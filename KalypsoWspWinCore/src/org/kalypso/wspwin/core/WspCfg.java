@@ -46,6 +46,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,14 +56,17 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * Represents the contents of an wsp.cfg file
- * 
+ *
  * @author belger
  */
 public class WspCfg
@@ -160,28 +164,64 @@ public class WspCfg
     return m_zustaende.toArray( new WspWinZustand[m_zustaende.size()] );
   }
 
-  public void read( final File wspwinDir ) throws IOException, ParseException
+  public IStatus read( final File wspwinDir )
   {
-    final File profDir = WspWinHelper.getProfDir( wspwinDir );
-    final File wspCfgFile = new File( profDir, WspWinFiles.WSP_CFG );
+    final IStatusCollector log = new StatusCollector( KalypsoWspWinCorePlugin.PLUGIN_ID );
 
-    LineNumberReader reader = null;
+    setProjectDir( wspwinDir );
+
+    final File profDir = WspWinHelper.getProfDir( wspwinDir );
+
+    final Collection<ZustandBean> zustandBeans = new ArrayList<ZustandBean>();
+
+    final IStatus wspCfgStatus = readWspCfg( profDir, zustandBeans );
+    log.add( wspCfgStatus );
+
+    /* Read zusteande */
+    for( final ZustandBean zustandBean : zustandBeans )
+    {
+      try
+      {
+        // TODO: improve error handling: import completely fails if we get an error here
+        final WspWinZustand wspwinZustand = zustandBean.readZustand( profDir );
+        m_zustaende.add( wspwinZustand );
+      }
+      catch( ParseException | IOException e )
+      {
+        final String msg = String.format( Messages.getString("WspCfg.0"), zustandBean.getFileName() ); //$NON-NLS-1$
+        log.add( IStatus.WARNING, msg, e );
+      }
+    }
+
     try
     {
-      reader = new LineNumberReader( new FileReader( wspCfgFile ) );
+      /* Read profproj */
+      m_profProj.read( wspwinDir );
+    }
+    catch( final ParseException | IOException e )
+    {
+      final String msg = String.format( Messages.getString("WspCfg.1"), WspWinFiles.PROFPROJ_TXT ); //$NON-NLS-1$
+      log.add( IStatus.WARNING, msg, e );
+    }
 
-      setProjectDir( wspwinDir );
+    return log.asMultiStatus( String.format( Messages.getString("WspCfg.2"), WspWinFiles.WSP_CFG ) ); //$NON-NLS-1$
+  }
 
+  private IStatus readWspCfg( final File profDir, final Collection<ZustandBean> zustandBeans )
+  {
+    final File wspCfgFile = new File( profDir, WspWinFiles.WSP_CFG );
+
+    try (LineNumberReader reader = new LineNumberReader( new FileReader( wspCfgFile ) ))
+    {
       final String firstLine = reader.readLine();
       if( firstLine == null || firstLine.length() == 0 )
-        throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspCfg.1" ), reader.getLineNumber() ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoWspWinCorePlugin.PLUGIN_ID, Messages.getString( "org.kalypso.wspwin.core.WspCfg.1" ) ); //$NON-NLS-1$
 
       // ignore the values, we read the count from the linecount
       // just parse the type
       final char type = firstLine.charAt( firstLine.length() - 1 );
       setType( type );
 
-      final Collection<ZustandBean> zustandBeans = new ArrayList<ZustandBean>();
       while( reader.ready() )
       {
         final String line = reader.readLine();
@@ -210,23 +250,15 @@ public class WspCfg
         catch( final NumberFormatException e )
         {
           e.printStackTrace();
-          throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspCfg.3" ) + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
+          throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspCfg.3", reader.getLineNumber() ), reader.getLineNumber() ); //$NON-NLS-1$
         }
       }
 
-      /* Read zusteande */
-      for( final ZustandBean zustandBean : zustandBeans )
-      {
-        final WspWinZustand wspwinZustand = zustandBean.readZustand( profDir );
-        m_zustaende.add( wspwinZustand );
-      }
-
-      /* Read profproj */
-      m_profProj.read( wspwinDir );
+      return Status.OK_STATUS;
     }
-    finally
+    catch( final ParseException | IOException e )
     {
-      IOUtils.closeQuietly( reader );
+      return new Status( IStatus.ERROR, KalypsoWspWinCorePlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
     }
   }
 
@@ -278,7 +310,7 @@ public class WspCfg
     // TODO
     final int xxx = 0;
     final int yyyy = 0;
-    pw.append( String.format( "%5d %4d %4d %s%n", xxx, m_zustaende.size(), yyyy, getType().getCode() ) );
+    pw.append( String.format( "%5d %4d %4d %s%n", xxx, m_zustaende.size(), yyyy, getType().getCode() ) ); //$NON-NLS-1$
 
     for( final WspWinZustand zustand : m_zustaende )
     {
@@ -298,7 +330,7 @@ public class WspCfg
   /**
    * Creates a profile ands it to the global definition (profproj)
    */
-  public ProfileBean createProfile( final String waterName, final String stateName, final double station, final String fileName )
+  public ProfileBean createProfile( final String waterName, final String stateName, final BigDecimal station, final String fileName )
   {
     final ProfileBean bean = new ProfileBean( waterName, stateName, station, fileName );
     m_profProj.add( bean );

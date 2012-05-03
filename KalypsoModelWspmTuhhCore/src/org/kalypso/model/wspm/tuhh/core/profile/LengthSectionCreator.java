@@ -58,7 +58,7 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IRecord;
@@ -147,7 +147,7 @@ public class LengthSectionCreator
         }
 
         // Profile Objects
-        final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, IProfileBuilding.class );
+        final IProfileBuilding building = WspmSohlpunkte.getBuilding( profil, IProfileBuilding.class );
 
         // FIXME: calculation of uk/ok/ok-weir values still not satisfactory...we probably need to calculate mean values
         if( building instanceof BuildingWehr )

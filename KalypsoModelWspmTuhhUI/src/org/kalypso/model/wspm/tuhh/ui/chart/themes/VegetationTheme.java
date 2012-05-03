@@ -44,13 +44,16 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Doubles;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.VegetationPanel;
@@ -58,7 +61,6 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
@@ -95,33 +97,28 @@ public class VegetationTheme extends AbstractProfilTheme
 
   private ILegendEntry[] createLegendEntries( )
   {
-
+    final LegendEntry le = new LegendEntry( this, toString() )
     {
-      final LegendEntry le = new LegendEntry( this, toString() )
+      @Override
+      public void paintSymbol( final GC gc, final Point size )
       {
-        @Override
-        public void paintSymbol( final GC gc, final Point size )
-        {
-          final Rectangle clipping = gc.getClipping();
-          drawIcon( gc, new Rectangle( clipping.x + clipping.width / 2, clipping.y + clipping.height, clipping.width, clipping.height ) );
-        }
-      };
+        final Rectangle clipping = gc.getClipping();
+        drawIcon( gc, new Rectangle( clipping.x + clipping.width / 2, clipping.y + clipping.height, clipping.width, clipping.height ) );
+      }
+    };
 
-      return new ILegendEntry[] { le };
-    }
+    return new ILegendEntry[] { le };
   }
 
-  private Rectangle getHoverRectInternal( final IRecord pp1, final IRecord pp2 )
+  private Rectangle getHoverRectInternal( final IProfileRecord point1, final IProfileRecord point2 )
   {
-    if( segmenthasVegetation( pp1 ) )
-    {
-      final Double y1 = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, pp1 );
-      final Double y2 = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, pp2 );
-      final Double x1 = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, pp1 );
-      final Double x2 = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, pp2 );
+    if( Objects.isNull( point1, point2 ) )
+      return null;
 
-      final Point p1 = new Point( getDomainAxis().numericToScreen( x1 ), getTargetAxis().numericToScreen( y1 ) - 3 );
-      final Point p2 = new Point( getDomainAxis().numericToScreen( x2 ), getTargetAxis().numericToScreen( y2 ) - 3 );
+    if( segmenthasVegetation( point1 ) )
+    {
+      final Point p1 = new Point( getDomainAxis().numericToScreen( point1.getBreite() ), getTargetAxis().numericToScreen( point1.getHoehe() ) - 3 );
+      final Point p2 = new Point( getDomainAxis().numericToScreen( point2.getBreite() ), getTargetAxis().numericToScreen( point2.getHoehe() ) - 3 );
 
       final int width = p2.x - p1.x;
       final int midX = p1.x + width / 2;
@@ -134,68 +131,55 @@ public class VegetationTheme extends AbstractProfilTheme
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getHover(org.eclipse.swt.graphics.Point)
-   */
   @Override
   public EditInfo getHover( final Point pos )
   {
     final IProfil profil = getProfil();
-    final IRecord[] profilPoints = profil.getPoints();
-    final int len = profilPoints.length - 2;
+    final IProfileRecord[] points = profil.getPoints();
 
-    for( int i = 0; i < len; i++ )
+    for( final IProfileRecord p1 : points )
     {
-      final Rectangle hover = getHoverRectInternal( profilPoints[i], profilPoints[i + 1] );
+      final IProfileRecord p2 = p1.getNextPoint();
+      if( Objects.isNull( p2 ) )
+        continue;
+
+      final Rectangle hover = getHoverRectInternal( p1, p2 );
       if( hover == null )
       {
         continue;
       }
       final int size = Math.min( hover.height / 2, Math.min( hover.width / 2, 10 ) );
       if( pos.x >= hover.x - size && pos.y >= hover.y - size && pos.x < hover.x + size && pos.y < hover.y + size )
-        return new EditInfo( this, null, null, i, getTooltipInfo( profilPoints[i] ), pos );
+        return new EditInfo( this, null, null, ArrayUtils.indexOf( points, p1 ), getTooltipInfo( p1 ), pos );
     }
+
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
-   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-
     if( ArrayUtils.isEmpty( m_legendEntries ) )
     {
       m_legendEntries = createLegendEntries();
     }
+
     return m_legendEntries;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
-   */
   @Override
   public IChartLayer[] getLegendNodes( )
   {
     return new IChartLayer[] {};
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTooltipInfo(org.kalypso.observation.result.IRecord)
-   */
   @Override
-  public String getTooltipInfo( final IRecord point )
+  public String getTooltipInfo( final IProfileRecord point )
   {
-    final Double ax = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, point );
-    final Double ay = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, point );
-    final Double dp = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, point );
-    return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", new Object[] { ax, ay, dp } ); //$NON-NLS-1$
+
+    return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", WspmClassifications.getAx( point ), WspmClassifications.getAy( point ), WspmClassifications.getDp( point ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#removeYourself()
-   */
   @Override
   public void removeYourself( )
   {
@@ -207,9 +191,6 @@ public class VegetationTheme extends AbstractProfilTheme
     new ProfilOperationJob( operation ).schedule();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange(de.openali.odysseus.chart.framework.model.mapper.IAxis)
-   */
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
@@ -217,32 +198,24 @@ public class VegetationTheme extends AbstractProfilTheme
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilTheme#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {
-
     final IProfil profil = getProfil();
-
     if( profil == null )
       return;
-    final IRecord[] profilPoints = profil.getPoints();
-    final int len = profilPoints.length - 1;
+
     final PolylineFigure pf = new PolylineFigure();
-
     pf.setStyle( getLineStyle() );
-    for( int i = 0; i < len; i++ )
+
+    final IProfileRecord[] points = profil.getPoints();
+    for( final IProfileRecord point : points )
     {
-
-      final Rectangle hover = getHoverRectInternal( profilPoints[i], profilPoints[i + 1] );
+      final Rectangle hover = getHoverRectInternal( point, point.getNextPoint() );
       if( hover == null )
-      {
         continue;
-      }
-      drawIcon( gc, hover );
 
+      drawIcon( gc, hover );
     }
   }
 
@@ -267,12 +240,16 @@ public class VegetationTheme extends AbstractProfilTheme
     }
   }
 
-  final boolean segmenthasVegetation( final IRecord point )
+  final boolean segmenthasVegetation( final IProfileRecord point )
   {
-    final Double ax = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, point );
-    final Double ay = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, point );
-    final Double dp = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, point );
-    return !ax.isNaN() && !ay.isNaN() && !dp.isNaN() && ax * ay * dp != 0;
+    final Double ax = WspmClassifications.getAx( point );
+    final Double ay = WspmClassifications.getAy( point );
+    final Double dp = WspmClassifications.getDp( point );
+
+    if( Doubles.isNaN( ax, ax, dp ) )
+      return false;
+
+    return ax * ay * dp != 0;
 
   }
 

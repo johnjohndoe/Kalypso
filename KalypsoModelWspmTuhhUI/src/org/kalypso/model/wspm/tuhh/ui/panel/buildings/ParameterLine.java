@@ -63,7 +63,7 @@ import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 public class ParameterLine
@@ -90,7 +90,7 @@ public class ParameterLine
     m_composite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     m_devider = devider;
-    final BuildingWehr weir = WspmProfileHelper.getBuilding( m_profile, BuildingWehr.class );
+    final BuildingWehr weir = WspmSohlpunkte.getBuilding( m_profile, BuildingWehr.class );
     final String weirType = weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString();
     m_label = toolkit.createLabel( m_composite, m_labelProvider.getDescription( weirType ) );
 
@@ -147,7 +147,7 @@ public class ParameterLine
 
   public final void refresh( )
   {
-    final BuildingWehr weir = WspmProfileHelper.getBuilding( m_profile, BuildingWehr.class );
+    final BuildingWehr weir = WspmSohlpunkte.getBuilding( m_profile, BuildingWehr.class );
     final String weirType = weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString();
     m_label.setText( m_labelProvider.getDescription( weirType ) );
   }
@@ -157,7 +157,7 @@ public class ParameterLine
     final double value = NumberUtils.parseQuietDouble( text );
     final Double valueToSet = Double.isNaN( value ) ? null : value;
 
-    final BuildingWehr weir = WspmProfileHelper.getBuilding( m_profile, BuildingWehr.class );
+    final BuildingWehr weir = WspmSohlpunkte.getBuilding( m_profile, BuildingWehr.class );
     if( weir == null )
       return;
 

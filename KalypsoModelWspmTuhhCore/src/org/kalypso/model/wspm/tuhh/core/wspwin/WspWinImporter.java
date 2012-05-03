@@ -61,6 +61,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -179,8 +180,10 @@ public final class WspWinImporter
       // /////////////////// //
       // Load WspWin Project //
       // /////////////////// //
+      // FIXME: add status of reading wspcfg to logStatus
       final WspCfg wspCfgBean = new WspCfg();
-      wspCfgBean.read( wspwinDirectory );
+      final IStatus wspCfgStatus = wspCfgBean.read( wspwinDirectory );
+      logStatus.add( wspCfgStatus );
 
       // from now on, we have tuhh projects: if we later support other kinds of projects, tweak here
       final TuhhWspmProject tuhhProject = (TuhhWspmProject) modelRootFeature;
@@ -254,32 +257,35 @@ public final class WspWinImporter
   private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, IProfileFeature> addedProfiles, final boolean isDirectionUpstreams )
   {
     final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID );
-    final String problemMessgage = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.18" ); //$NON-NLS-1$
 
     for( final ProfileBean bean : commonProfiles )
     {
       try
       {
-        final IProfileFeature profile = importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams );
-
-        final BigDecimal profStation = profile.getBigStation();
-        final BigDecimal beanStation = new BigDecimal( bean.getStation() );
-
-        if( Math.abs( profStation.doubleValue() - beanStation.doubleValue() ) > 0.0001 )
+        final IProfileFeature profile = importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams, true );
+        if( profile != null )
         {
-          final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.19", bean.getFileName(), profStation, bean.getWaterName(), bean.getStateName(), beanStation ); //$NON-NLS-1$
-          log.add( IStatus.WARNING, msg );
+          final BigDecimal profStation = profile.getBigStation();
+          final BigDecimal beanStation = bean.getStation();
 
-          // FIXME: bad: probably the station of the profproj.txt is rounded, so we are using the worse number here. We
-          // should instead use the station with the most significant digits.
+          // if( Math.abs( profStation.doubleValue() - beanStation.doubleValue() ) > 0.0001 )
+          if( profStation.compareTo( beanStation ) != 0 )
+          {
+            final BigDecimal fixedStation = fixStation( profStation, beanStation );
 
-          profile.setBigStation( new BigDecimal( bean.getStation() ) );
+            final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.19", bean.getFileName(), profStation, bean.getWaterName(), bean.getStateName(), beanStation ); //$NON-NLS-1$
+            log.add( IStatus.INFO, msg );
+
+            // FIXME: bad: probably the station of the profproj.txt is rounded, so we are using the worse number here.
+            // We should instead use the station with the most significant digits.
+            profile.setBigStation( fixedStation );
+          }
         }
       }
       catch( final IOException e )
       {
         final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.119", bean.getFileName() );//$NON-NLS-1$
-        log.add( IStatus.WARNING, msg, e );
+        log.add( IStatus.INFO, msg, e );
       }
       catch( final GMLSchemaException e )
       {
@@ -292,14 +298,28 @@ public final class WspWinImporter
     }
 
     final String okMessage = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.120" );//$NON-NLS-1$
-    return log.asMultiStatusOrOK( problemMessgage, okMessage );
+    return log.asMultiStatusOrOK( okMessage, okMessage );
+  }
+
+  /**
+   * Returns the station with the most significant decimals.
+   */
+  private static BigDecimal fixStation( final BigDecimal profStation, final BigDecimal beanStation )
+  {
+    final int profScale = profStation.scale();
+    final int beanScale = beanStation.scale();
+
+    if( profScale > beanScale )
+      return profStation;
+    else
+      return beanStation;
   }
 
   /**
    * Imports a single profile according to the given ProfileBean. If the map already contains a profile with the same id
    * (usually the filename), we return this instead.
    */
-  private static IProfileFeature importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, IProfileFeature> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams ) throws GMLSchemaException, IOException, CoreException
+  private static IProfileFeature importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, IProfileFeature> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams, final boolean ignoreMissingFile ) throws GMLSchemaException, IOException, CoreException
   {
     final String fileName = bean.getFileName();
 
@@ -309,6 +329,23 @@ public final class WspWinImporter
     final IProfileFeature prof = tuhhProject.createNewProfile( bean.getWaterName(), isDirectionUpstreams );
 
     final File prfFile = new File( profDir, fileName );
+    if( !prfFile.exists() )
+    {
+      if( ignoreMissingFile )
+      {
+        // REMARK: this is a situation that occurs rather often, because WspWin does not correctly keep
+        // track of removed profiles (i.e. if a profile is removed from its strand, the profile is not removed
+        // from the profproj file. Because of this, we silently ignore htis problem.
+        return null;
+      }
+      else
+      {
+        // REMARK: if file is missing and referenced from a strand, we really have a problem.
+        final String message = String.format( "Profile file '%s' missing.", fileName );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message );
+        throw new CoreException( status );
+      }
+    }
 
     final String profiletype = IWspmTuhhConstants.PROFIL_TYPE_PASCHE;
 
@@ -367,18 +404,22 @@ public final class WspWinImporter
       try
       {
         final ProfileBean fromBean = new ProfileBean( waterName, name, bean.getStationFrom(), bean.getFileNameFrom() );
-        final IProfileFeature fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams );
+        final IProfileFeature fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams, false );
 
-        reach.createProfileSegment( fromProf, bean.getStationFrom() );
+        reach.createProfileSegment( fromProf, bean.getStationFrom().doubleValue() );
 
         if( bean == segmentBeans[segmentBeans.length - 1] )
         {
           // also add last profile
           final ProfileBean toBean = new ProfileBean( waterName, name, bean.getStationTo(), bean.getFileNameTo() );
-          final IProfileFeature toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams );
+          final IProfileFeature toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams, false );
 
-          reach.createProfileSegment( toProf, bean.getStationTo() );
+          reach.createProfileSegment( toProf, bean.getStationTo().doubleValue() );
         }
+      }
+      catch( final CoreException e )
+      {
+        log.add( e.getStatus() );
       }
       catch( final Exception e )
       {

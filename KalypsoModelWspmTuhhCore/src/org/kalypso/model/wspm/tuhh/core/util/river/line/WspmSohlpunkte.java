@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.util;
+package org.kalypso.model.wspm.tuhh.core.util.river.line;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,20 +56,15 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 /**
  * @author Dirk Kuch
  */
-public final class WspmProfileHelper
+public final class WspmSohlpunkte
 {
-  private WspmProfileHelper( )
+  private WspmSohlpunkte( )
   {
   }
 
-  public static double findSohlpunkt( final IProfil profile, final double fuzziness )
+  public static double findSohlpunkt( final IProfil profile )
   {
-    return findSohlpunkt( new ProfileWrapper( profile ), fuzziness );
-  }
-
-  public static double findSohlpunkt( final ProfileWrapper wrapper )
-  {
-    return findSohlpunkt( wrapper, Profiles.FUZZINESS );
+    return findSohlpunkt( profile, Profiles.FUZZINESS );
   }
 
   /**
@@ -77,13 +72,13 @@ public final class WspmProfileHelper
    *          = height delta -> points inherit (interval!) this delta are equal!
    * @return breite of sohlpunkt
    */
-  public static double findSohlpunkt( final ProfileWrapper wrapper, final double fuziness )
+  public static double findSohlpunkt( final IProfil profile, final double fuziness )
   {
-    final IProfilPointMarker[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilPointMarker[] dbs = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( dbs.length != 2 )
       throw new IllegalStateException();
 
-    final IProfileRecord[] points = ProfileVisitors.findPointsBetween( wrapper.getProfile(), dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
+    final IProfileRecord[] points = ProfileVisitors.findPointsBetween( profile, dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
 
     final List<IProfileRecord> sohle = new ArrayList<>();
     boolean lastIterationAdd = false;

@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -52,6 +53,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Location;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.geom.TopologyException;
@@ -210,24 +212,45 @@ public class VariableBufferGeometryBuilder
     if( m_curveList.size() <= 0 )
       return createEmptyResultGeometry();
 
-    computeNodedEdges( noder, m_curveList );
+    // for debugging: turn off noding
+    final boolean noNoding = false;
+    if( noNoding )
+      return fromSegments();
+    else
+    {
+      computeNodedEdges( noder, m_curveList );
 
-    final PlanarGraph graph = new PlanarGraph( new OverlayNodeFactory() );
-    graph.addEdges( m_edgeList.getEdges() );
+      final PlanarGraph graph = new PlanarGraph( new OverlayNodeFactory() );
+      graph.addEdges( m_edgeList.getEdges() );
 
-    final List<BufferSubgraph> subgraphList = createSubgraphs( graph );
-    final PolygonBuilder polyBuilder = new PolygonBuilder( m_factory );
-    buildSubgraphs( subgraphList, polyBuilder );
+      final List<BufferSubgraph> subgraphList = createSubgraphs( graph );
+      final PolygonBuilder polyBuilder = new PolygonBuilder( m_factory );
+      buildSubgraphs( subgraphList, polyBuilder );
 
-    @SuppressWarnings("unchecked")
-    final List<Geometry> resultPolyList = polyBuilder.getPolygons();
+      @SuppressWarnings("unchecked")
+      final List<Geometry> resultPolyList = polyBuilder.getPolygons();
 
-    // just in case...
-    if( resultPolyList.size() <= 0 )
-      return createEmptyResultGeometry();
+      // just in case...
+      if( resultPolyList.size() <= 0 )
+        return createEmptyResultGeometry();
 
-    final Geometry resultGeom = m_factory.buildGeometry( resultPolyList );
-    return resultGeom;
+      return m_factory.buildGeometry( resultPolyList );
+    }
+  }
+
+  private Geometry fromSegments( )
+  {
+    final Collection<Coordinate> allCrds = new ArrayList<>();
+
+    for( final SegmentString segment : m_curveList )
+    {
+      final Coordinate[] coordinates = segment.getCoordinates();
+      allCrds.addAll( Arrays.asList( coordinates ) );
+    }
+
+    final LinearRing ring = m_factory.createLinearRing( allCrds.toArray( new Coordinate[allCrds.size()] ) );
+
+    return m_factory.createPolygon( ring, null );
   }
 
   /**

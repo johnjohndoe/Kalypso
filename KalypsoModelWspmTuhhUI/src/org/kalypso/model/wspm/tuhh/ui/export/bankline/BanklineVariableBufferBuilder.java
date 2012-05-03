@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.math.geom.PolyLine;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -50,7 +51,6 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Location;
 import com.vividsolutions.jts.operation.buffer.BufferInputLineSimplifier;
 import com.vividsolutions.jts.operation.buffer.BufferParameters;
-import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 /**
  * @author Gernot Belger
@@ -76,6 +76,9 @@ public class BanklineVariableBufferBuilder
 
   public BanklineVariableBufferBuilder( final LineString riverLine, final PolyLine leftDistances, final PolyLine rightDistances )
   {
+    Assert.isNotNull( leftDistances );
+    Assert.isNotNull( rightDistances );
+
     m_riverLine = riverLine;
     m_leftDistances = leftDistances;
     m_rightDistances = rightDistances;
@@ -87,28 +90,31 @@ public class BanklineVariableBufferBuilder
     final double maxRightDistance = getMaxDistance( m_rightDistances );
     final double maxDistance = Math.max( maxLeftDistance, maxRightDistance );
 
-    final LineString simpleLine = (LineString) DouglasPeuckerSimplifier.simplify( m_riverLine, maxDistance / SIMPLIFY_FACTOR );
+    final double distTol = 0.0001;
+// final double distTol = maxDistance / SIMPLIFY_FACTOR;
+
+// final LineString simpleLine = (LineString) DouglasPeuckerSimplifier.simplify( m_riverLine, distTol );
+    final LineString simpleLine = m_riverLine;
 
     // final LineString denseRiverLine = densifyRiverLine( simpleLine, profiles );
     // final LineString denseRiverLine = (LineString) Densifier.densify( simpleLine, 1.0 );
     final LineString denseRiverLine = simpleLine;
-
-    // final double minimaldistance = 0.1;
-    final double distTol = maxDistance / SIMPLIFY_FACTOR;
 
     // --------- compute points for left side of line
     // Simplify the appropriate side of the line before generating
     final Coordinate[] simpleLeftCoordinates = BufferInputLineSimplifier.simplify( denseRiverLine.getCoordinates(), +distTol );
 
     final VariableOffsetCurveBuilder leftCurveBuilder = new VariableOffsetCurveBuilder( m_leftDistances, -1, m_bufferParams );
-    leftCurveBuilder.addSegments( simpleLeftCoordinates );
+// leftCurveBuilder.addSegments( simpleLeftCoordinates );
+    leftCurveBuilder.addSegments( denseRiverLine.getCoordinates() );
 
     // ---------- compute points for right side of line
     // Simplify the appropriate side of the line before generating
     final Coordinate[] simpleRightCoordinates = BufferInputLineSimplifier.simplify( denseRiverLine.getCoordinates(), -distTol );
 
     final VariableOffsetCurveBuilder rightCurveBuilder = new VariableOffsetCurveBuilder( m_rightDistances, +1, m_bufferParams );
-    rightCurveBuilder.addSegments( simpleRightCoordinates );
+    rightCurveBuilder.addSegments( denseRiverLine.getCoordinates() );
+// rightCurveBuilder.addSegments( simpleRightCoordinates );
 
     /* Build closed ring */
     final CoordinateList allCoordinates = new CoordinateList();

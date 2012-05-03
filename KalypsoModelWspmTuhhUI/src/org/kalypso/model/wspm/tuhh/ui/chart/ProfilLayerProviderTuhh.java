@@ -61,11 +61,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileO
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.EnergylossLayer;
-import org.kalypso.model.wspm.tuhh.ui.chart.layers.PointMarkerLayer;
-import org.kalypso.model.wspm.tuhh.ui.chart.layers.RiverChannelLayer;
-import org.kalypso.model.wspm.tuhh.ui.chart.layers.RoughnessLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.SinuositaetLayer;
-import org.kalypso.model.wspm.tuhh.ui.chart.layers.StationPointLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingBridgeTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingTubesTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingWeirTheme;
@@ -77,16 +73,14 @@ import org.kalypso.model.wspm.tuhh.ui.chart.themes.RoughnessTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.VegetationTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.utils.LayerStyleProviderTuhh;
 import org.kalypso.model.wspm.tuhh.ui.chart.utils.TuhhLayerCreator;
+import org.kalypso.model.wspm.tuhh.ui.chart.utils.TuhhLayers;
 import org.kalypso.model.wspm.tuhh.ui.chart.utils.TuhhLayersAdder;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.LayerDescriptor;
-import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 import org.kalypso.model.wspm.ui.view.chart.layer.CrossSectionTheme;
-import org.kalypso.model.wspm.ui.view.chart.layer.StationLineLayer;
 import org.kalypso.model.wspm.ui.view.table.handler.WspmTableUiHandlerProvider;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -95,8 +89,6 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
@@ -217,62 +209,50 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       return null;
 
     final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
+    final CoordinateMapper cmRight = new CoordinateMapper( m_domainAxis, m_targetAxisRight );
     final CoordinateMapper cmScreen = new CoordinateMapper( m_domainAxis, m_screenAxisVertical );
 
-    if( layerID.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
-      return new VegetationTheme( profil, new IProfilChartLayer[] { new ComponentLayer( profil, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, false ),
-          new ComponentLayer( profil, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, false ), new ComponentLayer( profil, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, false ) }, cmLeft, m_styleProvider );
-    else if( layerID.equals( IWspmConstants.LAYER_GEOKOORDINATEN ) )
-      return new GeoCoordinateTheme( profil );
-    else if( layerID.equals( IWspmConstants.LAYER_COMMENT ) )
-      return new CommentTheme( profil );
-    else if( layerID.equals( IWspmConstants.LAYER_CODE ) )
-      return new CodeTheme( profil );
-    else if( layerID.equals( IWspmLayers.LAYER_GELAENDE ) )
-      return new CrossSectionTheme( profil, new IProfilChartLayer[] { new StationLineLayer( profil, IWspmPointProperties.POINT_PROPERTY_HOEHE ),
-          new StationPointLayer( layerID, profil, IWspmPointProperties.POINT_PROPERTY_HOEHE, m_styleProvider ) }, cmLeft );
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
+    switch( layerID )
     {
-      final CoordinateMapper cmRight = new CoordinateMapper( m_domainAxis, m_targetAxisRight );
+      case IWspmTuhhConstants.LAYER_BEWUCHS:
+        return TuhhLayers.createVegetationLayer( profil, cmLeft, m_styleProvider );
 
-      final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, m_styleProvider ),
-          new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, m_styleProvider ) };
+      case IWspmConstants.LAYER_GEOKOORDINATEN:
+        return new GeoCoordinateTheme( profil );
 
-      return new RoughnessTheme( profil, subLayers, cmRight );
+      case IWspmConstants.LAYER_COMMENT:
+        return new CommentTheme( profil );
+
+      case IWspmConstants.LAYER_CODE:
+        return new CodeTheme( profil );
+
+      case IWspmLayers.LAYER_GELAENDE:
+        return TuhhLayers.createGelaendeLayer( profil, cmLeft, m_styleProvider );
+
+      case IWspmTuhhConstants.LAYER_RAUHEIT:
+        return TuhhLayers.createRoughnessLayer( profil, cmRight, m_styleProvider );
+
+      case IWspmTuhhConstants.LAYER_BRUECKE:
+        return TuhhLayers.createBridgetLayer( profil, cmLeft, m_styleProvider );
+
+      case IWspmTuhhConstants.LAYER_WEHR:
+        return TuhhLayers.createWehrLayer( profil, layerID, cmLeft, cmScreen, m_styleProvider );
+
+      case IWspmTuhhConstants.LAYER_TUBES:
+        return new BuildingTubesTheme( profil, cmLeft, m_styleProvider );
+
+      case IWspmTuhhConstants.LAYER_SINUOSITAET:
+        return new SinuositaetLayer( profil );
+
+      case IWspmTuhhConstants.LAYER_DEVIDER:
+        return TuhhLayers.createDeviderLayer( profil, cmScreen, m_styleProvider );
+
+      case IWspmTuhhConstants.LAYER_ENERGYLOSS:
+        return new EnergylossLayer( profil );
+
+      default:
+        return null;
     }
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
-    {
-      final IProfilChartLayer[] subLayers = new IProfilChartLayer[] {
-          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_styleProvider ), //$NON-NLS-1$
-          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_styleProvider ) }; //$NON-NLS-1$
-
-      return new BuildingBridgeTheme( profil, subLayers, cmLeft );
-    }
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_WEHR ) )
-    {
-      final IProfilChartLayer[] subLayers = new IProfilChartLayer[] {
-          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, m_styleProvider ), //$NON-NLS-1$
-          new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_WEHR, m_styleProvider, 30, false ) };
-
-      return new BuildingWeirTheme( profil, subLayers, cmLeft, cmScreen );
-    }
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_TUBES ) )
-      return new BuildingTubesTheme( profil, cmLeft, m_styleProvider );
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
-      return new SinuositaetLayer( profil );
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_ENERGYLOSS ) )
-      return new EnergylossLayer( profil );
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
-    {
-      final PointMarkerLayer dbLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_styleProvider, 5, true );
-      final RiverChannelLayer tfLayer = new RiverChannelLayer( profil, m_styleProvider, 15, false );
-      final PointMarkerLayer bvLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_styleProvider, 25, false );
-      final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { dbLayer, tfLayer, bvLayer };
-
-      return new DeviderTheme( profil, subLayers, cmScreen );
-    }
-
-    return null;
   }
 
   @Override
@@ -331,7 +311,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     final IEnergylossProfileObject[] elpo = profile.getProfileObjects( IEnergylossProfileObject.class );
     if( ArrayUtils.isNotEmpty( elpo ) )
     {
-      layersToAdd.add( createLayer( profile, IWspmTuhhConstants.LAYER_ENERGYLOSS) );
+      layersToAdd.add( createLayer( profile, IWspmTuhhConstants.LAYER_ENERGYLOSS ) );
     }
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_COMMENT ) != null )
       layersToAdd.add( createLayer( profile, IWspmConstants.LAYER_COMMENT ) );
@@ -350,69 +330,65 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   @Override
   public LayerDescriptor[] getAddableLayers( final ProfilChartModel chartModel )
   {
-    final List<LayerDescriptor> addableLayer = new ArrayList<LayerDescriptor>();
 
-    final List<String> existingLayers = new ArrayList<String>();
-
-    final ILayerManager mngr = chartModel.getLayerManager();
     final IProfil profile = chartModel.getProfil();
-    if( mngr == null || profile == null )
+    if( Objects.isNull( profile ) )
       return new LayerDescriptor[] {};
 
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      existingLayers.add( layer.getIdentifier() );
-    }
+    final List<LayerDescriptor> addable = new ArrayList<LayerDescriptor>();
+    final String[] existing = TuhhLayers.getExistingLayers( chartModel );
 
     final IProfileObject[] objects = profile.getProfileObjects( IProfileBuilding.class );
 
     // only ONE Object allowed
     if( ArrayUtils.isEmpty( objects ) )
     {
-      addableLayer.add( new LayerDescriptor( BuildingBridgeTheme.TITLE, LAYER_BRUECKE ) );
-      addableLayer.add( new LayerDescriptor( BuildingWeirTheme.TITLE, IWspmTuhhConstants.LAYER_WEHR ) );
-      addableLayer.add( new LayerDescriptor( BuildingTubesTheme.TITLE, IWspmTuhhConstants.LAYER_TUBES ) );
+      addable.add( new LayerDescriptor( BuildingBridgeTheme.TITLE, LAYER_BRUECKE ) );
+      addable.add( new LayerDescriptor( BuildingWeirTheme.TITLE, IWspmTuhhConstants.LAYER_WEHR ) );
+      addable.add( new LayerDescriptor( BuildingTubesTheme.TITLE, IWspmTuhhConstants.LAYER_TUBES ) );
     }
     // always show devider and roughness
-    if( !existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT ) )
+    if( !ArrayUtils.contains( existing, IWspmTuhhConstants.LAYER_RAUHEIT ) )
     {
-      addableLayer.add( new LayerDescriptor( RoughnessTheme.TITLE, IWspmTuhhConstants.LAYER_RAUHEIT ) );
+      addable.add( new LayerDescriptor( RoughnessTheme.TITLE, IWspmTuhhConstants.LAYER_RAUHEIT ) );
     }
-    if( !existingLayers.contains( IWspmTuhhConstants.LAYER_DEVIDER ) )
+    if( !ArrayUtils.contains( existing, IWspmTuhhConstants.LAYER_DEVIDER ) )
     {
-      addableLayer.add( new LayerDescriptor( DeviderTheme.TITLE, IWspmTuhhConstants.LAYER_DEVIDER ) );
+      addable.add( new LayerDescriptor( DeviderTheme.TITLE, IWspmTuhhConstants.LAYER_DEVIDER ) );
     }
 
-    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) && !existingLayers.contains( IWspmTuhhConstants.LAYER_BEWUCHS ) )
+    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) && !ArrayUtils.contains( existing, IWspmTuhhConstants.LAYER_BEWUCHS ) )
     {
-      addableLayer.add( new LayerDescriptor( VegetationTheme.TITLE, IWspmTuhhConstants.LAYER_BEWUCHS ) );
+      addable.add( new LayerDescriptor( VegetationTheme.TITLE, IWspmTuhhConstants.LAYER_BEWUCHS ) );
     }
-    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE ) ) && !existingLayers.contains( IWspmLayers.LAYER_GELAENDE ) )
+    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE ) ) && !ArrayUtils.contains( existing, IWspmLayers.LAYER_GELAENDE ) )
     {
-      addableLayer.add( new LayerDescriptor( CrossSectionTheme.TITLE, IWspmLayers.LAYER_GELAENDE ) );
+      addable.add( new LayerDescriptor( CrossSectionTheme.TITLE, IWspmLayers.LAYER_GELAENDE ) );
     }
-    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT ) ) && !existingLayers.contains( IWspmLayers.LAYER_GEOKOORDINATEN ) )
+    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT ) ) && !ArrayUtils.contains( existing, IWspmLayers.LAYER_GEOKOORDINATEN ) )
     {
-      addableLayer.add( new LayerDescriptor( GeoCoordinateTheme.TITLE, IWspmLayers.LAYER_GEOKOORDINATEN ) );
+      addable.add( new LayerDescriptor( GeoCoordinateTheme.TITLE, IWspmLayers.LAYER_GEOKOORDINATEN ) );
     }
 
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_COMMENT ) == null )
-      addableLayer.add( new LayerDescriptor( CommentTheme.TITLE, IWspmConstants.LAYER_COMMENT ) );
+      addable.add( new LayerDescriptor( CommentTheme.TITLE, IWspmConstants.LAYER_COMMENT ) );
 
     if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_CODE ) ) )
-      addableLayer.add( new LayerDescriptor( CodeTheme.TITLE, IWspmConstants.LAYER_CODE ) );
+      addable.add( new LayerDescriptor( CodeTheme.TITLE, IWspmConstants.LAYER_CODE ) );
 
     final ISinuositaetProfileObject[] sinObj = profile.getProfileObjects( ISinuositaetProfileObject.class );
-    if( sinObj.length < 1 && !existingLayers.contains( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
+    if( sinObj.length < 1 && !ArrayUtils.contains( existing, IWspmTuhhConstants.LAYER_SINUOSITAET ) )
     {
-      addableLayer.add( new LayerDescriptor( Messages.getString( "ProfilLayerProviderTuhh.3" ), IWspmTuhhConstants.LAYER_SINUOSITAET ) ); //$NON-NLS-1$
+      addable.add( new LayerDescriptor( Messages.getString( "ProfilLayerProviderTuhh.3" ), IWspmTuhhConstants.LAYER_SINUOSITAET ) ); //$NON-NLS-1$
     }
+
     final IEnergylossProfileObject[] elpo = profile.getProfileObjects( IEnergylossProfileObject.class );
-    if( elpo.length < 1 && !existingLayers.contains( IWspmTuhhConstants.LAYER_ENERGYLOSS) )
+    if( elpo.length < 1 && !ArrayUtils.contains( existing, IWspmTuhhConstants.LAYER_ENERGYLOSS ) )
     {
-      addableLayer.add( new LayerDescriptor( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.7" ), IWspmTuhhConstants.LAYER_ENERGYLOSS) ); //$NON-NLS-1$
+      addable.add( new LayerDescriptor( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.7" ), IWspmTuhhConstants.LAYER_ENERGYLOSS ) ); //$NON-NLS-1$
     }
-    return addableLayer.toArray( new LayerDescriptor[addableLayer.size()] );
+
+    return addable.toArray( new LayerDescriptor[addable.size()] );
   }
 
   @Override

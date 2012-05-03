@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
@@ -118,17 +119,11 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
 
     final IProfil profile = profileFeature.getProfil();
 
-    try
-    {
-      addData( profile );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
+    final IProfileTransaction transaction = new AddProfileTransaction( this );
+    final IStatus status = profile.doTransaction( transaction );
 
-      final IStatus status = e.getStatus();
-      profile.setComment( status.toString() );
-    }
+    if( !status.isOK() )
+      throw new CoreException( status );
 
     return profile;
   }
@@ -178,13 +173,11 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     return anyPoint.getStation();
   }
 
-  private void addData( final IProfil profile ) throws CoreException
+  void addData( final IProfil profile ) throws CoreException
   {
     addBasicData( profile );
 
     final String newName = String.format( "%s (%s)", profile.getName(), m_description ); //$NON-NLS-1$
-    // FIXME: Andrea
-// final String newName = String.format( "%s", profile.getName() );
     profile.setName( newName );
 
     configure( profile );
@@ -212,8 +205,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
       profile.setComment( profileComment );
     }
 
-    // FIXME:
-    profile.setStation( Double.valueOf( (Double) Objects.firstNonNull( station, -999.999 ) ) );
+    profile.setStation( Objects.firstNonNull( station, -999.999 ).doubleValue() );
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_RECHTSWERT ) );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_HOCHWERT ) );

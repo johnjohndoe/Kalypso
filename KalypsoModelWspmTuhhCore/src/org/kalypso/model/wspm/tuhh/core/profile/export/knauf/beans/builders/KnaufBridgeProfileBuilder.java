@@ -234,7 +234,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
 
   private double getDeltaH( final BuildingBruecke bridge, final KnaufProfileWrapper profile )
   {
-    final IProfileRecord point = org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper.getSohlpunktPoint( profile );
+    final IProfileRecord point = org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte.getSohlpunktPoint( profile );
     if( Objects.isNull( point ) )
       return 0.0;
 

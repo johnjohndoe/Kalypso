@@ -48,7 +48,7 @@ import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.buildings.BridgePanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -95,7 +95,7 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
   {
     final IProfil profil = getProfil();
 
-    final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, IProfileBuilding.class );
+    final IProfileBuilding building = WspmSohlpunkte.getBuilding( profil, IProfileBuilding.class );
     if( building == null )
       return;
 

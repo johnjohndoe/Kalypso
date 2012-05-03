@@ -54,6 +54,7 @@ import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Gernot Belger
@@ -68,7 +69,10 @@ public class BanklinePatchesBuilder
 
   private final double m_distanceSignum;
 
-  private final GeometryFactory m_factory = new GeometryFactory();
+  // REMARK: working with a fixed PM makes ArcGis bahev better regarding a disolve.
+  private final PrecisionModel m_precisionModel = new PrecisionModel( 100.0 );
+
+  private final GeometryFactory m_factory = new GeometryFactory( m_precisionModel );
 
   public BanklinePatchesBuilder( final PolyLine distances, final LineString line, final double distanceSignum )
   {
@@ -183,9 +187,13 @@ public class BanklinePatchesBuilder
     final LinearRing shell = m_factory.createLinearRing( coordinates );
 
     final Polygon polygon = m_factory.createPolygon( shell, null );
-    polygon.normalize();
 
-    if( polygon.getArea() <= 0.0 )
+    // REMARK: ArcView gets problems with polygons that have points that are almost at the same location
+    // This check for the area fixes most of theses problems, however we loose some needed elements here...
+    // REMARK2: Instead, we no work with a fixed precision model, see above.
+    final double minimalArea = 0.0001;
+
+    if( polygon.getArea() <= minimalArea )
       return;
 
     if( !polygon.isValid() )

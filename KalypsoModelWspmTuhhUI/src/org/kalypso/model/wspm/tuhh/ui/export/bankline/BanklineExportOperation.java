@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -95,6 +96,10 @@ public class BanklineExportOperation implements ICoreRunnableWithProgress
         m_log.add( IStatus.OK, Messages.getString("BanklineExportOperation_2") ); //$NON-NLS-1$
       else
         m_log.add( status );
+    }
+    catch( final CoreException e )
+    {
+      m_log.add( e.getStatus() );
     }
     catch( final Exception e )
     {
