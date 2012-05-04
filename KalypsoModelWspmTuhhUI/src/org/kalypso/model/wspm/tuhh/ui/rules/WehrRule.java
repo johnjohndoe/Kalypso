@@ -214,17 +214,17 @@ public class WehrRule extends AbstractValidatorRule
     final Object groundValue = point.getValue( iHoehe );
     final Object weirValue = point.getValue( iOKWehr );
 
-    if( !(groundValue instanceof Number) || !(weirValue instanceof Number) )
+    if( !(groundValue instanceof Number) || !(weirValue == null || weirValue instanceof Number) )
       return;
 
     final double ground = ((Number) groundValue).doubleValue();
-    final double weir = ((Number) weirValue).doubleValue();
+    // final double weir = ((Number) weirValue).doubleValue();
 
     // FIXME: Fehlermeldung und Test passen nicht zusammen: es wird nicht getestet, ob Werte ausserhalb der TF
     // exisiterien und/oder auf dem Gelände liegen.
     // TODO: noch mal prüfen, was der Test eigentlich bewirken soll.
     // FIXME: >= is not a good double test; we should use BigDecimals with the correct precision instead
-    if( Math.abs( ground - weir ) > deltaOkW )
+    if( weirValue == null || Math.abs( ground - ((Number) weirValue).doubleValue() ) > deltaOkW )
     {
       final String location = String.format( "km %.4f", profil.getStation() ); //$NON-NLS-1$
       final int indexOfPoint = profil.indexOfPoint( point );
