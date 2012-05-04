@@ -61,6 +61,8 @@ public class RrmSimulation
 
   private static final String FOLDER_AKTUELL = "Aktuell"; //$NON-NLS-1$
 
+  private static final String FOLDER_BILANZ = "Bilanz"; //$NON-NLS-1$
+
   private static final String FOLDER_LOG = "Log"; //$NON-NLS-1$
 
   private static final String FOLDER_REPORT = "Report"; //$NON-NLS-1$
@@ -76,6 +78,8 @@ public class RrmSimulation
   private static final String FILE_HYDROTOP_GML = "hydrotop.gml"; //$NON-NLS-1$
 
   private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
+
+  public static final String FILE_BILANZ_TXT = "bilanz.txt"; //$NON-NLS-1$
 
   public static final String FILE_CALCULATION_LOG = "calculation.log"; //$NON-NLS-1$
 
@@ -138,6 +142,11 @@ public class RrmSimulation
     return getResultsFolder().getFolder( FOLDER_AKTUELL );
   }
 
+  public IFolder getBilanzFolder( )
+  {
+    return getCurrentResultsFolder().getFolder( FOLDER_BILANZ );
+  }
+
   public IFolder getLogFolder( )
   {
     return getCurrentResultsFolder().getFolder( FOLDER_LOG );
@@ -186,6 +195,11 @@ public class RrmSimulation
   public IFile getSyntnGml( )
   {
     return getModelsFolder().getFile( FILE_SYNTHN_GML );
+  }
+
+  public IFile getBilanzTxt( )
+  {
+    return getBilanzFolder().getFile( FILE_BILANZ_TXT );
   }
 
   public IFile getCalculationLog( )

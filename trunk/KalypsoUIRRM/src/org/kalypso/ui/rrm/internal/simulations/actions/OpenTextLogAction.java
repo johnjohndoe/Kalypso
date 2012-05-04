@@ -52,7 +52,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 
@@ -64,14 +63,9 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 public class OpenTextLogAction extends Action
 {
   /**
-   * The simulation.
+   * The text file.
    */
-  private final RrmSimulation m_simulation;
-
-  /**
-   * If true, the calculation.log will be opened. If false, the statistics.csv will be opened.
-   */
-  private final boolean m_calculationLog;
+  private final IFile m_textFile;
 
   /**
    * The constructor.
@@ -80,19 +74,16 @@ public class OpenTextLogAction extends Action
    *          The text.
    * @param tooltipText
    *          The tooltip text.
-   * @param simulation
-   *          The simulation.
-   * @param calculationLog
-   *          If true, the calculation.log will be opened. If false, the statistics.csv will be opened.
+   * @param textFile
+   *          The text file.
    */
-  public OpenTextLogAction( final String text, final String tooltipText, final RrmSimulation simulation, final boolean calculationLog )
+  public OpenTextLogAction( final String text, final String tooltipText, final IFile textFile )
   {
     super( text );
 
     setToolTipText( tooltipText );
 
-    m_simulation = simulation;
-    m_calculationLog = calculationLog;
+    m_textFile = textFile;
   }
 
   /**
@@ -104,17 +95,7 @@ public class OpenTextLogAction extends Action
     try
     {
       /* Get the file. */
-      File textFile = null;
-      if( m_calculationLog )
-      {
-        final IFile calculationLog = m_simulation.getCalculationLog();
-        textFile = calculationLog.getLocation().toFile();
-      }
-      else
-      {
-        final IFile statisticsCsv = m_simulation.getStatisticsCsv();
-        textFile = statisticsCsv.getLocation().toFile();
-      }
+      final File textFile = m_textFile.getLocation().toFile();
 
       /* Check if the text file exists. */
       if( !textFile.exists() )

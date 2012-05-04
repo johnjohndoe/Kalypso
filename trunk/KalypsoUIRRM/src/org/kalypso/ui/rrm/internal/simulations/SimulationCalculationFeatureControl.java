@@ -62,6 +62,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
@@ -90,14 +91,19 @@ import org.kalypsodeegree.model.feature.Feature;
 public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 {
   /**
-   * The calculation status composite.
+   * The execution status composite.
    */
-  protected StatusComposite m_calculationStatusComposite;
+  protected StatusComposite m_executionStatusComposite;
 
   /**
    * The validation status composite.
    */
   protected StatusComposite m_validationStatusComposite;
+
+  /**
+   * The calculation status composite.
+   */
+  protected StatusComposite m_calculationStatusComposite;
 
   /**
    * The constructor.
@@ -108,8 +114,9 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
   {
     super( ftp );
 
-    m_calculationStatusComposite = null;
+    m_executionStatusComposite = null;
     m_validationStatusComposite = null;
+    m_calculationStatusComposite = null;
   }
 
   /**
@@ -132,23 +139,74 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
   {
     /* Create the main composite. */
     final Composite main = new Composite( parent, style );
-    main.setLayout( new GridLayout( 2, false ) );
+    main.setLayout( new GridLayout( 1, false ) );
 
     try
     {
       /* Create a label. */
-      final Label calculationLabel = new Label( main, SWT.NONE );
-      calculationLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-      calculationLabel.setText( "Calculation status:" );
+      final Label statiLabel = new Label( main, SWT.NONE );
+      statiLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      statiLabel.setText( "Stati:" );
 
       /* Create a status composite. */
-      m_calculationStatusComposite = new StatusComposite( main, SWT.NONE );
+      m_executionStatusComposite = new StatusComposite( main, SWT.NONE );
+      m_executionStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      m_executionStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
+
+      /* Create a status composite. */
+      m_validationStatusComposite = new StatusComposite( main, SWT.NONE );
+      m_validationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      m_validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
+
+      /* Create a empty label. */
+      final Label emptyLabel1 = new Label( main, SWT.NONE );
+      emptyLabel1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+      /* Create a group. */
+      final Group resultsGroup = new Group( main, SWT.NONE );
+      resultsGroup.setLayout( new GridLayout( 1, false ) );
+      resultsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+      resultsGroup.setText( "Rechenergebnisse" );
+
+      /* Create a status composite. */
+      m_calculationStatusComposite = new StatusComposite( resultsGroup, SWT.NONE );
       m_calculationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       m_calculationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
 
+      /* Create a empty label. */
+      final Label emptyLabel2 = new Label( resultsGroup, SWT.NONE );
+      emptyLabel2.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+      /* Get the current simulation. */
+      final RrmSimulation simulation = getSimulation();
+
+      /* Create the actions. */
+      final List<Action> actions = new ArrayList<Action>();
+      actions.add( new OpenTextLogAction( "Calculation log", "Displays the calculation log.", simulation.getCalculationLog() ) );
+
+      // TODO This action may be added and implemented later (only the stub exists)...
+      // actions.add( new OpenErrorGmlAction( "Error log", "Displays the error log.", simulation ) );
+
+      actions.add( new OpenOutputZipAction( "Error log (calculation core)", "Displays the error log.", simulation, true ) );
+      actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
+      actions.add( new OpenTextLogAction( "Mass Balance", "Displays the mass balance.", simulation.getBilanzTxt() ) );
+      actions.add( new OpenTextLogAction( "Statistics", "Displays the statistics.", simulation.getStatisticsCsv() ) );
+
+      /* Create the image hyperlinks. */
+      for( final Action action : actions )
+      {
+        final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, resultsGroup, SWT.NONE, action );
+        imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+        imageHyperlink.setText( action.getText() );
+      }
+
+      /* Create a empty label. */
+      final Label emptyLabel3 = new Label( resultsGroup, SWT.NONE );
+      emptyLabel3.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
       /* Create a button. */
-      final Button calculationButton = new Button( main, SWT.PUSH );
-      calculationButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+      final Button calculationButton = new Button( resultsGroup, SWT.PUSH );
+      calculationButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
       calculationButton.setText( "Calculate" );
       calculationButton.addSelectionListener( new SelectionAdapter()
       {
@@ -159,42 +217,6 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
         }
       } );
 
-      /* Create a label. */
-      final Label validationLabel = new Label( main, SWT.NONE );
-      validationLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-      validationLabel.setText( "Validation status:" );
-
-      /* Create a status composite. */
-      m_validationStatusComposite = new StatusComposite( main, SWT.NONE );
-      m_validationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-      m_validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
-
-      /* Empty label. */
-      final Label emptyLabel = new Label( main, SWT.NONE );
-      emptyLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-
-      /* Get the current simulation. */
-      final RrmSimulation simulation = getSimulation();
-
-      /* Create the actions. */
-      final List<Action> actions = new ArrayList<Action>();
-      actions.add( new OpenTextLogAction( "Calculation log", "Displays the calculation log.", simulation, true ) );
-
-      // TODO This action may be added and implemented later (only the stub exists)...
-      // actions.add( new OpenErrorGmlAction( "Error log", "Displays the error log.", simulation ) );
-
-      actions.add( new OpenOutputZipAction( "Error log (calculation core)", "Displays the error log.", simulation, true ) );
-      actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
-      actions.add( new OpenTextLogAction( "Statistics", "Displays the statistics.", simulation, false ) );
-
-      /* Create the image hyperlinks. */
-      for( final Action action : actions )
-      {
-        final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, main, SWT.NONE, action );
-        imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-        imageHyperlink.setText( action.getText() );
-      }
-
       /* Initialize. */
       initialize( simulation );
     }
@@ -202,9 +224,9 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     {
       ex.printStackTrace();
 
-      final Label emptyLabel = new Label( main, SWT.WRAP );
-      emptyLabel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
-      emptyLabel.setText( ex.getLocalizedMessage() );
+      final Label errorLabel = new Label( main, SWT.WRAP );
+      errorLabel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+      errorLabel.setText( ex.getLocalizedMessage() );
     }
 
     return main;
@@ -244,31 +266,6 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
   private void initialize( final RrmSimulation simulation )
   {
-    /* Create the read calculation status job. */
-    final ReadCalculationStatusJob calculationJob = new ReadCalculationStatusJob( simulation );
-    calculationJob.setUser( false );
-    calculationJob.addJobChangeListener( new JobChangeAdapter()
-    {
-      @Override
-      public void done( final IJobChangeEvent event )
-      {
-        final Job job = event.getJob();
-        if( !(job instanceof ReadCalculationStatusJob) )
-          return;
-
-        final IStatus result = job.getResult();
-        if( !result.isOK() )
-        {
-          setCalculationStatus( result );
-          return;
-        }
-
-        final ReadCalculationStatusJob task = (ReadCalculationStatusJob) job;
-        final IStatus calculationStatus = task.getCalculationStatus();
-        setCalculationStatus( calculationStatus );
-      }
-    } );
-
     /* Create the validate simulation job. */
     final ValidateSimulationJob validationJob = new ValidateSimulationJob( (NAControl) getFeature() );
     validationJob.setUser( false );
@@ -294,9 +291,35 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       }
     } );
 
+    /* Create the read calculation status job. */
+    final ReadCalculationStatusJob calculationJob = new ReadCalculationStatusJob( simulation );
+    calculationJob.setUser( false );
+    calculationJob.addJobChangeListener( new JobChangeAdapter()
+    {
+      @Override
+      public void done( final IJobChangeEvent event )
+      {
+        final Job job = event.getJob();
+        if( !(job instanceof ReadCalculationStatusJob) )
+          return;
+
+        final IStatus result = job.getResult();
+        if( !result.isOK() )
+        {
+          setCalculationStatus( result );
+          return;
+        }
+
+        final ReadCalculationStatusJob task = (ReadCalculationStatusJob) job;
+        final IStatus calculationStatus = task.getCalculationStatus();
+
+        setCalculationStatus( calculationStatus );
+      }
+    } );
+
     /* Schedule the jobs. */
-    calculationJob.schedule();
     validationJob.schedule();
+    calculationJob.schedule();
   }
 
   protected void handleCalculatePressed( )
@@ -316,17 +339,17 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     // TODO Calculate with tasks in an operation...
   }
 
-  protected void setCalculationStatus( final IStatus calculationStatus )
+  protected void setExecutionStatus( final IStatus executionStatus )
   {
-    if( m_calculationStatusComposite == null || m_calculationStatusComposite.isDisposed() )
+    if( m_executionStatusComposite == null || m_executionStatusComposite.isDisposed() )
       return;
 
-    m_calculationStatusComposite.getDisplay().asyncExec( new Runnable()
+    m_executionStatusComposite.getDisplay().asyncExec( new Runnable()
     {
       @Override
       public void run( )
       {
-        m_calculationStatusComposite.setStatus( calculationStatus );
+        m_executionStatusComposite.setStatus( executionStatus );
       }
     } );
   }
@@ -342,6 +365,21 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       public void run( )
       {
         m_validationStatusComposite.setStatus( validationStatus );
+      }
+    } );
+  }
+
+  protected void setCalculationStatus( final IStatus calculationStatus )
+  {
+    if( m_calculationStatusComposite == null || m_calculationStatusComposite.isDisposed() )
+      return;
+
+    m_calculationStatusComposite.getDisplay().asyncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        m_calculationStatusComposite.setStatus( calculationStatus );
       }
     } );
   }

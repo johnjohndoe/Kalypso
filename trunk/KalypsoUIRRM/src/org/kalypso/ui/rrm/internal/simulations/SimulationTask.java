@@ -48,6 +48,7 @@ package org.kalypso.ui.rrm.internal.simulations;
 public enum SimulationTask
 {
   COPY_BASE_DATA("Copy base data"),
+  CALCULATE_START_CONDITION("Calculate start condition"),
   CALCULATE_CATCHMENT_MODEL_N("Calculate catchment model (precipitation)"),
   CALCULATE_CATCHMENT_MODEL_T("Calculate catchment model (temperature)"),
   CALCULATE_CATCHMENT_MODEL_E("Calculate catchment model (evaporation)"),
