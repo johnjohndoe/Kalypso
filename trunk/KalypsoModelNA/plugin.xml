@@ -387,6 +387,22 @@
                 class="org.kalypso.model.hydrology.internal.cm.binding.CatchmentModel"
                 qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}CatchmentModel">
           </feature>
+          <feature
+                class="org.kalypso.model.hydrology.internal.cm.binding.LinearSumGenerator"
+                qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}LinearSumGenerator">
+          </feature>
+          <feature
+                class="org.kalypso.model.hydrology.internal.cm.binding.Catchment"
+                qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}Catchment">
+          </feature>
+          <feature
+                class="org.kalypso.model.hydrology.internal.cm.binding.FactorizedTimeseries"
+                qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}FactorizedTimeseries">
+          </feature>
+          <feature
+                class="org.kalypso.model.hydrology.internal.cm.binding.MultiGenerator"
+                qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}MultiGenerator">
+          </feature>
      </extension>
      
    <extension

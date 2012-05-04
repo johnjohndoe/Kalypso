@@ -13,14 +13,15 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.ui,
  org.kalypso.ModelSimulationBase;visibility:=reexport,
  org.eclipse.wst.xml.core;resolution:=optional,
- org.kalypso.model.rcm;bundle-version="11.6.4",
- org.kalypso.zml.core;bundle-version="11.6.4"
+ org.kalypso.model.rcm,
+ org.kalypso.zml.core
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.kalypso.model.hydrology,
  org.kalypso.model.hydrology.binding,
  org.kalypso.model.hydrology.binding._11_6,
+ org.kalypso.model.hydrology.binding.cm,
  org.kalypso.model.hydrology.binding.control,
  org.kalypso.model.hydrology.binding.initialValues,
  org.kalypso.model.hydrology.binding.model,
@@ -39,5 +40,6 @@ Export-Package: org.kalypso.model.hydrology,
  org.kalypso.model.hydrology.project,
  org.kalypso.model.hydrology.timeseries,
  org.kalypso.model.hydrology.timeseries.binding,
+ org.kalypso.model.hydrology.util.cm,
  org.kalypso.model.hydrology.util.optimize
 Bundle-Activator: org.kalypso.model.hydrology.internal.ModelNA

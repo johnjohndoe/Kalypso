@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;

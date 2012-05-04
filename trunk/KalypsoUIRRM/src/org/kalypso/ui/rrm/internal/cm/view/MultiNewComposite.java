@@ -46,7 +46,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.rcm.binding.IMultiGenerator;
+import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;

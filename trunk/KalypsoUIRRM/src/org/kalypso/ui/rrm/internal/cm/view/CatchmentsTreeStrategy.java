@@ -46,7 +46,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.kalypso.model.hydrology.binding.ICatchmentModel;
+import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;

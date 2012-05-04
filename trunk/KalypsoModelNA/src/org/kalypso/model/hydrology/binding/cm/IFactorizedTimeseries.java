@@ -24,7 +24,7 @@
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  Lesser General License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
@@ -38,54 +38,59 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm.internal.binding;
+package org.kalypso.model.hydrology.binding.cm;
 
 import java.math.BigDecimal;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
+import javax.xml.namespace.QName;
+
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * The factorized timeseries.
- *
+ * 
  * @author Holger Albert
  */
-public class FactorizedTimeseries extends Feature_Impl implements IFactorizedTimeseries
+public interface IFactorizedTimeseries extends Feature
 {
-  public FactorizedTimeseries( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  /**
+   * The qname of the factorized timeseries.
+   */
+  QName FEATURE_FACTORIZED_TIMESERIES = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "FactorizedTimeseries" ); //$NON-NLS-1$
 
-  @Override
-  public BigDecimal getFactor( )
-  {
-    return getProperty( PROPERTY_FACTOR, BigDecimal.class );
-  }
+  /**
+   * The qname of the factor.
+   */
+  QName PROPERTY_FACTOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "factor" ); //$NON-NLS-1$
 
-  @Override
-  public void setFactor( final BigDecimal factor )
-  {
-    setProperty( PROPERTY_FACTOR, factor );
-  }
+  /**
+   * The qname of the timeseries link.
+   */
+  QName PROPERTY_TIMESERIES_LINK = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "timeseriesLink" ); //$NON-NLS-1$
 
-  @Override
-  public ZmlLink getTimeseriesLink( )
-  {
-    return new ZmlLink( this, PROPERTY_TIMESERIES_LINK, getWorkspace().getContext() );
-  }
+  /**
+   * This function returns the factor.
+   * 
+   * @return The factor.
+   */
+  BigDecimal getFactor( );
 
-  @Override
-  public void setTimeseriesLink( final String href )
-  {
-    final TimeseriesLinkType link = new TimeseriesLinkType();
+  /**
+   * Set the factor for this timeseries
+   */
+  void setFactor( BigDecimal factor );
 
-    link.setHref( href );
+  /**
+   * This function returns the timeseries link.
+   * 
+   * @return The timeseries link.
+   */
+  ZmlLink getTimeseriesLink( );
 
-    setProperty( PROPERTY_TIMESERIES_LINK, link );
-  }
+  /**
+   * Set the timeseries link for this timeseries.
+   */
+  void setTimeseriesLink( String href );
 }

@@ -41,7 +41,7 @@
 package org.kalypso.ui.rrm.internal.cm.view.provider;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 
 /**
  * @author Holger Albert

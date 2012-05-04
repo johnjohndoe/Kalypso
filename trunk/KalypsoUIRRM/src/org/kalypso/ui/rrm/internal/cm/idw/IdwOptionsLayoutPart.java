@@ -62,7 +62,7 @@ import org.kalypso.contribs.eclipse.swt.events.IntegerModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.core.layoutwizard.part.AbstractLayoutPart;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 

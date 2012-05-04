@@ -43,7 +43,7 @@ package org.kalypso.ui.rrm.internal.cm.view;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 

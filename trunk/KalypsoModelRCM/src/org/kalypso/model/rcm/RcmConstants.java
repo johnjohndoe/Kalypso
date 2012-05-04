@@ -50,6 +50,4 @@ public interface RcmConstants
   String NS_THIESSEN = "org.kalypso.model.rcm.thiessen"; //$NON-NLS-1$
 
   String NS_RCM = "org.kalypso.model.rcm.v2"; //$NON-NLS-1$
-
-  String NS_CM = "org.kalypso.model.cm"; //$NON-NLS-1$
 }

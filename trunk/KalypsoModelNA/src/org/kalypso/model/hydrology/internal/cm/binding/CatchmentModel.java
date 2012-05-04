@@ -42,7 +42,7 @@ package org.kalypso.model.hydrology.internal.cm.binding;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.binding.ICatchmentModel;
+import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;

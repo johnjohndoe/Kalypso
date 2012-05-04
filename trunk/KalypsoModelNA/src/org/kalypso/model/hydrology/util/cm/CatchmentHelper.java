@@ -38,41 +38,56 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view.comparator;
+package org.kalypso.model.hydrology.util.cm;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
-import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import org.apache.commons.lang3.StringUtils;
+import org.kalypso.model.hydrology.binding.cm.ICatchment;
+import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
+import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
- * A viewer comparator.
- * 
  * @author Holger Albert
  */
-public class CommentComparator extends ViewerComparator
+public class CatchmentHelper
 {
   /**
    * The constructor.
    */
-  public CommentComparator( )
+  private CatchmentHelper( )
   {
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * This function creates a hash from the catchment.<br/>
+   * <br/>
+   * A hash is generated from the catchment. It takes the factors/timeseries into account. An equal combination of
+   * factors and timeseries creates the same hash.
+   * 
+   * @param catchment
+   *          The catchment.
+   * @return The hash.
    */
-  @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
+  public static String buildHash( final ICatchment catchment )
   {
-    if( e1 instanceof ILinearSumGenerator && e2 instanceof ILinearSumGenerator )
-    {
-      final ILinearSumGenerator g1 = (ILinearSumGenerator) e1;
-      final ILinearSumGenerator g2 = (ILinearSumGenerator) e2;
+    /* Memory for the single values. */
+    final List<String> values = new ArrayList<String>();
 
-      return g1.getComment().compareTo( g2.getComment() );
+    /* Build the hash. */
+    final IFeatureBindingCollection<IFactorizedTimeseries> factorizedTimeseries = catchment.getFactorizedTimeseries();
+    for( final IFactorizedTimeseries timeseries : factorizedTimeseries )
+    {
+      final BigDecimal factor = timeseries.getFactor();
+      final ZmlLink link = timeseries.getTimeseriesLink();
+      values.add( String.format( Locale.PRC, "%s_%s", factor.toPlainString(), link.getHref() ) ); //$NON-NLS-1$
     }
 
-    return super.compare( viewer, e1, e2 );
+    /* Join the values. */
+    return StringUtils.join( values.toArray( new String[] {} ), ";" ); //$NON-NLS-1$
   }
 }

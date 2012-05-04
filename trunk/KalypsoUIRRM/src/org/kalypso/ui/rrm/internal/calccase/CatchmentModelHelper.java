@@ -69,15 +69,15 @@ import org.kalypso.contribs.java.math.IntervalUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.model.hydrology.binding.cm.ICatchment;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.model.rcm.binding.ICatchment;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
-import org.kalypso.model.rcm.binding.IMultiGenerator;
+import org.kalypso.model.hydrology.util.cm.CatchmentHelper;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
-import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -398,8 +398,8 @@ public class CatchmentModelHelper
       if( includeTimeseries )
       {
         /* Build the hash. */
-        final String hash1 = RainfallGeneratorUtilities.buildHash( catchment1 );
-        final String hash2 = RainfallGeneratorUtilities.buildHash( catchment2 );
+        final String hash1 = CatchmentHelper.buildHash( catchment1 );
+        final String hash2 = CatchmentHelper.buildHash( catchment2 );
         if( !hash1.equals( hash2 ) )
           return false;
       }

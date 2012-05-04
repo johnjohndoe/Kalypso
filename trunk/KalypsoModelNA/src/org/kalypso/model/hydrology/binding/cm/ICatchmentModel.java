@@ -24,7 +24,7 @@
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General License for more details.
+ *  Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
@@ -38,59 +38,32 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm.binding;
-
-import java.math.BigDecimal;
+package org.kalypso.model.hydrology.binding.cm;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.model.rcm.RcmConstants;
-import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
- * The factorized timeseries.
+ * The catchment model contains generators for timeseries generation for catchments.
  *
  * @author Holger Albert
  */
-public interface IFactorizedTimeseries extends Feature
+public interface ICatchmentModel extends IModel
 {
   /**
-   * The qname of the factorized timeseries.
+   * The qname of the generator member.
    */
-  QName FEATURE_FACTORIZED_TIMESERIES = new QName( RcmConstants.NS_CM, "FactorizedTimeseries" ); //$NON-NLS-1$
+  QName MEMBER_CATCHMENT_GENERATOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "generatorMember" );
 
   /**
-   * The qname of the factor.
-   */
-  QName PROPERTY_FACTOR = new QName( RcmConstants.NS_CM, "factor" ); //$NON-NLS-1$
-
-  /**
-   * The qname of the timeseries link.
-   */
-  QName PROPERTY_TIMESERIES_LINK = new QName( RcmConstants.NS_CM, "timeseriesLink" ); //$NON-NLS-1$
-
-  /**
-   * This function returns the factor.
+   * This function returns all catchment generators.
    *
-   * @return The factor.
+   * @return All catchment generators.
    */
-  BigDecimal getFactor( );
-
-  /**
-   * Set the factor for this timeseries
-   */
-  void setFactor( BigDecimal factor );
-
-  /**
-   * This function returns the timeseries link.
-   *
-   * @return The timeseries link.
-   */
-  ZmlLink getTimeseriesLink( );
-
-  /**
-   * Set the timeseries link for this timeseries.
-   */
-  void setTimeseriesLink( String href );
+  IFeatureBindingCollection<IRainfallGenerator> getGenerators( );
 }

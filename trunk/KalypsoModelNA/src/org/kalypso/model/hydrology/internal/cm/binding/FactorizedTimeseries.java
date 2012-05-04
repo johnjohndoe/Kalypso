@@ -38,32 +38,54 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding;
+package org.kalypso.model.hydrology.internal.cm.binding;
 
-import javax.xml.namespace.QName;
+import java.math.BigDecimal;
 
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.rcm.binding.IRainfallGenerator;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-
-import de.renew.workflow.connector.cases.IModel;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
+import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * The catchment model contains generators for timeseries generation for catchments.
+ * The factorized timeseries.
  *
  * @author Holger Albert
  */
-public interface ICatchmentModel extends IModel
+public class FactorizedTimeseries extends Feature_Impl implements IFactorizedTimeseries
 {
-  /**
-   * The qname of the generator member.
-   */
-  QName MEMBER_CATCHMENT_GENERATOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "generatorMember" );
+  public FactorizedTimeseries( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
 
-  /**
-   * This function returns all catchment generators.
-   *
-   * @return All catchment generators.
-   */
-  IFeatureBindingCollection<IRainfallGenerator> getGenerators( );
+  @Override
+  public BigDecimal getFactor( )
+  {
+    return getProperty( PROPERTY_FACTOR, BigDecimal.class );
+  }
+
+  @Override
+  public void setFactor( final BigDecimal factor )
+  {
+    setProperty( PROPERTY_FACTOR, factor );
+  }
+
+  @Override
+  public ZmlLink getTimeseriesLink( )
+  {
+    return new ZmlLink( this, PROPERTY_TIMESERIES_LINK, getWorkspace().getContext() );
+  }
+
+  @Override
+  public void setTimeseriesLink( final String href )
+  {
+    final TimeseriesLinkType link = new TimeseriesLinkType();
+
+    link.setHref( href );
+
+    setProperty( PROPERTY_TIMESERIES_LINK, link );
+  }
 }

@@ -38,11 +38,12 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm.binding;
+package org.kalypso.model.hydrology.binding.cm;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.model.rcm.RcmConstants;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -55,12 +56,12 @@ public interface IMultiGenerator extends IRainfallGenerator
   /**
    * The qname of the multi generator.
    */
-  QName FEATURE_MULTI_GENERATOR = new QName( RcmConstants.NS_CM, "MultiGenerator" ); //$NON-NLS-1$
+  QName FEATURE_MULTI_GENERATOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "MultiGenerator" ); //$NON-NLS-1$
 
   /**
    * The qname of the sub generator member.
    */
-  QName MEMBER_SUB_GENERATOR = new QName( RcmConstants.NS_CM, "subGeneratorMember" ); // $NON-NLS-1$
+  QName MEMBER_SUB_GENERATOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "subGeneratorMember" ); // $NON-NLS-1$
 
   /**
    * This function returns all sub generators.

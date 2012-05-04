@@ -44,10 +44,10 @@ import javax.xml.namespace.QName;
 
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.DateRange;
 

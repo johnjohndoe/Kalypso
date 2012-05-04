@@ -47,7 +47,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.model.hydrology.binding.ICatchmentModel;
+import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesNodeLabelComparator;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
