@@ -50,7 +50,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.model.hydrology.binding.ICatchmentModel;
+import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView;

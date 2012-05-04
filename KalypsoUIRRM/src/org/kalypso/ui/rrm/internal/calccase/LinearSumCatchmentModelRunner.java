@@ -61,18 +61,18 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.cm.ICatchment;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.model.hydrology.util.cm.CatchmentHelper;
 import org.kalypso.model.rcm.IRainfallModelProvider;
 import org.kalypso.model.rcm.RainfallGenerationOperation;
-import org.kalypso.model.rcm.binding.ICatchment;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IRainfallCatchmentModel;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.binding.ITarget;
 import org.kalypso.model.rcm.util.PlainRainfallModelProvider;
-import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -214,7 +214,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
         workspaceToSave = catchment.getWorkspace();
 
       /* Build the hash. */
-      final String hash = RainfallGeneratorUtilities.buildHash( generatorCatchment );
+      final String hash = CatchmentHelper.buildHash( generatorCatchment );
 
       /* If the link hash contains this hash code, the corresponding link will be used. */
       if( linkHash.containsKey( hash ) )

@@ -38,11 +38,11 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm.binding;
+package org.kalypso.model.hydrology.binding.cm;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.model.rcm.RcmConstants;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -57,17 +57,17 @@ public interface ICatchment extends Feature
   /**
    * The qname of the catchment.
    */
-  QName FEATURE_CATCHMENT = new QName( RcmConstants.NS_CM, "Catchment" );
+  QName FEATURE_CATCHMENT = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "Catchment" );
 
   /**
    * The qname of the area link.
    */
-  QName PROPERTY_AREA_LINK = new QName( RcmConstants.NS_CM, "areaLink" );
+  QName PROPERTY_AREA_LINK = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaLink" );
 
   /**
    * The qname of the factorized timeseries member.
    */
-  QName MEMBER_FACTORIZED_TIMESERIES = new QName( RcmConstants.NS_CM, "factorizedTimeseriesMember" );
+  QName MEMBER_FACTORIZED_TIMESERIES = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "factorizedTimeseriesMember" );
 
   /**
    * This function returns the area link.

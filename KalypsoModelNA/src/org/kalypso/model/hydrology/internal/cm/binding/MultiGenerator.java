@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm.internal.binding;
+package org.kalypso.model.hydrology.internal.cm.binding;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.runtime.ILog;
@@ -46,8 +46,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
-import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;

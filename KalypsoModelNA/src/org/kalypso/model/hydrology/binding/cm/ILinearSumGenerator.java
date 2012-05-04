@@ -38,12 +38,13 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm.binding;
+package org.kalypso.model.hydrology.binding.cm;
 
 import javax.xml.namespace.QName;
 
 import org.joda.time.LocalTime;
-import org.kalypso.model.rcm.RcmConstants;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -57,42 +58,42 @@ public interface ILinearSumGenerator extends IRainfallGenerator
   /**
    * The qname of the linear sum generator.
    */
-  QName FEATURE_LINEAR_SUM_GENERATOR = new QName( RcmConstants.NS_CM, "LinearSumGenerator" ); //$NON-NLS-1$
+  QName FEATURE_LINEAR_SUM_GENERATOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "LinearSumGenerator" ); //$NON-NLS-1$
 
   /**
    * The qname of the comment.
    */
-  QName PROPERTY_COMMENT = new QName( RcmConstants.NS_CM, "comment" ); // $NON-NLS-1$
+  QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "comment" ); // $NON-NLS-1$
 
   /**
    * The qname of the timestep.
    */
-  QName PROPERTY_TIMESTEP = new QName( RcmConstants.NS_CM, "timestep" ); // $NON-NLS-1$
+  QName PROPERTY_TIMESTEP = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "timestep" ); // $NON-NLS-1$
 
   /**
    * The qname of the timestamp.
    */
-  QName PROPERTY_TIMESTAMP = new QName( RcmConstants.NS_CM, "timestamp" ); // $NON-NLS-1$
+  QName PROPERTY_TIMESTAMP = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "timestamp" ); // $NON-NLS-1$
 
   /**
    * The qname of the area name property.
    */
-  QName PROPERTY_AREA_NAME = new QName( RcmConstants.NS_CM, "areaNameProperty" ); // $NON-NLS-1$
+  QName PROPERTY_AREA_NAME = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaNameProperty" ); // $NON-NLS-1$
 
   /**
    * The qname of the area description property.
    */
-  QName PROPERTY_AREA_DESCRIPTION = new QName( RcmConstants.NS_CM, "areaDescriptionProperty" ); // $NON-NLS-1$
+  QName PROPERTY_AREA_DESCRIPTION = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaDescriptionProperty" ); // $NON-NLS-1$
 
   /**
    * The qname of the area property.
    */
-  QName PROPERTY_AREA = new QName( RcmConstants.NS_CM, "areaProperty" ); // $NON-NLS-1$
+  QName PROPERTY_AREA = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaProperty" ); // $NON-NLS-1$
 
   /**
    * The qname of the catchment member.
    */
-  QName MEMBER_CATCHMENT = new QName( RcmConstants.NS_CM, "catchmentMember" ); // $NON-NLS-1$
+  QName MEMBER_CATCHMENT = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "catchmentMember" ); // $NON-NLS-1$
 
   /**
    * This function returns the comment.

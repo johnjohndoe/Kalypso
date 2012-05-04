@@ -65,7 +65,7 @@ import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.layoutwizard.part.AbstractLayoutPart;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.cm.view.InitThiessenTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumNewComposite;

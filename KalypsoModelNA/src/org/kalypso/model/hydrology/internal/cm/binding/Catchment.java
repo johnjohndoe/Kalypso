@@ -38,15 +38,15 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm.internal.binding;
+package org.kalypso.model.hydrology.internal.cm.binding;
 
 import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.rcm.binding.ICatchment;
-import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.cm.ICatchment;
+import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Surface;

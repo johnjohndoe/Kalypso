@@ -46,10 +46,17 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.Path;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -367,15 +374,31 @@ public class NAControl extends Feature_Impl
 
   private long getLastModifiedInputData( )
   {
-    /* This is the last modified timestamp of the model.gml. */
-    // TODO
+    try
+    {
+      /* Get the .models folder of the current scenario. */
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IContainer scenarioFolder = dataProvider.getScenarioFolder();
+      final IFolder modelsFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_MODELS ) );
 
-    /* This is the last modified timestamp of the parameter.gml. */
-    // TODO
+      /* This is the last modified timestamp of the modell.gml. */
+      final IFile modellFile = modelsFolder.getFile( INaProjectConstants.GML_MODELL_FILE );
+      final long modellLastModified = modellFile.getLocation().toFile().lastModified();
 
-    /* This is the last modified timestamp of the hydrotop.gml. */
-    // TODO
+      /* This is the last modified timestamp of the parameter.gml. */
+      final IFile parameterFile = modelsFolder.getFile( INaProjectConstants.GML_PARAMETER_FILE );
+      final long parameterLastModified = parameterFile.getLocation().toFile().lastModified();
 
-    return -1;
+      /* This is the last modified timestamp of the hydrotop.gml. */
+      final IFile hydrotopFile = modelsFolder.getFile( INaProjectConstants.GML_HYDROTOP_FILE );
+      final long hydrotopLastModified = hydrotopFile.getLocation().toFile().lastModified();
+
+      return NumberUtils.max( new long[] { modellLastModified, parameterLastModified, hydrotopLastModified } );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      return -1;
+    }
   }
 }

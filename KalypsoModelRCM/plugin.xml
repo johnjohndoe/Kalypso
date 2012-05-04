@@ -64,22 +64,6 @@
             class="org.kalypso.model.rcm.internal.binding.Target"
             qname="{org.kalypso.model.rcm.v2}Target">
       </feature>
-      <feature
-            class="org.kalypso.model.rcm.internal.binding.LinearSumGenerator"
-            qname="{org.kalypso.model.cm}LinearSumGenerator">
-      </feature>
-      <feature
-            class="org.kalypso.model.rcm.internal.binding.Catchment"
-            qname="{org.kalypso.model.cm}Catchment">
-      </feature>
-      <feature
-            class="org.kalypso.model.rcm.internal.binding.FactorizedTimeseries"
-            qname="{org.kalypso.model.cm}FactorizedTimeseries">
-      </feature>
-      <feature
-            class="org.kalypso.model.rcm.internal.binding.MultiGenerator"
-            qname="{org.kalypso.model.cm}MultiGenerator">
-      </feature>
    </extension>
 
 </plugin>
