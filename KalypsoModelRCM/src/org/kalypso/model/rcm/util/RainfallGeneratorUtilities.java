@@ -281,4 +281,31 @@ public final class RainfallGeneratorUtilities
     /* Join the values. */
     return StringUtils.join( values.toArray( new String[] {} ), ";" ); //$NON-NLS-1$
   }
+  
+  /**
+   * This function finds the name of the catchment. It will check the description and the name attribute of the
+   * catchment.
+   * 
+   * @param catchment
+   *          The catchment.
+   * @return The name or null.
+   */
+  public static String findName( final Feature catchment )
+  {
+    /* No catchment available. */
+    if( catchment == null )
+      return null;
+
+    /* Get the description. */
+    final String description = catchment.getDescription();
+    if( description != null && description.length() > 0 )
+      return description;
+
+    /* Get the name. */
+    final String name = catchment.getName();
+    if( name != null && name.length() > 0 )
+      return name;
+
+    return null;
+  }
 }

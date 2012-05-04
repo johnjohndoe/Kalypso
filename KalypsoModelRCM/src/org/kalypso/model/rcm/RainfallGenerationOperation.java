@@ -68,10 +68,14 @@ import org.kalypso.model.rcm.binding.IRainfallCatchmentModel;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.binding.ITarget;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
+import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.utils.log.GeoStatusLog;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -218,16 +222,38 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
 
       for( int i = 0; i < links.length; i++ )
       {
-        final IObservation obs = observations[i];
         final TimeseriesLinkType link = links[i];
-        if( obs == null || link == null )
+        if( link == null )
           continue;
 
-        final URL context = catchmentFeatures[i].getWorkspace().getContext();
+        /* Get the observation. */
+        /* If it is null, use the request defined in the filter to create a default one. */
+        IObservation obs = observations[i];
+        if( obs == null )
+          obs = RequestFactory.createDefaultObservation( targetFilter );
 
+        /* If it is still null, continue. */
+        if( obs == null )
+          continue;
+
+        /* Get the catchment feature. */
+        final Feature catchmentFeature = catchmentFeatures[i];
+
+        /* Update the name. */
+        final String name = RainfallGeneratorUtilities.findName( catchmentFeature );
+        if( name != null && name.length() > 0 )
+        {
+          final MetadataList metadata = obs.getMetadataList();
+          metadata.setProperty( ITimeseriesConstants.MD_NAME, name );
+        }
+
+        /* Decorate the observation. */
         final IObservation filteredObs = ZmlFactory.decorateObservation( obs, targetFilter, null );
         final IRequest request = new ObservationRequest( period );
+
+        final URL context = catchmentFeature.getWorkspace().getContext();
         final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
+
         File file = ResourceUtilities.findJavaFileFromURL( location );
         if( file == null )
           file = FileUtils.toFile( location );
