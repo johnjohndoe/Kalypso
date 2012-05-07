@@ -540,6 +540,11 @@
 			<!-- non workflow -->
             <command id="org.kalypso.model.rrm.simulationManagement.refreshSimulations" name="Create Simulations"/>
             <command
+                  description="%org.kalypso.model.rrm.resultView.description"
+                  id="org.kalypso.model.rrm.resultView"
+                  name="%org.kalypso.model.rrm.resultView.name">
+            </command>
+            <command
                   id="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items"
                   name="Öffne Baumelemente">
             </command>
@@ -579,6 +584,10 @@
             <image commandId="org.kalypso.model.rrm.simulationManagement" icon="icons/simulations/simulation.gif"/>
 
             <image commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" icon="icons/simulations/refreshSimulations.gif"/>
+            <image
+                  commandId="org.kalypso.model.rrm.resultView"
+                  icon="icons/resultview/resultView.png">
+            </image>
             <image
                   commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items"
                   icon="icons/timeseries/expandall.gif">
