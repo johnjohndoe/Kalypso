@@ -23,6 +23,8 @@
 
   <Task URI="org.kalypso.model.rrm.simulationManagement" context="SimulationManagementContext" />
 
+  <Task URI="org.kalypso.model.rrm.resultView" context="ResultViewContext" />
+
   <Perspectives>
     <con:PerspectiveContext id="ContextHydrology" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
 
@@ -143,6 +145,26 @@
       <con:WorkbenchSiteContext id="SimulationManagementContext" parent="ContextHydrology">
         <con:ViewContext id="GttView" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart" parent="ContextHydrology" />
       </con:WorkbenchSiteContext>
+
+
+      <!-- Result View -->
+      <con:WorkbenchSiteContext id="ResultViewContext" parent="ContextHydrology">
+        <con:ViewContext id="ResultViewTreeView" partId="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" parent="ResultViewContext" />
+
+        <!--
+        <con:ViewContext id="TimeseriesPropertiesView" partId="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" parent="TimeseriesManagementContext" />
+        <con:ViewContext id="TimeseriesDiagramView" partId="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView" parent="TimeseriesManagementContext" />
+
+        <con:ViewContext id="TimeseriesStationMapView" partId="org.kalypso.ui.views.mapView" parent="TimeseriesManagementContext">
+          <con:ExtensionContext id="TimeseriesManagementContext_extContext1" parent="TimeseriesStationMapView" handlerFactoryId="kalypsoContextHandlerFactory">
+            <con:Parameter name="type" value="mapViewInputContext" />
+            <con:Parameter name="input" value=".views/Timeseries.gmt" />
+          </con:ExtensionContext>
+        </con:ViewContext>
+        <con:ViewContext id="TimeseriesStationMapViewOutline" partId="org.kalypso.ui.views.outline" parent="TimeseriesManagementContext" />
+         -->
+      </con:WorkbenchSiteContext>
+
 
     </con:PerspectiveContext>
   </Perspectives>
