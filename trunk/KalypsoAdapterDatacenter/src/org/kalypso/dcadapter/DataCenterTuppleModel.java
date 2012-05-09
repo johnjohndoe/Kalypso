@@ -11,8 +11,10 @@ import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.impl.DefaultAxisRange;
 import org.kalypso.ogc.sensor.impl.ITupleModelChangeListener;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.transaction.ITupleModelTransaction;
@@ -274,6 +276,12 @@ public class DataCenterTuppleModel implements ITupleModel
           m_tupples[index].setStatus( (String) value );
 
         m_tupples[index].setValue( ((Number) value).doubleValue() );
+      }
+
+      @Override
+      public TupleModelDataSet getDataSetFor( final MetadataList metadata, final String valueAxis ) throws SensorException
+      {
+        return TupleModelDataSet.toDataSet( this, metadata, valueAxis );
       }
     } );
   }
