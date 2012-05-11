@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.utils.featureTree;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
@@ -47,12 +47,11 @@ import org.joda.time.Period;
 import org.joda.time.Seconds;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Gernot Belger
  */
-public class TimeseriesNodeLabelComparator extends ViewerComparator
+public class TreeNodeLabelComparator extends ViewerComparator
 {
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )

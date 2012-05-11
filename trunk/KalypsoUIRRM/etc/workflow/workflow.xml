@@ -23,7 +23,7 @@
 
   <Task URI="org.kalypso.model.rrm.simulationManagement" context="SimulationManagementContext" />
 
-  <Task URI="org.kalypso.model.rrm.resultView" context="ResultViewContext" />
+  <Task URI="org.kalypso.model.rrm.resultView" context="ResultViewContext_extContext1" />
 
   <Perspectives>
     <con:PerspectiveContext id="ContextHydrology" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
@@ -149,20 +149,19 @@
 
       <!-- Result View -->
       <con:WorkbenchSiteContext id="ResultViewContext" parent="ContextHydrology">
-        <con:ViewContext id="ResultViewTreeView" partId="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" parent="ResultViewContext" />
+        <con:ViewContext id="ResultTreeView" partId="org.kalypso.ui.rrm.internal.results.view.ResultManagementView" parent="ResultViewContext" />
+        <con:ViewContext id="ResultDiagramView" partId="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView" parent="ResultViewContext" />
 
-        <!--
-        <con:ViewContext id="TimeseriesPropertiesView" partId="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" parent="TimeseriesManagementContext" />
-        <con:ViewContext id="TimeseriesDiagramView" partId="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView" parent="TimeseriesManagementContext" />
+        <!-- <con:ViewContext id="TimeseriesPropertiesView" partId="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" parent="TimeseriesManagementContext" /> <con:ViewContext id="TimeseriesStationMapView" partId="org.kalypso.ui.views.mapView" parent="TimeseriesManagementContext"> <con:ExtensionContext id="TimeseriesManagementContext_extContext1" parent="TimeseriesStationMapView" handlerFactoryId="kalypsoContextHandlerFactory"> <con:Parameter name="type" value="mapViewInputContext" /> <con:Parameter name="input" value=".views/Timeseries.gmt" /> </con:ExtensionContext> </con:ViewContext> <con:ViewContext id="TimeseriesStationMapViewOutline" partId="org.kalypso.ui.views.outline" parent="TimeseriesManagementContext" /> -->
 
-        <con:ViewContext id="TimeseriesStationMapView" partId="org.kalypso.ui.views.mapView" parent="TimeseriesManagementContext">
-          <con:ExtensionContext id="TimeseriesManagementContext_extContext1" parent="TimeseriesStationMapView" handlerFactoryId="kalypsoContextHandlerFactory">
+        <con:ViewContext id="ResultNodeMapView" partId="org.kalypso.ui.views.mapView" parent="ResultViewContext">
+          <con:ExtensionContext id="ResultViewContext_extContext1" parent="ResultNodeMapView" handlerFactoryId="kalypsoContextHandlerFactory">
             <con:Parameter name="type" value="mapViewInputContext" />
+            <!-- TODO define own map template-->
             <con:Parameter name="input" value=".views/Timeseries.gmt" />
           </con:ExtensionContext>
         </con:ViewContext>
-        <con:ViewContext id="TimeseriesStationMapViewOutline" partId="org.kalypso.ui.views.outline" parent="TimeseriesManagementContext" />
-         -->
+        <con:ViewContext id="ResultViewMapViewOutline" partId="org.kalypso.ui.views.outline" parent="ResultViewContext" />
       </con:WorkbenchSiteContext>
 
 

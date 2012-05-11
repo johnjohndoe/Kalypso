@@ -83,7 +83,6 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.StationsByStationsStrategy;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesNodeLabelComparator;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CleanSearchPanelAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CollapseAllTreeItemsAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExpandAllTreeItemsAction;
@@ -92,6 +91,7 @@ import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.timeseries.view.filter.TimeseriesBrowserSearchViewer;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelComparator;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -277,7 +277,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     m_treeViewer = new TreeViewer( body, SWT.FLAT | SWT.SINGLE | SWT.BORDER );
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
-    m_treeViewer.setComparator( new TimeseriesNodeLabelComparator() );
+    m_treeViewer.setComparator( new TreeNodeLabelComparator() );
 
     manager.add( new CollapseAllTreeItemsAction( m_treeViewer ) );
     manager.add( new ExpandAllTreeItemsAction( m_treeViewer ) );
