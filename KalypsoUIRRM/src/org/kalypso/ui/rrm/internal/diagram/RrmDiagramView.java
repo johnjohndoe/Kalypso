@@ -40,17 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.diagram;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -59,12 +53,8 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.selection.ZmlSelectionBuilder;
 import org.kalypso.zml.ui.chart.view.ZmlDiagramChartPartComposite;
@@ -110,40 +100,9 @@ public class RrmDiagramView extends ViewPart
 
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
-    final IMultipleZmlSourceElement[] sources = ZmlSelectionBuilder.getSelection( convert( selection ) );
+
+    final IMultipleZmlSourceElement[] sources = ZmlSelectionBuilder.getSelection( RrmDiagramSelctionConverter.doConvert( selection ) );
     m_chartPart.setSelection( sources );
-  }
-
-  private IStructuredSelection convert( final IStructuredSelection selection )
-  {
-    final Set<Object> items = new LinkedHashSet<>();
-
-    final Iterator< ? > iterator = selection.iterator();
-    while( iterator.hasNext() )
-    {
-      final Object next = iterator.next();
-
-      if( next instanceof TreeNode )
-      {
-        final TreeNode node = (TreeNode) next;
-        final Object station = node.getAdapter( IStation.class );
-        final Object timeseries = node.getAdapter( ITimeseries.class );
-
-        if( station instanceof IStation )
-        {
-          Collections.addAll( items, ((IStation) station).getTimeseries().toArray() );
-        }
-        else if( Objects.isNull( timeseries ) ) // parameter tree item
-        {
-          Collections.addAll( items, node.getChildren() );
-        }
-        else
-          items.add( next );
-      }
-
-    }
-
-    return new StructuredSelection( items.toArray() );
   }
 
   public void hookSelection( final ISelectionProvider provider )
