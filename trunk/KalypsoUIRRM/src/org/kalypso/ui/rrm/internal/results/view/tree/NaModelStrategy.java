@@ -45,6 +45,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
@@ -133,7 +134,11 @@ public class NaModelStrategy implements ITreeNodeStrategy
       public void visit( final Node node )
       {
         if( node.isGenerateResults() )
-          base.addChild( toTreeNode( base, node ) );
+        {
+          final ZmlLink lnkResult = node.getResultLink();
+          if( lnkResult.isLinkSet() )
+            base.addChild( toTreeNode( base, node ) );
+        }
       }
     } );
 
