@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.results.view;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -65,6 +65,7 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.view.StationsByStationsStrategy;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CleanSearchPanelAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.dnd.MoveStationTransfer;
 import org.kalypso.ui.rrm.internal.timeseries.view.dnd.TimeseriesManagementTreeDragListener;
@@ -79,9 +80,9 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
 /**
  * @author Gernot Belger
  */
-public class TimeseriesManagementView extends ViewPart
+public class ResultManagementView extends ViewPart
 {
-  public static String ID = "org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"; //$NON-NLS-1$
+  public static String ID = "org.kalypso.ui.rrm.internal.timeseries.view.ResultManagementView"; //$NON-NLS-1$
 
   private TreeViewer m_treeViewer;
 

@@ -299,6 +299,14 @@
             name="Zeitreihen-Diagramm"
             restorable="true">
       </view>
+      <view
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.ui.rrm.internal.results.view.ResultManagementView"
+            icon="icons/resultview/resultView.png"
+            id="org.kalypso.ui.rrm.internal.results.view.ResultManagementView"
+            name="Result Management"
+            restorable="true">
+      </view>
    </extension>
 
   <extension point="org.kalypso.module.conversion">
@@ -460,6 +468,13 @@
                moveable="true"
                closeable="false"
                id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
+               relationship="stack"
+               relative="org.kalypso.ui.views.mapView"
+               visible="false">
+         </view>
+         <view
+               closeable="false"
+               id="org.kalypso.ui.rrm.internal.results.view.ResultManagementView"
                relationship="stack"
                relative="org.kalypso.ui.views.mapView"
                visible="false">

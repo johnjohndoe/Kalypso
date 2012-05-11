@@ -49,9 +49,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesNodeLabelComparator;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelComparator;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
 
@@ -81,7 +81,7 @@ public class CatchmentModelsView extends ViewPart
     m_treeViewer = new TreeViewer( panel );
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
-    m_treeViewer.setComparator( new TimeseriesNodeLabelComparator() );
+    m_treeViewer.setComparator( new TreeNodeLabelComparator() );
 
     return m_treeViewer.getTree();
   }
