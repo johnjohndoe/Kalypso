@@ -123,12 +123,10 @@ public class RrmDiagramView extends ViewPart
 
     m_chartPart.getChartModel().getLayerManager().accept( new AbstractChartLayerVisitor()
     {
-
       @Override
       public void visit( final IChartLayer layer )
       {
         layer.setVisible( false );
-
       }
     } );
   }

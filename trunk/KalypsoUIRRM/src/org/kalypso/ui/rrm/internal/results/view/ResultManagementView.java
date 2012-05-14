@@ -56,6 +56,7 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.results.view.tree.HydrologyResultFilter;
 import org.kalypso.ui.rrm.internal.results.view.tree.NaModelStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
@@ -120,6 +121,7 @@ public class ResultManagementView extends ViewPart
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
     m_treeViewer.setComparator( new TreeNodeLabelComparator() );
+    m_treeViewer.addFilter( new HydrologyResultFilter() );
 
     return m_treeViewer.getTree();
   }
