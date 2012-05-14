@@ -152,7 +152,11 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   protected TreeNode toTreeNode( final TreeNode parent, final StorageChannel channel )
   {
-    return new TreeNode( parent, new HydrologyStorageChannelUiHandler( channel ), channel );
+    final TreeNode node = new TreeNode( parent, new HydrologyStorageChannelUiHandler( channel ), channel );
+    node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( channel, KalypsoHydrologyResults.STORAGE_RESULT_TYPE.eFuellvolumen ), KalypsoHydrologyResults.STORAGE_RESULT_TYPE.eFuellvolumen ) );
+    node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( channel, KalypsoHydrologyResults.STORAGE_RESULT_TYPE.eSpeicherUeberlauf ), KalypsoHydrologyResults.STORAGE_RESULT_TYPE.eSpeicherUeberlauf ) );
+
+    return node;
   }
 
   private TreeNode buildHydrologyCatchments( final TreeNode parent )
@@ -214,6 +218,9 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   protected TreeNode toTreeNode( final TreeNode parent, final Node hydrologyNode )
   {
-    return new TreeNode( parent, new HydrologyNodeUiHandler( hydrologyNode ), hydrologyNode );
+    final TreeNode node = new TreeNode( parent, new HydrologyNodeUiHandler( hydrologyNode ), hydrologyNode );
+    node.addChild( new TreeNode( node, new HydrologyNodeParameterUiHandler( hydrologyNode, KalypsoHydrologyResults.NODE_RESULT_TYPE.eGesamtknotenAbfluss ), KalypsoHydrologyResults.NODE_RESULT_TYPE.eGesamtknotenAbfluss ) );
+
+    return node;
   }
 }

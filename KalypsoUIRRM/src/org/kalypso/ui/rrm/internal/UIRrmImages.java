@@ -77,6 +77,7 @@ public class UIRrmImages
     PARAMETER_TYPE_E_LAND("icons/timeseries/parameterType_E_LAND.png"), //$NON-NLS-1$
     PARAMETER_TYPE_E_WATER("icons/timeseries/parameterType_E_WATER.png"), //$NON-NLS-1$
     PARAMETER_TYPE_MEAN_RAINFALL("icons/timeseries/parameterType_MEAN_RAINFALL.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_VOLUME("icons/resultview/storage.png"), //$NON-NLS-1$
 
     PARAMETER_TYPE_SNOW_HEIGHT("icons/parameters/snow.png"), //$NON-NLS-1$
 

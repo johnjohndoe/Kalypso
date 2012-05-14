@@ -91,4 +91,61 @@ public class KalypsoHydrologyResults
 
   }
 
+  public enum NODE_RESULT_TYPE
+  {
+    eGesamtknotenAbfluss("Gesamtknotenabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml");
+
+    private final String m_label;
+
+    private final String m_fileName;
+
+    private final DESCRIPTORS m_image;
+
+    NODE_RESULT_TYPE( final String label, final UIRrmImages.DESCRIPTORS image, final String fileName )
+    {
+      m_label = label;
+      m_image = image;
+      m_fileName = fileName;
+    }
+
+    public String getLabel( )
+    {
+      return m_label;
+    }
+
+    public ImageDescriptor getImage( )
+    {
+      return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_image );
+    }
+  }
+
+  public enum STORAGE_RESULT_TYPE
+  {
+    eFuellvolumen("Füllvolumen", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_VOLUME, "Fuellvolumen.zml"),
+    eSpeicherUeberlauf("Specherüberlauf", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Speicherueberlauf.zml");
+
+    private final String m_label;
+
+    private final String m_fileName;
+
+    private final DESCRIPTORS m_image;
+
+    STORAGE_RESULT_TYPE( final String label, final UIRrmImages.DESCRIPTORS image, final String fileName )
+    {
+      m_label = label;
+      m_image = image;
+      m_fileName = fileName;
+    }
+
+    public String getLabel( )
+    {
+      return m_label;
+    }
+
+    public ImageDescriptor getImage( )
+    {
+      return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_image );
+    }
+
+  }
 }
