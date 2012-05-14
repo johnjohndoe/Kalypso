@@ -154,8 +154,6 @@ public class NaModelStrategy implements ITreeNodeStrategy
   protected TreeNode toTreeNode( final TreeNode parent, final StorageChannel channel, final IFolder calcCaseFolder )
   {
     final TreeNode node = new TreeNode( parent, new HydrologyStorageChannelUiHandler( channel ), channel );
-
-    ;
     node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( channel, STORAGE_RESULT_TYPE.eFuellvolumen ), new HydrologyResultReference( calcCaseFolder, channel, STORAGE_RESULT_TYPE.eFuellvolumen.getFileName() ) ) );
     node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( channel, STORAGE_RESULT_TYPE.eSpeicherUeberlauf ), new HydrologyResultReference( calcCaseFolder, channel, STORAGE_RESULT_TYPE.eSpeicherUeberlauf.getFileName() ) ) );
 
