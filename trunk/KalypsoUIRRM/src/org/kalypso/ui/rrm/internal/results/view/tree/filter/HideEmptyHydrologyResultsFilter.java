@@ -38,54 +38,65 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.base;
+package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.kalypso.commons.java.net.UrlUtilities;
+import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyResultReference implements IHydrologyResultReference
+public class HideEmptyHydrologyResultsFilter extends ViewerFilter
 {
 
-  private final IFile m_file;
-
-  public HydrologyResultReference( final IFolder calcCaseFolder, final StorageChannel channel, final String resultFileName )
-  {
-    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/SpeicherStrang/%s/%s", channel.getName(), resultFileName ) ); //$NON-NLS-1$
-  }
-
-  public HydrologyResultReference( final IFolder calcCaseFolder, final Catchment catchment, final String resultFileName )
-  {
-    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/Teilgebiet/%s/%s", catchment.getName(), resultFileName ) ); //$NON-NLS-1$
-  }
-
-  public HydrologyResultReference( final IFolder calcCaseFolder, final Node node, final String resultFileName )
-  {
-    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/Knoten/%s/%s", node.getName(), resultFileName ) ); //$NON-NLS-1$
-  }
-
   @Override
-  public Object getAdapter( final Class adapter )
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    if( adapter.isAssignableFrom( IHydrologyResultReference.class ) )
-      return this;
+    if( element instanceof TreeNode )
+    {
+      final TreeNode node = (TreeNode) element;
 
-    return null;
+      return doSelect( node );
+
+    }
+
+    return false;
   }
 
-  @Override
-  public URL getUrl( ) throws MalformedURLException
+  private boolean doSelect( final TreeNode node )
   {
+    final Object objReference = node.getAdapter( IHydrologyResultReference.class );
+    if( objReference == null )
+    {
+      final TreeNode[] children = node.getChildren();
+      for( final TreeNode child : children )
+      {
+        if( doSelect( child ) )
+          return true;
+      }
 
-    return m_file.getLocationURI().toURL();
+      return false;
+    }
+
+    final IHydrologyResultReference reference = (IHydrologyResultReference) objReference;
+    try
+    {
+      final URL url = reference.getUrl();
+
+      return UrlUtilities.checkIsAccessible( url );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+
+      return false;
+    }
 
   }
 
