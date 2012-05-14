@@ -44,20 +44,29 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.internal.results.view.tree.HydrologyResultFilter;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.tree.NaModelStrategy;
+import org.kalypso.ui.rrm.internal.results.view.tree.filter.CleanSearchPanelAction;
+import org.kalypso.ui.rrm.internal.results.view.tree.filter.HideEmptyHydrologyResultsFilter;
+import org.kalypso.ui.rrm.internal.results.view.tree.filter.HydrolgyManagementSearchControl;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
@@ -66,7 +75,7 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
 public class ResultManagementView extends ViewPart
 {
@@ -83,7 +92,7 @@ public class ResultManagementView extends ViewPart
     body.setLayout( Layouts.createGridLayout() );
 
     createResultTreeView( body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-// createSearchControls( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    createSearchControls( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
   }
 
   private Composite createResultTreeView( final Composite parent )
@@ -94,26 +103,24 @@ public class ResultManagementView extends ViewPart
     return tree;
   }
 
-// private Control createSearchControls( final Composite parent, final FormToolkit toolkit )
-// {
-// final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE |
-// ExpandableComposite.EXPANDED );
-//    section.setText( Messages.getString( "TimeseriesManagementView_0" ) ); //$NON-NLS-1$
-// section.setLayout( new FillLayout() );
-//
-// final ToolBarManager toolbar = SectionUtils.createSectionToolbar( section );
-//
-// final TimeseriesBrowserSearchViewer searchPanel = new TimeseriesBrowserSearchViewer( section, toolkit, m_treeViewer
-// );
-// toolkit.adapt( searchPanel );
-//
-// toolbar.add( new CleanSearchPanelAction( searchPanel ) );
-// toolbar.update( true );
-//
-// section.setClient( searchPanel );
-//
-// return section;
-// }
+  private Control createSearchControls( final Composite parent, final FormToolkit toolkit )
+  {
+    final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
+    section.setText( Messages.getString( "TimeseriesManagementView_0" ) ); //$NON-NLS-1$
+    section.setLayout( new FillLayout() );
+
+    final ToolBarManager toolbar = SectionUtils.createSectionToolbar( section );
+
+    final HydrolgyManagementSearchControl searchPanel = new HydrolgyManagementSearchControl( section, toolkit, m_treeViewer );
+    toolkit.adapt( searchPanel );
+
+    toolbar.add( new CleanSearchPanelAction( searchPanel ) );
+    toolbar.update( true );
+
+    section.setClient( searchPanel );
+
+    return section;
+  }
 
   private Composite createTree( final Composite panel )
   {
@@ -121,7 +128,7 @@ public class ResultManagementView extends ViewPart
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
     m_treeViewer.setComparator( new TreeNodeLabelComparator() );
-    m_treeViewer.addFilter( new HydrologyResultFilter() );
+    m_treeViewer.addFilter( new HideEmptyHydrologyResultsFilter() );
 
     return m_treeViewer.getTree();
   }
