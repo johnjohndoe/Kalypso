@@ -40,56 +40,60 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyStorageChannelUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyCalculationCaseGroupUiHandler extends AbstractTreeNodeUiHandler
 {
-  private final StorageChannel m_channel;
+  private final IFolder m_calculationCaseFolder;
 
-  public HydrologyStorageChannelUiHandler( final StorageChannel channel )
+  public HydrologyCalculationCaseGroupUiHandler( final IFolder calculationCaseFolder )
   {
-    m_channel = channel;
+    m_calculationCaseFolder = calculationCaseFolder;
   }
 
   @Override
   public String getTypeLabel( )
   {
-    return "HydrologyStorageChannel";
+    return m_calculationCaseFolder.getName();
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return m_channel.getName();
+    return m_calculationCaseFolder.getName();
   }
 
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    return UIRrmImages.id( DESCRIPTORS.STORAGE_CHANNEL );
+    return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( UIRrmImages.DESCRIPTORS.CALC_CASE_FOLDER );
   }
 
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
+    // TODO Auto-generated method stub
     return null;
   }
 
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
+    // TODO Auto-generated method stub
+
   }
 
 }

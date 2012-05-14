@@ -49,12 +49,11 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyCatchmentsGroupUiHandler extends AbstractTreeNodeUiHandler implements ITreeNodeUiHandler
+public class HydrologyCatchmentsGroupUiHandler extends AbstractTreeNodeUiHandler
 {
 
   @Override
