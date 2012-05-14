@@ -78,6 +78,8 @@ public class UIRrmImages
     PARAMETER_TYPE_E_WATER("icons/timeseries/parameterType_E_WATER.png"), //$NON-NLS-1$
     PARAMETER_TYPE_MEAN_RAINFALL("icons/timeseries/parameterType_MEAN_RAINFALL.png"), //$NON-NLS-1$
 
+    PARAMETER_TYPE_SNOW_HEIGHT("icons/parameters/snow.png"), //$NON-NLS-1$
+
     TIMESERIES("icons/timeseries/timeseries.png"), //$NON-NLS-1$
     TIMESERIES_EXTEND("icons/timeseries/extend.png"), //$NON-NLS-1$
     TIMESERIES_EXTEND_AND_OVERWRITE("icons/timeseries/extend_and_overwrite.png"), //$NON-NLS-1$
