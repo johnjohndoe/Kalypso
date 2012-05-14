@@ -107,7 +107,8 @@ public class UIRrmImages
 
     CATCHMENT("icons/resultview/catchment.png"), //$NON-NLS-1$
     NA_NODE("icons/resultview/node.png"), //$NON-NLS-1$
-    STORAGE_CHANNEL("icons/resultview/storage.png"); //$NON-NLS-1$
+    STORAGE_CHANNEL("icons/resultview/storage.png"), //$NON-NLS-1$
+    CALC_CASE_FOLDER("icons/resultview/calcCase.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

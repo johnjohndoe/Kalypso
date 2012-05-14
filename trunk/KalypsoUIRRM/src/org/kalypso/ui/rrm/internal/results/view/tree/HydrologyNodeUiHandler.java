@@ -50,14 +50,12 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyNodeUiHandler extends AbstractTreeNodeUiHandler implements ITreeNodeUiHandler
+public class HydrologyNodeUiHandler extends AbstractTreeNodeUiHandler
 {
-
   private final Node m_hydrologyNode;
 
   public HydrologyNodeUiHandler( final Node hydrologyNode )

@@ -40,12 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree;
 
+import java.net.URL;
+
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
@@ -71,11 +77,59 @@ public class NaModelStrategy implements ITreeNodeStrategy
   {
     final TreeNode virtualRootNode = new TreeNode( model, null, null, null );
 
-    virtualRootNode.addChild( buildHydrologyNodes( virtualRootNode ) );
-    virtualRootNode.addChild( buildHydrologyCatchments( virtualRootNode ) );
-    virtualRootNode.addChild( buildHydrologyStorages( virtualRootNode ) );
+    try
+    {
+      final URL context = m_model.getWorkspace().getContext();
+      final URL urlCalcCases = UrlResolverSingleton.resolveUrl( context, "../Rechenvarianten/" ); //$NON-NLS-1$
+      final IFolder folderCalcCases = ResourceUtilities.findFolderFromURL( urlCalcCases );
+
+      folderCalcCases.accept( new IResourceVisitor()
+      {
+        @Override
+        public boolean visit( final IResource resource )
+        {
+          if( !(resource instanceof IFolder) )
+            return true;
+          else if( isBaseFolder( (IFolder) resource ) )
+            return true;
+          else if( isCalculationCaseFolder( (IFolder) resource ) )
+          {
+            virtualRootNode.addChild( buildCalculationCaseNodes( virtualRootNode, (IFolder) resource ) );
+            return true;
+          }
+
+          return true;
+        }
+
+        private boolean isBaseFolder( final IFolder folder )
+        {
+          return folder.equals( folderCalcCases );
+        }
+
+        private boolean isCalculationCaseFolder( final IFolder folder )
+        {
+          return folder.getParent().equals( folderCalcCases );
+        }
+
+      }, 1, false );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
 
     return virtualRootNode;
+  }
+
+  protected TreeNode buildCalculationCaseNodes( final TreeNode parent, final IFolder calcCaseFolder )
+  {
+    final TreeNode calcCase = new TreeNode( parent, new HydrologyCalculationCaseGroupUiHandler( calcCaseFolder ), calcCaseFolder );
+
+    calcCase.addChild( buildHydrologyNodes( calcCase ) );
+    calcCase.addChild( buildHydrologyCatchments( calcCase ) );
+    calcCase.addChild( buildHydrologyStorages( calcCase ) );
+
+    return calcCase;
   }
 
   private TreeNode buildHydrologyStorages( final TreeNode parent )
@@ -150,9 +204,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
       {
         if( node.isGenerateResults() )
         {
-          final ZmlLink lnkResult = node.getResultLink();
-          if( lnkResult.isLinkSet() )
-            base.addChild( toTreeNode( base, node ) );
+          base.addChild( toTreeNode( base, node ) );
         }
       }
     } );
