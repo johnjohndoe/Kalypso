@@ -52,7 +52,10 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults;
+import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.NODE_RESULT_TYPE;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.STORAGE_RESULT_TYPE;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
@@ -64,7 +67,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
  */
 public class NaModelStrategy implements ITreeNodeStrategy
 {
-
   private final NaModell m_model;
 
   public NaModelStrategy( final NaModell model )
@@ -124,15 +126,14 @@ public class NaModelStrategy implements ITreeNodeStrategy
   protected TreeNode buildCalculationCaseNodes( final TreeNode parent, final IFolder calcCaseFolder )
   {
     final TreeNode calcCase = new TreeNode( parent, new HydrologyCalculationCaseGroupUiHandler( calcCaseFolder ), calcCaseFolder );
-
-    calcCase.addChild( buildHydrologyNodes( calcCase ) );
-    calcCase.addChild( buildHydrologyCatchments( calcCase ) );
-    calcCase.addChild( buildHydrologyStorages( calcCase ) );
+    calcCase.addChild( buildHydrologyNodes( calcCase, calcCaseFolder ) );
+    calcCase.addChild( buildHydrologyCatchments( calcCase, calcCaseFolder ) );
+    calcCase.addChild( buildHydrologyStorages( calcCase, calcCaseFolder ) );
 
     return calcCase;
   }
 
-  private TreeNode buildHydrologyStorages( final TreeNode parent )
+  private TreeNode buildHydrologyStorages( final TreeNode parent, final IFolder calcCaseFolder )
   {
     final IFeatureBindingCollection<Channel> channels = m_model.getChannels();
 
@@ -143,23 +144,25 @@ public class NaModelStrategy implements ITreeNodeStrategy
       public void visit( final Channel channel )
       {
         if( channel instanceof StorageChannel )
-          base.addChild( toTreeNode( base, (StorageChannel) channel ) );
+          base.addChild( toTreeNode( base, (StorageChannel) channel, calcCaseFolder ) );
       }
     } );
 
     return base;
   }
 
-  protected TreeNode toTreeNode( final TreeNode parent, final StorageChannel channel )
+  protected TreeNode toTreeNode( final TreeNode parent, final StorageChannel channel, final IFolder calcCaseFolder )
   {
     final TreeNode node = new TreeNode( parent, new HydrologyStorageChannelUiHandler( channel ), channel );
-    node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( channel, KalypsoHydrologyResults.STORAGE_RESULT_TYPE.eFuellvolumen ), KalypsoHydrologyResults.STORAGE_RESULT_TYPE.eFuellvolumen ) );
-    node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( channel, KalypsoHydrologyResults.STORAGE_RESULT_TYPE.eSpeicherUeberlauf ), KalypsoHydrologyResults.STORAGE_RESULT_TYPE.eSpeicherUeberlauf ) );
+
+    ;
+    node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( channel, STORAGE_RESULT_TYPE.eFuellvolumen ), new HydrologyResultReference( calcCaseFolder, channel, STORAGE_RESULT_TYPE.eFuellvolumen.getFileName() ) ) );
+    node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( channel, STORAGE_RESULT_TYPE.eSpeicherUeberlauf ), new HydrologyResultReference( calcCaseFolder, channel, STORAGE_RESULT_TYPE.eSpeicherUeberlauf.getFileName() ) ) );
 
     return node;
   }
 
-  private TreeNode buildHydrologyCatchments( final TreeNode parent )
+  private TreeNode buildHydrologyCatchments( final TreeNode parent, final IFolder calcCaseFolder )
   {
     final IFeatureBindingCollection<Catchment> catchments = m_model.getCatchments();
 
@@ -170,33 +173,32 @@ public class NaModelStrategy implements ITreeNodeStrategy
       public void visit( final Catchment catchment )
       {
         if( catchment.isGenerateResults() )
-          base.addChild( toTreeNode( base, catchment ) );
+          base.addChild( toTreeNode( base, catchment, calcCaseFolder ) );
       }
     } );
 
     return base;
   }
 
-  protected TreeNode toTreeNode( final TreeNode parent, final Catchment catchment )
+  protected TreeNode toTreeNode( final TreeNode parent, final Catchment catchment, final IFolder calcCaseFolder )
   {
     final TreeNode nodeCatchment = new TreeNode( parent, new HydrologyCatchmentUiHandler( catchment ), catchment );
-
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eTemperature ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eTemperature ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eNiederschlag ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eNiederschlag ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eSchneehoehe ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eSchneehoehe ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGesamtTeilgebietsQ ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGesamtTeilgebietsQ ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eOberflaechenQNatuerlich ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eOberflaechenQNatuerlich ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eOberflaechenQVersiegelt ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eOberflaechenQVersiegelt ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eInterflow ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eInterflow ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eBasisQ ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eBasisQ ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGrundwasserQ ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGrundwasserQ ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGrundwasserstand ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGrundwasserstand ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eEvapotranspiration ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eEvapotranspiration ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eTemperature ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eTemperature.getFileName() ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eNiederschlag ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eNiederschlag.getFileName() ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eSchneehoehe ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eSchneehoehe.getFileName() ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eGesamtTeilgebietsQ ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eGesamtTeilgebietsQ.getFileName() ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQNatuerlich ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQNatuerlich.getFileName() ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQVersiegelt ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQVersiegelt.getFileName() ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eInterflow ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eInterflow.getFileName() ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eBasisQ ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eBasisQ.getFileName() ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eGrundwasserQ ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eGrundwasserQ.getFileName() ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eGrundwasserstand ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eGrundwasserstand.getFileName() ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eEvapotranspiration ), new HydrologyResultReference( calcCaseFolder, catchment, CATCHMENT_RESULT_TYPE.eEvapotranspiration.getFileName() ) ) );
 
     return nodeCatchment;
   }
 
-  private TreeNode buildHydrologyNodes( final TreeNode parent )
+  private TreeNode buildHydrologyNodes( final TreeNode parent, final IFolder calcCaseFolder )
   {
     final IFeatureBindingCollection<Node> nodes = m_model.getNodes();
 
@@ -208,7 +210,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
       {
         if( node.isGenerateResults() )
         {
-          base.addChild( toTreeNode( base, node ) );
+          base.addChild( toTreeNode( base, node, calcCaseFolder ) );
         }
       }
     } );
@@ -216,10 +218,10 @@ public class NaModelStrategy implements ITreeNodeStrategy
     return base;
   }
 
-  protected TreeNode toTreeNode( final TreeNode parent, final Node hydrologyNode )
+  protected TreeNode toTreeNode( final TreeNode parent, final Node hydrologyNode, final IFolder calcCaseFolder )
   {
     final TreeNode node = new TreeNode( parent, new HydrologyNodeUiHandler( hydrologyNode ), hydrologyNode );
-    node.addChild( new TreeNode( node, new HydrologyNodeParameterUiHandler( hydrologyNode, KalypsoHydrologyResults.NODE_RESULT_TYPE.eGesamtknotenAbfluss ), KalypsoHydrologyResults.NODE_RESULT_TYPE.eGesamtknotenAbfluss ) );
+    node.addChild( new TreeNode( node, new HydrologyNodeParameterUiHandler( hydrologyNode, NODE_RESULT_TYPE.eGesamtknotenAbfluss ), new HydrologyResultReference( calcCaseFolder, hydrologyNode, NODE_RESULT_TYPE.eGesamtknotenAbfluss.getFileName() ) ) );
 
     return node;
   }

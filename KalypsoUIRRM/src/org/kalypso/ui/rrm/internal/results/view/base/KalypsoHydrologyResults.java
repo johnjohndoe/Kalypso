@@ -89,6 +89,11 @@ public class KalypsoHydrologyResults
       return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_image );
     }
 
+    public String getFileName( )
+    {
+      return m_fileName;
+    }
+
   }
 
   public enum NODE_RESULT_TYPE
@@ -116,6 +121,11 @@ public class KalypsoHydrologyResults
     public ImageDescriptor getImage( )
     {
       return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_image );
+    }
+
+    public String getFileName( )
+    {
+      return m_fileName;
     }
   }
 
@@ -145,6 +155,11 @@ public class KalypsoHydrologyResults
     public ImageDescriptor getImage( )
     {
       return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_image );
+    }
+
+    public String getFileName( )
+    {
+      return m_fileName;
     }
 
   }
