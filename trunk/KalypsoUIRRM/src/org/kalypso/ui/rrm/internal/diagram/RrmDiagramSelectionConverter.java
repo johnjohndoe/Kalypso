@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.diagram;
 
+import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -48,16 +49,16 @@ import java.util.Set;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Dirk Kuch
  */
-public class RrmDiagramSelctionConverter
+public class RrmDiagramSelectionConverter
 {
 
   public static IStructuredSelection doConvert( final IStructuredSelection selection )
@@ -74,21 +75,20 @@ public class RrmDiagramSelctionConverter
         final TreeNode node = (TreeNode) next;
         final Object objStation = node.getAdapter( IStation.class );
         final Object objTimeseries = node.getAdapter( ITimeseries.class );
-        final Object objNode = node.getAdapter( INode.class );
+        final Object objResultReference = node.getAdapter( IHydrologyResultReference.class );
 
         if( objStation instanceof IStation )
         {
           Collections.addAll( items, ((IStation) objStation).getTimeseries().toArray() );
         }
-        else if( objNode instanceof INode )
+        else if( objResultReference instanceof IHydrologyResultReference )
         {
-          items.add( doConvert( (INode) objNode ) );
+          items.add( doConvert( (IHydrologyResultReference) objResultReference ) );
         }
         else if( Objects.isNull( objTimeseries ) ) // parameter tree item
         {
           Collections.addAll( items, node.getChildren() );
         }
-
         else
           items.add( next );
       }
@@ -98,15 +98,25 @@ public class RrmDiagramSelctionConverter
     return new StructuredSelection( items.toArray() );
   }
 
-  private static Object doConvert( final INode node )
+  private static Object doConvert( final IHydrologyResultReference reference )
   {
     /*
      * TODO perhaps own zmlsourceelement - we don't know, how good or bad the meta data of the underlying zml is
      * (diagramm legend, table header, aso)
      */
-    final ZmlLink link = node.getResultLink();
 
-    return link;
+    try
+    {
+      final URL urlZmlSource = reference.getUrl();
+
+      return ZmlFactory.parseXML( urlZmlSource );
+    }
+    catch( final Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    return null;
   }
-
 }
