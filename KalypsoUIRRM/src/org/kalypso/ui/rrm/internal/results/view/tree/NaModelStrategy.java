@@ -46,6 +46,7 @@ import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
@@ -120,7 +121,21 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   protected TreeNode toTreeNode( final TreeNode parent, final Catchment catchment )
   {
-    return new TreeNode( parent, new HydrologyCatchmentUiHandler( catchment ), catchment );
+    final TreeNode nodeCatchment = new TreeNode( parent, new HydrologyCatchmentUiHandler( catchment ), catchment );
+
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eTemperature ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eTemperature ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eNiederschlag ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eNiederschlag ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eSchneehoehe ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eSchneehoehe ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGesamtTeilgebietsQ ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGesamtTeilgebietsQ ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eOberflaechenQNatuerlich ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eOberflaechenQNatuerlich ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eOberflaechenQVersiegelt ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eOberflaechenQVersiegelt ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eInterflow ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eInterflow ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eBasisQ ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eBasisQ ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGrundwasserQ ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGrundwasserQ ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGrundwasserstand ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eGrundwasserstand ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eEvapotranspiration ), KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE.eEvapotranspiration ) );
+
+    return nodeCatchment;
   }
 
   private TreeNode buildHydrologyNodes( final TreeNode parent )
