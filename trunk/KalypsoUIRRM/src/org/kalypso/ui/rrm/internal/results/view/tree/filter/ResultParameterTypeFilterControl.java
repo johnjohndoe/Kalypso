@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.filter;
+package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
 import java.util.Collections;
 import java.util.Set;
@@ -71,11 +71,11 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
 /**
  * @author Dirk Kuch
  */
-public class ParameterTypeFilterControl extends Composite
+public class ResultParameterTypeFilterControl extends Composite
 {
   static final RGB YELLOW = new RGB( 255, 255, 230 );
 
-  private final ParameterTypeFilter m_filter = new ParameterTypeFilter( StringUtils.EMPTY );
+  private final ResultParameterTypeFilter m_filter = new ResultParameterTypeFilter( StringUtils.EMPTY );
 
   private final DataBindingContext m_binding = new DataBindingContext();
 
@@ -83,7 +83,7 @@ public class ParameterTypeFilterControl extends Composite
 
   private ComboViewer m_viewer;
 
-  public ParameterTypeFilterControl( final Composite parent, final FormToolkit toolkit )
+  public ResultParameterTypeFilterControl( final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NONE );
 
@@ -134,7 +134,7 @@ public class ParameterTypeFilterControl extends Composite
     m_viewer.setInput( m_parameterTypes.toArray() );
 
     final IViewerObservableValue targetValue = ViewerProperties.singleSelection().observe( m_viewer );
-    final IObservableValue modelValue = PojoObservables.observeValue( m_filter, ParameterTypeFilter.PROPERTY_TYPE );
+    final IObservableValue modelValue = PojoObservables.observeValue( m_filter, ResultParameterTypeFilter.PROPERTY_TYPE );
 
     m_binding.bindValue( targetValue, modelValue );
 

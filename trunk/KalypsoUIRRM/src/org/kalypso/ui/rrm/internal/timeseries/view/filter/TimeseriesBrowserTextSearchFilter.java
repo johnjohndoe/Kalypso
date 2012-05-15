@@ -44,37 +44,40 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Dirk Kuch
  */
-public class ParameterTypeFilter extends ViewerFilter
+public class TimeseriesBrowserTextSearchFilter extends ViewerFilter
 {
-  private String m_type;
+  private String m_string;
 
   private StructuredViewer m_viewer;
 
-  public static final String PROPERTY_TYPE = "type"; //$NON-NLS-1$
+  public static final String PROPERTY_STRING = "string"; //$NON-NLS-1$
 
-  public ParameterTypeFilter( final String string )
+  public TimeseriesBrowserTextSearchFilter( final String string )
   {
-    setType( string );
+    setString( string );
   }
 
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    final String type = getType();
-    if( StringUtils.isEmpty( type ) )
+    final String searchString = getString();
+    if( StringUtils.isEmpty( searchString ) )
       return true;
 
     if( element instanceof TreeNode )
     {
       final TreeNode node = (TreeNode) element;
 
-      if( hasChildWithType( node, type ) )
+      if( hasChildWithName( node, searchString ) )
+        return true;
+
+      final int hierarchy = getLevel( node );
+      if( hierarchy > 2 )
         return true;
 
       return false;
@@ -83,25 +86,29 @@ public class ParameterTypeFilter extends ViewerFilter
     return false;
   }
 
-  private boolean hasChildWithType( final TreeNode node, final String type )
+  private int getLevel( final TreeNode node )
   {
-
-    final Object adapter = node.getAdapter( ITimeseries.class );
-    if( adapter instanceof ITimeseries )
+    int count = 0;
+    TreeNode parent = node.getParent();
+    while( parent != null )
     {
-      final ITimeseries timeseries = (ITimeseries) adapter;
-      final String parameterType = timeseries.getParameterType();
-
-      return StringUtils.equalsIgnoreCase( parameterType, type );
+      parent = parent.getParent();
+      count += 1;
     }
-    else
+
+    return count;
+  }
+
+  private boolean hasChildWithName( final TreeNode node, final String searchString )
+  {
+    if( StringUtils.containsIgnoreCase( node.getLabel(), searchString ) )
+      return true;
+
+    final TreeNode[] children = node.getChildren();
+    for( final TreeNode child : children )
     {
-      final TreeNode[] children = node.getChildren();
-      for( final TreeNode child : children )
-      {
-        if( hasChildWithType( child, type ) )
-          return true;
-      }
+      if( hasChildWithName( child, searchString ) )
+        return true;
     }
 
     return false;
@@ -112,14 +119,14 @@ public class ParameterTypeFilter extends ViewerFilter
     m_viewer = viewer;
   }
 
-  public String getType( )
+  public String getString( )
   {
-    return m_type;
+    return m_string;
   }
 
-  public void setType( final String type )
+  public void setString( final String string )
   {
-    m_type = StringUtils.isBlank( type ) ? null : type.toLowerCase();
+    m_string = StringUtils.isBlank( string ) ? null : string.toLowerCase();
 
     if( m_viewer != null )
       m_viewer.refresh();

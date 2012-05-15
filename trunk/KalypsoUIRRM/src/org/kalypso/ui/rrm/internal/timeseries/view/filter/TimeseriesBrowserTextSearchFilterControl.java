@@ -66,12 +66,12 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
  * 
  * @author Dirk Kuch
  */
-public class TextSearchFilterControl extends Composite
+public class TimeseriesBrowserTextSearchFilterControl extends Composite
 {
 
   static final RGB YELLOW = new RGB( 255, 255, 230 );
 
-  private final TextSearchFilter m_filter;
+  private final TimeseriesBrowserTextSearchFilter m_filter;
 
   private final DataBindingContext m_binding;
 
@@ -79,7 +79,7 @@ public class TextSearchFilterControl extends Composite
 
   private Text m_nameField;
 
-  public TextSearchFilterControl( final Composite parent, final FormToolkit toolkit )
+  public TimeseriesBrowserTextSearchFilterControl( final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NONE );
 
@@ -87,7 +87,7 @@ public class TextSearchFilterControl extends Composite
     toolkit.adapt( this );
 
     m_yellow = new Color( parent.getDisplay(), YELLOW );
-    m_filter = new TextSearchFilter( StringUtils.EMPTY );
+    m_filter = new TimeseriesBrowserTextSearchFilter( StringUtils.EMPTY );
     m_binding = new DataBindingContext();
 
     setLayout( Layouts.createGridLayout() );
@@ -123,7 +123,7 @@ public class TextSearchFilterControl extends Composite
     addResetListener( m_nameField );
 
     final ISWTObservableValue target = SWTObservables.observeText( m_nameField, new int[] { SWT.Modify, SWT.DefaultSelection } );
-    final IObservableValue model = PojoObservables.observeValue( m_filter, TextSearchFilter.PROPERTY_STRING );
+    final IObservableValue model = PojoObservables.observeValue( m_filter, TimeseriesBrowserTextSearchFilter.PROPERTY_STRING );
     m_binding.bindValue( target, model );
 
     if( toolkit != null )

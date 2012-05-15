@@ -63,7 +63,7 @@ public class HydrolgyManagementSearchControl extends Composite
 {
 // private final ParameterTypeFilterControl m_parameterTypeFilterControl;
 //
-// private final TextSearchFilterControl m_textSearchControl;
+  private final ResultTextSearchFilterControl m_textSearchControl;
 
   private String m_parameterType;
 
@@ -79,8 +79,8 @@ public class HydrolgyManagementSearchControl extends Composite
     groupTextSearch.setText( Messages.getString( "TimeseriesBrowserSearchViewer_0" ) ); //$NON-NLS-1$
     groupTextSearch.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-// m_textSearchControl = new TextSearchFilterControl( groupTextSearch, toolkit );
-// m_textSearchControl.setViewer( viewer );
+    m_textSearchControl = new ResultTextSearchFilterControl( groupTextSearch, toolkit );
+    m_textSearchControl.setViewer( viewer );
 
     final Group groupParameter = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupParameter );
@@ -106,7 +106,7 @@ public class HydrolgyManagementSearchControl extends Composite
 
   public void doClean( )
   {
-// m_textSearchControl.reset();
+    m_textSearchControl.reset();
 //
 // if( StringUtils.isEmpty( m_parameterType ) )
 // m_parameterTypeFilterControl.reset();
