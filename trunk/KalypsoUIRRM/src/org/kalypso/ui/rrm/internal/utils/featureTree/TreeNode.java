@@ -139,6 +139,11 @@ public class TreeNode implements IAdaptable
     return m_model;
   }
 
+  public Object getData( )
+  {
+    return m_treeData;
+  }
+
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {

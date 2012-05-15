@@ -50,7 +50,10 @@ import org.eclipse.core.runtime.IAdaptable;
  */
 public interface IHydrologyResultReference extends IAdaptable
 {
-
   URL getUrl( ) throws MalformedURLException;
+
+  Object getType( );
+
+  boolean isValid( );
 
 }

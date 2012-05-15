@@ -45,31 +45,39 @@ import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.NODE_RESULT_TYPE;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.STORAGE_RESULT_TYPE;
 
 /**
  * @author Dirk Kuch
  */
 public class HydrologyResultReference implements IHydrologyResultReference
 {
+  private final Object m_type;
 
   private final IFile m_file;
 
-  public HydrologyResultReference( final IFolder calcCaseFolder, final StorageChannel channel, final String resultFileName )
+  public HydrologyResultReference( final IFolder calcCaseFolder, final StorageChannel channel, final STORAGE_RESULT_TYPE type )
   {
-    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/SpeicherStrang/%s/%s", channel.getName(), resultFileName ) ); //$NON-NLS-1$
+    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/SpeicherStrang/%s/%s", channel.getName(), type.getFileName() ) ); //$NON-NLS-1$
+    m_type = type;
   }
 
-  public HydrologyResultReference( final IFolder calcCaseFolder, final Catchment catchment, final String resultFileName )
+  public HydrologyResultReference( final IFolder calcCaseFolder, final Catchment catchment, final CATCHMENT_RESULT_TYPE type )
   {
-    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/Teilgebiet/%s/%s", catchment.getName(), resultFileName ) ); //$NON-NLS-1$
+    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/Teilgebiet/%s/%s", catchment.getName(), type.getFileName() ) ); //$NON-NLS-1$
+    m_type = type;
   }
 
-  public HydrologyResultReference( final IFolder calcCaseFolder, final Node node, final String resultFileName )
+  public HydrologyResultReference( final IFolder calcCaseFolder, final Node node, final NODE_RESULT_TYPE type )
   {
-    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/Knoten/%s/%s", node.getName(), resultFileName ) ); //$NON-NLS-1$
+    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/Knoten/%s/%s", node.getName(), type.getFileName() ) ); //$NON-NLS-1$
+    m_type = type;
   }
 
   @Override
@@ -84,9 +92,27 @@ public class HydrologyResultReference implements IHydrologyResultReference
   @Override
   public URL getUrl( ) throws MalformedURLException
   {
-
     return m_file.getLocationURI().toURL();
-
   }
 
+  @Override
+  public Object getType( )
+  {
+    return m_type;
+  }
+
+  @Override
+  public boolean isValid( )
+  {
+    try
+    {
+      return UrlUtilities.checkIsAccessible( getUrl() );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+
+    return false;
+  }
 }
