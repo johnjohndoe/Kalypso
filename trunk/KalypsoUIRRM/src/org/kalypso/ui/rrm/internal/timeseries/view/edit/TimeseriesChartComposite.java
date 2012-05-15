@@ -63,7 +63,7 @@ import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
 import org.kalypso.zml.ui.chart.layer.selection.ZmlChartSelectionChangedHandler;
 import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
 import org.kalypso.zml.ui.chart.view.DiagramCompositeSelection;
-import org.kalypso.zml.ui.chart.view.HideUnuseLayersVisitor;
+import org.kalypso.zml.ui.chart.view.HideUnusedLayersVisitor;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
@@ -160,7 +160,7 @@ public class TimeseriesChartComposite extends Composite
     DiagramCompositeSelection.doApply( m_model, source );
 
     final ILayerManager layerManager = m_model.getLayerManager();
-    layerManager.accept( new HideUnuseLayersVisitor() );
+    layerManager.accept( new HideUnusedLayersVisitor() );
     layerManager.accept( new SingleGridVisibilityVisitor() );
 
     m_model.autoscale();

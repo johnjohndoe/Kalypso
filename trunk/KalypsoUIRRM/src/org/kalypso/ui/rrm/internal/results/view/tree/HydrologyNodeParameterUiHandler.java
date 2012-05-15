@@ -55,7 +55,6 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
  */
 public class HydrologyNodeParameterUiHandler extends AbstractTreeNodeUiHandler
 {
-
   private final NODE_RESULT_TYPE m_type;
 
   private final Node m_node;
@@ -84,10 +83,6 @@ public class HydrologyNodeParameterUiHandler extends AbstractTreeNodeUiHandler
     return m_type.getImage();
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler#createPropertiesControl(org.eclipse.swt.widgets.Composite,
-   *      org.kalypso.commons.databinding.IDataBinding, org.eclipse.jface.action.ToolBarManager)
-   */
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
@@ -95,10 +90,6 @@ public class HydrologyNodeParameterUiHandler extends AbstractTreeNodeUiHandler
     return null;
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler#createHyperlinks(org.eclipse.ui.forms.widgets.FormToolkit,
-   *      org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
