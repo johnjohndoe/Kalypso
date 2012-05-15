@@ -84,6 +84,12 @@ public class KalypsoHydrologyResults
       return m_label;
     }
 
+    @Override
+    public String toString( )
+    {
+      return getLabel();
+    }
+
     public ImageDescriptor getImage( )
     {
       return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_image );
@@ -123,6 +129,12 @@ public class KalypsoHydrologyResults
       return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_image );
     }
 
+    @Override
+    public String toString( )
+    {
+      return getLabel();
+    }
+
     public String getFileName( )
     {
       return m_fileName;
@@ -150,6 +162,12 @@ public class KalypsoHydrologyResults
     public String getLabel( )
     {
       return m_label;
+    }
+
+    @Override
+    public String toString( )
+    {
+      return getLabel();
     }
 
     public ImageDescriptor getImage( )

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -61,8 +62,8 @@ import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExpandAllTreeItemsAct
  */
 public class HydrolgyManagementSearchControl extends Composite
 {
-// private final ParameterTypeFilterControl m_parameterTypeFilterControl;
-//
+  private final ResultParameterTypeFilterControl m_parameterTypeFilterControl;
+
   private final ResultTextSearchFilterControl m_textSearchControl;
 
   private String m_parameterType;
@@ -76,7 +77,7 @@ public class HydrolgyManagementSearchControl extends Composite
     final Group groupTextSearch = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupTextSearch );
     groupTextSearch.setLayout( new FillLayout() );
-    groupTextSearch.setText( Messages.getString( "TimeseriesBrowserSearchViewer_0" ) ); //$NON-NLS-1$
+    groupTextSearch.setText( "Freitext" ); //$NON-NLS-1$
     groupTextSearch.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_textSearchControl = new ResultTextSearchFilterControl( groupTextSearch, toolkit );
@@ -85,11 +86,11 @@ public class HydrolgyManagementSearchControl extends Composite
     final Group groupParameter = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupParameter );
     groupParameter.setLayout( new FillLayout() );
-    groupParameter.setText( Messages.getString( "TimeseriesBrowserSearchViewer_1" ) ); //$NON-NLS-1$
+    groupParameter.setText( "Ergebnistyp" );
     groupParameter.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-// m_parameterTypeFilterControl = new ParameterTypeFilterControl( groupParameter, toolkit );
-// m_parameterTypeFilterControl.setViewer( viewer );
+    m_parameterTypeFilterControl = new ResultParameterTypeFilterControl( groupParameter, toolkit );
+    m_parameterTypeFilterControl.setViewer( viewer );
 
     final Composite control = toolkit.createComposite( this );
     control.setLayout( Layouts.createGridLayout( 2 ) );
@@ -107,14 +108,14 @@ public class HydrolgyManagementSearchControl extends Composite
   public void doClean( )
   {
     m_textSearchControl.reset();
-//
-// if( StringUtils.isEmpty( m_parameterType ) )
-// m_parameterTypeFilterControl.reset();
+
+    if( StringUtils.isEmpty( m_parameterType ) )
+      m_parameterTypeFilterControl.reset();
   }
 
   public void setParameterType( final String parameterType )
   {
-// m_parameterType = parameterType;
-// m_parameterTypeFilterControl.setParameterType( parameterType );
+    m_parameterType = parameterType;
+    m_parameterTypeFilterControl.setParameterType( parameterType );
   }
 }

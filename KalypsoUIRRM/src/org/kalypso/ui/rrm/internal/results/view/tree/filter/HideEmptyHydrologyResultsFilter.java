@@ -40,12 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
@@ -85,18 +81,7 @@ public class HideEmptyHydrologyResultsFilter extends ViewerFilter
     }
 
     final IHydrologyResultReference reference = (IHydrologyResultReference) objReference;
-    try
-    {
-      final URL url = reference.getUrl();
-
-      return UrlUtilities.checkIsAccessible( url );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-
-      return false;
-    }
+    return reference.isValid();
 
   }
 
