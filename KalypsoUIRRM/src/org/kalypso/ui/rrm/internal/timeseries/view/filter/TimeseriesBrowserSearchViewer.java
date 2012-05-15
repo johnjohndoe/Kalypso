@@ -62,9 +62,9 @@ import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExpandAllTreeItemsAct
  */
 public class TimeseriesBrowserSearchViewer extends Composite
 {
-  private final ParameterTypeFilterControl m_parameterTypeFilterControl;
+  private final TimeseriesBrowserParameterTypeFilterControl m_parameterTypeFilterControl;
 
-  private final TextSearchFilterControl m_textSearchControl;
+  private final TimeseriesBrowserTextSearchFilterControl m_textSearchControl;
 
   private String m_parameterType;
 
@@ -80,7 +80,7 @@ public class TimeseriesBrowserSearchViewer extends Composite
     groupTextSearch.setText( Messages.getString( "TimeseriesBrowserSearchViewer_0" ) ); //$NON-NLS-1$
     groupTextSearch.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_textSearchControl = new TextSearchFilterControl( groupTextSearch, toolkit );
+    m_textSearchControl = new TimeseriesBrowserTextSearchFilterControl( groupTextSearch, toolkit );
     m_textSearchControl.setViewer( viewer );
 
     final Group groupParameter = new Group( this, SWT.NONE );
@@ -89,7 +89,7 @@ public class TimeseriesBrowserSearchViewer extends Composite
     groupParameter.setText( Messages.getString( "TimeseriesBrowserSearchViewer_1" ) ); //$NON-NLS-1$
     groupParameter.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_parameterTypeFilterControl = new ParameterTypeFilterControl( groupParameter, toolkit );
+    m_parameterTypeFilterControl = new TimeseriesBrowserParameterTypeFilterControl( groupParameter, toolkit );
     m_parameterTypeFilterControl.setViewer( viewer );
 
     final Composite control = toolkit.createComposite( this );
