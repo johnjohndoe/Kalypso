@@ -77,7 +77,7 @@ public class ResultTextSearchFilter extends ViewerFilter
         return true;
 
       final int hierarchy = getLevel( node );
-      if( hierarchy > 3 )
+      if( hierarchy > 4 )
         return true;
 
       return false;

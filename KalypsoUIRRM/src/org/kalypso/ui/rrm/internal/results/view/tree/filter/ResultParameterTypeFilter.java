@@ -104,7 +104,7 @@ public class ResultParameterTypeFilter extends ViewerFilter
   private boolean doSelectStorageType( final TreeNode node, final STORAGE_RESULT_TYPE type )
   {
     final int level = getLevel( node );
-    if( level == 2 )
+    if( level == 3 )
     {
       final Object data = node.getData();
       if( Objects.notEqual( STORAGE_RESULT_TYPE.class, data ) )
@@ -143,7 +143,7 @@ public class ResultParameterTypeFilter extends ViewerFilter
   private boolean doSelectNodeType( final TreeNode node, final NODE_RESULT_TYPE type )
   {
     final int level = getLevel( node );
-    if( level == 2 )
+    if( level == 3 )
     {
       final Object data = node.getData();
       if( Objects.notEqual( NODE_RESULT_TYPE.class, data ) )
@@ -182,7 +182,7 @@ public class ResultParameterTypeFilter extends ViewerFilter
   private boolean doSelectCatchmentType( final TreeNode node, final CATCHMENT_RESULT_TYPE type )
   {
     final int level = getLevel( node );
-    if( level == 2 )
+    if( level == 3 )
     {
       final Object data = node.getData();
       if( Objects.notEqual( CATCHMENT_RESULT_TYPE.class, data ) )
