@@ -49,13 +49,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.timeseries.view.actions.CollapseAllTreeItemsAction;
-import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExpandAllTreeItemsAction;
 
 /**
  * @author Dirk Kuch
@@ -92,17 +86,23 @@ public class HydrolgyManagementSearchControl extends Composite
     m_parameterTypeFilterControl = new ResultParameterTypeFilterControl( groupParameter, toolkit );
     m_parameterTypeFilterControl.setViewer( viewer );
 
-    final Composite control = toolkit.createComposite( this );
-    control.setLayout( Layouts.createGridLayout( 2 ) );
-    control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
+    final CurrentResultsFilterControl currentResultsControl = new CurrentResultsFilterControl( this, toolkit );
+    currentResultsControl.setViewer( viewer );
+    currentResultsControl.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 1 ) );
 
-    final ImageHyperlink lnkExpandAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new ExpandAllTreeItemsAction( viewer ) );
-    lnkExpandAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_2" ) ); //$NON-NLS-1$
-    lnkExpandAll.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
-
-    final ImageHyperlink lnkCollapseAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new CollapseAllTreeItemsAction( viewer ) );
-    lnkCollapseAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) ); //$NON-NLS-1$
-    lnkCollapseAll.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+// final Composite control = toolkit.createComposite( this );
+// control.setLayout( Layouts.createGridLayout( 2 ) );
+// control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
+//
+// final ImageHyperlink lnkExpandAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new
+// ExpandAllTreeItemsAction( viewer ) );
+//    lnkExpandAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_2" ) ); //$NON-NLS-1$
+// lnkExpandAll.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+//
+// final ImageHyperlink lnkCollapseAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new
+// CollapseAllTreeItemsAction( viewer ) );
+//    lnkCollapseAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) ); //$NON-NLS-1$
+// lnkCollapseAll.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
   }
 
   public void doClean( )

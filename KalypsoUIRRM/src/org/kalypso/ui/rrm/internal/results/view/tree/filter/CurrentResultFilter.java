@@ -40,74 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Dirk Kuch
  */
-public class ResultTextSearchFilter extends AbstractResultViewerFilter
+public class CurrentResultFilter extends AbstractResultViewerFilter
 {
-  private String m_string;
-
-  private StructuredViewer m_viewer;
-
-  public static final String PROPERTY_STRING = "string"; //$NON-NLS-1$
-
-  public ResultTextSearchFilter( final String string )
-  {
-    setString( string );
-  }
+  private boolean m_doFilter;
 
   @Override
   protected boolean doSelect( final TreeNode node )
   {
-    final String searchString = getString();
-    if( StringUtils.isEmpty( searchString ) )
+    if( !m_doFilter )
       return true;
 
-    if( hasChildWithName( node, searchString ) )
-      return true;
-
-    final int hierarchy = getLevel( node );
-    if( hierarchy > 4 )
-      return true;
-
+    // TODO Auto-generated method stub
     return false;
   }
 
-  private boolean hasChildWithName( final TreeNode node, final String searchString )
+  public void setSelection( final boolean doFilter )
   {
-    if( StringUtils.containsIgnoreCase( node.getLabel(), searchString ) )
-      return true;
-
-    final TreeNode[] children = node.getChildren();
-    for( final TreeNode child : children )
-    {
-      if( hasChildWithName( child, searchString ) )
-        return true;
-    }
-
-    return false;
-  }
-
-  public void setViewer( final StructuredViewer viewer )
-  {
-    m_viewer = viewer;
-  }
-
-  public String getString( )
-  {
-    return m_string;
-  }
-
-  public void setString( final String string )
-  {
-    m_string = StringUtils.isBlank( string ) ? null : string.toLowerCase();
-
-    if( m_viewer != null )
-      m_viewer.refresh();
+    m_doFilter = doFilter;
   }
 
 }
