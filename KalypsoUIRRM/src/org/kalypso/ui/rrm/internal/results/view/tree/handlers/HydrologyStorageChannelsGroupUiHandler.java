@@ -44,21 +44,19 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyStorageChannelsGroupUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyStorageChannelsGroupUiHandler extends AbstractResultTreeNodeUiHandler
 {
-  @Override
-  public String getTypeLabel( )
+  public HydrologyStorageChannelsGroupUiHandler( final RrmSimulation simulation )
   {
-    return "Speicher";
+    super( simulation );
   }
 
   @Override
@@ -78,12 +76,6 @@ public class HydrologyStorageChannelsGroupUiHandler extends AbstractTreeNodeUiHa
   {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
-  {
-    // TODO Auto-generated method stub
   }
 
 }

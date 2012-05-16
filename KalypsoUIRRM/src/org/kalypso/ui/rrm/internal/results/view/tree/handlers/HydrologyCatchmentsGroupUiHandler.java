@@ -44,22 +44,20 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyCatchmentsGroupUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyCatchmentsGroupUiHandler extends AbstractResultTreeNodeUiHandler
 {
 
-  @Override
-  public String getTypeLabel( )
+  public HydrologyCatchmentsGroupUiHandler( final RrmSimulation simulation )
   {
-    return "Teilgebiete";
+    super( simulation );
   }
 
   @Override
@@ -79,13 +77,6 @@ public class HydrologyCatchmentsGroupUiHandler extends AbstractTreeNodeUiHandler
   {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
-  {
-    // TODO Auto-generated method stub
-
   }
 
 }

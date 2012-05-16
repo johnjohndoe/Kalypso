@@ -68,15 +68,6 @@ public class HydrologyCalculationCaseGroupUiHandler extends AbstractResultTreeNo
   }
 
   @Override
-  public String getTypeLabel( )
-  {
-    if( Objects.isNotNull( m_calculationCaseResultFolder ) )
-      return m_calculationCaseResultFolder.getName();
-
-    return getSimulation().getName();
-  }
-
-  @Override
   public String getTreeLabel( )
   {
     if( Objects.isNotNull( m_calculationCaseResultFolder ) )

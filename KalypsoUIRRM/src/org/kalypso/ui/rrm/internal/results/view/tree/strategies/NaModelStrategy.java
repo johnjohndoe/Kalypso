@@ -155,9 +155,9 @@ public class NaModelStrategy implements ITreeNodeStrategy
       {
         final TreeNode calculationResultNode = new TreeNode( calcCase, new HydrologyCalculationCaseGroupUiHandler( simulation, calculationResultFolder ), calculationResultFolder );
 
-        calculationResultNode.addChild( buildHydrologyNodes( calculationResultNode, calculationResultFolder ) );
-        calculationResultNode.addChild( buildHydrologyCatchments( calculationResultNode, calculationResultFolder ) );
-        calculationResultNode.addChild( buildHydrologyStorages( calculationResultNode, calculationResultFolder ) );
+        calculationResultNode.addChild( buildHydrologyNodes( calculationResultNode, simulation, calculationResultFolder ) );
+        calculationResultNode.addChild( buildHydrologyCatchments( calculationResultNode, simulation, calculationResultFolder ) );
+        calculationResultNode.addChild( buildHydrologyStorages( calculationResultNode, simulation, calculationResultFolder ) );
 
         calcCase.addChild( calculationResultNode );
       }
@@ -171,74 +171,74 @@ public class NaModelStrategy implements ITreeNodeStrategy
     return calcCase;
   }
 
-  private TreeNode buildHydrologyStorages( final TreeNode parent, final IFolder calculationFolder )
+  private TreeNode buildHydrologyStorages( final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
     final IFeatureBindingCollection<Channel> channels = m_model.getChannels();
 
-    final TreeNode base = new TreeNode( parent, new HydrologyStorageChannelsGroupUiHandler(), STORAGE_RESULT_TYPE.class );
+    final TreeNode base = new TreeNode( parent, new HydrologyStorageChannelsGroupUiHandler( simulation ), STORAGE_RESULT_TYPE.class );
     channels.accept( new IFeatureBindingCollectionVisitor<Channel>()
     {
       @Override
       public void visit( final Channel channel )
       {
         if( channel instanceof StorageChannel )
-          base.addChild( toTreeNode( base, (StorageChannel) channel, calculationFolder ) );
+          base.addChild( toTreeNode( base, (StorageChannel) channel, simulation, calculationFolder ) );
       }
     } );
 
     return base;
   }
 
-  protected TreeNode toTreeNode( final TreeNode parent, final StorageChannel channel, final IFolder calculationFolder )
+  protected TreeNode toTreeNode( final TreeNode parent, final StorageChannel channel, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-    final TreeNode node = new TreeNode( parent, new HydrologyStorageChannelUiHandler( channel ), channel );
-    node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( channel, STORAGE_RESULT_TYPE.eFuellvolumen ), new HydrologyResultReference( calculationFolder, channel, STORAGE_RESULT_TYPE.eFuellvolumen ) ) );
-    node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( channel, STORAGE_RESULT_TYPE.eSpeicherUeberlauf ), new HydrologyResultReference( calculationFolder, channel, STORAGE_RESULT_TYPE.eSpeicherUeberlauf ) ) );
+    final TreeNode node = new TreeNode( parent, new HydrologyStorageChannelUiHandler( simulation, channel ), channel );
+    node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( simulation, channel, STORAGE_RESULT_TYPE.eFuellvolumen ), new HydrologyResultReference( calculationFolder, channel, STORAGE_RESULT_TYPE.eFuellvolumen ) ) );
+    node.addChild( new TreeNode( node, new HydrologyStorageParameterUiHandler( simulation, channel, STORAGE_RESULT_TYPE.eSpeicherUeberlauf ), new HydrologyResultReference( calculationFolder, channel, STORAGE_RESULT_TYPE.eSpeicherUeberlauf ) ) );
 
     return node;
   }
 
-  private TreeNode buildHydrologyCatchments( final TreeNode parent, final IFolder calculationFolder )
+  private TreeNode buildHydrologyCatchments( final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
     final IFeatureBindingCollection<Catchment> catchments = m_model.getCatchments();
 
-    final TreeNode base = new TreeNode( parent, new HydrologyCatchmentsGroupUiHandler(), CATCHMENT_RESULT_TYPE.class );
+    final TreeNode base = new TreeNode( parent, new HydrologyCatchmentsGroupUiHandler( simulation ), CATCHMENT_RESULT_TYPE.class );
     catchments.accept( new IFeatureBindingCollectionVisitor<Catchment>()
     {
       @Override
       public void visit( final Catchment catchment )
       {
         if( catchment.isGenerateResults() )
-          base.addChild( toTreeNode( base, catchment, calculationFolder ) );
+          base.addChild( toTreeNode( base, catchment, simulation, calculationFolder ) );
       }
     } );
 
     return base;
   }
 
-  protected TreeNode toTreeNode( final TreeNode parent, final Catchment catchment, final IFolder calculationFolder )
+  protected TreeNode toTreeNode( final TreeNode parent, final Catchment catchment, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-    final TreeNode nodeCatchment = new TreeNode( parent, new HydrologyCatchmentUiHandler( catchment ), catchment );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eTemperature ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eTemperature ) ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eNiederschlag ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eNiederschlag ) ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eSchneehoehe ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eSchneehoehe ) ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eGesamtTeilgebietsQ ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eGesamtTeilgebietsQ ) ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQNatuerlich ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQNatuerlich ) ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQVersiegelt ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQVersiegelt ) ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eInterflow ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eInterflow ) ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eBasisQ ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eBasisQ ) ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eGrundwasserQ ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eGrundwasserQ ) ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eGrundwasserstand ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eGrundwasserstand ) ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( catchment, CATCHMENT_RESULT_TYPE.eEvapotranspiration ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eEvapotranspiration ) ) );
+    final TreeNode nodeCatchment = new TreeNode( parent, new HydrologyCatchmentUiHandler( simulation, catchment ), catchment );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eTemperature ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eTemperature ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eNiederschlag ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eNiederschlag ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eSchneehoehe ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eSchneehoehe ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eGesamtTeilgebietsQ ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eGesamtTeilgebietsQ ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQNatuerlich ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQNatuerlich ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQVersiegelt ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eOberflaechenQVersiegelt ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eInterflow ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eInterflow ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eBasisQ ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eBasisQ ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eGrundwasserQ ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eGrundwasserQ ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eGrundwasserstand ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eGrundwasserstand ) ) );
+    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyCatchmentParameterUiHandler( simulation, catchment, CATCHMENT_RESULT_TYPE.eEvapotranspiration ), new HydrologyResultReference( calculationFolder, catchment, CATCHMENT_RESULT_TYPE.eEvapotranspiration ) ) );
 
     return nodeCatchment;
   }
 
-  private TreeNode buildHydrologyNodes( final TreeNode parent, final IFolder calculationFolder )
+  private TreeNode buildHydrologyNodes( final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
     final IFeatureBindingCollection<Node> nodes = m_model.getNodes();
 
-    final TreeNode base = new TreeNode( parent, new HydrologyNodesGroupUiHandler(), NODE_RESULT_TYPE.class );
+    final TreeNode base = new TreeNode( parent, new HydrologyNodesGroupUiHandler( simulation ), NODE_RESULT_TYPE.class );
     nodes.accept( new IFeatureBindingCollectionVisitor<Node>()
     {
       @Override
@@ -246,7 +246,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
       {
         if( node.isGenerateResults() )
         {
-          base.addChild( toTreeNode( base, node, calculationFolder ) );
+          base.addChild( toTreeNode( base, node, simulation, calculationFolder ) );
         }
       }
     } );
@@ -254,10 +254,10 @@ public class NaModelStrategy implements ITreeNodeStrategy
     return base;
   }
 
-  protected TreeNode toTreeNode( final TreeNode parent, final Node hydrologyNode, final IFolder calculationFolder )
+  protected TreeNode toTreeNode( final TreeNode parent, final Node hydrologyNode, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-    final TreeNode node = new TreeNode( parent, new HydrologyNodeUiHandler( hydrologyNode ), hydrologyNode );
-    node.addChild( new TreeNode( node, new HydrologyNodeParameterUiHandler( hydrologyNode, NODE_RESULT_TYPE.eGesamtknotenAbfluss ), new HydrologyResultReference( calculationFolder, hydrologyNode, NODE_RESULT_TYPE.eGesamtknotenAbfluss ) ) );
+    final TreeNode node = new TreeNode( parent, new HydrologyNodeUiHandler( simulation, hydrologyNode ), hydrologyNode );
+    node.addChild( new TreeNode( node, new HydrologyNodeParameterUiHandler( simulation, hydrologyNode, NODE_RESULT_TYPE.eGesamtknotenAbfluss ), new HydrologyResultReference( calculationFolder, hydrologyNode, NODE_RESULT_TYPE.eGesamtknotenAbfluss ) ) );
 
     return node;
   }

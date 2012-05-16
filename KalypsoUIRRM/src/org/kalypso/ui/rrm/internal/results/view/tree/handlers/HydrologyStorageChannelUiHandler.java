@@ -44,29 +44,24 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyStorageChannelUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyStorageChannelUiHandler extends AbstractResultTreeNodeUiHandler
 {
   private final StorageChannel m_channel;
 
-  public HydrologyStorageChannelUiHandler( final StorageChannel channel )
+  public HydrologyStorageChannelUiHandler( final RrmSimulation simulation, final StorageChannel channel )
   {
-    m_channel = channel;
-  }
+    super( simulation );
 
-  @Override
-  public String getTypeLabel( )
-  {
-    return m_channel.getName();
+    m_channel = channel;
   }
 
   @Override
@@ -85,11 +80,6 @@ public class HydrologyStorageChannelUiHandler extends AbstractTreeNodeUiHandler
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
     return null;
-  }
-
-  @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
-  {
   }
 
 }

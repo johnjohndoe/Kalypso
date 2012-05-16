@@ -44,31 +44,26 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.NODE_RESULT_TYPE;
-import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyNodeParameterUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyNodeParameterUiHandler extends AbstractResultTreeNodeUiHandler
 {
   private final NODE_RESULT_TYPE m_type;
 
   private final Node m_node;
 
-  public HydrologyNodeParameterUiHandler( final Node node, final NODE_RESULT_TYPE type )
+  public HydrologyNodeParameterUiHandler( final RrmSimulation simulation, final Node node, final NODE_RESULT_TYPE type )
   {
+    super( simulation );
+
     m_node = node;
     m_type = type;
-  }
-
-  @Override
-  public String getTypeLabel( )
-  {
-    return m_type.getLabel();
   }
 
   @Override
@@ -88,13 +83,6 @@ public class HydrologyNodeParameterUiHandler extends AbstractTreeNodeUiHandler
   {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
-  {
-    // TODO Auto-generated method stub
-
   }
 
 }
