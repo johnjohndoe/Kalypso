@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IFolder;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
@@ -55,7 +57,20 @@ public class CurrentResultFilter extends AbstractResultViewerFilter
     if( !m_doFilter )
       return true;
 
-    // TODO Auto-generated method stub
+    final int level = getLevel( node );
+    if( level != 2 )
+      return true;
+
+    final Object data = node.getData();
+    if( data instanceof IFolder )
+    {
+      final IFolder folder = (IFolder) data;
+
+      // FIXME english project template
+      return StringUtils.equalsIgnoreCase( folder.getName(), "berechnet" );
+
+    }
+
     return false;
   }
 
