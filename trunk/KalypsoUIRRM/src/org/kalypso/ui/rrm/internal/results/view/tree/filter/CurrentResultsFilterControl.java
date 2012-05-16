@@ -56,7 +56,7 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
  */
 public class CurrentResultsFilterControl extends Composite
 {
-  private TreeViewer m_viewer;
+  protected TreeViewer m_viewer;
 
   protected final CurrentResultFilter m_filter = new CurrentResultFilter();
 
@@ -68,7 +68,6 @@ public class CurrentResultsFilterControl extends Composite
     doRenderControl( toolkit );
 
     layout();
-
   }
 
   private void doRenderControl( final FormToolkit toolkit )

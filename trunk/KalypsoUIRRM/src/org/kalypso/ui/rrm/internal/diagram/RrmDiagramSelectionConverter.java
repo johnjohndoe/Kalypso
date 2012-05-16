@@ -49,6 +49,9 @@ import java.util.Set;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
+import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -75,7 +78,13 @@ public class RrmDiagramSelectionConverter
         final TreeNode node = (TreeNode) next;
         final Object objStation = node.getAdapter( IStation.class );
         final Object objTimeseries = node.getAdapter( ITimeseries.class );
+
+        /** result references tree node */
         final Object objResultReference = node.getAdapter( IHydrologyResultReference.class );
+
+        final Object objCatchment = node.getAdapter( Catchment.class );
+        final Object objNode = node.getAdapter( INode.class );
+        final Object objStorageChannel = node.getAdapter( IStorageChannel.class );
 
         if( objStation instanceof IStation )
         {
@@ -84,6 +93,17 @@ public class RrmDiagramSelectionConverter
         else if( objResultReference instanceof IHydrologyResultReference )
         {
           items.add( doConvert( (IHydrologyResultReference) objResultReference ) );
+        }
+        else if( objCatchment != null || objNode != null || objStorageChannel != null )
+        {
+          final TreeNode[] children = node.getChildren();
+          for( final TreeNode child : children )
+          {
+            final Object resultRefernce = child.getAdapter( IHydrologyResultReference.class );
+            if( resultRefernce != null )
+              items.add( doConvert( (IHydrologyResultReference) resultRefernce ) );
+          }
+
         }
         else if( Objects.isNull( objTimeseries ) ) // parameter tree item
         {

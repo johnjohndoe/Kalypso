@@ -400,6 +400,18 @@
                  style="push">
            </command>
         </menuContribution>
+        <menuContribution
+              allPopups="false"
+              locationURI="toolbar:org.kalypso.ui.rrm.internal.results.view.ResultManagementView">
+           <command
+                 commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items"
+                 style="push">
+           </command>
+           <command
+                 commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items"
+                 style="push">
+           </command>
+        </menuContribution>
    </extension>
    <extension point="org.kalypso.ui.importWizards">
       <wizard
@@ -567,6 +579,14 @@
                   id="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items"
                   name="Schließe Baumelemente">
             </command>
+            <command
+                  id="org.kalypso.ui.rrm.internal.result.view.expand.tree.items"
+                  name="Öffne Baumelemente">
+            </command>
+            <command
+                  id="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items"
+                  name="Schließe Baumelemente">
+            </command>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
             <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
@@ -609,6 +629,14 @@
             </image>
             <image
                   commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items"
+                  icon="icons/timeseries/collapseall.gif">
+            </image>
+            <image
+                  commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items"
+                  icon="icons/timeseries/expandall.gif">
+            </image>
+            <image
+                  commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items"
                   icon="icons/timeseries/collapseall.gif">
             </image>
    </extension>
@@ -654,6 +682,14 @@
       <handler
             class="org.kalypso.ui.rrm.internal.timeseries.view.actions.CollapseAllTreeItemsHandler"
             commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items">
+      </handler>
+      <handler
+            class="org.kalypso.ui.rrm.internal.results.view.actions.ExpandAllTreeItemsHandler"
+            commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items">
+      </handler>
+      <handler
+            class="org.kalypso.ui.rrm.internal.results.view.actions.CollapseAllTreeItemsHandler"
+            commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items">
       </handler>
    </extension>
 
