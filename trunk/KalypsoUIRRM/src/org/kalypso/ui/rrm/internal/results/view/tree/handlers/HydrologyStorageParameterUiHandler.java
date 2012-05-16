@@ -44,31 +44,26 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.STORAGE_RESULT_TYPE;
-import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyStorageParameterUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyStorageParameterUiHandler extends AbstractResultTreeNodeUiHandler
 {
   private final StorageChannel m_channel;
 
   private final STORAGE_RESULT_TYPE m_type;
 
-  public HydrologyStorageParameterUiHandler( final StorageChannel channel, final STORAGE_RESULT_TYPE type )
+  public HydrologyStorageParameterUiHandler( final RrmSimulation simualtion, final StorageChannel channel, final STORAGE_RESULT_TYPE type )
   {
+    super( simualtion );
+
     m_channel = channel;
     m_type = type;
-  }
-
-  @Override
-  public String getTypeLabel( )
-  {
-    return m_type.getLabel();
   }
 
   @Override
@@ -92,17 +87,6 @@ public class HydrologyStorageParameterUiHandler extends AbstractTreeNodeUiHandle
   {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  /**
-   * @see org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler#createHyperlinks(org.eclipse.ui.forms.widgets.FormToolkit,
-   *      org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
-  {
-    // TODO Auto-generated method stub
-
   }
 
 }

@@ -44,31 +44,26 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE;
-import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyCatchmentParameterUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyCatchmentParameterUiHandler extends AbstractResultTreeNodeUiHandler
 {
   private final Catchment m_catchment;
 
   private final CATCHMENT_RESULT_TYPE m_type;
 
-  public HydrologyCatchmentParameterUiHandler( final Catchment catchment, final CATCHMENT_RESULT_TYPE type )
+  public HydrologyCatchmentParameterUiHandler( final RrmSimulation simulation, final Catchment catchment, final CATCHMENT_RESULT_TYPE type )
   {
+    super( simulation );
+
     m_catchment = catchment;
     m_type = type;
-  }
-
-  @Override
-  public String getTypeLabel( )
-  {
-    return m_type.getLabel();
   }
 
   @Override
@@ -92,17 +87,6 @@ public class HydrologyCatchmentParameterUiHandler extends AbstractTreeNodeUiHand
   {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  /**
-   * @see org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler#createHyperlinks(org.eclipse.ui.forms.widgets.FormToolkit,
-   *      org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
-  {
-    // TODO Auto-generated method stub
-
   }
 
 }

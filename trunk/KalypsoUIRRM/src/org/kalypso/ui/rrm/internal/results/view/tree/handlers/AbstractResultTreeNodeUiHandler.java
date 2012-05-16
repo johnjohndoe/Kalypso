@@ -40,13 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.ui.rrm.internal.results.view.base.ResultLogFileComposite;
+import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
+import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
@@ -68,15 +77,34 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
   }
 
   @Override
-  protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
+  public final String getTypeLabel( )
   {
-    return new ResultLogFileComposite( parent, binding, m_simulation );
+    return String.format( "Simulation: %s", getSimulation().getName() );
   }
 
   @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
+  protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected final void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
+  {
+    final List<Action> actions = new ArrayList<Action>();
+    actions.add( new OpenTextLogAction( "Open calculation log", "Displays the calculation log.", m_simulation.getCalculationLog() ) );
+    actions.add( new OpenOutputZipAction( "Open error log (calculation core)", "Displays the error log.", m_simulation, true ) );
+    actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.", m_simulation, false ) );
+    actions.add( new OpenTextLogAction( "Open Mass Balance", "Displays the mass balance.", m_simulation.getBilanzTxt() ) );
+    actions.add( new OpenTextLogAction( "Open Statistics", "Displays the statistics.", m_simulation.getStatisticsCsv() ) );
+
+    /* Create the image hyperlinks. */
+    for( final Action action : actions )
+    {
+      final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, actionPanel, SWT.NONE, action );
+      imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      imageHyperlink.setText( action.getText() );
+    }
 
   }
 

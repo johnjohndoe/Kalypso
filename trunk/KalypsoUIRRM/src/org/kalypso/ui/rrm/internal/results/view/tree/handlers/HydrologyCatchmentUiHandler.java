@@ -44,30 +44,24 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyCatchmentUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyCatchmentUiHandler extends AbstractResultTreeNodeUiHandler
 {
 
   private final Catchment m_catchment;
 
-  public HydrologyCatchmentUiHandler( final Catchment catchment )
+  public HydrologyCatchmentUiHandler( final RrmSimulation simulation, final Catchment catchment )
   {
+    super( simulation );
     m_catchment = catchment;
-  }
-
-  @Override
-  public String getTypeLabel( )
-  {
-    return m_catchment.getName();
   }
 
   @Override
@@ -86,12 +80,6 @@ public class HydrologyCatchmentUiHandler extends AbstractTreeNodeUiHandler
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
     return null;
-  }
-
-  @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
-  {
-
   }
 
 }
