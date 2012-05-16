@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree;
+package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -46,22 +46,22 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.NODE_RESULT_TYPE;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyCatchmentParameterUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyNodeParameterUiHandler extends AbstractTreeNodeUiHandler
 {
-  private final Catchment m_catchment;
+  private final NODE_RESULT_TYPE m_type;
 
-  private final CATCHMENT_RESULT_TYPE m_type;
+  private final Node m_node;
 
-  public HydrologyCatchmentParameterUiHandler( final Catchment catchment, final CATCHMENT_RESULT_TYPE type )
+  public HydrologyNodeParameterUiHandler( final Node node, final NODE_RESULT_TYPE type )
   {
-    m_catchment = catchment;
+    m_node = node;
     m_type = type;
   }
 
@@ -83,10 +83,6 @@ public class HydrologyCatchmentParameterUiHandler extends AbstractTreeNodeUiHand
     return m_type.getImage();
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler#createPropertiesControl(org.eclipse.swt.widgets.Composite,
-   *      org.kalypso.commons.databinding.IDataBinding, org.eclipse.jface.action.ToolBarManager)
-   */
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
@@ -94,10 +90,6 @@ public class HydrologyCatchmentParameterUiHandler extends AbstractTreeNodeUiHand
     return null;
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler#createHyperlinks(org.eclipse.ui.forms.widgets.FormToolkit,
-   *      org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {

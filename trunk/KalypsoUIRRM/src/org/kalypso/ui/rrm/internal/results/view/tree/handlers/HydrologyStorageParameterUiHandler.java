@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree;
+package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -47,49 +47,62 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.STORAGE_RESULT_TYPE;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyStorageChannelUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyStorageParameterUiHandler extends AbstractTreeNodeUiHandler
 {
   private final StorageChannel m_channel;
 
-  public HydrologyStorageChannelUiHandler( final StorageChannel channel )
+  private final STORAGE_RESULT_TYPE m_type;
+
+  public HydrologyStorageParameterUiHandler( final StorageChannel channel, final STORAGE_RESULT_TYPE type )
   {
     m_channel = channel;
+    m_type = type;
   }
 
   @Override
   public String getTypeLabel( )
   {
-    return "HydrologyStorageChannel";
+    return m_type.getLabel();
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return m_channel.getName();
+    return m_type.getLabel();
   }
 
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    return UIRrmImages.id( DESCRIPTORS.STORAGE_CHANNEL );
+    return m_type.getImage();
   }
 
+  /**
+   * @see org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler#createPropertiesControl(org.eclipse.swt.widgets.Composite,
+   *      org.kalypso.commons.databinding.IDataBinding, org.eclipse.jface.action.ToolBarManager)
+   */
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
+    // TODO Auto-generated method stub
     return null;
   }
 
+  /**
+   * @see org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler#createHyperlinks(org.eclipse.ui.forms.widgets.FormToolkit,
+   *      org.eclipse.swt.widgets.Composite)
+   */
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
+    // TODO Auto-generated method stub
+
   }
 
 }

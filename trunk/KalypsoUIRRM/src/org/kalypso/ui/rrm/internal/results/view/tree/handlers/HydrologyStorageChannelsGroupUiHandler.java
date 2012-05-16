@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree;
+package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -53,25 +53,24 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 /**
  * @author Dirk Kuch
  */
-public class HydrologyCatchmentsGroupUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyStorageChannelsGroupUiHandler extends AbstractTreeNodeUiHandler
 {
-
   @Override
   public String getTypeLabel( )
   {
-    return "HydrologyCatchments";
+    return "Speicher";
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return "Teilgebiete";
+    return "Speicher";
   }
 
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    return UIRrmImages.id( DESCRIPTORS.CATCHMENT );
+    return UIRrmImages.id( DESCRIPTORS.STORAGE_CHANNEL );
   }
 
   @Override
@@ -85,7 +84,6 @@ public class HydrologyCatchmentsGroupUiHandler extends AbstractTreeNodeUiHandler
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
     // TODO Auto-generated method stub
-
   }
 
 }
