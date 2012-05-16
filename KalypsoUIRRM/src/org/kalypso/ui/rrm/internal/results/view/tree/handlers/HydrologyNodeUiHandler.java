@@ -38,81 +38,58 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree;
+package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyCalculationCaseGroupUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyNodeUiHandler extends AbstractTreeNodeUiHandler
 {
-  private final IFolder m_calculationCaseResultFolder;
+  private final Node m_hydrologyNode;
 
-  private final RrmSimulation m_simulation;
-
-  public HydrologyCalculationCaseGroupUiHandler( final IFolder calculationCaseResultFolder )
+  public HydrologyNodeUiHandler( final Node hydrologyNode )
   {
-    m_calculationCaseResultFolder = calculationCaseResultFolder;
-    m_simulation = null;
-  }
-
-  public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation )
-  {
-    m_simulation = simulation;
-    m_calculationCaseResultFolder = null;
+    m_hydrologyNode = hydrologyNode;
   }
 
   @Override
   public String getTypeLabel( )
   {
-    if( Objects.isNotNull( m_calculationCaseResultFolder ) )
-      return m_calculationCaseResultFolder.getName();
-
-    return m_simulation.getName();
+    return m_hydrologyNode.getName();
   }
 
   @Override
   public String getTreeLabel( )
   {
-    if( Objects.isNotNull( m_calculationCaseResultFolder ) )
-      return m_calculationCaseResultFolder.getName();
-
-    return m_simulation.getName();
+    return m_hydrologyNode.getName();
   }
 
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    if( Objects.isNotNull( m_calculationCaseResultFolder ) )
-      return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( UIRrmImages.DESCRIPTORS.CALC_CASE_FOLDER );
-
-    return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( UIRrmImages.DESCRIPTORS.SIMULATION );
+    return UIRrmImages.id( DESCRIPTORS.NA_NODE );
   }
 
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    // TODO Auto-generated method stub
-
   }
 
 }

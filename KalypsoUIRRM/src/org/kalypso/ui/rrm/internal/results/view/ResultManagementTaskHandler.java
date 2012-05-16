@@ -55,6 +55,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.diagram.RrmDiagramView;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
@@ -78,13 +79,12 @@ public class ResultManagementTaskHandler extends AbstractHandler
 
     try
     {
-      // TODO
-// /* Hook properties view and management view */
-// final TreePropertiesView propertiesView = (TreePropertiesView) page.showView( TreePropertiesView.ID );
-// if( propertiesView == null )
-//        throw new ExecutionException( "Failed to access properties view" ); //$NON-NLS-1$
-//
-// propertiesView.hookSelection( selectionProvider );
+      /* Hook properties view and management view */
+      final TreePropertiesView propertiesView = (TreePropertiesView) page.showView( TreePropertiesView.ID );
+      if( propertiesView == null )
+        throw new ExecutionException( "Failed to access properties view" ); //$NON-NLS-1$
+
+      propertiesView.hookSelection( selectionProvider );
 
       /* hook rrm diagram view */
       final IViewPart diagramView = page.showView( RrmDiagramView.ID );

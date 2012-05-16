@@ -38,56 +38,39 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree;
+package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.NODE_RESULT_TYPE;
+import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ui.rrm.internal.results.view.base.ResultLogFileComposite;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyNodeParameterUiHandler extends AbstractTreeNodeUiHandler
+public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUiHandler
 {
-  private final NODE_RESULT_TYPE m_type;
 
-  private final Node m_node;
+  private final RrmSimulation m_simulation;
 
-  public HydrologyNodeParameterUiHandler( final Node node, final NODE_RESULT_TYPE type )
+  public AbstractResultTreeNodeUiHandler( final RrmSimulation simulation )
   {
-    m_node = node;
-    m_type = type;
+    m_simulation = simulation;
   }
 
-  @Override
-  public String getTypeLabel( )
+  protected RrmSimulation getSimulation( )
   {
-    return m_type.getLabel();
-  }
-
-  @Override
-  public String getTreeLabel( )
-  {
-    return m_type.getLabel();
-  }
-
-  @Override
-  public ImageDescriptor getTreeImage( )
-  {
-    return m_type.getImage();
+    return m_simulation;
   }
 
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return new ResultLogFileComposite( parent, binding, m_simulation );
   }
 
   @Override

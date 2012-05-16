@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree;
+package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -53,37 +53,36 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 /**
  * @author Dirk Kuch
  */
-public class HydrologyStorageChannelsGroupUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyNodesGroupUiHandler extends AbstractTreeNodeUiHandler
 {
   @Override
   public String getTypeLabel( )
   {
-    return "HydrologyStorageChannels";
+    return "Knoten";
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return "Speicher";
+    return "Knoten";
   }
 
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    return UIRrmImages.id( DESCRIPTORS.STORAGE_CHANNEL );
+    return UIRrmImages.id( DESCRIPTORS.NA_NODE );
   }
 
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    // TODO Auto-generated method stub
+
   }
 
 }

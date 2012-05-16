@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree;
+package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -46,7 +46,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
@@ -54,26 +53,19 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 /**
  * @author Dirk Kuch
  */
-public class HydrologyCatchmentUiHandler extends AbstractTreeNodeUiHandler
+public class HydrologyCatchmentsGroupUiHandler extends AbstractTreeNodeUiHandler
 {
-
-  private final Catchment m_catchment;
-
-  public HydrologyCatchmentUiHandler( final Catchment catchment )
-  {
-    m_catchment = catchment;
-  }
 
   @Override
   public String getTypeLabel( )
   {
-    return "HydrologyCatchment";
+    return "Teilgebiete";
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return m_catchment.getName();
+    return "Teilgebiete";
   }
 
   @Override
@@ -85,12 +77,14 @@ public class HydrologyCatchmentUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
+    // TODO Auto-generated method stub
     return null;
   }
 
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
+    // TODO Auto-generated method stub
 
   }
 

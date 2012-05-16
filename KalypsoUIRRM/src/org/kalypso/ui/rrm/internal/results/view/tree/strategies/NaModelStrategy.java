@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree;
+package org.kalypso.ui.rrm.internal.results.view.tree.strategies;
 
 import java.net.URL;
 
@@ -59,6 +59,17 @@ import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.NODE_RESULT_TYPE;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.STORAGE_RESULT_TYPE;
+import org.kalypso.ui.rrm.internal.results.view.tree.HydrologyCalculationFoldersCollector;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCalculationCaseGroupUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCatchmentParameterUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCatchmentUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCatchmentsGroupUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyNodeParameterUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyNodeUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyNodesGroupUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyStorageChannelUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyStorageChannelsGroupUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyStorageParameterUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
@@ -135,7 +146,6 @@ public class NaModelStrategy implements ITreeNodeStrategy
     try
     {
       // FIXME english project template folder names?!?
-
       final HydrologyCalculationFoldersCollector visitor = new HydrologyCalculationFoldersCollector( simulation ); //$NON-NLS-1$
       simulation.getResultsFolder().accept( visitor, 1, false );
 
@@ -143,8 +153,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
       for( final IFolder calculationResultFolder : caluculationResultsFolders )
       {
-
-        final TreeNode calculationResultNode = new TreeNode( calcCase, new HydrologyCalculationCaseGroupUiHandler( calculationResultFolder ), calculationResultFolder );
+        final TreeNode calculationResultNode = new TreeNode( calcCase, new HydrologyCalculationCaseGroupUiHandler( simulation, calculationResultFolder ), calculationResultFolder );
 
         calculationResultNode.addChild( buildHydrologyNodes( calculationResultNode, calculationResultFolder ) );
         calculationResultNode.addChild( buildHydrologyCatchments( calculationResultNode, calculationResultFolder ) );
