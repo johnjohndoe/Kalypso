@@ -8,6 +8,7 @@
 <view id="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"/>
 <view id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"/>
 <view id="org.kalypso.ui.views.outline"/>
+<view id="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"/>
 <fastViewBars/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.views.mapView"/>
@@ -43,7 +44,7 @@
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.17572892" ratioLeft="223" ratioRight="1046" relationship="2" relative="leftTop"/>
 <info folder="true" part="rightTop" ratio="0.94949496" ratioLeft="846" ratioRight="45" relationship="2" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.kalypso.ui.views.mapView" appearance="2" expanded="2">
+<folder activePageID="org.kalypso.ui.rrm.internal.results.view.ResultManagementView" appearance="2" expanded="2">
 <page content="org.kalypso.ui.views.mapView" label="Karte: Zeitreihen-Stationierung"/>
 <page content="org.kalypso.ui.rrm.internal.results.view.ResultManagementView" label="Result Management"/>
 <page content="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" label="LabelNotFound"/>
@@ -69,10 +70,12 @@
 <page content="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@70e2b9f0" ratio="0.31699553" ratioLeft="498" ratioRight="1073" relationship="2" relative="rightTop">
-<folder appearance="2" expanded="2">
-<page content="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@70e2b9f0" ratio="0.35837045" ratioLeft="563" ratioRight="1008" relationship="2" relative="rightTop">
+<folder activePageID="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" appearance="2" expanded="2">
+<page content="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" label="Properties"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@38e77c19" ratio="0.44432315" ratioLeft="407" ratioRight="509" relationship="4" relative="org.eclipse.ui.internal.ViewStack@70e2b9f0">

@@ -47,9 +47,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 
 /**
@@ -57,29 +58,47 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
  */
 public class HydrologyCalculationCaseGroupUiHandler extends AbstractTreeNodeUiHandler
 {
-  private final IFolder m_calculationCaseFolder;
+  private final IFolder m_calculationCaseResultFolder;
 
-  public HydrologyCalculationCaseGroupUiHandler( final IFolder calculationCaseFolder )
+  private final RrmSimulation m_simulation;
+
+  public HydrologyCalculationCaseGroupUiHandler( final IFolder calculationCaseResultFolder )
   {
-    m_calculationCaseFolder = calculationCaseFolder;
+    m_calculationCaseResultFolder = calculationCaseResultFolder;
+    m_simulation = null;
+  }
+
+  public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation )
+  {
+    m_simulation = simulation;
+    m_calculationCaseResultFolder = null;
   }
 
   @Override
   public String getTypeLabel( )
   {
-    return m_calculationCaseFolder.getName();
+    if( Objects.isNotNull( m_calculationCaseResultFolder ) )
+      return m_calculationCaseResultFolder.getName();
+
+    return m_simulation.getName();
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return m_calculationCaseFolder.getName();
+    if( Objects.isNotNull( m_calculationCaseResultFolder ) )
+      return m_calculationCaseResultFolder.getName();
+
+    return m_simulation.getName();
   }
 
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( UIRrmImages.DESCRIPTORS.CALC_CASE_FOLDER );
+    if( Objects.isNotNull( m_calculationCaseResultFolder ) )
+      return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( UIRrmImages.DESCRIPTORS.CALC_CASE_FOLDER );
+
+    return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( UIRrmImages.DESCRIPTORS.SIMULATION );
   }
 
   @Override
