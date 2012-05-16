@@ -54,17 +54,17 @@ public class KalypsoHydrologyResults
 
   public enum CATCHMENT_RESULT_TYPE
   {
-    eTemperature("Temperatur", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_TEMPERATURE, "Temperatur.zml"),
-    eNiederschlag("Niederschlag", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_RAINFALL, "Niederschlag.zml"),
-    eSchneehoehe("Schneehöhe", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_SNOW_HEIGHT, null), // FIXME
-    eGesamtTeilgebietsQ("Gesamtteilgebietsabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml"),
-    eOberflaechenQNatuerlich("Oberflächenabfluss, natürlich", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(natuerlich).zml"),
-    eOberflaechenQVersiegelt("Oberflächenabfluss, versiegelt", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(versiegelt).zml"),
-    eInterflow("Interflow", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Interflow.zml"),
-    eBasisQ("Basisabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Basisabfluss.zml"),
-    eGrundwasserQ("Grundwasserabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Grundwasserabfluss.zml"),
-    eGrundwasserstand("Grundwasserstand", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_WATERLEVEL, "Grundwasserstand.zml"),
-    eEvapotranspiration("Evapotranspiration", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_EVAPORATION, null); // FIXME
+    eTemperature("Temperatur", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_TEMPERATURE, "Temperatur.zml"), //$NON-NLS-2$
+    eNiederschlag("Niederschlag", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_RAINFALL, "Niederschlag.zml"), //$NON-NLS-2$
+    eSchneehoehe("Schneehöhe", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_SNOW_HEIGHT, null), //$NON-NLS-2$ // FIXME
+    eGesamtTeilgebietsQ("Gesamtteilgebietsabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml"), //$NON-NLS-2$
+    eOberflaechenQNatuerlich("Oberflächenabfluss, natürlich", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(natuerlich).zml"), //$NON-NLS-2$
+    eOberflaechenQVersiegelt("Oberflächenabfluss, versiegelt", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(versiegelt).zml"), //$NON-NLS-2$
+    eInterflow("Interflow", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Interflow.zml"), //$NON-NLS-2$
+    eBasisQ("Basisabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Basisabfluss.zml"), //$NON-NLS-2$
+    eGrundwasserQ("Grundwasserabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Grundwasserabfluss.zml"), //$NON-NLS-2$
+    eGrundwasserstand("Grundwasserstand", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_WATERLEVEL, "Grundwasserstand.zml"), //$NON-NLS-2$
+    eEvapotranspiration("Evapotranspiration", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_EVAPORATION, null); //$NON-NLS-2$ // FIXME
 
     private final String m_label;
 
@@ -104,7 +104,7 @@ public class KalypsoHydrologyResults
 
   public enum NODE_RESULT_TYPE
   {
-    eGesamtknotenAbfluss("Gesamtknotenabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml");
+    eGesamtknotenAbfluss("Gesamtknotenabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml"); //$NON-NLS-2$
 
     private final String m_label;
 
@@ -143,8 +143,8 @@ public class KalypsoHydrologyResults
 
   public enum STORAGE_RESULT_TYPE
   {
-    eFuellvolumen("Füllvolumen", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_VOLUME, "Fuellvolumen.zml"),
-    eSpeicherUeberlauf("Specherüberlauf", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Speicherueberlauf.zml");
+    eFuellvolumen("Füllvolumen", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_VOLUME, "Fuellvolumen.zml"), //$NON-NLS-2$
+    eSpeicherUeberlauf("Specherüberlauf", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Speicherueberlauf.zml"); //$NON-NLS-2$
 
     private final String m_label;
 

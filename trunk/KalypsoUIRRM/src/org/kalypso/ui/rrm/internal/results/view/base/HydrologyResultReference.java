@@ -64,19 +64,19 @@ public class HydrologyResultReference implements IHydrologyResultReference
 
   public HydrologyResultReference( final IFolder calcCaseFolder, final StorageChannel channel, final STORAGE_RESULT_TYPE type )
   {
-    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/SpeicherStrang/%s/%s", channel.getName(), type.getFileName() ) ); //$NON-NLS-1$
+    m_file = calcCaseFolder.getFile( String.format( "/SpeicherStrang/%s/%s", channel.getName(), type.getFileName() ) ); //$NON-NLS-1$
     m_type = type;
   }
 
   public HydrologyResultReference( final IFolder calcCaseFolder, final Catchment catchment, final CATCHMENT_RESULT_TYPE type )
   {
-    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/Teilgebiet/%s/%s", catchment.getName(), type.getFileName() ) ); //$NON-NLS-1$
+    m_file = calcCaseFolder.getFile( String.format( "/Teilgebiet/%s/%s", catchment.getName(), type.getFileName() ) ); //$NON-NLS-1$
     m_type = type;
   }
 
   public HydrologyResultReference( final IFolder calcCaseFolder, final Node node, final NODE_RESULT_TYPE type )
   {
-    m_file = calcCaseFolder.getFile( String.format( "Ergebnisse/Berechnet/Knoten/%s/%s", node.getName(), type.getFileName() ) ); //$NON-NLS-1$
+    m_file = calcCaseFolder.getFile( String.format( "/Knoten/%s/%s", node.getName(), type.getFileName() ) ); //$NON-NLS-1$
     m_type = type;
   }
 
