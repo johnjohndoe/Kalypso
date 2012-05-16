@@ -58,7 +58,7 @@ public class CurrentResultsFilterControl extends Composite
 {
   private TreeViewer m_viewer;
 
-  private final CurrentResultFilter m_filter = new CurrentResultFilter();
+  protected final CurrentResultFilter m_filter = new CurrentResultFilter();
 
   public CurrentResultsFilterControl( final Composite parent, final FormToolkit toolkit )
   {
