@@ -48,6 +48,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 
 /**
  * Collects simulation results folders
@@ -68,6 +69,8 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
       final String name1 = folder1.getName();
       final String name2 = folder2.getName();
 
+      // TODO use rrmsimulation
+
       // FIXME english project template?!?
       if( StringUtils.equalsIgnoreCase( name1, "berechnet" ) )
         return 1;
@@ -78,11 +81,11 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
     }
   } );
 
-  private final IFolder m_resultBaseFolder;
+  private final RrmSimulation m_simulation;
 
-  public HydrologyCalculationFoldersCollector( final IFolder resultBaseFolder )
+  public HydrologyCalculationFoldersCollector( final RrmSimulation simulation )
   {
-    m_resultBaseFolder = resultBaseFolder;
+    m_simulation = simulation;
   }
 
   @Override
@@ -111,7 +114,7 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
 
   private boolean isCalculationCaseFolder( final IFolder folder )
   {
-    return folder.equals( m_resultBaseFolder );
+    return folder.equals( m_simulation.getResultsFolder() );
   }
 
   public IFolder[] getFolders( )

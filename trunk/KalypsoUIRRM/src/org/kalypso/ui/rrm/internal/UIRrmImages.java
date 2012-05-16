@@ -106,6 +106,7 @@ public class UIRrmImages
     OPEN_ERROR_GML_ACTION("icons/simulations/openErrorGmlAction.gif"), //$NON-NLS-1$
     OPEN_OUTPUT_ZML_ACTION("icons/simulations/openOutputZipAction.gif"), //$NON-NLS-1$
 
+    SIMULATION("icons/simulations/simulation.gif"), //$NON-NLS-1$
     CATCHMENT("icons/resultview/catchment.png"), //$NON-NLS-1$
     NA_NODE("icons/resultview/node.png"), //$NON-NLS-1$
     STORAGE_CHANNEL("icons/resultview/storage.png"), //$NON-NLS-1$

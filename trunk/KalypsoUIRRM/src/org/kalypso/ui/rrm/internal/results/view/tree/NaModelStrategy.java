@@ -54,6 +54,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.NODE_RESULT_TYPE;
@@ -101,7 +102,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
             if( StringUtils.startsWithIgnoreCase( resource.getName(), "tmp" ) )
               return true;
 
-            virtualRootNode.addChild( buildCalculationCaseNodes( virtualRootNode, (IFolder) resource ) );
+            virtualRootNode.addChild( buildCalculationCaseNodes( virtualRootNode, new RrmSimulation( (IFolder) resource ) ) );
             return true;
           }
 
@@ -128,15 +129,15 @@ public class NaModelStrategy implements ITreeNodeStrategy
     return virtualRootNode;
   }
 
-  protected TreeNode buildCalculationCaseNodes( final TreeNode parent, final IFolder calcCaseFolder )
+  protected TreeNode buildCalculationCaseNodes( final TreeNode parent, final RrmSimulation simulation )
   {
-    final TreeNode calcCase = new TreeNode( parent, new HydrologyCalculationCaseGroupUiHandler( calcCaseFolder ), calcCaseFolder );
+    final TreeNode calcCase = new TreeNode( parent, new HydrologyCalculationCaseGroupUiHandler( simulation ), simulation );
     try
     {
       // FIXME english project template folder names?!?
-      final IFolder calculationResultsFolder = calcCaseFolder.getFolder( "Ergebnisse" );
-      final HydrologyCalculationFoldersCollector visitor = new HydrologyCalculationFoldersCollector( calculationResultsFolder ); //$NON-NLS-1$
-      calculationResultsFolder.accept( visitor, 1, false );
+
+      final HydrologyCalculationFoldersCollector visitor = new HydrologyCalculationFoldersCollector( simulation ); //$NON-NLS-1$
+      simulation.getResultsFolder().accept( visitor, 1, false );
 
       final IFolder[] caluculationResultsFolders = visitor.getFolders();
 
