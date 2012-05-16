@@ -272,7 +272,7 @@
             class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
             icon="icons/timeseries/timeseriesManagementView.gif"
             id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
-            name="Timeseries Management"
+            name="Zeitreihenverwaltung"
             restorable="true">
       </view>
       <view
@@ -304,7 +304,7 @@
             class="org.kalypso.ui.rrm.internal.results.view.ResultManagementView"
             icon="icons/resultview/resultView.png"
             id="org.kalypso.ui.rrm.internal.results.view.ResultManagementView"
-            name="Result Management"
+            name="Ergebnisansicht"
             restorable="true">
       </view>
    </extension>
