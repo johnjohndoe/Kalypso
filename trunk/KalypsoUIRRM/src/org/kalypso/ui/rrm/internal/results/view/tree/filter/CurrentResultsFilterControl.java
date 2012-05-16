@@ -40,74 +40,57 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 /**
- * @author Dirk Kuch
+ * Search control - for displaying only last calculation result
+ * 
+ * @author Dirk kuch
  */
-public class ResultTextSearchFilter extends AbstractResultViewerFilter
+public class CurrentResultsFilterControl extends Composite
 {
-  private String m_string;
+  private TreeViewer m_viewer;
 
-  private StructuredViewer m_viewer;
+  private final CurrentResultFilter m_filter = new CurrentResultFilter();
 
-  public static final String PROPERTY_STRING = "string"; //$NON-NLS-1$
-
-  public ResultTextSearchFilter( final String string )
+  public CurrentResultsFilterControl( final Composite parent, final FormToolkit toolkit )
   {
-    setString( string );
+    super( parent, SWT.NULL );
+
+    setLayout( Layouts.createGridLayout() );
+    doRenderControl( toolkit );
+
+    layout();
+
   }
 
-  @Override
-  protected boolean doSelect( final TreeNode node )
+  private void doRenderControl( final FormToolkit toolkit )
   {
-    final String searchString = getString();
-    if( StringUtils.isEmpty( searchString ) )
-      return true;
+    final Button button = toolkit.createButton( this, "Nur aktuelle Berechnungsergebnis", SWT.CHECK );
+    button.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    if( hasChildWithName( node, searchString ) )
-      return true;
-
-    final int hierarchy = getLevel( node );
-    if( hierarchy > 4 )
-      return true;
-
-    return false;
-  }
-
-  private boolean hasChildWithName( final TreeNode node, final String searchString )
-  {
-    if( StringUtils.containsIgnoreCase( node.getLabel(), searchString ) )
-      return true;
-
-    final TreeNode[] children = node.getChildren();
-    for( final TreeNode child : children )
+    button.addSelectionListener( new SelectionAdapter()
     {
-      if( hasChildWithName( child, searchString ) )
-        return true;
-    }
-
-    return false;
+      @Override
+      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
+      {
+        m_filter.setSelection( button.getSelection() );
+        m_viewer.refresh();
+      }
+    } );
   }
 
-  public void setViewer( final StructuredViewer viewer )
+  public void setViewer( final TreeViewer viewer )
   {
     m_viewer = viewer;
-  }
-
-  public String getString( )
-  {
-    return m_string;
-  }
-
-  public void setString( final String string )
-  {
-    m_string = StringUtils.isBlank( string ) ? null : string.toLowerCase();
-
-    if( m_viewer != null )
-      m_viewer.refresh();
+    m_viewer.addFilter( m_filter );
   }
 
 }

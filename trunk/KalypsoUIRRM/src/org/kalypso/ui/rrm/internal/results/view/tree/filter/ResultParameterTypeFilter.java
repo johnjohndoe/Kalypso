@@ -42,8 +42,6 @@ package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE;
@@ -54,7 +52,7 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 /**
  * @author Dirk Kuch
  */
-public class ResultParameterTypeFilter extends ViewerFilter
+public class ResultParameterTypeFilter extends AbstractResultViewerFilter
 {
   private Object m_type;
 
@@ -68,21 +66,14 @@ public class ResultParameterTypeFilter extends ViewerFilter
   }
 
   @Override
-  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+  protected boolean doSelect( final TreeNode node )
   {
     final Object type = getType();
     if( StringUtils.EMPTY == type )
       return true;
 
-    if( element instanceof TreeNode )
-    {
-      final TreeNode node = (TreeNode) element;
-
-      if( doSelectNode( node, type ) )
-        return true;
-
-      return false;
-    }
+    if( doSelectNode( node, type ) )
+      return true;
 
     return false;
   }
@@ -234,19 +225,6 @@ public class ResultParameterTypeFilter extends ViewerFilter
 
     if( m_viewer != null )
       m_viewer.refresh();
-  }
-
-  private int getLevel( final TreeNode node )
-  {
-    int count = 0;
-    TreeNode parent = node.getParent();
-    while( parent != null )
-    {
-      parent = parent.getParent();
-      count += 1;
-    }
-
-    return count;
   }
 
 }

@@ -40,74 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Dirk Kuch
  */
-public class ResultTextSearchFilter extends AbstractResultViewerFilter
+public abstract class AbstractResultViewerFilter extends ViewerFilter
 {
-  private String m_string;
-
-  private StructuredViewer m_viewer;
-
-  public static final String PROPERTY_STRING = "string"; //$NON-NLS-1$
-
-  public ResultTextSearchFilter( final String string )
-  {
-    setString( string );
-  }
 
   @Override
-  protected boolean doSelect( final TreeNode node )
+  public final boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    final String searchString = getString();
-    if( StringUtils.isEmpty( searchString ) )
-      return true;
+    if( !(element instanceof TreeNode) )
+      return false;
 
-    if( hasChildWithName( node, searchString ) )
-      return true;
-
-    final int hierarchy = getLevel( node );
-    if( hierarchy > 4 )
-      return true;
-
-    return false;
+    return doSelect( (TreeNode) element );
   }
 
-  private boolean hasChildWithName( final TreeNode node, final String searchString )
-  {
-    if( StringUtils.containsIgnoreCase( node.getLabel(), searchString ) )
-      return true;
+  protected abstract boolean doSelect( TreeNode node );
 
-    final TreeNode[] children = node.getChildren();
-    for( final TreeNode child : children )
+  protected final int getLevel( final TreeNode node )
+  {
+    int count = 0;
+    TreeNode parent = node.getParent();
+    while( parent != null )
     {
-      if( hasChildWithName( child, searchString ) )
-        return true;
+      parent = parent.getParent();
+      count += 1;
     }
 
-    return false;
+    return count;
   }
-
-  public void setViewer( final StructuredViewer viewer )
-  {
-    m_viewer = viewer;
-  }
-
-  public String getString( )
-  {
-    return m_string;
-  }
-
-  public void setString( final String string )
-  {
-    m_string = StringUtils.isBlank( string ) ? null : string.toLowerCase();
-
-    if( m_viewer != null )
-      m_viewer.refresh();
-  }
-
 }
