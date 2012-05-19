@@ -40,11 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -53,6 +59,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
@@ -109,47 +116,89 @@ public class AddProfileToMapHandler extends AbstractHandler
       final Object[] result = showNetworksDialog( shell, riverProfileNetworkCollection );
       if( result == null )
         return Status.CANCEL_STATUS;
-      
-      final IRiverProfileNetwork network = (IRiverProfileNetwork) result[ 0 ];
 
-      /* Add new layer to profile-collection-map and remove existing one with same path and source*/
+      final IRiverProfileNetwork network = (IRiverProfileNetwork) result[0];
+
+      /* Add new layer to profile-collection-map and remove existing one with same path and source */
       final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
       if( mapView != null )
-      { 
-          final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
+      {
+        final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
 
-          final FeaturePath networkPath = new FeaturePath( network.getFeature() );
-          final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
-          final String source = terrainModel.getFeature().getWorkspace().getContext().toString();
-         
-          final IKalypsoThemePredicate predicate = new SoureAndPathThemePredicate( source, profilesPath.toString() );
-          final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
-          mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
-          IKalypsoTheme[] foundThemes = visitor.getFoundThemes();
-          if( foundThemes.length > 0 ){
-            for( final IKalypsoTheme themeToRemove: foundThemes ){
-              final RemoveThemeCommand commandRemove = new RemoveThemeCommand( mapModell, themeToRemove, true ); //$NON-NLS-1$
-              mapView.postCommand( commandRemove, null );
-            }
+        final FeaturePath networkPath = new FeaturePath( network.getFeature() );
+        final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
+
+        final URL terrainModelLocation = terrainModel.getFeature().getWorkspace().getContext();
+
+        final String absoluteTerrainPath = terrainModelLocation.toString();
+        final String relativeTerrainPath = createRelativeTerrainPath( mapModell.getContext(), terrainModelLocation );
+
+        /* Remove themes with same path in map */
+        final IKalypsoTheme[] foundThemes = findExistingThemes( mapModell, profilesPath, absoluteTerrainPath, relativeTerrainPath );
+        if( foundThemes.length > 0 )
+        {
+          for( final IKalypsoTheme themeToRemove : foundThemes )
+          {
+            final RemoveThemeCommand commandRemove = new RemoveThemeCommand( mapModell, themeToRemove, true ); //$NON-NLS-1$
+            mapView.postCommand( commandRemove, null );
           }
-          final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), source ); //$NON-NLS-1$
-          mapView.postCommand( command, null );
+        }
 
-          /* Zoom to new profiles in fe-map? */
-          final GM_Envelope envelope = network.getWrappedList().getBoundingBox();
-          if( envelope != null )
-            mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
+        /* Add as new theme */
+        final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), relativeTerrainPath ); //$NON-NLS-1$
+        mapView.postCommand( command, null );
+
+        /* Zoom to new profiles in fe-map? */
+        final GM_Envelope envelope = network.getWrappedList().getBoundingBox();
+        if( envelope != null )
+          mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
       }
       else
         throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.3" ) ); //$NON-NLS-1$
-      
+
       return Status.OK_STATUS;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e );
     }
+  }
+
+  private String createRelativeTerrainPath( final URL mapLocation, final URL terrainLocation )
+  {
+    final IPath mapPath = ResourceUtilities.findPathFromURL( mapLocation );
+    final IPath terrainPath = ResourceUtilities.findPathFromURL( terrainLocation );
+
+    final IPath mapFolderPath = mapPath.removeLastSegments( 1 );
+
+    final IPath relativePath = terrainPath.makeRelativeTo( mapFolderPath );
+    return relativePath.toPortableString();
+  }
+
+  protected IKalypsoTheme[] findExistingThemes( final GisTemplateMapModell mapModell, final FeaturePath profilesPath, final String absolutePath, final String relativePath )
+  {
+    final Collection<IKalypsoTheme> allThemes = new ArrayList<IKalypsoTheme>();
+
+    /* Find all themes with absolute path to terrain model */
+    // REMARK: this is for backwards compatibility; the path was absolute in the beginning, so they might still be
+    // projects out there with an absolute path
+    final IKalypsoThemePredicate absolutePredicate = new SoureAndPathThemePredicate( absolutePath, profilesPath.toString() );
+    final KalypsoThemeVisitor absoluteVisitor = new KalypsoThemeVisitor( absolutePredicate );
+    mapModell.accept( absoluteVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+
+    final IKalypsoTheme[] absoluteThemes = absoluteVisitor.getFoundThemes();
+    allThemes.addAll( Arrays.asList( absoluteThemes ) );
+
+    /* Find all themes with relative path to terrain model */
+    final IKalypsoThemePredicate relativePredicate = new SoureAndPathThemePredicate( relativePath, profilesPath.toString() );
+    final KalypsoThemeVisitor relativeVisitor = new KalypsoThemeVisitor( relativePredicate );
+    mapModell.accept( relativeVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+
+    final IKalypsoTheme[] relativeThemes = relativeVisitor.getFoundThemes();
+    allThemes.addAll( Arrays.asList( relativeThemes ) );
+
+    return allThemes.toArray( new IKalypsoTheme[allThemes.size()] );
   }
 
   private Object[] showNetworksDialog( final Shell shell, final IRiverProfileNetworkCollection riverProfileNetworkCollection )
