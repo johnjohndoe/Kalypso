@@ -131,6 +131,17 @@ public class CalcTuhhHandler extends AbstractHandler
             final String calcxpath = String.format( "id('%s')", calculation.getId() ); //$NON-NLS-1$
             final String resultPath = calculation.getResultFolder().toPortableString();
 
+            /* Check path */
+            final String calcName = calculation.getName();
+            if( calcName.endsWith( "." ) ) //$NON-NLS-1$
+            {
+              // REMARK: very special case (windows only)?: if path ends with '.', the file system will remove that
+              // automatically later.
+              // This leads to the bug, that results are not found, even if present.
+              final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.1", calcName ); //$NON-NLS-1$
+              return new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message );
+            }
+
             final ModelNature nature = (ModelNature) gmlFile.getProject().getNature( ModelNature.ID );
             if( nature == null )
             {
