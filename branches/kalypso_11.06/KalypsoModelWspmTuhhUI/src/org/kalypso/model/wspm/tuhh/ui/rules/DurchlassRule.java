@@ -93,11 +93,11 @@ public class DurchlassRule extends AbstractValidatorRule
     final IComponent compKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( compKS != null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.1", compKS.getName() ), String.format( "km %.4f", profil.getStation() ), 0, null, new DelRoughnessResolution( new String[] {}, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ); //$NON-NLS-1$//$NON-NLS-2$ 
+      collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.1", compKS.getName() ), String.format( "km %.4f", profil.getStation() ), 0, null, new DelRoughnessResolution( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ); //$NON-NLS-1$//$NON-NLS-2$ 
     }
     if( compKST != null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.1", compKST.getName() ), String.format( "km %.4f", profil.getStation() ), 0, null, new DelRoughnessResolution( new String[] {}, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ); //$NON-NLS-1$//$NON-NLS-2$ 
+      collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.1", compKST.getName() ), String.format( "km %.4f", profil.getStation() ), 0, null, new DelRoughnessResolution( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ); //$NON-NLS-1$//$NON-NLS-2$ 
     }
     for( final IComponent property : building.getObjectProperties() )
     {
