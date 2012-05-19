@@ -147,10 +147,12 @@ class CulvertPainter
       return null;
 
     final double leftX = x - b / 2;
-    final double upperY = y + h;
     final double rightX = x + b / 2;
+
     final double lowerY = y;
-    final double deltaX = m > 0 ? (lowerY - upperY) / m : 0;
+    final double upperY = y + h;
+
+    final double deltaX = m > 0 ? h / m : 0;
 
     final Coordinate[] points = new Coordinate[4];
     points[0] = new Coordinate( leftX, lowerY );
