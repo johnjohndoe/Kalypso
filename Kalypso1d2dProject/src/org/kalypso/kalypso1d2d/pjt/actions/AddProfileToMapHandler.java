@@ -44,6 +44,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -65,7 +67,9 @@ import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.SoureAndPathThemePredicate;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
@@ -73,7 +77,9 @@ import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
+import org.kalypso.ui.action.AddCascadingThemeCommand;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.action.IThemeCommand.ADD_THEME_POSITION;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -88,8 +94,10 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 public class AddProfileToMapHandler extends AbstractHandler
 {
   /**
-   * @see de.renew.workflow.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
+   * themeID of the cascading theme containing the cross section themes.
    */
+  private static final String CONTAINER_THEME_ID = "crossSections"; //$NON-NLS-1$
+
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -97,19 +105,8 @@ public class AddProfileToMapHandler extends AbstractHandler
     {
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-      final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
-      /* Get network collection */
-      final ITerrainModel terrainModel;
-      try
-      {
-        terrainModel = modelProvider.getModel( ITerrainModel.class.getName(), ITerrainModel.class );
-      }
-      catch( final CoreException e )
-      {
-        throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.2" ), e ); //$NON-NLS-1$
-      }
-
+      final ITerrainModel terrainModel = getTerrainModel( context );
       final IRiverProfileNetworkCollection riverProfileNetworkCollection = terrainModel.getRiverProfileNetworkCollection();
 
       /* ask user and add everything to map */
@@ -121,40 +118,29 @@ public class AddProfileToMapHandler extends AbstractHandler
 
       /* Add new layer to profile-collection-map and remove existing one with same path and source */
       final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
-      if( mapView != null )
-      {
-        final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
-
-        final FeaturePath networkPath = new FeaturePath( network.getFeature() );
-        final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
-
-        final URL terrainModelLocation = terrainModel.getFeature().getWorkspace().getContext();
-
-        final String absoluteTerrainPath = terrainModelLocation.toString();
-        final String relativeTerrainPath = createRelativeTerrainPath( mapModell.getContext(), terrainModelLocation );
-
-        /* Remove themes with same path in map */
-        final IKalypsoTheme[] foundThemes = findExistingThemes( mapModell, profilesPath, absoluteTerrainPath, relativeTerrainPath );
-        if( foundThemes.length > 0 )
-        {
-          for( final IKalypsoTheme themeToRemove : foundThemes )
-          {
-            final RemoveThemeCommand commandRemove = new RemoveThemeCommand( mapModell, themeToRemove, true ); //$NON-NLS-1$
-            mapView.postCommand( commandRemove, null );
-          }
-        }
-
-        /* Add as new theme */
-        final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), relativeTerrainPath ); //$NON-NLS-1$
-        mapView.postCommand( command, null );
-
-        /* Zoom to new profiles in fe-map? */
-        final GM_Envelope envelope = network.getWrappedList().getBoundingBox();
-        if( envelope != null )
-          mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
-      }
-      else
+      if( mapView == null )
         throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.3" ) ); //$NON-NLS-1$
+
+      final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
+
+      final FeaturePath networkPath = new FeaturePath( network.getFeature() );
+      final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
+
+      final URL terrainModelLocation = terrainModel.getFeature().getWorkspace().getContext();
+
+      final String absoluteTerrainPath = terrainModelLocation.toString();
+      final String relativeTerrainPath = createRelativeTerrainPath( mapModell.getContext(), terrainModelLocation );
+
+      /* Remove themes with same path in map */
+      removeExistingThemes( mapView, mapModell, profilesPath, absoluteTerrainPath, relativeTerrainPath );
+
+      /* Add as new theme */
+      addNewTheme( mapView, mapModell, network, profilesPath, relativeTerrainPath );
+
+      /* Zoom to new profiles in fe-map? */
+      final GM_Envelope envelope = network.getWrappedList().getBoundingBox();
+      if( envelope != null )
+        mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
 
       return Status.OK_STATUS;
     }
@@ -162,6 +148,59 @@ public class AddProfileToMapHandler extends AbstractHandler
     {
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e );
+    }
+  }
+
+  private void addNewTheme( final MapView mapView, final GisTemplateMapModell mapModell, final IRiverProfileNetwork network, final FeaturePath profilesPath, final String relativeTerrainPath )
+  {
+    final IKalypsoCascadingTheme containerTheme = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, CONTAINER_THEME_ID );
+    if( containerTheme != null )
+    {
+      /* add new theme into existing cascading theme */
+      final AddThemeCommand command = new AddThemeCommand( containerTheme, network.getName(), "gml", profilesPath.toString(), relativeTerrainPath ); //$NON-NLS-1$
+      mapView.postCommand( command, null );
+      return;
+    }
+
+    /* Container theme does not yet exist (needs special handling, as commands are posted in jobs) */
+    final String name = Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.4" ); //$NON-NLS-1$
+
+    final AddCascadingThemeCommand cascadingCommand = new AddCascadingThemeCommand( mapModell, name, ADD_THEME_POSITION.eFront );
+
+    final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), relativeTerrainPath ); //$NON-NLS-1$
+    cascadingCommand.addCommand( command );
+
+    final Map<String, String> properties = new HashMap<String, String>();
+    properties.put( CascadingThemeHelper.PROPERTY_THEME_ID, CONTAINER_THEME_ID );
+    cascadingCommand.addProperties( properties );
+
+    mapView.postCommand( cascadingCommand, null );
+  }
+
+  protected ITerrainModel getTerrainModel( final IEvaluationContext context ) throws ExecutionException
+  {
+    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+
+    try
+    {
+      return modelProvider.getModel( ITerrainModel.class.getName(), ITerrainModel.class );
+    }
+    catch( final CoreException e )
+    {
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.2" ), e ); //$NON-NLS-1$
+    }
+  }
+
+  protected void removeExistingThemes( final MapView mapView, final GisTemplateMapModell mapModell, final FeaturePath profilesPath, final String absoluteTerrainPath, final String relativeTerrainPath )
+  {
+    final IKalypsoTheme[] foundThemes = findExistingThemes( mapModell, profilesPath, absoluteTerrainPath, relativeTerrainPath );
+    if( foundThemes.length > 0 )
+    {
+      for( final IKalypsoTheme themeToRemove : foundThemes )
+      {
+        final RemoveThemeCommand commandRemove = new RemoveThemeCommand( mapModell, themeToRemove, true ); //$NON-NLS-1$
+        mapView.postCommand( commandRemove, null );
+      }
     }
   }
 
