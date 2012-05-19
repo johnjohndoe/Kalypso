@@ -60,6 +60,7 @@
    </extension>
    <extension
          point="org.kalypso.afgui.scenarioData">
+         <!-- FIXME: does NOT belong here; wrong dependency direction. Move to 1d2d -->
       <dataSet
             id="org.kalypso.kalypso1d2d">
          <scenarioDatum
