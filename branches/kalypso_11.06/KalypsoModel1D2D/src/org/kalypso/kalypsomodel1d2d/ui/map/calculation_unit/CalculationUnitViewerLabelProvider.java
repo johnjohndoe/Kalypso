@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 /**
  * @author Madanagopal
  */
-public class CalculationUnitViewerLabelProvider extends LabelProvider
+public class CalculationUnitViewerLabelProvider extends ColumnLabelProvider
 {
   private final Display m_display;
 
@@ -67,7 +67,7 @@ public class CalculationUnitViewerLabelProvider extends LabelProvider
   {
     m_display = display;
 
-    // TODO: these images never get disposed!
+    // FIXME: these images never get disposed!
 
     calc1DImage = new Image( m_display, KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/1d_Element.GIF" ).getImageData() ); //$NON-NLS-1$
 
@@ -104,5 +104,4 @@ public class CalculationUnitViewerLabelProvider extends LabelProvider
 
     throw new UnsupportedOperationException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
-
 }
