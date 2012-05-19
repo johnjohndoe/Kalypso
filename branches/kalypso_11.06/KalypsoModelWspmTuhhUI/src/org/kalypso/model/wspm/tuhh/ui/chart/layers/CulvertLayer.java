@@ -56,9 +56,11 @@ import de.openali.odysseus.chart.framework.model.figure.IFigure;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IFill;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
+import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
 /**
  * @author kimwerner
@@ -68,7 +70,6 @@ public class CulvertLayer extends AbstractProfilLayer
   public CulvertLayer( final IProfil profil, final ILayerStyleProvider styleProvider )
   {
     super( IWspmTuhhConstants.LAYER_TUBES, profil, IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
-    getLineStyle().setColor( new RGB( 255, 255, 100 ) );
   }
 
   @Override
@@ -106,22 +107,17 @@ public class CulvertLayer extends AbstractProfilLayer
     if( tubeFigure == null )
       return;
 
-    final IAreaStyle areaStyle = translatePointStyle();
+    final IAreaStyle areaStyle = createStyle();
     tubeFigure.setStyle( areaStyle );
     tubeFigure.paint( gc );
   }
 
-  // FIXME: ugly: we paint an area with a point style here; why?! TODO: change...!
-  private IAreaStyle translatePointStyle( )
+  private IAreaStyle createStyle( )
   {
-    final IPointStyle pointStyle = getPointStyle();
+    final IFill fill = new ColorFill( new RGB( 255, 255, 100 ) );
+    final ILineStyle stroke = new LineStyle( 2, new RGB( 0, 0, 0 ), 255, 0f, null, LINEJOIN.ROUND, LINECAP.ROUND, 1, true );
 
-    final boolean isFilled = pointStyle.isFillVisible();
-    final IFill fill = isFilled ? new ColorFill( pointStyle.getInlineColor() ) : null;
-    final int alpha = pointStyle.getAlpha();
-    final ILineStyle stroke = pointStyle.getStroke();
-
-    return new AreaStyle( fill, alpha, stroke, true );
+    return new AreaStyle( fill, 128, stroke, true );
   }
 
   @Override
