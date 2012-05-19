@@ -855,7 +855,7 @@ public class RiskModelHelper
   public static IKalypsoCascadingTheme getHQiTheme( final IMapModell mapModell )
   {
     // activate cascading theme that contains the events
-    final AbstractCascadingLayerTheme byThemeId = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, THEME_ID__WATERDEPTH );
+    final IKalypsoCascadingTheme byThemeId = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, THEME_ID__WATERDEPTH );
     if( byThemeId != null )
       return byThemeId;
 
