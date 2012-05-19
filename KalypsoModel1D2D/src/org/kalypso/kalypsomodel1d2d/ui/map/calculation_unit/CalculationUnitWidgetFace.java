@@ -68,38 +68,31 @@ class CalculationUnitWidgetFace
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     final ScrolledForm scrolledForm = toolkit.createScrolledForm( parent );
+    scrolledForm.setExpandHorizontal( true );
+    scrolledForm.setExpandVertical( true );
     final Composite body = scrolledForm.getBody();
     body.setLayout( new TableWrapLayout() );
 
     // Calculation Unit Section
-    final Section calculationUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
+    final Section calculationUnitSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
 
     calculationUnitSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.0") );  //$NON-NLS-1$
-    TableWrapData tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.TOP, 1, 1 );
-    tableWrapData.grabHorizontal = true;
-    tableWrapData.grabVertical = true;
-    tableWrapData.maxHeight = 380; 
-    calculationUnitSection.setLayoutData( tableWrapData );
-    calculationUnitSection.setExpanded( true );
+    final TableWrapData calculationUnitData = new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB, 1, 1 );
+    calculationUnitData.maxHeight = 250;
+    calculationUnitSection.setLayoutData( calculationUnitData );
 
     // Creates Section for "Calculation Settings Unit"
-    final Section calculationSettingsSection = toolkit.createSection( body, Section.TITLE_BAR );
+    final Section calculationSettingsSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
     calculationSettingsSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.1") );  //$NON-NLS-1$
-    tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.TOP, 1, 1 );
-    tableWrapData.grabHorizontal = true;
-    tableWrapData.grabVertical = true;
-    tableWrapData.maxHeight = 470; 
-    calculationSettingsSection.setLayoutData( tableWrapData );
-    calculationSettingsSection.setExpanded( true );
+    final TableWrapData calculationSettingsData = new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB, 1, 1 );
+    calculationSettingsData.maxHeight = 470;
+    calculationSettingsSection.setLayoutData( calculationSettingsData );
 
     // Creates Section for "Calculation Elements Unit"
-    final Section calculationElementUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
+    final Section calculationElementUnitSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
     calculationElementUnitSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.2") );  //$NON-NLS-1$
-    tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.FILL, 1, 1 );
-    tableWrapData.grabHorizontal = true;
-    tableWrapData.grabVertical = true;
-    calculationElementUnitSection.setLayoutData( tableWrapData );
-    calculationElementUnitSection.setExpanded( true );
+    final TableWrapData calculationElementUnitData = new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB, 1, 1 );
+    calculationElementUnitSection.setLayoutData( calculationElementUnitData );
 
     createCalculationUnit( calculationUnitSection, toolkit );
     createCalculationSettingsSection( calculationSettingsSection, toolkit );
