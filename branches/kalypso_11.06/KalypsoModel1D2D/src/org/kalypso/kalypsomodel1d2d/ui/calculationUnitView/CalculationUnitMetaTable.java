@@ -238,7 +238,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
   private TableViewer createTableControl( final Composite parent, final FormToolkit toolkit )
   {
-    final Table table = toolkit.createTable( parent, SWT.FULL_SELECTION | SWT.SINGLE );
+    final Table table = toolkit.createTable( parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL );
     table.setLinesVisible( true );
     table.setHeaderVisible( true );
 
@@ -265,9 +265,10 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
     viewer.addSelectionChangedListener( m_selectListener );
 
+    // TODO: replace with toolbar and actions
     final Composite btnComposite = toolkit.createComposite( parent, SWT.NONE );
     btnComposite.setLayout( new GridLayout( 1, false ) );
-    btnComposite.setLayoutData( new GridData() );
+    btnComposite.setLayoutData( new GridData( SWT.CENTER, SWT.TOP, false, true ) );
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_UP ) )
     {
       final Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
