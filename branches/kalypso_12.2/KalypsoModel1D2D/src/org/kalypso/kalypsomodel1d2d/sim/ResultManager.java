@@ -469,11 +469,8 @@ public class ResultManager implements ISimulation1D2DConstants
     if( filename != null && filename.endsWith( ".2d.zip" ) ) //$NON-NLS-1$
       return ResultMeta1d2dHelper.resolveDateFromResultStep( file );
 
-    final int index = filename.length();
-    final CharSequence sequence = filename.subSequence( 1, index );
-    final String string = sequence.toString();
-
-    final int step = Integer.parseInt( string );
+    final String name = FilenameUtils.removeExtension( filename );
+    final int step = Integer.parseInt( name.substring( 1 ) );
 
     final IComponent componentTime = ComponentUtilities.findComponentByID( m_timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
     final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) m_timeSteps.get( step ).getValue( componentTime );
@@ -486,7 +483,7 @@ public class ResultManager implements ISimulation1D2DConstants
     final List<FileObject> resultList = new ArrayList<FileObject>();
     if( remoteWorking == null )
       return null;
-    
+
     final FileObject[] children = remoteWorking.getChildren();
     for( final FileObject child : children )
     {
