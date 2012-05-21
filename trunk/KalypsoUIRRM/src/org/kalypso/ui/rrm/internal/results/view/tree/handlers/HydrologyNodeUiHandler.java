@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
@@ -49,6 +50,7 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 
 /**
  * @author Dirk Kuch
@@ -56,6 +58,8 @@ import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 public class HydrologyNodeUiHandler extends AbstractResultTreeNodeUiHandler
 {
   private final Node m_hydrologyNode;
+
+  private IHydrologyResultReference[] m_references;
 
   public HydrologyNodeUiHandler( final RrmSimulation simulation, final Node hydrologyNode )
   {
@@ -73,13 +77,27 @@ public class HydrologyNodeUiHandler extends AbstractResultTreeNodeUiHandler
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    return UIRrmImages.id( DESCRIPTORS.NA_NODE );
+    if( ArrayUtils.isEmpty( m_references ) )
+      return UIRrmImages.id( DESCRIPTORS.NA_NODE );
+
+    for( final IHydrologyResultReference refernce : m_references )
+    {
+      if( refernce.isValid() )
+        return UIRrmImages.id( DESCRIPTORS.NA_NODE );
+    }
+
+    return UIRrmImages.id( DESCRIPTORS.EMPTY_NA_NODE );
   }
 
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
     return null;
+  }
+
+  public void setReferences( final IHydrologyResultReference... reference )
+  {
+    m_references = reference;
   }
 
 }

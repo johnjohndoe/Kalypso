@@ -187,9 +187,14 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   protected TreeNode toTreeNode( final TreeNode parent, final StorageChannel channel, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-    final TreeNode node = new TreeNode( parent, new HydrologyStorageChannelUiHandler( simulation, channel ), channel );
+
     final HydrologyResultReference ref1 = new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageFuellvolumen );
     final HydrologyResultReference ref2 = new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageSpeicherUeberlauf );
+
+    final HydrologyStorageChannelUiHandler handler = new HydrologyStorageChannelUiHandler( simulation, channel );
+    handler.setReferences( ref1, ref2 );
+
+    final TreeNode node = new TreeNode( parent, handler, channel );
 
     node.addChild( new TreeNode( node, new HydrologyResultReferenceUiHandler( simulation, ref1 ), ref1 ) );
     node.addChild( new TreeNode( node, new HydrologyResultReferenceUiHandler( simulation, ref2 ), ref2 ) );
@@ -217,7 +222,6 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   protected TreeNode toTreeNode( final TreeNode parent, final Catchment catchment, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-    final TreeNode nodeCatchment = new TreeNode( parent, new HydrologyCatchmentUiHandler( simulation, catchment ), catchment );
 
     final HydrologyResultReference ref1 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentTemperature );
     final HydrologyResultReference ref2 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentNiederschlag );
@@ -230,6 +234,11 @@ public class NaModelStrategy implements ITreeNodeStrategy
     final HydrologyResultReference ref9 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserQ );
     final HydrologyResultReference ref10 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserstand );
     final HydrologyResultReference ref11 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentEvapotranspiration );
+
+    final HydrologyCatchmentUiHandler handler = new HydrologyCatchmentUiHandler( simulation, catchment );
+    handler.setReferences( ref1, ref2, ref3, ref4, ref5, ref6, ref7, ref8, ref9, ref10, ref11 );
+
+    final TreeNode nodeCatchment = new TreeNode( parent, handler, catchment );
 
     nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref1 ), ref1 ) );
     nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref2 ), ref2 ) );
@@ -268,9 +277,12 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   protected TreeNode toTreeNode( final TreeNode parent, final Node hydrologyNode, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-    final TreeNode node = new TreeNode( parent, new HydrologyNodeUiHandler( simulation, hydrologyNode ), hydrologyNode );
-
     final HydrologyResultReference reference = new HydrologyResultReference( calculationFolder, hydrologyNode, RRM_RESULT.nodeGesamtknotenAbfluss );
+
+    final HydrologyNodeUiHandler handler = new HydrologyNodeUiHandler( simulation, hydrologyNode );
+    handler.setReferences( reference );
+
+    final TreeNode node = new TreeNode( parent, handler, hydrologyNode );
     node.addChild( new TreeNode( node, new HydrologyResultReferenceUiHandler( simulation, reference ), reference ) );
 
     return node;

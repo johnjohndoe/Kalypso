@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
@@ -49,6 +50,7 @@ import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 
 /**
  * @author Dirk Kuch
@@ -56,6 +58,8 @@ import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 public class HydrologyStorageChannelUiHandler extends AbstractResultTreeNodeUiHandler
 {
   private final StorageChannel m_channel;
+
+  private IHydrologyResultReference[] m_references;
 
   public HydrologyStorageChannelUiHandler( final RrmSimulation simulation, final StorageChannel channel )
   {
@@ -71,15 +75,29 @@ public class HydrologyStorageChannelUiHandler extends AbstractResultTreeNodeUiHa
   }
 
   @Override
-  public ImageDescriptor getTreeImage( )
-  {
-    return UIRrmImages.id( DESCRIPTORS.STORAGE_CHANNEL );
-  }
-
-  @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
     return null;
+  }
+
+  @Override
+  public ImageDescriptor getTreeImage( )
+  {
+    if( ArrayUtils.isEmpty( m_references ) )
+      return UIRrmImages.id( DESCRIPTORS.STORAGE_CHANNEL );
+
+    for( final IHydrologyResultReference refernce : m_references )
+    {
+      if( refernce.isValid() )
+        return UIRrmImages.id( DESCRIPTORS.STORAGE_CHANNEL );
+    }
+
+    return UIRrmImages.id( DESCRIPTORS.EMPTY_STORAGE_CHANNEL );
+  }
+
+  public void setReferences( final IHydrologyResultReference... reference )
+  {
+    m_references = reference;
   }
 
 }

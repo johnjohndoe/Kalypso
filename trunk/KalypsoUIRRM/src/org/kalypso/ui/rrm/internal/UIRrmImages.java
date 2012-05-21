@@ -54,6 +54,7 @@ public class UIRrmImages
     CALC_CASE_FOLDER("icons/resultview/calcCase.gif"), //$NON-NLS-1$
 
     CATCHMENT("icons/resultview/catchment.png"), //$NON-NLS-1$
+    EMPTY_CATCHMENT("icons/resultview/emptyCatchment.png"), //$NON-NLS-1$
 
     DELETE("icons/timeseries/delete.gif"), //$NON-NLS-1$
     EDIT_STATION("icons/timeseries/editStation.png"), //$NON-NLS-1$
@@ -78,6 +79,8 @@ public class UIRrmImages
     MISSING_PARAMETER_TYPE_WATERLEVEL("icons/timeseries/missingParameterType_W.png"), //$NON-NLS-1$
 
     NA_NODE("icons/resultview/node.png"), //$NON-NLS-1$
+    EMPTY_NA_NODE("icons/resultview/emptyNode.png"), //$NON-NLS-1$
+
     OPEN_ERROR_GML_ACTION("icons/simulations/openErrorGmlAction.gif"), //$NON-NLS-1$
     OPEN_OUTPUT_ZML_ACTION("icons/simulations/openOutputZipAction.gif"), //$NON-NLS-1$
     OPEN_TEXT_LOG_ACTION("icons/simulations/openTextLogAction.gif"), //$NON-NLS-1$
@@ -109,6 +112,8 @@ public class UIRrmImages
     STATION_NEW_METEOROLOGICAL("icons/timeseries/stationNewMeteorological.png"), //$NON-NLS-1$
 
     STORAGE_CHANNEL("icons/resultview/storage.png"), //$NON-NLS-1$
+    EMPTY_STORAGE_CHANNEL("icons/resultview/missingStorage.png"), //$NON-NLS-1$
+
     TIMESERIES("icons/timeseries/timeseries.png"), //$NON-NLS-1$
     TIMESERIES_EXTEND("icons/timeseries/extend.png"), //$NON-NLS-1$
 

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
@@ -49,6 +50,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 
 /**
  * @author Dirk Kuch
@@ -57,6 +59,8 @@ public class HydrologyCatchmentUiHandler extends AbstractResultTreeNodeUiHandler
 {
 
   private final Catchment m_catchment;
+
+  private IHydrologyResultReference[] m_references;
 
   public HydrologyCatchmentUiHandler( final RrmSimulation simulation, final Catchment catchment )
   {
@@ -71,15 +75,29 @@ public class HydrologyCatchmentUiHandler extends AbstractResultTreeNodeUiHandler
   }
 
   @Override
-  public ImageDescriptor getTreeImage( )
-  {
-    return UIRrmImages.id( DESCRIPTORS.CATCHMENT );
-  }
-
-  @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
     return null;
+  }
+
+  @Override
+  public ImageDescriptor getTreeImage( )
+  {
+    if( ArrayUtils.isEmpty( m_references ) )
+      return UIRrmImages.id( DESCRIPTORS.CATCHMENT );
+
+    for( final IHydrologyResultReference refernce : m_references )
+    {
+      if( refernce.isValid() )
+        return UIRrmImages.id( DESCRIPTORS.CATCHMENT );
+    }
+
+    return UIRrmImages.id( DESCRIPTORS.EMPTY_CATCHMENT );
+  }
+
+  public void setReferences( final IHydrologyResultReference... reference )
+  {
+    m_references = reference;
   }
 
 }
