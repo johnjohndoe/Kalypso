@@ -64,7 +64,6 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.CleanSearchPanelAction;
-import org.kalypso.ui.rrm.internal.results.view.tree.filter.HideEmptyHydrologyResultsFilter;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.HydrolgyManagementSearchControl;
 import org.kalypso.ui.rrm.internal.results.view.tree.strategies.NaModelStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
@@ -128,7 +127,6 @@ public class ResultManagementView extends ViewPart
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
     m_treeViewer.setComparator( new TreeNodeLabelComparator() );
-    m_treeViewer.addFilter( new HideEmptyHydrologyResultsFilter() );
 
     return m_treeViewer.getTree();
   }

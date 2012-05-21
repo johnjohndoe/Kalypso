@@ -51,9 +51,14 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 public class HideEmptyHydrologyResultsFilter extends ViewerFilter
 {
 
+  private boolean m_enabled = false;
+
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
+    if( !m_enabled )
+      return true;
+
     if( element instanceof TreeNode )
     {
       final TreeNode node = (TreeNode) element;
@@ -63,6 +68,11 @@ public class HideEmptyHydrologyResultsFilter extends ViewerFilter
     }
 
     return false;
+  }
+
+  public void setEnablement( final boolean enabled )
+  {
+    m_enabled = enabled;
   }
 
   private boolean doSelect( final TreeNode node )

@@ -54,17 +54,19 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
  * 
  * @author Dirk kuch
  */
-public class CurrentResultsFilterControl extends Composite
+public class ResultTreeFilterControl extends Composite
 {
   protected TreeViewer m_viewer;
 
-  protected final CurrentResultFilter m_filter = new CurrentResultFilter();
+  protected final CurrentResultFilter m_filterCurrentResults = new CurrentResultFilter();
 
-  public CurrentResultsFilterControl( final Composite parent, final FormToolkit toolkit )
+  HideEmptyHydrologyResultsFilter m_filterEmptyElements = new HideEmptyHydrologyResultsFilter();
+
+  public ResultTreeFilterControl( final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
 
-    setLayout( Layouts.createGridLayout() );
+    setLayout( Layouts.createGridLayout( 2, true ) );
     doRenderControl( toolkit );
 
     layout();
@@ -72,15 +74,28 @@ public class CurrentResultsFilterControl extends Composite
 
   private void doRenderControl( final FormToolkit toolkit )
   {
-    final Button button = toolkit.createButton( this, "Nur aktuelle Berechnungsergebnis", SWT.CHECK );
-    button.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final Button buttonCurrent = toolkit.createButton( this, "Nur aktuelle Berechnungsergebnis", SWT.CHECK );
+    buttonCurrent.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    button.addSelectionListener( new SelectionAdapter()
+    buttonCurrent.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
-        m_filter.setSelection( button.getSelection() );
+        m_filterCurrentResults.setSelection( buttonCurrent.getSelection() );
+        m_viewer.refresh();
+      }
+    } );
+
+    final Button buttonEmpty = toolkit.createButton( this, "Leere Berechnungsergebnis ausblenden", SWT.CHECK );
+    buttonEmpty.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    buttonEmpty.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
+      {
+        m_filterEmptyElements.setEnablement( buttonEmpty.getSelection() );
         m_viewer.refresh();
       }
     } );
@@ -89,7 +104,9 @@ public class CurrentResultsFilterControl extends Composite
   public void setViewer( final TreeViewer viewer )
   {
     m_viewer = viewer;
-    m_viewer.addFilter( m_filter );
+
+    m_viewer.addFilter( m_filterCurrentResults );
+    m_viewer.addFilter( m_filterEmptyElements );
   }
 
 }
