@@ -60,22 +60,28 @@ public class KalypsoHydrologyResults
   public enum RRM_RESULT
   {
     nodeGesamtknotenAbfluss(
-        "Gesamtknotenabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.PARAMETER_MISSING_TYPE_DISCHARGE, "Gesamtabfluss.zml", RRM_RESULT_TYPE.eNode), //$NON-NLS-2$
+        "Gesamtknotenabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml", RRM_RESULT_TYPE.eNode), //$NON-NLS-2$
 
-    catchmentTemperature("Temperatur", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_TEMPERATURE, null, "Temperatur.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
-    catchmentNiederschlag("Niederschlag", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_RAINFALL, null, "Niederschlag.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
-    catchmentSchneehoehe("Schneehöhe", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_SNOW_HEIGHT, null, null, RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$ // FIXME
-    catchmentGesamtTeilgebietsQ("Gesamtteilgebietsabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Gesamtabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
-    catchmentOberflaechenQNatuerlich("Oberflächenabfluss, natürlich", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Oberflaechenabfluss(natuerlich).zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
-    catchmentOberflaechenQVersiegelt("Oberflächenabfluss, versiegelt", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Oberflaechenabfluss(versiegelt).zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
-    catchmentInterflow("Interflow", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Interflow.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
-    catchmentBasisQ("Basisabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Basisabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
-    catchmentGrundwasserQ("Grundwasserabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Grundwasserabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
-    catchmentGrundwasserstand("Grundwasserstand", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_WATERLEVEL, null, "Grundwasserstand.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
-    catchmentEvapotranspiration("Evapotranspiration", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_EVAPORATION, null, null, RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$ // FIXME
+    catchmentTemperature("Temperatur", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_TEMPERATURE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_TEMPERATURE, "Temperatur.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentNiederschlag("Niederschlag", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_RAINFALL, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_RAINFALL, "Niederschlag.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentSchneehoehe("Schneehöhe", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_SNOW_HEIGHT, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_SNOW_HEIGHT, null, RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$ // FIXME
+    catchmentGesamtTeilgebietsQ(
+        "Gesamtteilgebietsabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentOberflaechenQNatuerlich(
+        "Oberflächenabfluss, natürlich", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(natuerlich).zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentOberflaechenQVersiegelt(
+        "Oberflächenabfluss, versiegelt", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(versiegelt).zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentInterflow("Interflow", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Interflow.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentBasisQ("Basisabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Basisabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentGrundwasserQ(
+        "Grundwasserabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Grundwasserabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentGrundwasserstand(
+        "Grundwasserstand", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_WATERLEVEL, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_WATERLEVEL, "Grundwasserstand.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentEvapotranspiration("Evapotranspiration", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_EVAPORATION, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_EVAPORATION, null, RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$ // FIXME
 
-    storageFuellvolumen("Füllvolumen", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_VOLUME, null, "Fuellvolumen.zml", RRM_RESULT_TYPE.eStorage), //$NON-NLS-2$
-    storageSpeicherUeberlauf("Specherüberlauf", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Speicherueberlauf.zml", RRM_RESULT_TYPE.eStorage); //$NON-NLS-2$
+    storageFuellvolumen("Füllvolumen", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_VOLUME, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_VOLUME, "Fuellvolumen.zml", RRM_RESULT_TYPE.eStorage), //$NON-NLS-2$
+    storageSpeicherUeberlauf(
+        "Specherüberlauf", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Speicherueberlauf.zml", RRM_RESULT_TYPE.eStorage); //$NON-NLS-2$
 
     private final String m_label;
 
