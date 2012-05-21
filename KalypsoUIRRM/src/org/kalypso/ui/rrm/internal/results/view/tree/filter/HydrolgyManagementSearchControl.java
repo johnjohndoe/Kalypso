@@ -86,7 +86,7 @@ public class HydrolgyManagementSearchControl extends Composite
     m_parameterTypeFilterControl = new ResultParameterTypeFilterControl( groupParameter, toolkit );
     m_parameterTypeFilterControl.setViewer( viewer );
 
-    final CurrentResultsFilterControl currentResultsControl = new CurrentResultsFilterControl( this, toolkit );
+    final ResultTreeFilterControl currentResultsControl = new ResultTreeFilterControl( this, toolkit );
     currentResultsControl.setViewer( viewer );
     currentResultsControl.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 1 ) );
 
