@@ -51,67 +51,72 @@ public class UIRrmImages
 {
   public static enum DESCRIPTORS implements ImageKey
   {
+    CALC_CASE_FOLDER("icons/resultview/calcCase.gif"), //$NON-NLS-1$
+
+    CATCHMENT("icons/resultview/catchment.png"), //$NON-NLS-1$
+
     DELETE("icons/timeseries/delete.gif"), //$NON-NLS-1$
-
-    GROUP("icons/timeseries/group.gif"), //$NON-NLS-1$
-
-    STATION("icons/timeseries/station.gif"), //$NON-NLS-1$
-    STATION_NEW_METEOROLOGICAL("icons/timeseries/stationNewMeteorological.png"), //$NON-NLS-1$
-    STATION_NEW_HYDROLOGICAL("icons/timeseries/stationNewHydrological.png"), //$NON-NLS-1$
-    STATION_METEOROLOGICAL("icons/timeseries/station_meteorological.png"), //$NON-NLS-1$
-    STATION_HYDROLOGICAL("icons/timeseries/station_hydrological.png"), //$NON-NLS-1$
-
-    PARAMETER_TYPE_BASE("icons/timeseries/parameterType"), //$NON-NLS-1$
-    PARAMETER_TYPE_WATERLEVEL("icons/timeseries/parameterType_W.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_DISCHARGE("icons/timeseries/parameterType_Q.png"), //$NON-NLS-1$
-    PARAMETER_MISSING_TYPE_DISCHARGE("icons/timeseries/missingParameterType_Q.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_RAINFALL("icons/timeseries/parameterType_N.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_TEMPERATURE("icons/timeseries/parameterType_T.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_EVAPORATION("icons/timeseries/parameterType_E.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_HUMIDITY("icons/timeseries/parameterType_U.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_VELOCITY("icons/timeseries/parameterType_v.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_SUNSHINE("icons/timeseries/parameterType_H.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_MEAN_TEMPERATURE("icons/timeseries/parameterType_MEAN_TEMPERATURE.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_H_SUNSHINE("icons/timeseries/parameterType_H_SUNSHINE.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_MEAN_WIND_VELOCITY("icons/timeseries/parameterType_MEAN_WIND_VELOCITY.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_MEAN_HUMIDITY("icons/timeseries/parameterType_MEAN_HUMIDITY.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_E_LAND("icons/timeseries/parameterType_E_LAND.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_E_WATER("icons/timeseries/parameterType_E_WATER.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_MEAN_RAINFALL("icons/timeseries/parameterType_MEAN_RAINFALL.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_VOLUME("icons/resultview/storage.png"), //$NON-NLS-1$
-
-    PARAMETER_TYPE_SNOW_HEIGHT("icons/parameters/snow.png"), //$NON-NLS-1$
-
-    TIMESERIES("icons/timeseries/timeseries.png"), //$NON-NLS-1$
-    TIMESERIES_EXTEND("icons/timeseries/extend.png"), //$NON-NLS-1$
-    TIMESERIES_EXTEND_AND_OVERWRITE("icons/timeseries/extend_and_overwrite.png"), //$NON-NLS-1$
-    TIMESERIES_REPLACE("icons/timeseries/overwrite.png"), //$NON-NLS-1$
-
-    TIMESERIES_SEARCH_CONTROL_CLEAN("icons/timeseries/clear.gif"), //$NON-NLS-1$
-    TIMESERIES_TREE_COLLAPSE_ALL("icons/timeseries/collapseall.gif"), //$NON-NLS-1$
-    TIMESERIES_TREE_EXPAND_ALL("icons/timeseries/expandall.gif"), //$NON-NLS-1$
-
-    IMPORT_TIMESERIES("icons/timeseries/importTimeseries.gif"), //$NON-NLS-1$
-
     EDIT_STATION("icons/timeseries/editStation.png"), //$NON-NLS-1$
+    GENERATOR_EDIT("icons/cm/generatorEdit.png"), //$NON-NLS-1$
+    GENERATOR_EDIT_IDW("icons/cm/generatorEditIdw.png"), //$NON-NLS-1$
+    GENERATOR_EDIT_THIESSEN("icons/cm/generatorEditThiessen.png"), //$NON-NLS-1$
 
     GENERATOR_LINEAR_SUM("icons/cm/generatorLinearSum.png"), //$NON-NLS-1$
     GENERATOR_MULTI("icons/cm/generatorMulti.png"), //$NON-NLS-1$
     GENERATOR_NEW_LINEAR_SUM("icons/cm/generatorNewLinearSum.png"), //$NON-NLS-1$
-    GENERATOR_NEW_MULTI("icons/cm/generatorNewMulti.png"), //$NON-NLS-1$
-    GENERATOR_EDIT("icons/cm/generatorEdit.png"), //$NON-NLS-1$
-    GENERATOR_EDIT_THIESSEN("icons/cm/generatorEditThiessen.png"), //$NON-NLS-1$
-    GENERATOR_EDIT_IDW("icons/cm/generatorEditIdw.png"), //$NON-NLS-1$
 
-    OPEN_TEXT_LOG_ACTION("icons/simulations/openTextLogAction.gif"), //$NON-NLS-1$
+    GENERATOR_NEW_MULTI("icons/cm/generatorNewMulti.png"), //$NON-NLS-1$
+    GROUP("icons/timeseries/group.gif"), //$NON-NLS-1$
+    IMPORT_TIMESERIES("icons/timeseries/importTimeseries.gif"), //$NON-NLS-1$
+
+    MISSING_PARAMETER_TYPE_DISCHARGE("icons/timeseries/missingParameterType_Q.png"), //$NON-NLS-1$
+    MISSING_PARAMETER_TYPE_EVAPORATION("icons/timeseries/missingParameterType_E.png"), //$NON-NLS-1$
+    MISSING_PARAMETER_TYPE_RAINFALL("icons/timeseries/missingParameterType_N.png"), //$NON-NLS-1$
+    MISSING_PARAMETER_TYPE_SNOW_HEIGHT("icons/parameters/missingSnow.png"), //$NON-NLS-1$
+    MISSING_PARAMETER_TYPE_TEMPERATURE("icons/timeseries/missingParameterType_T.png"), //$NON-NLS-1$
+    MISSING_PARAMETER_TYPE_VOLUME("icons/resultview/missingStorage.png"), //$NON-NLS-1$
+    MISSING_PARAMETER_TYPE_WATERLEVEL("icons/timeseries/missingParameterType_W.png"), //$NON-NLS-1$
+
+    NA_NODE("icons/resultview/node.png"), //$NON-NLS-1$
     OPEN_ERROR_GML_ACTION("icons/simulations/openErrorGmlAction.gif"), //$NON-NLS-1$
     OPEN_OUTPUT_ZML_ACTION("icons/simulations/openOutputZipAction.gif"), //$NON-NLS-1$
+    OPEN_TEXT_LOG_ACTION("icons/simulations/openTextLogAction.gif"), //$NON-NLS-1$
+
+    PARAMETER_TYPE_BASE("icons/timeseries/parameterType"), //$NON-NLS-1$
+    PARAMETER_TYPE_DISCHARGE("icons/timeseries/parameterType_Q.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_E_LAND("icons/timeseries/parameterType_E_LAND.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_E_WATER("icons/timeseries/parameterType_E_WATER.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_EVAPORATION("icons/timeseries/parameterType_E.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_H_SUNSHINE("icons/timeseries/parameterType_H_SUNSHINE.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_HUMIDITY("icons/timeseries/parameterType_U.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_MEAN_HUMIDITY("icons/timeseries/parameterType_MEAN_HUMIDITY.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_MEAN_RAINFALL("icons/timeseries/parameterType_MEAN_RAINFALL.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_MEAN_TEMPERATURE("icons/timeseries/parameterType_MEAN_TEMPERATURE.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_MEAN_WIND_VELOCITY("icons/timeseries/parameterType_MEAN_WIND_VELOCITY.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_RAINFALL("icons/timeseries/parameterType_N.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_SNOW_HEIGHT("icons/parameters/snow.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_SUNSHINE("icons/timeseries/parameterType_H.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_TEMPERATURE("icons/timeseries/parameterType_T.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_VELOCITY("icons/timeseries/parameterType_v.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_VOLUME("icons/resultview/storage.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_WATERLEVEL("icons/timeseries/parameterType_W.png"), //$NON-NLS-1$
 
     SIMULATION("icons/simulations/simulation.gif"), //$NON-NLS-1$
-    CATCHMENT("icons/resultview/catchment.png"), //$NON-NLS-1$
-    NA_NODE("icons/resultview/node.png"), //$NON-NLS-1$
+    STATION("icons/timeseries/station.gif"), //$NON-NLS-1$
+    STATION_HYDROLOGICAL("icons/timeseries/station_hydrological.png"), //$NON-NLS-1$
+    STATION_METEOROLOGICAL("icons/timeseries/station_meteorological.png"), //$NON-NLS-1$
+    STATION_NEW_HYDROLOGICAL("icons/timeseries/stationNewHydrological.png"), //$NON-NLS-1$
+    STATION_NEW_METEOROLOGICAL("icons/timeseries/stationNewMeteorological.png"), //$NON-NLS-1$
+
     STORAGE_CHANNEL("icons/resultview/storage.png"), //$NON-NLS-1$
-    CALC_CASE_FOLDER("icons/resultview/calcCase.gif"); //$NON-NLS-1$
+    TIMESERIES("icons/timeseries/timeseries.png"), //$NON-NLS-1$
+    TIMESERIES_EXTEND("icons/timeseries/extend.png"), //$NON-NLS-1$
+
+    TIMESERIES_EXTEND_AND_OVERWRITE("icons/timeseries/extend_and_overwrite.png"), //$NON-NLS-1$
+    TIMESERIES_REPLACE("icons/timeseries/overwrite.png"), //$NON-NLS-1$
+    TIMESERIES_SEARCH_CONTROL_CLEAN("icons/timeseries/clear.gif"), //$NON-NLS-1$
+    TIMESERIES_TREE_COLLAPSE_ALL("icons/timeseries/collapseall.gif"), //$NON-NLS-1$
+    TIMESERIES_TREE_EXPAND_ALL("icons/timeseries/expandall.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 
@@ -127,11 +132,6 @@ public class UIRrmImages
     }
   }
 
-  public static final ImageDescriptor id( final String pluginID, final String location )
-  {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( pluginID, location );
-  }
-
   public static final ImageDescriptor id( final DESCRIPTORS key )
   {
     return id( key.getImagePath() );
@@ -140,5 +140,10 @@ public class UIRrmImages
   public static final ImageDescriptor id( final String location )
   {
     return UIRrmImages.id( KalypsoUIRRMPlugin.getID(), location ); //$NON-NLS-1$
+  }
+
+  public static final ImageDescriptor id( final String pluginID, final String location )
+  {
+    return AbstractUIPlugin.imageDescriptorFromPlugin( pluginID, location );
   }
 }
