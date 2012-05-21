@@ -44,6 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 
 /**
  * @author Dirk Kuch
@@ -52,7 +53,7 @@ public interface IHydrologyResultReference extends IAdaptable
 {
   URL getUrl( ) throws MalformedURLException;
 
-  Object getType( );
+  RRM_RESULT getType( );
 
   boolean isValid( );
 

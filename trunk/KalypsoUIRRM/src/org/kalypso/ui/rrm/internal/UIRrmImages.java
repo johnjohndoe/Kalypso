@@ -64,6 +64,7 @@ public class UIRrmImages
     PARAMETER_TYPE_BASE("icons/timeseries/parameterType"), //$NON-NLS-1$
     PARAMETER_TYPE_WATERLEVEL("icons/timeseries/parameterType_W.png"), //$NON-NLS-1$
     PARAMETER_TYPE_DISCHARGE("icons/timeseries/parameterType_Q.png"), //$NON-NLS-1$
+    PARAMETER_MISSING_TYPE_DISCHARGE("icons/timeseries/missingParameterType_Q.png"), //$NON-NLS-1$
     PARAMETER_TYPE_RAINFALL("icons/timeseries/parameterType_N.png"), //$NON-NLS-1$
     PARAMETER_TYPE_TEMPERATURE("icons/timeseries/parameterType_T.png"), //$NON-NLS-1$
     PARAMETER_TYPE_EVAPORATION("icons/timeseries/parameterType_E.png"), //$NON-NLS-1$

@@ -45,47 +45,44 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.STORAGE_RESULT_TYPE;
+import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyStorageParameterUiHandler extends AbstractResultTreeNodeUiHandler
+public class HydrologyResultReferenceUiHandler extends AbstractResultTreeNodeUiHandler
 {
-  private final StorageChannel m_channel;
 
-  private final STORAGE_RESULT_TYPE m_type;
+  private final IHydrologyResultReference m_reference;
 
-  public HydrologyStorageParameterUiHandler( final RrmSimulation simualtion, final StorageChannel channel, final STORAGE_RESULT_TYPE type )
+  public HydrologyResultReferenceUiHandler( final RrmSimulation simulation, final IHydrologyResultReference reference )
   {
-    super( simualtion );
-
-    m_channel = channel;
-    m_type = type;
+    super( simulation );
+    m_reference = reference;
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return m_type.getLabel();
+    return m_reference.getType().getLabel();
   }
 
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    return m_type.getImage();
+    final RRM_RESULT type = m_reference.getType();
+
+    if( m_reference.isValid() )
+      return type.getImage();
+
+    return type.getMissingImage();
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler#createPropertiesControl(org.eclipse.swt.widgets.Composite,
-   *      org.kalypso.commons.databinding.IDataBinding, org.eclipse.jface.action.ToolBarManager)
-   */
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 

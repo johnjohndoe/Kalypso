@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFolder;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
@@ -67,7 +68,15 @@ public class CurrentResultFilter extends AbstractResultViewerFilter
       final IFolder folder = (IFolder) data;
 
       // FIXME english project template
-      return StringUtils.equalsIgnoreCase( folder.getName(), "berechnet" );
+      if( StringUtils.equalsIgnoreCase( folder.getName(), "berechnet" ) ) /*
+                                                                           * current result folder name set by project
+                                                                           * import
+                                                                           */
+        return true;
+      else if( StringUtils.equalsIgnoreCase( folder.getName(), RrmSimulation.FOLDER_AKTUELL ) )
+        return true;
+
+      return false;
 
     }
 

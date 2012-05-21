@@ -44,9 +44,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.NODE_RESULT_TYPE;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.STORAGE_RESULT_TYPE;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
@@ -82,29 +80,25 @@ public class ResultParameterTypeFilter extends AbstractResultViewerFilter
   {
     // TODO remove level
 
-    if( type instanceof CATCHMENT_RESULT_TYPE )
-      return doSelectCatchmentType( node, (CATCHMENT_RESULT_TYPE) type );
-    else if( type instanceof NODE_RESULT_TYPE )
-      return doSelectNodeType( node, (NODE_RESULT_TYPE) type );
-    else if( type instanceof STORAGE_RESULT_TYPE )
-      return doSelectStorageType( node, (STORAGE_RESULT_TYPE) type );
+    if( type instanceof RRM_RESULT )
+      return doSelecType( node, (RRM_RESULT) type );
 
     return false;
   }
 
-  private boolean doSelectStorageType( final TreeNode node, final STORAGE_RESULT_TYPE type )
+  private boolean doSelecType( final TreeNode node, final RRM_RESULT type )
   {
     final int level = getLevel( node );
     if( level == 3 )
     {
       final Object data = node.getData();
-      if( Objects.notEqual( STORAGE_RESULT_TYPE.class, data ) )
+      if( Objects.notEqual( RRM_RESULT.class, data ) )
         return false;
 
       final TreeNode[] children = node.getChildren();
       for( final TreeNode child : children )
       {
-        if( doSelectStorageType( child, type ) )
+        if( doSelecType( child, type ) )
           return true;
       }
 
@@ -117,85 +111,7 @@ public class ResultParameterTypeFilter extends AbstractResultViewerFilter
       final TreeNode[] children = node.getChildren();
       for( final TreeNode child : children )
       {
-        if( doSelectStorageType( child, type ) )
-          return true;
-      }
-
-      return false;
-    }
-
-    final IHydrologyResultReference reference = (IHydrologyResultReference) adapter;
-    if( Objects.notEqual( type, reference.getType() ) )
-      return false;
-
-    return reference.isValid();
-  }
-
-  private boolean doSelectNodeType( final TreeNode node, final NODE_RESULT_TYPE type )
-  {
-    final int level = getLevel( node );
-    if( level == 3 )
-    {
-      final Object data = node.getData();
-      if( Objects.notEqual( NODE_RESULT_TYPE.class, data ) )
-        return false;
-
-      final TreeNode[] children = node.getChildren();
-      for( final TreeNode child : children )
-      {
-        if( doSelectNodeType( child, type ) )
-          return true;
-      }
-
-      return false;
-    }
-
-    final Object adapter = node.getAdapter( IHydrologyResultReference.class );
-    if( !(adapter instanceof IHydrologyResultReference) )
-    {
-      final TreeNode[] children = node.getChildren();
-      for( final TreeNode child : children )
-      {
-        if( doSelectNodeType( child, type ) )
-          return true;
-      }
-
-      return false;
-    }
-
-    final IHydrologyResultReference reference = (IHydrologyResultReference) adapter;
-    if( Objects.notEqual( type, reference.getType() ) )
-      return false;
-
-    return reference.isValid();
-  }
-
-  private boolean doSelectCatchmentType( final TreeNode node, final CATCHMENT_RESULT_TYPE type )
-  {
-    final int level = getLevel( node );
-    if( level == 3 )
-    {
-      final Object data = node.getData();
-      if( Objects.notEqual( CATCHMENT_RESULT_TYPE.class, data ) )
-        return false;
-
-      final TreeNode[] children = node.getChildren();
-      for( final TreeNode child : children )
-      {
-        if( doSelectCatchmentType( child, type ) )
-          return true;
-      }
-
-      return false;
-    }
-
-    final Object adapter = node.getAdapter( IHydrologyResultReference.class );
-    if( !(adapter instanceof IHydrologyResultReference) )
-    {
-      final TreeNode[] children = node.getChildren();
-      for( final TreeNode child : children )
-      {
-        if( doSelectCatchmentType( child, type ) )
+        if( doSelecType( child, type ) )
           return true;
       }
 

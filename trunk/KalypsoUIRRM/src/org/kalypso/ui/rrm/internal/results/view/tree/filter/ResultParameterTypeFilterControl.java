@@ -63,9 +63,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.CATCHMENT_RESULT_TYPE;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.NODE_RESULT_TYPE;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.STORAGE_RESULT_TYPE;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 
 /**
  * @author Dirk Kuch
@@ -97,9 +95,7 @@ public class ResultParameterTypeFilterControl extends Composite
     toolkit.adapt( this );
 
     m_parameterTypes.add( StringUtils.EMPTY );
-    Collections.addAll( m_parameterTypes, CATCHMENT_RESULT_TYPE.values() );
-    Collections.addAll( m_parameterTypes, NODE_RESULT_TYPE.values() );
-    Collections.addAll( m_parameterTypes, STORAGE_RESULT_TYPE.values() );
+    Collections.addAll( m_parameterTypes, RRM_RESULT.values() );
 
     setLayout( Layouts.createGridLayout() );
     createContents( this );
