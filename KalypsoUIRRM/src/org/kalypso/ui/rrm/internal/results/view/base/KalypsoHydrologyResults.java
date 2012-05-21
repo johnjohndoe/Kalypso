@@ -50,61 +50,32 @@ import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
  */
 public class KalypsoHydrologyResults
 {
-  // FIXME own parameter definitions and axes?!?
-
-  public enum CATCHMENT_RESULT_TYPE
+  public enum RRM_RESULT_TYPE
   {
-    eTemperature("Temperatur", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_TEMPERATURE, "Temperatur.zml"), //$NON-NLS-2$
-    eNiederschlag("Niederschlag", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_RAINFALL, "Niederschlag.zml"), //$NON-NLS-2$
-    eSchneehoehe("Schneehöhe", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_SNOW_HEIGHT, null), //$NON-NLS-2$ // FIXME
-    eGesamtTeilgebietsQ("Gesamtteilgebietsabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml"), //$NON-NLS-2$
-    eOberflaechenQNatuerlich("Oberflächenabfluss, natürlich", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(natuerlich).zml"), //$NON-NLS-2$
-    eOberflaechenQVersiegelt("Oberflächenabfluss, versiegelt", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(versiegelt).zml"), //$NON-NLS-2$
-    eInterflow("Interflow", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Interflow.zml"), //$NON-NLS-2$
-    eBasisQ("Basisabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Basisabfluss.zml"), //$NON-NLS-2$
-    eGrundwasserQ("Grundwasserabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Grundwasserabfluss.zml"), //$NON-NLS-2$
-    eGrundwasserstand("Grundwasserstand", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_WATERLEVEL, "Grundwasserstand.zml"), //$NON-NLS-2$
-    eEvapotranspiration("Evapotranspiration", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_EVAPORATION, null); //$NON-NLS-2$ // FIXME
-
-    private final String m_label;
-
-    private final String m_fileName;
-
-    private final DESCRIPTORS m_image;
-
-    CATCHMENT_RESULT_TYPE( final String label, final UIRrmImages.DESCRIPTORS image, final String fileName )
-    {
-      m_label = label;
-      m_image = image;
-      m_fileName = fileName;
-    }
-
-    public String getLabel( )
-    {
-      return m_label;
-    }
-
-    @Override
-    public String toString( )
-    {
-      return getLabel();
-    }
-
-    public ImageDescriptor getImage( )
-    {
-      return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_image );
-    }
-
-    public String getFileName( )
-    {
-      return m_fileName;
-    }
-
+    eNode,
+    eCatchment,
+    eStorage;
   }
 
-  public enum NODE_RESULT_TYPE
+  public enum RRM_RESULT
   {
-    eGesamtknotenAbfluss("Gesamtknotenabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml"); //$NON-NLS-2$
+    nodeGesamtknotenAbfluss(
+        "Gesamtknotenabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.PARAMETER_MISSING_TYPE_DISCHARGE, "Gesamtabfluss.zml", RRM_RESULT_TYPE.eNode), //$NON-NLS-2$
+
+    catchmentTemperature("Temperatur", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_TEMPERATURE, null, "Temperatur.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentNiederschlag("Niederschlag", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_RAINFALL, null, "Niederschlag.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentSchneehoehe("Schneehöhe", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_SNOW_HEIGHT, null, null, RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$ // FIXME
+    catchmentGesamtTeilgebietsQ("Gesamtteilgebietsabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Gesamtabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentOberflaechenQNatuerlich("Oberflächenabfluss, natürlich", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Oberflaechenabfluss(natuerlich).zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentOberflaechenQVersiegelt("Oberflächenabfluss, versiegelt", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Oberflaechenabfluss(versiegelt).zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentInterflow("Interflow", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Interflow.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentBasisQ("Basisabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Basisabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentGrundwasserQ("Grundwasserabfluss", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Grundwasserabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentGrundwasserstand("Grundwasserstand", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_WATERLEVEL, null, "Grundwasserstand.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$
+    catchmentEvapotranspiration("Evapotranspiration", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_EVAPORATION, null, null, RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$ // FIXME
+
+    storageFuellvolumen("Füllvolumen", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_VOLUME, null, "Fuellvolumen.zml", RRM_RESULT_TYPE.eStorage), //$NON-NLS-2$
+    storageSpeicherUeberlauf("Specherüberlauf", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, null, "Speicherueberlauf.zml", RRM_RESULT_TYPE.eStorage); //$NON-NLS-2$
 
     private final String m_label;
 
@@ -112,11 +83,17 @@ public class KalypsoHydrologyResults
 
     private final DESCRIPTORS m_image;
 
-    NODE_RESULT_TYPE( final String label, final UIRrmImages.DESCRIPTORS image, final String fileName )
+    private final DESCRIPTORS m_missing;
+
+    private final RRM_RESULT_TYPE m_type;
+
+    RRM_RESULT( final String label, final UIRrmImages.DESCRIPTORS image, final UIRrmImages.DESCRIPTORS missing, final String fileName, final RRM_RESULT_TYPE type )
     {
       m_label = label;
       m_image = image;
+      m_missing = missing;
       m_fileName = fileName;
+      m_type = type;
     }
 
     public String getLabel( )
@@ -129,6 +106,11 @@ public class KalypsoHydrologyResults
       return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_image );
     }
 
+    public ImageDescriptor getMissingImage( )
+    {
+      return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_missing );
+    }
+
     @Override
     public String toString( )
     {
@@ -139,46 +121,11 @@ public class KalypsoHydrologyResults
     {
       return m_fileName;
     }
+
+    public RRM_RESULT_TYPE getType( )
+    {
+      return m_type;
+    }
   }
 
-  public enum STORAGE_RESULT_TYPE
-  {
-    eFuellvolumen("Füllvolumen", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_VOLUME, "Fuellvolumen.zml"), //$NON-NLS-2$
-    eSpeicherUeberlauf("Specherüberlauf", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, "Speicherueberlauf.zml"); //$NON-NLS-2$
-
-    private final String m_label;
-
-    private final String m_fileName;
-
-    private final DESCRIPTORS m_image;
-
-    STORAGE_RESULT_TYPE( final String label, final UIRrmImages.DESCRIPTORS image, final String fileName )
-    {
-      m_label = label;
-      m_image = image;
-      m_fileName = fileName;
-    }
-
-    public String getLabel( )
-    {
-      return m_label;
-    }
-
-    @Override
-    public String toString( )
-    {
-      return getLabel();
-    }
-
-    public ImageDescriptor getImage( )
-    {
-      return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( m_image );
-    }
-
-    public String getFileName( )
-    {
-      return m_fileName;
-    }
-
-  }
 }

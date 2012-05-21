@@ -59,7 +59,7 @@ public class RrmSimulation
 
   private static final String FOLDER_RESULTS = "Ergebnisse"; //$NON-NLS-1$
 
-  private static final String FOLDER_AKTUELL = "Aktuell"; //$NON-NLS-1$
+  public static final String FOLDER_AKTUELL = "Aktuell"; //$NON-NLS-1$
 
   private static final String FOLDER_BILANZ = "Bilanz"; //$NON-NLS-1$
 
