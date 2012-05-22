@@ -66,7 +66,6 @@ import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyGroupUiHa
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
@@ -173,7 +172,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
   private TreeNode addStorageChannels( final IFeatureBindingCollection<Channel> channels, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
 
-    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, "Speicherstrang", DESCRIPTORS.STORAGE_CHANNEL ), RRM_RESULT.class );
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, "Speicherstränge", DESCRIPTORS.STORAGE_CHANNEL ), RRM_RESULT.class );
     channels.accept( new IFeatureBindingCollectionVisitor<Channel>()
     {
       @Override
@@ -184,15 +183,15 @@ public class NaModelStrategy implements ITreeNodeStrategy
           final ParameterSetBuilder builder = new ParameterSetBuilder( simulation, channel );
           builder.init( base, UIRrmImages.DESCRIPTORS.STORAGE_CHANNEL, UIRrmImages.DESCRIPTORS.EMPTY_STORAGE_CHANNEL );
 
-          builder.addNode( new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageFuellvolumen ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageSpeicherUeberlauf ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageFuellvolumen ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageSpeicherUeberlauf ) );
 
           try
           {
             final StorageChannel storage = (StorageChannel) channel;
             final URL context = storage.getWorkspace().getContext();
 
-            builder.addNode( new HydrologyResultReference( context, storage.getSeaEvaporationTimeseriesLink(), RRM_RESULT.inputEvaporation ) );
+            builder.doAddNode( new HydrologyResultReference( context, storage.getSeaEvaporationTimeseriesLink(), RRM_RESULT.inputEvaporation ) );
           }
           catch( final MalformedURLException e )
           {
@@ -219,24 +218,24 @@ public class NaModelStrategy implements ITreeNodeStrategy
           final ParameterSetBuilder builder = new ParameterSetBuilder( simulation, catchment );
           builder.init( base, UIRrmImages.DESCRIPTORS.CATCHMENT, UIRrmImages.DESCRIPTORS.EMPTY_CATCHMENT );
 
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentTemperature ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentNiederschlag ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentSchneehoehe ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGesamtTeilgebietsQ ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentOberflaechenQNatuerlich ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentOberflaechenQVersiegelt ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentInterflow ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentBasisQ ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserQ ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserstand ) );
-          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentEvapotranspiration ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentTemperature ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentNiederschlag ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentSchneehoehe ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGesamtTeilgebietsQ ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentOberflaechenQNatuerlich ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentOberflaechenQVersiegelt ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentInterflow ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentBasisQ ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserQ ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserstand ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentEvapotranspiration ) );
 
           try
           {
             final URL context = catchment.getWorkspace().getContext();
 
-            builder.addNode( new HydrologyResultReference( context, catchment.getEvaporationLink(), RRM_RESULT.inputEvaporation ) );
-            builder.addNode( new HydrologyResultReference( context, catchment.getTemperatureLink(), RRM_RESULT.inputTemperature ) );
+            builder.doAddNode( new HydrologyResultReference( context, catchment.getEvaporationLink(), RRM_RESULT.inputEvaporation ) );
+            builder.doAddNode( new HydrologyResultReference( context, catchment.getTemperatureLink(), RRM_RESULT.inputTemperature ) );
           }
           catch( final MalformedURLException e )
           {
@@ -263,14 +262,12 @@ public class NaModelStrategy implements ITreeNodeStrategy
           final ParameterSetBuilder builder = new ParameterSetBuilder( simulation, node );
           builder.init( base, UIRrmImages.DESCRIPTORS.NA_NODE, UIRrmImages.DESCRIPTORS.EMPTY_NA_NODE );
 
-          builder.addNode( new HydrologyResultReference( calculationFolder, node, RRM_RESULT.nodeGesamtknotenAbfluss ) );
+          builder.doAddNode( new HydrologyResultReference( calculationFolder, node, RRM_RESULT.nodeGesamtknotenAbfluss ) );
 
           try
           {
             final URL context = node.getWorkspace().getContext();
-            final TimeseriesLinkType lnk = node.getZuflussLink();
-            if( lnk != null )
-              builder.addNode( new HydrologyResultReference( context, lnk, RRM_RESULT.inputInflow ) );
+            builder.doAddNode( new HydrologyResultReference( context, node.getZuflussLink(), RRM_RESULT.inputInflow ) );
           }
           catch( final MalformedURLException e )
           {

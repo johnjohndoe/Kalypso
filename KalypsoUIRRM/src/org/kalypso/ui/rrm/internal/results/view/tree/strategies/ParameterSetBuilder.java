@@ -76,7 +76,7 @@ public class ParameterSetBuilder
     base.addChild( m_node );
   }
 
-  public void addNode( final IHydrologyResultReference reference )
+  public void doAddNode( final IHydrologyResultReference reference )
   {
     m_node.addChild( new TreeNode( m_node, new HydrologyResultReferenceUiHandler( m_simulation, reference ), reference ) );
     m_handler.addReferences( reference );
