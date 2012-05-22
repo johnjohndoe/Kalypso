@@ -40,18 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
-import java.net.URL;
-
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -59,13 +49,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTrayDialog;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ogc.sensor.TIMESERIES_TYPE;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -74,19 +60,8 @@ import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 /**
  * @author Dirk Kuch
  */
-public class EditTimeseriesDialog extends EnhancedTrayDialog
+public class EditTimeseriesDialog extends ShowTimeseriesDialog
 {
-  private static final String DIALOG_SCREEN_SIZE = "edit.time.series.dialog.screen.size"; //$NON-NLS-1$
-
-  private static final String DIALOG_SASH_FORM_WEIGHTS = "edit.time.series.dialog.weights"; //$NON-NLS-1$
-
-  private final IServiceLocator m_context;
-
-  private RrmTableComposite m_table;
-
-  private TimeseriesChartComposite m_chart;
-
-  private final IMultipleZmlSourceElement m_source;
 
   private final FeatureBean<ITimeseries> m_timeseries;
 
@@ -94,12 +69,10 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
 
   public EditTimeseriesDialog( final Shell shell, final FeatureBean<ITimeseries> timeseries, final IMultipleZmlSourceElement source, final IDataBinding binding, final IServiceLocator context )
   {
-    super( shell );
+    super( shell, source, context );
 
     m_timeseries = timeseries;
-    m_source = source;
     m_binding = binding;
-    m_context = context;
 
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
     setHelpAvailable( false );
@@ -112,55 +85,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
     getShell().setText( Messages.getString( "EditTimeseriesDialog_0" ) ); //$NON-NLS-1$
 
-    final Composite base = toolkit.createComposite( parent, SWT.NULL );
-    base.setLayout( new GridLayout() );
-
-    final Point screen = getScreenSize( DIALOG_SCREEN_SIZE );
-
-    final GridData data = new GridData( GridData.FILL, GridData.FILL, true, true );
-    data.widthHint = screen.x;
-    data.heightHint = screen.y;
-    base.setLayoutData( data );
-
-    base.addControlListener( new ControlAdapter()
-    {
-      @Override
-      public void controlResized( final ControlEvent e )
-      {
-        setScreenSize( DIALOG_SCREEN_SIZE, base.getSize() );
-      }
-    } );
-
-    /* first row */
-    final SashForm form = new SashForm( base, SWT.HORIZONTAL );
-    form.setLayout( new FillLayout() );
-    form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
-
-    final Composite leftPane = toolkit.createComposite( form );
-    leftPane.setLayout( Layouts.createGridLayout() );
-
-    final Composite rightPane = toolkit.createComposite( form );
-    rightPane.setLayout( Layouts.createGridLayout() );
-
-    m_chart = new TimeseriesChartComposite( leftPane, toolkit, m_context, getClass().getResource( "templates/diagram_edit.kod" ) ); //$NON-NLS-1$
-    m_chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    m_chart.setSelection( m_source );
-
-    m_table = new RrmTableComposite( rightPane, toolkit, getTableTemplate(), m_context );
-    m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    m_table.setSelection( m_source );
-
-    m_chart.addControlListener( new ControlAdapter()
-    {
-      @Override
-      public void controlResized( final ControlEvent e )
-      {
-        setWeights( form.getWeights() );
-      }
-    } );
-
-    form.setWeights( getWeights() );
-    toolkit.adapt( form );
+    final Composite base = (Composite) super.createDialogArea( parent );
 
     final Section controlSection = toolkit.createSection( base, Section.TITLE_BAR | Section.EXPANDED );
     controlSection.setText( Messages.getString( "EditTimeseriesDialog_1" ) ); //$NON-NLS-1$
@@ -178,61 +103,6 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
 
     controlSection.setClient( properties );
 
-    return super.createDialogArea( parent );
-  }
-
-  private URL getTableTemplate( )
-  {
-    final ITimeseries timeseries = m_timeseries.getFeature();
-    final String parameter = timeseries.getParameterType();
-
-    final TIMESERIES_TYPE type = TIMESERIES_TYPE.getType( parameter );
-    switch( type )
-    {
-      case eSumValue:
-        return getClass().getResource( "templates/table.sum.kot" ); //$NON-NLS-1$
-      default:
-        return getClass().getResource( "templates/table.kot" ); //$NON-NLS-1$
-    }
-  }
-
-  private int[] getWeights( )
-  {
-    final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();
-
-    final String weights = settings.get( DIALOG_SASH_FORM_WEIGHTS );
-    if( weights == null || weights.trim().isEmpty() )
-      return new int[] { 64, 40 };
-
-    final String[] parts = weights.split( "," ); //$NON-NLS-1$ //$NON-NLS-1$
-    final int[] w = new int[parts.length];
-
-    for( int i = 0; i < parts.length; i++ )
-    {
-      w[i] = Integer.valueOf( parts[i] );
-    }
-
-    return w;
-  }
-
-  protected void setWeights( final int[] weights )
-  {
-    final StringBuffer buffer = new StringBuffer();
-    for( final int weight : weights )
-    {
-      buffer.append( String.format( Messages.getString( "EditTimeseriesDialog_3" ), weight ) ); //$NON-NLS-1$ //$NON-NLS-1$
-    }
-
-    final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();
-    settings.put( DIALOG_SASH_FORM_WEIGHTS, StringUtils.chop( buffer.toString() ) );
-  }
-
-  @Override
-  protected void buttonPressed( final int buttonId )
-  {
-    m_table.deactivate();
-    m_chart.deactivate();
-
-    super.buttonPressed( buttonId );
+    return base;
   }
 }

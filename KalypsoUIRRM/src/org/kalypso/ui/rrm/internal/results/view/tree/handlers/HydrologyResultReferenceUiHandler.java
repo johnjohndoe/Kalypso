@@ -40,12 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ui.rrm.internal.results.view.actions.OpenResultTimeseriesTableAction;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 
@@ -84,6 +93,28 @@ public class HydrologyResultReferenceUiHandler extends AbstractResultTreeNodeUiH
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
     return null;
+  }
+
+  @Override
+  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
+  {
+
+    try
+    {
+
+      final URL url = m_reference.getUrl();
+      final OpenResultTimeseriesTableAction actionZmlTable = new OpenResultTimeseriesTableAction( url );
+
+      final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, actionPanel, SWT.NONE, actionZmlTable );
+      imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      imageHyperlink.setText( actionZmlTable.getText() );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+
+    super.createHyperlinks( toolkit, actionPanel );
   }
 
 }

@@ -63,7 +63,7 @@ import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
 public class EditTimeseriesAction extends Action
 {
