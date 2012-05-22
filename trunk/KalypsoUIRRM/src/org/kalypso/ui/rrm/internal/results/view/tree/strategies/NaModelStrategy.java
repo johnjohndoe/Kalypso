@@ -57,16 +57,16 @@ import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 import org.kalypso.ui.rrm.internal.results.view.tree.HydrologyCalculationFoldersCollector;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCalculationCaseGroupUiHandler;
-import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCatchmentsGroupUiHandler;
-import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyNodesGroupUiHandler;
-import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyStorageChannelsGroupUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyGroupUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
@@ -173,7 +173,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
   private TreeNode addStorageChannels( final IFeatureBindingCollection<Channel> channels, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
 
-    final TreeNode base = new TreeNode( parent, new HydrologyStorageChannelsGroupUiHandler( simulation ), RRM_RESULT.class );
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, "Speicherstrang", DESCRIPTORS.STORAGE_CHANNEL ), RRM_RESULT.class );
     channels.accept( new IFeatureBindingCollectionVisitor<Channel>()
     {
       @Override
@@ -186,6 +186,18 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
           builder.addNode( new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageFuellvolumen ) );
           builder.addNode( new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageSpeicherUeberlauf ) );
+
+          try
+          {
+            final StorageChannel storage = (StorageChannel) channel;
+            final URL context = storage.getWorkspace().getContext();
+
+            builder.addNode( new HydrologyResultReference( context, storage.getSeaEvaporationTimeseriesLink(), RRM_RESULT.inputEvaporation ) );
+          }
+          catch( final MalformedURLException e )
+          {
+            e.printStackTrace();
+          }
         }
       }
     } );
@@ -195,7 +207,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   private TreeNode addCatchments( final IFeatureBindingCollection<Catchment> catchments, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-    final TreeNode base = new TreeNode( parent, new HydrologyCatchmentsGroupUiHandler( simulation ), RRM_RESULT.class );
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, "Teilgebiete", DESCRIPTORS.CATCHMENT ), RRM_RESULT.class );
 
     catchments.accept( new IFeatureBindingCollectionVisitor<Catchment>()
     {
@@ -240,7 +252,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   private TreeNode addNodes( final IFeatureBindingCollection<Node> nodes, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-    final TreeNode base = new TreeNode( parent, new HydrologyNodesGroupUiHandler( simulation ), RRM_RESULT.class );
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, "Knoten", DESCRIPTORS.NA_NODE ), RRM_RESULT.class );
     nodes.accept( new IFeatureBindingCollectionVisitor<Node>()
     {
       @Override
@@ -252,6 +264,18 @@ public class NaModelStrategy implements ITreeNodeStrategy
           builder.init( base, UIRrmImages.DESCRIPTORS.NA_NODE, UIRrmImages.DESCRIPTORS.EMPTY_NA_NODE );
 
           builder.addNode( new HydrologyResultReference( calculationFolder, node, RRM_RESULT.nodeGesamtknotenAbfluss ) );
+
+          try
+          {
+            final URL context = node.getWorkspace().getContext();
+            final TimeseriesLinkType lnk = node.getZuflussLink();
+            if( lnk != null )
+              builder.addNode( new HydrologyResultReference( context, lnk, RRM_RESULT.inputInflow ) );
+          }
+          catch( final MalformedURLException e )
+          {
+            e.printStackTrace();
+          }
         }
       }
     } );

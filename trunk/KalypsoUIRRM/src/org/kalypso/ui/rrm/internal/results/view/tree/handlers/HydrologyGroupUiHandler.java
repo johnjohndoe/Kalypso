@@ -52,23 +52,30 @@ import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 /**
  * @author Dirk Kuch
  */
-public class HydrologyStorageChannelsGroupUiHandler extends AbstractResultTreeNodeUiHandler
+public class HydrologyGroupUiHandler extends AbstractResultTreeNodeUiHandler
 {
-  public HydrologyStorageChannelsGroupUiHandler( final RrmSimulation simulation )
+
+  private final String m_label;
+
+  private final DESCRIPTORS m_icon;
+
+  public HydrologyGroupUiHandler( final RrmSimulation simulation, final String label, final DESCRIPTORS icon )
   {
     super( simulation );
+    m_label = label;
+    m_icon = icon;
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return "Speicher";
+    return m_label;
   }
 
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    return UIRrmImages.id( DESCRIPTORS.STORAGE_CHANNEL );
+    return UIRrmImages.id( m_icon );
   }
 
   @Override
