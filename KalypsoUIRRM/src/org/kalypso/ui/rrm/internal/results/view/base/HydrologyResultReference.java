@@ -90,9 +90,15 @@ public class HydrologyResultReference implements IHydrologyResultReference
 
   public HydrologyResultReference( final URL context, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
   {
-    final URL url = UrlResolverSingleton.resolveUrl( context, link.getHref() );
+    if( link != null )
+    {
+      final URL url = UrlResolverSingleton.resolveUrl( context, link.getHref() );
 
-    m_file = ResourceUtilities.findFileFromURL( url );
+      m_file = ResourceUtilities.findFileFromURL( url );
+    }
+    else
+      m_file = null;
+
     m_type = type;
   }
 
@@ -108,6 +114,9 @@ public class HydrologyResultReference implements IHydrologyResultReference
   @Override
   public URL getUrl( ) throws MalformedURLException
   {
+    if( m_file == null )
+      return null;
+
     return m_file.getLocationURI().toURL();
   }
 
@@ -120,8 +129,12 @@ public class HydrologyResultReference implements IHydrologyResultReference
   @Override
   public boolean isValid( )
   {
+    if( m_file == null )
+      return false;
+
     try
     {
+
       return UrlUtilities.checkIsAccessible( getUrl() );
     }
     catch( final MalformedURLException e )

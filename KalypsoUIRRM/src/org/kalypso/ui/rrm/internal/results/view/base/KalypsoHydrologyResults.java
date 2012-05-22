@@ -85,6 +85,7 @@ public class KalypsoHydrologyResults
         "Specherüberlauf", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Speicherueberlauf.zml", RRM_RESULT_TYPE.eStorage), //$NON-NLS-2$
 
     inputEvaporation("Verdunstung", UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_EVAPORATION, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_EVAPORATION, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-2$
+    inputInflow("Zufluss", UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_INFLOW, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_INFLOW, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-2$
     inputTemperature("Temperatur", UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_TEMPERATURE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_TEMPERATURE, null, RRM_RESULT_TYPE.eInputTimeseries); //$NON-NLS-2$
 
     private final String m_label;

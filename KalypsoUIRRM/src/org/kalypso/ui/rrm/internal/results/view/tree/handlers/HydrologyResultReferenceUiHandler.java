@@ -98,16 +98,18 @@ public class HydrologyResultReferenceUiHandler extends AbstractResultTreeNodeUiH
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-
     try
     {
 
-      final URL url = m_reference.getUrl();
-      final OpenResultTimeseriesTableAction actionZmlTable = new OpenResultTimeseriesTableAction( url );
+      if( m_reference.isValid() )
+      {
+        final URL url = m_reference.getUrl();
+        final OpenResultTimeseriesTableAction actionZmlTable = new OpenResultTimeseriesTableAction( url );
 
-      final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, actionPanel, SWT.NONE, actionZmlTable );
-      imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      imageHyperlink.setText( actionZmlTable.getText() );
+        final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, actionPanel, SWT.NONE, actionZmlTable );
+        imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+        imageHyperlink.setText( actionZmlTable.getText() );
+      }
     }
     catch( final MalformedURLException e )
     {
