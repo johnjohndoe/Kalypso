@@ -102,7 +102,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
             return true;
           else if( isCalculationCaseFolder( (IFolder) resource ) )
           {
-            if( StringUtils.startsWithIgnoreCase( resource.getName(), "tmp" ) )
+            if( StringUtils.startsWithIgnoreCase( resource.getName(), "tmp" ) ) //$NON-NLS-1$
               return true;
 
             virtualRootNode.addChild( buildCalculationCaseNodes( virtualRootNode, new RrmSimulation( (IFolder) resource ) ) );
