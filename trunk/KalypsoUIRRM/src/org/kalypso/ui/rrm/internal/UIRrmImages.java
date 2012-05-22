@@ -70,6 +70,9 @@ public class UIRrmImages
     GROUP("icons/timeseries/group.gif"), //$NON-NLS-1$
     IMPORT_TIMESERIES("icons/timeseries/importTimeseries.gif"), //$NON-NLS-1$
 
+    MISSING_PARAMETER_INPUT_TYPE_EVAPORATION("icons/timeseries/missingInputParameterType_E.png"), //$NON-NLS-1$
+    MISSING_PARAMETER_INPUT_TYPE_TEMPERATURE("icons/timeseries/missingInputParameterType_T.png"), //$NON-NLS-1$
+
     MISSING_PARAMETER_TYPE_DISCHARGE("icons/timeseries/missingParameterType_Q.png"), //$NON-NLS-1$
     MISSING_PARAMETER_TYPE_EVAPORATION("icons/timeseries/missingParameterType_E.png"), //$NON-NLS-1$
     MISSING_PARAMETER_TYPE_RAINFALL("icons/timeseries/missingParameterType_N.png"), //$NON-NLS-1$
@@ -84,6 +87,9 @@ public class UIRrmImages
     OPEN_ERROR_GML_ACTION("icons/simulations/openErrorGmlAction.gif"), //$NON-NLS-1$
     OPEN_OUTPUT_ZML_ACTION("icons/simulations/openOutputZipAction.gif"), //$NON-NLS-1$
     OPEN_TEXT_LOG_ACTION("icons/simulations/openTextLogAction.gif"), //$NON-NLS-1$
+
+    PARAMETER_INPUT_TYPE_EVAPORATION("icons/timeseries/inputParameterType_E.png"), //$NON-NLS-1$
+    PARAMETER_INPUT_TYPE_TEMPERATURE("icons/timeseries/inputParameterType_T.png"), //$NON-NLS-1$
 
     PARAMETER_TYPE_BASE("icons/timeseries/parameterType"), //$NON-NLS-1$
     PARAMETER_TYPE_DISCHARGE("icons/timeseries/parameterType_Q.png"), //$NON-NLS-1$

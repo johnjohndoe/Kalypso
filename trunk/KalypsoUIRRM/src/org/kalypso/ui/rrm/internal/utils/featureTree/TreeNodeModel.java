@@ -105,7 +105,8 @@ public class TreeNodeModel implements ITreeNodeModel
   @Override
   public void addModellListener( final ModellEventListener modelListener )
   {
-    m_workspace.addModellListener( modelListener );
+    if( m_workspace != null )
+      m_workspace.addModellListener( modelListener );
   }
 
   @Override

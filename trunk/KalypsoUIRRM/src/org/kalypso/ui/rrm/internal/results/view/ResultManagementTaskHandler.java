@@ -44,6 +44,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IViewPart;
@@ -51,9 +52,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ui.rrm.internal.diagram.RrmDiagramView;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView;
 
@@ -95,10 +94,9 @@ public class ResultManagementTaskHandler extends AbstractHandler
 
       // TODO
       final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL );
-      final NaModell model = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL );
+      final RrmScenario scenario = new RrmScenario( (IFolder) modelProvider.getScenarioFolder() );
 
-      managementView.setInput( workspace, model );
+      managementView.setInput( scenario );
     }
     catch( final CoreException e )
     {

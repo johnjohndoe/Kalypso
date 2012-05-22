@@ -40,35 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.strategies;
 
-import java.net.URL;
-
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 import org.kalypso.ui.rrm.internal.results.view.tree.HydrologyCalculationFoldersCollector;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCalculationCaseGroupUiHandler;
-import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCatchmentUiHandler;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCatchmentsGroupUiHandler;
-import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyNodeUiHandler;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyNodesGroupUiHandler;
-import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyResultReferenceUiHandler;
-import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyStorageChannelUiHandler;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyStorageChannelsGroupUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
 
@@ -77,11 +73,12 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
  */
 public class NaModelStrategy implements ITreeNodeStrategy
 {
-  private final NaModell m_model;
 
-  public NaModelStrategy( final NaModell model )
+  private final RrmScenario m_scenario;
+
+  public NaModelStrategy( final RrmScenario scenario )
   {
-    m_model = model;
+    m_scenario = scenario;
   }
 
   @Override
@@ -91,11 +88,10 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
     try
     {
-      final URL context = m_model.getWorkspace().getContext();
-      final URL urlCalcCases = UrlResolverSingleton.resolveUrl( context, "../Rechenvarianten/" ); //$NON-NLS-1$
-      final IFolder folderCalcCases = ResourceUtilities.findFolderFromURL( urlCalcCases );
 
-      folderCalcCases.accept( new IResourceVisitor()
+      final IFolder folderSimulations = m_scenario.getSimulationsFolder();
+
+      folderSimulations.accept( new IResourceVisitor()
       {
         @Override
         public boolean visit( final IResource resource )
@@ -118,12 +114,12 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
         private boolean isBaseFolder( final IFolder folder )
         {
-          return folder.equals( folderCalcCases );
+          return folder.equals( folderSimulations );
         }
 
         private boolean isCalculationCaseFolder( final IFolder folder )
         {
-          return folder.getParent().equals( folderCalcCases );
+          return folder.getParent().equals( folderSimulations );
         }
 
       }, 1, false );
@@ -141,6 +137,10 @@ public class NaModelStrategy implements ITreeNodeStrategy
     final TreeNode calcCase = new TreeNode( parent, new HydrologyCalculationCaseGroupUiHandler( simulation ), simulation );
     try
     {
+      final IFile modelGml = simulation.getModelGml();
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelGml );
+      final NaModell model = (NaModell) workspace.getRootFeature();
+
       // FIXME english project template folder names?!?
       final HydrologyCalculationFoldersCollector visitor = new HydrologyCalculationFoldersCollector( simulation ); //$NON-NLS-1$
       simulation.getResultsFolder().accept( visitor, 1, false );
@@ -151,15 +151,15 @@ public class NaModelStrategy implements ITreeNodeStrategy
       {
         final TreeNode calculationResultNode = new TreeNode( calcCase, new HydrologyCalculationCaseGroupUiHandler( simulation, calculationResultFolder ), calculationResultFolder );
 
-        calculationResultNode.addChild( buildHydrologyNodes( calculationResultNode, simulation, calculationResultFolder ) );
-        calculationResultNode.addChild( buildHydrologyCatchments( calculationResultNode, simulation, calculationResultFolder ) );
-        calculationResultNode.addChild( buildHydrologyStorages( calculationResultNode, simulation, calculationResultFolder ) );
+        calculationResultNode.addChild( addNodes( model.getNodes(), calculationResultNode, simulation, calculationResultFolder ) );
+        calculationResultNode.addChild( addCatchments( model.getCatchments(), calculationResultNode, simulation, calculationResultFolder ) );
+        calculationResultNode.addChild( addStorageChannels( model.getChannels(), calculationResultNode, simulation, calculationResultFolder ) );
 
         calcCase.addChild( calculationResultNode );
       }
 
     }
-    catch( final CoreException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -167,9 +167,8 @@ public class NaModelStrategy implements ITreeNodeStrategy
     return calcCase;
   }
 
-  private TreeNode buildHydrologyStorages( final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
+  private TreeNode addStorageChannels( final IFeatureBindingCollection<Channel> channels, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-    final IFeatureBindingCollection<Channel> channels = m_model.getChannels();
 
     final TreeNode base = new TreeNode( parent, new HydrologyStorageChannelsGroupUiHandler( simulation ), RRM_RESULT.class );
     channels.accept( new IFeatureBindingCollectionVisitor<Channel>()
@@ -178,87 +177,57 @@ public class NaModelStrategy implements ITreeNodeStrategy
       public void visit( final Channel channel )
       {
         if( channel instanceof StorageChannel )
-          base.addChild( toTreeNode( base, (StorageChannel) channel, simulation, calculationFolder ) );
+        {
+          final ParameterSetBuilder builder = new ParameterSetBuilder( simulation, channel );
+          builder.init( base, UIRrmImages.DESCRIPTORS.STORAGE_CHANNEL, UIRrmImages.DESCRIPTORS.EMPTY_STORAGE_CHANNEL );
+
+          builder.addNode( new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageFuellvolumen ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageSpeicherUeberlauf ) );
+        }
       }
     } );
 
     return base;
   }
 
-  protected TreeNode toTreeNode( final TreeNode parent, final StorageChannel channel, final RrmSimulation simulation, final IFolder calculationFolder )
+  private TreeNode addCatchments( final IFeatureBindingCollection<Catchment> catchments, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-
-    final HydrologyResultReference ref1 = new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageFuellvolumen );
-    final HydrologyResultReference ref2 = new HydrologyResultReference( calculationFolder, channel, RRM_RESULT.storageSpeicherUeberlauf );
-
-    final HydrologyStorageChannelUiHandler handler = new HydrologyStorageChannelUiHandler( simulation, channel );
-    handler.setReferences( ref1, ref2 );
-
-    final TreeNode node = new TreeNode( parent, handler, channel );
-
-    node.addChild( new TreeNode( node, new HydrologyResultReferenceUiHandler( simulation, ref1 ), ref1 ) );
-    node.addChild( new TreeNode( node, new HydrologyResultReferenceUiHandler( simulation, ref2 ), ref2 ) );
-
-    return node;
-  }
-
-  private TreeNode buildHydrologyCatchments( final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
-  {
-    final IFeatureBindingCollection<Catchment> catchments = m_model.getCatchments();
-
     final TreeNode base = new TreeNode( parent, new HydrologyCatchmentsGroupUiHandler( simulation ), RRM_RESULT.class );
+
     catchments.accept( new IFeatureBindingCollectionVisitor<Catchment>()
     {
       @Override
       public void visit( final Catchment catchment )
       {
         if( catchment.isGenerateResults() )
-          base.addChild( toTreeNode( base, catchment, simulation, calculationFolder ) );
+        {
+          final ParameterSetBuilder builder = new ParameterSetBuilder( simulation, catchment );
+          builder.init( base, UIRrmImages.DESCRIPTORS.CATCHMENT, UIRrmImages.DESCRIPTORS.EMPTY_CATCHMENT );
+
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentTemperature ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentNiederschlag ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentSchneehoehe ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGesamtTeilgebietsQ ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentOberflaechenQNatuerlich ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentOberflaechenQVersiegelt ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentInterflow ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentBasisQ ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserQ ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserstand ) );
+          builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentEvapotranspiration ) );
+
+// base.addChild( addInputTimeseries( catchment.getEvaporationLink(), RRM_RESULT.inputEvaporation ) );
+// base.addChild( addInputTimeseries( catchment.getTemperatureLink(), RRM_RESULT.inputTemperature ) );
+        }
+
       }
     } );
 
     return base;
   }
 
-  protected TreeNode toTreeNode( final TreeNode parent, final Catchment catchment, final RrmSimulation simulation, final IFolder calculationFolder )
+  private TreeNode addNodes( final IFeatureBindingCollection<Node> nodes, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-
-    final HydrologyResultReference ref1 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentTemperature );
-    final HydrologyResultReference ref2 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentNiederschlag );
-    final HydrologyResultReference ref3 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentSchneehoehe );
-    final HydrologyResultReference ref4 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGesamtTeilgebietsQ );
-    final HydrologyResultReference ref5 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentOberflaechenQNatuerlich );
-    final HydrologyResultReference ref6 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentOberflaechenQVersiegelt );
-    final HydrologyResultReference ref7 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentInterflow );
-    final HydrologyResultReference ref8 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentBasisQ );
-    final HydrologyResultReference ref9 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserQ );
-    final HydrologyResultReference ref10 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserstand );
-    final HydrologyResultReference ref11 = new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentEvapotranspiration );
-
-    final HydrologyCatchmentUiHandler handler = new HydrologyCatchmentUiHandler( simulation, catchment );
-    handler.setReferences( ref1, ref2, ref3, ref4, ref5, ref6, ref7, ref8, ref9, ref10, ref11 );
-
-    final TreeNode nodeCatchment = new TreeNode( parent, handler, catchment );
-
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref1 ), ref1 ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref2 ), ref2 ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref3 ), ref3 ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref4 ), ref4 ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref5 ), ref5 ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref6 ), ref6 ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref7 ), ref7 ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref8 ), ref8 ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref9 ), ref9 ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref10 ), ref10 ) );
-    nodeCatchment.addChild( new TreeNode( nodeCatchment, new HydrologyResultReferenceUiHandler( simulation, ref11 ), ref11 ) );
-
-    return nodeCatchment;
-  }
-
-  private TreeNode buildHydrologyNodes( final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
-  {
-    final IFeatureBindingCollection<Node> nodes = m_model.getNodes();
-
     final TreeNode base = new TreeNode( parent, new HydrologyNodesGroupUiHandler( simulation ), RRM_RESULT.class );
     nodes.accept( new IFeatureBindingCollectionVisitor<Node>()
     {
@@ -267,7 +236,10 @@ public class NaModelStrategy implements ITreeNodeStrategy
       {
         if( node.isGenerateResults() )
         {
-          base.addChild( toTreeNode( base, node, simulation, calculationFolder ) );
+          final ParameterSetBuilder builder = new ParameterSetBuilder( simulation, node );
+          builder.init( base, UIRrmImages.DESCRIPTORS.NA_NODE, UIRrmImages.DESCRIPTORS.EMPTY_NA_NODE );
+
+          builder.addNode( new HydrologyResultReference( calculationFolder, node, RRM_RESULT.nodeGesamtknotenAbfluss ) );
         }
       }
     } );
@@ -275,16 +247,4 @@ public class NaModelStrategy implements ITreeNodeStrategy
     return base;
   }
 
-  protected TreeNode toTreeNode( final TreeNode parent, final Node hydrologyNode, final RrmSimulation simulation, final IFolder calculationFolder )
-  {
-    final HydrologyResultReference reference = new HydrologyResultReference( calculationFolder, hydrologyNode, RRM_RESULT.nodeGesamtknotenAbfluss );
-
-    final HydrologyNodeUiHandler handler = new HydrologyNodeUiHandler( simulation, hydrologyNode );
-    handler.setReferences( reference );
-
-    final TreeNode node = new TreeNode( parent, handler, hydrologyNode );
-    node.addChild( new TreeNode( node, new HydrologyResultReferenceUiHandler( simulation, reference ), reference ) );
-
-    return node;
-  }
 }

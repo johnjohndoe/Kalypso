@@ -40,53 +40,59 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyNodeUiHandler extends AbstractResultTreeNodeUiHandler
+public class HydrologyParameterSetUiHandler extends AbstractResultTreeNodeUiHandler
 {
-  private final Node m_hydrologyNode;
 
-  private IHydrologyResultReference[] m_references;
+  private final Set<IHydrologyResultReference> m_references = Collections.synchronizedSet( new LinkedHashSet<IHydrologyResultReference>() );
 
-  public HydrologyNodeUiHandler( final RrmSimulation simulation, final Node hydrologyNode )
+  private final Feature m_feature;
+
+  private final DESCRIPTORS m_existing;
+
+  private final DESCRIPTORS m_missing;
+
+  public HydrologyParameterSetUiHandler( final RrmSimulation simulation, final Feature feature, final UIRrmImages.DESCRIPTORS existing, final UIRrmImages.DESCRIPTORS missing )
   {
     super( simulation );
 
-    m_hydrologyNode = hydrologyNode;
+    m_feature = feature;
+    m_existing = existing;
+    m_missing = missing;
+  }
+
+  public void addReferences( final IHydrologyResultReference... reference )
+  {
+    Collections.addAll( m_references, reference );
+  }
+
+  public IHydrologyResultReference[] getReferences( )
+  {
+    return m_references.toArray( new IHydrologyResultReference[] {} );
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return m_hydrologyNode.getName();
-  }
-
-  @Override
-  public ImageDescriptor getTreeImage( )
-  {
-    if( ArrayUtils.isEmpty( m_references ) )
-      return UIRrmImages.id( DESCRIPTORS.NA_NODE );
-
-    for( final IHydrologyResultReference refernce : m_references )
-    {
-      if( refernce.isValid() )
-        return UIRrmImages.id( DESCRIPTORS.NA_NODE );
-    }
-
-    return UIRrmImages.id( DESCRIPTORS.EMPTY_NA_NODE );
+    return m_feature.getName();
   }
 
   @Override
@@ -95,9 +101,21 @@ public class HydrologyNodeUiHandler extends AbstractResultTreeNodeUiHandler
     return null;
   }
 
-  public void setReferences( final IHydrologyResultReference... reference )
+  @Override
+  public ImageDescriptor getTreeImage( )
   {
-    m_references = reference;
+    final IHydrologyResultReference[] references = getReferences();
+
+    if( ArrayUtils.isEmpty( references ) )
+      return UIRrmImages.id( m_missing );
+
+    for( final IHydrologyResultReference refernce : references )
+    {
+      if( refernce.isValid() )
+        return UIRrmImages.id( m_existing );
+    }
+
+    return UIRrmImages.id( m_missing );
   }
 
 }
