@@ -89,7 +89,7 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
   }
 
   @Override
-  protected final void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
+  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
     final List<Action> actions = new ArrayList<Action>();
     actions.add( new OpenTextLogAction( "Open calculation log", "Displays the calculation log.", m_simulation.getCalculationLog() ) );
