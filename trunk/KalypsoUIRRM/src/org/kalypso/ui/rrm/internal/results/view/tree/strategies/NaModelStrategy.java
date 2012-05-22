@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.strategies;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -216,8 +219,17 @@ public class NaModelStrategy implements ITreeNodeStrategy
           builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentGrundwasserstand ) );
           builder.addNode( new HydrologyResultReference( calculationFolder, catchment, RRM_RESULT.catchmentEvapotranspiration ) );
 
-// base.addChild( addInputTimeseries( catchment.getEvaporationLink(), RRM_RESULT.inputEvaporation ) );
-// base.addChild( addInputTimeseries( catchment.getTemperatureLink(), RRM_RESULT.inputTemperature ) );
+          try
+          {
+            final URL context = catchment.getWorkspace().getContext();
+
+            builder.addNode( new HydrologyResultReference( context, catchment.getEvaporationLink(), RRM_RESULT.inputEvaporation ) );
+            builder.addNode( new HydrologyResultReference( context, catchment.getTemperatureLink(), RRM_RESULT.inputTemperature ) );
+          }
+          catch( final MalformedURLException e )
+          {
+            e.printStackTrace();
+          }
         }
 
       }

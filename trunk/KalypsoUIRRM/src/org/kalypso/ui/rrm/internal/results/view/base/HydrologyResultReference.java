@@ -46,8 +46,11 @@ import java.net.URL;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.kalypso.commons.java.net.UrlUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT_TYPE;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -83,6 +86,14 @@ public class HydrologyResultReference implements IHydrologyResultReference
     }
 
     m_type = result;
+  }
+
+  public HydrologyResultReference( final URL context, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
+  {
+    final URL url = UrlResolverSingleton.resolveUrl( context, link.getHref() );
+
+    m_file = ResourceUtilities.findFileFromURL( url );
+    m_type = type;
   }
 
   @Override
