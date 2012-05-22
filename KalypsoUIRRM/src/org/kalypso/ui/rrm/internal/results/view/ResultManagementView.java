@@ -60,8 +60,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
-import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.CleanSearchPanelAction;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.HydrolgyManagementSearchControl;
@@ -80,7 +79,7 @@ public class ResultManagementView extends ViewPart
 {
   public static String ID = "org.kalypso.ui.rrm.internal.results.view.ResultManagementView"; //$NON-NLS-1$
 
-  private TreeViewer m_treeViewer;
+  protected TreeViewer m_treeViewer;
 
   @Override
   public void createPartControl( final Composite parent )
@@ -137,11 +136,11 @@ public class ResultManagementView extends ViewPart
     m_treeViewer.getControl().setFocus();
   }
 
-  public void setInput( final CommandableWorkspace workspace, final NaModell model )
+  public void setInput( final RrmScenario scenario )
   {
-    final ITreeNodeStrategy strategy = new NaModelStrategy( model );
+    final ITreeNodeStrategy strategy = new NaModelStrategy( scenario );
 
-    final TreeNodeModel input = new TreeNodeModel( strategy, workspace, m_treeViewer );
+    final TreeNodeModel input = new TreeNodeModel( strategy, null, m_treeViewer );
     m_treeViewer.setInput( input );
 
     /** set tree viewer selection to it's first item! */

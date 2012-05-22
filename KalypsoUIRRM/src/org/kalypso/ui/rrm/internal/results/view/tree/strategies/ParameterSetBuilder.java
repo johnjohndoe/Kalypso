@@ -38,66 +38,48 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
+package org.kalypso.ui.rrm.internal.results.view.tree.strategies;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyParameterSetUiHandler;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyResultReferenceUiHandler;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyStorageChannelUiHandler extends AbstractResultTreeNodeUiHandler
+public class ParameterSetBuilder
 {
-  private final StorageChannel m_channel;
 
-  private IHydrologyResultReference[] m_references;
+  private final Feature m_feature;
 
-  public HydrologyStorageChannelUiHandler( final RrmSimulation simulation, final StorageChannel channel )
+  private final RrmSimulation m_simulation;
+
+  private HydrologyParameterSetUiHandler m_handler;
+
+  private TreeNode m_node;
+
+  public ParameterSetBuilder( final RrmSimulation simulation, final Feature feature )
   {
-    super( simulation );
-
-    m_channel = channel;
+    m_simulation = simulation;
+    m_feature = feature;
   }
 
-  @Override
-  public String getTreeLabel( )
+  public void init( final TreeNode base, final DESCRIPTORS imgExisting, final DESCRIPTORS imgMissing )
   {
-    return m_channel.getName();
+    m_handler = new HydrologyParameterSetUiHandler( m_simulation, m_feature, imgExisting, imgMissing );
+    m_node = new TreeNode( base, m_handler, m_feature );
+
+    base.addChild( m_node );
   }
 
-  @Override
-  protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
+  public void addNode( final IHydrologyResultReference reference )
   {
-    return null;
-  }
-
-  @Override
-  public ImageDescriptor getTreeImage( )
-  {
-    if( ArrayUtils.isEmpty( m_references ) )
-      return UIRrmImages.id( DESCRIPTORS.STORAGE_CHANNEL );
-
-    for( final IHydrologyResultReference refernce : m_references )
-    {
-      if( refernce.isValid() )
-        return UIRrmImages.id( DESCRIPTORS.STORAGE_CHANNEL );
-    }
-
-    return UIRrmImages.id( DESCRIPTORS.EMPTY_STORAGE_CHANNEL );
-  }
-
-  public void setReferences( final IHydrologyResultReference... reference )
-  {
-    m_references = reference;
+    m_node.addChild( new TreeNode( m_node, new HydrologyResultReferenceUiHandler( m_simulation, reference ), reference ) );
+    m_handler.addReferences( reference );
   }
 
 }

@@ -83,7 +83,6 @@ public class OpenResultTimeseriesTableAction extends Action
     {
       t.printStackTrace();
     }
-
   }
 
 }
