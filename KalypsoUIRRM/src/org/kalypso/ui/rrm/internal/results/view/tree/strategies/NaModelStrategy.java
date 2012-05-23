@@ -235,6 +235,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
             final URL context = catchment.getWorkspace().getContext();
 
             builder.doAddNode( new HydrologyResultReference( simulation, context, catchment, catchment.getEvaporationLink(), RRM_RESULT.inputEvaporation ) );
+            builder.doAddNode( new HydrologyResultReference( simulation, context, catchment, catchment.getPrecipitationLink(), RRM_RESULT.inputRainfall ) );
             builder.doAddNode( new HydrologyResultReference( simulation, context, catchment, catchment.getTemperatureLink(), RRM_RESULT.inputTemperature ) );
           }
           catch( final MalformedURLException e )

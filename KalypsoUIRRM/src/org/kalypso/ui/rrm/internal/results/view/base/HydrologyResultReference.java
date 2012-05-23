@@ -294,11 +294,15 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
       case catchmentTemperature:
         return ITimeseriesConstants.TYPE_TEMPERATURE;
       case inputEvaporation:
-        return ITimeseriesConstants.TYPE_EVAPORATION;
+        return "HYDROLOGY_INPUT_EVAPORATION";
       case inputInflow:
         return ITimeseriesConstants.TYPE_DISCHARGE;
       case inputTemperature:
-        return ITimeseriesConstants.TYPE_TEMPERATURE;
+        return "HYDROLOGY_INPUT_T";
+      case inputRainfall:
+        return "HYDROLOGY_INPUT_RAINFALL";
+      case inputSeaEvaporation:
+        return "HYDROLOGY_INPUT_EVAPORATION";
       case nodeGesamtknotenAbfluss:
         return ITimeseriesConstants.TYPE_DISCHARGE;
       case storageFuellvolumen:
