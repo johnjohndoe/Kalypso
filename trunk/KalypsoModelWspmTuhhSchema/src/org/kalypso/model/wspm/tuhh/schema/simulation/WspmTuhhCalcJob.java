@@ -67,7 +67,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.BufferedAndOtherOutputStream;
 import org.kalypso.simulation.core.util.LogHelper;
-import org.kalypso.wspwin.core.WspWinHelper;
+import org.kalypso.wspwin.core.WspWinProject;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
@@ -79,9 +79,9 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class WspmTuhhCalcJob implements ISimulation
 {
-  public static final String KALYPSO_1D_EXE_PATTERN = "Kalypso-1D(.*).exe";//$NON-NLS-1$ 
+  public static final String KALYPSO_1D_EXE_PATTERN = "Kalypso-1D(.*).exe";//$NON-NLS-1$
 
-  public static final String KALYPSO_1D_EXE_FORMAT = "Kalypso-1D%s.exe";//$NON-NLS-1$ 
+  public static final String KALYPSO_1D_EXE_FORMAT = "Kalypso-1D%s.exe";//$NON-NLS-1$
 
   public static final String CALCJOB_SPEC = "WspmTuhhCalcJob_spec.xml"; //$NON-NLS-1$
 
@@ -189,11 +189,13 @@ public class WspmTuhhCalcJob implements ISimulation
 
       log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.10" ) ); //$NON-NLS-1$
 
+      final WspWinProject wspWinProject = new WspWinProject( tmpDir );
+
       // write calculation to tmpDir
       WspWinExporter.writeForTuhhKernel( calculation, tmpDir );
 
       // ensure availability of DATH directory (for results)
-      final File dathDir = new File( tmpDir, "dath" ); //$NON-NLS-1$
+      final File dathDir = wspWinProject.getDathDir();
       dathDir.mkdirs();
 
       // prepare kernel logs (log and err)
@@ -223,7 +225,7 @@ public class WspmTuhhCalcJob implements ISimulation
       if( log.checkCanceled() )
         return;
 
-      final File profDir = WspWinHelper.getProfDir( tmpDir );
+      final File profDir = wspWinProject.getProfDir();
       final WspmTuhhPostProcessor postProcessor = new WspmTuhhPostProcessor( calculation, tmpDir, dathDir, profDir, epsThinning, ovwMapURL, resultEater, log );
       postProcessor.run( monitor );
     }

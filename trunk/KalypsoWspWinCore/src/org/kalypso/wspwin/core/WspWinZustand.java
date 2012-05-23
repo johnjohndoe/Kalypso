@@ -214,7 +214,10 @@ public class WspWinZustand
 
   public void write( final File wspwinDir ) throws IOException
   {
-    final File strFile = new File( WspWinHelper.getProfDir( wspwinDir ), m_bean.getFileName() );
+    final WspWinProject wspWinProject = new WspWinProject( wspwinDir );
+    final File profDir = wspWinProject.getProfDir();
+
+    final File strFile = new File( profDir, m_bean.getFileName() );
 
     final BufferedWriter pw = new BufferedWriter( new FileWriter( strFile ) );
 

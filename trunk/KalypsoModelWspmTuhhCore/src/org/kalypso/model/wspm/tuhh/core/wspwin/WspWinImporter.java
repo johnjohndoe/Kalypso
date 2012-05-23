@@ -94,7 +94,7 @@ import org.kalypso.wspwin.core.ProfileBean;
 import org.kalypso.wspwin.core.RunOffEventBean;
 import org.kalypso.wspwin.core.WspCfg;
 import org.kalypso.wspwin.core.WspCfg.TYPE;
-import org.kalypso.wspwin.core.WspWinHelper;
+import org.kalypso.wspwin.core.WspWinProject;
 import org.kalypso.wspwin.core.WspWinZustand;
 import org.kalypso.wspwin.core.ZustandBean;
 import org.kalypso.wspwin.core.ZustandSegmentBean;
@@ -107,8 +107,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public final class WspWinImporter
 {
-  public static final String FILE_PROBEZ = "probez.txt"; //$NON-NLS-1$
-
   private static final DateFormat DATE_FORMATTER = SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT );
 
   private WspWinImporter( )
@@ -132,6 +130,8 @@ public final class WspWinImporter
 
     try
     {
+      final WspWinProject wspWinProject = new WspWinProject( wspwinDirectory );
+
       // load gml workspace
       monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.4" ) ); //$NON-NLS-1$
       final IFile modelFile = targetContainer.getFile( new Path( "modell.gml" ) ); //$NON-NLS-1$
@@ -168,7 +168,7 @@ public final class WspWinImporter
       final String description = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.10", wspwinDirectory.getAbsolutePath(), DATE_FORMATTER.format( new Date( System.currentTimeMillis() ) ) ); //$NON-NLS-1$
       modelDescription.append( description );
 
-      final String wspwinModelDescription = readProjectDescription( wspwinDirectory );
+      final String wspwinModelDescription = readProjectDescription( wspWinProject );
       if( wspwinModelDescription != null )
       {
         modelDescription.append( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.13" ) ); //$NON-NLS-1$
@@ -181,8 +181,8 @@ public final class WspWinImporter
       // Load WspWin Project //
       // /////////////////// //
       // FIXME: add status of reading wspcfg to logStatus
-      final WspCfg wspCfgBean = new WspCfg();
-      final IStatus wspCfgStatus = wspCfgBean.read( wspwinDirectory );
+      final WspCfg wspCfgBean = new WspCfg( wspWinProject );
+      final IStatus wspCfgStatus = wspCfgBean.read();
       logStatus.add( wspCfgStatus );
 
       // from now on, we have tuhh projects: if we later support other kinds of projects, tweak here
@@ -196,7 +196,9 @@ public final class WspWinImporter
       // /////////////// //
       final Map<String, IProfileFeature> importedProfiles = new HashMap<String, IProfileFeature>();
       final ProfileBean[] commonProfiles = wspCfgBean.getProfiles();
-      logStatus.add( importProfiles( WspWinHelper.getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams ) );
+
+      final File profDir = wspWinProject.getProfDir();
+      logStatus.add( importProfiles( profDir, tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams ) );
 
       // ////////////// //
       // import reaches //
@@ -397,7 +399,9 @@ public final class WspWinImporter
     // we ignore the profileBeans and just add the segments, so we can even import projects
     // which are slightly inconsistent, maybe add warning messages later
     final ZustandSegmentBean[] segmentBeans = zustand.getSegmentBeans();
-    final File profDir = WspWinHelper.getProfDir( wspCfg.getProjectDir() );
+
+    final WspWinProject wspwinProject = wspCfg.getProject();
+    final File profDir = wspwinProject.getProfDir();
     // create reachSegments and associated profiles
     for( final ZustandSegmentBean bean : segmentBeans )
     {
@@ -513,7 +517,7 @@ public final class WspWinImporter
     try
     {
       final TYPE type = wspCfg.getType();
-      importCalculations( zustand, log, reach, profDir, baseName, runOffEventsByCount, runOffEventsByName, type, targetContainer );
+      importCalculations( zustand, log, reach, wspwinProject, baseName, runOffEventsByCount, runOffEventsByName, type, targetContainer );
     }
     catch( final Exception e )
     {
@@ -523,11 +527,12 @@ public final class WspWinImporter
     return log.asMultiStatus( message );
   }
 
-  private static void importCalculations( final WspWinZustand zustand, final IStatusCollector log, final TuhhReach reach, final File profDir, final String baseName, final Map<Integer, String> readRunOffEventsByCount, final Map<String, String> runOffEventsByName, final TYPE projectType, final IContainer targetContainer )
+  private static void importCalculations( final WspWinZustand zustand, final IStatusCollector log, final TuhhReach reach, final WspWinProject wspwinProject, final String baseName, final Map<Integer, String> readRunOffEventsByCount, final Map<String, String> runOffEventsByName, final TYPE projectType, final IContainer targetContainer )
   {
     final ICalculationWspmConverter converter = createCalculationConverter( projectType, reach, baseName, readRunOffEventsByCount, runOffEventsByName );
 
-    final File dathDir = WspWinHelper.getDathDir( profDir.getParentFile() );
+    final File dathDir = wspwinProject.getDathDir();
+    final File profDir = wspwinProject.getProfDir();
     final CalculationResultConverter resultConverter = new CalculationResultConverter( projectType, baseName, log, targetContainer );
 
     final CalculationBean[] calcBeans = zustand.getCalculations();
@@ -588,9 +593,9 @@ public final class WspWinImporter
   }
 
   /** Returns the content of the prof/probez.txt file */
-  public static String readProjectDescription( final File wspwinDirectory ) throws IOException
+  private static String readProjectDescription( final WspWinProject wspWinProject ) throws IOException
   {
-    final File probezFile = new File( WspWinHelper.getProfDir( wspwinDirectory ), FILE_PROBEZ );
+    final File probezFile = wspWinProject.getProbezFile();
 
     return FileUtils.readFileToString( probezFile, (Charset) null );
   }

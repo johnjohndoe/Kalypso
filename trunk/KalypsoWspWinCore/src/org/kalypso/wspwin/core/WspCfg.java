@@ -105,18 +105,19 @@ public class WspCfg
   /** model type: 'b' is Pasche-TUHH, 'l' is PSW-Knauf */
   private TYPE m_type;
 
-  private File m_projectDir;
-
   private String m_projectName = StringUtils.EMPTY;
 
-  public WspCfg( final TYPE type )
+  private final WspWinProject m_project;
+
+  public WspCfg( final WspWinProject project )
   {
-    m_type = type;
+    this( project, TYPE.PASCHE );
   }
 
-  public WspCfg( )
+  public WspCfg( final WspWinProject project, final TYPE type )
   {
-    this( TYPE.PASCHE );
+    m_project = project;
+    m_type = type;
   }
 
   public void setProjectName( final String name )
@@ -124,14 +125,9 @@ public class WspCfg
     m_projectName = name;
   }
 
-  public File getProjectDir( )
+  public WspWinProject getProject( )
   {
-    return m_projectDir;
-  }
-
-  public void setProjectDir( final File projectDir )
-  {
-    m_projectDir = projectDir;
+    return m_project;
   }
 
   public TYPE getType( )
@@ -164,13 +160,11 @@ public class WspCfg
     return m_zustaende.toArray( new WspWinZustand[m_zustaende.size()] );
   }
 
-  public IStatus read( final File wspwinDir )
+  public IStatus read( )
   {
     final IStatusCollector log = new StatusCollector( KalypsoWspWinCorePlugin.PLUGIN_ID );
 
-    setProjectDir( wspwinDir );
-
-    final File profDir = WspWinHelper.getProfDir( wspwinDir );
+    final File profDir = m_project.getProfDir();
 
     final Collection<ZustandBean> zustandBeans = new ArrayList<ZustandBean>();
 
@@ -196,7 +190,7 @@ public class WspCfg
     try
     {
       /* Read profproj */
-      m_profProj.read( wspwinDir );
+      m_profProj.read( m_project.getProjectDir() );
     }
     catch( final ParseException | IOException e )
     {
@@ -204,7 +198,7 @@ public class WspCfg
       log.add( IStatus.WARNING, msg, e );
     }
 
-    return log.asMultiStatus( String.format( Messages.getString("WspCfg.2"), WspWinFiles.WSP_CFG ) ); //$NON-NLS-1$
+    return log.asMultiStatus( String.format( Messages.getString( "WspCfg.2" ), WspWinFiles.WSP_CFG ) ); //$NON-NLS-1$
   }
 
   private IStatus readWspCfg( final File profDir, final Collection<ZustandBean> zustandBeans )
@@ -275,11 +269,11 @@ public class WspCfg
     return m_profProj.getProfiles();
   }
 
-  public void write( final File wspwinDir ) throws IOException
+  public void write( ) throws IOException
   {
     updateSegmentInfo();
 
-    final File profDir = WspWinHelper.getProfDir( wspwinDir );
+    final File profDir = m_project.getProfDir();
     profDir.mkdirs();
 
     /* probez.txt */
@@ -287,23 +281,24 @@ public class WspCfg
     FileUtils.writeStringToFile( probezFile, m_projectName );
 
     /* wsp.cfg */
-    writeContent( wspwinDir );
+    writeContent();
 
     /* ProfProj */
     final WspWinZustand[] zustaende = getZustaende();
-    m_profProj.write( wspwinDir, zustaende );
+    final File projectDir = m_project.getProjectDir();
+    m_profProj.write( projectDir, zustaende );
 
     /* Zustaende */
     for( final WspWinZustand zustand : zustaende )
     {
       final ZustandBean bean = zustand.getBean();
-      bean.writeZustand( wspwinDir, zustand );
+      bean.writeZustand( projectDir, zustand );
     }
   }
 
-  private void writeContent( final File wspwinDir ) throws IOException
+  private void writeContent( ) throws IOException
   {
-    final File wspCfgFile = new File( WspWinHelper.getProfDir( wspwinDir ), WspWinFiles.WSP_CFG );
+    final File wspCfgFile = m_project.getWspCfgFile();
 
     final BufferedWriter pw = new BufferedWriter( new FileWriter( wspCfgFile ) );
 
@@ -330,9 +325,9 @@ public class WspCfg
   /**
    * Creates a profile ands it to the global definition (profproj)
    */
-  public ProfileBean createProfile( final String waterName, final String stateName, final BigDecimal station, final String fileName )
+  public ProfileBean createProfile( final String waterName, final String stateName, final BigDecimal station, final String fileName, final String mehrfeldCode, final int vzk )
   {
-    final ProfileBean bean = new ProfileBean( waterName, stateName, station, fileName );
+    final ProfileBean bean = new ProfileBean( waterName, stateName, station, fileName, mehrfeldCode, vzk );
     m_profProj.add( bean );
     return bean;
   }

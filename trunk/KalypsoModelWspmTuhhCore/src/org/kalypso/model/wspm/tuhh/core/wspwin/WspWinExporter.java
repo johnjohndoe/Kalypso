@@ -72,7 +72,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.wspwin.calc.TuhhCalcEnergylossWriter;
 import org.kalypso.model.wspm.tuhh.core.wspwin.calc.TuhhCalcZustandWriter;
-import org.kalypso.wspwin.core.WspWinHelper;
+import org.kalypso.wspwin.core.WspWinProject;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -86,15 +86,16 @@ public final class WspWinExporter
 
   /**
    * Schreibt eine Berechnung für den 1D Tuhh-Rechenkern in das angegebene Verzeichnis
-   * 
+   *
    * @param context
    *          Context to resolve links inside the gml structure.
    */
   public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir ) throws IOException, CoreException
   {
     dir.mkdirs();
+    final WspWinProject wspWinProject = new WspWinProject( dir );
 
-    final File profDir = WspWinHelper.getProfDir( dir );
+    final File profDir = wspWinProject.getProfDir();
     final File batFile = new File( dir, "kalypso-1D.ini" ); //$NON-NLS-1$
     final File zustFile = new File( profDir, "zustand.001" ); //$NON-NLS-1$
     final File qwtFile = new File( profDir, "qwert.001" ); //$NON-NLS-1$

@@ -74,7 +74,9 @@ public class WspWinProfProj
 
   public void write( final File wspwinDir, final WspWinZustand[] zustaende ) throws IOException
   {
-    final File profprojFile = new File( WspWinHelper.getProfDir( wspwinDir ), WspWinFiles.PROFPROJ_TXT );
+    final WspWinProject wspwinProject = new WspWinProject( wspwinDir );
+
+    final File profprojFile = wspwinProject.getProfProjFile();
 
     final Map<String, String> profileStateHash = new HashMap<String, String>();
     for( final ProfileBean profile : m_profiles )
@@ -125,7 +127,8 @@ public class WspWinProfProj
    */
   public void read( final File wspwinDir ) throws IOException, ParseException
   {
-    final File profprojFile = new File( WspWinHelper.getProfDir( wspwinDir ), WspWinFiles.PROFPROJ_TXT );
+    final WspWinProject wspWinProject = new WspWinProject( wspwinDir );
+    final File profprojFile = wspWinProject.getProfProjFile();
 
     try (LineNumberReader reader = new LineNumberReader( new FileReader( profprojFile ) );)
     {
