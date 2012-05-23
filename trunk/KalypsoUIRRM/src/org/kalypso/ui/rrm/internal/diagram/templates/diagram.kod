@@ -23,6 +23,8 @@
 
       <!-- Selektionslayer unten drunter -->
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#selectionLayer" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#noData" />
+
     </Layers>
   </Chart>
 </ChartConfiguration>
