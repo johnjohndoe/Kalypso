@@ -91,7 +91,9 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
       if( !(diagramView instanceof RrmDiagramView) )
         throw new ExecutionException( "Failed to access diagram view" ); //$NON-NLS-1$
 
-      ((RrmDiagramView) diagramView).hookSelection( selectionProvider );
+      final RrmDiagramView rrmDiagramView = (RrmDiagramView) diagramView;
+      rrmDiagramView.hookSelection( selectionProvider );
+      rrmDiagramView.setSelectionFilter( managementView.getFilterControl() );
 
       final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );

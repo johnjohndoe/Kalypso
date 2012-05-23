@@ -63,6 +63,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 
 /**
@@ -144,4 +145,10 @@ public class ResultParameterTypeFilterControl extends Composite
     m_viewer.setSelection( new StructuredSelection( type ) );
     m_viewer.getCombo().setEnabled( false );
   }
+
+  public boolean doSelect( final IHydrologyResultReference reference )
+  {
+    return m_filter.doSelect( reference );
+  }
+
 }
