@@ -35,7 +35,8 @@
           <element name="spi" type="boolean" />
           <element name="sup" type="boolean" />
 
-          <element name="initialValueMember" minOccurs="0" maxOccurs="100">
+
+          <element name="initialValueMember" minOccurs="0" maxOccurs="unbounded">
             <complexType>
               <sequence>
                 <element ref="na:InitialValue" />

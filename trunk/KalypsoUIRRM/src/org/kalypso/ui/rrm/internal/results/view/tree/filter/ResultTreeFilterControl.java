@@ -87,7 +87,7 @@ public class ResultTreeFilterControl extends Composite
       }
     } );
 
-    final Button buttonEmpty = toolkit.createButton( this, "Leere Berechnungsergebnisse ausblenden", SWT.CHECK );
+    final Button buttonEmpty = toolkit.createButton( this, "Leere Elemente ausblenden", SWT.CHECK );
     buttonEmpty.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     buttonEmpty.addSelectionListener( new SelectionAdapter()
