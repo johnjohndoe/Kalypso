@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.diagram;
 
-import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -54,8 +53,6 @@ import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
@@ -84,12 +81,10 @@ public class RrmDiagramSelectionConverter
     while( iterator.hasNext() )
     {
       final Object ptr = iterator.next();
-
       if( ptr instanceof TreeNode )
       {
         Collections.addAll( items, doConvert( (TreeNode) ptr ) );
       }
-
     }
 
     return new StructuredSelection( items.toArray() );
@@ -174,7 +169,6 @@ public class RrmDiagramSelectionConverter
     {
       if( doSelectTimeseries( timeseries ) )
         selected.add( timeseries );
-
     }
 
     return selected.toArray( new ITimeseries[] {} );
@@ -203,9 +197,9 @@ public class RrmDiagramSelectionConverter
   /**
    * @return observations from nanode, catchment or storage channel result node
    */
-  private IObservation[] doConvertResultNode( final TreeNode node )
+  private IHydrologyResultReference[] doConvertResultNode( final TreeNode node )
   {
-    final Set<IObservation> observations = new LinkedHashSet<>();
+    final Set<IHydrologyResultReference> references = new LinkedHashSet<>();
 
     final TreeNode[] children = node.getChildren();
     for( final TreeNode child : children )
@@ -216,13 +210,13 @@ public class RrmDiagramSelectionConverter
          * FIXME at the moment result observations contains only one value axis. we will show all value axes of a
          * observation by default. perhaps (in future) this can be a problem!
          */
-        final IObservation observation = doConvertResultReference( child );
-        if( observation != null )
-          observations.add( observation );
+        final IHydrologyResultReference reference = doConvertResultReference( child );
+        if( reference != null )
+          references.add( reference );
       }
     }
 
-    return observations.toArray( new IObservation[] {} );
+    return references.toArray( new IHydrologyResultReference[] {} );
   }
 
   /**
@@ -240,7 +234,7 @@ public class RrmDiagramSelectionConverter
     return false;
   }
 
-  private IObservation doConvertResultReference( final TreeNode node )
+  private IHydrologyResultReference doConvertResultReference( final TreeNode node )
   {
     final Object objReference = node.getAdapter( IHydrologyResultReference.class );
     if( !(objReference instanceof IHydrologyResultReference) )
@@ -251,23 +245,6 @@ public class RrmDiagramSelectionConverter
     if( m_filter != null && !m_filter.doSelect( reference ) )
       return null;
 
-    /*
-     * TODO perhaps own zmlsourceelement - we don't know, how good or bad the meta data of the underlying zml is
-     * (diagramm legend, table header, aso)
-     */
-
-    try
-    {
-      final URL urlZmlSource = reference.getUrl();
-
-      return ZmlFactory.parseXML( urlZmlSource );
-    }
-    catch( final Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
-    return null;
+    return reference;
   }
 }
