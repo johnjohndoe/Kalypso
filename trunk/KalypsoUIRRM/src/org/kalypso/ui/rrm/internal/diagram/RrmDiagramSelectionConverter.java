@@ -94,16 +94,19 @@ public class RrmDiagramSelectionConverter
   {
     final Set<Object> items = new LinkedHashSet<>();
 
+    /* IStation */
     if( isStationItem( node ) )
     {
       Collections.addAll( items, doConvertStation( node ) );
     }
+    /* ITimeseries */
     else if( isTimeseriesItem( node ) )
     {
       final ITimeseries timeseries = doConvertTimeseries( node );
       if( timeseries != null )
         items.add( timeseries );
     }
+
     else if( isResultReference( node ) )
     {
       items.add( doConvertResultReference( node ) );
