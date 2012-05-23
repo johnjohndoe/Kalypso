@@ -62,18 +62,33 @@ public class ProfileBean
 
   static final int MAX_STATENAME_LENGTH = 10;
 
+  public static final String DEFAULT_MFB = "0"; //$NON-NLS-1$
+
+  public static final int DEFAULT_VZK = 0;
+
   private final String m_waterName;
   private final String m_stateName;
 
   private final BigDecimal m_station;
   private final String m_fileName;
 
+  private final String m_mehrfeldCode;
+
+  private final int m_vzk;
+
   public ProfileBean( final String waterName, final String stateName, final BigDecimal station, final String fileName )
+  {
+    this( waterName, stateName, station, fileName, DEFAULT_MFB, DEFAULT_VZK );
+  }
+
+  public ProfileBean( final String waterName, final String stateName, final BigDecimal station, final String fileName, final String mehrfeldCode, final int vzk )
   {
     m_waterName = waterName;
     m_stateName = stateName;
     m_station = station;
     m_fileName = fileName;
+    m_mehrfeldCode = mehrfeldCode;
+    m_vzk = vzk;
   }
 
   public String getFileName( )
@@ -96,6 +111,16 @@ public class ProfileBean
     return m_stateName;
   }
 
+  public String getMehrfeldCode( )
+  {
+    return m_mehrfeldCode;
+  }
+
+  public int getVzk( )
+  {
+    return m_vzk;
+  }
+
   public static ProfileBean[] readProfiles( final LineNumberReader reader, final int profilCount ) throws IOException, ParseException
   {
     final List<ProfileBean> beans = new ArrayList<ProfileBean>( 20 );
@@ -116,12 +141,12 @@ public class ProfileBean
       {
         final String waterName = tokenizer.nextToken();
         final BigDecimal station = new BigDecimal( tokenizer.nextToken() );
-        /* final String vzk = */tokenizer.nextToken(); // Verzweigungskennung
-        /* final String mfb = */tokenizer.nextToken(); // Mehrfeldbrückenkennung
+        final String mfb = tokenizer.nextToken(); // Mehrfeldbrückenkennung
+        final int vzk = parseVZK( tokenizer.nextToken() ); // Verzweigungskennung
         final String zustandName = tokenizer.nextToken();
         final String fileName = tokenizer.nextToken();
 
-        final ProfileBean bean = new ProfileBean( waterName, zustandName, station, fileName );
+        final ProfileBean bean = new ProfileBean( waterName, zustandName, station, fileName, mfb, vzk );
         beans.add( bean );
       }
       catch( final NumberFormatException e )
@@ -131,6 +156,19 @@ public class ProfileBean
     }
 
     return beans.toArray( new ProfileBean[beans.size()] );
+  }
+
+  private static int parseVZK( final String token )
+  {
+    try
+    {
+      return Integer.parseInt( token.trim() );
+    }
+    catch( final NumberFormatException e )
+    {
+      e.printStackTrace();
+      return 0;
+    }
   }
 
   public String formatLine( )
