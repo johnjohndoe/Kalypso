@@ -112,7 +112,8 @@ public class TreeNodeModel implements ITreeNodeModel
   @Override
   public void removeModellListener( final ModellEventListener modelListener )
   {
-    m_workspace.removeModellListener( modelListener );
+    if( m_workspace != null )
+      m_workspace.removeModellListener( modelListener );
   }
 
   @Override
