@@ -74,7 +74,7 @@ public class ResultTreeFilterControl extends Composite
 
   private void doRenderControl( final FormToolkit toolkit )
   {
-    final Button buttonCurrent = toolkit.createButton( this, "Nur aktuelle Berechnungsergebnis", SWT.CHECK );
+    final Button buttonCurrent = toolkit.createButton( this, "Nur aktuelle Berechnungsergebnisse", SWT.CHECK );
     buttonCurrent.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     buttonCurrent.addSelectionListener( new SelectionAdapter()
@@ -87,7 +87,7 @@ public class ResultTreeFilterControl extends Composite
       }
     } );
 
-    final Button buttonEmpty = toolkit.createButton( this, "Leere Berechnungsergebnis ausblenden", SWT.CHECK );
+    final Button buttonEmpty = toolkit.createButton( this, "Leere Berechnungsergebnisse ausblenden", SWT.CHECK );
     buttonEmpty.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     buttonEmpty.addSelectionListener( new SelectionAdapter()
