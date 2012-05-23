@@ -121,4 +121,17 @@ public class OpenErrorGmlAction extends Action
   {
     return UIRrmImages.id( UIRrmImages.DESCRIPTORS.OPEN_ERROR_GML_ACTION );
   }
+
+  /**
+   * @see org.eclipse.jface.action.Action#isEnabled()
+   */
+  @Override
+  public boolean isEnabled( )
+  {
+    final IFile errorGml = m_simulation.getErrorGml();
+    if( errorGml.exists() )
+      return true;
+
+    return false;
+  }
 }

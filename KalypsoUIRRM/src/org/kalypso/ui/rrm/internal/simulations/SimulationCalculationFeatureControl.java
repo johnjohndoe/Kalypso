@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.window.Window;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -64,12 +64,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.contribs.eclipse.ui.dialogs.ListSelectionDialog;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
@@ -81,6 +87,7 @@ import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ReadCalculationStatusJob;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ValidateSimulationJob;
+import org.kalypso.ui.rrm.internal.simulations.runnables.CalculateSimulationRunnable;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -91,19 +98,14 @@ import org.kalypsodeegree.model.feature.Feature;
 public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 {
   /**
-   * The execution status composite.
+   * The calculation status composite.
    */
-  protected StatusComposite m_executionStatusComposite;
+  protected StatusComposite m_calculationStatusComposite;
 
   /**
    * The validation status composite.
    */
   protected StatusComposite m_validationStatusComposite;
-
-  /**
-   * The calculation status composite.
-   */
-  protected StatusComposite m_calculationStatusComposite;
 
   /**
    * The constructor.
@@ -114,9 +116,8 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
   {
     super( ftp );
 
-    m_executionStatusComposite = null;
-    m_validationStatusComposite = null;
     m_calculationStatusComposite = null;
+    m_validationStatusComposite = null;
   }
 
   /**
@@ -144,19 +145,14 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     try
     {
       /* Create a label. */
-      final Label statiLabel = new Label( main, SWT.NONE );
-      statiLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      statiLabel.setText( "Stati:" );
+      final Label desciptionLabel = new Label( main, SWT.WRAP );
+      desciptionLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      desciptionLabel.setText( "Here you can review some result files and the logs of the calculation." );
 
       /* Create a status composite. */
-      m_executionStatusComposite = new StatusComposite( main, SWT.NONE );
-      m_executionStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      m_executionStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
-
-      /* Create a status composite. */
-      m_validationStatusComposite = new StatusComposite( main, SWT.NONE );
-      m_validationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      m_validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
+      m_calculationStatusComposite = new StatusComposite( main, SWT.NONE );
+      m_calculationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      m_calculationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
 
       /* Create a empty label. */
       final Label emptyLabel1 = new Label( main, SWT.NONE );
@@ -169,9 +165,9 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       resultsGroup.setText( "Rechenergebnisse" );
 
       /* Create a status composite. */
-      m_calculationStatusComposite = new StatusComposite( resultsGroup, SWT.NONE );
-      m_calculationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      m_calculationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
+      m_validationStatusComposite = new StatusComposite( resultsGroup, SWT.NONE );
+      m_validationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      m_validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
 
       /* Create a empty label. */
       final Label emptyLabel2 = new Label( resultsGroup, SWT.NONE );
@@ -266,31 +262,6 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
   private void initialize( final RrmSimulation simulation )
   {
-    /* Create the validate simulation job. */
-    final ValidateSimulationJob validationJob = new ValidateSimulationJob( (NAControl) getFeature() );
-    validationJob.setUser( false );
-    validationJob.addJobChangeListener( new JobChangeAdapter()
-    {
-      @Override
-      public void done( final IJobChangeEvent event )
-      {
-        final Job job = event.getJob();
-        if( !(job instanceof ValidateSimulationJob) )
-          return;
-
-        final IStatus result = job.getResult();
-        if( !result.isOK() )
-        {
-          setValidationStatus( result );
-          return;
-        }
-
-        final ValidateSimulationJob task = (ValidateSimulationJob) job;
-        final IStatus validationStatus = task.getValidationStatus();
-        setValidationStatus( validationStatus );
-      }
-    } );
-
     /* Create the read calculation status job. */
     final ReadCalculationStatusJob calculationJob = new ReadCalculationStatusJob( simulation );
     calculationJob.setUser( false );
@@ -317,9 +288,34 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       }
     } );
 
+    /* Create the validate simulation job. */
+    final ValidateSimulationJob validationJob = new ValidateSimulationJob( (NAControl) getFeature() );
+    validationJob.setUser( false );
+    validationJob.addJobChangeListener( new JobChangeAdapter()
+    {
+      @Override
+      public void done( final IJobChangeEvent event )
+      {
+        final Job job = event.getJob();
+        if( !(job instanceof ValidateSimulationJob) )
+          return;
+
+        final IStatus result = job.getResult();
+        if( !result.isOK() )
+        {
+          setValidationStatus( result );
+          return;
+        }
+
+        final ValidateSimulationJob task = (ValidateSimulationJob) job;
+        final IStatus validationStatus = task.getValidationStatus();
+        setValidationStatus( validationStatus );
+      }
+    } );
+
     /* Schedule the jobs. */
-    validationJob.schedule();
     calculationJob.schedule();
+    validationJob.schedule();
   }
 
   protected void handleCalculatePressed( )
@@ -327,29 +323,43 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     if( m_calculationStatusComposite == null || m_calculationStatusComposite.isDisposed() )
       return;
 
-    // TODO What should be preselected?
+    // TODO Abfrage ob Gebietsmodell neu gerechnet werden muss...
 
-    final Shell shell = m_calculationStatusComposite.getDisplay().getActiveShell();
-    final ListSelectionDialog<SimulationTask> dialog = new ListSelectionDialog<SimulationTask>( shell, "Select the tasks:", SimulationTask.values(), null, new SimulationTaskLabelProvider(), SimulationTask.class );
-    final int open = dialog.open();
-    if( open != Window.OK )
-      return;
+    /* Create the operation. */
+    final CalculateSimulationRunnable operation = new CalculateSimulationRunnable();
 
-    final SimulationTask[] selectedElements = dialog.getSelectedElements();
-    // TODO Calculate with tasks in an operation...
+    /* Execute the operation. */
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+    final IWorkbenchPage page = workbenchWindow.getActivePage();
+    final IWorkbenchPart part = page.getActivePart();
+    final IWorkbenchPartSite site = part.getSite();
+    final IProgressService progressService = (IProgressService) site.getService( IProgressService.class );
+    final IStatus status = RunnableContextHelper.execute( progressService, true, true, operation );
+    if( !status.isOK() )
+    {
+      /* Log the error message. */
+      KalypsoUIRRMPlugin.getDefault().getLog().log( status );
+
+      /* Show an error, if the operation has failed. */
+      ErrorDialog.openError( m_calculationStatusComposite.getShell(), "Calculate Simulation", "Calculation of the simulation has failed...", status );
+    }
+
+    /* Update the control. */
+    updateControl();
   }
 
-  protected void setExecutionStatus( final IStatus executionStatus )
+  protected void setCalculationStatus( final IStatus calculationStatus )
   {
-    if( m_executionStatusComposite == null || m_executionStatusComposite.isDisposed() )
+    if( m_calculationStatusComposite == null || m_calculationStatusComposite.isDisposed() )
       return;
 
-    m_executionStatusComposite.getDisplay().asyncExec( new Runnable()
+    m_calculationStatusComposite.getDisplay().asyncExec( new Runnable()
     {
       @Override
       public void run( )
       {
-        m_executionStatusComposite.setStatus( executionStatus );
+        m_calculationStatusComposite.setStatus( calculationStatus );
       }
     } );
   }
@@ -365,21 +375,6 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       public void run( )
       {
         m_validationStatusComposite.setStatus( validationStatus );
-      }
-    } );
-  }
-
-  protected void setCalculationStatus( final IStatus calculationStatus )
-  {
-    if( m_calculationStatusComposite == null || m_calculationStatusComposite.isDisposed() )
-      return;
-
-    m_calculationStatusComposite.getDisplay().asyncExec( new Runnable()
-    {
-      @Override
-      public void run( )
-      {
-        m_calculationStatusComposite.setStatus( calculationStatus );
       }
     } );
   }

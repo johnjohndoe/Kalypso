@@ -229,7 +229,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
         /* Get the observation. */
         /* If it is null, use the request defined in the filter to create a default one. */
         IObservation obs = observations[i];
-        if( obs == null )
+        if( obs == null && targetFilter != null )
           obs = RequestFactory.createDefaultObservation( targetFilter );
 
         /* If it is still null, continue. */

@@ -308,6 +308,8 @@ public class NAControl extends Feature_Impl
    */
   public long getLastModified( )
   {
+    // TODO This is not set at the moment...
+    // TODO This must be done on every change of the user...
     final Long property = getProperty( PROPERTY_LAST_MODIFIED, Long.class );
     if( property == null || property.longValue() < 0 )
       return -1;

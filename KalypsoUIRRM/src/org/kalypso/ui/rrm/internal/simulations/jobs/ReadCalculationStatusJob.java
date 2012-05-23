@@ -141,6 +141,8 @@ public class ReadCalculationStatusJob extends Job
 
       /* Get the file of the calculation status gml. */
       final IFile calculationStatusGml = m_simulation.getCalculationStatusGml();
+      if( !calculationStatusGml.exists() )
+        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "The simulation was not calculated." );
 
       /* Load the workspace. */
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( calculationStatusGml );
@@ -155,7 +157,7 @@ public class ReadCalculationStatusJob extends Job
       for( final IGeoStatus geoStatus : statusCollection.getStati() )
         results.add( geoStatus );
 
-      return results.asMultiStatusOrOK( "The calculation was not executed.", "The calculation was executed." );
+      return results.asMultiStatus( "The simulation was calculated." );
     }
     catch( final Exception ex )
     {
