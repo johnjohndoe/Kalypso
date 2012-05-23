@@ -38,31 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.simulations;
+package org.kalypso.ui.rrm.internal.simulations.runnables;
+
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
- * Possible tasks, if a simulation should be calculated.
+ * This runnable calculates the simulation.
  * 
  * @author Holger Albert
  */
-public enum SimulationTask
+public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 {
-  COPY_BASE_DATA("Copy base data"),
-  CALCULATE_START_CONDITION("Calculate start condition"),
-  CALCULATE_CATCHMENT_MODEL_N("Calculate catchment model (precipitation)"),
-  CALCULATE_CATCHMENT_MODEL_T("Calculate catchment model (temperature)"),
-  CALCULATE_CATCHMENT_MODEL_E("Calculate catchment model (evaporation)"),
-  CALCULATE_NA_MODEL("Calculate NA model");
-
-  private final String m_label;
-
-  private SimulationTask( final String label )
+  /**
+   * The constructor.
+   */
+  public CalculateSimulationRunnable( )
   {
-    m_label = label;
   }
 
-  public String getLabel( )
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
-    return m_label;
+    // TODO
+
+    return Status.OK_STATUS;
   }
 }

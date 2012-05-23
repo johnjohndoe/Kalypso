@@ -78,7 +78,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Create / Updates simulations from the simulations table.
- *
+ * 
  * @author Gernot Belger
  */
 public class RefreshSimulationsTaskHandler extends AbstractHandler
@@ -109,9 +109,7 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
       return null;
 
     /* Refresh it */
-
     final RefreshSimulationsOperation operation = new RefreshSimulationsOperation( simulationsFolder, chosenSimulations );
-
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     StatusDialog.open( shell, status, title );
 
@@ -127,7 +125,7 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
     final String duplicateName = findDuplicates( allSimulations );
     if( duplicateName != null )
     {
-      final String message = String.format( Messages.getString("RefreshSimulationsTaskHandler_1"), duplicateName ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "RefreshSimulationsTaskHandler_1" ), duplicateName ); //$NON-NLS-1$
       MessageDialog.openWarning( shell, title, message );
       return null;
     }
@@ -143,13 +141,13 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
 
         final IFolder simulationFolder = RefreshSimulationsOperation.createFolder( simulationsFolder, (NAControl) element );
         if( simulationFolder.exists() )
-          return String.format( Messages.getString("RefreshSimulationsTaskHandler_2"), text ); //$NON-NLS-1$
+          return String.format( Messages.getString( "RefreshSimulationsTaskHandler_2" ), text ); //$NON-NLS-1$
 
         return text;
       }
     };
 
-    final ListSelectionDialog<NAControl> dialog = new ListSelectionDialog<>( shell, Messages.getString("RefreshSimulationsTaskHandler_3"), allSimulations, selectedSimulations, labelProvider, NAControl.class ); //$NON-NLS-1$
+    final ListSelectionDialog<NAControl> dialog = new ListSelectionDialog<>( shell, Messages.getString( "RefreshSimulationsTaskHandler_3" ), allSimulations, selectedSimulations, labelProvider, NAControl.class ); //$NON-NLS-1$
     if( dialog.open() != Window.OK )
       return null;
 
@@ -206,7 +204,7 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
     /* check names (= calc case folder names) for empty names */
     if( hasEmptyNames( simulations ) )
     {
-      final String message = String.format( Messages.getString("RefreshSimulationsTaskHandler_4") ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "RefreshSimulationsTaskHandler_4" ) ); //$NON-NLS-1$
       MessageDialog.openWarning( shell, title, message );
       return false;
     }

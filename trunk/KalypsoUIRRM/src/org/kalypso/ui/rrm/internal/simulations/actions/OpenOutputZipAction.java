@@ -174,6 +174,19 @@ public class OpenOutputZipAction extends Action
   }
 
   /**
+   * @see org.eclipse.jface.action.Action#isEnabled()
+   */
+  @Override
+  public boolean isEnabled( )
+  {
+    final IFile outputZip = m_simulation.getOutputZip();
+    if( outputZip.exists() )
+      return true;
+
+    return false;
+  }
+
+  /**
    * This function unzips the output zip.
    * 
    * @param outputZip

@@ -131,4 +131,16 @@ public class OpenTextLogAction extends Action
   {
     return UIRrmImages.id( UIRrmImages.DESCRIPTORS.OPEN_TEXT_LOG_ACTION );
   }
+
+  /**
+   * @see org.eclipse.jface.action.Action#isEnabled()
+   */
+  @Override
+  public boolean isEnabled( )
+  {
+    if( m_textFile.exists() )
+      return true;
+
+    return false;
+  }
 }
