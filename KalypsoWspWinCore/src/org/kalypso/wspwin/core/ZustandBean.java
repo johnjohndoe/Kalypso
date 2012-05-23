@@ -137,45 +137,61 @@ public class ZustandBean
 
   private RunOffEventBean[] readRunOffs( final File profDir ) throws ParseException, IOException
   {
-    final File qwtFile = getZustandFile( profDir, "qwt" ); //$NON-NLS-1$
+    final File qwtFile = new File( profDir, getRunoffFilename() );
     return RunOffEventBean.read( qwtFile );
   }
 
   private void writeRunOffs( final File profDir, final RunOffEventBean[] runoff ) throws IOException
   {
-    final File qwtFile = getZustandFile( profDir, "qwt" ); //$NON-NLS-1$
+    final File qwtFile = new File( profDir, getRunoffFilename() ); //$NON-NLS-1$
     RunOffEventBean.write( qwtFile, runoff );
   }
 
   private RunOffEventBean[] readWspFixes( final File profDir ) throws ParseException, IOException
   {
-    final File wsfFile = getZustandFile( profDir, "wsf" ); //$NON-NLS-1$
+    final File wsfFile = new File( profDir, getWspFixFilename() ); //$NON-NLS-1$
     return RunOffEventBean.read( wsfFile );
   }
 
+
   private void writeWspFixes( final File profDir, final RunOffEventBean[] fixation ) throws FileNotFoundException
   {
-    final File wsfFile = getZustandFile( profDir, "wsf" ); //$NON-NLS-1$
+    final File wsfFile = new File( profDir, getWspFixFilename() ); //$NON-NLS-1$
     RunOffEventBean.write( wsfFile, fixation );
   }
 
   private LocalEnergyLossBean[] readLocalEnergyLosses( final File profDir ) throws ParseException, IOException
   {
-    final File lelFile = getZustandFile( profDir, "psi" ); //$NON-NLS-1$
+    final File lelFile = new File( profDir, getLossFilename() );
     return LocalEnergyLossBean.read( lelFile );
+  }
+
+  public String getLossFilename( )
+  {
+    return getZustandFile( "psi" ); //$NON-NLS-1$
+  }
+
+  public String getRunoffFilename( )
+  {
+    return getZustandFile( "qwt" ); //$NON-NLS-1$
+  }
+
+  public String getWspFixFilename( )
+  {
+    return getZustandFile( "wsf" ); //$NON-NLS-1$
   }
 
   private CalculationBean[] readCalculations( final File profDir ) throws ParseException, IOException
   {
-    final File berFile = getZustandFile( profDir, "ber" ); //$NON-NLS-1$
+    final File berFile = new File( profDir, getZustandFile( "ber" ) ); //$NON-NLS-1$
     return CalculationBean.readBerFile( berFile );
   }
 
-  private File getZustandFile( final File profDir, final String suffix )
+  private String getZustandFile( final String suffix )
   {
     final String strFileName = getFileName();
     final String strBaseName = FileUtilities.nameWithoutExtension( strFileName );
-    return new File( profDir, strBaseName + "." + suffix );
+    return strBaseName + "." + suffix;
   }
 
   public String formatLine( )
@@ -200,7 +216,8 @@ public class ZustandBean
   {
     zustand.write( wspwinDir );
 
-    final File profDir = WspWinHelper.getProfDir( wspwinDir );
+    final WspWinProject wspWinProject = new WspWinProject( wspwinDir );
+    final File profDir = wspWinProject.getProfDir();
 
     writeRunOffs( profDir, zustand.getRunOffEvents() );
     writeWspFixes( profDir, zustand.getWspFixations() );
