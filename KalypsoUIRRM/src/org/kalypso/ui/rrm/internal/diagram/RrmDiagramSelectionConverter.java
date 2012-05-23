@@ -54,63 +54,40 @@ import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
+import org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Dirk Kuch
  */
 public class RrmDiagramSelectionConverter
 {
+  private final IRrmDiagramFilterControl m_filter;
 
-  public static IStructuredSelection doConvert( final IStructuredSelection selection )
+  private final int m_minTraverseLevel;
+
+  public RrmDiagramSelectionConverter( final IRrmDiagramFilterControl filter, final int minTraverseLevel )
+  {
+    m_filter = filter;
+    m_minTraverseLevel = minTraverseLevel;
+  }
+
+  public IStructuredSelection doConvert( final IStructuredSelection selection )
   {
     final Set<Object> items = new LinkedHashSet<>();
 
     final Iterator< ? > iterator = selection.iterator();
     while( iterator.hasNext() )
     {
-      final Object next = iterator.next();
+      final Object ptr = iterator.next();
 
-      if( next instanceof TreeNode )
+      if( ptr instanceof TreeNode )
       {
-        final TreeNode node = (TreeNode) next;
-        final Object objStation = node.getAdapter( IStation.class );
-        final Object objTimeseries = node.getAdapter( ITimeseries.class );
-
-        /** result references tree node */
-        final Object objResultReference = node.getAdapter( IHydrologyResultReference.class );
-
-        final Object objCatchment = node.getAdapter( Catchment.class );
-        final Object objNode = node.getAdapter( INode.class );
-        final Object objStorageChannel = node.getAdapter( IStorageChannel.class );
-
-        if( objStation instanceof IStation )
-        {
-          Collections.addAll( items, ((IStation) objStation).getTimeseries().toArray() );
-        }
-        else if( objResultReference instanceof IHydrologyResultReference )
-        {
-          items.add( doConvert( (IHydrologyResultReference) objResultReference ) );
-        }
-        else if( objCatchment != null || objNode != null || objStorageChannel != null )
-        {
-          final TreeNode[] children = node.getChildren();
-          for( final TreeNode child : children )
-          {
-            final Object resultRefernce = child.getAdapter( IHydrologyResultReference.class );
-            if( resultRefernce != null )
-              items.add( doConvert( (IHydrologyResultReference) resultRefernce ) );
-          }
-
-        }
-        else if( Objects.isNull( objTimeseries ) ) // parameter tree item
-        {
-          Collections.addAll( items, node.getChildren() );
-        }
-        else
-          items.add( next );
+        Collections.addAll( items, doConvert( (TreeNode) ptr ) );
       }
 
     }
@@ -118,8 +95,162 @@ public class RrmDiagramSelectionConverter
     return new StructuredSelection( items.toArray() );
   }
 
-  private static Object doConvert( final IHydrologyResultReference reference )
+  private Object[] doConvert( final TreeNode node )
   {
+    final Set<Object> items = new LinkedHashSet<>();
+
+    if( isStationItem( node ) )
+    {
+      Collections.addAll( items, doConvertStation( node ) );
+    }
+    else if( isTimeseriesItem( node ) )
+    {
+      final ITimeseries timeseries = doConvertTimeseries( node );
+      if( timeseries != null )
+        items.add( timeseries );
+    }
+    else if( isResultReference( node ) )
+    {
+      items.add( doConvertResultReference( node ) );
+    }
+    else if( isResultNode( node ) )
+    {
+      Collections.addAll( items, doConvertResultNode( node ) );
+    }
+    else if( doTravese( node ) )
+    {
+      final TreeNode[] children = node.getChildren();
+      for( final TreeNode child : children )
+      {
+        Collections.addAll( items, doConvert( child ) );
+      }
+    }
+
+    return items.toArray();
+  }
+
+  private boolean doTravese( final TreeNode node )
+  {
+    final int level = getHierarchy( node );
+
+    return level > m_minTraverseLevel;
+  }
+
+  private int getHierarchy( final TreeNode node )
+  {
+    int count = 0;
+
+    TreeNode ptr = node;
+    while( ptr != null )
+    {
+      ptr = ptr.getParent();
+      count++;
+    }
+
+    return count;
+  }
+
+  private boolean isResultReference( final TreeNode node )
+  {
+    return Objects.isNotNull( node.getAdapter( IHydrologyResultReference.class ) );
+  }
+
+  private boolean isTimeseriesItem( final TreeNode node )
+  {
+    return Objects.isNotNull( node.getAdapter( ITimeseries.class ) );
+  }
+
+  private ITimeseries[] doConvertStation( final TreeNode node )
+  {
+    final Object objStation = node.getAdapter( IStation.class );
+    if( !(objStation instanceof IStation) )
+      return null;
+
+    final Set<ITimeseries> selected = new LinkedHashSet<>();
+
+    final IStation station = (IStation) objStation;
+    final IFeatureBindingCollection<ITimeseries> timeserieses = station.getTimeseries();
+    for( final ITimeseries timeseries : timeserieses )
+    {
+      if( doSelectTimeseries( timeseries ) )
+        selected.add( timeseries );
+
+    }
+
+    return selected.toArray( new ITimeseries[] {} );
+
+  }
+
+  private boolean isStationItem( final TreeNode node )
+  {
+    return Objects.isNotNull( node.getAdapter( IStation.class ) );
+  }
+
+  private ITimeseries doConvertTimeseries( final TreeNode node )
+  {
+    final ITimeseries timeseries = (ITimeseries) node.getAdapter( ITimeseries.class );
+    if( doSelectTimeseries( timeseries ) )
+      return timeseries;
+
+    return null;
+  }
+
+  private boolean doSelectTimeseries( final ITimeseries timeseries )
+  {
+    return m_filter.doSelect( timeseries.getParameterType() );
+  }
+
+  /**
+   * @return observations from nanode, catchment or storage channel result node
+   */
+  private IObservation[] doConvertResultNode( final TreeNode node )
+  {
+    final Set<IObservation> observations = new LinkedHashSet<>();
+
+    final TreeNode[] children = node.getChildren();
+    for( final TreeNode child : children )
+    {
+      if( isResultReference( child ) )
+      {
+        /*
+         * FIXME at the moment result observations contains only one value axis. we will show all value axes of a
+         * observation by default. perhaps (in future) this can be a problem!
+         */
+        final IObservation observation = doConvertResultReference( child );
+        if( observation != null )
+          observations.add( observation );
+      }
+    }
+
+    return observations.toArray( new IObservation[] {} );
+  }
+
+  /**
+   * @return node is result group element - like NaNode, Catchment or StorageChannel
+   */
+  private boolean isResultNode( final TreeNode node )
+  {
+    if( Objects.isNotNull( node.getAdapter( Catchment.class ) ) )
+      return true;
+    else if( Objects.isNotNull( node.getAdapter( INode.class ) ) )
+      return true;
+    else if( Objects.isNotNull( node.getAdapter( IStorageChannel.class ) ) )
+      return true;
+
+    return false;
+  }
+
+  private IObservation doConvertResultReference( final TreeNode node )
+  {
+    final Object objReference = node.getAdapter( IHydrologyResultReference.class );
+    if( !(objReference instanceof IHydrologyResultReference) )
+      return null;
+
+    final IHydrologyResultReference reference = (IHydrologyResultReference) objReference;
+
+    if( m_filter != null && !m_filter.doSelect( reference ) )
+      return null;
+
     /*
      * TODO perhaps own zmlsourceelement - we don't know, how good or bad the meta data of the underlying zml is
      * (diagramm legend, table header, aso)

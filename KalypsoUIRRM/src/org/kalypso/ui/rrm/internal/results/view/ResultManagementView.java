@@ -64,6 +64,7 @@ import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.CleanSearchPanelAction;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.HydrolgyManagementSearchControl;
+import org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl;
 import org.kalypso.ui.rrm.internal.results.view.tree.strategies.NaModelStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
@@ -80,6 +81,8 @@ public class ResultManagementView extends ViewPart
   public static String ID = "org.kalypso.ui.rrm.internal.results.view.ResultManagementView"; //$NON-NLS-1$
 
   protected TreeViewer m_treeViewer;
+
+  private HydrolgyManagementSearchControl m_searchPanel;
 
   @Override
   public void createPartControl( final Composite parent )
@@ -109,13 +112,13 @@ public class ResultManagementView extends ViewPart
 
     final ToolBarManager toolbar = SectionUtils.createSectionToolbar( section );
 
-    final HydrolgyManagementSearchControl searchPanel = new HydrolgyManagementSearchControl( section, toolkit, m_treeViewer );
-    toolkit.adapt( searchPanel );
+    m_searchPanel = new HydrolgyManagementSearchControl( section, toolkit, m_treeViewer );
+    toolkit.adapt( m_searchPanel );
 
-    toolbar.add( new CleanSearchPanelAction( searchPanel ) );
+    toolbar.add( new CleanSearchPanelAction( m_searchPanel ) );
     toolbar.update( true );
 
-    section.setClient( searchPanel );
+    section.setClient( m_searchPanel );
 
     return section;
   }
@@ -162,5 +165,10 @@ public class ResultManagementView extends ViewPart
   public TreeViewer getTreeViewer( )
   {
     return m_treeViewer;
+  }
+
+  public IRrmDiagramFilterControl getFilterControl( )
+  {
+    return m_searchPanel;
   }
 }

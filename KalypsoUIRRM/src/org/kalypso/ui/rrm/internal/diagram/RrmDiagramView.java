@@ -55,6 +55,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.selection.ZmlSelectionBuilder;
 import org.kalypso.zml.ui.chart.view.ZmlDiagramChartPartComposite;
@@ -69,6 +70,8 @@ public class RrmDiagramView extends ViewPart
 {
   public static String ID = "org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"; //$NON-NLS-1$
 
+  private int m_minTraverseLevel = 2;
+
   private final ISelectionChangedListener m_selectionListener = new ISelectionChangedListener()
   {
     @Override
@@ -80,6 +83,8 @@ public class RrmDiagramView extends ViewPart
 
   private ZmlDiagramChartPartComposite m_chartPart;
 
+  private IRrmDiagramFilterControl m_selectionFilterControl;
+
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -87,6 +92,11 @@ public class RrmDiagramView extends ViewPart
     GridLayoutFactory.fillDefaults().applyTo( panel );
 
     createDiagram( panel );
+  }
+
+  public void setSelectionTraverseLevel( final int level )
+  {
+    m_minTraverseLevel = level;
   }
 
   @Override
@@ -100,7 +110,10 @@ public class RrmDiagramView extends ViewPart
 
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
-    final IMultipleZmlSourceElement[] sources = ZmlSelectionBuilder.getSelection( RrmDiagramSelectionConverter.doConvert( selection ) );
+    final RrmDiagramSelectionConverter converter = new RrmDiagramSelectionConverter( m_selectionFilterControl, m_minTraverseLevel );
+    final IStructuredSelection converted = converter.doConvert( selection );
+
+    final IMultipleZmlSourceElement[] sources = ZmlSelectionBuilder.getSelection( converted );
     m_chartPart.setSelection( sources );
   }
 
@@ -137,5 +150,10 @@ public class RrmDiagramView extends ViewPart
     final Composite composite = (Composite) m_chartPart.getChartComposite();
     if( composite != null && !composite.isDisposed() )
       composite.setFocus();
+  }
+
+  public void setSelectionFilter( final IRrmDiagramFilterControl selectionFilterControl )
+  {
+    m_selectionFilterControl = selectionFilterControl;
   }
 }

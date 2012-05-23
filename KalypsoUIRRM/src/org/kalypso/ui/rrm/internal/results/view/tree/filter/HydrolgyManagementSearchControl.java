@@ -50,11 +50,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrolgyManagementSearchControl extends Composite
+public class HydrolgyManagementSearchControl extends Composite implements IRrmDiagramFilterControl
 {
   private final ResultParameterTypeFilterControl m_parameterTypeFilterControl;
 
@@ -118,4 +119,20 @@ public class HydrolgyManagementSearchControl extends Composite
     m_parameterType = parameterType;
     m_parameterTypeFilterControl.setParameterType( parameterType );
   }
+
+  @Override
+  public boolean doSelect( final IHydrologyResultReference reference )
+  {
+    return m_parameterTypeFilterControl.doSelect( reference );
+  }
+
+  /**
+   * @see org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl#doSelect(java.lang.String)
+   */
+  @Override
+  public boolean doSelect( final String parameterType )
+  {
+    return false;
+  }
+
 }

@@ -65,6 +65,7 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CleanSearchPanelAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.dnd.MoveStationTransfer;
 import org.kalypso.ui.rrm.internal.timeseries.view.dnd.TimeseriesManagementTreeDragListener;
@@ -83,7 +84,9 @@ public class TimeseriesManagementView extends ViewPart
 {
   public static String ID = "org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"; //$NON-NLS-1$
 
-  private TreeViewer m_treeViewer;
+  protected TreeViewer m_treeViewer;
+
+  private TimeseriesBrowserSearchViewer m_searchPanel;
 
   @Override
   public void createPartControl( final Composite parent )
@@ -113,13 +116,13 @@ public class TimeseriesManagementView extends ViewPart
 
     final ToolBarManager toolbar = SectionUtils.createSectionToolbar( section );
 
-    final TimeseriesBrowserSearchViewer searchPanel = new TimeseriesBrowserSearchViewer( section, toolkit, m_treeViewer );
-    toolkit.adapt( searchPanel );
+    m_searchPanel = new TimeseriesBrowserSearchViewer( section, toolkit, m_treeViewer );
+    toolkit.adapt( m_searchPanel );
 
-    toolbar.add( new CleanSearchPanelAction( searchPanel ) );
+    toolbar.add( new CleanSearchPanelAction( m_searchPanel ) );
     toolbar.update( true );
 
-    section.setClient( searchPanel );
+    section.setClient( m_searchPanel );
 
     return section;
   }
@@ -172,4 +175,10 @@ public class TimeseriesManagementView extends ViewPart
   {
     return m_treeViewer;
   }
+
+  public IRrmDiagramFilterControl getFilterControl( )
+  {
+    return m_searchPanel;
+  }
+
 }

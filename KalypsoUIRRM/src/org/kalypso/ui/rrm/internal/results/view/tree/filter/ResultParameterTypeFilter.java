@@ -76,6 +76,15 @@ public class ResultParameterTypeFilter extends AbstractResultViewerFilter
     return false;
   }
 
+  public boolean doSelect( final IHydrologyResultReference reference )
+  {
+    final Object type = getType();
+    if( StringUtils.EMPTY == type )
+      return true;
+
+    return type.equals( reference.getType() );
+  }
+
   private boolean doSelectNode( final TreeNode node, final Object type )
   {
     // TODO remove level
