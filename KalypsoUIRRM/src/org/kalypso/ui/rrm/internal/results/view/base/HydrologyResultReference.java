@@ -43,27 +43,55 @@ package org.kalypso.ui.rrm.internal.results.view.base;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.model.hydrology.binding.cm.ICatchment;
+import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT_TYPE;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyResultReference implements IHydrologyResultReference
+public class HydrologyResultReference implements IHydrologyResultReference, IZmlSourceElement
 {
   private final RRM_RESULT m_type;
 
   private final IFile m_file;
 
-  public HydrologyResultReference( final IFolder calcCaseFolder, final Feature feature, final RRM_RESULT result )
+  private String m_identifier;
+
+  private PoolableObjectType m_key;
+
+  private PooledObsProvider m_provider;
+
+  private final Feature m_parent;
+
+  private final RrmSimulation m_simulation;
+
+  public HydrologyResultReference( final RrmSimulation simulation, final IFolder calcCaseFolder, final Feature feature, final RRM_RESULT result )
   {
+    m_simulation = simulation;
+    m_parent = feature;
     final RRM_RESULT_TYPE type = result.getType();
     switch( type )
     {
@@ -88,8 +116,10 @@ public class HydrologyResultReference implements IHydrologyResultReference
     m_type = result;
   }
 
-  public HydrologyResultReference( final URL context, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
+  public HydrologyResultReference( final RrmSimulation simulation, final URL context, final Feature parent, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
   {
+    m_simulation = simulation;
+    m_parent = parent;
     if( link != null )
     {
       final URL url = UrlResolverSingleton.resolveUrl( context, link.getHref() );
@@ -106,6 +136,8 @@ public class HydrologyResultReference implements IHydrologyResultReference
   public Object getAdapter( final Class adapter )
   {
     if( adapter.isAssignableFrom( IHydrologyResultReference.class ) )
+      return this;
+    else if( adapter.isAssignableFrom( IZmlSourceElement.class ) )
       return this;
 
     return null;
@@ -143,5 +175,151 @@ public class HydrologyResultReference implements IHydrologyResultReference
     }
 
     return false;
+  }
+
+  @Override
+  public void dispose( )
+  {
+    // nothing to do...b
+  }
+
+  @Override
+  public IObsProvider getObsProvider( )
+  {
+    if( !isValid() )
+      return null;
+
+    if( Objects.isNotNull( m_provider ) )
+      return m_provider;
+
+    m_provider = new PooledObsProvider( getPoolKey() );
+
+    return m_provider;
+
+  }
+
+  @Override
+  public IPoolableObjectType getPoolKey( )
+  {
+    if( !isValid() )
+      return null;
+
+    if( Objects.isNotNull( m_key ) )
+      return m_key;
+
+    m_key = new PoolableObjectType( "zml", m_file.getName(), getContext(), false );
+
+    return m_key;
+
+  }
+
+  private URL getContext( )
+  {
+    try
+    {
+      return m_file.getLocationURI().toURL();
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
+  @Override
+  public boolean isDirty( )
+  {
+    final IObservation observation = getObsProvider().getObservation();
+    if( Objects.isNull( observation ) )
+      return false;
+
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    final KeyInfo info = pool.getInfo( observation );
+
+    return info.isDirty();
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    final String label = getType().getLabel();
+    final String simulation = m_simulation.getName();
+    final String parent = m_parent.getName();
+
+    return String.format( "%s, %s: %s\r\n%s", simulation, getFeatureTypeName(), parent, label );
+  }
+
+  private String getFeatureTypeName( )
+  {
+    if( m_parent instanceof Node )
+      return "Knoten";
+    else if( m_parent instanceof IStorageChannel )
+      return "Speicherstrang";
+    else if( m_parent instanceof ICatchment )
+      return "Teilgebiet";
+
+    return "";
+  }
+
+  @Override
+  public String getIdentifier( )
+  {
+    if( StringUtils.isNotBlank( m_identifier ) )
+      return m_identifier;
+
+    final RRM_RESULT type = getType();
+    switch( type )
+    {
+      case catchmentBasisQ:
+        return ITimeseriesConstants.TYPE_DISCHARGE;
+      case catchmentEvapotranspiration:
+        return ITimeseriesConstants.TYPE_EVAPORATION;
+      case catchmentGesamtTeilgebietsQ:
+        return ITimeseriesConstants.TYPE_DISCHARGE;
+      case catchmentGrundwasserQ:
+        return ITimeseriesConstants.TYPE_DISCHARGE;
+      case catchmentGrundwasserstand:
+        return ITimeseriesConstants.TYPE_WATERLEVEL;
+      case catchmentInterflow:
+        return ITimeseriesConstants.TYPE_DISCHARGE;
+      case catchmentNiederschlag:
+        return ITimeseriesConstants.TYPE_RAINFALL;
+      case catchmentOberflaechenQNatuerlich:
+        return ITimeseriesConstants.TYPE_DISCHARGE;
+      case catchmentOberflaechenQVersiegelt:
+        return ITimeseriesConstants.TYPE_DISCHARGE;
+      case catchmentSchneehoehe:
+        return ITimeseriesConstants.TYPE_WATERLEVEL;
+      case catchmentTemperature:
+        return ITimeseriesConstants.TYPE_TEMPERATURE;
+      case inputEvaporation:
+        return ITimeseriesConstants.TYPE_EVAPORATION;
+      case inputInflow:
+        return ITimeseriesConstants.TYPE_DISCHARGE;
+      case inputTemperature:
+        return ITimeseriesConstants.TYPE_TEMPERATURE;
+      case nodeGesamtknotenAbfluss:
+        return ITimeseriesConstants.TYPE_DISCHARGE;
+      case storageFuellvolumen:
+        return ITimeseriesConstants.TYPE_VOLUME;
+      case storageSpeicherUeberlauf:
+        return ITimeseriesConstants.TYPE_DISCHARGE;
+
+    }
+
+    return m_identifier;
+  }
+
+  @Override
+  public void setIdentifier( final String identifier )
+  {
+    m_identifier = identifier;
+  }
+
+  @Override
+  public int getIndex( )
+  {
+    return 0;
   }
 }

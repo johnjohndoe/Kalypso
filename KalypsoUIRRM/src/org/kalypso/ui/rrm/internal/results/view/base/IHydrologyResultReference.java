@@ -45,11 +45,12 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 
 /**
  * @author Dirk Kuch
  */
-public interface IHydrologyResultReference extends IAdaptable
+public interface IHydrologyResultReference extends IAdaptable, IZmlSourceElement
 {
   URL getUrl( ) throws MalformedURLException;
 
