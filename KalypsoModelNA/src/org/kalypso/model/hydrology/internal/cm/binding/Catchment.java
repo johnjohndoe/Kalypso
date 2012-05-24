@@ -170,4 +170,10 @@ public class Catchment extends Feature_Impl implements ICatchment
 
     return null;
   }
+
+  @Override
+  public String getResultCategory( )
+  {
+    return getProperty( PROPERTY_RESULT_CATEGORY, String.class );
+  }
 }

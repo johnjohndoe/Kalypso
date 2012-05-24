@@ -67,9 +67,9 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window.getActivePage();
 
-    /* set input to gtt tables */
     try
     {
+      /* set input to gtt tables */
       final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
@@ -82,6 +82,7 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
     catch( final CoreException e )
     {
       e.printStackTrace();
+
       throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
     }
 
