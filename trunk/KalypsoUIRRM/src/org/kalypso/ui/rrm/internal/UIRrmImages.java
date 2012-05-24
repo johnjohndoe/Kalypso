@@ -105,7 +105,6 @@ public class UIRrmImages
     PARAMETER_TYPE_H_SUNSHINE("icons/timeseries/parameterType_H_SUNSHINE.png"), //$NON-NLS-1$
     PARAMETER_TYPE_HUMIDITY("icons/timeseries/parameterType_U.png"), //$NON-NLS-1$
     PARAMETER_TYPE_MEAN_HUMIDITY("icons/timeseries/parameterType_MEAN_HUMIDITY.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_MEAN_RAINFALL("icons/timeseries/parameterType_MEAN_RAINFALL.png"), //$NON-NLS-1$
     PARAMETER_TYPE_MEAN_TEMPERATURE("icons/timeseries/parameterType_MEAN_TEMPERATURE.png"), //$NON-NLS-1$
     PARAMETER_TYPE_MEAN_WIND_VELOCITY("icons/timeseries/parameterType_MEAN_WIND_VELOCITY.png"), //$NON-NLS-1$
     PARAMETER_TYPE_RAINFALL("icons/timeseries/parameterType_N.png"), //$NON-NLS-1$
