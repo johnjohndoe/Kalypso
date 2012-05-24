@@ -69,8 +69,6 @@ public interface ICatchment extends Feature
    */
   QName MEMBER_FACTORIZED_TIMESERIES = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "factorizedTimeseriesMember" );
 
-  QName PROPERTY_RESULT_CATEGORY = new QName( NaModelConstants.NS_NAMODELL, "resultCategory" ); //$NON-NLS-1$
-
   /**
    * This function returns the area link.
    * 
@@ -105,5 +103,4 @@ public interface ICatchment extends Feature
    */
   String resolveDescription( );
 
-  String getResultCategory( );
 }
