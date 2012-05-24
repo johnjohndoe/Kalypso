@@ -51,9 +51,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -128,22 +125,9 @@ public class HydrologyParameterSetUiHandler extends AbstractResultTreeNodeUiHand
     return UIRrmImages.id( m_missing );
   }
 
-  @Override
-  protected String getTreeCompareLabel( )
+  protected Feature getFeature( )
   {
-    if( m_feature instanceof Catchment )
-    {
-      return String.format( "CCC_%s", getTreeLabel() );
-    }
-    else if( m_feature instanceof Channel )
-    {
-      return String.format( "DDD_%s", getTreeLabel() );
-    }
-    else if( m_feature instanceof Node )
-    {
-      return String.format( "EEE_%s", getTreeLabel() );
-    }
-
-    return super.getTreeCompareLabel();
+    return m_feature;
   }
+
 }

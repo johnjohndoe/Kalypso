@@ -70,10 +70,4 @@ public class ResultCategoryUiHandler extends AbstractResultTreeNodeUiHandler
     return UIRrmImages.id( UIRrmImages.DESCRIPTORS.RESULT_CATEGORY );
   }
 
-  @Override
-  protected String getTreeCompareLabel( )
-  {
-    return String.format( "ZZZ_%s", getTreeLabel() );
-  }
-
 }

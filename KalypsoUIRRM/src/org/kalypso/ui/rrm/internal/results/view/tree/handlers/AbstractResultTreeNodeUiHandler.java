@@ -53,10 +53,14 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
@@ -108,4 +112,32 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
 
   }
 
+  @Override
+  protected String getTreeCompareLabel( )
+  {
+    if( this instanceof HydrologyParameterSetUiHandler )
+    {
+      final HydrologyParameterSetUiHandler handler = (HydrologyParameterSetUiHandler) this;
+      final Feature feature = handler.getFeature();
+
+      if( feature instanceof Catchment )
+      {
+        return String.format( "AAA_%s", getTreeLabel() );
+      }
+      else if( feature instanceof Node )
+      {
+        return String.format( "BBB_%s", getTreeLabel() );
+      }
+      else if( feature instanceof StorageChannel )
+      {
+        return String.format( "CCC_%s", getTreeLabel() );
+      }
+    }
+    else if( this instanceof ResultCategoryUiHandler )
+    {
+      return String.format( "ZZZ_%s", getTreeLabel() );
+    }
+
+    return super.getTreeCompareLabel();
+  }
 }
