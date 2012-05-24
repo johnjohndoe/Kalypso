@@ -206,7 +206,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   private TreeNode addCatchments( final IFeatureBindingCollection<Catchment> catchments, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder )
   {
-    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, "Teilgebiete", DESCRIPTORS.CATCHMENT ), RRM_RESULT.class );
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, "Einzugsgebiete", DESCRIPTORS.CATCHMENT ), RRM_RESULT.class );
 
     catchments.accept( new IFeatureBindingCollectionVisitor<Catchment>()
     {

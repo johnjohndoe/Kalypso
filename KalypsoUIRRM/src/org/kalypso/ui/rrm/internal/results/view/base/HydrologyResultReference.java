@@ -243,9 +243,9 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
   @Override
   public String getLabel( )
   {
-    final String label = getType().getLabel();
     final String simulation = m_simulation.getName();
     final String parent = m_parent.getName();
+    final String label = getType().getLabel();
 
     return String.format( "%s, %s: %s\r\n%s", simulation, getFeatureTypeName(), parent, label );
   }
@@ -257,7 +257,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     else if( m_parent instanceof IStorageChannel )
       return "Speicherstrang";
     else if( m_parent instanceof ICatchment )
-      return "Teilgebiet";
+      return "Einzugsgebiet";
 
     return "";
   }

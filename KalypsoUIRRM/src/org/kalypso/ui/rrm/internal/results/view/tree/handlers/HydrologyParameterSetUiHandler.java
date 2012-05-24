@@ -45,6 +45,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
@@ -92,7 +93,13 @@ public class HydrologyParameterSetUiHandler extends AbstractResultTreeNodeUiHand
   @Override
   public String getTreeLabel( )
   {
-    return m_feature.getName();
+    final String name = m_feature.getName();
+    final String description = m_feature.getDescription();
+
+    if( StringUtils.isNotBlank( description ) )
+      return String.format( "%s - %s", name, description );
+
+    return name;
   }
 
   @Override
