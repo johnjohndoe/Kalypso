@@ -55,6 +55,7 @@ public class UIRrmImages
 
     CATCHMENT("icons/resultview/catchment.png"), //$NON-NLS-1$
     EMPTY_CATCHMENT("icons/resultview/emptyCatchment.png"), //$NON-NLS-1$
+    RESULT_CATEGORY("icons/resultview/category.png"), //$NON-NLS-1$
 
     DELETE("icons/timeseries/delete.gif"), //$NON-NLS-1$
     EDIT_STATION("icons/timeseries/editStation.png"), //$NON-NLS-1$

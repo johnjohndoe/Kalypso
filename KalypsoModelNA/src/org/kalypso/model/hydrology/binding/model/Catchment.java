@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ogc.sensor.IObservation;
@@ -55,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}Catchment.
- *
+ * 
  * @author Gernot Belger
  */
 public class Catchment extends AbstractNaModelElement
@@ -127,6 +128,8 @@ public class Catchment extends AbstractNaModelElement
   private static final QName PROP_KLUPOR = new QName( NS_NAMODELL, "klupor" ); //$NON-NLS-1$
 
   private static final QName PROP_GENERATE_RESULT = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
+
+  public static final QName PROPERTY_RESULT_CATEGORY = new QName( NaModelConstants.NS_NAMODELL, "resultCategory" ); //$NON-NLS-1$
 
   public static final QName PROP_PRECIPITATION_LINK = new QName( NS_NAMODELL, "niederschlagZR" ); //$NON-NLS-1$
 
@@ -435,5 +438,10 @@ public class Catchment extends AbstractNaModelElement
   public void setCorrSealing( final Double corrSealing )
   {
     setProperty( QNAME_PROP_CORRSEALING, corrSealing );
+  }
+
+  public String getResultCategory( )
+  {
+    return getProperty( PROPERTY_RESULT_CATEGORY, String.class );
   }
 }
