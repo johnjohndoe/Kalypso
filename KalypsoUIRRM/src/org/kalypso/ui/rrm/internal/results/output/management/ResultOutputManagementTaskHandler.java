@@ -67,8 +67,6 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window.getActivePage();
 
-    configureFeatureView( activePage );
-
     /* set input to gtt tables */
     try
     {
@@ -79,7 +77,7 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
       WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Catchments:gtt", "Einzugsgebiete", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
       WorkflowHandlerUtils.setGttInput( activePage, "StorageChannels", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:StorageChannels:gtt", "Speicherstränge", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      WorkflowHandlerUtils.setGftInput( activePage, "Outputs", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Outputs:gft", "Ergebnisausgabe", scenarioFolder );
+      WorkflowHandlerUtils.setGftInput( activePage, "Outputs", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Outputs:gft", "Ergebnisausgabe-Optionen", scenarioFolder );
 
     }
     catch( final CoreException e )
@@ -91,18 +89,4 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
     return null;
   }
 
-  /** Configure feature view with specialized templates */
-  private void configureFeatureView( final IWorkbenchPage page )
-  {
-// final IViewPart part = page.findView( FeatureView.ID );
-// if( !(part instanceof FeatureView) )
-// return;
-//
-// final FeatureView featureView = (FeatureView) part;
-// final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
-//
-//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_Catchment.gft" ) ); //$NON-NLS-1$
-//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_KMChannel.gft" ) ); //$NON-NLS-1$
-//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_RHBChannel.gft" ) ); //$NON-NLS-1$
-  }
 }

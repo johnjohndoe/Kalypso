@@ -12,7 +12,6 @@
       <tm:parameterType>MEAN_HUMIDITY</tm:parameterType>
       <tm:parameterType>E_LAND</tm:parameterType>
       <tm:parameterType>E_WATER</tm:parameterType>
-      <tm:parameterType>MEAN_RAINFALL</tm:parameterType>
     </tm:StationClass>
   </tm:classMember>
   <tm:classMember>
