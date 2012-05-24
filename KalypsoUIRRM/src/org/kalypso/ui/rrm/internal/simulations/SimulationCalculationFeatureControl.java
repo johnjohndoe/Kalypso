@@ -326,7 +326,8 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       return;
 
     /* Ask the user if he wants to start the calculation. */
-    final CalculateSimulationDialog dialog = new CalculateSimulationDialog( m_calculationStatusComposite.getShell() );
+    // TODO
+    final CalculateSimulationDialog dialog = new CalculateSimulationDialog( m_calculationStatusComposite.getShell(), null );
     if( dialog.open() != Window.OK )
       return;
 

@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 
 /**
@@ -63,6 +64,11 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 public class CalculateSimulationDialog extends Dialog
 {
   /**
+   * The simulations to calculate.
+   */
+  private final NAControl[] m_simulations;
+
+  /**
    * The dialog settings.
    */
   private final IDialogSettings m_settings;
@@ -72,11 +78,14 @@ public class CalculateSimulationDialog extends Dialog
    * 
    * @param shell
    *          The parent shell, or null to create a top-level shell.
+   * @param simulations
+   *          The simulations to calculate.
    */
-  public CalculateSimulationDialog( final Shell shell )
+  public CalculateSimulationDialog( final Shell shell, final NAControl[] simulations )
   {
     super( shell );
 
+    m_simulations = simulations;
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
   }
 
@@ -85,11 +94,14 @@ public class CalculateSimulationDialog extends Dialog
    * 
    * @param parentShell
    *          The object that returns the current parent shell.
+   * @param simulations
+   *          The simulations to calculate.
    */
-  public CalculateSimulationDialog( final IShellProvider parentShell )
+  public CalculateSimulationDialog( final IShellProvider parentShell, final NAControl[] simulations )
   {
     super( parentShell );
 
+    m_simulations = simulations;
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
   }
 
