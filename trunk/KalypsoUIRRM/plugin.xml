@@ -562,6 +562,8 @@
 
             <command id="org.kalypso.model.rrm.editCalibration" name="%org.kalypso.model.rrm.editCalibration.name" description="%org.kalypso.model.rrm.editCalibration.description" />
 
+            <command id="org.kalypso.model.rrm.simulationResultOutputManagement" name="%org.kalypso.model.rrm.simulationResultOutputManagement.name" description="%org.kalypso.model.rrm.simulationResultOutputManagement.description" />
+
             <command id="org.kalypso.model.rrm.simulationManagement" name="%org.kalypso.model.rrm.simulationManagement.name" description="%org.kalypso.model.rrm.simulationManagement.description"/>
 
 			<!-- non workflow -->
@@ -616,6 +618,8 @@
 
             <image commandId="org.kalypso.model.rrm.editCalibration" icon="icons/calibration/calibration.png"/>
 
+            <image commandId="org.kalypso.model.rrm.simulationResultOutputManagement" icon="icons/resultmanagement/resultOutputManagement.png"/>
+
             <image commandId="org.kalypso.model.rrm.simulationManagement" icon="icons/simulations/simulation.gif"/>
 
             <image commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" icon="icons/simulations/refreshSimulations.gif"/>
@@ -655,6 +659,7 @@
 
       <handler class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsTaskHandler" commandId="org.kalypso.model.rrm.catchmentModels"/>
       <handler class="org.kalypso.ui.rrm.internal.calibration.EditCalibrationTaskHandler" commandId="org.kalypso.model.rrm.editCalibration"/>
+      <handler class="org.kalypso.ui.rrm.internal.results.output.management.ResultOutputManagementTaskHandler" commandId="org.kalypso.model.rrm.simulationResultOutputManagement"/>
       <handler class="org.kalypso.ui.rrm.internal.simulations.SimulationManagementTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement"/>
       <handler class="org.kalypso.ui.rrm.internal.results.view.ResultManagementTaskHandler" commandId="org.kalypso.model.rrm.resultView"/>
 
