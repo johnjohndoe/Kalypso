@@ -101,4 +101,21 @@ public abstract class AbstractTreeNodeUiHandler implements ITreeNodeUiHandler
   protected abstract Control createPropertiesControl( Composite parent, IDataBinding binding, ToolBarManager sectionToolbar );
 
   protected abstract void createHyperlinks( FormToolkit toolkit, Composite actionPanel );
+
+  @Override
+  public int compareTo( final ITreeNodeUiHandler other )
+  {
+    if( other instanceof AbstractTreeNodeUiHandler )
+    {
+      final AbstractTreeNodeUiHandler o = (AbstractTreeNodeUiHandler) other;
+      return getTreeCompareLabel().compareTo( o.getTreeCompareLabel() );
+    }
+
+    return getTreeLabel().compareTo( other.getTreeLabel() );
+  }
+
+  protected String getTreeCompareLabel( )
+  {
+    return getTreeLabel();
+  }
 }
