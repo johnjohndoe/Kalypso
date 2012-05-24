@@ -113,7 +113,7 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
       monitor.beginTask( String.format( "Generiere Zeitreihen mit %d Gebietsmodellen...", m_subGenerators.size() ), m_subGenerators.size() * 200 );
       monitor.subTask( "Generiere Zeitreihen..." );
 
-      // TODO
+      // TODO Is calculated by the child generators and the results are managed outside.
 
       return null;
     }

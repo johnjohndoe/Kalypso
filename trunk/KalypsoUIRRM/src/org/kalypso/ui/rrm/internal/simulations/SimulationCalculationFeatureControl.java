@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -85,6 +86,7 @@ import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
+import org.kalypso.ui.rrm.internal.simulations.dialogs.CalculateSimulationDialog;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ReadCalculationStatusJob;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ValidateSimulationJob;
 import org.kalypso.ui.rrm.internal.simulations.runnables.CalculateSimulationRunnable;
@@ -323,7 +325,10 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     if( m_calculationStatusComposite == null || m_calculationStatusComposite.isDisposed() )
       return;
 
-    // TODO Abfrage ob Gebietsmodell neu gerechnet werden muss...
+    /* Ask the user if he wants to start the calculation. */
+    final CalculateSimulationDialog dialog = new CalculateSimulationDialog( m_calculationStatusComposite.getShell() );
+    if( dialog.open() != Window.OK )
+      return;
 
     /* Create the operation. */
     final CalculateSimulationRunnable operation = new CalculateSimulationRunnable();

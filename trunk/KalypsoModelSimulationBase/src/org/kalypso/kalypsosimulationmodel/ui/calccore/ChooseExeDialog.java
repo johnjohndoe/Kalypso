@@ -74,8 +74,5 @@ public class ChooseExeDialog extends ElementListSelectionDialog
     setAllowDuplicates( false );
     setElements( exeFiles );
     setMessage( String.format( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.3" ) ) ); //$NON-NLS-1$
-
   }
-
-
 }
