@@ -38,26 +38,42 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.utils.featureTree;
+package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ui.rrm.internal.UIRrmImages;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public interface ITreeNodeUiHandler extends Comparable<ITreeNodeUiHandler>
+public class ResultCategoryUiHandler extends AbstractResultTreeNodeUiHandler
 {
-  String getTypeLabel( );
 
-  String getTreeLabel( );
+  private final String m_label;
 
-  ImageDescriptor getTreeImage( );
-
-  Control createControl( Composite parent, IDataBinding binding );
+  public ResultCategoryUiHandler( final RrmSimulation simulation, final String label )
+  {
+    super( simulation );
+    m_label = label;
+  }
 
   @Override
-  int compareTo( ITreeNodeUiHandler other );
+  public String getTreeLabel( )
+  {
+    return m_label;
+  }
+
+  @Override
+  public ImageDescriptor getTreeImage( )
+  {
+    return UIRrmImages.id( UIRrmImages.DESCRIPTORS.RESULT_CATEGORY );
+  }
+
+  @Override
+  protected String getTreeCompareLabel( )
+  {
+    return String.format( "ZZZ_%s", getTreeLabel() );
+  }
+
 }

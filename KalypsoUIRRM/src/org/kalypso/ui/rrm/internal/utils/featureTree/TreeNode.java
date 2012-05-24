@@ -52,7 +52,7 @@ import org.kalypso.commons.java.lang.Objects;
 /**
  * @author Gernot Belger
  */
-public class TreeNode implements IAdaptable
+public class TreeNode implements IAdaptable, Comparable<TreeNode>
 {
   private final Collection<TreeNode> m_children = new ArrayList<>();
 
@@ -151,5 +151,15 @@ public class TreeNode implements IAdaptable
       return null;
 
     return ((IAdaptable) m_treeData).getAdapter( adapter );
+  }
+
+  @Override
+  public int compareTo( final TreeNode other )
+  {
+    final ITreeNodeUiHandler h1 = getUiHandler();
+    final ITreeNodeUiHandler h2 = other.getUiHandler();
+
+    return h1.compareTo( h2 );
+
   }
 }

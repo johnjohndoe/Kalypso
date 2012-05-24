@@ -64,10 +64,7 @@ public class TreeNodeLabelComparator extends ViewerComparator
     if( Objects.allNotNull( t1, t2 ) )
       return comparteTimeseries( t1, t2 );
 
-    final String l1 = n1.getLabel();
-    final String l2 = n2.getLabel();
-
-    return l1.compareTo( l2 );
+    return n1.compareTo( n2 );
   }
 
   private int comparteTimeseries( final ITimeseries t1, final ITimeseries t2 )
