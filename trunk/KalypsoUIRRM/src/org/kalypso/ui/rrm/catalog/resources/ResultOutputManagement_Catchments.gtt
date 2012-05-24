@@ -6,6 +6,8 @@
 
     <column name="rrm:generateResult" editable="true" width="150" alignment="SWT.CENTER" />
 
+    <column name="rrm:resultCategory" editable="true" width="250" alignment="SWT.LEFT" format="" />
+
     <sort propertyName="name" inverse="false" />
   </layer>
 </gistableview>
