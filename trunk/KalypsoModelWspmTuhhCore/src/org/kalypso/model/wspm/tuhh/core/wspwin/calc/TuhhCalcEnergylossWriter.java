@@ -105,7 +105,7 @@ public class TuhhCalcEnergylossWriter
           final int iValue = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
           psiWriter.print( "STATION " + segment.getStation() );
           int i = 1;
-          for( IRecord record : result )
+          for( final IRecord record : result )
           {
             final String type = record.getValue( iType ).toString();
             if( type.compareTo( ENERGYLOSS_TYPE.eEinlauf.getId() ) == 0 )
