@@ -146,11 +146,14 @@
 
       <!-- SimulationResultsManagement -->
       <con:WorkbenchSiteContext id="SimulationResultOutputManagementContext" parent="ContextHydrology">
-        <con:ViewContext id="SimulationResultsManagementContext_GttView_KMChannels" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:KMChannels" parent="SimulationResultOutputManagementContext" />
-        <con:ViewContext id="SimulationResultsManagementContext_GttView_StorageChannels" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:StorageChannels" parent="SimulationResultOutputManagementContext" />
+        <con:ViewContext id="SimulationResultsManagementContext_GttView_NaNodes" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:NaNodes" parent="SimulationResultOutputManagementContext" />
         <con:ViewContext id="SimulationResultsManagementContext_GttView_Catchments" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Catchments" parent="SimulationResultOutputManagementContext" />
+        <con:ViewContext id="SimulationResultsManagementContext_GttView_StorageChannels" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:StorageChannels" parent="SimulationResultOutputManagementContext" />
 
+
+        <!--
         <con:ViewContext id="SimulationResultsManagementContext_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="SimulationResultOutputManagementContext" />
+        -->
 
       </con:WorkbenchSiteContext>
 
