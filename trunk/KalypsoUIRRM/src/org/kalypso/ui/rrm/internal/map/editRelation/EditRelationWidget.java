@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.map.editRelation;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -57,7 +58,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.WidgetCursors;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -68,10 +69,10 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Widget where the user can create relations between selected features.
- * 
+ *
  * @author doemming
  */
-public class EditRelationWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class EditRelationWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private static final int GRAB_RADIUS = 30;
 
@@ -137,8 +138,6 @@ public class EditRelationWidget extends DeprecatedMouseWidget implements IWidget
   @Override
   public void finish( )
   {
-    super.finish();
-
     /* FIXME: should be handled by framework */
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
@@ -146,11 +145,13 @@ public class EditRelationWidget extends DeprecatedMouseWidget implements IWidget
   }
 
   @Override
-  public void dragged( final Point p )
+  public void mouseDragged( final MouseEvent e )
   {
     final Feature sourceFeature = m_data.getSourceFeature();
     if( sourceFeature == null )
       return;
+
+    final Point p = e.getPoint();
 
     final IMapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
@@ -165,15 +166,11 @@ public class EditRelationWidget extends DeprecatedMouseWidget implements IWidget
     m_data.setFeatures( sourceFeature, newTarget );
 
     repaintMap();
-
-    repaintMap();
   }
 
   @Override
-  public void moved( final Point p )
+  public void mouseMoved( final MouseEvent e )
   {
-    super.moved( p );
-
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
@@ -182,6 +179,7 @@ public class EditRelationWidget extends DeprecatedMouseWidget implements IWidget
     if( transform == null )
       return;
 
+    final Point p = e.getPoint();
     final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, point, GRAB_RADIUS );
 
@@ -191,12 +189,16 @@ public class EditRelationWidget extends DeprecatedMouseWidget implements IWidget
     m_data.setFeatures( newSource, null );
 
     repaintMap();
+
     return;
   }
 
   @Override
-  public void leftReleased( final Point p )
+  public void mouseReleased( final MouseEvent e )
   {
+    if( e.getButton() != MouseEvent.BUTTON1 )
+      return;
+
     m_performRunner.execute();
   }
 

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Represents an n-m relation, modelled by three features.
- * 
+ *
  * @author Andreas von Dömming
  */
 public class HeavyRelationType implements IEditRelationType
@@ -168,12 +168,13 @@ public class HeavyRelationType implements IEditRelationType
     final IRelationType link1Name = getLink1();
     final IRelationType link2Name = getLink2();
     final IFeatureType bodyFT = getBodyFT();
-    final Feature[] props1 = sourceFeature.getWorkspace().resolveLinks( sourceFeature, link1Name );
+
+    final Feature[] props1 = sourceFeature.resolveMembers( link1Name );
     for( final Feature feature1 : props1 )
     {
       if( GMLSchemaUtilities.substitutes( feature1.getFeatureType(), bodyFT.getQName() ) )
       {
-        final Feature[] props2 = feature1.getWorkspace().resolveLinks( feature1, link2Name );
+        final Feature[] props2 = feature1.resolveMembers( link2Name );
         for( final Feature feature2 : props2 )
         {
           if( feature2.getFeatureType().equals( getTargetType() ) )
