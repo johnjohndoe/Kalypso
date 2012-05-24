@@ -219,24 +219,26 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
       m_log.add( status );
 
     final Geometry banklineGeometry = exporter.getBanklineGeometry();
+    if( banklineGeometry != null )
+    {
+      final Object[] data = new Object[5];
 
-    final Object[] data = new Object[5];
+      final WspmWaterBody water = exporter.getWaterBody();
+      final TuhhReach reach = exporter.getReach();
+      final String waterName = water == null ? StringUtils.EMPTY : water.getName();
+      final String refId = water == null ? StringUtils.EMPTY : water.getRefNr();
+      final String reachName = reach == null ? StringUtils.EMPTY : reach.getName();
 
-    final WspmWaterBody water = exporter.getWaterBody();
-    final TuhhReach reach = exporter.getReach();
-    final String waterName = water == null ? StringUtils.EMPTY : water.getName();
-    final String refId = water == null ? StringUtils.EMPTY : water.getRefNr();
-    final String reachName = reach == null ? StringUtils.EMPTY : reach.getName();
+      data[0] = StringUtils.abbreviate( waterName, FIELD_LENGTH_NAME );
+      data[1] = StringUtils.abbreviate( refId, FIELD_LENGTH_NAME );
+      data[2] = StringUtils.abbreviate( reachName, FIELD_LENGTH_NAME );
+      data[3] = StringUtils.abbreviate( element.getFeatureType().getQName().getLocalPart(), FIELD_LENGTH_TYPE );
+      data[4] = StringUtils.abbreviate( status.getMessage(), FIELD_LENGTH_STATUS );
 
-    data[0] = StringUtils.abbreviate( waterName, FIELD_LENGTH_NAME );
-    data[1] = StringUtils.abbreviate( refId, FIELD_LENGTH_NAME );
-    data[2] = StringUtils.abbreviate( reachName, FIELD_LENGTH_NAME );
-    data[3] = StringUtils.abbreviate( element.getFeatureType().getQName().getLocalPart(), FIELD_LENGTH_TYPE );
-    data[4] = StringUtils.abbreviate( status.getMessage(), FIELD_LENGTH_STATUS );
-
-    final List< ? > geometries = GeometryExtracter.extract( banklineGeometry, Polygon.class );
-    for( final Object geom : geometries )
-      addShapeElement( (Geometry) geom, kalypsoSrs, data );
+      final List< ? > geometries = GeometryExtracter.extract( banklineGeometry, Polygon.class );
+      for( final Object geom : geometries )
+        addShapeElement( (Geometry) geom, kalypsoSrs, data );
+    }
 
     monitor.done();
   }

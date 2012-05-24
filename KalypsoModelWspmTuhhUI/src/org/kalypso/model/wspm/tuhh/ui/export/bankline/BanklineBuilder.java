@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
+import java.util.Arrays;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -49,6 +52,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -124,21 +128,32 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 
       final LineString denseRiverLine = densifyRiverLine( riverLine, profiles );
 
-
-      // FIXME: invert this, if centerline goes in wrong direction
-      // we could/should do this automatically:
-      final boolean directionUpstreams = water.isDirectionUpstreams();
+      final boolean directionUpstreams = findFlowDirection( water, riverLine, profiles );
 
       return buildBankLines( denseRiverLine, profiles, directionUpstreams );
     }
-    catch( final GM_Exception e )
+    catch( final GM_Exception | CoreException e )
     {
       final String message = String.format( Messages.getString( "BanklineBuilder_3" ), m_waterOrReach.getName() ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message, e );
     }
   }
 
-  private IStatus buildBankLines( final LineString riverLine, final IProfileFeature[] profiles, final boolean flowDirection )
+  private boolean findFlowDirection( final WspmWaterBody water, final LineString riverLine, final IProfileFeature[] profiles )
+  {
+    /* Sort profiles in flow direction */
+    final ProfileFeatureStationComparator tuhhStationComparator = new ProfileFeatureStationComparator( water.isDirectionUpstreams() );
+    Arrays.sort( profiles, tuhhStationComparator );
+
+    // TODO: intersect each with river line
+
+    // FIXME: invert this, if centerline goes in wrong direction
+    // we could/should do this automatically:
+
+    return water.isDirectionUpstreams();
+  }
+
+  private IStatus buildBankLines( final LineString riverLine, final IProfileFeature[] profiles, final boolean flowDirection ) throws CoreException
   {
     final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
@@ -262,7 +277,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 // return JTSUtilities.addPointsToLine( riverLine, intersectionPoints.toCoordinateArray() );
   }
 
-  private Geometry buildVariableBuffer( final LineString riverLine, final IProfileFeature[] profiles, final IStatusCollector log, final boolean flowDirection )
+  private Geometry buildVariableBuffer( final LineString riverLine, final IProfileFeature[] profiles, final IStatusCollector log, final boolean flowDirection ) throws CoreException
   {
     final SIDE left = flowDirection ? SIDE.left : SIDE.right;
     final SIDE right = flowDirection ? SIDE.right : SIDE.left;
@@ -275,6 +290,12 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     final BanklineDistanceBuilder rightDistanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, right );
     log.add( rightDistanceBuilder.execute() );
     final PolyLine rightDistances = rightDistanceBuilder.getDistances();
+
+    if( leftDistances == null || rightDistances == null )
+    {
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to determine bankline distances. Please check river line and marker positions." );
+      throw new CoreException( status );
+    }
 
     final BanklineVariableBufferBuilder builder = new BanklineVariableBufferBuilder( riverLine, leftDistances, rightDistances );
     return builder.buffer();
