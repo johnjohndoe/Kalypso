@@ -80,6 +80,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 
 /**
@@ -226,7 +227,24 @@ public class NaModelStrategy implements ITreeNodeStrategy
   {
 
     TreeNode ptr = parent;
-    final Iterable<String> parts = Splitter.on( '/' ).trimResults().split( path );
+
+    final CharMatcher matcher = new CharMatcher()
+    {
+      @Override
+      public boolean matches( final char c )
+      {
+        if( '/' == c ) //$NON-NLS-1$
+          return true;
+        else if( '\\' == c ) //$NON-NLS-1$
+          return true;
+        else if( ';' == c ) //$NON-NLS-1$
+          return true;
+
+        return false;
+      }
+    };
+
+    final Iterable<String> parts = Splitter.on( matcher ).trimResults().omitEmptyStrings().split( path ); //$NON-NLS-1$
     int count = 0;
 
     for( final String part : parts )
