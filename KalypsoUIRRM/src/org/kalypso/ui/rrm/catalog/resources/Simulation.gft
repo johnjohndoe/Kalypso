@@ -141,6 +141,16 @@
       <param name="label" value="NA·Kalypso" />
       <param name="exePattern" value="Kalypso-NA_(.*).exe" />
     </extensioncontrol>
+
+    <label property="rrm:initialValueSource" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </label>
+    <text property="rrm:initialValueSource" style="SWT.BORDER">
+      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:initialValueSource" visible="true" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </validatorlabel>
   </group>
 
   <group text="%control.gft.calculation" style="SWT.NONE">
