@@ -40,19 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.utils;
 
+import java.net.URL;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.afgui.scenarios.CatalogStorage;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.template.featureview.Featuretemplate;
+import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 import org.kalypso.ui.editor.gistableeditor.GttViewPart;
 
 /**
  * Utilities for handler implementations of workflow.
- *
+ * 
  * @author Gernot Belger
  */
 public final class WorkflowHandlerUtils
@@ -105,6 +112,39 @@ public final class WorkflowHandlerUtils
     {
       e.printStackTrace();
       throw new ExecutionException( e.getMessage(), e );
+    }
+  }
+
+  public static void setGftInput( final IWorkbenchPage activePage, final String secondaryId, final String resource, final String title, final IFolder context ) throws ExecutionException
+  {
+    final IViewReference viewReference = activePage.findViewReference( FeatureTemplateView.ID, secondaryId );
+    if( viewReference == null )
+      return;
+
+    final IWorkbenchPart part = viewReference.getPart( false );
+    if( part instanceof FeatureTemplateView )
+    {
+      final FeatureTemplateView gftView = (FeatureTemplateView) part;
+      try
+      {
+        final IStorageEditorInput input = CatalogStorage.createEditorInput( resource, context );
+
+        final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( input.getStorage().getContents(), new NullProgressMonitor() );
+        final URL urlContext = ResourceUtilities.createURL( context );
+
+        gftView.setTemplate( template, urlContext, null, null, null );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        throw new ExecutionException( e.getMessage(), e );
+      }
+
+      if( title != null )
+      {
+        gftView.setPartName( title );
+        gftView.setTitleToolTip( title );
+      }
     }
   }
 }

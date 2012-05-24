@@ -87,6 +87,8 @@
   <system systemId="urn:org.kalypso.model.rrm.resultOutputManagement:workflow:NaNodes:gtt" uri="ResultOutputManagement_NaNodes.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Catchments:gtt" uri="ResultOutputManagement_Catchments.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.resultOutputManagement:workflow:StorageChannels:gtt" uri="ResultOutputManagement_StorageChannels.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Outputs:gft" uri="ResultOutputManagement_ExpertControl.gft" />
+
 
   <system systemId="urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt" uri="Simulations.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulation:gft" uri="Simulation.gft" />

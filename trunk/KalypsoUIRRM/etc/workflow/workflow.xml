@@ -150,11 +150,7 @@
         <con:ViewContext id="SimulationResultsManagementContext_GttView_Catchments" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Catchments" parent="SimulationResultOutputManagementContext" />
         <con:ViewContext id="SimulationResultsManagementContext_GttView_StorageChannels" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:StorageChannels" parent="SimulationResultOutputManagementContext" />
 
-
-        <!--
-        <con:ViewContext id="SimulationResultsManagementContext_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="SimulationResultOutputManagementContext" />
-        -->
-
+        <con:ViewContext id="SimulationResultsManagementContext_FeatureTemplateView_Outputs" partId="org.kalypso.ui.views.featuretemplateview:Outputs" parent="SimulationResultOutputManagementContext" />
       </con:WorkbenchSiteContext>
 
 
@@ -173,7 +169,7 @@
         <con:ViewContext id="ResultNodeMapView" partId="org.kalypso.ui.views.mapView" parent="ResultViewContext">
           <con:ExtensionContext id="ResultViewContext_extContext1" parent="ResultNodeMapView" handlerFactoryId="kalypsoContextHandlerFactory">
             <con:Parameter name="type" value="mapViewInputContext" />
-            <!-- TODO define own map template-->
+            <!-- TODO define own map template -->
             <con:Parameter name="input" value=".views/Timeseries.gmt" />
           </con:ExtensionContext>
         </con:ViewContext>

@@ -47,13 +47,10 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.featureview.views.FeatureView;
-import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 /**
@@ -82,6 +79,8 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
       WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Catchments:gtt", "Einzugsgebiete", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
       WorkflowHandlerUtils.setGttInput( activePage, "StorageChannels", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:StorageChannels:gtt", "Speicherstränge", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
 
+      WorkflowHandlerUtils.setGftInput( activePage, "Outputs", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Outputs:gft", "Ergebnisausgabe", scenarioFolder );
+
     }
     catch( final CoreException e )
     {
@@ -95,15 +94,15 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
   /** Configure feature view with specialized templates */
   private void configureFeatureView( final IWorkbenchPage page )
   {
-    final IViewPart part = page.findView( FeatureView.ID );
-    if( !(part instanceof FeatureView) )
-      return;
-
-    final FeatureView featureView = (FeatureView) part;
-    final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
-
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_Catchment.gft" ) ); //$NON-NLS-1$
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_KMChannel.gft" ) ); //$NON-NLS-1$
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_RHBChannel.gft" ) ); //$NON-NLS-1$
+// final IViewPart part = page.findView( FeatureView.ID );
+// if( !(part instanceof FeatureView) )
+// return;
+//
+// final FeatureView featureView = (FeatureView) part;
+// final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
+//
+//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_Catchment.gft" ) ); //$NON-NLS-1$
+//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_KMChannel.gft" ) ); //$NON-NLS-1$
+//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_RHBChannel.gft" ) ); //$NON-NLS-1$
   }
 }
