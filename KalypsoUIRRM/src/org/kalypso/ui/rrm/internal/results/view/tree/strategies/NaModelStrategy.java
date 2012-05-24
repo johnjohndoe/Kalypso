@@ -225,27 +225,28 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   private TreeNode doAddResultCategries( final RrmSimulation simulation, final TreeNode parent, final String path, final Map<Pair<Integer, String>, TreeNode> registry )
   {
-
-    TreeNode ptr = parent;
-
     final CharMatcher matcher = new CharMatcher()
     {
       @Override
       public boolean matches( final char c )
       {
-        if( '/' == c ) //$NON-NLS-1$
-          return true;
-        else if( '\\' == c ) //$NON-NLS-1$
-          return true;
-        else if( ';' == c ) //$NON-NLS-1$
-          return true;
+        switch( c )
+        {
+          case '/':
+          case '\\':
+          case ';':
+            return true;
 
-        return false;
+          default:
+            return false;
+        }
       }
     };
 
     final Iterable<String> parts = Splitter.on( matcher ).trimResults().omitEmptyStrings().split( path ); //$NON-NLS-1$
     int count = 0;
+
+    TreeNode ptr = parent;
 
     for( final String part : parts )
     {
