@@ -48,10 +48,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  */
 public class WeirFlowRelation2D extends BuildingFlowRelation2D implements IWeirFlowRelation2D
 {
-
-  public WeirFlowRelation2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public WeirFlowRelation2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
-
 }

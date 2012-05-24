@@ -50,24 +50,17 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public abstract class FlowRelationship extends Feature_Impl implements IFlowRelationship
 {
-
-  public FlowRelationship( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public FlowRelationship( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship#getPosition()
-   */
   @Override
   public GM_Point getPosition( )
   {
     return (GM_Point) getProperty( QNAME_PROP_POSITION );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship#setPosition(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public void setPosition( final GM_Point point )
   {
