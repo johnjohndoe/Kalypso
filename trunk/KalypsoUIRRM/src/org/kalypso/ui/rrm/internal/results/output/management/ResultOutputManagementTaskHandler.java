@@ -77,7 +77,7 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
       WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Catchments:gtt", "Einzugsgebiete", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
       WorkflowHandlerUtils.setGttInput( activePage, "StorageChannels", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:StorageChannels:gtt", "Speicherstränge", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      WorkflowHandlerUtils.setGftInput( activePage, "Outputs", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Outputs:gft", "Ergebnisausgabe-Optionen", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+      WorkflowHandlerUtils.setGftInput( activePage, "Outputs", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Outputs:gft", "Ausgabeoptionen", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final CoreException e )
     {
