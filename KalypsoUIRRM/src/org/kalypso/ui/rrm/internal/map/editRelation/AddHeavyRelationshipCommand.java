@@ -46,9 +46,9 @@ import java.util.List;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.command.FeatureLinkUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
@@ -67,7 +67,7 @@ public class AddHeavyRelationshipCommand implements ICommand
 
   private final IRelationType m_linkFT2;
 
-  private Feature m_newFeature;
+  private Feature m_bodyFeature;
 
   private final IFeatureType m_bodyFT;
 
@@ -81,69 +81,63 @@ public class AddHeavyRelationshipCommand implements ICommand
     m_targetFE = targetFE;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
-    // create relation feature
-    m_newFeature = m_workspace.createFeature( m_srcFE, m_linkFT1, m_bodyFT );
-    // create first link
-    m_workspace.addFeatureAsComposition( m_srcFE, m_linkFT1, 0, m_newFeature );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    // create second link
-    FeatureLinkUtils.insertLink( m_newFeature, m_linkFT2, 0, m_targetFE.getId() );
+    if( m_linkFT1.isList() )
+    {
+      final IFeatureBindingCollection<Feature> memberList = m_srcFE.getMemberList( m_linkFT1 );
+      m_bodyFeature = memberList.addNew( m_bodyFT.getQName() );
+    }
+    else
+      m_bodyFeature = m_srcFE.createSubFeature( m_linkFT1, m_bodyFT.getQName() );
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_newFeature, m_targetFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_bodyFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
-    // HACK: Normally, the first two event shold be enough; however the virtual-relation geometries don't get updated
+    // create link from body to second feature
+    // REAMRK: does only work for inline links for now
+    m_bodyFeature.setLink( m_linkFT2.getQName(), "#" + m_targetFE.getId() );
+
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_bodyFeature, m_targetFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    // HACK: Normally, the first two event shod be enough; however the virtual-relation geometries don't get updated
     // this way.
-    // In order to enforce a map redrawal, the next event is fired additinally.
+    // In order to enforce a map redrawal, the next event is fired additionally.
     // TODO: This should (somehow) be done automatically be the feature framework...
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_srcFE } ) );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     process();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
     // remove second link
+
     if( m_linkFT2.isList() )
     {
-      ((List< ? >) m_newFeature.getProperty( m_linkFT2 )).remove( m_targetFE.getId() );
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_newFeature, m_targetFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+      ((List< ? >) m_bodyFeature.getProperty( m_linkFT2 )).remove( m_targetFE.getId() );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_bodyFeature, m_targetFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
     }
     else
     {
-      m_newFeature.setProperty( m_linkFT2, null );
-      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_newFeature } ) );
-
+      m_bodyFeature.setProperty( m_linkFT2, null );
+      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_bodyFeature } ) );
     }
 
     // remove relation feature and also first link
-    m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkFT1, m_newFeature );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_srcFE.removeMember( m_linkFT1, m_bodyFeature );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_bodyFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
 
     // HACK: Normally, the first two events should be enough; however the virtual-relation geometries don't get updated
     // this way. In order to enforce a map redrawal, the next event is fired additionally.

@@ -45,9 +45,9 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.FeatureLinkUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * class RemoveHeavyRelationCommand Command to remove a normal relation created by
@@ -68,13 +68,7 @@ public class RemoveHeavyRelationCommand implements ICommand
 
   private final IRelationType m_linkName2;
 
-  private final boolean m_isComposition1;
-
   private final int m_pos1;
-
-  private final int m_pos2;
-
-  private final boolean m_isComposition2;
 
   public RemoveHeavyRelationCommand( final GMLWorkspace workspace, final Feature srcFE, final IRelationType linkName1, final Feature bodyFE, final IRelationType linkName2, final Feature destFE )
   {
@@ -84,40 +78,25 @@ public class RemoveHeavyRelationCommand implements ICommand
     m_destFE = destFE;
     m_linkName1 = linkName1;
     m_linkName2 = linkName2;
-    m_isComposition1 = FeatureHelper.isCompositionLink( srcFE, linkName1, bodyFE );
-    m_isComposition2 = FeatureHelper.isCompositionLink( bodyFE, linkName2, destFE );
-    m_pos1 = FeatureHelper.getPositionOfAssoziation( srcFE, linkName1, bodyFE );
-    m_pos2 = FeatureHelper.getPositionOfAssoziation( bodyFE, linkName2, destFE );
+
+    m_pos1 = FeatureLinkUtils.indexOfLink( srcFE, linkName1, bodyFE );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
     // first remove 2. normal relation
-    if( m_isComposition2 )
-      m_workspace.removeLinkedAsCompositionFeature( m_bodyFE, m_linkName2, m_destFE );
-    else
-      m_workspace.removeLinkedAsAggregationFeature( m_bodyFE, m_linkName2, m_destFE.getId() );
-
+    m_bodyFE.setProperty( m_linkName2, null );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_bodyFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
 
     // then remove 1. normal relation
-    if( m_isComposition1 )
-      m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkName1, m_bodyFE );
-    else
-      m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkName1, m_bodyFE.getId() );
+    m_srcFE.removeMember( m_linkName1, m_bodyFE );
 
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_bodyFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
 
@@ -128,9 +107,6 @@ public class RemoveHeavyRelationCommand implements ICommand
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_srcFE } ) );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
@@ -140,15 +116,15 @@ public class RemoveHeavyRelationCommand implements ICommand
   @Override
   public void undo( ) throws Exception
   {
-    if( m_isComposition1 )
-      m_workspace.addFeatureAsComposition( m_srcFE, m_linkName1, m_pos1, m_bodyFE );
+    if( m_linkName1.isList() )
+    {
+      final IFeatureBindingCollection<Feature> memberList = m_srcFE.getMemberList( m_linkName1 );
+      memberList.add( m_pos1, m_bodyFE );
+    }
     else
-      FeatureLinkUtils.insertLink( m_srcFE, m_linkName1, m_pos1, m_bodyFE.getId() );
+      m_srcFE.setProperty( m_linkName1, m_bodyFE );
 
-    if( m_isComposition2 )
-      m_workspace.addFeatureAsComposition( m_bodyFE, m_linkName2, m_pos2, m_destFE );
-    else
-      FeatureLinkUtils.insertLink( m_bodyFE, m_linkName2, m_pos2, m_destFE.getId() );
+    m_bodyFE.setLink( m_linkName2, "#" + m_destFE.getId() );
 
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_bodyFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
