@@ -98,11 +98,9 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
     if( isCalculationCaseFolder( folder ) )
       return true;
 
-    // FIXME rework ignore cases
+    // FIXME rework ignore cases - look into folders and decide if it is an result folder
     final String name = folder.getName();
-    if( StringUtils.containsIgnoreCase( name, "Original" ) )
-      return true;
-    else if( StringUtils.startsWithIgnoreCase( name, "tmp" ) )
+    if( StringUtils.startsWithIgnoreCase( name, "tmp" ) )
       return true;
     else if( StringUtils.equalsIgnoreCase( name, "logs" ) )
       return true;
