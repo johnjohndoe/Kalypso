@@ -83,7 +83,8 @@ public class ResultTreeFilterControl extends Composite
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         m_filterCurrentResults.setSelection( buttonCurrent.getSelection() );
-        m_viewer.refresh();
+
+        doTreeRefresh();
       }
     } );
 
@@ -96,9 +97,18 @@ public class ResultTreeFilterControl extends Composite
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         m_filterEmptyElements.setEnablement( buttonEmpty.getSelection() );
-        m_viewer.refresh();
+
+        doTreeRefresh();
       }
     } );
+  }
+
+  protected void doTreeRefresh( )
+  {
+    final Object[] visible = m_viewer.getVisibleExpandedElements();
+    m_viewer.collapseAll();
+    m_viewer.refresh();
+    m_viewer.setExpandedElements( visible );
   }
 
   public void setViewer( final TreeViewer viewer )
