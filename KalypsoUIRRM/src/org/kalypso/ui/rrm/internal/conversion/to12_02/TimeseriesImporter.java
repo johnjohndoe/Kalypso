@@ -49,6 +49,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -78,6 +79,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -223,15 +225,13 @@ public class TimeseriesImporter
     }
 
     final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, true );
-
     if( valueAxes.length == 0 )
     {
       final String message = String.format( Messages.getString( "TimeseriesImporter_7" ), relativePath ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
-
-    if( valueAxes.length > 1 )
+    else if( valueAxes.length > 1 )
     {
       final String message = String.format( Messages.getString( "TimeseriesImporter_8" ), relativePath ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
@@ -301,7 +301,7 @@ public class TimeseriesImporter
   {
     final IObservation observation = ZmlFactory.parseXML( zmlFile.toURI().toURL() );
 
-    final String forcedParmaterType = m_parameterIndex.getParmaterType( relativePath );
+    final String forcedParmaterType = getForcedParameterType( observation, relativePath );
     if( forcedParmaterType == null )
       return observation;
 
@@ -322,6 +322,22 @@ public class TimeseriesImporter
     final String href = observation.getHref();
     final MetadataList metadata = MetadataHelper.clone( observation.getMetadataList() );
     return new SimpleObservation( href, name, metadata, newModel );
+  }
+
+  private String getForcedParameterType( final IObservation observation, final String relativePath )
+  {
+    final String parmaterType = m_parameterIndex.getParmaterType( relativePath );
+    if( StringUtils.equals( ITimeseriesConstants.TYPE_TEMPERATURE, parmaterType ) )
+      return ITimeseriesConstants.TYPE_MEAN_TEMPERATURE;
+
+    if( parmaterType == null )
+    {
+      final IAxis valueAxis = AxisUtils.findValueAxis( observation.getAxes(), true );
+      if( valueAxis != null && StringUtils.equals( ITimeseriesConstants.TYPE_TEMPERATURE, valueAxis.getType() ) )
+        return ITimeseriesConstants.TYPE_MEAN_TEMPERATURE;
+    }
+
+    return parmaterType;
   }
 
   // REMARK: heavy, but necessary as we cannot assume that we always have a simple tuple model
