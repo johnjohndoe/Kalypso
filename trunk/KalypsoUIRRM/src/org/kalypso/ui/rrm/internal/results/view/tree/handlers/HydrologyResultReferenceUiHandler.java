@@ -63,7 +63,6 @@ import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM
  */
 public class HydrologyResultReferenceUiHandler extends AbstractResultTreeNodeUiHandler
 {
-
   private final IHydrologyResultReference m_reference;
 
   public HydrologyResultReferenceUiHandler( final RrmSimulation simulation, final IHydrologyResultReference reference )
@@ -100,7 +99,6 @@ public class HydrologyResultReferenceUiHandler extends AbstractResultTreeNodeUiH
   {
     try
     {
-
       if( m_reference.isValid() )
       {
         final URL url = m_reference.getUrl();
