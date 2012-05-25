@@ -281,84 +281,6 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   @Override
-  public boolean isOutdated( )
-  {
-    final long lastModifiedInput = getLastModifiedInput();
-    final long lastModifiedOutput = getLastModifiedOutput();
-    if( lastModifiedInput > lastModifiedOutput )
-      return true;
-
-    return false;
-  }
-
-  private long getLastModifiedInput( )
-  {
-    /* This is the last modified timestamp of the this generator itself. */
-    final long lastModified = getLastModified();
-
-    /* This is the last modified timestamp of the timeseries. */
-    final long lastModifiedTimeseries = getLastModifiedTimeseries();
-
-    /* This is the last modified timestamp of the catchments. */
-    final long lastModifiedCatchments = getLastModifiedCatchments();
-
-    return NumberUtils.max( new long[] { lastModified, lastModifiedTimeseries, lastModifiedCatchments } );
-  }
-
-  private long getLastModifiedOutput( )
-  {
-    // TODO
-    return -1;
-  }
-
-  private long getLastModifiedTimeseries( )
-  {
-    final IFeatureBindingCollection<ICatchment> catchments = getCatchments();
-    if( catchments == null || catchments.size() == 0 )
-      return -1;
-
-    long result = -1;
-    for( final ICatchment catchment : catchments )
-    {
-      final IFeatureBindingCollection<IFactorizedTimeseries> timeseries = catchment.getFactorizedTimeseries();
-      for( final IFactorizedTimeseries oneTimeseries : timeseries )
-      {
-        final ZmlLink timeseriesLink = oneTimeseries.getTimeseriesLink();
-        final BigDecimal factor = oneTimeseries.getFactor();
-        if( timeseriesLink == null || !timeseriesLink.isLinkExisting() || factor == null || factor.intValue() == 0 )
-          continue;
-
-        final File javaFile = timeseriesLink.getJavaFile();
-        final long lastModified = javaFile.lastModified();
-        result = Math.max( result, lastModified );
-      }
-    }
-
-    return result;
-  }
-
-  private long getLastModifiedCatchments( )
-  {
-    try
-    {
-      /* Get the .models folder of the current scenario. */
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IContainer scenarioFolder = dataProvider.getScenarioFolder();
-      final IFolder modelsFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_MODELS ) );
-
-      /* This is the last modified timestamp of the modell.gml. */
-      final IFile modellFile = modelsFolder.getFile( INaProjectConstants.GML_MODELL_FILE );
-
-      return modellFile.getLocation().toFile().lastModified();
-    }
-    catch( final Exception ex )
-    {
-      ex.printStackTrace();
-      return -1;
-    }
-  }
-
-  @Override
   public String getComment( )
   {
     return getProperty( PROPERTY_COMMENT, String.class );
@@ -533,5 +455,69 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     /* Set the properties. */
     setProperty( PROPERTY_VALID_FROM, DateUtilities.toXMLGregorianCalendar( validFromCalendar.getTime() ) );
     setProperty( PROPERTY_VALID_TO, DateUtilities.toXMLGregorianCalendar( validToCalendar.getTime() ) );
+  }
+
+  @Override
+  public long getLastModifiedInput( )
+  {
+    /* This is the last modified timestamp of the this generator itself. */
+    final long lastModified = getLastModified();
+
+    /* This is the last modified timestamp of the timeseries. */
+    final long lastModifiedTimeseries = getLastModifiedTimeseries();
+
+    /* This is the last modified timestamp of the catchments. */
+    final long lastModifiedCatchments = getLastModifiedCatchments();
+
+    return NumberUtils.max( new long[] { lastModified, lastModifiedTimeseries, lastModifiedCatchments } );
+  }
+
+  @Override
+  public long getLastModifiedTimeseries( )
+  {
+    final IFeatureBindingCollection<ICatchment> catchments = getCatchments();
+    if( catchments == null || catchments.size() == 0 )
+      return -1;
+
+    long result = -1;
+    for( final ICatchment catchment : catchments )
+    {
+      final IFeatureBindingCollection<IFactorizedTimeseries> timeseries = catchment.getFactorizedTimeseries();
+      for( final IFactorizedTimeseries oneTimeseries : timeseries )
+      {
+        final ZmlLink timeseriesLink = oneTimeseries.getTimeseriesLink();
+        final BigDecimal factor = oneTimeseries.getFactor();
+        if( timeseriesLink == null || !timeseriesLink.isLinkExisting() || factor == null || factor.intValue() == 0 )
+          continue;
+
+        final File javaFile = timeseriesLink.getJavaFile();
+        final long lastModified = javaFile.lastModified();
+        result = Math.max( result, lastModified );
+      }
+    }
+
+    return result;
+  }
+
+  @Override
+  public long getLastModifiedCatchments( )
+  {
+    try
+    {
+      /* Get the .models folder of the current scenario. */
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IContainer scenarioFolder = dataProvider.getScenarioFolder();
+      final IFolder modelsFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_MODELS ) );
+
+      /* This is the last modified timestamp of the modell.gml. */
+      final IFile modellFile = modelsFolder.getFile( INaProjectConstants.GML_MODELL_FILE );
+
+      return modellFile.getLocation().toFile().lastModified();
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      return -1;
+    }
   }
 }

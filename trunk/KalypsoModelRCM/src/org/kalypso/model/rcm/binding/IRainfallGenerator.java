@@ -196,13 +196,6 @@ public interface IRainfallGenerator extends Feature
   void setLastModified( long lastModified );
 
   /**
-   * This function returns true, if this generator is outdated.
-   * 
-   * @return True, if this generator is outdated.
-   */
-  boolean isOutdated( );
-
-  /**
    * This function returns the filters.
    * 
    * @return The filters.

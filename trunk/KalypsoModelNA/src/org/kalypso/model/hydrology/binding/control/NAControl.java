@@ -56,6 +56,8 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -329,21 +331,14 @@ public class NAControl extends Feature_Impl
   }
 
   /**
-   * This function returns true, if this simulation is outdated.
+   * This function returns the last modified timestamp for all last modified values available.<br/>
+   * {@link #getLastModified()}<br/>
+   * {@link #getLastModifiedGenerators()}<br/>
+   * {@link #getLastModifiedInputData()}
    * 
-   * @return True, if this simulation is outdated.
+   * @return The last modified timestamp.
    */
-  public boolean isOutdated( )
-  {
-    final long lastModifiedInput = getLastModifiedInput();
-    final long lastModifiedOutput = getLastModifiedOutput();
-    if( lastModifiedInput > lastModifiedOutput )
-      return true;
-
-    return false;
-  }
-
-  private long getLastModifiedInput( )
+  public long getLastModifiedInput( )
   {
     /* This is the last modified timestamp of the this simulation itself. */
     final long lastModified = getLastModified();
@@ -357,24 +352,25 @@ public class NAControl extends Feature_Impl
     return NumberUtils.max( new long[] { lastModified, lastModifiedGenerators, lastModifiedInputData } );
   }
 
-  private long getLastModifiedOutput( )
-  {
-    // TODO
-    return -1;
-  }
-
-  private long getLastModifiedGenerators( )
+  public long getLastModifiedGenerators( )
   {
     long result = -1;
 
     final IRainfallGenerator[] generators = new IRainfallGenerator[] { getGeneratorN(), getGeneratorT(), getGeneratorE() };
     for( final IRainfallGenerator generator : generators )
-      result = Math.max( result, generator.getLastModified() );
+    {
+      if( generator instanceof ILinearSumGenerator )
+        result = Math.max( result, ((ILinearSumGenerator) generator).getLastModifiedInput() );
+      else if( generator instanceof IMultiGenerator )
+        result = Math.max( result, ((IMultiGenerator) generator).getLastModifiedInput() );
+      else
+        result = Math.max( result, generator.getLastModified() );
+    }
 
     return result;
   }
 
-  private long getLastModifiedInputData( )
+  public long getLastModifiedInputData( )
   {
     try
     {

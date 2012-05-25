@@ -189,12 +189,6 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   }
 
   @Override
-  public boolean isOutdated( )
-  {
-    return false;
-  }
-
-  @Override
   public List<IZmlFilter> getFilters( )
   {
     return m_filters;

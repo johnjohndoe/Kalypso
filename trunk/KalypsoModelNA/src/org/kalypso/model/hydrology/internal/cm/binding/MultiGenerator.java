@@ -125,20 +125,19 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
   }
 
   /**
-   * @see org.kalypso.model.rcm.binding.AbstractRainfallGenerator#isOutdated()
+   * @see org.kalypso.model.rcm.binding.IMultiGenerator#getSubGenerators()
    */
   @Override
-  public boolean isOutdated( )
+  public IFeatureBindingCollection<IRainfallGenerator> getSubGenerators( )
   {
-    final long lastModifiedInput = getLastModifiedInput();
-    final long lastModifiedOutput = getLastModifiedOutput();
-    if( lastModifiedInput > lastModifiedOutput )
-      return true;
-
-    return false;
+    return m_subGenerators;
   }
 
-  private long getLastModifiedInput( )
+  /**
+   * @see org.kalypso.model.hydrology.binding.cm.IMultiGenerator#getLastModifiedInput()
+   */
+  @Override
+  public long getLastModifiedInput( )
   {
     /* This is the last modified timestamp of the this generator itself. */
     final long lastModified = getLastModified();
@@ -149,13 +148,11 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
     return NumberUtils.max( new long[] { lastModified, lastModifiedSubGenerators } );
   }
 
-  private long getLastModifiedOutput( )
-  {
-    // TODO
-    return -1;
-  }
-
-  private long getLastModifiedSubGenerators( )
+  /**
+   * @see org.kalypso.model.hydrology.binding.cm.IMultiGenerator#getLastModifiedSubGenerators()
+   */
+  @Override
+  public long getLastModifiedSubGenerators( )
   {
     long result = -1;
 
@@ -164,14 +161,5 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
       result = Math.max( result, subGenerator.getLastModified() );
 
     return result;
-  }
-
-  /**
-   * @see org.kalypso.model.rcm.binding.IMultiGenerator#getSubGenerators()
-   */
-  @Override
-  public IFeatureBindingCollection<IRainfallGenerator> getSubGenerators( )
-  {
-    return m_subGenerators;
   }
 }
