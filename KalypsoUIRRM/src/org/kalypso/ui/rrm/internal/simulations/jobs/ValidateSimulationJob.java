@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
@@ -139,7 +140,7 @@ public class ValidateSimulationJob extends Job
   {
     try
     {
-      final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+      final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
       collector.add( validateGenerator( m_control.getGeneratorN(), lastModifiedResults ) );
       monitor.worked( 250 );
@@ -163,7 +164,7 @@ public class ValidateSimulationJob extends Job
 
   private IStatus validateGenerator( final IRainfallGenerator generator, final long lastModifiedResults )
   {
-    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     final long lastModified = generator.getLastModified();
     if( lastModified > lastModifiedResults )
@@ -204,7 +205,7 @@ public class ValidateSimulationJob extends Job
 
   private IStatus validateSimulation( final NAControl control, final long lastModifiedResults )
   {
-    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     final long lastModified = control.getLastModified();
     if( lastModified > lastModifiedResults )

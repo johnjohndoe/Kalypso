@@ -84,14 +84,13 @@ public class RefreshSimulationsOperation implements ICoreRunnableWithProgress
   public RefreshSimulationsOperation( final IContainer baseFolder, final NAControl... simulations )
   {
     m_baseFolder = baseFolder;
-
     m_simulations = simulations;
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString("RefreshSimulationsOperation_0"), m_simulations.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "RefreshSimulationsOperation_0" ), m_simulations.length ); //$NON-NLS-1$
 
     for( final NAControl simulation : m_simulations )
     {
@@ -105,7 +104,7 @@ public class RefreshSimulationsOperation implements ICoreRunnableWithProgress
       }
       catch( final CoreException e )
       {
-        m_log.add( IStatus.ERROR, Messages.getString("RefreshSimulationsOperation_1"), e, name ); //$NON-NLS-1$
+        m_log.add( IStatus.ERROR, Messages.getString( "RefreshSimulationsOperation_1" ), e, name ); //$NON-NLS-1$
       }
 
       // check for cancel, only after completion of one simulation to avoid inconsistent simulations
@@ -121,14 +120,14 @@ public class RefreshSimulationsOperation implements ICoreRunnableWithProgress
 
     final IFolder simulationFolder = createFolder( m_baseFolder, simulation );
 
-    monitor.beginTask( String.format( Messages.getString("RefreshSimulationsOperation_4"), simulationFolder.getName() ), 100 ); //$NON-NLS-1$
+    monitor.beginTask( String.format( Messages.getString( "RefreshSimulationsOperation_4" ), simulationFolder.getName() ), 100 ); //$NON-NLS-1$
 
     /* Delete existing data */
     // TODO: should we always do that? What about existing results etc.?
     // TODO: give warning to user!
     if( simulationFolder.exists() )
     {
-      monitor.subTask( Messages.getString("RefreshSimulationsOperation_5") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "RefreshSimulationsOperation_5" ) ); //$NON-NLS-1$
       simulationFolder.delete( false, false, new SubProgressMonitor( monitor, 10 ) );
     }
 
@@ -190,7 +189,7 @@ public class RefreshSimulationsOperation implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("RefreshSimulationsOperation_6"), simulation.getName() ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "RefreshSimulationsOperation_6" ), simulation.getName() ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
