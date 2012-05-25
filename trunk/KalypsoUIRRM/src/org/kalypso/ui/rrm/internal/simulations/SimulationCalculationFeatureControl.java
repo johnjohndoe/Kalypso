@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.simulations;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -53,8 +54,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.window.Window;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -65,32 +65,26 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.control.SimulationCollection;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
-import org.kalypso.ui.rrm.internal.simulations.dialogs.CalculateSimulationDialog;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ReadCalculationStatusJob;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ValidateSimulationJob;
-import org.kalypso.ui.rrm.internal.simulations.runnables.CalculateSimulationRunnable;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * The simulation calculation feature control.
@@ -320,36 +314,57 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     validationJob.schedule();
   }
 
+  private NAControl[] findAllSimulations( )
+  {
+    final Collection<NAControl> results = new ArrayList<NAControl>();
+
+    final NAControl naControl = (NAControl) getFeature();
+    final SimulationCollection owner = (SimulationCollection) naControl.getOwner();
+
+    final IFeatureBindingCollection<NAControl> simulations = owner.getSimulations();
+    for( final NAControl simulation : simulations )
+      results.add( simulation );
+
+    return results.toArray( new NAControl[results.size()] );
+  }
+
   protected void handleCalculatePressed( )
   {
     if( m_calculationStatusComposite == null || m_calculationStatusComposite.isDisposed() )
       return;
 
-    /* Ask the user if he wants to start the calculation. */
-    // TODO
-    final CalculateSimulationDialog dialog = new CalculateSimulationDialog( m_calculationStatusComposite.getShell(), null );
-    if( dialog.open() != Window.OK )
+    /* Get the shell and the title. */
+    final Shell shell = m_calculationStatusComposite.getShell();
+    final String title = "Calculate Simulations";
+
+    /* Get the na control. */
+    final NAControl naControl = (NAControl) getFeature();
+    final NAControl[] simulations = new NAControl[] { naControl };
+
+    /* Create the simulation handler. */
+    final SimulationHandler handler = new SimulationHandler();
+
+    /* Check for duplicates. */
+    final NAControl[] allSimulations = findAllSimulations();
+    final String duplicateName = handler.findDuplicates( allSimulations );
+    if( duplicateName != null )
+    {
+      final String message = String.format( Messages.getString( "RefreshSimulationsTaskHandler_0" ), duplicateName ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, title, message );
       return;
+    }
 
-    /* Create the operation. */
-    final CalculateSimulationRunnable operation = new CalculateSimulationRunnable();
-
-    /* Execute the operation. */
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-    final IWorkbenchPage page = workbenchWindow.getActivePage();
-    final IWorkbenchPart part = page.getActivePart();
-    final IWorkbenchPartSite site = part.getSite();
-    final IProgressService progressService = (IProgressService) site.getService( IProgressService.class );
-    final IStatus status = RunnableContextHelper.execute( progressService, true, true, operation );
+    /* Check the sanity of the simulations. */
+    final IStatus status = handler.checkSanity( simulations );
     if( !status.isOK() )
     {
-      /* Log the error message. */
-      KalypsoUIRRMPlugin.getDefault().getLog().log( status );
-
-      /* Show an error, if the operation has failed. */
-      ErrorDialog.openError( m_calculationStatusComposite.getShell(), "Calculate Simulation", "Calculation of the simulation has failed...", status );
+      final String message = status.getMessage();
+      MessageDialog.openWarning( shell, title, message );
+      return;
     }
+
+    /* Calculate the simulations. */
+    handler.calculateSimulation( shell, simulations );
 
     /* Update the control. */
     updateControl();
