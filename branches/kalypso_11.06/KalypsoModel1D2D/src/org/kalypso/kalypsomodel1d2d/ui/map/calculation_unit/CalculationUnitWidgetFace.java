@@ -76,21 +76,21 @@ class CalculationUnitWidgetFace
     // Calculation Unit Section
     final Section calculationUnitSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
 
-    calculationUnitSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.0") );  //$NON-NLS-1$
+    calculationUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.0" ) ); //$NON-NLS-1$
     final TableWrapData calculationUnitData = new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB, 1, 1 );
     calculationUnitData.maxHeight = 250;
     calculationUnitSection.setLayoutData( calculationUnitData );
 
     // Creates Section for "Calculation Settings Unit"
     final Section calculationSettingsSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
-    calculationSettingsSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.1") );  //$NON-NLS-1$
+    calculationSettingsSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.1" ) ); //$NON-NLS-1$
     final TableWrapData calculationSettingsData = new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB, 1, 1 );
     calculationSettingsData.maxHeight = 470;
     calculationSettingsSection.setLayoutData( calculationSettingsData );
 
     // Creates Section for "Calculation Elements Unit"
     final Section calculationElementUnitSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
-    calculationElementUnitSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.2") );  //$NON-NLS-1$
+    calculationElementUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.2" ) ); //$NON-NLS-1$
     final TableWrapData calculationElementUnitData = new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB, 1, 1 );
     calculationElementUnitSection.setLayoutData( calculationElementUnitData );
 
@@ -103,7 +103,7 @@ class CalculationUnitWidgetFace
 
   private final void createCalculationUnit( final Section workStatusSection, final FormToolkit toolkit )
   {
-    final CalculationUnitMetaTable calcGUI = new CalculationUnitMetaTable( m_dataModel, CalculationUnitMetaTable.BTN_SHOW_AND_MAXIMIZE, CalculationUnitMetaTable.BTN_REMOVE, CalculationUnitMetaTable.BTN_ADD, CalculationUnitMetaTable.BTN_EDIT );
+    final CalculationUnitMetaTable calcGUI = new CalculationUnitMetaTable( m_dataModel, CalculationUnitMetaTable.BTN_SHOW_AND_MAXIMIZE, CalculationUnitMetaTable.BTN_REMOVE, CalculationUnitMetaTable.BTN_ADD, CalculationUnitMetaTable.BTN_CLONE, CalculationUnitMetaTable.BTN_EDIT );
     final Control client = calcGUI.createControl( workStatusSection, toolkit );
     workStatusSection.setClient( client );
   }
