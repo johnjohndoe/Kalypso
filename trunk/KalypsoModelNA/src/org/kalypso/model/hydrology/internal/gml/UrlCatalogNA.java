@@ -102,5 +102,8 @@ public class UrlCatalogNA extends AbstractUrlCatalog
 
     catalog.put( NaModelConstants.NS_CATCHMENT_MODEL, myClass.getResource( "/etc/schema/gml/catchmentModel.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_CATCHMENT_MODEL, "cmrrm" ); //$NON-NLS-1$
+
+    catalog.put( NaModelConstants.NS_TIMESERIES_MAPPING, myClass.getResource( "/etc/schema/gml/timeseriesMapping.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_TIMESERIES_MAPPING, "tmrrm" ); //$NON-NLS-1$
   }
 }

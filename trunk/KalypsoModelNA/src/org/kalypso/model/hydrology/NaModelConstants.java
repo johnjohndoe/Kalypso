@@ -99,6 +99,8 @@ public interface NaModelConstants
 
   String NS_CATCHMENT_MODEL = "http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel"; //$NON-NLS-1$
 
+  String NS_TIMESERIES_MAPPING = "http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping"; //$NON-NLS-1$
+
   /** server client bean constants */
   // input
   String IN_META_ID = "MetaSteuerdaten"; //$NON-NLS-1$
@@ -261,5 +263,4 @@ public interface NaModelConstants
   String[] TN_AXES = new String[] { ITimeseriesConstants.TYPE_MIN, ITimeseriesConstants.TYPE_RAINFALL };
 
   String NAMESPACE_ZML_INLINE = "inline.zml.kalypso.org"; //$NON-NLS-1$
-
 }

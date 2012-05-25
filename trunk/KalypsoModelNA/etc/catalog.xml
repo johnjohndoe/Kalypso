@@ -9,6 +9,7 @@
 
   <uri name="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement" uri="schema/gml/timeseriesManagement.xsd" />
   <uri name="http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel" uri="schema/gml/catchmentModel.xsd" />
+  <uri name="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping" uri="schema/gml/timeseriesMapping.xsd" />
 
   <uri name="org.kalypso.na.control_v2" uri="schema/gml/control.xsd" />
   <uri name="http://www.tuhh.de/kalypsoNA" uri="schema/gml/namodell.xsd" />
