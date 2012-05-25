@@ -40,10 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.runnables;
 
+import java.util.Arrays;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -100,19 +104,60 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "", 1000 );
-      monitor.subTask( "" );
+      monitor.beginTask( "Calculating simulations...", 1000 * m_simulations.length );
+      monitor.subTask( "Calculating simulations..." );
 
-      // TODO
+      /* Sort the simulations. */
+      /* Longterm simulations should be calculated first. */
+      Arrays.sort( m_simulations, new SimulationComparator() );
 
-      /* Monitor. */
-      monitor.worked( 1000 );
+      /* Calculate the simulations. */
+      for( final NAControl simulation : m_simulations )
+        calculateSimulation( simulation, new SubProgressMonitor( monitor, 1000 ) );
 
       return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The calculation was finished." );
     }
     catch( final Exception e )
     {
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), e.getLocalizedMessage(), e );
+    }
+    finally
+    {
+      /* Monitor. */
+      monitor.done();
+    }
+  }
+
+  /**
+   * This function calculates one simulation.
+   * 
+   * @param simulation
+   *          The simulation to calculate.
+   * @param monitor
+   *          A progress monitor.
+   * @return A status with the result of the calculation.
+   */
+  private IStatus calculateSimulation( final NAControl simulation, final IProgressMonitor monitor )
+  {
+    /* The status collector. */
+    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    try
+    {
+      /* Monitor. */
+      monitor.beginTask( String.format( "Calculating simulation '%s'...", simulation.getDescription() ), 1000 );
+      monitor.subTask( String.format( "Calculating simulation '%s'...", simulation.getDescription() ) );
+
+      // TODO
+
+      return collector.asMultiStatus( String.format( "Calculation of '%s' finished without errors.", simulation.getDescription() ) );
+    }
+    catch( final Exception ex )
+    {
+      /* Add the exception to the log. */
+      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
+
+      return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
     }
     finally
     {
