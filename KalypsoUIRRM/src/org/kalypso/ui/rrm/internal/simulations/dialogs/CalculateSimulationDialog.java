@@ -40,16 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.dialogs;
 
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -61,7 +62,7 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
  * 
  * @author Holger Albert
  */
-public class CalculateSimulationDialog extends Dialog
+public class CalculateSimulationDialog extends TitleAreaDialog
 {
   /**
    * The simulations to calculate.
@@ -72,6 +73,16 @@ public class CalculateSimulationDialog extends Dialog
    * The dialog settings.
    */
   private final IDialogSettings m_settings;
+
+  /**
+   * True, if the catchment models should be calculated.
+   */
+  protected boolean m_calculateCatchmentModels;
+
+  /**
+   * True, if the start conditions should be calculated.
+   */
+  protected boolean m_calculateStartConditions;
 
   /**
    * The constructor.
@@ -87,22 +98,8 @@ public class CalculateSimulationDialog extends Dialog
 
     m_simulations = simulations;
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
-  }
-
-  /**
-   * The constructor.
-   * 
-   * @param parentShell
-   *          The object that returns the current parent shell.
-   * @param simulations
-   *          The simulations to calculate.
-   */
-  public CalculateSimulationDialog( final IShellProvider parentShell, final NAControl[] simulations )
-  {
-    super( parentShell );
-
-    m_simulations = simulations;
-    m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
+    m_calculateCatchmentModels = false;
+    m_calculateStartConditions = false;
   }
 
   /**
@@ -112,7 +109,8 @@ public class CalculateSimulationDialog extends Dialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( "Calculate Simulation" );
+    getShell().setText( "Calculate Simulations" );
+    setTitle( "Calculate Simulations" );
 
     /* Create the main composite. */
     final Composite main = (Composite) super.createDialogArea( parent );
@@ -124,51 +122,78 @@ public class CalculateSimulationDialog extends Dialog
     questionLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     questionLabel.setText( "Do you want to start the calculation? 'Ok' will start the calculation. 'Cancel' will abort." );
 
-    // TODO Was tun, wenn es mehrere Simulationen sind (Checkboxen unten weglassen)?
-
     /* Create a empty label. */
     final Label emptyLabel = new Label( main, SWT.NONE );
     emptyLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
+    /* Create a group. */
+    final Group refreshGroup = new Group( main, SWT.NONE );
+    refreshGroup.setLayout( new GridLayout( 1, false ) );
+    refreshGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    refreshGroup.setText( "Refresh Simulation(s)" );
+
+    /* Create a label. */
+    final Label refreshLabel = new Label( refreshGroup, SWT.WRAP );
+    refreshLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    refreshLabel.setText( "If checked, all timeseries data will be refreshed. For simulations that needs to be created, the refresh will always be done, regardless the selection here." );
+
+    /* Create a empty label. */
+    final Label emptyLabel1 = new Label( refreshGroup, SWT.NONE );
+    emptyLabel1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     /* Create a button. */
-    final Button catchmentModelButton = new Button( main, SWT.CHECK );
+    final Button catchmentModelButton = new Button( refreshGroup, SWT.CHECK );
     catchmentModelButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    catchmentModelButton.setText( "Calculate the catchment models" );
+    catchmentModelButton.setText( "Refresh" );
+    catchmentModelButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final Button source = (Button) e.getSource();
+        m_calculateCatchmentModels = source.getSelection();
+      }
+    } );
 
-    // TODO Nur bei Langzeit diese Checkbox zeigen?
+    /* Show the group, only if there is a longterm simulation. */
+    if( !containsLongtermSimulation( m_simulations ) )
+      return main;
+
+    /* Create a group. */
+    final Group startConditionsGroup = new Group( main, SWT.NONE );
+    startConditionsGroup.setLayout( new GridLayout( 1, false ) );
+    startConditionsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    startConditionsGroup.setText( "Calculate Start Conditions" );
+
+    /* Create a label. */
+    final Label startConditionsLabel = new Label( startConditionsGroup, SWT.WRAP );
+    startConditionsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    startConditionsLabel.setText( "If checked, the start conditions will be calculated. This affects only longterm simulations." );
+
+    /* Create a empty label. */
+    final Label emptyLabel2 = new Label( startConditionsGroup, SWT.NONE );
+    emptyLabel2.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create a button. */
-    final Button startConditionsButton = new Button( main, SWT.CHECK );
+    final Button startConditionsButton = new Button( startConditionsGroup, SWT.CHECK );
     startConditionsButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    startConditionsButton.setText( "Calculate the start conditions" );
+    startConditionsButton.setText( "Calculate" );
+    startConditionsButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final Button source = (Button) e.getSource();
+        m_calculateStartConditions = source.getSelection();
+      }
+    } );
 
-    // TODO Simulation ist noch nie gerechnet worden -> Gebietsmodelle müssen gerechnet werden...
+    // TODO NTH Erst mal nur als INFO in Tabelle oder FV
     // TODO Simulation wurde bereits gerechnet -> Gebietsmodelle sind nicht aktuell und müssen neu gerechnet werden...
     // TODO Simulation wurde bereits gerechnet -> Gebietsmodelle sind aktuell und müssen nicht neu gerechnet werden...
-
     // TODO Vergleiche lastModified von den GNMs und den Simulationsergebnis...
 
-    // TODO Wenn es eine Kurzzeit-Simulation ist und eine Langzeit-Simulation für die Anfangswerte gesetzt ist...
-    // TODO Wenn es eine Kurzzeit-Simulation ist und keine Langzeit-Simulation für die Anfangswerte gesetzt ist...
-
-    // TODO Wenn es eine Langzeit-Simulation ist und Anfangswerte berechnet werden sollen...
-    // TODO Wenn es eine Langzeit-Simulation ist und keine Anfangswerte berechnet werden sollen...
-
-    // TODO
-
     return main;
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected void createButtonsForButtonBar( final Composite parent )
-  {
-    super.createButtonsForButtonBar( parent );
-
-    /* Check, if the dialog is allowed to be completed. */
-    checkDialogComplete();
   }
 
   /**
@@ -195,7 +220,7 @@ public class CalculateSimulationDialog extends Dialog
   @Override
   protected void okPressed( )
   {
-    // TODO
+    /* Nothing to do. */
 
     super.okPressed();
   }
@@ -206,22 +231,50 @@ public class CalculateSimulationDialog extends Dialog
   @Override
   protected void cancelPressed( )
   {
-    // TODO
+    m_calculateCatchmentModels = false;
+    m_calculateStartConditions = false;
 
     super.cancelPressed();
   }
 
   /**
-   * This function checks, if the dialog is allowed to be completed.
+   * This function returns true, if one longterm simulation is contained.
+   * 
+   * @param simulations
+   *          The simulations to calculate.
    */
-  private void checkDialogComplete( )
+  private boolean containsLongtermSimulation( final NAControl[] simulations )
   {
-    /* Get the OK button. */
-    final Button okButton = getButton( IDialogConstants.OK_ID );
+    for( final NAControl simulation : simulations )
+    {
+      final Integer timestep = simulation.getMinutesOfTimestep();
+      if( timestep == null )
+        continue;
 
-    /* First of all, it should be allowed to complete. */
-    okButton.setEnabled( true );
+      if( timestep.intValue() == 1440 )
+        return true;
+    }
 
-    // TODO
+    return false;
+  }
+
+  /**
+   * This function returns true, if the catchment models should be calculated.
+   * 
+   * @return True, if the catchment models should be calculated.
+   */
+  public boolean isCalculateCatchmentModels( )
+  {
+    return m_calculateCatchmentModels;
+  }
+
+  /**
+   * This function returns true, if the start conditions should be calculated.
+   * 
+   * @return True, if the start conditions should be calculated.
+   */
+  public boolean isCalculateStartConditions( )
+  {
+    return m_calculateStartConditions;
   }
 }

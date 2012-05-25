@@ -40,13 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.runnables;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 
 /**
  * This runnable calculates the simulation.
@@ -56,20 +56,68 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 {
   /**
-   * The constructor.
+   * The simulations to calculate.
    */
-  public CalculateSimulationRunnable( )
+  private final NAControl[] m_simulations;
+
+  /**
+   * True, if the catchment models should be calculated.
+   */
+  private final boolean m_calculateCatchmentModels;
+
+  /**
+   * True, if the start conditions should be calculated.
+   */
+  private final boolean m_calculateStartConditions;
+
+  /**
+   * The constructor.
+   * 
+   * @param simulations
+   *          The simulations to calculate.
+   * @param calculateCatchmentModels
+   *          True, if the catchment models should be calculated.
+   * @param calculateStartConditions
+   *          True, if the start conditions should be calculated.
+   */
+  public CalculateSimulationRunnable( final NAControl[] simulations, final boolean calculateCatchmentModels, final boolean calculateStartConditions )
   {
+    m_simulations = simulations;
+    m_calculateCatchmentModels = calculateCatchmentModels;
+    m_calculateStartConditions = calculateStartConditions;
   }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( IProgressMonitor monitor )
   {
-    // TODO
+    /* If no monitor is given, take a null progress monitor. */
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
 
-    return Status.OK_STATUS;
+    try
+    {
+      /* Monitor. */
+      monitor.beginTask( "", 1000 );
+      monitor.subTask( "" );
+
+      // TODO
+
+      /* Monitor. */
+      monitor.worked( 1000 );
+
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The calculation was finished." );
+    }
+    catch( final Exception e )
+    {
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), e.getLocalizedMessage(), e );
+    }
+    finally
+    {
+      /* Monitor. */
+      monitor.done();
+    }
   }
 }
