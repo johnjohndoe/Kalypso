@@ -81,7 +81,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts one calc case.
- *
+ * 
  * @author Gernot Belger
  */
 public class CalcCaseConverter extends AbstractLoggingOperation
@@ -354,6 +354,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final IStatusCollector localLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     visitModel( naModel, new FixDotDotTimeseriesVisitor(), localLog );
+    naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
 
     final IStatus status = localLog.asMultiStatus( "Anpassen der Zeitreihenreferenzen" );
     log.add( status );

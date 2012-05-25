@@ -174,7 +174,6 @@ public class TimeseriesImporter
     for( final Iterator<File> iterator = zmlIterator; iterator.hasNext(); )
     {
       final File zmlFile = iterator.next();
-
       monitor.subTask( zmlFile.getName() );
 
       try

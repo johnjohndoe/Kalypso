@@ -81,12 +81,12 @@ public class BasicModelConverter extends AbstractLoggingOperation
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( Messages.getString("BasicModelConverter.0"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "BasicModelConverter.0" ), 100 ); //$NON-NLS-1$
 
     try
     {
       /* Copy basic .gml files */
-      monitor.subTask( Messages.getString("BasicModelConverter.1") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "BasicModelConverter.1" ) ); //$NON-NLS-1$
       final IPath basisPath = new Path( INaProjectConstants.FOLDER_BASIS );
 
       copyFile( new Path( INaProjectConstants.GML_MODELL_FILE ), basisPath.append( INaProjectConstants.GML_MODELL_PATH ) );
@@ -102,11 +102,11 @@ public class BasicModelConverter extends AbstractLoggingOperation
       final IParameterTypeIndex parameterIndex = fixTimeseries();
 
       /* Copy timeseries */
-      monitor.subTask( Messages.getString("BasicModelConverter.3") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "BasicModelConverter.3" ) ); //$NON-NLS-1$
       m_timeseriesIndex = copyBasicTimeseries( parameterIndex, new SubProgressMonitor( monitor, 90 ) );
 
       /* timeseries links */
-      monitor.subTask( Messages.getString("BasicModelConverter.4") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "BasicModelConverter.4" ) ); //$NON-NLS-1$
 
       copyObservationConf( m_timeseriesIndex );
 
@@ -120,9 +120,9 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   private TimeseriesIndex copyBasicTimeseries( final IParameterTypeIndex parameterIndex, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("BasicModelConverter.5"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "BasicModelConverter.5" ), 100 ); //$NON-NLS-1$
 
-    monitor.subTask( Messages.getString("BasicModelConverter.6") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "BasicModelConverter.6" ) ); //$NON-NLS-1$
     final TimeseriesImporter importer = new TimeseriesImporter( m_sourceDir, m_targetDir, getLog(), parameterIndex );
     importer.readStations();
     monitor.worked( 5 );
@@ -130,7 +130,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     /* Copy known folders */
     copyTimeseries( importer, monitor );
 
-    monitor.subTask( Messages.getString("BasicModelConverter.7") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "BasicModelConverter.7" ) ); //$NON-NLS-1$
     importer.saveStations();
     monitor.worked( 5 );
 
@@ -140,7 +140,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
   private void copyTimeseries( final TimeseriesImporter importer, final IProgressMonitor monitor )
   {
     monitor.subTask( Messages.getString( "BasicModelConverter.8", INaProjectConstants.FOLDER_ZEITREIHEN ) ); //$NON-NLS-1$
-    importer.copyTimeseries( new SubProgressMonitor( monitor, (90 / 7) ) ); //$NON-NLS-1$
+    importer.copyTimeseries( new SubProgressMonitor( monitor, 90 / 7 ) ); //$NON-NLS-1$
   }
 
   /**
@@ -170,8 +170,9 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
     // IMPORTANT: index parameter types before the links have been fixed, so file pathes are correct
     final IParameterTypeIndex parameterIndex = CalcCaseConverter.collectTimeseriesParameterTypes( naModel, m_sourceDir );
-
     CalcCaseConverter.fixTimeseriesLinks( naModel, getLog() );
+
+    naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
 
