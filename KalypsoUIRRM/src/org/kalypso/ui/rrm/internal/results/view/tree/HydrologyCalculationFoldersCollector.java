@@ -40,11 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree;
 
-import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
@@ -57,29 +55,7 @@ import org.kalypso.model.hydrology.project.RrmSimulation;
  */
 public class HydrologyCalculationFoldersCollector implements IResourceVisitor
 {
-  Set<IFolder> m_folders = new TreeSet<>( new Comparator<IFolder>()
-  {
-
-    @Override
-    public int compare( final IFolder folder1, final IFolder folder2 )
-    {
-      if( folder1 == folder2 )
-        return 0;
-
-      final String name1 = folder1.getName();
-      final String name2 = folder2.getName();
-
-      // TODO use rrmsimulation
-
-      // FIXME english project template?!?
-      if( StringUtils.equalsIgnoreCase( name1, "berechnet" ) )
-        return 1;
-      else if( StringUtils.equalsIgnoreCase( name2, "berechnet" ) )
-        return -1;
-
-      return name1.compareTo( name2 );
-    }
-  } );
+  Set<IFolder> m_folders = new LinkedHashSet<>();
 
   private final RrmSimulation m_simulation;
 
@@ -98,16 +74,23 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
     if( isCalculationCaseFolder( folder ) )
       return true;
 
-    // FIXME rework ignore cases - look into folders and decide if it is an result folder
-    final String name = folder.getName();
-    if( StringUtils.startsWithIgnoreCase( name, "tmp" ) )
-      return true;
-    else if( StringUtils.equalsIgnoreCase( name, "logs" ) )
-      return true;
-
-    m_folders.add( folder );
+    if( isResultFolder( folder ) )
+      m_folders.add( folder );
 
     return true;
+  }
+
+  private boolean isResultFolder( final IFolder folder )
+  {
+    final IFolder nodes = folder.getFolder( "Knoten" ); //$NON-NLS-1$
+    final IFolder storageChannels = folder.getFolder( "SpeicherStrang" ); //$NON-NLS-1$
+    final IFolder catchments = folder.getFolder( "Teilgebiet" ); //$NON-NLS-1$
+
+    if( !nodes.exists() && !storageChannels.exists() && !catchments.exists() )
+      return false;
+
+    return true;
+
   }
 
   private boolean isCalculationCaseFolder( final IFolder folder )

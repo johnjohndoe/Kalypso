@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
@@ -115,7 +116,17 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
   @Override
   protected String getTreeCompareLabel( )
   {
-    if( this instanceof HydrologyParameterSetUiHandler )
+    if( this instanceof HydrologyCalculationCaseGroupUiHandler )
+    {
+      final String label = getTreeLabel();
+      if( StringUtils.equalsIgnoreCase( label, "aktuell" ) )
+        return String.format( "AAA_%s", label );
+      else if( StringUtils.equalsIgnoreCase( label, "berechnet" ) )
+        return String.format( "AAA_%s", label );
+
+      return String.format( "ZZZ_%s", label );
+    }
+    else if( this instanceof HydrologyParameterSetUiHandler )
     {
       final HydrologyParameterSetUiHandler handler = (HydrologyParameterSetUiHandler) this;
       final Feature feature = handler.getFeature();
