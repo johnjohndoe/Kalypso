@@ -46,10 +46,6 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
-
 /**
  * sets empty result categories by existing qberechnet properties
  * 
@@ -76,29 +72,31 @@ public class UpdateResultCategoriesVisitor implements IFeatureBindingCollectionV
 
   private String doCategorize( final String href )
   {
-    final CharMatcher matcher = new CharMatcher()
-    {
-      @Override
-      public boolean matches( final char c )
-      {
-        switch( c )
-        {
-          case '/': //$NON-NLS-1$
-          case '\\': //$NON-NLS-1$
-            return true;
-        }
+// final CharMatcher matcher = new CharMatcher()
+// {
+// @Override
+// public boolean matches( final char c )
+// {
+// switch( c )
+// {
+//          case '/': //$NON-NLS-1$
+//          case '\\': //$NON-NLS-1$
+// return true;
+// }
+//
+// return false;
+// }
+// };
+//
+// /* keep existing manually set zml file name (notation = ${FILE_NAME} */
+// final Iterable<String> splitted = Splitter.on( matcher ).trimResults().omitEmptyStrings().split( href );
+// String name = Iterables.getLast( splitted );
+// if( name.contains( "." ) )
+// name = name.substring( 0, name.indexOf( '.' ) );
+//
+//    return String.format( "Pegel/${%s}", name ); //$NON-NLS-1$
 
-        return false;
-      }
-    };
-
-    /* keep existing manually set zml file name (notation = ${FILE_NAME} */
-    final Iterable<String> splitted = Splitter.on( matcher ).trimResults().omitEmptyStrings().split( href );
-    String name = Iterables.getLast( splitted );
-    if( name.contains( "." ) )
-      name = name.substring( 0, name.indexOf( '.' ) );
-
-    return String.format( "Pegel/${%s}", name ); //$NON-NLS-1$
+    return "Pegel";
   }
 
   private String getHref( final Node node )

@@ -92,7 +92,6 @@ public class HideEmptyHydrologyResultsFilter extends ViewerFilter
 
     final IHydrologyResultReference reference = (IHydrologyResultReference) objReference;
     return reference.isValid();
-
   }
 
 }
