@@ -45,8 +45,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 
 /**
  * This job validates the simulation and provides the validation status.
@@ -95,11 +100,12 @@ public class ValidateSimulationJob extends Job
       monitor.beginTask( "Validating the simulation...", 1000 );
       monitor.subTask( "Validating the simulation..." );
 
-      /* Validate the simulation. */
-      m_validationStatus = validateSimulation();
+      /* The last modified timestamp of the results of the simulation. */
+      // TODO
+      final long lastModifiedResults = -1;
 
-      /* Monitor. */
-      monitor.worked( 1000 );
+      /* Validate the simulation. */
+      m_validationStatus = validateSimulation( lastModifiedResults, monitor );
 
       return Status.OK_STATUS;
     }
@@ -123,21 +129,101 @@ public class ValidateSimulationJob extends Job
   /**
    * This function validates the simulation and returns the validation status.
    * 
+   * @param lastModifiedResults
+   *          The last modified timestamp of the results of the simulation.
+   * @param monitor
+   *          A progress monitor.
    * @return The validation status.
    */
-  private IStatus validateSimulation( )
+  private IStatus validateSimulation( final long lastModifiedResults, final IProgressMonitor monitor )
   {
     try
     {
-      final boolean outdated = m_control.isOutdated();
-      if( outdated )
-        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The results are outdated." );
+      final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The results are uptodate." );
+      collector.add( validateGenerator( m_control.getGeneratorN(), lastModifiedResults ) );
+      monitor.worked( 250 );
+
+      collector.add( validateGenerator( m_control.getGeneratorT(), lastModifiedResults ) );
+      monitor.worked( 250 );
+
+      collector.add( validateGenerator( m_control.getGeneratorE(), lastModifiedResults ) );
+      monitor.worked( 250 );
+
+      collector.add( validateSimulation( m_control, lastModifiedResults ) );
+      monitor.worked( 250 );
+
+      return collector.asMultiStatusOrOK( "Results are outdated.", "Results are up to date." );
     }
     catch( final Exception ex )
     {
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Validation has failed.", ex );
     }
+  }
+
+  private IStatus validateGenerator( final IRainfallGenerator generator, final long lastModifiedResults )
+  {
+    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final long lastModified = generator.getLastModified();
+    if( lastModified > lastModifiedResults )
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Some values of the generator has changed." ) );
+    else
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The values are unchanged." ) );
+
+    if( generator instanceof ILinearSumGenerator )
+    {
+      final ILinearSumGenerator linearGenerator = (ILinearSumGenerator) generator;
+
+      final long lastModifiedTimeseries = linearGenerator.getLastModifiedTimeseries();
+      if( lastModifiedTimeseries > lastModifiedResults )
+        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Some timeseries of the linear sum generator has changed." ) );
+      else
+        collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The timeseries are unchanged." ) );
+
+      final long lastModifiedCatchments = linearGenerator.getLastModifiedCatchments();
+      if( lastModifiedCatchments > lastModifiedResults )
+        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Some catchments of the linear sum generator has changed." ) );
+      else
+        collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The catchments are unchanged." ) );
+    }
+
+    if( generator instanceof IMultiGenerator )
+    {
+      final IMultiGenerator multiGenerator = (IMultiGenerator) generator;
+
+      final long lastModifiedSubGenerators = multiGenerator.getLastModifiedSubGenerators();
+      if( lastModifiedSubGenerators > lastModifiedResults )
+        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Some sub generators of the multi generator has changed." ) );
+      else
+        collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The sub generators are unchanged." ) );
+    }
+
+    return collector.asMultiStatus( String.format( "Catchment Model %s (%s)", generator.getDescription(), ParameterTypeUtils.formatParameterType( generator.getParameterType() ) ) );
+  }
+
+  private IStatus validateSimulation( final NAControl control, final long lastModifiedResults )
+  {
+    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final long lastModified = control.getLastModified();
+    if( lastModified > lastModifiedResults )
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Some values of the simulation has changed." ) );
+    else
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The values are unchanged." ) );
+
+    final long lastModifiedGenerators = control.getLastModifiedGenerators();
+    if( lastModifiedGenerators > lastModifiedResults )
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Some generators of the simulation has changed." ) );
+    else
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The generators are unchanged." ) );
+
+    final long lastModifiedInputData = control.getLastModifiedInputData();
+    if( lastModifiedInputData > lastModifiedResults )
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Some input data of the simulation has changed." ) );
+    else
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The input data is unchanged." ) );
+
+    return collector.asMultiStatus( String.format( "Simulation %s", control.getDescription() ) );
   }
 }

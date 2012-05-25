@@ -69,4 +69,15 @@ public interface IMultiGenerator extends IRainfallGenerator
    * @return All sub generators.
    */
   IFeatureBindingCollection<IRainfallGenerator> getSubGenerators( );
+
+  /**
+   * This function returns the last modified timestamp for all last modified values available.<br/>
+   * {@link #getLastModified()}<br/>
+   * {@link #getLastModifiedSubGenerators()}
+   * 
+   * @return The last modified timestamp.
+   */
+  long getLastModifiedInput( );
+
+  long getLastModifiedSubGenerators( );
 }

@@ -196,4 +196,18 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    * This function adjusts the valdity range using the timestamp.
    */
   void adjustValidities( );
+
+  /**
+   * This function returns the last modified timestamp for all last modified values available.<br/>
+   * {@link #getLastModified()}<br/>
+   * {@link #getLastModifiedTimeseries()}<br/>
+   * {@link #getLastModifiedCatchments()}
+   * 
+   * @return The last modified timestamp.
+   */
+  long getLastModifiedInput( );
+
+  long getLastModifiedTimeseries( );
+
+  long getLastModifiedCatchments( );
 }
