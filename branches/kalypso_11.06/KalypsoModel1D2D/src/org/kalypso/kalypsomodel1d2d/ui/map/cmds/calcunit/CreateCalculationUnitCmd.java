@@ -52,6 +52,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
@@ -73,15 +74,16 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Command to create new calculation unit
- *
+ * 
  * @author Patrice Congo
- *
+ * 
  */
 public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
@@ -94,6 +96,11 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    * the created calculation unit
    */
   private ICalculationUnit m_calculationUnit;
+
+  /**
+   * the original calculation unit, that should be cloned to the new one
+   */
+  private ICalculationUnit m_calculationUnitOrig = null;
 
   /**
    * the discretisation model holding the calculation unit
@@ -110,19 +117,21 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   private final String m_calcUnitDescription;
 
+  private IControlModelGroup m_modelGroup;
+
   /**
    * Creates a Calculation unit of the given q-name
-   *
+   * 
    * @param cuFeatureQName
-   *            the q-name of the calculation unit to create
+   *          the q-name of the calculation unit to create
    * @param model1d2d
-   *            the model that should hold the new calculation unit
+   *          the model that should hold the new calculation unit
    * @param name
-   *            a name for the calculation unit if one has to be set or null
+   *          a name for the calculation unit if one has to be set or null
    * @param description
-   *            text describing the calculation unit or null
+   *          text describing the calculation unit or null
    * @throws IllegalArgumentException
-   *             if cuFeatureQName or model1d2d is null
+   *           if cuFeatureQName or model1d2d is null
    */
   public CreateCalculationUnitCmd( final QName calcUnitFeatureQName, final IFEDiscretisationModel1d2d model1d2d, final String name, final String decription )
   {
@@ -130,6 +139,47 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     m_model1d2d = model1d2d;
     m_calcUnitName = name;
     m_calcUnitDescription = decription;
+    initModelGroup();
+  }
+
+  /**
+   * Creates a Calculation unit of the given q-name
+   * 
+   * @param cuFeatureQName
+   *          the q-name of the calculation unit to create
+   * @param model1d2d
+   *          the model that should hold the new calculation unit
+   * @param name
+   *          a name for the calculation unit if one has to be set or null
+   * @param calcUnitToClone
+   *          original calculation unit that will be cloned in to new one
+   * @throws IllegalArgumentException
+   *           if cuFeatureQName or model1d2d is null
+   */
+  public CreateCalculationUnitCmd( final QName calcUnitFeatureQName, final IFEDiscretisationModel1d2d model1d2d, final String name, final ICalculationUnit calcUnitToClone )
+  {
+    m_calcUnitFeatureQName = calcUnitFeatureQName;
+    m_model1d2d = model1d2d;
+    m_calcUnitName = name;
+    m_calcUnitDescription = "";
+    m_calculationUnitOrig = calcUnitToClone;
+    initModelGroup();
+  }
+
+  private void initModelGroup( )
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    try
+    {
+      m_modelGroup = szenarioDataProvider.getModel( IControlModelGroup.class );
+    }
+    catch( final CoreException e )
+    {
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd.1" ), e ); //$NON-NLS-1$
+    }
   }
 
   /**
@@ -179,14 +229,40 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   {
     try
     {
-      final IFeatureWrapperCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
-      m_calculationUnit = ce.addNew( m_calcUnitFeatureQName, ICalculationUnit.class );
-      if( m_calcUnitName != null )
-        m_calculationUnit.setName( m_calcUnitName );
-      if( m_calcUnitDescription != null )
-        m_calculationUnit.setDescription( m_calcUnitDescription );
-      m_calculationUnit.getElements().clear();
-      createControlModel();
+      if( m_calculationUnitOrig != null )
+      {
+        if( m_calculationUnitOrig instanceof ICalculationUnit1D2D )
+        {
+          Feature calcUnitFeature = FeatureHelper.cloneFeature( m_calculationUnitOrig.getFeature().getParent(), m_calculationUnitOrig.getFeature().getParentRelation(), m_calculationUnitOrig.getFeature() );
+          m_calculationUnit = (ICalculationUnit) calcUnitFeature.getAdapter( ICalculationUnit.class );
+        }
+        // the clone of basic calculation unit was specified as not needed, so it will not be cloned also
+        // the clone button is not enabled for basic calculation units in widget face
+        // else
+        // {
+        // final IFeatureWrapperCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
+        // m_calculationUnit = ce.addNew( m_calcUnitFeatureQName, ICalculationUnit.class );
+        // FeatureHelper.copySimpleProperties( m_calculationUnitOrig.getFeature(), m_calculationUnit.getFeature() );
+        // }
+      }
+      else
+      {
+        final IFeatureWrapperCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
+        m_calculationUnit = ce.addNew( m_calcUnitFeatureQName, ICalculationUnit.class );
+        if( m_calcUnitDescription != null )
+          m_calculationUnit.setDescription( m_calcUnitDescription );
+        m_calculationUnit.getElements().clear();
+      }
+
+      m_calculationUnit.setName( m_calcUnitName );
+      if( m_calculationUnitOrig == null )
+      {
+        createControlModel();
+      }
+      else
+      {
+        copyDataControlModel();
+      }
       fireProcessChanges( m_calculationUnit, true );
     }
     catch( final Exception e )
@@ -197,12 +273,53 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
   }
 
+  private void copyDataControlModel( )
+  {
+    final IControlModel1D2DCollection controlModel1D2DCollection = m_modelGroup.getModel1D2DCollection();
+    IControlModel1D2D controlModelOrig = null;
+
+    for( final IControlModel1D2D controlModel : controlModel1D2DCollection )
+    {
+      final ICalculationUnit cmCalcUnit = controlModel.getCalculationUnit();
+      if( cmCalcUnit != null )
+      {
+        if( m_calculationUnitOrig.getGmlID().equals( cmCalcUnit.getGmlID() ) )
+        {
+          controlModelOrig = controlModel;
+        }
+
+        if( controlModelOrig != null )
+        {
+          break;
+
+        }
+      }
+    }
+
+    if( controlModelOrig != null )
+    {
+      try
+      {
+        Feature controlModelFeature = FeatureHelper.cloneFeature( controlModelOrig.getFeature().getParent(), controlModelOrig.getFeature().getParentRelation(), controlModelOrig.getFeature() );
+        final IControlModel1D2D newControlModel = (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
+
+        newControlModel.setCalculationUnit( m_calculationUnit );
+        controlModel1D2DCollection.setActiveControlModel( newControlModel );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+
+    }
+  }
+
   /**
-   *
+   * 
    * @param calculationUnit
-   *            the added or removed calculation unit
+   *          the added or removed calculation unit
    * @param added
-   *            true if the calculation unit was added false otherwise
+   *          true if the calculation unit was added false otherwise
    */
   private final void fireProcessChanges( final ICalculationUnit calculationUnit, final boolean added )
   {
@@ -249,20 +366,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
   private void createControlModel( )
   {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-    IControlModelGroup modelGroup = null;
-    try
-    {
-      modelGroup = szenarioDataProvider.getModel( IControlModelGroup.class );
-    }
-    catch( final CoreException e )
-    {
-      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd.1" ), e ); //$NON-NLS-1$
-    }
-    final IControlModel1D2DCollection model1D2DCollection = modelGroup.getModel1D2DCollection();
+    final IControlModel1D2DCollection model1D2DCollection = m_modelGroup.getModel1D2DCollection();
     final Feature parentFeature = model1D2DCollection.getFeature();
     final IRelationType relationType = (IRelationType) parentFeature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
     final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
@@ -306,12 +410,12 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           /**
            * <om:observedProperty xmlns:om="http://www.opengis.net/om"
            * xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-           *
-           *
-           *
-           * IPhenomenon phenomenon = new
-           * DictionaryPhenomenon("urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D",
-           * "", ""); obs.setPhenomenon( phenomenon );
+           * 
+           * 
+           * 
+           * IPhenomenon phenomenon = new DictionaryPhenomenon(
+           * "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", "", "");
+           * obs.setPhenomenon( phenomenon );
            */
 
           final String[] componentUrns = new String[] { Kalypso1D2DDictConstants.DICT_COMPONENT_ORDINAL_NUMBER, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME,

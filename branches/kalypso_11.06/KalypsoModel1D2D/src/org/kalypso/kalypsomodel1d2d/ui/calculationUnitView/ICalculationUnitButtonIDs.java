@@ -56,6 +56,8 @@ public interface ICalculationUnitButtonIDs
 
   public final String BTN_ADD = "ADD"; //$NON-NLS-1$
 
+  public final String BTN_CLONE = "CLONE"; //$NON-NLS-1$
+
   public final String BTN_EDIT = "EDIT"; //$NON-NLS-1$
 
   public final String BTN_CLICK_TO_CALCULATE = "CLICK_TO_CALCULATE"; //$NON-NLS-1$

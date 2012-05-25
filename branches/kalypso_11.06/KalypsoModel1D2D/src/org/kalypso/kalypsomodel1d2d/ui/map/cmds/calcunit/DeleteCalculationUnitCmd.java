@@ -130,20 +130,20 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    * Deletes the calculation unit
    * 
    * @param cuFeatureQName
-   *            the q-name of the calculation unit to create
+   *          the q-name of the calculation unit to create
    * @param model1d2d
-   *            the model that should hold the new calculation unit
+   *          the model that should hold the new calculation unit
    * @param name
-   *            a name for the calculation unit if one has to be set or null
+   *          a name for the calculation unit if one has to be set or null
    * @param description
-   *            text describing the calculation unit or null
+   *          text describing the calculation unit or null
    * @throws IllegalArgumentException
-   *             if cuFeatureQName or model1d2d is null
+   *           if cuFeatureQName or model1d2d is null
    */
   public DeleteCalculationUnitCmd( final IFEDiscretisationModel1d2d model1d2d, final ICalculationUnit calcUnit )
   {
     m_model1d2d = model1d2d;
-    m_calcUnitToDelete = calcUnit;
+    m_calcUnitToDelete = calcUnit; 
   }
 
   /**
@@ -278,19 +278,20 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
     final IControlModel1D2D activeControlModel = controlModel1D2DCollection.getActiveControlModel();
     IControlModel1D2D controlModelToActivate = null;
-    boolean invalidActiveModel = activeControlModel == null || activeControlModel.getCalculationUnit() == null
-        || activeControlModel.getCalculationUnit().getGmlID().equals( calcUnitToDeleteGmlID );
+    boolean invalidActiveModel = activeControlModel == null || activeControlModel.getCalculationUnit() == null || activeControlModel.getCalculationUnit().getGmlID().equals( calcUnitToDeleteGmlID );
     for( final IControlModel1D2D controlModel : controlModel1D2DCollection )
     {
       final ICalculationUnit cmCalcUnit = controlModel.getCalculationUnit();
       if( cmCalcUnit != null )
       {
-        if( calcUnitToDeleteGmlID.equals( cmCalcUnit.getGmlID() ) ){
+        if( calcUnitToDeleteGmlID.equals( cmCalcUnit.getGmlID() ) )
+        {
           controlModel1D2D = controlModel;
           if( !invalidActiveModel )
             break;
         }
-        else if( invalidActiveModel ){
+        else if( invalidActiveModel )
+        {
           controlModelToActivate = controlModel;
           controlModel1D2DCollection.setActiveControlModel( controlModelToActivate );
           invalidActiveModel = false;
@@ -298,8 +299,8 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       }
       else if( controlModel1D2D == null )
         controlModel1D2D = controlModel;
-        // control model doesn't exists, actually we have control model without reference to any existing calculation unit
-        // so this one is invalid and should be deleted. In this case it is a needed control model 
+      // control model doesn't exists, actually we have control model without reference to any existing calculation unit
+      // so this one is invalid and should be deleted. In this case it is a needed control model
     }
 
     final Feature parentFeature = controlModel1D2DCollection.getFeature();
@@ -347,9 +348,9 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * 
    * @param calculationUnit
-   *            the added or removed calculation unit
+   *          the added or removed calculation unit
    * @param added
-   *            true if the calculation unit was added false otherwise
+   *          true if the calculation unit was added false otherwise
    */
   private final void fireProcessChanges( final Feature[] changedFeatures, final boolean added )
   {
