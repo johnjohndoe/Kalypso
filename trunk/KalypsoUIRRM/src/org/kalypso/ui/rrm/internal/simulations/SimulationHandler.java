@@ -46,7 +46,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
@@ -57,6 +56,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.simulations.dialogs.CalculateSimulationDialog;
@@ -157,14 +157,10 @@ public class SimulationHandler
     final IWorkbenchPartSite site = part.getSite();
     final IProgressService progressService = (IProgressService) site.getService( IProgressService.class );
     final IStatus status = RunnableContextHelper.execute( progressService, true, true, operation );
-    if( !status.isOK() )
-    {
-      /* Log the error message. */
-      KalypsoUIRRMPlugin.getDefault().getLog().log( status );
 
-      /* Show an error, if the operation has failed. */
-      ErrorDialog.openError( shell, "Calculate Simulations", "Calculation of the simulation has failed...", status );
-    }
+    /* Always show dialog. */
+    final StatusDialog statusDialog = new StatusDialog( shell, status, "Calculate Simulations" );
+    statusDialog.open();
 
     return status;
   }
