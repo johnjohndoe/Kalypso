@@ -80,7 +80,7 @@ public class PlaningArea extends Feature_Impl
     {
       final ArrayList<GM_Surface< ? >> arrayList = new ArrayList<GM_Surface< ? >>();
       arrayList.add( (GM_Surface< ? >) geom );
-      final GM_MultiSurface multiSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_MultiSurface( arrayList.toArray( new GM_Surface[0] ), ((GM_Surface) geom).getCoordinateSystem() );
+      final GM_MultiSurface multiSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_MultiSurface( arrayList.toArray( new GM_Surface[0] ), ((GM_Surface< ? >) geom).getCoordinateSystem() );
       return multiSurface;
     }
 
