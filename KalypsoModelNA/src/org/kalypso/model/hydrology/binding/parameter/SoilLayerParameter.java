@@ -71,7 +71,7 @@ public class SoilLayerParameter extends Feature_Impl
 
   public boolean getXRet( )
   {
-    return getBoolean( PROPERTY_XRET, false );
+    return getBooleanProperty( PROPERTY_XRET, false );
   }
 
   public double getXTief( )

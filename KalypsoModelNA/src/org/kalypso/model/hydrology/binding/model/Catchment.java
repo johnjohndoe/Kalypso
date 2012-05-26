@@ -341,7 +341,7 @@ public class Catchment extends AbstractNaModelElement
 
   public boolean isGenerateResults( )
   {
-    return getBoolean( PROP_GENERATE_RESULT, false );
+    return getBooleanProperty( PROP_GENERATE_RESULT, false );
   }
 
   public void setGenerateResults( final boolean value )

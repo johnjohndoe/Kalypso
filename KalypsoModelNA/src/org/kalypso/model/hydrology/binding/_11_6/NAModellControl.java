@@ -124,107 +124,107 @@ public class NAModellControl extends Feature_Impl
 
   public boolean doGenerateTMP( )
   {
-    return getBoolean( PROP_TMP, false );
+    return getBooleanProperty( PROP_TMP, false );
   }
 
   public boolean doGeneratePRE( )
   {
-    return getBoolean( PRE_PROP, false );
+    return getBooleanProperty( PRE_PROP, false );
   }
 
   public boolean doGenerateSCH( )
   {
-    return getBoolean( PROP_SCH, false );
+    return getBooleanProperty( PROP_SCH, false );
   }
 
   public boolean doGenerateBOF( )
   {
-    return getBoolean( PROP_BOF, false );
+    return getBooleanProperty( PROP_BOF, false );
   }
 
   public boolean doGenerateBSP( )
   {
-    return getBoolean( PROP_BSP, false );
+    return getBooleanProperty( PROP_BSP, false );
   }
 
   public boolean doGenerateGWS( )
   {
-    return getBoolean( PROP_GWS, false );
+    return getBooleanProperty( PROP_GWS, false );
   }
 
   public boolean doGenerateQGS( )
   {
-    return getBoolean( PROP_QGS, false );
+    return getBooleanProperty( PROP_QGS, false );
   }
 
   public boolean doGenerateQGG( )
   {
-    return getBoolean( PROP_QGG, false );
+    return getBooleanProperty( PROP_QGG, false );
   }
 
   public boolean doGenerateQNA( )
   {
-    return getBoolean( PROP_QNA, false );
+    return getBooleanProperty( PROP_QNA, false );
   }
 
   public boolean doGenerateQIF( )
   {
-    return getBoolean( PROP_QIF, false );
+    return getBooleanProperty( PROP_QIF, false );
   }
 
   public boolean doGenerateQVS( )
   {
-    return getBoolean( PROP_QVS, false );
+    return getBooleanProperty( PROP_QVS, false );
   }
 
   public boolean doGenerateQBS( )
   {
-    return getBoolean( PROP_QBS, false );
+    return getBooleanProperty( PROP_QBS, false );
   }
 
   public boolean doGenerateQT1( )
   {
-    return getBoolean( PROP_QT1, false );
+    return getBooleanProperty( PROP_QT1, false );
   }
 
   public boolean doGenerateQTG( )
   {
-    return getBoolean( PROP_QTG, false );
+    return getBooleanProperty( PROP_QTG, false );
   }
 
   public boolean doGenerateQGW( )
   {
-    return getBoolean( PROP_QGW, false );
+    return getBooleanProperty( PROP_QGW, false );
   }
 
   public boolean doGenerateVET( )
   {
-    return getBoolean( PROP_VET, false );
+    return getBooleanProperty( PROP_VET, false );
   }
 
   public boolean doGenerateHYD( )
   {
-    return getBoolean( PROP_HYD, false );
+    return getBooleanProperty( PROP_HYD, false );
   }
 
   public boolean doGenerateBIL( )
   {
-    return getBoolean( PROP_BIL, false );
+    return getBooleanProperty( PROP_BIL, false );
   }
 
   public boolean doGenerateNMQ( )
   {
-    return getBoolean( PROP_NMQ, false );
+    return getBooleanProperty( PROP_NMQ, false );
   }
 
   public boolean doGenerateSPI( )
   {
-    return getBoolean( PROP_SPI, false );
+    return getBooleanProperty( PROP_SPI, false );
   }
 
   public boolean doGenerateSUP( )
   {
-    return getBoolean( PROP_SUP, false );
+    return getBooleanProperty( PROP_SUP, false );
   }
 
   /**

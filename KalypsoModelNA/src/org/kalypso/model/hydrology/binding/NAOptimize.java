@@ -131,7 +131,7 @@ public class NAOptimize extends Feature_Impl
 
   public boolean doOptimize( )
   {
-    return getBoolean( PROP_AUTOCALI, false );
+    return getBooleanProperty( PROP_AUTOCALI, false );
   }
 
   public Double getFactorRkf( )
