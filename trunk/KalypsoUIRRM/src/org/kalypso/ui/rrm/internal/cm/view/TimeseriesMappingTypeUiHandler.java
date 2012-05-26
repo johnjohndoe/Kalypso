@@ -74,13 +74,13 @@ public class TimeseriesMappingTypeUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return "Mapping Definition";
+    return "Mapping definitions";
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return m_mappingType.getLabel();
+    return "Timeseries mappings - " + m_mappingType.getLabel();
   }
 
   @Override

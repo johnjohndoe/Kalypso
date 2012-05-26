@@ -88,7 +88,7 @@ public class ParameterGeneratorUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTreeLabel( )
   {
-    return ParameterTypeUtils.formatParameterType( m_parameterType );
+    return "Catchment models - " + ParameterTypeUtils.formatParameterType( m_parameterType );
   }
 
   @Override

@@ -40,55 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.databinding.IDataBinding;
+import java.util.Comparator;
+
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 
 /**
  * @author Gernot Belger
  */
-public class MappingTypeComposite extends Composite
+public final class TimeseriesMappingElementsComparator implements Comparator<Object>
 {
-  private final IDataBinding m_binding;
-
-  private final TimeseriesMappingType m_mappingType;
-
-  public MappingTypeComposite( final Composite parent, final IDataBinding binding, final TimeseriesMappingType mappingType )
+  @Override
+  public int compare( final Object o1, final Object o2 )
   {
-    super( parent, SWT.NONE );
+    final int cat1 = getCategory( o1 );
+    final int cat2 = getCategory( o2 );
 
-    m_binding = binding;
-    m_mappingType = mappingType;
+    if( cat1 != cat2 )
+      return cat1 - cat2;
 
-    GridLayoutFactory.fillDefaults().applyTo( this );
+    if( o1 instanceof String )
+    {
+      final String s1 = (String) o1;
+      final String s2 = (String) o2;
+      return s1.compareTo( s2 );
+    }
 
-    binding.getToolkit().adapt( this );
+    final TimeseriesMappingType t1 = (TimeseriesMappingType) o1;
+    final TimeseriesMappingType t2 = (TimeseriesMappingType) o2;
 
-    createContents();
+    return t1.ordinal() - t2.ordinal();
   }
 
-  private void createContents( )
+  private int getCategory( final Object o1 )
   {
-    createInfoField( "Type", m_mappingType.getLabel() ); //$NON-NLS-1$
-    //createInfoField( Messages.getString("ParameterComposite_1"), TimeseriesUtils.getUnit( m_parameterType ) ); //$NON-NLS-1$
+    if( o1 instanceof String )
+      return 0;
 
-    // TODO: list contained mappings
-  }
+    if( o1 instanceof TimeseriesMappingType )
+      return 1;
 
-  private void createInfoField( final String label, final String text )
-  {
-    final FormToolkit toolkit = m_binding.getToolkit();
-
-    toolkit.createLabel( this, label );
-
-    final Text field = toolkit.createText( this, text, SWT.BORDER | SWT.SINGLE );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-    field.setEnabled( false );
+    throw new IllegalStateException();
   }
 }
