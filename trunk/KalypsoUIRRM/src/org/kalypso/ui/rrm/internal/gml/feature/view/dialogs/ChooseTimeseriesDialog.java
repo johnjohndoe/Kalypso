@@ -120,8 +120,6 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
 
   private TreeNodeModel m_model;
 
-  private Button m_reset;
-
   private static final int BUTTON_RESET_ID = 5000;
 
   private final IFeatureControl m_control;
@@ -144,7 +142,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
   @Override
   protected void createButtonsForButtonBar( final Composite parent )
   {
-    m_reset = createButton( parent, BUTTON_RESET_ID, "Verknüpfung löschen", false );
+    createButton( parent, BUTTON_RESET_ID, "Verknüpfung löschen", false );
 
     createButton( parent, 5010, "", false ).setVisible( false );
 
@@ -163,9 +161,6 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
 
   private void resetPressed( )
   {
-    final ITimeseries selection = getSelection();
-    final ZmlLink link = selection.getDataLink();
-
     final Feature feature = m_control.getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
 

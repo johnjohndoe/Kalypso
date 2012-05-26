@@ -48,7 +48,6 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
 import org.joda.time.LocalTime;
-import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IAxis;
@@ -80,7 +79,7 @@ public class ValidateTimestampVisitor implements IObservationVisitor
   }
 
   @Override
-  public void visit( final IObservationValueContainer container ) throws CancelVisitorException, SensorException
+  public void visit( final IObservationValueContainer container ) throws SensorException
   {
     final IAxis dateAxis = AxisUtils.findDateAxis( container.getAxes() );
     final Date date = (Date) container.get( dateAxis );
