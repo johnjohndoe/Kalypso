@@ -31,7 +31,6 @@
       <extension base="gml:AbstractFeatureType">
         <sequence>
           <element name="type" type="tmrrm:mappingType" />
-          <element name="elementFeatureType" type="QName" />
           <element name="mappingMember" minOccurs="0" maxOccurs="unbounded">
             <complexType>
               <sequence>

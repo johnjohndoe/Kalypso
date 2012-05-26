@@ -42,47 +42,42 @@ package org.kalypso.model.hydrology.binding.timeseriesMappings;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for tmrrm:TimeseriesMapping
  *
  * @author Gernot Belger
  */
-public class TimeseriesMapping extends UnversionedModel
+public class TimeseriesMapping extends Feature_Impl
 {
-  public static enum TYPE
-  {
-    gaugeMeasurement,
-    inflow,
-    waterBasedEvaporation;
-  }
-
-  public static final QName FEATURE_TIMESERIES_MAPPING_COLLECTION = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "TimeseriesMapping" ); //$NON-NLS-1$
+  public static final QName FEATURE_TIMESERIES_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "TimeseriesMapping" ); //$NON-NLS-1$
 
   public static final QName PROPERTY_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "type" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_ELEMENT_FEATURE_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "elementFeatureType" ); //$NON-NLS-1$
-
   public static final QName MEMBER_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "mappingMember" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<Geology> m_mappingMembers;
+  private final IFeatureBindingCollection<MappingElement> m_mappingMembers;
 
   public TimeseriesMapping( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_mappingMembers = new FeatureBindingCollection<Geology>( this, Geology.class, MEMBER_MAPPING );
+    m_mappingMembers = new FeatureBindingCollection<MappingElement>( this, MappingElement.class, MEMBER_MAPPING );
   }
 
-  public IFeatureBindingCollection<Geology> getMappings( )
+  public IFeatureBindingCollection<MappingElement> getMappings( )
   {
     return m_mappingMembers;
+  }
+
+  public TimeseriesMappingType getType( )
+  {
+    return getEnumProperty( PROPERTY_TYPE, TimeseriesMappingType.class, TimeseriesMappingType.gaugeMeasurement );
   }
 }
