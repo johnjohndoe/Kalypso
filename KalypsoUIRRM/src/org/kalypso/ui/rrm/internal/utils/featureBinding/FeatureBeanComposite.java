@@ -98,7 +98,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @param featureBean
@@ -135,7 +135,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   /**
    * This function returns the feature bean.
-   * 
+   *
    * @return The feature bean.
    */
   protected final FeatureBean<F> getBean( )
@@ -145,7 +145,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   /**
    * This function returns the data binding.
-   * 
+   *
    * @return The data binding.
    */
   protected final IDataBinding getBinding( )
@@ -155,7 +155,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   /**
    * This function returns true, if the contents of the composite should be generally editable. False otherwise.
-   * 
+   *
    * @return True, if the contents of the composite should be generally editable. False otherwise.
    */
   protected final boolean isEditable( )
@@ -165,7 +165,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   /**
    * This function returns the toolkit.
-   * 
+   *
    * @return The toolkit.
    */
   protected final FormToolkit getToolkit( )
@@ -192,7 +192,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   /**
    * This function creates a control, which allows the editing of the property specified by the qname.
-   * 
+   *
    * @param property
    *          The qname of the property.
    * @param validators
@@ -210,7 +210,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return field;
   }
 
-  protected final DateTime createPropertyDateTimeControl( final QName property, final IValidator... validators )
+  protected final DateTime createPropertyDateTimeControl( final QName property )
   {
     createPropertyLabel( this, property );
 
