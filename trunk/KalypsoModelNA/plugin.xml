@@ -431,6 +431,21 @@
             class="org.kalypso.model.hydrology.internal.timeseries.binding.StationClass"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationClass">
       </feature>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingCollection"
+            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping}TimeseriesMappingCollection">
+      </feature>
+      <feature
+            class="org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMapping"
+            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping}TimeseriesMapping">
+      </feature>
+      <feature
+            class="org.kalypso.model.hydrology.binding.timeseriesMappings.MappingElement"
+            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping}MappingElement">
+      </feature>
    </extension>     
      
      <extension
