@@ -81,9 +81,6 @@ public class LinearSumComposite extends FeatureBeanComposite<ILinearSumGenerator
     super( parent, featureBean, binding, generalEditable );
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite#createContents()
-   */
   @Override
   protected void createContents( )
   {
