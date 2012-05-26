@@ -162,7 +162,7 @@ public class Node extends AbstractNaModelElement implements INode
   @Override
   public boolean isGenerateResults( )
   {
-    return getBoolean( PROPERTY_GENERATE_RESULT, false );
+    return getBooleanProperty( PROPERTY_GENERATE_RESULT, false );
   }
 
   @Override
@@ -174,7 +174,7 @@ public class Node extends AbstractNaModelElement implements INode
   @Override
   public boolean isUseResultAsInflow( )
   {
-    return getBoolean( PROPERTY_USE_RESULT_AS_INFLOW, false );
+    return getBooleanProperty( PROPERTY_USE_RESULT_AS_INFLOW, false );
   }
 
   @Override

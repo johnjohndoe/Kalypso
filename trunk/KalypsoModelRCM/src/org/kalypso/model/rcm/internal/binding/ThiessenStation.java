@@ -62,7 +62,7 @@ public class ThiessenStation extends Feature_Impl implements IThiessenStation
   @Override
   public boolean isActive( )
   {
-    return getBoolean( PROPERTY_ACTIVE, false );
+    return getBooleanProperty( PROPERTY_ACTIVE, false );
   }
 
   @Override

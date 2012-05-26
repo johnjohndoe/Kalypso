@@ -69,7 +69,7 @@ public class StorageChannel extends Channel implements IStorageChannel
   @Override
   public boolean isGenerateResults( )
   {
-    return getBoolean( PROPERTY_GENERATE_RESULT, false );
+    return getBooleanProperty( PROPERTY_GENERATE_RESULT, false );
   }
 
   @Override
