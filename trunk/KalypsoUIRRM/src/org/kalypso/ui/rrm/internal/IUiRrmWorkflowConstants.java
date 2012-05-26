@@ -42,7 +42,7 @@ package org.kalypso.ui.rrm.internal;
 
 /**
  * Constants regarding workflow and/or scenario stuff.
- * 
+ *
  * @author Gernot Belger
  */
 public interface IUiRrmWorkflowConstants
@@ -55,4 +55,6 @@ public interface IUiRrmWorkflowConstants
   String SCENARIO_DATA_CATCHMENT_MODELS = "catchmentModels"; //$NON-NLS-1$
 
   String SCENARIO_DATA_SIMULATIONS = "simulations"; //$NON-NLS-1$
+
+  String SCENARIO_DATA_TIMESERIES_MAPPINGS = "timesriesMappings"; //$NON-NLS-1$
 }
