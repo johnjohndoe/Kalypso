@@ -83,7 +83,7 @@ public class StationClassesCatalog
     return allowedTypes.toArray( new String[allowedTypes.size()] );
   }
 
-  public static String[] findAllowedParameterTypes( final Class clazz )
+  public static String[] findAllowedParameterTypes( final Class< ? > clazz )
   {
     Assert.isNotNull( clazz );
 

@@ -3,7 +3,7 @@
   <tm:classMember>
     <tm:StationClass gml:id="StationClass13230210297191">
       <gml:name />
-      <tm:class>org.kalypso.model.hydrology.internal.timeseries.binding.MeteorologicalStation</tm:class>
+      <tm:class>org.kalypso.model.hydrology.binding.timeseries.IMeteorologicalStation</tm:class>
       <tm:parameterType>N</tm:parameterType>
       <tm:parameterType>T</tm:parameterType>
       <tm:parameterType>MEAN_WIND_VELOCITY</tm:parameterType>
@@ -17,7 +17,7 @@
   <tm:classMember>
     <tm:StationClass gml:id="StationClass13230210281750">
       <gml:name />
-      <tm:class>org.kalypso.model.hydrology.internal.timeseries.binding.HydrologicalStation</tm:class>
+      <tm:class>org.kalypso.model.hydrology.binding.timeseries.IHydrologicalStation</tm:class>
       <tm:parameterType>W</tm:parameterType>
       <tm:parameterType>Q</tm:parameterType>
     </tm:StationClass>
