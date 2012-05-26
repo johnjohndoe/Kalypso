@@ -38,54 +38,41 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.cm.binding;
+package org.kalypso.model.hydrology.binding.timeseries;
 
-import java.math.BigDecimal;
+import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
-import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * The factorized timeseries.
- *
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public class FactorizedTimeseries extends Feature_Impl implements IFactorizedTimeseries
+public interface IStation extends Feature
 {
-  public FactorizedTimeseries( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  QName FEATURE_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "_Station" ); //$NON-NLS-1$
 
-  @Override
-  public BigDecimal getFactor( )
-  {
-    return getProperty( PROPERTY_FACTOR, BigDecimal.class );
-  }
+  QName MEMBER_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timseriesMember" ); //$NON-NLS-1$
 
-  @Override
-  public void setFactor( final BigDecimal factor )
-  {
-    setProperty( PROPERTY_FACTOR, factor );
-  }
+  QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "comment" ); //$NON-NLS-1$
 
-  @Override
-  public ZmlLink getTimeseriesLink( )
-  {
-    return new ZmlLink( this, PROPERTY_TIMESERIES_LINK, getWorkspace().getContext() );
-  }
+  QName PROPERTY_GROUP = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "group" ); //$NON-NLS-1$
 
-  @Override
-  public void setTimeseriesLink( final String href )
-  {
-    final TimeseriesLinkType link = new TimeseriesLinkType();
+  QName PROPERTY_LOCATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "location" ); //$NON-NLS-1$
 
-    link.setHref( href );
+  IFeatureBindingCollection<ITimeseries> getTimeseries( );
 
-    setProperty( PROPERTY_TIMESERIES_LINK, link );
-  }
+  String getComment( );
+
+  void setComment( String comment );
+
+  String getGroup( );
+
+  void setGroup( String groupName );
+
+  String getTimeseriesFoldername( );
+
+  GM_Point getStationLocation( );
 }

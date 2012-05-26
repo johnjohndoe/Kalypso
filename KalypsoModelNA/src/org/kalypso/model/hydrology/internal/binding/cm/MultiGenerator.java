@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.cm.binding;
+package org.kalypso.model.hydrology.internal.binding.cm;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.runtime.ILog;

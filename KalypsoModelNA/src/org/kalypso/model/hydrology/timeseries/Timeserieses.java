@@ -54,8 +54,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.sensor.metadata.ParameterTypeLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -171,5 +171,26 @@ public final class Timeserieses
     }
 
     return buffer.toString().trim();
+  }
+
+  public static String formatTimeseriesFilename( final String parameterType, final String quality, final Period timestep )
+  {
+    final String periodText = PeriodUtils.formatDefault( timestep );
+
+    final StringBuffer buffer = new StringBuffer();
+    buffer.append( format( parameterType ) );
+    buffer.append( format( periodText ) );
+    buffer.append( format( quality ) );
+    buffer.append( ".zml" ); //$NON-NLS-1$
+
+    return buffer.toString().substring( 1 ); // remove first '_' character
+  }
+
+  private static String format( final String part )
+  {
+    if( StringUtils.isEmpty( part ) )
+      return StringUtils.EMPTY;
+
+    return StringUtils.trim( String.format( "_%s", part ) );
   }
 }

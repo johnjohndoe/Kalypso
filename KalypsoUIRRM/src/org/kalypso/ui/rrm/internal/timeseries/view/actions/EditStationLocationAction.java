@@ -47,7 +47,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.ogc.gml.featureview.dialog.PointDialog;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;

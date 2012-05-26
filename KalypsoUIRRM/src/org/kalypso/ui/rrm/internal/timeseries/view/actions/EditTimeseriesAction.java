@@ -52,7 +52,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.UIRrmImages;

@@ -38,24 +38,54 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.timeseries.binding;
+package org.kalypso.model.hydrology.internal.binding.cm;
 
-import javax.xml.namespace.QName;
+import java.math.BigDecimal;
 
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
+import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * @author Gernot Belger
+ * The factorized timeseries.
+ *
+ * @author Holger Albert
  */
-public interface IStationClasses extends Feature
+public class FactorizedTimeseries extends Feature_Impl implements IFactorizedTimeseries
 {
-  String STATION_CLASSES_URN = "urn:ogc:gml:kalypso:model:rrm:stationClasses"; //$NON-NLS-1$
+  public FactorizedTimeseries( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
 
-  QName FEATURE_STATION_CLASSES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationClasses" ); //$NON-NLS-1$
+  @Override
+  public BigDecimal getFactor( )
+  {
+    return getProperty( PROPERTY_FACTOR, BigDecimal.class );
+  }
 
-  QName MEMBER_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "classMember" ); //$NON-NLS-1$
+  @Override
+  public void setFactor( final BigDecimal factor )
+  {
+    setProperty( PROPERTY_FACTOR, factor );
+  }
 
-  IFeatureBindingCollection<IStationClass> getClasses( );
+  @Override
+  public ZmlLink getTimeseriesLink( )
+  {
+    return new ZmlLink( this, PROPERTY_TIMESERIES_LINK, getWorkspace().getContext() );
+  }
+
+  @Override
+  public void setTimeseriesLink( final String href )
+  {
+    final TimeseriesLinkType link = new TimeseriesLinkType();
+
+    link.setHref( href );
+
+    setProperty( PROPERTY_TIMESERIES_LINK, link );
+  }
 }

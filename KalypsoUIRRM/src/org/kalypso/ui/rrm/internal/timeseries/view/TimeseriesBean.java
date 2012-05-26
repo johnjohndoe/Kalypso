@@ -44,7 +44,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;

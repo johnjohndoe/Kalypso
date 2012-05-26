@@ -38,13 +38,13 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.timeseries.binding;
+package org.kalypso.model.hydrology.internal.binding.timeseries;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.timeseries.binding;
+package org.kalypso.model.hydrology.internal.binding.timeseries;
 
 import java.util.Date;
 
@@ -55,8 +55,8 @@ import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;

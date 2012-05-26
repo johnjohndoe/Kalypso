@@ -57,7 +57,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusCompositeValue;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;

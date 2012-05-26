@@ -172,7 +172,7 @@
               name="FeatureAssociationFunctionProperty">
         </function>
         <function
-              class="org.kalypso.model.hydrology.internal.timeseries.binding.TimeseriesDataLinkFunctionProperty"
+              class="org.kalypso.model.hydrology.internal.binding.timeseries.TimeseriesDataLinkFunctionProperty"
               id="org.kalypso.model.hydrology.timeseries.functionProperty.data.link"
               name="Timeseries Data Link">
         </function>
@@ -384,23 +384,23 @@
      </extension>
      <extension point="org.kalypso.deegree.featureBinding">
           <feature
-                class="org.kalypso.model.hydrology.internal.cm.binding.CatchmentModel"
+                class="org.kalypso.model.hydrology.internal.binding.cm.CatchmentModel"
                 qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}CatchmentModel">
           </feature>
           <feature
-                class="org.kalypso.model.hydrology.internal.cm.binding.LinearSumGenerator"
+                class="org.kalypso.model.hydrology.internal.binding.cm.LinearSumGenerator"
                 qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}LinearSumGenerator">
           </feature>
           <feature
-                class="org.kalypso.model.hydrology.internal.cm.binding.Catchment"
+                class="org.kalypso.model.hydrology.internal.binding.cm.Catchment"
                 qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}Catchment">
           </feature>
           <feature
-                class="org.kalypso.model.hydrology.internal.cm.binding.FactorizedTimeseries"
+                class="org.kalypso.model.hydrology.internal.binding.cm.FactorizedTimeseries"
                 qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}FactorizedTimeseries">
           </feature>
           <feature
-                class="org.kalypso.model.hydrology.internal.cm.binding.MultiGenerator"
+                class="org.kalypso.model.hydrology.internal.binding.cm.MultiGenerator"
                 qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}MultiGenerator">
           </feature>
      </extension>
@@ -408,42 +408,42 @@
    <extension
          point="org.kalypso.deegree.featureBinding">
       <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.StationCollection"
+            class="org.kalypso.model.hydrology.internal.binding.timeseries.StationCollection"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationCollection">
       </feature>
       <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.HydrologicalStation"
+            class="org.kalypso.model.hydrology.internal.binding.timeseries.HydrologicalStation"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}HydrologicalStation">
       </feature>
       <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.MeteorologicalStation"
+            class="org.kalypso.model.hydrology.internal.binding.timeseries.MeteorologicalStation"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}MeteorologicalStation">
       </feature>
       <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.Timeseries"
+            class="org.kalypso.model.hydrology.internal.binding.timeseries.Timeseries"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}Timeseries">
       </feature>
       <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.StationClasses"
+            class="org.kalypso.model.hydrology.internal.binding.timeseries.StationClasses"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationClasses">
       </feature>
       <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.StationClass"
+            class="org.kalypso.model.hydrology.internal.binding.timeseries.StationClass"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationClass">
       </feature>
    </extension>
    <extension
          point="org.kalypso.deegree.featureBinding">
       <feature
-            class="org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingCollection"
+            class="org.kalypso.model.hydrology.internal.binding.timeseriesMappings.TimeseriesMappingCollection"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping}TimeseriesMappingCollection">
       </feature>
       <feature
-            class="org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMapping"
+            class="org.kalypso.model.hydrology.internal.binding.timeseriesMappings.TimeseriesMapping"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping}TimeseriesMapping">
       </feature>
       <feature
-            class="org.kalypso.model.hydrology.binding.timeseriesMappings.MappingElement"
+            class="org.kalypso.model.hydrology.internal.binding.timeseriesMappings.MappingElement"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping}MappingElement">
       </feature>
    </extension>     

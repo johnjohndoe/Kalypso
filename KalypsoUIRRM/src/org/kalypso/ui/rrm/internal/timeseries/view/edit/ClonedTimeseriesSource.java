@@ -41,7 +41,7 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
 import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.event.IObservationListener;
 import org.kalypso.ogc.sensor.event.ObservationChangeType;

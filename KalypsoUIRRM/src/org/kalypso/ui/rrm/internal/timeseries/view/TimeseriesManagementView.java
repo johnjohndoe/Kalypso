@@ -62,7 +62,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
-import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
+import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl;

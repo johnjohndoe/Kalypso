@@ -38,20 +38,24 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.timeseries.binding;
+package org.kalypso.model.hydrology.binding.timeseries;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * @author Gernot Belger
  */
-public interface IMeteorologicalStation extends IStation
+public interface IStationCollection extends Feature, IModel
 {
-  QName FEATURE_METEOROLOGICAL_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "MeteorologicalStation" ); //$NON-NLS-1$
+  QName FEATURE_STATION_COLLECTION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationCollection" ); //$NON-NLS-1$
 
-  QName PROPERTY_ALTITUDE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "altitude" ); //$NON-NLS-1$
+  QName MEMBER_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "stationMember" ); //$NON-NLS-1$
 
-  Double getAltitude( );
+  IFeatureBindingCollection<IStation> getStations( );
 }

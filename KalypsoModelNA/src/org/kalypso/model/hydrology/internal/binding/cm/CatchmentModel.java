@@ -38,41 +38,41 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.timeseries.binding;
+package org.kalypso.model.hydrology.internal.binding.cm;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * @author Gernot Belger
+ * The catchment model contains generators for timeseries generation for catchments.
+ *
+ * @author Holger Albert
  */
-public interface IStation extends Feature
+public class CatchmentModel extends Feature_Impl implements ICatchmentModel
 {
-  QName FEATURE_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "_Station" ); //$NON-NLS-1$
+  private final IFeatureBindingCollection<IRainfallGenerator> m_generators;
 
-  QName MEMBER_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timseriesMember" ); //$NON-NLS-1$
+  public CatchmentModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
 
-  QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "comment" ); //$NON-NLS-1$
+    m_generators = new FeatureBindingCollection<IRainfallGenerator>( this, IRainfallGenerator.class, MEMBER_CATCHMENT_GENERATOR );
+  }
 
-  QName PROPERTY_GROUP = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "group" ); //$NON-NLS-1$
+  @Override
+  public String getVersion( )
+  {
+    return NO_VERSION;
+  }
 
-  QName PROPERTY_LOCATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "location" ); //$NON-NLS-1$
-
-  IFeatureBindingCollection<ITimeseries> getTimeseries( );
-
-  String getComment( );
-
-  void setComment( String comment );
-
-  String getGroup( );
-
-  void setGroup( String groupName );
-
-  String getTimeseriesFoldername( );
-
-  GM_Point getStationLocation( );
+  @Override
+  public IFeatureBindingCollection<IRainfallGenerator> getGenerators( )
+  {
+    return m_generators;
+  }
 }

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.timeseries.binding;
+package org.kalypso.model.hydrology.internal.binding.timeseries;
 
 import java.lang.ref.WeakReference;
 import java.net.URI;
@@ -56,8 +56,8 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.timeseries.binding.IStationClass;
-import org.kalypso.model.hydrology.timeseries.binding.IStationClasses;
+import org.kalypso.model.hydrology.binding.timeseries.IStationClass;
+import org.kalypso.model.hydrology.binding.timeseries.IStationClasses;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;

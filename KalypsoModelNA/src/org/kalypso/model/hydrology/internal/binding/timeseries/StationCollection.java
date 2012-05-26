@@ -38,36 +38,37 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.actions;
+package org.kalypso.model.hydrology.internal.binding.timeseries;
 
-import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class ExtendTimeseriesAction extends AbstractOverwriteTimeseriesAction
+public class StationCollection extends Feature_Impl implements IStationCollection
 {
+  private final IFeatureBindingCollection<IStation> m_stations = new FeatureBindingCollection<IStation>( this, IStation.class, MEMBER_STATION );
 
-  public ExtendTimeseriesAction( final ITreeNodeModel model, final FeatureBean<ITimeseries> timeseries )
+  public StationCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( model, timeseries );
-
-    setText( Messages.getString( "ExtendTimeseriesAction_0" ) ); //$NON-NLS-1$
-    setToolTipText( Messages.getString( "ExtendTimeseriesAction_1" ) ); //$NON-NLS-1$
-
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.TIMESERIES_EXTEND ) );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   @Override
-  protected IMergeTimeseriesOperation getMergeOperation( )
+  public String getVersion( )
   {
-    return new MergeTimeseriesOperation( getWorkspace(), getTimeseries(), false );
+    return NO_VERSION;
   }
 
+  @Override
+  public IFeatureBindingCollection<IStation> getStations( )
+  {
+    return m_stations;
+  }
 }
