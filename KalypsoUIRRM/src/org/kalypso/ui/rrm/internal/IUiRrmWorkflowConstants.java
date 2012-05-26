@@ -56,5 +56,5 @@ public interface IUiRrmWorkflowConstants
 
   String SCENARIO_DATA_SIMULATIONS = "simulations"; //$NON-NLS-1$
 
-  String SCENARIO_DATA_TIMESERIES_MAPPINGS = "timesriesMappings"; //$NON-NLS-1$
+  String SCENARIO_DATA_TIMESERIES_MAPPINGS = "timeseriesMapppings"; //$NON-NLS-1$
 }

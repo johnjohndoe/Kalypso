@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.cm.view;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -89,7 +90,9 @@ public class TimeseriesMappingsTreeStrategy implements ITreeNodeStrategy
 
   private Map<Object, Collection<Object>> hashByType( )
   {
-    final Map<Object, Collection<Object>> byType = new TreeMap<>();
+    final Comparator<Object> byTypeComparator = new TimeseriesMappingElementsComparator();
+
+    final Map<Object, Collection<Object>> byType = new TreeMap<>( byTypeComparator );
 
     /* Fill known types: tree should never be empty */
     byType.put( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, new LinkedList<Object>() );
@@ -174,6 +177,7 @@ public class TimeseriesMappingsTreeStrategy implements ITreeNodeStrategy
       final TimeseriesMappingTypeUiHandler uiHandler = new TimeseriesMappingTypeUiHandler( parent.getModel(), mappingType, allMappings );
       final TreeNode mappingNode = new TreeNode( parent, uiHandler, nodeData );
       buildMappingNodes( mappingNode, allMappings );
+      return mappingNode;
     }
 
     throw new IllegalArgumentException();
