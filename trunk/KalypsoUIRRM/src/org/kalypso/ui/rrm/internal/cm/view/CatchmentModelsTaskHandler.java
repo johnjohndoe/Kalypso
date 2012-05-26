@@ -51,6 +51,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView;
@@ -86,9 +87,10 @@ public class CatchmentModelsTaskHandler extends AbstractHandler
     {
       final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
-      final ICatchmentModel input = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
+      final ICatchmentModel catchmentModel = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
+      final ITimeseriesMappingCollection timeseriesMappings = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
 
-      managementView.setInput( workspace, input );
+      managementView.setInput( workspace, catchmentModel, timeseriesMappings );
     }
     catch( final CoreException e )
     {

@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
@@ -92,9 +93,9 @@ public class CatchmentModelsView extends ViewPart
     m_treeViewer.getControl().setFocus();
   }
 
-  public void setInput( final CommandableWorkspace workspace, final ICatchmentModel model )
+  public void setInput( final CommandableWorkspace workspace, final ICatchmentModel model, final ITimeseriesMappingCollection timeseriesMappings )
   {
-    final ITreeNodeStrategy strategy = new CatchmentsTreeStrategy( model );
+    final ITreeNodeStrategy strategy = new TimeseriesMappingsTreeStrategy( model, timeseriesMappings );
     final TreeNodeModel input = new TreeNodeModel( strategy, workspace, m_treeViewer );
 
     m_treeViewer.setInput( input );
