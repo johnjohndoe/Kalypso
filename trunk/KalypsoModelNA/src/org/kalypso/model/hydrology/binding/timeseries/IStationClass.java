@@ -38,21 +38,25 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.timeseries.binding;
+package org.kalypso.model.hydrology.binding.timeseries;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public interface IHydrologicalStation extends IStation
+public interface IStationClass extends Feature
 {
-  QName FEATURE_HYDROLOGICAL_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "HydrologicalStation" ); //$NON-NLS-1$
+  QName FEATURE_STATION_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationClass" ); //$NON-NLS-1$
 
-  QName PROPERTY_GAUGE_ZERO = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "gaugeZero" ); //$NON-NLS-1$
+  QName PROPERTY_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "class" ); //$NON-NLS-1$
 
-  Double getGaugeZero( );
+  QName PROPERTY_PARAMETER_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "parameterType" ); //$NON-NLS-1$
 
+  String getClassName( );
+
+  String[] getParameterTypes( );
 }

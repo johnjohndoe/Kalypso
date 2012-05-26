@@ -38,15 +38,15 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.timeseries.binding;
+package org.kalypso.model.hydrology.internal.binding.timeseries;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ParameterTypeLabelProvider;
 import org.kalypso.ogc.sensor.provider.IObsProvider;

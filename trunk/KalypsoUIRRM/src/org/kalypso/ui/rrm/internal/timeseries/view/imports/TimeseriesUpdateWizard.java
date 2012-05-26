@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;

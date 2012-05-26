@@ -46,7 +46,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.joda.time.Period;
 import org.joda.time.Seconds;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 
 /**
  * @author Gernot Belger

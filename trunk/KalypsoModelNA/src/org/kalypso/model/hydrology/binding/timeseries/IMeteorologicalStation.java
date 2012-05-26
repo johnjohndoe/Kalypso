@@ -38,25 +38,20 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.timeseries.binding;
+package org.kalypso.model.hydrology.binding.timeseries;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
+import javax.xml.namespace.QName;
+
+import org.kalypso.model.hydrology.NaModelConstants;
 
 /**
  * @author Gernot Belger
  */
-public class HydrologicalStation extends Station implements IHydrologicalStation
+public interface IMeteorologicalStation extends IStation
 {
-  public HydrologicalStation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  QName FEATURE_METEOROLOGICAL_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "MeteorologicalStation" ); //$NON-NLS-1$
 
-  @Override
-  public Double getGaugeZero( )
-  {
-    return getProperty( PROPERTY_GAUGE_ZERO, Double.class );
-  }
+  QName PROPERTY_ALTITUDE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "altitude" ); //$NON-NLS-1$
+
+  Double getAltitude( );
 }

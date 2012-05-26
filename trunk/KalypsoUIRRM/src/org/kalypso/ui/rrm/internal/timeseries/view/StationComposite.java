@@ -58,10 +58,10 @@ import org.kalypso.commons.databinding.validation.MultiValidator;
 import org.kalypso.commons.databinding.validation.StringFilenameValidator;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.model.hydrology.internal.timeseries.binding.StationCollection;
-import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
-import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.IHydrologicalStation;
+import org.kalypso.model.hydrology.binding.timeseries.IMeteorologicalStation;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditStationLocationAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -115,7 +115,6 @@ public class StationComposite extends FeatureBeanComposite<IStation>
 
     createMeasurementControl();
     createTimeseriesControl();
-
   }
 
   private String[] findGroups( final IStation base )
@@ -124,12 +123,12 @@ public class StationComposite extends FeatureBeanComposite<IStation>
       return new String[] {};
 
     final Feature parent = base.getOwner();
-    if( !(parent instanceof StationCollection) )
+    if( !(parent instanceof IStationCollection) )
       return new String[] {};
 
     final Set<String> groups = new TreeSet<>();
 
-    final StationCollection collection = (StationCollection) parent;
+    final IStationCollection collection = (IStationCollection) parent;
     final IFeatureBindingCollection<IStation> stations = collection.getStations();
     for( final IStation station : stations )
     {

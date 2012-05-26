@@ -38,37 +38,25 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.timeseries.binding;
+package org.kalypso.model.hydrology.internal.binding.timeseries;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypso.model.hydrology.binding.timeseries.IHydrologicalStation;
 
 /**
  * @author Gernot Belger
  */
-public class StationCollection extends Feature_Impl implements IStationCollection
+public class HydrologicalStation extends Station implements IHydrologicalStation
 {
-  private final IFeatureBindingCollection<IStation> m_stations = new FeatureBindingCollection<IStation>( this, IStation.class, MEMBER_STATION );
-
-  public StationCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public HydrologicalStation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
   @Override
-  public String getVersion( )
+  public Double getGaugeZero( )
   {
-    return NO_VERSION;
-  }
-
-  @Override
-  public IFeatureBindingCollection<IStation> getStations( )
-  {
-    return m_stations;
+    return getProperty( PROPERTY_GAUGE_ZERO, Double.class );
   }
 }

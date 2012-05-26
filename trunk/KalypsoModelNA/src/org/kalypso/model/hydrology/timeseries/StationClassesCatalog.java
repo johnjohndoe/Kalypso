@@ -54,11 +54,11 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
-import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.IStationClass;
-import org.kalypso.model.hydrology.timeseries.binding.IStationClasses;
+import org.kalypso.model.hydrology.binding.timeseries.IHydrologicalStation;
+import org.kalypso.model.hydrology.binding.timeseries.IMeteorologicalStation;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.IStationClass;
+import org.kalypso.model.hydrology.binding.timeseries.IStationClasses;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.cm.binding;
+package org.kalypso.model.hydrology.internal.binding.cm;
 
 import java.io.File;
 import java.math.BigDecimal;

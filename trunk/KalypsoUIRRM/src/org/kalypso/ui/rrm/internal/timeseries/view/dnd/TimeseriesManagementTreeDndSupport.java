@@ -47,8 +47,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 

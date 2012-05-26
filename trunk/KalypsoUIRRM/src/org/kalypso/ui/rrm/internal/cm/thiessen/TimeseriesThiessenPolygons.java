@@ -47,7 +47,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.rcm.binding.IThiessenStation;
 import org.kalypso.model.rcm.binding.IThiessenStationCollection;
 import org.kalypso.ogc.sensor.util.ZmlLink;

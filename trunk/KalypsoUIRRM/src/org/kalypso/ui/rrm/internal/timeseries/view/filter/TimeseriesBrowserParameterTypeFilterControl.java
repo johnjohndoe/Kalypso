@@ -62,8 +62,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.model.hydrology.internal.timeseries.binding.HydrologicalStation;
-import org.kalypso.model.hydrology.internal.timeseries.binding.MeteorologicalStation;
+import org.kalypso.model.hydrology.binding.timeseries.IHydrologicalStation;
+import org.kalypso.model.hydrology.binding.timeseries.IMeteorologicalStation;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
 import org.kalypso.ogc.sensor.metadata.ParameterTypeLabelProvider;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -91,8 +91,8 @@ public class TimeseriesBrowserParameterTypeFilterControl extends Composite
     toolkit.adapt( this );
 
     m_parameterTypes.add( StringUtils.EMPTY );
-    Collections.addAll( m_parameterTypes, StationClassesCatalog.findAllowedParameterTypes( MeteorologicalStation.class ) );
-    Collections.addAll( m_parameterTypes, StationClassesCatalog.findAllowedParameterTypes( HydrologicalStation.class ) );
+    Collections.addAll( m_parameterTypes, StationClassesCatalog.findAllowedParameterTypes( IMeteorologicalStation.class ) );
+    Collections.addAll( m_parameterTypes, StationClassesCatalog.findAllowedParameterTypes( IHydrologicalStation.class ) );
 
     setLayout( Layouts.createGridLayout() );
     createContents( this );
