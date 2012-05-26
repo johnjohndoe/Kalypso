@@ -539,6 +539,11 @@
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.GeologyCollection" id="geologie" modelPath=".models/geologie.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.SoilTypeCollection" id="pedologie" modelPath=".models/pedologie.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.NAHydrotop" id="hydrotopes" modelPath=".models/hydrotop.gml"/>
+         <scenarioDatum
+               classKey="org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingCollection"
+               id="timeseriesMapppings"
+               modelPath=".models/timeseriesMappings.gml">
+         </scenarioDatum>
       </dataSet>
    </extension>
 
