@@ -42,38 +42,21 @@ package org.kalypso.model.hydrology.binding.timeseriesMappings;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
- * Binding class for tmrrm:MappingElement
+ * Binding class for tmrrm:TimeseriesMappingCollection
  *
  * @author Gernot Belger
  */
-public class MappingElement extends Feature_Impl
+public interface ITimeseriesMappingCollection extends IModel
 {
-  public static final QName FEATURE_MAPPING_ELEMENT = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "MappingElement" ); //$NON-NLS-1$
+  public static final QName FEATURE_TIMESERIES_MAPPING_COLLECTION = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "TimeseriesMappingCollection" ); //$NON-NLS-1$
 
-  public static final QName MEMBER_FEATURE_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "fatureLink" ); //$NON-NLS-1$
+  public static final QName MEMBER_TIMESERIES_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "timeseriesMappingMember" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_TIMESERIES_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "timeseriesLink" ); //$NON-NLS-1$
-
-  public MappingElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
-
-  public IXLinkedFeature getLinkedFeature( )
-  {
-    return (IXLinkedFeature) getMember( MEMBER_FEATURE_LINK );
-  }
-
-  public ZmlLink getLinkedTimeseries( )
-  {
-    return new ZmlLink( this, PROPERTY_TIMESERIES_LINK );
-  }
+  IFeatureBindingCollection<ITimeseriesMapping> getTimeseriesMappings( );
 }

@@ -42,35 +42,25 @@ package org.kalypso.model.hydrology.binding.timeseriesMappings;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.UnversionedModel;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
- * Binding class for tmrrm:TimeseriesMappingCollection
+ * Binding class for tmrrm:MappingElement
  *
  * @author Gernot Belger
  */
-public class TimeseriesMappingCollection extends UnversionedModel
+public interface IMappingElement extends Feature
 {
-  public static final QName FEATURE_TIMESERIES_MAPPING_COLLECTION = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "TimeseriesMappingCollection" ); //$NON-NLS-1$
+  public static final QName FEATURE_MAPPING_ELEMENT = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "MappingElement" ); //$NON-NLS-1$
 
-  public static final QName MEMBER_TIMESERIES_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "timeseriesMappingMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_FEATURE_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "fatureLink" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<TimeseriesMapping> m_timeseriesMappingMembers;
+  public static final QName PROPERTY_TIMESERIES_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "timeseriesLink" ); //$NON-NLS-1$
 
-  public TimeseriesMappingCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
+  IXLinkedFeature getLinkedFeature( );
 
-    m_timeseriesMappingMembers = new FeatureBindingCollection<TimeseriesMapping>( this, TimeseriesMapping.class, MEMBER_TIMESERIES_MAPPING );
-  }
-
-  public IFeatureBindingCollection<TimeseriesMapping> getTimeseriesMappings( )
-  {
-    return m_timeseriesMappingMembers;
-  }
+  ZmlLink getLinkedTimeseries( );
 }
