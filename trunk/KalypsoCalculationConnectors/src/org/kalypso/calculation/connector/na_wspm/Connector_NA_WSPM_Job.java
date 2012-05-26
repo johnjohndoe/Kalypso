@@ -15,7 +15,7 @@ import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.model.visitors.FindNodeByNameVisitor;
-import org.kalypso.model.hydrology.internal.postprocessing.statistics.INaStatistics;
+import org.kalypso.model.hydrology.statistics.INaStatistics;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IRunOffEvent;
