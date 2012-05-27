@@ -52,11 +52,10 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * moves a timeseries from one station to the given target station
- * 
+ *
  * @author Dirk Kuch
  */
 public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
@@ -65,13 +64,10 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
 
   private final ITimeseries m_timeseries;
 
-  private final ITreeNodeModel m_model;
-
   private ITimeseries m_moved;
 
-  public MoveTimeSeriesOperation( final ITreeNodeModel model, final IStation target, final ITimeseries timeseries )
+  public MoveTimeSeriesOperation( final IStation target, final ITimeseries timeseries )
   {
-    m_model = model;
     m_target = target;
     m_timeseries = timeseries;
   }
@@ -86,18 +82,16 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
 
     final ObservationImportOperation importOperation = new ObservationImportOperation( observation, m_timeseries.getParameterType() );
 
-    final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_model.getWorkspace(), m_target, importOperation );
+    final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_target, importOperation );
     storeOperation.updateDataAfterFinish();
     stati.add( storeOperation.execute( monitor ) );
 
     m_moved = storeOperation.getTimeseries();
     stati.add( UpdateTimeseriesLinks.doUpdateTimeseriesLinks( m_timeseries, m_moved ) );
 
-    m_model.getWorkspace().getContext();
-
     UpdateTimeseriesLinks.doUpdateTimeseriesLinks( m_timeseries, m_moved );
 
-    final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( m_model, m_timeseries );
+    final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( m_timeseries );
     stati.add( deleteOperation.execute( monitor ) );
 
     final IStatus status = stati.asMultiStatusOrOK( String.format( Messages.getString( "MoveTimeSeriesOperation_0" ), m_timeseries.getName() ) );

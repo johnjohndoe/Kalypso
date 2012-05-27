@@ -152,7 +152,7 @@ public class TimeseriesManagementView extends ViewPart
   {
     final StationsByStationsStrategy strategy = new StationsByStationsStrategy( stations );
 
-    final TreeNodeModel input = new TreeNodeModel( strategy, workspace, m_treeViewer );
+    final TreeNodeModel input = new TreeNodeModel( strategy, m_treeViewer, workspace );
     m_treeViewer.setInput( input );
 
     /** set tree viewer selection to it's first item! */

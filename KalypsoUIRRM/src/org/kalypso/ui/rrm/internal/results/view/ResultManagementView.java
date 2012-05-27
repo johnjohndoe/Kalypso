@@ -143,7 +143,7 @@ public class ResultManagementView extends ViewPart
   {
     final ITreeNodeStrategy strategy = new NaModelStrategy( scenario );
 
-    final TreeNodeModel input = new TreeNodeModel( strategy, null, m_treeViewer );
+    final TreeNodeModel input = new TreeNodeModel( strategy, m_treeViewer );
     m_treeViewer.setInput( input );
 
     /** set tree viewer selection to it's first item! */

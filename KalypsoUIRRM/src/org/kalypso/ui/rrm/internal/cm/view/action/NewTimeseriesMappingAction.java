@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.action;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,12 +47,18 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.cm.view.EditTimeseriesMappingWizard;
+import org.kalypso.ui.rrm.internal.cm.view.TimeseriesMappingBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -61,15 +67,12 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class NewTimeseriesMappingAction extends Action
 {
-  private final ITimeseriesMappingCollection m_timeseriesMappings;
-
   private final TimeseriesMappingType m_mappingType;
 
   private final ITreeNodeModel m_treeModel;
 
-  public NewTimeseriesMappingAction( final ITimeseriesMappingCollection timeseriesMappings, final TimeseriesMappingType mappingType, final ITreeNodeModel treeModel )
+  public NewTimeseriesMappingAction( final TimeseriesMappingType mappingType, final ITreeNodeModel treeModel )
   {
-    m_timeseriesMappings = timeseriesMappings;
     m_mappingType = mappingType;
     m_treeModel = treeModel;
 
@@ -95,8 +98,12 @@ public class NewTimeseriesMappingAction extends Action
     {
       try
       {
-        final Feature mappingFeature = newMapping.apply( m_treeModel.getWorkspace(), m_timeseriesMappings );
-        m_treeModel.refreshTree( mappingFeature );
+        final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+        final CommandableWorkspace mappingsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
+        final ITimeseriesMappingCollection timeseriesMappings = (ITimeseriesMappingCollection) mappingsWorkspace.getRootFeature();
+
+        final Feature feature = newMapping.apply( mappingsWorkspace, timeseriesMappings );
+        m_treeModel.refreshTree( feature );
       }
       catch( final Exception e )
       {

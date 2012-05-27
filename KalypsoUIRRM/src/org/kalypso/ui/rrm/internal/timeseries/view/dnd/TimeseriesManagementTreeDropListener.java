@@ -83,7 +83,7 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
     {
       try
       {
-        final MoveTimeSeriesOperation operation = new MoveTimeSeriesOperation( model, m_station, timeseries );
+        final MoveTimeSeriesOperation operation = new MoveTimeSeriesOperation( m_station, timeseries );
         stati.add( operation.execute( new NullProgressMonitor() ) );
 
         model.refreshTree( operation.getMovedTimeseries() );

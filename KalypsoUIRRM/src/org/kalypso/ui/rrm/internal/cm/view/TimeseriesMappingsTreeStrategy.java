@@ -149,7 +149,7 @@ public class TimeseriesMappingsTreeStrategy implements ITreeNodeStrategy
       final Object type = entry.getKey();
       final Collection<Object> elements = entry.getValue();
 
-      final TreeNode node = buildNode( parent, type, elements, entry );
+      final TreeNode node = buildNode( parent, type, elements, type );
       parent.addChild( node );
     }
   }
@@ -174,7 +174,7 @@ public class TimeseriesMappingsTreeStrategy implements ITreeNodeStrategy
 
       final ITimeseriesMapping[] allMappings = elements.toArray( new ITimeseriesMapping[elements.size()] );
 
-      final TimeseriesMappingTypeUiHandler uiHandler = new TimeseriesMappingTypeUiHandler( parent.getModel(), m_timeseriesMappings, mappingType, allMappings );
+      final TimeseriesMappingTypeUiHandler uiHandler = new TimeseriesMappingTypeUiHandler( parent.getModel(), mappingType );
       final TreeNode mappingNode = new TreeNode( parent, uiHandler, nodeData );
       buildMappingNodes( mappingNode, allMappings );
       return mappingNode;

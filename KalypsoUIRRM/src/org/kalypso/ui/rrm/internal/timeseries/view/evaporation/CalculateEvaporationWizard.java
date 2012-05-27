@@ -51,7 +51,6 @@ import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.operation.evaporation.IEvaporationCalculator;
 import org.kalypso.model.hydrology.operation.evaporation.LandbasedEvaporationCalculator;
 import org.kalypso.model.hydrology.operation.evaporation.WaterbasedEvaporationCalculator;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -67,17 +66,14 @@ import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporat
  */
 public class CalculateEvaporationWizard extends Wizard
 {
-  private final CommandableWorkspace m_workspace;
-
   private final IStation m_station;
 
   private final CalculateEvaporationData m_data;
 
   private ITimeseries m_timeseries;
 
-  public CalculateEvaporationWizard( final CommandableWorkspace workspace, final IStation station, final CalculateEvaporationData data )
+  public CalculateEvaporationWizard( final IStation station, final CalculateEvaporationData data )
   {
-    m_workspace = workspace;
     m_station = station;
     m_data = data;
 
@@ -103,7 +99,7 @@ public class CalculateEvaporationWizard extends Wizard
 
       final IObservation observation = calculator.getObservation();
 
-      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_workspace, m_station, new ObservationImportOperation( observation ) );
+      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_station, new ObservationImportOperation( observation ) );
       storeOperation.updateDataAfterFinish();
 
       final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );

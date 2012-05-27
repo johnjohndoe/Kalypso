@@ -38,48 +38,48 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.actions;
+package org.kalypso.ui.rrm.internal.cm.view.action;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.hydrology.binding.timeseries.IStation;
-import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.cm.view.EditTimeseriesMappingWizard;
+import org.kalypso.ui.rrm.internal.cm.view.TimeseriesMappingBean;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class DeleteStationAction extends Action
+public class EditMappingAction extends Action
 {
-  private final IStation[] m_stations;
+  private final ITreeNodeModel m_treeModel;
 
-  public DeleteStationAction( final IStation... station )
+  private final ITimeseriesMapping m_mapping;
+
+  public EditMappingAction( final ITreeNodeModel model, final ITimeseriesMapping mapping )
   {
-    m_stations = station;
+    m_treeModel = model;
+    m_mapping = mapping;
 
-    setText( Messages.getString("DeleteStationAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("DeleteStationAction_1") ); //$NON-NLS-1$
+    setText( "Edit" );
+    setToolTipText( "Edit the properties of the mapping" );
 
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
-
-    if( station.length == 0 )
-    {
-      setEnabled( false );
-      setToolTipText( Messages.getString("DeleteStationAction_2") ); //$NON-NLS-1$
-    }
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT ) );
   }
 
   @Override
@@ -87,42 +87,31 @@ public class DeleteStationAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final String deleteMessage = getDeleteMessage();
+    final TimeseriesMappingBean mappingBean = new TimeseriesMappingBean( m_mapping );
+    mappingBean.initFromNaModel();
 
-    if( !MessageDialog.openConfirm( shell, getText(), deleteMessage ) )
-      return;
+    final EditTimeseriesMappingWizard wizard = new EditTimeseriesMappingWizard( mappingBean );
+    wizard.setWindowTitle( getText() );
 
-    try
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    if( dialog.open() == Window.OK )
     {
-      /* Delete data files */
-      for( final IStation station : m_stations )
+      try
       {
-        for( final ITimeseries timeseries : station.getTimeseries() )
-          timeseries.deleteDataFile();
+        final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+        final CommandableWorkspace mappingsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
+        final ITimeseriesMappingCollection timeseriesMappings = (ITimeseriesMappingCollection) mappingsWorkspace.getRootFeature();
+
+        final Feature mappingFeature = mappingBean.apply( mappingsWorkspace, timeseriesMappings );
+        m_treeModel.refreshTree( mappingFeature );
       }
-
-      /* Delete feature */
-      final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_stations );
-
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-      final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
-
-      stationsWorkspace.postCommand( deleteCommand );
+      catch( final Exception e )
+      {
+        // should never happen
+        e.printStackTrace();
+        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed ot edit mapping", e ); //$NON-NLS-1$
+        StatusDialog.open( shell, status, wizard.getWindowTitle() );
+      }
     }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("DeleteStationAction_3"), e ); //$NON-NLS-1$
-      StatusDialog.open( shell, status, getText() );
-    }
-  }
-
-  private String getDeleteMessage( )
-  {
-    if( m_stations.length > 1 )
-      return Messages.getString("DeleteStationAction_4"); //$NON-NLS-1$
-
-    return String.format( Messages.getString("DeleteStationAction_5"), m_stations[0].getDescription() ); //$NON-NLS-1$
   }
 }

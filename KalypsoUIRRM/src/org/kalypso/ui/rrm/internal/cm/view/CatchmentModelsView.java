@@ -93,10 +93,10 @@ public class CatchmentModelsView extends ViewPart
     m_treeViewer.getControl().setFocus();
   }
 
-  public void setInput( final CommandableWorkspace workspace, final ICatchmentModel model, final ITimeseriesMappingCollection timeseriesMappings )
+  public void setInput( final ICatchmentModel model, final ITimeseriesMappingCollection timeseriesMappings, final CommandableWorkspace... workspaces )
   {
     final ITreeNodeStrategy strategy = new TimeseriesMappingsTreeStrategy( model, timeseriesMappings );
-    final TreeNodeModel input = new TreeNodeModel( strategy, workspace, m_treeViewer );
+    final TreeNodeModel input = new TreeNodeModel( strategy, m_treeViewer, workspaces );
 
     m_treeViewer.setInput( input );
   }

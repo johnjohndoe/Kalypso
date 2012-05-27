@@ -51,7 +51,6 @@ import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -115,8 +114,7 @@ public class ImportTimeseriesAction extends Action
 
     final ImportTimeseriesOperation operation = new ImportTimeseriesOperation( data, new TargetTimeseriesValidator( m_station, data, bean ) );
 
-    final CommandableWorkspace workspace = m_model.getWorkspace();
-    final TimeseriesImportWizard wizard = new TimeseriesImportWizard( operation, data, bean, workspace, m_station );
+    final TimeseriesImportWizard wizard = new TimeseriesImportWizard( operation, data, bean, m_station );
 
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), TimeseriesImportWizard.class.getName() );
     data.init( settings );

@@ -94,7 +94,7 @@ public class DeleteTimeseriesAction extends Action
 
     final Feature owner = m_timeserieses[0].getOwner();
 
-    final DeleteTimeseriesOperation operation = new DeleteTimeseriesOperation( m_model, m_timeserieses );
+    final DeleteTimeseriesOperation operation = new DeleteTimeseriesOperation( m_timeserieses );
     final IStatus status = operation.execute( new NullProgressMonitor() );
 
     /* Select parent node */

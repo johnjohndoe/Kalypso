@@ -111,7 +111,7 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
       sectionToolbar.add( new EditLinearSumIdwAction( m_model, (ILinearSumGenerator) m_generator ) );
     }
 
-    sectionToolbar.add( new DeleteGeneratorAction( m_model, m_generator ) );
+    sectionToolbar.add( new DeleteGeneratorAction( m_generator ) );
 
     if( m_generator instanceof ILinearSumGenerator )
     {

@@ -45,11 +45,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.view.InitThiessenTimeseriesOperation;
@@ -91,7 +95,10 @@ public final class ThiessenLinearSumHelper
       try
       {
         /* Apply the changes. */
-        final Feature generator = bean.apply( model.getWorkspace(), (String) bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) );
+        final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+        final CommandableWorkspace generatorsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
+
+        final Feature generator = bean.apply( generatorsWorkspace, (String) bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) );
 
         /* Refresh the tree. */
         model.refreshTree( generator );

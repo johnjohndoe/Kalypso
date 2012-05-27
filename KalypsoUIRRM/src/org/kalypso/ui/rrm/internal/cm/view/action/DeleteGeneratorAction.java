@@ -62,7 +62,6 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -72,11 +71,8 @@ public class DeleteGeneratorAction extends Action
 {
   private final IRainfallGenerator[] m_generators;
 
-  private final ITreeNodeModel m_model;
-
-  public DeleteGeneratorAction( final ITreeNodeModel model, final IRainfallGenerator... generators )
+  public DeleteGeneratorAction( final IRainfallGenerator... generators )
   {
-    m_model = model;
     m_generators = generators;
 
     setText( Messages.getString( "DeleteGeneratorAction_0" ) ); //$NON-NLS-1$
@@ -114,7 +110,11 @@ public class DeleteGeneratorAction extends Action
 
       /* Delete the selected catchment models. */
       final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_generators );
-      m_model.postCommand( deleteCommand );
+
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final CommandableWorkspace generatorsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
+
+      generatorsWorkspace.postCommand( deleteCommand );
     }
     catch( final Exception e )
     {
