@@ -40,27 +40,42 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 
 /**
  * @author Gernot Belger
  */
-public class TimeseriesMappingComposite extends FeatureBeanComposite<ITimeseriesMapping>
+public class EditTimeseriesMappingWizardPage extends WizardPage
 {
-  public TimeseriesMappingComposite( final Composite parent, final IDataBinding binding, final FeatureBean<ITimeseriesMapping> bean, final boolean generalEditable )
+  private final TimeseriesMappingBean m_mapping;
+
+  private DatabindingWizardPage m_binding;
+
+  public EditTimeseriesMappingWizardPage( final TimeseriesMappingBean mapping )
   {
-    super( parent, bean, binding, generalEditable );
+    super( "editMappingPage" ); //$NON-NLS-1$
+
+    m_mapping = mapping;
+
+    setTitle( "Properties" );
+    setDescription( "Edit the properties of the mapping on this page." );
   }
 
   @Override
-  protected void createContents( )
+  public void createControl( final Composite parent )
   {
-    createPropertyTextFieldControl( Feature.QN_DESCRIPTION );
-    createPropertyTextFieldControl( ITimeseriesMapping.PROPERTY_COMMENT );
+    m_binding = new DatabindingWizardPage( this, null );
+
+    final Composite panel = new Composite( parent, SWT.NONE );
+    GridLayoutFactory.swtDefaults().applyTo( panel );
+    setControl( panel );
+
+    new TimeseriesMappingComposite( panel, m_binding, m_mapping, true );
+
+    // TODO: mappings
   }
 }

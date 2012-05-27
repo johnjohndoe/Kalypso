@@ -42,11 +42,14 @@ package org.kalypso.ui.rrm.internal.cm.view;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -64,9 +67,12 @@ public class TimeseriesMappingTypeUiHandler extends AbstractTreeNodeUiHandler
 
   private final ITimeseriesMapping[] m_allMappings;
 
-  public TimeseriesMappingTypeUiHandler( final ITreeNodeModel model, final TimeseriesMappingType mappingType, final ITimeseriesMapping[] allMappings )
+  private final ITimeseriesMappingCollection m_timeseriesMappings;
+
+  public TimeseriesMappingTypeUiHandler( final ITreeNodeModel model, final ITimeseriesMappingCollection timeseriesMappings, final TimeseriesMappingType mappingType, final ITimeseriesMapping[] allMappings )
   {
     m_model = model;
+    m_timeseriesMappings = timeseriesMappings;
     m_mappingType = mappingType;
     m_allMappings = allMappings;
   }
@@ -90,8 +96,10 @@ public class TimeseriesMappingTypeUiHandler extends AbstractTreeNodeUiHandler
     {
       case gaugeMeasurement:
         return UIRrmImages.id( DESCRIPTORS.PARAMETER_TYPE_WATERLEVEL );
+
       case inflow:
         return UIRrmImages.id( DESCRIPTORS.PARAMETER_TYPE_DISCHARGE );
+
       case waterBasedEvaporation:
         return UIRrmImages.id( DESCRIPTORS.PARAMETER_TYPE_EVAPORATION );
     }
@@ -108,10 +116,6 @@ public class TimeseriesMappingTypeUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-// ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumGeneratorAction( m_model,
-// m_parameterType ) );
-
-    // TODO Auto-generated method stub
-
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewTimeseriesMappingAction( m_timeseriesMappings, m_mappingType, m_model ) );
   }
 }

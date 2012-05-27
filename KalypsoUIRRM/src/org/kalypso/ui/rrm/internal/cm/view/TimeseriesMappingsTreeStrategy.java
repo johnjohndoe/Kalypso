@@ -63,13 +63,13 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class TimeseriesMappingsTreeStrategy implements ITreeNodeStrategy
 {
-  private final ICatchmentModel m_ctchmentModel;
+  private final ICatchmentModel m_catchmentModel;
 
   private final ITimeseriesMappingCollection m_timeseriesMappings;
 
   public TimeseriesMappingsTreeStrategy( final ICatchmentModel catchmentModel, final ITimeseriesMappingCollection timeseriesMappings )
   {
-    m_ctchmentModel = catchmentModel;
+    m_catchmentModel = catchmentModel;
     m_timeseriesMappings = timeseriesMappings;
   }
 
@@ -104,7 +104,7 @@ public class TimeseriesMappingsTreeStrategy implements ITreeNodeStrategy
     byType.put( TimeseriesMappingType.waterBasedEvaporation, new LinkedList<Object>() );
 
     /* Rainfall generators */
-    final IFeatureBindingCollection<IRainfallGenerator> generators = m_ctchmentModel.getGenerators();
+    final IFeatureBindingCollection<IRainfallGenerator> generators = m_catchmentModel.getGenerators();
     for( final IRainfallGenerator generator : generators )
     {
       final String parameterType = generator.getParameterType();
@@ -174,7 +174,7 @@ public class TimeseriesMappingsTreeStrategy implements ITreeNodeStrategy
 
       final ITimeseriesMapping[] allMappings = elements.toArray( new ITimeseriesMapping[elements.size()] );
 
-      final TimeseriesMappingTypeUiHandler uiHandler = new TimeseriesMappingTypeUiHandler( parent.getModel(), mappingType, allMappings );
+      final TimeseriesMappingTypeUiHandler uiHandler = new TimeseriesMappingTypeUiHandler( parent.getModel(), m_timeseriesMappings, mappingType, allMappings );
       final TreeNode mappingNode = new TreeNode( parent, uiHandler, nodeData );
       buildMappingNodes( mappingNode, allMappings );
       return mappingNode;
