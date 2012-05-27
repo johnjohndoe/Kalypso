@@ -45,7 +45,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -67,24 +66,15 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window.getActivePage();
 
-    try
-    {
-      /* set input to gtt tables */
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
+    /* set input to gtt tables */
+    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, "NaNodes", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:NaNodes:gtt", "Knoten", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Catchments:gtt", "Einzugsgebiete", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-      WorkflowHandlerUtils.setGttInput( activePage, "StorageChannels", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:StorageChannels:gtt", "Speicherstränge", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+    WorkflowHandlerUtils.setGttInput( activePage, "NaNodes", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:NaNodes:gtt", "Knoten", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+    WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Catchments:gtt", "Einzugsgebiete", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+    WorkflowHandlerUtils.setGttInput( activePage, "StorageChannels", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:StorageChannels:gtt", "Speicherstränge", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      WorkflowHandlerUtils.setGftInput( activePage, "Outputs", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Outputs:gft", "Ausgabeoptionen", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-
-      throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
-    }
+    WorkflowHandlerUtils.setGftInput( activePage, "Outputs", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Outputs:gft", "Ausgabeoptionen", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }

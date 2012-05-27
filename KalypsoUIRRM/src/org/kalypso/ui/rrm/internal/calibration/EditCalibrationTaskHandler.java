@@ -45,7 +45,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -73,21 +72,12 @@ public class EditCalibrationTaskHandler extends AbstractHandler
 
     configureFeatureView( activePage );
 
-    /* set input to gtt tables */
-    try
-    {
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
+    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, "KMChannels", "urn:org.kalypso.model.rrm.editCalibration:workflow:KMChannels:gtt", Messages.getString( "EditCalibrationTaskHandler_0" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      WorkflowHandlerUtils.setGttInput( activePage, "StorageChannels", "urn:org.kalypso.model.rrm.editCalibration:workflow:StorageChannels:gtt", Messages.getString( "EditCalibrationTaskHandler_1" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.editCalibration:workflow:Catchments:gtt", Messages.getString( "EditCalibrationTaskHandler_2" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
-    }
+    WorkflowHandlerUtils.setGttInput( activePage, "KMChannels", "urn:org.kalypso.model.rrm.editCalibration:workflow:KMChannels:gtt", Messages.getString( "EditCalibrationTaskHandler_0" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "StorageChannels", "urn:org.kalypso.model.rrm.editCalibration:workflow:StorageChannels:gtt", Messages.getString( "EditCalibrationTaskHandler_1" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.editCalibration:workflow:Catchments:gtt", Messages.getString( "EditCalibrationTaskHandler_2" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return null;
   }

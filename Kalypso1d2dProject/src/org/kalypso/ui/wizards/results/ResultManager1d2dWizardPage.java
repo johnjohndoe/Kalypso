@@ -370,11 +370,6 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
       {
         e1.printStackTrace();
       }
-
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
     }
     finally
     {

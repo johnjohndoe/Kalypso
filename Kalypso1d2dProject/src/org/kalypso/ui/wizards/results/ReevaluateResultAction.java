@@ -41,7 +41,6 @@
 package org.kalypso.ui.wizards.results;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -120,10 +119,6 @@ public class ReevaluateResultAction extends Action
       final IStatus status = RunnableContextHelper.execute( container, true, true, calculationOperation );
       if( !status.isOK() )
         new StatusDialog( shell, status, wizard.getWindowTitle() ).open();
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
     }
     finally
     {

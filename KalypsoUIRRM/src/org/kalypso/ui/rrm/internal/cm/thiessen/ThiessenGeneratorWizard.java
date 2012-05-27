@@ -43,7 +43,6 @@ package org.kalypso.ui.rrm.internal.cm.thiessen;
 import java.net.URL;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -107,16 +106,8 @@ public class ThiessenGeneratorWizard extends Wizard
 
   private URL getContext( )
   {
-    try
-    {
-      final IContainer currentScenario = ScenarioHelper.getScenarioDataProvider().getScenarioFolder();
-      return ResourceUtilities.createQuietURL( currentScenario );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    final IContainer currentScenario = ScenarioHelper.getScenarioDataProvider().getScenarioFolder();
+    return ResourceUtilities.createQuietURL( currentScenario );
   }
 
   private Arguments createPageDefinition( )

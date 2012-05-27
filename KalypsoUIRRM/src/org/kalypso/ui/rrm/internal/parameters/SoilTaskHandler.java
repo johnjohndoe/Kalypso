@@ -45,7 +45,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -72,20 +71,11 @@ public class SoilTaskHandler extends AbstractHandler
 
     configureFeatureView( activePage );
 
-    /* set input to gtt tables */
-    try
-    {
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
+    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, "Layers", "urn:org.kalypso.model.rrm.soilDefinition:Layers:gtt", Messages.getString("SoilTaskHandler_0"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      WorkflowHandlerUtils.setGttInput( activePage, "Profiles", "urn:org.kalypso.model.rrm.soilDefinition:Profiles:gtt", Messages.getString("SoilTaskHandler_1"), scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      throw new ExecutionException( "Failed to initialize tables", e ); //$NON-NLS-1$
-    }
+    WorkflowHandlerUtils.setGttInput( activePage, "Layers", "urn:org.kalypso.model.rrm.soilDefinition:Layers:gtt", Messages.getString( "SoilTaskHandler_0" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "Profiles", "urn:org.kalypso.model.rrm.soilDefinition:Profiles:gtt", Messages.getString( "SoilTaskHandler_1" ), scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$
 
     return null;
   }

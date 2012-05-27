@@ -43,7 +43,6 @@ package org.kalypso.risk.project;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.afgui.scenarios.IScenarioDataListener;
@@ -59,7 +58,7 @@ import de.renew.workflow.connector.cases.IScenario;
  * A central place for controlling scenario specific stuff for Kalypso1d2d.
  * <p>
  * Get informed when models are loaded and/or scenario is changed.
- * 
+ *
  * @author Dejan Antanaskovic
  * @author Gernot Belger
  */
@@ -84,17 +83,10 @@ public class SzenarioController implements IScenarioDataListener
     }
     if( model instanceof IRasterizationControlModel )
     {
-      try
-      {
-        final Path path = new Path( "/models/RasterizationControlModel.gml" ); //$NON-NLS-1$
-        final IFile file = m_scenario.getFolder().getFile( path );
-        m_landuseStyleUpdateListener.startStyleUpdateJob( file );
-        RiskZonesThemeInfo.reloadDefinitions();
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
+      final Path path = new Path( "/models/RasterizationControlModel.gml" ); //$NON-NLS-1$
+      final IFile file = m_scenario.getFolder().getFile( path );
+      m_landuseStyleUpdateListener.startStyleUpdateJob( file );
+      RiskZonesThemeInfo.reloadDefinitions();
     }
 
     // maybe get status info from status-model

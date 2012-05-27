@@ -45,7 +45,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -73,23 +72,14 @@ public class HydrotopesTaskHandler extends AbstractHandler
 
     configureFeatureView( activePage );
 
-    /* set input to gtt tables */
-    try
-    {
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
+    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Catchments:gtt", Messages.getString("HydrotopesTaskHandler_0"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      WorkflowHandlerUtils.setGttInput( activePage, "Landuse", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Landuse:gtt", Messages.getString("HydrotopesTaskHandler_1"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      WorkflowHandlerUtils.setGttInput( activePage, "Geologie", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Geologie:gtt", Messages.getString("HydrotopesTaskHandler_2"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      WorkflowHandlerUtils.setGttInput( activePage, "Pedologie", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Pedologie:gtt", Messages.getString("HydrotopesTaskHandler_3"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      WorkflowHandlerUtils.setGttInput( activePage, "Hydrotopes", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Hydrotopes:gtt", Messages.getString("HydrotopesTaskHandler_4"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
-    }
+    WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Catchments:gtt", Messages.getString( "HydrotopesTaskHandler_0" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "Landuse", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Landuse:gtt", Messages.getString( "HydrotopesTaskHandler_1" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "Geologie", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Geologie:gtt", Messages.getString( "HydrotopesTaskHandler_2" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "Pedologie", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Pedologie:gtt", Messages.getString( "HydrotopesTaskHandler_3" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "Hydrotopes", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Hydrotopes:gtt", Messages.getString( "HydrotopesTaskHandler_4" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return null;
   }
