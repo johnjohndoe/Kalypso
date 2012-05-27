@@ -67,6 +67,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.dialog.DatabindingTitleAreaDialog;
 import org.kalypso.commons.databinding.validation.ValidationStatusUtilities;
@@ -76,6 +78,8 @@ import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.DescriptionComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.FactorComparator;
@@ -98,7 +102,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * This dialog allows the editing of the properties of a linear sum catchment model.
- * 
+ *
  * @author Holger Albert
  */
 public class EditLinearSumDialog extends TitleAreaDialog
@@ -177,7 +181,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
    * @param model
@@ -316,7 +320,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the main group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -349,7 +353,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the secondary group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -428,7 +432,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the details group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @param catchmentBean
@@ -532,15 +536,18 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * This function saves the changes.
-   * 
+   *
    * @return A ERROR status on error or an OK status.
    */
   private IStatus performOk( )
   {
     try
     {
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final CommandableWorkspace generatorsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
+
       /* Apply the changes. */
-      final Feature generator = m_bean.apply( m_model.getWorkspace(), (String) m_bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) );
+      final Feature generator = m_bean.apply( generatorsWorkspace, (String) m_bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) );
 
       /* Refresh the tree. */
       m_model.refreshTree( generator );
@@ -609,7 +616,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * This function handles the property changed event for the parameter type.
-   * 
+   *
    * @param evt
    *          The property change event.
    */

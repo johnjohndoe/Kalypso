@@ -47,6 +47,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.ui.rrm.internal.cm.view.action.DeleteMappingAction;
+import org.kalypso.ui.rrm.internal.cm.view.action.EditMappingAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -88,6 +90,9 @@ public class TimeseriesMappingUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
+    sectionToolbar.add( new EditMappingAction( m_model, m_mapping ) );
+    sectionToolbar.add( new DeleteMappingAction( m_mapping ) );
+
     final FeatureBean<ITimeseriesMapping> bean = new FeatureBean<ITimeseriesMapping>( m_mapping );
 
     return new TimeseriesMappingComposite( parent, binding, bean, false );

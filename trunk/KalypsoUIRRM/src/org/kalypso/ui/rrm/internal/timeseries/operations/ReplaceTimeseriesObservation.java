@@ -44,6 +44,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
@@ -54,6 +56,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.util.Observations;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
@@ -68,11 +71,8 @@ public class ReplaceTimeseriesObservation implements IMergeTimeseriesOperation
 
   private IObservation m_observation;
 
-  private final CommandableWorkspace m_workspace;
-
-  public ReplaceTimeseriesObservation( final CommandableWorkspace workspace, final FeatureBean<ITimeseries> timeseries )
+  public ReplaceTimeseriesObservation( final FeatureBean<ITimeseries> timeseries )
   {
-    m_workspace = workspace;
     m_timeseries = timeseries;
   }
 
@@ -94,7 +94,11 @@ public class ReplaceTimeseriesObservation implements IMergeTimeseriesOperation
       m_timeseries.setProperty( ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( dateRange.getFrom() ) );
 
       final ICommand command = m_timeseries.applyChanges();
-      m_workspace.postCommand( command );
+
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
+
+      stationsWorkspace.postCommand( command );
     }
     catch( final Exception ex )
     {

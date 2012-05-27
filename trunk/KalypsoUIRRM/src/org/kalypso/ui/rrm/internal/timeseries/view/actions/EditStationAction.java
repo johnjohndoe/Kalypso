@@ -85,7 +85,7 @@ public class EditStationAction extends Action
 
     final String oldGroup = m_station.getGroup();
 
-    final Wizard wizard = new EditStationWizard( m_context, m_station );
+    final Wizard wizard = new EditStationWizard( m_station );
     wizard.setWindowTitle( Messages.getString( "EditStationAction_2" ) ); //$NON-NLS-1$
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );

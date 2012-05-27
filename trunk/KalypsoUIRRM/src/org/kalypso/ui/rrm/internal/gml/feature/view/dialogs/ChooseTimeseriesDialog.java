@@ -282,7 +282,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
 
     final StationsByStationsStrategy strategy = new StationsByStationsStrategy( m_collection );
 
-    m_model = new TreeNodeModel( strategy, m_workspace, m_treeViewer );
+    m_model = new TreeNodeModel( strategy, m_treeViewer, m_workspace );
     m_treeViewer.setInput( m_model );
     m_treeViewer.expandToLevel( 2 );
 

@@ -86,11 +86,14 @@ public class CatchmentModelsTaskHandler extends AbstractHandler
     try
     {
       final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
+
+      final CommandableWorkspace generatorsWorkspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
+      final CommandableWorkspace mappingsWorkspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
+
       final ICatchmentModel catchmentModel = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
       final ITimeseriesMappingCollection timeseriesMappings = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
 
-      managementView.setInput( workspace, catchmentModel, timeseriesMappings );
+      managementView.setInput( catchmentModel, timeseriesMappings, generatorsWorkspace, mappingsWorkspace );
     }
     catch( final CoreException e )
     {

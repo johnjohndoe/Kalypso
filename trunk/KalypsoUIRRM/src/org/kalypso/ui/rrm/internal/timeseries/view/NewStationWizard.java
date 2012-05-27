@@ -50,6 +50,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -57,6 +59,7 @@ import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
@@ -70,13 +73,10 @@ public class NewStationWizard extends Wizard
 {
   private final FeatureBean<IStation> m_bean;
 
-  private final CommandableWorkspace m_workspace;
-
   private IStation m_newStation;
 
-  public NewStationWizard( final CommandableWorkspace workspace, final FeatureBean<IStation> bean )
+  public NewStationWizard( final FeatureBean<IStation> bean )
   {
-    m_workspace = workspace;
     m_bean = bean;
   }
 
@@ -102,14 +102,17 @@ public class NewStationWizard extends Wizard
     {
       final Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
 
-      final IStationCollection collection = (IStationCollection) m_workspace.getRootFeature();
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
+
+      final IStationCollection collection = (IStationCollection) stationsWorkspace.getRootFeature();
       final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( IStationCollection.MEMBER_STATION );
 
       final QName type = m_bean.getFeatureType().getQName();
 
-      final AddFeatureCommand command = new AddFeatureCommand( m_workspace, type, collection, parentRelation, -1, properties, null, -1 );
+      final AddFeatureCommand command = new AddFeatureCommand( stationsWorkspace, type, collection, parentRelation, -1, properties, null, -1 );
 
-      m_workspace.postCommand( command );
+      stationsWorkspace.postCommand( command );
 
       m_newStation = (IStation) command.getNewFeature();
     }

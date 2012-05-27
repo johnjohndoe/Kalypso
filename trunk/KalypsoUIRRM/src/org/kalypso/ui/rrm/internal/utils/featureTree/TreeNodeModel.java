@@ -45,7 +45,6 @@ import java.util.Set;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -57,16 +56,16 @@ public class TreeNodeModel implements ITreeNodeModel
 {
   private TreeNode[] m_nodes;
 
-  private final CommandableWorkspace m_workspace;
+  private final CommandableWorkspace[] m_workspaces;
 
   final TreeViewer m_viewer;
 
   private final ITreeNodeStrategy m_strategy;
 
-  public TreeNodeModel( final ITreeNodeStrategy strategy, final CommandableWorkspace workspace, final TreeViewer viewer )
+  public TreeNodeModel( final ITreeNodeStrategy strategy, final TreeViewer viewer, final CommandableWorkspace... workspaces )
   {
     m_strategy = strategy;
-    m_workspace = workspace;
+    m_workspaces = workspaces;
     m_viewer = viewer;
   }
 
@@ -89,12 +88,6 @@ public class TreeNodeModel implements ITreeNodeModel
   }
 
   @Override
-  public void postCommand( final ICommand command ) throws Exception
-  {
-    m_workspace.postCommand( command );
-  }
-
-  @Override
   public void setSelection( final TreeNode... incoming )
   {
     final TreeNode[] selection = convert( incoming );
@@ -105,21 +98,15 @@ public class TreeNodeModel implements ITreeNodeModel
   @Override
   public void addModellListener( final ModellEventListener modelListener )
   {
-    if( m_workspace != null )
-      m_workspace.addModellListener( modelListener );
+    for( final CommandableWorkspace workspace : m_workspaces )
+      workspace.addModellListener( modelListener );
   }
 
   @Override
   public void removeModellListener( final ModellEventListener modelListener )
   {
-    if( m_workspace != null )
-      m_workspace.removeModellListener( modelListener );
-  }
-
-  @Override
-  public CommandableWorkspace getWorkspace( )
-  {
-    return m_workspace;
+    for( final CommandableWorkspace workspace : m_workspaces )
+      workspace.removeModellListener( modelListener );
   }
 
   @Override
@@ -154,11 +141,10 @@ public class TreeNodeModel implements ITreeNodeModel
     else
       select = new TreeNode( this, null, null, treeDataToSelect );
 
-    TreeNode ptr = null;
     final TreeNode[] nodes = getRootElements();
     for( final TreeNode node : nodes )
     {
-      ptr = findNode( node, select );
+      final TreeNode ptr = findNode( node, select );
       if( ptr != null )
         return ptr;
     }

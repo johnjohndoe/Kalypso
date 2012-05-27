@@ -54,7 +54,6 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
  */
 public class ReplaceTimeseriesAction extends AbstractOverwriteTimeseriesAction
 {
-
   public ReplaceTimeseriesAction( final ITreeNodeModel model, final FeatureBean<ITimeseries> timeseries )
   {
     super( model, timeseries );
@@ -68,7 +67,6 @@ public class ReplaceTimeseriesAction extends AbstractOverwriteTimeseriesAction
   @Override
   protected IMergeTimeseriesOperation getMergeOperation( )
   {
-    return new ReplaceTimeseriesObservation( getWorkspace(), getTimeseries() );
+    return new ReplaceTimeseriesObservation( getTimeseries() );
   }
-
 }

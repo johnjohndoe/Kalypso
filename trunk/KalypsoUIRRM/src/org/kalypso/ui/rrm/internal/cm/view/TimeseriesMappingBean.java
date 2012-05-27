@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import java.util.HashMap;
+import java.util.Date;
 import java.util.Map;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
@@ -78,24 +81,29 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
     // TODO: fill with existing data
 
     // TODO Auto-generated method stub
-
   }
 
   public Feature apply( final CommandableWorkspace workspace, final ITimeseriesMappingCollection timeseriesMappings ) throws Exception
   {
+    final XMLGregorianCalendar lastModified = DateUtilities.toXMLGregorianCalendar( new Date() );
+    setProperty( ITimeseriesMapping.PROPERTY_LAST_MODIFIED, lastModified );
+
     if( getFeature() == null )
     {
       /* Needs to create new feature */
-
       final IRelationType relation = (IRelationType) timeseriesMappings.getFeatureType().getProperty( ITimeseriesMappingCollection.MEMBER_TIMESERIES_MAPPING );
-      final Map<QName, Object> properties = new HashMap<QName, Object>();
+      final Map<QName, Object> properties = getProperties();
 
       /* Post the command. */
       final AddFeatureCommand command = new AddFeatureCommand( workspace, ITimeseriesMapping.FEATURE_TIMESERIES_MAPPING, timeseriesMappings, relation, -1, properties, null, -1 );
       workspace.postCommand( command );
+
+      /* Get the new feature. */
+      return command.getNewFeature();
     }
 
-    applyChanges();
+    final ICommand changeCommands = applyChanges();
+    workspace.postCommand( changeCommands );
 
     return getFeature();
   }

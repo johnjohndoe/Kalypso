@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -67,6 +68,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.dialog.DatabindingTitleAreaDialog;
 import org.kalypso.commons.databinding.validation.ValidationStatusUtilities;
@@ -80,6 +83,7 @@ import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.CommentComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.DescriptionComparator;
@@ -96,7 +100,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * This dialog allows the editing of the properties of a multi catchment model.
- * 
+ *
  * @author Holger Albert
  */
 public class EditMultiDialog extends TitleAreaDialog
@@ -160,7 +164,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
    * @param model
@@ -289,9 +293,6 @@ public class EditMultiDialog extends TitleAreaDialog
     super.okPressed();
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
-   */
   @Override
   protected void cancelPressed( )
   {
@@ -303,7 +304,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the main group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -336,7 +337,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the details group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -361,18 +362,12 @@ public class EditMultiDialog extends TitleAreaDialog
     /* Add a checkstate provider. */
     m_generatorViewer.setCheckStateProvider( new ICheckStateProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
-       */
       @Override
       public boolean isGrayed( final Object element )
       {
         return false;
       }
 
-      /**
-       * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
-       */
       @Override
       public boolean isChecked( final Object element )
       {
@@ -391,9 +386,6 @@ public class EditMultiDialog extends TitleAreaDialog
     /* Add a listener. */
     m_generatorViewer.addCheckStateListener( new ICheckStateListener()
     {
-      /**
-       * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
-       */
       @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
@@ -455,20 +447,30 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function returns all linear sum generators that can be linked in a multi generator.
-   * 
+   *
    * @return All linear sum generators that can be linked in a multi generator.
    */
   private ILinearSumGenerator[] getGenerators( )
   {
     final List<ILinearSumGenerator> results = new ArrayList<ILinearSumGenerator>();
 
-    final CommandableWorkspace workspace = m_model.getWorkspace();
-    final ICatchmentModel rootFeature = (ICatchmentModel) workspace.getRootFeature();
-    final IFeatureBindingCollection<IRainfallGenerator> generators = rootFeature.getGenerators();
-    for( final IRainfallGenerator generator : generators )
+    try
     {
-      if( generator instanceof ILinearSumGenerator )
-        results.add( (ILinearSumGenerator) generator );
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final CommandableWorkspace generatorsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
+
+      final ICatchmentModel rootFeature = (ICatchmentModel) generatorsWorkspace.getRootFeature();
+      final IFeatureBindingCollection<IRainfallGenerator> generators = rootFeature.getGenerators();
+      for( final IRainfallGenerator generator : generators )
+      {
+        if( generator instanceof ILinearSumGenerator )
+          results.add( (ILinearSumGenerator) generator );
+      }
+    }
+    catch( final CoreException e )
+    {
+      // should never happen
+      e.printStackTrace();
     }
 
     return results.toArray( new ILinearSumGenerator[] {} );
@@ -476,15 +478,18 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function saves the changes.
-   * 
+   *
    * @return A ERROR status on error or an OK status.
    */
   private IStatus performOk( )
   {
     try
     {
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final CommandableWorkspace generatorsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
+
       /* Apply the changes. */
-      final Feature generator = m_bean.apply( m_model.getWorkspace() );
+      final Feature generator = m_bean.apply( generatorsWorkspace );
 
       /* Refresh the tree. */
       m_model.refreshTree( generator );
@@ -526,7 +531,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function handles the property changed event for the parameter type.
-   * 
+   *
    * @param evt
    *          The property change event.
    */

@@ -49,12 +49,15 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -71,11 +74,8 @@ public class EditTimeseriesAction extends Action
 
   private final FeatureBean<ITimeseries> m_timeseries;
 
-  private final CommandableWorkspace m_workspace;
-
-  public EditTimeseriesAction( final CommandableWorkspace workspace, final FeatureBean<ITimeseries> timeseries, final IDataBinding binding )
+  public EditTimeseriesAction( final FeatureBean<ITimeseries> timeseries, final IDataBinding binding )
   {
-    m_workspace = workspace;
     m_timeseries = timeseries;
     m_binding = binding;
 
@@ -107,7 +107,12 @@ public class EditTimeseriesAction extends Action
 
         final ICommand command = m_timeseries.applyChanges();
         if( Objects.isNotNull( command ) )
-          m_workspace.postCommand( command );
+        {
+          final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+          final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
+
+          stationsWorkspace.postCommand( command );
+        }
 
         // quality changed? so rename zml file!
         if( isQualityChanged( oldQuality ) )

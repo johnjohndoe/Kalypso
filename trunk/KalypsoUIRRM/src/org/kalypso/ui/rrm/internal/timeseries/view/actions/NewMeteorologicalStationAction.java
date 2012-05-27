@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.hydrology.binding.timeseries.IMeteorologicalStation;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -79,12 +78,10 @@ public class NewMeteorologicalStationAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final CommandableWorkspace workspace = m_model.getWorkspace();
-
     final FeatureBean<IStation> bean = new FeatureBean<>( IMeteorologicalStation.FEATURE_METEOROLOGICAL_STATION );
     bean.setProperty( IStation.PROPERTY_GROUP, m_group );
 
-    final NewStationWizard wizard = new NewStationWizard( workspace, bean );
+    final NewStationWizard wizard = new NewStationWizard( bean );
     wizard.setWindowTitle( getText() );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );

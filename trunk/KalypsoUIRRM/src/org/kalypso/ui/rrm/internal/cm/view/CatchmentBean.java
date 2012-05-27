@@ -219,7 +219,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
   /**
    * This function applies the changes of this catchment. It assumes, that the catchment does not exist or does not
    * exist anymore, because it will create a new catchment feature.
-   * 
+   *
    * @param workspace
    *          The workspace.
    * @param parent
@@ -245,6 +245,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     final Feature newFeature = command.getNewFeature();
 
     /* Build the area link. */
+
     final String href = INaProjectConstants.GML_MODELL_FILE + "#" + m_catchmentRef; //$NON-NLS-1$
     final IRelationType relation = (IRelationType) getFeatureType().getProperty( ICatchment.PROPERTY_AREA_LINK );
     final IXLinkedFeature areaLink = FeatureFactory.createXLink( newFeature, relation, null, href );

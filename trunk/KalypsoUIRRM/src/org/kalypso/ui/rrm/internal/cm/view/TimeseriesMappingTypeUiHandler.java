@@ -48,11 +48,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.cm.view.action.NewTimeseriesMappingAction;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
@@ -65,16 +64,10 @@ public class TimeseriesMappingTypeUiHandler extends AbstractTreeNodeUiHandler
 
   private final TimeseriesMappingType m_mappingType;
 
-  private final ITimeseriesMapping[] m_allMappings;
-
-  private final ITimeseriesMappingCollection m_timeseriesMappings;
-
-  public TimeseriesMappingTypeUiHandler( final ITreeNodeModel model, final ITimeseriesMappingCollection timeseriesMappings, final TimeseriesMappingType mappingType, final ITimeseriesMapping[] allMappings )
+  public TimeseriesMappingTypeUiHandler( final ITreeNodeModel model, final TimeseriesMappingType mappingType )
   {
     m_model = model;
-    m_timeseriesMappings = timeseriesMappings;
     m_mappingType = mappingType;
-    m_allMappings = allMappings;
   }
 
   @Override
@@ -116,6 +109,6 @@ public class TimeseriesMappingTypeUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewTimeseriesMappingAction( m_timeseriesMappings, m_mappingType, m_model ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewTimeseriesMappingAction( m_mappingType, m_model ) );
   }
 }

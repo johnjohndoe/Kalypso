@@ -76,6 +76,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
@@ -91,18 +92,15 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
 {
   private final IStation m_station;
 
-  private final CommandableWorkspace m_workspace;
-
   private ITimeseries m_timeseries;
 
   private final IImportTimeseriesOperation m_operation;
 
   private final TimeseriesBean m_bean;
 
-  public StoreTimeseriesOperation( final TimeseriesBean bean, final CommandableWorkspace workspace, final IStation station, final IImportTimeseriesOperation importOperation )
+  public StoreTimeseriesOperation( final TimeseriesBean bean, final IStation station, final IImportTimeseriesOperation importOperation )
   {
     m_bean = bean;
-    m_workspace = workspace;
     m_station = station;
     m_operation = importOperation;
   }
@@ -161,9 +159,12 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
       properties.put( ITimeseries.PROPERTY_MEASUREMENT_START, DateUtilities.toXMLGregorianCalendar( daterange.getFrom() ) );
       properties.put( ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( daterange.getTo() ) );
 
-      final AddFeatureCommand command = new AddFeatureCommand( m_workspace, ITimeseries.FEATURE_TIMESERIES, m_station, parentRelation, -1, properties, null, -1 );
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
 
-      m_workspace.postCommand( command );
+      final AddFeatureCommand command = new AddFeatureCommand( stationsWorkspace, ITimeseries.FEATURE_TIMESERIES, m_station, parentRelation, -1, properties, null, -1 );
+
+      stationsWorkspace.postCommand( command );
 
       return (ITimeseries) command.getNewFeature();
     }

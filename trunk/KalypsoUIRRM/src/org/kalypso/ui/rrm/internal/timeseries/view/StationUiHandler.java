@@ -120,7 +120,7 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
     final StationComposite stationControl = new StationComposite( parent, bean, binding, false );
 
     sectionToolbar.add( new EditStationAction( m_model, m_station, stationControl ) );
-    sectionToolbar.add( new DeleteStationAction( m_model, m_station ) );
+    sectionToolbar.add( new DeleteStationAction( m_station ) );
 
     return stationControl;
   }

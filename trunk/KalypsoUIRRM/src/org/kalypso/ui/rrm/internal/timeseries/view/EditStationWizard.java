@@ -50,14 +50,17 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.timeseries.operations.RenameStationOperation;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -67,15 +70,12 @@ public class EditStationWizard extends Wizard
 {
   private final FeatureBean<IStation> m_stationBean;
 
-  private final ITreeNodeModel m_model;
-
   private String m_oldFolder;
 
   private URL[] m_oldTimeseriesLinks;
 
-  public EditStationWizard( final ITreeNodeModel model, final IStation station )
+  public EditStationWizard( final IStation station )
   {
-    m_model = model;
     m_stationBean = new FeatureBean<>( station );
 
     init( station );
@@ -120,7 +120,10 @@ public class EditStationWizard extends Wizard
     try
     {
       final ICommand command = m_stationBean.applyChanges();
-      m_model.postCommand( command );
+
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
+      stationsWorkspace.postCommand( command );
     }
     catch( final Exception e )
     {

@@ -55,7 +55,6 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
@@ -100,13 +99,11 @@ public class CalculateEvaporationAction extends Action
       return;
     }
 
-    final CommandableWorkspace workspace = m_model.getWorkspace();
-
     final CalculateEvaporationData data = new CalculateEvaporationData();
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), CalculateEvaporationWizard.class.getName() );
     data.init( settings );
 
-    final CalculateEvaporationWizard wizard = new CalculateEvaporationWizard( workspace, m_station, data );
+    final CalculateEvaporationWizard wizard = new CalculateEvaporationWizard( m_station, data );
     wizard.setDialogSettings( settings );
     wizard.setWindowTitle( getText() );
 

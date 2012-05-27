@@ -47,6 +47,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -67,6 +69,7 @@ import org.kalypso.ogc.sensor.util.DataSetTupleModelBuilder;
 import org.kalypso.ogc.sensor.util.Observations;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
@@ -77,18 +80,14 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
  */
 public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
 {
-
   private final FeatureBean<ITimeseries> m_timeseries;
 
   private final boolean m_overwrite;
 
   private IObservation m_imported;
 
-  private final CommandableWorkspace m_workspace;
-
-  public MergeTimeseriesOperation( final CommandableWorkspace workspace, final FeatureBean<ITimeseries> timeseries, final boolean overwrite )
+  public MergeTimeseriesOperation( final FeatureBean<ITimeseries> timeseries, final boolean overwrite )
   {
-    m_workspace = workspace;
     m_timeseries = timeseries;
     m_overwrite = overwrite;
   }
@@ -150,7 +149,11 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
       m_timeseries.setProperty( ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( dateRange.getFrom() ) );
 
       final ICommand command = m_timeseries.applyChanges();
-      m_workspace.postCommand( command );
+
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
+
+      stationsWorkspace.postCommand( command );
     }
     catch( final Exception e )
     {

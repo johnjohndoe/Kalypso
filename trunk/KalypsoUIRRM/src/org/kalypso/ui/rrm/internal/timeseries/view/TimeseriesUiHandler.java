@@ -117,7 +117,7 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
     final String stationLabel = m_timeseries.getOwner().getDescription();
     final String deleteMessage = String.format( Messages.getString( "TimeseriesUiHandler_1" ), getTreeLabel(), stationLabel ); //$NON-NLS-1$
 
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new EditTimeseriesAction( m_model.getWorkspace(), timeseriesBean, m_binding ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new EditTimeseriesAction( timeseriesBean, m_binding ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ExtendTimeseriesAction( m_model, timeseriesBean ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ExtendAndOverwriteTimeseriesAction( m_model, timeseriesBean ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ReplaceTimeseriesAction( m_model, timeseriesBean ) );

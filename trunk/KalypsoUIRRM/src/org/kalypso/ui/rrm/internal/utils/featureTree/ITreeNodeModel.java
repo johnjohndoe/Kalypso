@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.utils.featureTree;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
@@ -53,11 +51,7 @@ public interface ITreeNodeModel
 
   void removeModellListener( ModellEventListener modelListener );
 
-  void postCommand( ICommand command ) throws Exception;
-
   void setSelection( TreeNode... selection );
-
-  CommandableWorkspace getWorkspace( );
 
   void refreshTree( Object treeDataToSelect );
 
