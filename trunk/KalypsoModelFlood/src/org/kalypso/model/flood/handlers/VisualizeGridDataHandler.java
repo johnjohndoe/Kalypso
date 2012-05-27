@@ -6,15 +6,12 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
-import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
@@ -51,20 +48,13 @@ public class VisualizeGridDataHandler extends AbstractHandler implements IHandle
       return null;
     }
 
-    try
-    {
-      final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString("org.kalypso.model.flood.handlers.VisualizeGridDataHandler.3"), Messages.getString("org.kalypso.model.flood.handlers.VisualizeGridDataHandler.4") ); //$NON-NLS-1$ //$NON-NLS-2$
-      final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
-      coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
-      coverageManagementWidget.setAllowUserChangeGridFolder( false );
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "org.kalypso.model.flood.handlers.VisualizeGridDataHandler.3" ), Messages.getString( "org.kalypso.model.flood.handlers.VisualizeGridDataHandler.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+    coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
+    coverageManagementWidget.setAllowUserChangeGridFolder( false );
 
-      final ActivateWidgetJob job = new ActivateWidgetJob( Messages.getString("org.kalypso.model.flood.handlers.VisualizeGridDataHandler.6"), coverageManagementWidget, mapPanel, activePage ); //$NON-NLS-1$
-      job.schedule();
-    }
-    catch( final CoreException e )
-    {
-      KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
+    final ActivateWidgetJob job = new ActivateWidgetJob( Messages.getString( "org.kalypso.model.flood.handlers.VisualizeGridDataHandler.6" ), coverageManagementWidget, mapPanel, activePage ); //$NON-NLS-1$
+    job.schedule();
 
     return null;
   }

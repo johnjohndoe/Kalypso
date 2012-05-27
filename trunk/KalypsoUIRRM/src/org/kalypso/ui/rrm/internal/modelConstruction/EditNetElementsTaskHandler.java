@@ -45,7 +45,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
@@ -93,21 +92,12 @@ public class EditNetElementsTaskHandler extends AbstractHandler
 
     configureFeatureView( activePage );
 
-    /* set input to gtt tables */
-    try
-    {
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
+    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, "Nodes", "urn:org.kalypso.model.rrm.editNetElements:workflow:Nodes:gtt", Messages.getString("EditNetElementsTaskHandler_2"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      WorkflowHandlerUtils.setGttInput( activePage, "Channels", "urn:org.kalypso.model.rrm.editNetElements:workflow:Channels:gtt", Messages.getString("EditNetElementsTaskHandler_4"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.editNetElements:workflow:Catchments:gtt", Messages.getString("EditNetElementsTaskHandler_6"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
-    }
+    WorkflowHandlerUtils.setGttInput( activePage, "Nodes", "urn:org.kalypso.model.rrm.editNetElements:workflow:Nodes:gtt", Messages.getString( "EditNetElementsTaskHandler_2" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "Channels", "urn:org.kalypso.model.rrm.editNetElements:workflow:Channels:gtt", Messages.getString( "EditNetElementsTaskHandler_4" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.editNetElements:workflow:Catchments:gtt", Messages.getString( "EditNetElementsTaskHandler_6" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return null;
   }

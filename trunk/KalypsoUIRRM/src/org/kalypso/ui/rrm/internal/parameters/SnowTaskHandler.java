@@ -45,7 +45,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -73,19 +72,10 @@ public class SnowTaskHandler extends AbstractHandler
 
     configureFeatureView( activePage );
 
-    /* set input to gtt tables */
-    try
-    {
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
+    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, null, "urn:org.kalypso.model.rrm.snowDefinition:workflow:Snowtypes:gtt", Messages.getString("SnowTaskHandler_0"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
-    }
+    WorkflowHandlerUtils.setGttInput( activePage, null, "urn:org.kalypso.model.rrm.snowDefinition:workflow:Snowtypes:gtt", Messages.getString( "SnowTaskHandler_0" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }

@@ -44,7 +44,6 @@ import java.net.URL;
 import java.util.Locale;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -173,16 +172,8 @@ public class IdwGeneratorWizard extends Wizard
 
   private URL getContext( )
   {
-    try
-    {
-      final IContainer currentScenario = ScenarioHelper.getScenarioDataProvider().getScenarioFolder();
-      return ResourceUtilities.createQuietURL( currentScenario );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    final IContainer currentScenario = ScenarioHelper.getScenarioDataProvider().getScenarioFolder();
+    return ResourceUtilities.createQuietURL( currentScenario );
   }
 
   LinearSumBean getGenerator( )

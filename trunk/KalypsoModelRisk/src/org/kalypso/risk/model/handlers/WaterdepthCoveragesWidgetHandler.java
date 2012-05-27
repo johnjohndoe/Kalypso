@@ -6,7 +6,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
@@ -24,9 +23,6 @@ import org.kalypso.ui.views.map.MapView;
 public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements IHandler
 {
 
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -52,22 +48,14 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
 
     RiskModelHelper.activateEventTheme( mapPanel );
 
-    try
-    {
-      final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.4" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
-      final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
-      widget.setGridFolder( scenarioFolder.getFolder( "models/raster/input" ) ); //$NON-NLS-1$
-      widget.setAllowUserChangeGridFolder( false );
+    final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.4" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+    widget.setGridFolder( scenarioFolder.getFolder( "models/raster/input" ) ); //$NON-NLS-1$
+    widget.setAllowUserChangeGridFolder( false );
 
-      final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePage ); //$NON-NLS-1$
-      job.schedule();
-    }
-    catch( final CoreException e )
-    {
-      throw new ExecutionException( org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.6" ), e ); //$NON-NLS-1$
-    }
+    final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePage ); //$NON-NLS-1$
+    job.schedule();
 
     return Status.OK_STATUS;
   }
-
 }
