@@ -280,7 +280,7 @@
             class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"
             icon="icons/cm/catchmentModelsView.png"
             id="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"
-            name="Catchment Models"
+            name="Timeseries Mappings"
             restorable="true">
       </view>
       <view
@@ -400,17 +400,13 @@
                  style="push">
            </command>
         </menuContribution>
-        <menuContribution
-              allPopups="false"
-              locationURI="toolbar:org.kalypso.ui.rrm.internal.results.view.ResultManagementView">
-           <command
-                 commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items"
-                 style="push">
-           </command>
-           <command
-                 commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items"
-                 style="push">
-           </command>
+        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView">
+           <command commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items" style="push"/>
+           <command commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items" style="push"/>
+        </menuContribution>
+        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.ui.rrm.internal.results.view.ResultManagementView">
+           <command commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items" style="push"/>
+           <command commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items" style="push"/>
         </menuContribution>
    </extension>
    <extension point="org.kalypso.ui.importWizards">
