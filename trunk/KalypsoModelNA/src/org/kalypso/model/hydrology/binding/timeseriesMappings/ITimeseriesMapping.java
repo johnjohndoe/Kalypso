@@ -55,11 +55,15 @@ public interface ITimeseriesMapping extends Feature
 {
   public static final QName FEATURE_TIMESERIES_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "TimeseriesMapping" ); //$NON-NLS-1$
 
+  public static final QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "comment" ); //$NON-NLS-1$
+
   public static final QName PROPERTY_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "type" ); //$NON-NLS-1$
 
   public static final QName MEMBER_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "mappingMember" ); //$NON-NLS-1$
 
   IFeatureBindingCollection<IMappingElement> getMappings( );
+
+  String getComment( );
 
   TimeseriesMappingType getType( );
 }
