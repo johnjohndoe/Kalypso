@@ -58,8 +58,6 @@ public class RrmProject
 
   static final String FOLDER_BASIS = "Basis"; //$NON-NLS-1$
 
-  static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
-
   private final IProject m_project;
 
   public RrmProject( final IProject project )

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.timeseriesMappings;
 
+import java.util.Date;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
@@ -59,6 +61,8 @@ public interface ITimeseriesMapping extends Feature
 
   public static final QName PROPERTY_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "type" ); //$NON-NLS-1$
 
+  public static final QName PROPERTY_LAST_MODIFIED = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "lastModified" ); //$NON-NLS-1$
+
   public static final QName MEMBER_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "mappingMember" ); //$NON-NLS-1$
 
   IFeatureBindingCollection<IMappingElement> getMappings( );
@@ -66,4 +70,8 @@ public interface ITimeseriesMapping extends Feature
   String getComment( );
 
   TimeseriesMappingType getType( );
+
+  Date getLastModified( );
+
+  void setLastModified( Date date );
 }
