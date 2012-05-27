@@ -67,8 +67,6 @@ public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
   private final String m_defaultPerspective;
 
   /**
-   * The constructor.
-   * 
    * @param configurer
    *          An object for configuring the workbench window.
    * @param restrictedAccess
@@ -83,9 +81,6 @@ public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
     m_defaultPerspective = defaultPerspective;
   }
 
-  /**
-   * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#createActionBarAdvisor(org.eclipse.ui.application.IActionBarConfigurer)
-   */
   @Override
   public ActionBarAdvisor createActionBarAdvisor( final IActionBarConfigurer configurer )
   {
