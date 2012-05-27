@@ -125,9 +125,6 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     createContents();
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
-   */
   @Override
   public final void setLayout( final Layout layout )
   {
