@@ -96,7 +96,7 @@ public class TimeseriesMappingsTreeStrategy implements ITreeNodeStrategy
 
     /* Fill known types: tree should never be empty */
     byType.put( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, new LinkedList<Object>() );
-    byType.put( ITimeseriesConstants.TYPE_EVAPORATION, new LinkedList<Object>() );
+    byType.put( ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, new LinkedList<Object>() );
     byType.put( ITimeseriesConstants.TYPE_RAINFALL, new LinkedList<Object>() );
 
     byType.put( TimeseriesMappingType.gaugeMeasurement, new LinkedList<Object>() );
