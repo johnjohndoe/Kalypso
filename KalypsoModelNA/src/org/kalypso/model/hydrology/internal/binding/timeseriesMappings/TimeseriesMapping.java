@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.binding.timeseriesMappings;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
@@ -82,5 +85,17 @@ public class TimeseriesMapping extends Feature_Impl implements ITimeseriesMappin
   public TimeseriesMappingType getType( )
   {
     return getEnumProperty( PROPERTY_TYPE, TimeseriesMappingType.class, TimeseriesMappingType.gaugeMeasurement );
+  }
+
+  @Override
+  public Date getLastModified( )
+  {
+    return DateUtilities.toDate( getProperty( PROPERTY_LAST_MODIFIED ) );
+  }
+
+  @Override
+  public void setLastModified( final Date lastModified )
+  {
+    setProperty( PROPERTY_LAST_MODIFIED, DateUtilities.toXMLGregorianCalendar( lastModified ) );
   }
 }
