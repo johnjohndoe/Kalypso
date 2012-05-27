@@ -42,13 +42,9 @@ package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * @author Dirk Kuch
@@ -58,20 +54,16 @@ public class CollapseAllTreeItemsHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IWorkbenchPart part = HandlerUtil.getActivePart( event );
+    if( part == null )
+      return null;
 
-    /* Get the map */
-    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IWorkbenchPage activePage = window.getActivePage();
+    final TreeViewer treeViewer = (TreeViewer) part.getAdapter( TreeViewer.class );
+    if( treeViewer == null )
+      return null;
 
-    final IViewPart part = activePage.findView( TimeseriesManagementView.ID );
-    if( !(part instanceof TimeseriesManagementView) )
-      return Status.CANCEL_STATUS;
+    treeViewer.collapseAll();
 
-    final TimeseriesManagementView view = (TimeseriesManagementView) part;
-    view.getTreeViewer().collapseAll();
-
-    return Status.OK_STATUS;
+    return null;
   }
-
 }
