@@ -40,30 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * Represents a mapping element ( {@link org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement} for
+ * editing in the dialog.
+ *
  * @author Gernot Belger
  */
-public class TimeseriesMappingComposite extends FeatureBeanComposite<ITimeseriesMapping>
+public class MappingElementBean
 {
-  public TimeseriesMappingComposite( final Composite parent, final IDataBinding binding, final FeatureBean<ITimeseriesMapping> bean, final boolean generalEditable )
+  private IMappingElement m_mappingElement;
+
+  private final Feature m_modelElement;
+
+  private final String m_href;
+
+  public MappingElementBean( final IMappingElement mappingElement, final Feature modelElement, final String href )
   {
-    super( parent, bean, binding, generalEditable );
+    m_mappingElement = mappingElement;
+    m_modelElement = modelElement;
+    m_href = href;
   }
 
-  @Override
-  protected void createContents( )
+  public void setMappingElement( final IMappingElement mappingElement )
   {
-    createPropertyTextFieldControl( Feature.QN_DESCRIPTION );
-    createPropertyTextFieldControl( ITimeseriesMapping.PROPERTY_COMMENT );
+    m_mappingElement = mappingElement;
+  }
 
-    if( !isEditable() )
-      createPropertyDateTimeControl( ITimeseriesMapping.PROPERTY_LAST_MODIFIED );
+  public IMappingElement getMappingElement( )
+  {
+    return m_mappingElement;
+  }
+
+  public String getHref( )
+  {
+    return m_href;
+  }
+
+  public Feature getModelElement( )
+  {
+    return m_modelElement;
   }
 }

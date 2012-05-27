@@ -40,22 +40,71 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.timeseriesMappings;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+
 
 public enum TimeseriesMappingType
 {
-  gaugeMeasurement("Gauge measurement"),
-  inflow("Inflow"),
-  waterBasedEvaporation("Water based evaporation");
+  gaugeMeasurement("Gauge measurement", Node.FEATURE_NODE ),
+  inflow("Inflow", Node.FEATURE_NODE),
+  waterBasedEvaporation("Water based evaporation", StorageChannel.FEATURE_CHANNEL );
 
   private String m_label;
 
-  private TimeseriesMappingType( final String label )
+  private final QName m_elementType;
+
+  private TimeseriesMappingType( final String label, final QName elementType )
   {
     m_label = label;
+    m_elementType = elementType;
   }
 
   public String getLabel( )
   {
     return m_label;
+  }
+
+  public Feature[] getModelElements( final NaModell naModel )
+  {
+    final IFeatureBindingCollection< ? extends Feature> modelElements = getModelElementList( naModel );
+    final List<Feature> filteredElements = filterElements( modelElements );
+    return filteredElements.toArray( new Feature[filteredElements.size()] );
+  }
+
+  private List<Feature> filterElements( final IFeatureBindingCollection< ? extends Feature> modelElements )
+  {
+    final List<Feature> result = new ArrayList<>();
+
+    for( final Feature feature : modelElements )
+    {
+      if( feature.getFeatureType().getQName().equals( m_elementType ) )
+        result.add( feature );
+    }
+
+    return result;
+  }
+
+  private IFeatureBindingCollection< ? extends Feature> getModelElementList( final NaModell naModel )
+  {
+    switch( this )
+    {
+      case gaugeMeasurement:
+      case inflow:
+        return naModel.getNodes();
+
+      case waterBasedEvaporation:
+        return naModel.getChannels();
+    }
+
+    throw new IllegalStateException();
   }
 }

@@ -47,6 +47,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.cm.view.action.DeleteMappingAction;
 import org.kalypso.ui.rrm.internal.cm.view.action.EditMappingAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -83,8 +85,7 @@ public class TimeseriesMappingUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return UIRrmImages.id( DESCRIPTORS.TIMESERIES_MAPPING );
   }
 
   @Override

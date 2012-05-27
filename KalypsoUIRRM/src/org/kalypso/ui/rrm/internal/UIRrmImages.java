@@ -68,6 +68,7 @@ public class UIRrmImages
     GENERATOR_NEW_LINEAR_SUM("icons/cm/generatorNewLinearSum.png"), //$NON-NLS-1$
 
     TIMESERIES_MAPPING_NEW_MAPPING("icons/timeseriesMapping/newMapping.png"), //$NON-NLS-1$
+    TIMESERIES_MAPPING("icons/timeseriesMapping/mapping.png"), //$NON-NLS-1$
 
     GENERATOR_NEW_MULTI("icons/cm/generatorNewMulti.png"), //$NON-NLS-1$
     GROUP("icons/timeseries/group.gif"), //$NON-NLS-1$
