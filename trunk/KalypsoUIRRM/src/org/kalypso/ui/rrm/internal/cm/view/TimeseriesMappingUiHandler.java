@@ -75,7 +75,7 @@ public class TimeseriesMappingUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTreeLabel( )
   {
-    return m_mapping.getName();
+    return m_mapping.getDescription();
   }
 
   @Override
@@ -90,7 +90,7 @@ public class TimeseriesMappingUiHandler extends AbstractTreeNodeUiHandler
   {
     final FeatureBean<ITimeseriesMapping> bean = new FeatureBean<ITimeseriesMapping>( m_mapping );
 
-    return new TimeseriesMappingComposite( parent, binding, bean );
+    return new TimeseriesMappingComposite( parent, binding, bean, false );
   }
 
   @Override

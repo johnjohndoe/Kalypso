@@ -40,27 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.jface.wizard.Wizard;
 
 /**
  * @author Gernot Belger
  */
-public class TimeseriesMappingComposite extends FeatureBeanComposite<ITimeseriesMapping>
+public class EditTimeseriesMappingWizard extends Wizard
 {
-  public TimeseriesMappingComposite( final Composite parent, final IDataBinding binding, final FeatureBean<ITimeseriesMapping> bean, final boolean generalEditable )
+  public EditTimeseriesMappingWizard( final TimeseriesMappingBean mapping )
   {
-    super( parent, bean, binding, generalEditable );
+    final EditTimeseriesMappingWizardPage page = new EditTimeseriesMappingWizardPage( mapping );
+    addPage( page );
   }
 
   @Override
-  protected void createContents( )
+  public boolean performFinish( )
   {
-    createPropertyTextFieldControl( Feature.QN_DESCRIPTION );
-    createPropertyTextFieldControl( ITimeseriesMapping.PROPERTY_COMMENT );
+    return true;
   }
 }

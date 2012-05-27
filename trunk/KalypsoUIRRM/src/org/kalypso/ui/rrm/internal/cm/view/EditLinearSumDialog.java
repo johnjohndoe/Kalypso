@@ -206,9 +206,6 @@ public class EditLinearSumDialog extends TitleAreaDialog
     m_bean.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_parameterTypeListener );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
@@ -261,9 +258,6 @@ public class EditLinearSumDialog extends TitleAreaDialog
     return control;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected void createButtonsForButtonBar( final Composite parent )
   {
@@ -273,27 +267,18 @@ public class EditLinearSumDialog extends TitleAreaDialog
     updateStatus();
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsSettings()
-   */
   @Override
   protected IDialogSettings getDialogBoundsSettings( )
   {
     return DialogSettingsUtils.getSection( m_settings, "bounds" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#isResizable()
-   */
   @Override
   protected boolean isResizable( )
   {
     return true;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-   */
   @Override
   protected void okPressed( )
   {
@@ -320,9 +305,6 @@ public class EditLinearSumDialog extends TitleAreaDialog
     super.okPressed();
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
-   */
   @Override
   protected void cancelPressed( )
   {
