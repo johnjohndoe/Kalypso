@@ -30,6 +30,7 @@
     <complexContent>
       <extension base="gml:AbstractFeatureType">
         <sequence>
+          <element name="comment" type="string" />
           <element name="type" type="tmrrm:mappingType" />
           <element name="mappingMember" minOccurs="0" maxOccurs="unbounded">
             <complexType>

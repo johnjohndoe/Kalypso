@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.binding.timeseriesMappings;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
@@ -69,6 +70,12 @@ public class TimeseriesMapping extends Feature_Impl implements ITimeseriesMappin
   public IFeatureBindingCollection<IMappingElement> getMappings( )
   {
     return m_mappingMembers;
+  }
+
+  @Override
+  public String getComment( )
+  {
+    return getStringProperty( PROPERTY_COMMENT, StringUtils.EMPTY );
   }
 
   @Override
