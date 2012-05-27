@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.cm.view.action;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
@@ -49,6 +50,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
@@ -58,6 +61,7 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.cm.view.EditTimeseriesMappingWizard;
+import org.kalypso.ui.rrm.internal.cm.view.MappingElementBean;
 import org.kalypso.ui.rrm.internal.cm.view.TimeseriesMappingBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -90,6 +94,9 @@ public class EditMappingAction extends Action
     final TimeseriesMappingBean mappingBean = new TimeseriesMappingBean( m_mapping );
     mappingBean.initFromNaModel();
 
+    if( !askForLostMappings( shell, mappingBean ) )
+      return;
+
     final EditTimeseriesMappingWizard wizard = new EditTimeseriesMappingWizard( mappingBean );
     wizard.setWindowTitle( getText() );
 
@@ -113,5 +120,23 @@ public class EditMappingAction extends Action
         StatusDialog.open( shell, status, wizard.getWindowTitle() );
       }
     }
+  }
+
+  private boolean askForLostMappings( final Shell shell, final TimeseriesMappingBean mappingBean )
+  {
+    final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final MappingElementBean[] lostMappings = mappingBean.getLostMappings();
+    if( lostMappings.length == 0 )
+      return true;
+
+    for( final MappingElementBean mappingElementBean : lostMappings )
+      log.add( IStatus.WARNING, mappingElementBean.getMappingElement().getDescription() );
+
+    final MultiStatus status = log.asMultiStatus( "Timeseries mapping contains invalid elements (will be lost after edit):" );
+
+    StatusDialog.open( shell, status, getText() );
+
+    return true;
   }
 }
