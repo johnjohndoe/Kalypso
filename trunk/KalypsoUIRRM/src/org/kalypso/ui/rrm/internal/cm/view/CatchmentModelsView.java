@@ -100,4 +100,13 @@ public class CatchmentModelsView extends ViewPart
 
     m_treeViewer.setInput( input );
   }
+
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  {
+    if( adapter == TreeViewer.class )
+      return m_treeViewer;
+
+    return super.getAdapter( adapter );
+  }
 }

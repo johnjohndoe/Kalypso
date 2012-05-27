@@ -171,14 +171,17 @@ public class TimeseriesManagementView extends ViewPart
 
   }
 
-  public TreeViewer getTreeViewer( )
-  {
-    return m_treeViewer;
-  }
-
   public IRrmDiagramFilterControl getFilterControl( )
   {
     return m_searchPanel;
   }
 
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  {
+    if( adapter == TreeViewer.class )
+      return m_treeViewer;
+
+    return super.getAdapter( adapter );
+  }
 }
