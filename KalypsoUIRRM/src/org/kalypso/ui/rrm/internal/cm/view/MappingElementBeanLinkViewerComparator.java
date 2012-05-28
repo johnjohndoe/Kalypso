@@ -40,40 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.timeseries.Timeserieses;
 
 /**
  * @author Gernot Belger
  */
-public class EditTimeseriesMappingWizardPage extends WizardPage
+public class MappingElementBeanLinkViewerComparator extends ViewerComparator
 {
-  private final TimeseriesMappingBean m_mapping;
-
-  private DatabindingWizardPage m_binding;
-
-  public EditTimeseriesMappingWizardPage( final TimeseriesMappingBean mapping )
-  {
-    super( "editMappingPage" ); //$NON-NLS-1$
-
-    m_mapping = mapping;
-
-    setTitle( "Properties" );
-    setDescription( "Edit the properties of the mapping on this page." );
-  }
-
   @Override
-  public void createControl( final Composite parent )
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    m_binding = new DatabindingWizardPage( this, null );
+    final MappingElementBean bean1 = (MappingElementBean) e1;
+    final MappingElementBean bean2 = (MappingElementBean) e2;
 
-    final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new FillLayout() );
-    setControl( panel );
+    final ITimeseries t1 = bean1.getTimeseries();
+    final ITimeseries t2 = bean2.getTimeseries();
 
-    new TimeseriesMappingComposite( panel, m_binding, m_mapping, true );
+    final String l1 = Timeserieses.toLinkLabel( t1 );
+    final String l2 = Timeserieses.toLinkLabel( t2 );
+
+    return l1.compareTo( l2 );
   }
 }

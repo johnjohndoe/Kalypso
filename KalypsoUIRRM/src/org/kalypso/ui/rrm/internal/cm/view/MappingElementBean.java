@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -55,7 +56,9 @@ public class MappingElementBean
 
   private final Feature m_modelElement;
 
-  private final String m_href;
+  private String m_href;
+
+  private ITimeseries m_timeseries;
 
   public MappingElementBean( final IMappingElement mappingElement, final Feature modelElement, final String href )
   {
@@ -82,5 +85,20 @@ public class MappingElementBean
   public Feature getModelElement( )
   {
     return m_modelElement;
+  }
+
+  public void setTimeseries( final ITimeseries timeseries )
+  {
+    m_timeseries = timeseries;
+  }
+
+  public ITimeseries getTimeseries( )
+  {
+    return m_timeseries;
+  }
+
+  public void setHref( final String href )
+  {
+    m_href = href;
   }
 }

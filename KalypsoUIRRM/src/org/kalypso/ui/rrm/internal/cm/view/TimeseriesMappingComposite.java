@@ -40,9 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import javax.xml.namespace.QName;
+
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
+import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 import org.kalypsodeegree.model.feature.Feature;
@@ -63,7 +82,79 @@ public class TimeseriesMappingComposite extends FeatureBeanComposite<ITimeseries
     createPropertyTextFieldControl( Feature.QN_DESCRIPTION );
     createPropertyTextFieldControl( ITimeseriesMapping.PROPERTY_COMMENT );
 
-    if( !isEditable() )
+    if( isEditable() )
+    {
+      final Label label = createPropertyLabel( this, ITimeseriesMapping.MEMBER_MAPPING );
+
+      final TimeseriesMappingBean bean = (TimeseriesMappingBean) getBean();
+      final TimeseriesMappingType mappingType = bean.getMappingType();
+
+      label.setText( String.format( "Timeseries Mapping - %s", mappingType.getLabel() ) );
+
+      createMappingTable();
+    }
+    else
       createPropertyDateTimeControl( ITimeseriesMapping.PROPERTY_LAST_MODIFIED );
+  }
+
+  private void createMappingTable( )
+  {
+    final TimeseriesMappingBean bean = (TimeseriesMappingBean) getBean();
+
+    final Table table = new Table( this, SWT.FULL_SELECTION | SWT.SINGLE | SWT.BORDER );
+    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    table.setHeaderVisible( true );
+
+    final TableViewer tableViewer = new TableViewer( table );
+    tableViewer.setContentProvider( new ArrayContentProvider() );
+
+    /* Name column */
+    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( tableViewer, SWT.LEFT );
+    nameColumn.setLabelProvider( new MappingElementBeanNameLabelProvider() );
+
+    final ViewerColumnItem nameItem = new ViewerColumnItem( nameColumn );
+    setPropertyLabel( nameItem, IMappingElement.QN_NAME );
+    nameItem.setMoveable( false );
+    ColumnsResizeControlListener.setMinimumPackWidth( nameItem.getColumn() );
+    ColumnViewerSorter.registerSorter( nameColumn, new MappingElementBeanNameViewerComparator() );
+
+    /* Description column */
+    final ViewerColumn descriptionColumn = ColumnViewerUtil.createViewerColumn( tableViewer, SWT.LEFT );
+    descriptionColumn.setLabelProvider( new MappingElementBeanDescriptionLabelProvider() );
+
+    final ViewerColumnItem descriptionItem = new ViewerColumnItem( descriptionColumn );
+    setPropertyLabel( descriptionItem, IMappingElement.QN_DESCRIPTION );
+    descriptionItem.setMoveable( false );
+    ColumnsResizeControlListener.setMinimumPackWidth( descriptionItem.getColumn() );
+    ColumnViewerSorter.registerSorter( descriptionColumn, new MappingElementBeanDescriptionViewerComparator() );
+
+    /* Link column */
+    final ViewerColumn linkColumn = ColumnViewerUtil.createViewerColumn( tableViewer, SWT.LEFT );
+    linkColumn.setLabelProvider( new MappingElementBeanLinkLabelProvider() );
+
+    final ViewerColumnItem linkItem = new ViewerColumnItem( linkColumn );
+    setPropertyLabel( linkItem, IMappingElement.PROPERTY_TIMESERIES_LINK );
+    linkItem.setMoveable( false );
+    ColumnsResizeControlListener.setMinimumPackWidth( linkItem.getColumn() );
+    ColumnViewerSorter.registerSorter( linkColumn, new MappingElementBeanLinkViewerComparator() );
+
+    linkColumn.setEditingSupport( new MappingElementBeanLinkEditingSupport( tableViewer, bean.getMappingType() ) );
+
+    /* content */
+    tableViewer.setInput( bean.getMappings() );
+
+    table.addControlListener( new ColumnsResizeControlListener() );
+
+    ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
+  }
+
+  private void setPropertyLabel( final ViewerColumnItem nameItem, final QName propertyName )
+  {
+    final IFeatureType meType = GMLSchemaUtilities.getFeatureTypeQuiet( IMappingElement.FEATURE_MAPPING_ELEMENT );
+
+    final IPropertyType property = meType.getProperty( propertyName );
+    final IAnnotation annotation = property.getAnnotation();
+    nameItem.setText( annotation.getLabel() );
+    nameItem.setToolTipText( annotation.getTooltip() );
   }
 }

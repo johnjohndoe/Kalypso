@@ -45,27 +45,33 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
-
 public enum TimeseriesMappingType
 {
-  gaugeMeasurement("Gauge measurement", Node.FEATURE_NODE ),
-  inflow("Inflow", Node.FEATURE_NODE),
-  waterBasedEvaporation("Water based evaporation", StorageChannel.FEATURE_CHANNEL );
+  gaugeMeasurement("Gauge measurement", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_WATERLEVEL),
+  nodeInflow("Node inflow", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE),
+  storageEvaporation("Storage evaporation", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED);
 
   private String m_label;
 
   private final QName m_elementType;
 
-  private TimeseriesMappingType( final String label, final QName elementType )
+  private final String m_parameterType;
+
+  private TimeseriesMappingType( final String label, final QName elementType, final String parameterType )
   {
     m_label = label;
     m_elementType = elementType;
+    m_parameterType = parameterType;
   }
 
   public String getLabel( )
@@ -98,13 +104,24 @@ public enum TimeseriesMappingType
     switch( this )
     {
       case gaugeMeasurement:
-      case inflow:
+      case nodeInflow:
         return naModel.getNodes();
 
-      case waterBasedEvaporation:
+      case storageEvaporation:
         return naModel.getChannels();
     }
 
     throw new IllegalStateException();
+  }
+
+  public String getLinkParameterType( )
+  {
+    return m_parameterType;
+  }
+
+  public String getElementName( )
+  {
+    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( m_elementType );
+    return featureType.getAnnotation().getValue( IAnnotation.ANNO_NAME );
   }
 }

@@ -136,6 +136,9 @@ public final class Timeserieses
 
   public static String toLinkLabel( final ITimeseries timeseries )
   {
+    if( timeseries == null )
+      return StringUtils.EMPTY;
+
     final Feature owner = timeseries.getOwner();
 
     final String type = timeseries.getParameterType();

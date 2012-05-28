@@ -40,40 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class EditTimeseriesMappingWizardPage extends WizardPage
+public class MappingElementBeanDescriptionLabelProvider extends ColumnLabelProvider
 {
-  private final TimeseriesMappingBean m_mapping;
-
-  private DatabindingWizardPage m_binding;
-
-  public EditTimeseriesMappingWizardPage( final TimeseriesMappingBean mapping )
-  {
-    super( "editMappingPage" ); //$NON-NLS-1$
-
-    m_mapping = mapping;
-
-    setTitle( "Properties" );
-    setDescription( "Edit the properties of the mapping on this page." );
-  }
-
   @Override
-  public void createControl( final Composite parent )
+  public String getText( final Object element )
   {
-    m_binding = new DatabindingWizardPage( this, null );
-
-    final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new FillLayout() );
-    setControl( panel );
-
-    new TimeseriesMappingComposite( panel, m_binding, m_mapping, true );
+    final MappingElementBean bean = (MappingElementBean) element;
+    final Feature modelElement = bean.getModelElement();
+    return modelElement.getDescription();
   }
 }

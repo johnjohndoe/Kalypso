@@ -143,8 +143,12 @@ public class LightRelationType implements IEditRelationType
   public ICommand getAddCommand( final Shell shell, final Feature sourceFeature, final Feature targetFeature )
   {
     final IRelationType link = getLink();
+
     // REAMRK: make sure its the property of this feature type
     final IRelationType relation = (IRelationType) sourceFeature.getFeatureType().getProperty( link.getQName() );
-    return new AddLinkCommand( sourceFeature, relation, 0, targetFeature );
+
+    final String href = "#" + targetFeature.getId(); //$NON-NLS-1$
+
+    return new AddLinkCommand( sourceFeature, relation, 0, href );
   }
 }

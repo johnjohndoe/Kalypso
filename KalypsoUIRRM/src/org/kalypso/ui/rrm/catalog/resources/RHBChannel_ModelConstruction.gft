@@ -28,6 +28,7 @@
     </validatorlabel>
   </group>
 
+    <!--  
   <group style="SWT.NONE" text="%modelConstruction.gft.group.timeseries">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
     <gridLayout numColumns="3" />
@@ -38,10 +39,9 @@
     
     <extensioncontrol style="SWT.SEARCH" property="rrm:zmlLinkSeaEvaporation" extension-id="ChooseZmlLinkControlFactory">
       <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.CENTER" horizontalSpan="1" />
-      <param name="parameterType" value="E" />
+      <param name="parameterType" value="E_WATER" />
     </extensioncontrol>
     
-    <!--  
       <composite style="SWT.NONE">
         <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
         <gridLayout marginWidth="0" numColumns="2" makeColumnsEqualWidth="false" />
@@ -55,8 +55,8 @@
       <validatorlabel property="rrm:zmlLinkSeaEvaporation" style="SWT.NONE" visible="true">
         <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
       </validatorlabel>
-    -->
   </group>
+    -->
 
   <group style="SWT.NONE" text="%modelConstruction.gft.group.net">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />

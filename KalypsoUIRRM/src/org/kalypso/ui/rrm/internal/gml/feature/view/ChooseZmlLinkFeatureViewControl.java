@@ -40,9 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.gml.feature.view;
 
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
@@ -50,26 +49,22 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.services.IEvaluationService;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.gml.feature.view.dialogs.ChooseTimeseriesDialog;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
  * @author Dirk Kuch
@@ -107,8 +102,8 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
       @Override
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
-        final CommandableWorkspace workspace = getStationsWorkspace();
-        final IStationCollection collection = getStationCollection();
+        final CommandableWorkspace workspace = FindTimeseriesLinkRunnable.getStationsWorkspace();
+        final IStationCollection collection = FindTimeseriesLinkRunnable.getStationCollection();
 
         if( Objects.isNull( workspace, collection ) )
         {
@@ -116,59 +111,27 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
           return;
         }
 
-        final ChooseTimeseriesDialog dialog = new ChooseTimeseriesDialog( ChooseZmlLinkFeatureViewControl.this, button.getShell(), workspace, collection, m_parameterType );
+        final ChooseTimeseriesDialog dialog = new ChooseTimeseriesDialog( button.getShell(), workspace, collection, m_parameterType );
         dialog.setSelection( getTimeseries() );
-        dialog.open();
+        if( dialog.open() == Window.OK )
+        {
+          final ITimeseries selection = dialog.getSelection();
+          final ZmlLink link = selection == null ? null : selection.getDataLink();
+          final TimeseriesLinkType linkType = link == null ? null : link.getTimeseriesLink();
 
-        final ICommand command = dialog.getCommand();
-        if( Objects.isNotNull( command ) )
+          final Feature feature = getFeature();
+
+          final FeatureChange change = new FeatureChange( feature, getFeatureTypeProperty(), linkType );
+          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( feature.getWorkspace(), new FeatureChange[] { change } );
+
           fireFeatureChange( command );
+        }
       }
     } );
 
     updateControl();
 
     return body;
-  }
-
-  protected CommandableWorkspace getStationsWorkspace( )
-  {
-    try
-    {
-      final IEvaluationService service = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
-      final IEvaluationContext context = service.getCurrentState();
-
-      final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
-
-      return workspace;
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
-
-    return null;
-  }
-
-  protected IStationCollection getStationCollection( )
-  {
-    try
-    {
-      final IEvaluationService service = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
-      final IEvaluationContext context = service.getCurrentState();
-
-      final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final IStationCollection collection = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
-
-      return collection;
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
-
-    return null;
   }
 
   @Override
@@ -192,12 +155,9 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
       return null;
 
     final TimeseriesLinkType link = (TimeseriesLinkType) objLink;
-    final IStationCollection collection = getStationCollection();
+    final String href = link.getHref();
 
-    final FindTimeseriesLinkRunnable runnable = new FindTimeseriesLinkRunnable( collection, link );
-    runnable.execute( new NullProgressMonitor() );
-
-    return runnable.getTimeseries();
+    return FindTimeseriesLinkRunnable.findTimeseries( href );
   }
 
   @Override
