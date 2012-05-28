@@ -100,8 +100,8 @@ public class TimeseriesMappingsTreeStrategy implements ITreeNodeStrategy
     byType.put( ITimeseriesConstants.TYPE_RAINFALL, new LinkedList<Object>() );
 
     byType.put( TimeseriesMappingType.gaugeMeasurement, new LinkedList<Object>() );
-    byType.put( TimeseriesMappingType.inflow, new LinkedList<Object>() );
-    byType.put( TimeseriesMappingType.waterBasedEvaporation, new LinkedList<Object>() );
+    byType.put( TimeseriesMappingType.nodeInflow, new LinkedList<Object>() );
+    byType.put( TimeseriesMappingType.storageEvaporation, new LinkedList<Object>() );
 
     /* Rainfall generators */
     final IFeatureBindingCollection<IRainfallGenerator> generators = m_catchmentModel.getGenerators();

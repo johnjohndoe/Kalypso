@@ -68,8 +68,8 @@
   <simpleType name="mappingType">
     <restriction base="string">
       <enumeration value="gaugeMeasurement" />
-      <enumeration value="inflow" />
-      <enumeration value="waterBasedEvaporation" />
+      <enumeration value="nodeInflow" />
+      <enumeration value="storageEvaporation" />
     </restriction>
   </simpleType>
 </schema>

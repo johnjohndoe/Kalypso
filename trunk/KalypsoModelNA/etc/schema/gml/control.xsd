@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:na="org.kalypso.na.control_v2" xmlns:gml="http://www.opengis.net/gml" xmlns:rcm="org.kalypso.model.rcm.v2" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="org.kalypso.na.control_v2" elementFormDefault="qualified" version="1.0">
+<schema xmlns:na="org.kalypso.na.control_v2" xmlns:gml="http://www.opengis.net/gml" xmlns:rcm="org.kalypso.model.rcm.v2" xmlns:tmrrm="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="org.kalypso.na.control_v2" elementFormDefault="qualified" version="1.0">
 
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="org.kalypso.model.rcm.v2" />
+  <import namespace="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping" />
 
   <element name="SimulationCollection" substitutionGroup="gml:_Feature">
     <complexType>
@@ -50,6 +51,10 @@
             <element name="generatorT" type="na:generatorLinkProperty" />
             <element name="generatorE" type="na:generatorLinkProperty" />
 
+            <element name="mappingGaugeMeasurement" type="na:mappingLinkProperty" />
+            <element name="mappingNodeInflow" type="na:mappingLinkProperty" />
+            <element name="mappingStorageEvaporation" type="na:mappingLinkProperty" />
+
             <!-- Source for initial values -->
             <element name="initialValueSource" type="string" minOccurs="0" />
 
@@ -69,6 +74,18 @@
     </annotation>
     <sequence>
       <element ref="rcm:RainfallGenerator" minOccurs="0" maxOccurs="0" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+
+  <complexType name="mappingLinkProperty">
+    <annotation>
+      <appinfo xmlns:kapp="org.kalypso.appinfo">
+        <kapp:documentReference>timeseriesMappings.gml</kapp:documentReference>
+      </appinfo>
+    </annotation>
+    <sequence>
+      <element ref="tmrrm:TimeseriesMapping" minOccurs="0" maxOccurs="0" />
     </sequence>
     <attributeGroup ref="gml:AssociationAttributeGroup" />
   </complexType>

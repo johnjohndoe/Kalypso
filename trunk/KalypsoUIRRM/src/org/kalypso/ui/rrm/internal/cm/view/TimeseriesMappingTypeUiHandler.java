@@ -90,10 +90,10 @@ public class TimeseriesMappingTypeUiHandler extends AbstractTreeNodeUiHandler
       case gaugeMeasurement:
         return UIRrmImages.id( DESCRIPTORS.PARAMETER_TYPE_WATERLEVEL );
 
-      case inflow:
+      case nodeInflow:
         return UIRrmImages.id( DESCRIPTORS.PARAMETER_TYPE_DISCHARGE );
 
-      case waterBasedEvaporation:
+      case storageEvaporation:
         return UIRrmImages.id( DESCRIPTORS.PARAMETER_TYPE_EVAPORATION );
     }
 
