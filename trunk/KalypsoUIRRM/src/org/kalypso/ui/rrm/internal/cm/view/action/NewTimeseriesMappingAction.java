@@ -44,11 +44,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
@@ -92,8 +93,10 @@ public class NewTimeseriesMappingAction extends Action
 
     final EditTimeseriesMappingWizard wizard = new EditTimeseriesMappingWizard( newMapping );
     wizard.setWindowTitle( getText() );
+    wizard.setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), EditTimeseriesMappingWizard.class.getName() ) );
 
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    final WizardDialog2 dialog = new WizardDialog2( shell, wizard );
+    dialog.setRememberSize( true );
     if( dialog.open() == Window.OK )
     {
       try

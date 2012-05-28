@@ -42,8 +42,10 @@ package org.kalypso.ui.rrm.internal.cm.view;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -58,10 +60,12 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ogc.gml.command.AddLinkCommand;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
@@ -71,7 +75,9 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
+import org.kalypso.ui.rrm.internal.gml.feature.view.FindTimeseriesLinkRunnable;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -124,7 +130,6 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
         mappingElements.put( modelElement, new MappingElementBean( null, modelElement, null ) );
 
       /* Fill in existing associations */
-
       final ITimeseriesMapping mapping = getFeature();
       if( mapping != null )
       {
@@ -144,8 +149,20 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
             m_lostMappings.add( new MappingElementBean( existingMappingElement, null, linkedHref ) );
           }
           else
+          {
             mappingBean.setMappingElement( existingMappingElement );
+            mappingBean.setHref( linkedHref );
+          }
         }
+      }
+
+      /* Find associated timeseries */
+      for( final MappingElementBean mappingElementBean : mappingElements.values() )
+      {
+        final String href = mappingElementBean.getHref();
+        // TODO: performanz?
+        final ITimeseries timeseries = FindTimeseriesLinkRunnable.findTimeseries( href );
+        mappingElementBean.setTimeseries( timeseries );
       }
 
       m_mappingElements.addAll( mappingElements.values() );
@@ -172,6 +189,7 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
       final Map<QName, Object> properties = getProperties();
 
       /* Post the command. */
+
       final AddFeatureCommand command = new AddFeatureCommand( workspace, ITimeseriesMapping.FEATURE_TIMESERIES_MAPPING, timeseriesMappings, relation, -1, properties, null, -1 );
       workspace.postCommand( command );
 
@@ -208,28 +226,45 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
 
     for( final MappingElementBean mapping : m_mappingElements )
     {
-      final String href = mapping.getHref();
+      /* create new link type*/
+      final ITimeseries timeseries = mapping.getTimeseries();
+      final ZmlLink dataLink = timeseries == null ? null : timeseries.getDataLink();
+      final String href = dataLink == null ? null : dataLink.getHref();
+      final TimeseriesLinkType linkType = new TimeseriesLinkType();
+      linkType.setHref( href );
+
+      final Feature modelFeature = mapping.getModelElement();
+      final List<String> modelName = Collections.singletonList( modelFeature.getName() );
+      final String modelDescription = modelFeature.getDescription();
 
       final IMappingElement mappingElement = mapping.getMappingElement();
+
       if( mappingElement == null )
       {
         /* add new mapping element */
-        final Feature modelFeature = mapping.getModelElement();
 
         final Map<QName, Object> properties = new HashMap<>();
-        properties.put( IMappingElement.PROPERTY_TIMESERIES_LINK, href );
+        properties.put( IMappingElement.QN_NAME, modelName );
+        properties.put( IMappingElement.QN_DESCRIPTION, modelDescription );
+        properties.put( IMappingElement.PROPERTY_TIMESERIES_LINK, linkType );
 
         final AddFeatureCommand addCommand = new AddFeatureCommand( workspace, IMappingElement.FEATURE_MAPPING_ELEMENT, parentMapping, mappingRelation, -1, properties, null, -1 );
         commands.addCommand( addCommand );
 
         final IFeatureProvider newElementProvider = addCommand;
-        final AddLinkCommand linkCommand = new AddLinkCommand( newElementProvider, mappingElementLinkRelation, -1, modelFeature );
+
+        final String modelRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelFeature.getId() );
+
+        final AddLinkCommand linkCommand = new AddLinkCommand( newElementProvider, mappingElementLinkRelation, -1, modelRef );
         commands.addCommand( linkCommand );
       }
       else
       {
-        final FeatureChange change = new FeatureChange( mappingElement, IMappingElement.PROPERTY_TIMESERIES_LINK, href );
-        commands.addCommand( new ChangeFeaturesCommand( workspace, change ) );
+        final FeatureChange changeName = new FeatureChange( mappingElement, IMappingElement.QN_NAME, modelName );
+        final FeatureChange changeDescription = new FeatureChange( mappingElement, IMappingElement.QN_DESCRIPTION, modelDescription );
+        final FeatureChange changeLink = new FeatureChange( mappingElement, IMappingElement.PROPERTY_TIMESERIES_LINK, linkType );
+
+        commands.addCommand( new ChangeFeaturesCommand( workspace, changeName, changeDescription, changeLink ) );
       }
     }
 
@@ -239,5 +274,15 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
   public MappingElementBean[] getLostMappings( )
   {
     return m_lostMappings.toArray( new MappingElementBean[m_lostMappings.size()] );
+  }
+
+  public MappingElementBean[] getMappings( )
+  {
+    return m_mappingElements.toArray( new MappingElementBean[m_mappingElements.size()] );
+  }
+
+  public TimeseriesMappingType getMappingType( )
+  {
+    return m_mappingType;
   }
 }

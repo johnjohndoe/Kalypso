@@ -67,7 +67,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTrayDialog;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
@@ -75,11 +74,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.StationsByStationsStrategy;
@@ -94,8 +89,6 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelComparator;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
@@ -122,14 +115,10 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
 
   private static final int BUTTON_RESET_ID = 5000;
 
-  private final IFeatureControl m_control;
-
-  private ChangeFeaturesCommand m_command;
-
-  public ChooseTimeseriesDialog( final IFeatureControl control, final Shell shell, final CommandableWorkspace workspace, final IStationCollection collection, final String parameterType )
+  public ChooseTimeseriesDialog( final Shell shell, final CommandableWorkspace workspace, final IStationCollection collection, final String parameterType )
   {
     super( shell );
-    m_control = control;
+
     m_workspace = workspace;
     m_collection = collection;
     m_parameterType = parameterType;
@@ -161,33 +150,9 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
 
   private void resetPressed( )
   {
-    final Feature feature = m_control.getFeature();
-    final GMLWorkspace workspace = feature.getWorkspace();
-
-    final FeatureChange change = new FeatureChange( feature, m_control.getFeatureTypeProperty(), null );
-    m_command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
+    m_selection = null;
 
     super.okPressed();
-  }
-
-  @Override
-  protected void okPressed( )
-  {
-    final ITimeseries selection = getSelection();
-    final ZmlLink link = selection.getDataLink();
-
-    final Feature feature = m_control.getFeature();
-    final GMLWorkspace workspace = feature.getWorkspace();
-
-    final FeatureChange change = new FeatureChange( feature, m_control.getFeatureTypeProperty(), link.getTimeseriesLink() );
-    m_command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
-
-    super.okPressed();
-  }
-
-  public ICommand getCommand( )
-  {
-    return m_command;
   }
 
   @Override
@@ -251,6 +216,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     m_chart = new TimeseriesChartComposite( body, toolkit, context, TimeseriesChartComposite.class.getResource( "templates/diagram_view.kod" ) ); //$NON-NLS-1$
 
     if( Objects.isNotNull( m_selection ) )
+    {
       try
       {
         m_chart.setSelection( new TimeseriesDialogSource( m_selection ) );
@@ -259,6 +225,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
       {
         e.printStackTrace();
       }
+    }
 
     return m_chart;
   }

@@ -234,13 +234,13 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return viewer;
   }
 
-  protected final void createPropertyLabel( final Composite parent, final QName property )
+  protected final Label createPropertyLabel( final Composite parent, final QName property )
   {
     final IPropertyType propertyType = m_featureBean.getFeatureType().getProperty( property );
     final String label = AnnotationUtilities.getAnnotation( propertyType.getAnnotation(), null, IAnnotation.ANNO_LABEL );
     final FormToolkit toolkit = m_binding.getToolkit();
     if( toolkit != null )
-      toolkit.createLabel( parent, label );
+      return toolkit.createLabel( parent, label );
     else
     {
       final Label propertyLabel = new Label( parent, SWT.NONE );
@@ -248,6 +248,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
       layoutData.widthHint = 180;
       propertyLabel.setLayoutData( layoutData );
       propertyLabel.setText( label );
+      return propertyLabel;
     }
   }
 
