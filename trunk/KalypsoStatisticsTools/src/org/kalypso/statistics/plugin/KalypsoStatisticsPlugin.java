@@ -12,7 +12,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
@@ -23,7 +22,6 @@ import org.kalypso.statistics.types.EStatisticsImage;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import de.renew.workflow.connector.worklist.TaskExecutionListener;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -31,12 +29,10 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class KalypsoStatisticsPlugin extends AbstractUIPlugin
 {
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.kalypso.statistics"; //$NON-NLS-1$
+  // The plug-in ID
+  public static final String PLUGIN_ID = "org.kalypso.statistics"; //$NON-NLS-1$
 
   private static KalypsoStatisticsPlugin PLUGIN;
-
-  private TaskExecutionListener m_taskExecutionListener;
 
   private PluginImageProvider m_imageProvider;
 
@@ -57,16 +53,6 @@ public class KalypsoStatisticsPlugin extends AbstractUIPlugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
-
-    if( PlatformUI.isWorkbenchRunning() )
-    {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      // TODO: check if this stuff is really necessary! This is copy paste from AFGUI stuff, probably not needed twice
-
-      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-      m_taskExecutionListener = new TaskExecutionListener();
-      commandService.addExecutionListener( m_taskExecutionListener );
-    }
 
     // delete tmp images both on startup and shutdown
     m_imageProvider = new PluginImageProvider( this );
@@ -131,15 +117,15 @@ public class KalypsoStatisticsPlugin extends AbstractUIPlugin
     m_szenarioController = szenarioController;
   }
 
-	@Override
-	protected void initializeImageRegistry(final ImageRegistry registry) {
-		super.initializeImageRegistry(registry);
-		final Bundle bundle = Platform.getBundle(PLUGIN_ID);
-		for (final EStatisticsImage eImage : EStatisticsImage.values()) {
-			final ImageDescriptor imgDesc = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(eImage.getImagePath()), null));
-			registry.put(eImage.name(), imgDesc);
-		}
-	}
-
-
+  @Override
+  protected void initializeImageRegistry( final ImageRegistry registry )
+  {
+    super.initializeImageRegistry( registry );
+    final Bundle bundle = Platform.getBundle( PLUGIN_ID );
+    for( final EStatisticsImage eImage : EStatisticsImage.values() )
+    {
+      final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( FileLocator.find( bundle, new Path( eImage.getImagePath() ), null ) );
+      registry.put( eImage.name(), imgDesc );
+    }
+  }
 }

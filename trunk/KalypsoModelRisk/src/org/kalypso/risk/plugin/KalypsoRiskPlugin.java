@@ -8,7 +8,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
@@ -18,7 +17,6 @@ import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.risk.project.SzenarioController;
 import org.osgi.framework.BundleContext;
 
-import de.renew.workflow.connector.worklist.TaskExecutionListener;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -29,8 +27,6 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   public static final String PLUGIN_ID = "org.kalypso.risk"; //$NON-NLS-1$
 
   private static KalypsoRiskPlugin PLUGIN;
-
-  private TaskExecutionListener m_taskExecutionListener;
 
   private PluginImageProvider m_imageProvider;
 
@@ -51,16 +47,6 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
-
-    if( PlatformUI.isWorkbenchRunning() )
-    {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      // TODO: check if this stuff is really necessary! This is copy paste from AFGUI stuff, probably not needed twice
-
-      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-      m_taskExecutionListener = new TaskExecutionListener();
-      commandService.addExecutionListener( m_taskExecutionListener );
-    }
 
     // delete tmp images both on startup and shutdown
     m_imageProvider = new PluginImageProvider( this );
