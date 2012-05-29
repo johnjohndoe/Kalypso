@@ -46,8 +46,8 @@ import java.util.Arrays;
 import java.util.Date;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -56,19 +56,25 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusWithTime;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.simulations.worker.CalculateCatchmentModelsWorker;
+import org.kalypso.ui.rrm.internal.simulations.worker.CalculateSimulationWorker;
+import org.kalypso.ui.rrm.internal.simulations.worker.CleanupSimulationWorker;
+import org.kalypso.ui.rrm.internal.simulations.worker.CreateSimulationWorker;
+import org.kalypso.ui.rrm.internal.simulations.worker.PrepareSimulationWorker;
+import org.kalypso.utils.log.GeoStatusLog;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * This runnable calculates the simulation.
- *
+ * 
  * @author Holger Albert
  */
 public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
@@ -95,7 +101,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
   /**
    * The constructor.
-   *
+   * 
    * @param simulations
    *          The simulations to calculate.
    * @param calculateCatchmentModels
@@ -121,7 +127,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       monitor = new NullProgressMonitor();
 
     /* The status collector. */
-    final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
 
     try
     {
@@ -155,7 +161,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
   /**
    * This function calculates one simulation.
-   *
+   * 
    * @param simulation
    *          The simulation to calculate.
    * @param monitor
@@ -165,7 +171,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
   private IStatus calculateSimulation( final NAControl simulation, final IProgressMonitor monitor )
   {
     /* The status collector. */
-    final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
 
     try
     {
@@ -175,14 +181,17 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
       /* Mark a status with the current time. */
       final Date startTime = new Date();
-      collector.add( new StatusWithTime( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Calculation started at %s.", DF.format( startTime ) ), startTime ) );
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Calculation started at %s.", DF.format( startTime ) ) ) );
+
+      /* Get the rrm simulation. */
+      final RrmSimulation rrmSimulation = getRrmSimulation( simulation );
+
+      /* The model. */
+      NaModell model = null;
 
       /* Copy given flags. */
       boolean calculateCatchmentModels = m_calculateCatchmentModels;
       final boolean calculateStartConditions = m_calculateStartConditions;
-
-      /* Get the rrm simulation. */
-      final RrmSimulation rrmSimulation = getRrmSimulation( simulation );
 
       /* Create/Cleanup the simulation folder. */
       final IFolder simulationFolder = rrmSimulation.getSimulationFolder();
@@ -191,7 +200,14 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         /* HINT: We keep the selection of the user. */
 
         /* Clean up. */
-        // TODO
+        final CleanupSimulationWorker cleanupWorker = new CleanupSimulationWorker( simulation, rrmSimulation );
+        final IStatus cleanupStatus = cleanupWorker.execute( new SubProgressMonitor( monitor, 200 ) );
+        collector.add( cleanupStatus );
+        if( cleanupStatus.getSeverity() >= IStatus.ERROR )
+          return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+
+        /* Get model. */
+        model = cleanupWorker.getModel();
       }
       else
       {
@@ -200,44 +216,58 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         calculateCatchmentModels = true;
 
         /* Create. */
-        // TODO
+        final CreateSimulationWorker createWorker = new CreateSimulationWorker( simulation, rrmSimulation );
+        final IStatus createStatus = createWorker.execute( new SubProgressMonitor( monitor, 200 ) );
+        collector.add( createStatus );
+        if( createStatus.getSeverity() >= IStatus.ERROR )
+          return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+
+        /* Get model. */
+        model = createWorker.getModel();
       }
 
       /* Monitor. */
-      monitor.worked( 200 );
-      monitor.subTask( "Copy some data..." );
+      monitor.subTask( "Prepare..." );
 
-      /* Copy some data. */
-      // TODO
+      /* Prepare. */
+      final PrepareSimulationWorker prepareWorker = new PrepareSimulationWorker( simulation, rrmSimulation, model, calculateStartConditions );
+      final IStatus prepareStatus = prepareWorker.execute( new SubProgressMonitor( monitor, 200 ) );
+      collector.add( prepareStatus );
+      if( prepareStatus.getSeverity() >= IStatus.ERROR )
+        return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
 
       /* Monitor. */
-      monitor.worked( 200 );
       monitor.subTask( "Calculate the catchment models..." );
 
       /* Calculate the catchment models. */
-      // TODO
+      final CalculateCatchmentModelsWorker catchmentModelsWorker = new CalculateCatchmentModelsWorker( simulation, rrmSimulation, model, calculateCatchmentModels );
+      final IStatus catchmentModelsStatus = catchmentModelsWorker.execute( new SubProgressMonitor( monitor, 200 ) );
+      collector.add( catchmentModelsStatus );
+      if( catchmentModelsStatus.getSeverity() >= IStatus.ERROR )
+        return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
 
       /* Monitor. */
-      monitor.worked( 200 );
       monitor.subTask( "Calculate the simulation..." );
 
-      /* If this is a longterm simulation and the start conditions should be calculated, */
-      /* We need to manipulate the modell.gml, activating all result flags. */
-      // TODO
-
       /* Calculate the simulation. */
-      // TODO
+      final CalculateSimulationWorker calculateWorker = new CalculateSimulationWorker( rrmSimulation );
+      final IStatus calculateStatus = calculateWorker.execute( new SubProgressMonitor( monitor, 200 ) );
+      collector.add( calculateStatus );
+      if( calculateStatus.getSeverity() >= IStatus.ERROR )
+        return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
 
       /* Monitor. */
-      monitor.worked( 200 );
       monitor.subTask( "Save the log..." );
-
-      /* Save the status in the simulation folder. */
-      // TODO
 
       /* Mark a status with the current time. */
       final Date endTime = new Date();
-      collector.add( new StatusWithTime( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Calculation finished at %s.", DF.format( endTime ) ), endTime ) );
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Calculation finished at %s.", DF.format( endTime ) ) ) );
+
+      /* Save the status in the simulation folder. */
+      final IFile calculationStatusGml = rrmSimulation.getCalculationStatusGml();
+      final GeoStatusLog geoStatusLog = new GeoStatusLog( calculationStatusGml );
+      geoStatusLog.log( collector.asMultiStatus( String.format( "Calculation of '%s'", simulation.getDescription() ) ) );
+      geoStatusLog.serialize();
 
       /* Monitor. */
       monitor.worked( 200 );
@@ -260,11 +290,11 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
   /**
    * This function returns the rrm simulation.
-   *
+   * 
    * @param simulation
    *          The simulation to calculate.
    */
-  private RrmSimulation getRrmSimulation( final NAControl simulation ) throws CoreException
+  private RrmSimulation getRrmSimulation( final NAControl simulation )
   {
     /* Get the description of the simulation. */
     final String description = simulation.getDescription();

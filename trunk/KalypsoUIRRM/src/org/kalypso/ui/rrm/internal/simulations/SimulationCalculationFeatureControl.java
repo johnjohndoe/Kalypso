@@ -46,7 +46,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -89,7 +88,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * The simulation calculation feature control.
- *
+ * 
  * @author Holger Albert
  */
 public class SimulationCalculationFeatureControl extends AbstractFeatureControl
@@ -106,7 +105,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
   /**
    * The constructor.
-   *
+   * 
    * @param ftp
    */
   public SimulationCalculationFeatureControl( final IPropertyType ftp )
@@ -119,7 +118,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
   /**
    * The constructor.
-   *
+   * 
    * @param feature
    * @param ftp
    */
@@ -213,7 +212,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       /* Initialize. */
       initialize( simulation );
     }
-    catch( final CoreException ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
 
@@ -242,7 +241,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     return true;
   }
 
-  private RrmSimulation getSimulation( ) throws CoreException
+  private RrmSimulation getSimulation( )
   {
     /* Get the description of the current simulation. */
     final Feature feature = getFeature();
@@ -286,7 +285,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     } );
 
     /* Create the validate simulation job. */
-    final ValidateSimulationJob validationJob = new ValidateSimulationJob( (NAControl) getFeature() );
+    final ValidateSimulationJob validationJob = new ValidateSimulationJob( simulation, (NAControl) getFeature() );
     validationJob.setUser( false );
     validationJob.addJobChangeListener( new JobChangeAdapter()
     {

@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.jobs;
 
+import java.util.Date;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -50,9 +53,16 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
+import org.kalypsodeegree_impl.gml.binding.commons.StatusCollection;
 
 /**
  * This job validates the simulation and provides the validation status.
@@ -61,6 +71,11 @@ import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
  */
 public class ValidateSimulationJob extends Job
 {
+  /**
+   * The simulation.
+   */
+  private final RrmSimulation m_simulation;
+
   /**
    * The na control.
    */
@@ -74,13 +89,16 @@ public class ValidateSimulationJob extends Job
   /**
    * The constructor.
    * 
+   * @param simulation
+   *          The simulation.
    * @param control
    *          The na control.
    */
-  public ValidateSimulationJob( final NAControl control )
+  public ValidateSimulationJob( final RrmSimulation simulation, final NAControl control )
   {
     super( "ValidateSimulationJob" );
 
+    m_simulation = simulation;
     m_control = control;
     m_validationStatus = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Not available." );
   }
@@ -101,14 +119,24 @@ public class ValidateSimulationJob extends Job
       monitor.beginTask( "Validating the simulation...", 1000 );
       monitor.subTask( "Validating the simulation..." );
 
-      /* The last modified timestamp of the results of the simulation. */
-      // TODO
-      final long lastModifiedResults = -1;
+      /* Get the calculation status gml. */
+      final IFile calculationStatusGml = m_simulation.getCalculationStatusGml();
+      if( calculationStatusGml.exists() )
+      {
+        /* The last modified timestamp of the results of the simulation. */
+        final long lastModifiedResults = getLastModifiedResults( calculationStatusGml );
 
-      /* Validate the simulation. */
-      m_validationStatus = validateSimulation( lastModifiedResults, monitor );
+        /* Validate the simulation. */
+        m_validationStatus = validateSimulation( lastModifiedResults, monitor );
+      }
+      else
+        m_validationStatus = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "The simulation was not calculated." );
 
       return Status.OK_STATUS;
+    }
+    catch( final Exception ex )
+    {
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Reading the calculation status has failed.", ex );
     }
     finally
     {
@@ -125,6 +153,25 @@ public class ValidateSimulationJob extends Job
   public IStatus getValidationStatus( )
   {
     return m_validationStatus;
+  }
+
+  private long getLastModifiedResults( final IFile calculationStatusGml ) throws Exception
+  {
+    /* Load the workspace. */
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( calculationStatusGml );
+
+    /* Get the root feature. */
+    final Feature rootFeature = workspace.getRootFeature();
+
+    /* Cast to status collection. */
+    final StatusCollection statusCollection = (StatusCollection) rootFeature;
+    final IFeatureBindingCollection<IGeoStatus> stati = statusCollection.getStati();
+    final IGeoStatus status = stati.get( stati.size() - 1 );
+    final Date time = status.getTime();
+    if( time != null )
+      return time.getTime();
+
+    return calculationStatusGml.getLocalTimeStamp();
   }
 
   /**

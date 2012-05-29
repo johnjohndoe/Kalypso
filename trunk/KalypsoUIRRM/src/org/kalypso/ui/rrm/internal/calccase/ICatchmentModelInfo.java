@@ -69,6 +69,8 @@ public interface ICatchmentModelInfo
 
   public abstract String getParameterType( );
 
+  public abstract boolean isCalculateCatchmentModels( );
+
   public abstract Period getTimestep( );
 
   public abstract LocalTime getTimestamp( );
