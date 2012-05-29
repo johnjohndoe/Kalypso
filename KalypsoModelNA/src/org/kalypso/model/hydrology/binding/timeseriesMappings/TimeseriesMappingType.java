@@ -57,9 +57,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 public enum TimeseriesMappingType
 {
-  gaugeMeasurement("Gauge measurement", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_WATERLEVEL),
-  nodeInflow("Node inflow", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE),
-  storageEvaporation("Storage evaporation", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED);
+  gaugeMeasurement("Gauge measurement", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_WATERLEVEL, Node.PROPERTY_PEGEL_ZR),
+  nodeInflow("Node inflow", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_ZUFLUSS_ZR),
+  storageEvaporation("Storage evaporation", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED, StorageChannel.PROPERTY_SEA_EVAPORATION_ZMLLINK);
 
   private String m_label;
 
@@ -67,11 +67,14 @@ public enum TimeseriesMappingType
 
   private final String m_parameterType;
 
-  private TimeseriesMappingType( final String label, final QName elementType, final String parameterType )
+  private final QName m_modelLinkProperty;
+
+  private TimeseriesMappingType( final String label, final QName elementType, final String parameterType, final QName modelLinkProperty )
   {
     m_label = label;
     m_elementType = elementType;
     m_parameterType = parameterType;
+    m_modelLinkProperty = modelLinkProperty;
   }
 
   public String getLabel( )
@@ -123,5 +126,10 @@ public enum TimeseriesMappingType
   {
     final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( m_elementType );
     return featureType.getAnnotation().getValue( IAnnotation.ANNO_NAME );
+  }
+
+  public QName getModelLinkProperty( )
+  {
+    return m_modelLinkProperty;
   }
 }

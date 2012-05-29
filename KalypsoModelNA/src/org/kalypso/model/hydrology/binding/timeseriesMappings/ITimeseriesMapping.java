@@ -69,7 +69,11 @@ public interface ITimeseriesMapping extends Feature
 
   String getComment( );
 
+  void setComment( String comment );
+
   TimeseriesMappingType getType( );
+
+  void setType( TimeseriesMappingType type );
 
   Date getLastModified( );
 

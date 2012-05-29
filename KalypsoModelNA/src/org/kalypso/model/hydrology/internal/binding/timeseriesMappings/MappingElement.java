@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.binding.timeseriesMappings;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -69,5 +71,25 @@ public class MappingElement extends Feature_Impl implements IMappingElement
   public ZmlLink getLinkedTimeseries( )
   {
     return new ZmlLink( this, PROPERTY_TIMESERIES_LINK );
+  }
+
+  @Override
+  public void setLinkedFeature( final String href )
+  {
+    setLink( MEMBER_FEATURE_LINK, href );
+  }
+
+  @Override
+  public void setLinkedTimeseries( final String href )
+  {
+    if( StringUtils.isBlank( href ) )
+      setProperty( MEMBER_FEATURE_LINK, null );
+    else
+    {
+      final TimeseriesLinkType link = new TimeseriesLinkType();
+      link.setHref( href );
+
+      setProperty( MEMBER_FEATURE_LINK, link );
+    }
   }
 }

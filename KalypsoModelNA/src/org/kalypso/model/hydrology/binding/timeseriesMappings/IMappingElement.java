@@ -62,5 +62,9 @@ public interface IMappingElement extends Feature
 
   IXLinkedFeature getLinkedFeature( );
 
+  void setLinkedFeature( String href );
+
   ZmlLink getLinkedTimeseries( );
+
+  void setLinkedTimeseries( String href );
 }
