@@ -98,4 +98,16 @@ public class TimeseriesMapping extends Feature_Impl implements ITimeseriesMappin
   {
     setProperty( PROPERTY_LAST_MODIFIED, DateUtilities.toXMLGregorianCalendar( lastModified ) );
   }
+
+  @Override
+  public void setComment( final String comment )
+  {
+    setProperty( PROPERTY_COMMENT, comment );
+  }
+
+  @Override
+  public void setType( final TimeseriesMappingType type )
+  {
+    setProperty( PROPERTY_TYPE, type.name() );
+  }
 }

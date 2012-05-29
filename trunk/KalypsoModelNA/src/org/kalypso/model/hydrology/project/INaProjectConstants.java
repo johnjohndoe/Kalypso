@@ -104,7 +104,11 @@ public interface INaProjectConstants
 
   String GML_CATCHMENT_MODEL_FILE = "catchmentModels.gml"; //$NON-NLS-1$
 
+  String GML_TIMESERIES_MAPPINGS_FILE = "timeseriesMappings.gml"; //$NON-NLS-1$
+
   String GML_CATCHMENT_MODEL_PATH = FOLDER_MODELS + "/" + GML_CATCHMENT_MODEL_FILE; //$NON-NLS-1$
+
+  String GML_TIMESERIES_MAPPINGS_PATH = FOLDER_MODELS + "/" + GML_TIMESERIES_MAPPINGS_FILE; //$NON-NLS-1$
 
   String GML_SIMULATIONS_FILE = "simulations.gml"; //$NON-NLS-1$
 
