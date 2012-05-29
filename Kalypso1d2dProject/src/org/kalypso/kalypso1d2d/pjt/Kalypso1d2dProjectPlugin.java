@@ -11,13 +11,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioController;
 import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -61,10 +61,10 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     final Job job = new Job( Messages.getString("org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin.0") ) //$NON-NLS-1$
     {
       @Override
-      protected IStatus run( IProgressMonitor monitor )
+      protected IStatus run( final IProgressMonitor monitor )
       {
         initScenarioController();
-        
+
         return Status.OK_STATUS;
       }
     };
@@ -87,7 +87,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
-      final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       caseDataProvider.removeScenarioDataListener( m_szenarioController );
     }
     plugin = null;
@@ -96,7 +96,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   protected void initScenarioController( )
   {
-    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     m_szenarioController = new SzenarioController();
     dataProvider.addScenarioDataListener( m_szenarioController );
     final IScenario scenario = dataProvider.getScenario();
@@ -105,7 +105,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   /**
    * Returns the shared instance
-   * 
+   *
    * @return the shared instance
    */
   public static Kalypso1d2dProjectPlugin getDefault( )

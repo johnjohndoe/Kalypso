@@ -24,7 +24,6 @@ import org.eclipse.ui.internal.actions.NewWizardShortcutAction;
 import org.eclipse.ui.internal.wizards.NewWizardRegistry;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
@@ -38,6 +37,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -66,7 +66,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
 
       /* collect the flood model data, that is needed for Risk Modeller */
       // get the data provider
-      final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider dataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final IFolder floodModelScenarioFolder = (IFolder) dataProvider.getScenarioFolder().findMember( "/models/" ); //$NON-NLS-1$
 
       // get the flood model

@@ -60,7 +60,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -70,6 +69,8 @@ import org.kalypso.ui.wizards.imports.utils.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Madanagopal
@@ -227,7 +228,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys, temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getOwner(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
-            final SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
+            final IScenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
             caseDataProvider.postCommand( ITerrainModel.class.getName(), new AddTerrainelevationModelCmd() );
 
             caseDataProvider.saveModel( ITerrainModel.class.getName(), null );

@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter;
@@ -57,6 +56,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Thomas Jung
@@ -85,7 +86,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
   {
     monitor.beginTask( Messages.getString( "org.kalypso.wizards.export2d.Export2dMeshRunnable.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
-    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
     final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class.getName() );
     final IRoughnessClsCollection roughnessModel = m_exportRoughness ? (IRoughnessClsCollection) dataProvider.getModel( IRoughnessClsCollection.class.getName() ) : null;

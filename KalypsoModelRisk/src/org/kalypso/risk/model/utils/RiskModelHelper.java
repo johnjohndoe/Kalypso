@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -77,6 +76,8 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.xml.sax.SAXException;
 
 import com.vividsolutions.jts.geom.Coordinate;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Thomas Jung
@@ -245,7 +246,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for one raster cell <br>
    * further informations: DVWK-Mitteilung 10
-   *
+   * 
    * @param damages
    *          damage values for all annualities
    * @param probabilities
@@ -606,7 +607,7 @@ public class RiskModelHelper
     monitor.beginTask( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.1" ), names.length ); //$NON-NLS-1$
 
     /* The active scenario must have changed to the risk project. We can now access risk project data. */
-    final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
 
     final String failedToLoadRiskMsg = String.format( Messages.getString( "RiskModelHelper.0" ) ); //$NON-NLS-1$
     final IStatus failedToLoadRiskStatus = new Status( IStatus.ERROR, PluginUtilities.id( KalypsoRiskPlugin.getDefault() ), failedToLoadRiskMsg );

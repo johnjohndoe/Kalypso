@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -74,6 +73,8 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dirk Kuch
@@ -150,7 +151,7 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
 
       final ICommand command = m_timeseries.applyChanges();
 
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
 
       stationsWorkspace.postCommand( command );

@@ -43,7 +43,6 @@ package org.kalypso.ui.rrm.internal.timeseries.operations;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
@@ -52,6 +51,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dirk Kuch
@@ -89,7 +90,7 @@ public class DeleteTimeseriesOperation implements ICoreRunnableWithProgress
       /* Delete feature */
       final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_timeserieses );
 
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
       stationsWorkspace.postCommand( deleteCommand );
     }

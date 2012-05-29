@@ -58,7 +58,6 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -108,6 +107,8 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * The handler that converts the RMA-Kalypso element events into discretisation model elements and links
@@ -173,13 +174,13 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final RoughnessHandler m_roughnessHandler;
 
-  private final SzenarioDataProvider m_szenarioDataProvider;
+  private final IScenarioDataProvider m_szenarioDataProvider;
 
   private boolean m_importRoughness;
 
-  private String m_crs;
+  private final String m_crs;
 
-  public DiscretisationModel1d2dHandler( final SzenarioDataProvider szenarioDataProvider, final IPositionProvider positionProvider ) throws CoreException
+  public DiscretisationModel1d2dHandler( final IScenarioDataProvider szenarioDataProvider, final IPositionProvider positionProvider ) throws CoreException
   {
     m_szenarioDataProvider = szenarioDataProvider;
 

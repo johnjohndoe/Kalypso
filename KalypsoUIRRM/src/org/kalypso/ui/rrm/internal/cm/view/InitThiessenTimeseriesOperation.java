@@ -52,7 +52,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -73,6 +72,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author Gernot Belger
  * @author Holger Albert
@@ -91,7 +92,7 @@ public class InitThiessenTimeseriesOperation implements ICoreRunnableWithProgres
   {
     try
     {
-      final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
       final IStationCollection modelStations = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
 
       /* Create workspace */

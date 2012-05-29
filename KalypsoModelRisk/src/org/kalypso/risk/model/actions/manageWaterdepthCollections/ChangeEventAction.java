@@ -51,7 +51,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -63,6 +62,8 @@ import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author Gernot Belger
  */
@@ -70,13 +71,13 @@ public class ChangeEventAction extends Action implements IUpdateable
 {
   private final IRasterDataModel m_model;
 
-  private final SzenarioDataProvider m_dataProvider;
+  private final IScenarioDataProvider m_dataProvider;
 
   private final TreeViewer m_eventViewer;
 
   private final IMapPanel m_mapPanel;
 
-  public ChangeEventAction( final IRasterDataModel model, final SzenarioDataProvider dataProvider, final TreeViewer eventViewer, final IMapPanel mapPanel )
+  public ChangeEventAction( final IRasterDataModel model, final IScenarioDataProvider dataProvider, final TreeViewer eventViewer, final IMapPanel mapPanel )
   {
     super( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.12" ) );
 

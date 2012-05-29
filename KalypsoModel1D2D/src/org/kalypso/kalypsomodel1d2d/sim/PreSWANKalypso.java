@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.vfs.FileSystemManagerWrapper;
@@ -59,6 +58,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Convert from GML to SWAN-Kalypso format
@@ -143,10 +144,11 @@ public class PreSWANKalypso implements ISimulation
       final IControlModelGroup controlModelGroup = (IControlModelGroup) controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
       m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
 
+      final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+
       m_discretisationModel = null;
       try
       {
-        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         m_discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       }
       catch( final Exception e )
@@ -162,7 +164,6 @@ public class PreSWANKalypso implements ISimulation
       m_flowRelationshipModel = null;
       try
       {
-        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         m_flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName() );
       }
       catch( final Exception e )
@@ -178,7 +179,6 @@ public class PreSWANKalypso implements ISimulation
       m_scenarioMetaData = null;
       try
       {
-        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         m_scenarioMetaData = caseDataProvider.getModel( IScenarioResultMeta.class.getName() );
       }
       catch( final Exception e )
@@ -193,7 +193,6 @@ public class PreSWANKalypso implements ISimulation
 
       try
       {
-        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         m_windRelationshipModel = caseDataProvider.getModel( IWindModel.class.getName() );
       }
       catch( final Exception e )

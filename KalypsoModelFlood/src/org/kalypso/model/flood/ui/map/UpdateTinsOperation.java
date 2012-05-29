@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -96,6 +95,8 @@ import com.bce.gis.io.hmo.HMOReader;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * TODO: remove the TriangulatedSurfaceTriangleEater from here: we do not want to have a dependency on 1d2d!<br>
  *
@@ -108,9 +109,9 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 {
   private final ITinReference[] m_tinReferences;
 
-  private final SzenarioDataProvider m_provider;
+  private final IScenarioDataProvider m_provider;
 
-  public UpdateTinsOperation( final ITinReference[] tinReferences, final SzenarioDataProvider provider )
+  public UpdateTinsOperation( final ITinReference[] tinReferences, final IScenarioDataProvider provider )
   {
     m_tinReferences = tinReferences;
     m_provider = provider;

@@ -53,7 +53,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -129,7 +128,7 @@ public class ImportRestartAction extends Action
           final Restart1DImporter restart1DImporter = new Restart1DImporter( (IScenarioResultMeta) page.getResultRoot(), scenarioFolder );
           restart1DImporter.doImport( lengthSectionFile, IWspmDictionaryConstants.LS_COMPONENT_STATION, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY, IWspmDictionaryConstants.LS_COMPONENT_TYPE, progress.newChild( 80 ) );
 
-          final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) modelProvider;
+          final IScenarioDataProvider szenarioDataProvider = modelProvider;
           szenarioDataProvider.postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "empty", false ) ); //$NON-NLS-1$
           modelProvider.saveModel( IScenarioResultMeta.class.getName(), progress.newChild( 20 ) );
 

@@ -52,7 +52,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
@@ -61,6 +60,8 @@ import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 import org.kalypso.ui.views.map.MapView;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -92,7 +93,7 @@ public class EditNetElementsTaskHandler extends AbstractHandler
 
     configureFeatureView( activePage );
 
-    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
     final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
     WorkflowHandlerUtils.setGttInput( activePage, "Nodes", "urn:org.kalypso.model.rrm.editNetElements:workflow:Nodes:gtt", Messages.getString( "EditNetElementsTaskHandler_2" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

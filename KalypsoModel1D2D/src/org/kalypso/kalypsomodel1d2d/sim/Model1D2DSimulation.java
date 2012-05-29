@@ -50,7 +50,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -69,6 +68,8 @@ import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Starting point for running 1d2d simulations.
@@ -102,7 +103,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     final Date startTime = geoLog.getStartTime();
     final String calcUnitId = calculationUnit.getId();
 
-    final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
 
     try
     {
@@ -137,7 +138,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     }
   }
 
-  private void initResultMeta( final ICalculationUnit calculationUnit, final Date startTime, final SzenarioDataProvider caseDataProvider ) throws CoreException
+  private void initResultMeta( final ICalculationUnit calculationUnit, final Date startTime, final IScenarioDataProvider caseDataProvider ) throws CoreException
   {
     final IScenarioResultMeta scenarioResultMeta = caseDataProvider.getModel( IScenarioResultMeta.class.getName() );
     final ICalcUnitResultMeta existingCalcUnitMeta = scenarioResultMeta.findCalcUnitMetaResult( calculationUnit.getId() );

@@ -71,7 +71,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.core.status.StatusComposite;
@@ -92,6 +91,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -106,7 +106,7 @@ public class WaterdepthCollectionsManagementComposite extends Composite
 
   private TreeViewer m_eventViewer;
 
-  protected SzenarioDataProvider m_dataProvider;
+  protected IScenarioDataProvider m_dataProvider;
 
   private IRasterDataModel m_model;
 
@@ -234,7 +234,7 @@ public class WaterdepthCollectionsManagementComposite extends Composite
 
     final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = service.getCurrentState();
-    final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IScenarioDataProvider dataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
     m_model = dataProvider.getModel( IRasterDataModel.class.getName() );
     m_dataProvider = dataProvider;

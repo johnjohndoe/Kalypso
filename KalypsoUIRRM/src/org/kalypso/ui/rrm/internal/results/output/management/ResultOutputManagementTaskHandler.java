@@ -49,8 +49,9 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dirk Kuch
@@ -67,7 +68,7 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
     final IWorkbenchPage activePage = window.getActivePage();
 
     /* set input to gtt tables */
-    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
     final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
     WorkflowHandlerUtils.setGttInput( activePage, "NaNodes", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:NaNodes:gtt", "Knoten", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$

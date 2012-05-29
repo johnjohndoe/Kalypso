@@ -3,7 +3,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.themeinfo;
 import java.util.Formatter;
 
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
@@ -14,11 +13,10 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 public class PolyElementThemeInfo extends FeatureThemeInfo
 {
-  /**
-   * @see org.kalypso.ogc.gml.FeatureThemeInfo#formatInfo(java.util.Formatter, org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public void formatInfo( final Formatter formatter, final Feature feature )
   {
@@ -29,7 +27,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
       return;
     }
 
-    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     if( dataProvider == null )
       return;
 

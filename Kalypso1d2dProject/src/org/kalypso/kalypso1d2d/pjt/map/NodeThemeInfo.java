@@ -12,7 +12,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -33,6 +32,8 @@ import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 public class NodeThemeInfo implements IKalypsoThemeInfo
 {
@@ -86,7 +87,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 //    if( m_listSWANProps.contains( m_propertyNameFromTheme ) )
     {
       m_boolResolveNodesFromDiscrModel = true;
-      final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
 
       try
       {

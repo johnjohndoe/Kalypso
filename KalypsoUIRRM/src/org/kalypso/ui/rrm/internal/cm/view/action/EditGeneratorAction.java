@@ -48,7 +48,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -63,6 +62,8 @@ import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.cm.view.MultiBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -101,7 +102,7 @@ public class EditGeneratorAction extends Action
     try
     {
       /* Get the data provider. */
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final NaModell model = dataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL );
 
       /* Compare the catchments of the model and the catchments of the generator. */

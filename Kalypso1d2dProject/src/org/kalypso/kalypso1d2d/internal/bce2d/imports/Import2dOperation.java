@@ -13,7 +13,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -24,9 +23,11 @@ import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * Provides the mechanism for transforming a 2D-Ascii model into a 1d 2d gml model
- * 
+ *
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class Import2dOperation implements ICoreRunnableWithProgress
@@ -54,7 +55,7 @@ public class Import2dOperation implements ICoreRunnableWithProgress
       // TODO: use this position provider to import 2d-files with missing 6th coordinate -> ask user for offset values
       final IPositionProvider positionProvider = new XYZOffsetPositionProvider( 0.0, 0.0, m_data.getCoordinateSystem() );
 
-      final SzenarioDataProvider szenarioDataProvider = m_data.getSzenarioDataProvider();
+      final IScenarioDataProvider szenarioDataProvider = m_data.getSzenarioDataProvider();
       final DiscretisationModel1d2dHandler handler = new DiscretisationModel1d2dHandler( szenarioDataProvider, positionProvider );
       handler.setImportRoughness( m_data.getImportRoughness() );
 

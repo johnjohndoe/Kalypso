@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.Period;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -84,6 +83,8 @@ import org.kalypso.ui.rrm.internal.timeseries.view.imports.IImportTimeseriesOper
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.imports.IStoreObservationData;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -159,7 +160,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
       properties.put( ITimeseries.PROPERTY_MEASUREMENT_START, DateUtilities.toXMLGregorianCalendar( daterange.getFrom() ) );
       properties.put( ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( daterange.getTo() ) );
 
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
 
       final AddFeatureCommand command = new AddFeatureCommand( stationsWorkspace, ITimeseries.FEATURE_TIMESERIES, m_station, parentRelation, -1, properties, null, -1 );
@@ -201,7 +202,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private IFile createDataFile( final TimeseriesBean timeseries, final Period timestep, final IStatusCollector stati ) throws CoreException
+  private IFile createDataFile( final TimeseriesBean timeseries, final Period timestep, final IStatusCollector stati )
   {
     final String parameterType = (String) timeseries.getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
     final String quality = (String) timeseries.getProperty( ITimeseries.PROPERTY_QUALITY );
@@ -215,8 +216,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
       stati.add( IStatus.WARNING, Messages.getString( "StoreTimeseriesOperation.1" ) ); //$NON-NLS-1$
     }
 
-    final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
-    final IProject project = scenarioDataProvider.getScenarioFolder().getProject();
+    final IProject project = ScenarioHelper.getScenarioFolder().getProject();
     final IFolder timeseriesFolder = project.getFolder( INaProjectConstants.PATH_TIMESERIES );
     final IFolder stationFolder = timeseriesFolder.getFolder( stationFoldername );
 

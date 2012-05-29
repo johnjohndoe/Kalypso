@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.risk.i18n.Messages;
@@ -61,16 +60,18 @@ import org.kalypso.simulation.core.refactoring.ISimulationRunner;
 import org.kalypso.simulation.core.refactoring.SimulationRunnerFactory;
 import org.kalypso.simulation.core.simspec.Modeldata;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author Gernot Belger
  */
 public class SpecificDamageOperation implements ICoreRunnableWithProgress
 {
-  private final SzenarioDataProvider m_scenarioDataProvider;
+  private final IScenarioDataProvider m_scenarioDataProvider;
 
   private final IFolder m_scenarioFolder;
 
-  public SpecificDamageOperation( final SzenarioDataProvider scenarioDataProvider, final IFolder scenarioFolder )
+  public SpecificDamageOperation( final IScenarioDataProvider scenarioDataProvider, final IFolder scenarioFolder )
   {
     m_scenarioDataProvider = scenarioDataProvider;
     m_scenarioFolder = scenarioFolder;

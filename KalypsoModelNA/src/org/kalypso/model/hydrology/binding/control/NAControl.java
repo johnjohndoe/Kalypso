@@ -51,7 +51,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -63,9 +62,11 @@ import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * Binding class for {org.kalypso.na.control_v2}NAControl.
- * 
+ *
  * @author Gernot Belger
  */
 public class NAControl extends Feature_Impl
@@ -305,7 +306,7 @@ public class NAControl extends Feature_Impl
   /**
    * This function returns the last modified timestamp. If it was not set or is invalid (e.g. negative) this function
    * returns always -1.
-   * 
+   *
    * @return The last modified timestamp.
    */
   public long getLastModified( )
@@ -321,7 +322,7 @@ public class NAControl extends Feature_Impl
 
   /**
    * This function sets the last modified timestamp.
-   * 
+   *
    * @param lastModified
    *          The last modified timestamp.
    */
@@ -335,7 +336,7 @@ public class NAControl extends Feature_Impl
    * {@link #getLastModified()}<br/>
    * {@link #getLastModifiedGenerators()}<br/>
    * {@link #getLastModifiedInputData()}
-   * 
+   *
    * @return The last modified timestamp.
    */
   public long getLastModifiedInput( )
@@ -375,7 +376,7 @@ public class NAControl extends Feature_Impl
     try
     {
       /* Get the .models folder of the current scenario. */
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IContainer scenarioFolder = dataProvider.getScenarioFolder();
       final IFolder modelsFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_MODELS ) );
 

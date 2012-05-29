@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
@@ -20,6 +19,8 @@ import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author Gernot Belger
  */
@@ -27,11 +28,11 @@ public final class RemoveCollectionOperation implements ICoreRunnableWithProgres
 {
   private final Object[] m_treeSelection;
 
-  private final SzenarioDataProvider m_provider;
+  private final IScenarioDataProvider m_provider;
 
   private final IKalypsoCascadingTheme m_wspThemes;
 
-  public RemoveCollectionOperation( final Object[] treeSelection, final SzenarioDataProvider provider, final IKalypsoCascadingTheme wspThemes )
+  public RemoveCollectionOperation( final Object[] treeSelection, final IScenarioDataProvider provider, final IKalypsoCascadingTheme wspThemes )
   {
     m_treeSelection = treeSelection;
     m_provider = provider;

@@ -51,7 +51,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
@@ -84,6 +83,8 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Polygon;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Stefan Kurzbach
@@ -302,7 +303,7 @@ public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
     {
       final GM_Object poly = m_builder.finish();
 
-      final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
       final ITerrainModel model = dataProvider.getModel( ITerrainModel.class.getName() );
 
       final IRoughnessClsCollection clsCollection = dataProvider.getModel( IRoughnessClsCollection.class.getName() );

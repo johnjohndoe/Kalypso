@@ -67,7 +67,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalTime;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -90,9 +89,11 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * The linear sum generator.
- * 
+ *
  * @author Holger Albert
  */
 public class LinearSumGenerator extends AbstractRainfallGenerator implements ILinearSumGenerator
@@ -104,7 +105,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          The parent.
    * @param parentRelation
@@ -125,7 +126,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
   /**
    * This function calculates the catchment model.
-   * 
+   *
    * @param catchmentFeatures
    *          The catchment features will be taken from the generator itself, so they are not needed here. Leave them
    *          <code>null</code>.
@@ -505,7 +506,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     try
     {
       /* Get the .models folder of the current scenario. */
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IContainer scenarioFolder = dataProvider.getScenarioFolder();
       final IFolder modelsFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_MODELS ) );
 

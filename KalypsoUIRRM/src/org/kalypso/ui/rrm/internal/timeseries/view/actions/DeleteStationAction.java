@@ -47,7 +47,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
@@ -58,6 +57,8 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -104,7 +105,7 @@ public class DeleteStationAction extends Action
       /* Delete feature */
       final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_stations );
 
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
 
       stationsWorkspace.postCommand( deleteCommand );

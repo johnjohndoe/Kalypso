@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
@@ -64,6 +63,8 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialog;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dirk Kuch
@@ -108,7 +109,7 @@ public class EditTimeseriesAction extends Action
         final ICommand command = m_timeseries.applyChanges();
         if( Objects.isNotNull( command ) )
         {
-          final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+          final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
           final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
 
           stationsWorkspace.postCommand( command );

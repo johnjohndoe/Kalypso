@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.services.IEvaluationService;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
@@ -60,6 +59,7 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dirk Kuch
@@ -86,7 +86,7 @@ public class FindTimeseriesLinkRunnable implements ICoreRunnableWithProgress
       final IEvaluationService service = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
       final IEvaluationContext context = service.getCurrentState();
 
-      final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
       return modelProvider.<IStationCollection>getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
     }
@@ -105,7 +105,7 @@ public class FindTimeseriesLinkRunnable implements ICoreRunnableWithProgress
       final IEvaluationService service = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
       final IEvaluationContext context = service.getCurrentState();
 
-      final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
       return modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
     }

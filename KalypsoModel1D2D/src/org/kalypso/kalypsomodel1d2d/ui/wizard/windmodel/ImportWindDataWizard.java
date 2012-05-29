@@ -59,7 +59,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataCollectionReader;
 import org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataReader;
 import org.kalypso.kalypsomodel1d2d.conv.wind.WindDataConverterFactory;
@@ -73,6 +72,8 @@ import org.kalypso.kalypsosimulationmodel.core.wind.WindDataModelSystem;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  *
@@ -191,7 +192,7 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
               workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getOwner(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             }
             // TODO check why saving thow pool does not work
-            final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+            final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
 
             caseDataProvider.postCommand( IWindModel.class.getName(), new AddWindDataModelCmd() );
 

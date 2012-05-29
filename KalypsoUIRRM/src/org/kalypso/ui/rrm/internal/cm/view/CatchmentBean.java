@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.cm.ICatchment;
 import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
@@ -75,6 +74,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -281,7 +282,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     try
     {
       /* Get the stations. */
-      final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
       final IStationCollection stationCollection = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
       final IFeatureBindingCollection<IStation> stations = stationCollection.getStations();
       for( final IStation station : stations )

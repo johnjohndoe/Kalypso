@@ -51,7 +51,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
@@ -62,6 +61,8 @@ import org.kalypso.ui.rrm.internal.timeseries.operations.RenameStationOperation;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -121,7 +122,7 @@ public class EditStationWizard extends Wizard
     {
       final ICommand command = m_stationBean.applyChanges();
 
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
       stationsWorkspace.postCommand( command );
     }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypso1d2d.internal.bce2d.imports;
 
@@ -10,7 +10,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -18,6 +17,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -47,7 +47,7 @@ public class Import2dWizard extends Wizard implements INewWizard
   {
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IScenarioDataProvider szenarioDataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
     m_data.init( szenarioDataProvider, getDialogSettings() );
   }

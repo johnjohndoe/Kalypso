@@ -59,7 +59,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.TreeSingleSelectionDialog;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -90,6 +89,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Lets the user choose a profile for a flow relation.
@@ -191,7 +192,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       // TODO: add filter depending on relation type (bridge, weir, normal)
 
       // find network
-      final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
       final ITerrainModel terrainModel = dataProvider.getModel( ITerrainModel.class.getName() );
 
       final GMLWorkspace root = terrainModel.getWorkspace();

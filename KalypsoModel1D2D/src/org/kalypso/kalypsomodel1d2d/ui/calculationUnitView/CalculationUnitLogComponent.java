@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
@@ -227,7 +226,7 @@ public class CalculationUnitLogComponent
   {
     try
     {
-      final SzenarioDataProvider dataProvider = (SzenarioDataProvider) m_dataModel.getData( IScenarioDataProvider.class, ICommonKeys.KEY_DATA_PROVIDER );
+      final IScenarioDataProvider dataProvider = m_dataModel.getData( IScenarioDataProvider.class, ICommonKeys.KEY_DATA_PROVIDER );
       final IContainer scenarioFolder = dataProvider.getScenarioFolder();
       final IScenarioResultMeta scenarioMeta = dataProvider.getModel( IScenarioResultMeta.class.getName() );
       final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getId() );

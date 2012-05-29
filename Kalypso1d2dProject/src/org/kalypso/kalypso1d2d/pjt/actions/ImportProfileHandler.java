@@ -50,7 +50,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
@@ -109,7 +108,7 @@ public class ImportProfileHandler extends AbstractHandler
     try
     {
       /* post empty command(s) in order to make pool dirty. */
-      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.1" ), false ) ); //$NON-NLS-1$
+      modelProvider.postCommand( ITerrainModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.1" ), false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {

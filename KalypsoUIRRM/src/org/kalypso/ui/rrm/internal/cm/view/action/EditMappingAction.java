@@ -48,7 +48,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -66,6 +65,8 @@ import org.kalypso.ui.rrm.internal.cm.view.MappingElementBean;
 import org.kalypso.ui.rrm.internal.cm.view.TimeseriesMappingBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -108,7 +109,7 @@ public class EditMappingAction extends Action
     {
       try
       {
-        final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+        final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
         final CommandableWorkspace mappingsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
         final ITimeseriesMappingCollection timeseriesMappings = (ITimeseriesMappingCollection) mappingsWorkspace.getRootFeature();
 

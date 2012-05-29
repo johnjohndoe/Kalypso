@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -38,6 +37,8 @@ import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author Gernot Belger
  */
@@ -53,11 +54,11 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   private final String m_eventName;
 
-  private final SzenarioDataProvider m_provider;
+  private final IScenarioDataProvider m_provider;
 
   private final URL m_sldContent;
 
-  public AddEventOperation( final String eventName, final IFloodModel model, final IFolder eventsFolder, final IKalypsoCascadingTheme wspThemes, final SzenarioDataProvider provider, final URL sldContent )
+  public AddEventOperation( final String eventName, final IFloodModel model, final IFolder eventsFolder, final IKalypsoCascadingTheme wspThemes, final IScenarioDataProvider provider, final URL sldContent )
   {
     m_eventName = eventName;
     m_model = model;

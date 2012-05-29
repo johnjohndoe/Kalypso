@@ -56,7 +56,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -66,6 +65,7 @@ import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class StatisticAnalysisHandler extends AbstractHandler
@@ -79,7 +79,7 @@ public class StatisticAnalysisHandler extends AbstractHandler
     final Shell shell = workbench.getDisplay().getActiveShell();
     final String title = HandlerUtils.getCommandName( event );
 
-    final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IScenarioDataProvider scenarioDataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
     /* read data and check prerequisites */
     final StatisticCalculationData data = initData( shell, title, scenarioDataProvider );
@@ -105,7 +105,7 @@ public class StatisticAnalysisHandler extends AbstractHandler
   }
 
 
-  private StatisticCalculationData initData( final Shell shell, final String title, final SzenarioDataProvider scenarioDataProvider )
+  private StatisticCalculationData initData( final Shell shell, final String title, final IScenarioDataProvider scenarioDataProvider )
   {
     try
     {
@@ -142,7 +142,7 @@ public class StatisticAnalysisHandler extends AbstractHandler
     return dialog.open() == Window.OK;
   }
 
-  private void saveControlModel( final SzenarioDataProvider scenarioDataProvider, final Shell shell, final String title )
+  private void saveControlModel( final IScenarioDataProvider scenarioDataProvider, final Shell shell, final String title )
   {
     try
     {

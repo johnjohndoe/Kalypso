@@ -6,7 +6,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -18,6 +17,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author Gernot Belger
  */
@@ -27,13 +28,13 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
 
   private final String m_eventName;
 
-  private final SzenarioDataProvider m_provider;
+  private final IScenarioDataProvider m_provider;
 
   private final int m_returnPeriod;
 
   private Feature m_newFeature;
 
-  public AddCollectionOperation( final String eventName, final int returnPeriod, final IRasterDataModel model, final SzenarioDataProvider provider )
+  public AddCollectionOperation( final String eventName, final int returnPeriod, final IRasterDataModel model, final IScenarioDataProvider provider )
   {
     m_eventName = eventName;
     m_returnPeriod = returnPeriod;

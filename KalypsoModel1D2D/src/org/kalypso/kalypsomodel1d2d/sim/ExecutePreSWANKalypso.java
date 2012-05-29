@@ -62,7 +62,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -76,6 +75,8 @@ import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author kurzbach
@@ -125,7 +126,7 @@ public class ExecutePreSWANKalypso
    */
   public ExecutePreSWANKalypso( final String serviceEndpoint, final String calcUnitID, final URI rmaCalcPath ) throws CoreException
   {
-    final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
     m_scenarioFolder = caseDataProvider.getScenarioFolder();
     final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName() );
     final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
