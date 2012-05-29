@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
@@ -72,19 +73,9 @@ import org.kalypso.ui.rrm.internal.calccase.MultiCatchmentModelRunner;
 public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
 {
   /**
-   * The simulation.
-   */
-  private final NAControl m_simulation;
-
-  /**
    * The rrm simulation.
    */
   private final RrmSimulation m_rrmSimulation;
-
-  /**
-   * The model.
-   */
-  private final NaModell m_model;
 
   /**
    * True, if the catchment models should be calculated.
@@ -92,23 +83,25 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
   private final boolean m_calculateCatchmentModels;
 
   /**
+   * The simulation data.
+   */
+  private final INaSimulationData m_simulationData;
+
+  /**
    * The constructor.
    * 
-   * @param simulation
-   *          The simulation.
    * @param rrmSimulation
    *          The rrm simulation.
-   * @param model
-   *          The model.
    * @param calculateCatchmentModels
    *          True, if the catchment models should be calculated.
+   * @param simulationData
+   *          The simulation data.
    */
-  public CalculateCatchmentModelsWorker( final NAControl simulation, final RrmSimulation rrmSimulation, final NaModell model, final boolean calculateCatchmentModels )
+  public CalculateCatchmentModelsWorker( final RrmSimulation rrmSimulation, final boolean calculateCatchmentModels, final INaSimulationData simulationData )
   {
-    m_simulation = simulation;
     m_rrmSimulation = rrmSimulation;
-    m_model = model;
     m_calculateCatchmentModels = calculateCatchmentModels;
+    m_simulationData = simulationData;
   }
 
   /**
@@ -130,18 +123,25 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
       monitor.beginTask( "Calculating catchment models...", 300 );
       monitor.subTask( "Calculating catchment models..." );
 
+      /* Get the some data of the simulation data. */
+      final NaModell naModel = m_simulationData.getNaModel();
+      final NAControl simulation = m_simulationData.getMetaControl();
+
+      // TODO Copy links of eventually old model.gml, only if cms should not be calculated (no yet!)...
+      // TODO Implement condition for not calculating the cm (not yet!)...
+
       /* Rainfall. */
-      final ICatchmentModelInfo infoN = getCatchmentModelInfo( m_rrmSimulation, m_simulation, m_model, m_simulation.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, m_calculateCatchmentModels );
+      final ICatchmentModelInfo infoN = getCatchmentModelInfo( m_rrmSimulation, simulation, naModel, simulation.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
       final AbstractCatchmentModelRunner runnerN = getCatchmentModelRunner( infoN );
       runnerN.executeCatchmentModel( infoN, new SubProgressMonitor( monitor, 100 ) );
 
       /* Temperature. */
-      final ICatchmentModelInfo infoT = getCatchmentModelInfo( m_rrmSimulation, m_simulation, m_model, m_simulation.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, m_calculateCatchmentModels );
+      final ICatchmentModelInfo infoT = getCatchmentModelInfo( m_rrmSimulation, simulation, naModel, simulation.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
       final AbstractCatchmentModelRunner runnerT = getCatchmentModelRunner( infoT );
       runnerT.executeCatchmentModel( infoT, new SubProgressMonitor( monitor, 100 ) );
 
       /* Evaporation. */
-      final ICatchmentModelInfo infoE = getCatchmentModelInfo( m_rrmSimulation, m_simulation, m_model, m_simulation.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, m_calculateCatchmentModels );
+      final ICatchmentModelInfo infoE = getCatchmentModelInfo( m_rrmSimulation, simulation, naModel, simulation.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
       final AbstractCatchmentModelRunner runnerE = getCatchmentModelRunner( infoE );
       runnerE.executeCatchmentModel( infoE, new SubProgressMonitor( monitor, 100 ) );
 
@@ -161,13 +161,13 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
     }
   }
 
-  private ICatchmentModelInfo getCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final boolean calculateCatchmentModels )
+  private ICatchmentModelInfo getCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType )
   {
     if( generator instanceof ILinearSumGenerator )
-      return new LinearSumCatchmentModelInfo( simulation, control, model, (ILinearSumGenerator) generator, targetLink, parameterType, calculateCatchmentModels );
+      return new LinearSumCatchmentModelInfo( simulation, control, model, (ILinearSumGenerator) generator, targetLink, parameterType );
 
     if( generator instanceof IMultiGenerator )
-      return new MultiCatchmentModelInfo( simulation, control, model, (IMultiGenerator) generator, targetLink, parameterType, calculateCatchmentModels );
+      return new MultiCatchmentModelInfo( simulation, control, model, (IMultiGenerator) generator, targetLink, parameterType );
 
     throw new IllegalArgumentException( "The type of the generator must be that of ILinearSumGenerator or IMultiGenerator..." ); // $NON-NLS-1$
   }

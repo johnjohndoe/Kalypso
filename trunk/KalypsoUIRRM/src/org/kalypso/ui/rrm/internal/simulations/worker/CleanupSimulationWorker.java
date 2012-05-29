@@ -45,17 +45,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Holger Albert
@@ -63,33 +56,27 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class CleanupSimulationWorker implements ICoreRunnableWithProgress
 {
   /**
-   * The simulation.
-   */
-  private final NAControl m_simulation;
-
-  /**
    * The rrm simulation.
    */
   private final RrmSimulation m_rrmSimulation;
 
   /**
-   * The model.
+   * True, if the catchment models should be calculated.
    */
-  private NaModell m_model;
+  private final boolean m_calculateCatchmentModels;
 
   /**
    * The constructor.
    * 
-   * @param simulation
-   *          The simulation.
    * @param rrmSimulation
    *          The rrm simulation.
+   * @param calculateCatchmentModels
+   *          True, if the catchment models should be calculated.
    */
-  public CleanupSimulationWorker( final NAControl simulation, final RrmSimulation rrmSimulation )
+  public CleanupSimulationWorker( final RrmSimulation rrmSimulation, final boolean calculateCatchmentModels )
   {
-    m_simulation = simulation;
     m_rrmSimulation = rrmSimulation;
-    m_model = null;
+    m_calculateCatchmentModels = calculateCatchmentModels;
   }
 
   /**
@@ -105,34 +92,26 @@ public class CleanupSimulationWorker implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Cleanup simulation...", 200 );
+      monitor.beginTask( "Cleanup simulation...", 300 );
       monitor.subTask( "Cleanup simulation..." );
 
-      /* Delete/overwrite old data. */
-      // TODO
-
-      /* Move results. */
-      // TODO
-
-      /* Save the calculation.gml. */
+      /* Delete the calculation gml. */
       final IFile calculationGml = m_rrmSimulation.getCalculationGml();
-      final GMLWorkspace simulationWorkspace = FeatureFactory.createGMLWorkspace( m_simulation.getFeatureType(), null, null );
-      final Feature simulationFeature = simulationWorkspace.getRootFeature();
-      FeatureHelper.copyData( m_simulation, simulationFeature );
-      GmlSerializer.saveWorkspace( simulationWorkspace, calculationGml );
+      if( calculationGml.exists() )
+        calculationGml.delete( false, new SubProgressMonitor( monitor, 100 ) );
+
+      /* Delete the model.gml (only if the cms should be calculated). */
+      // TODO Implement the condition for the case the cms should be calculated...
+      final IFile modelGml = m_rrmSimulation.getModelGml();
+      if( modelGml.exists() )
+        modelGml.delete( false, new SubProgressMonitor( monitor, 100 ) );
+
+      /* Delete the timeseries results (only if the cms should be calculated). */
+      // TODO Implement the condition for the case the cms should be calculated...
+      // TODO
 
       /* Monitor. */
-      monitor.worked( 100 );
-      monitor.subTask( "Loading model.gml..." );
-
-      /* Load the model.gml. */
-      final RrmScenario scenario = m_rrmSimulation.getScenario();
-      final IFile modelFile = scenario.getModelFile();
-      final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelFile );
-      m_model = (NaModell) modelWorkspace.getRootFeature();
-
-      /* Monitor. */
-      monitor.worked( 100 );
+      monitor.worked( 200 );
 
       return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Cleanup of the simulation was successfull." );
     }
@@ -145,15 +124,5 @@ public class CleanupSimulationWorker implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.done();
     }
-  }
-
-  /**
-   * This function returns model.
-   * 
-   * @return The model or null.
-   */
-  public NaModell getModel( )
-  {
-    return m_model;
   }
 }

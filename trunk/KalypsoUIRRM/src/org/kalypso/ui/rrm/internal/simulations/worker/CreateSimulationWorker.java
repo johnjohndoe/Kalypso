@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.worker;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -49,17 +48,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmProject;
-import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Holger Albert
@@ -67,33 +58,19 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class CreateSimulationWorker implements ICoreRunnableWithProgress
 {
   /**
-   * The simulation.
-   */
-  private final NAControl m_simulation;
-
-  /**
    * The rrm simulation.
    */
   private final RrmSimulation m_rrmSimulation;
 
   /**
-   * The model.
-   */
-  private NaModell m_model;
-
-  /**
    * The constructor.
    * 
-   * @param simulation
-   *          The simulation.
    * @param rrmSimulation
    *          The rrm simulation.
    */
-  public CreateSimulationWorker( final NAControl simulation, final RrmSimulation rrmSimulation )
+  public CreateSimulationWorker( final RrmSimulation rrmSimulation )
   {
-    m_simulation = simulation;
     m_rrmSimulation = rrmSimulation;
-    m_model = null;
   }
 
   /**
@@ -121,25 +98,8 @@ public class CreateSimulationWorker implements ICoreRunnableWithProgress
       final IFolder calcCaseTemplateFolder = project.getCalcCaseTemplateFolder();
       copyCalcCaseTemplate( calcCaseTemplateFolder, simulationFolder );
 
-      /* Save the calculation.gml. */
-      final IFile calculationGml = m_rrmSimulation.getCalculationGml();
-      final GMLWorkspace simulationWorkspace = FeatureFactory.createGMLWorkspace( m_simulation.getFeatureType(), null, null );
-      final Feature simulationFeature = simulationWorkspace.getRootFeature();
-      FeatureHelper.copyData( m_simulation, simulationFeature );
-      GmlSerializer.saveWorkspace( simulationWorkspace, calculationGml );
-
       /* Monitor. */
-      monitor.worked( 100 );
-      monitor.subTask( "Loading model.gml..." );
-
-      /* Load the model.gml. */
-      final RrmScenario scenario = m_rrmSimulation.getScenario();
-      final IFile modelFile = scenario.getModelFile();
-      final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelFile );
-      m_model = (NaModell) modelWorkspace.getRootFeature();
-
-      /* Monitor. */
-      monitor.worked( 100 );
+      monitor.worked( 200 );
 
       return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Creation of the simulation was successfull." );
     }
@@ -152,16 +112,6 @@ public class CreateSimulationWorker implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.done();
     }
-  }
-
-  /**
-   * This function returns model.
-   * 
-   * @return The model or null.
-   */
-  public NaModell getModel( )
-  {
-    return m_model;
   }
 
   /**

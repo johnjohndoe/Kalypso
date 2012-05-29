@@ -54,30 +54,27 @@ public class RrmScenario
 
   private static final String FOLDER_MODELS = ".models"; //$NON-NLS-1$
 
+  private static final String FOLDER_ANFANGSWERTE = "Anfangswerte"; //$NON-NLS-1$
+
   private static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
 
-  private static final String FILE_HYDROTOP_GML = "hydrotop.gml";//$NON-NLS-1$
+  private static final String FILE_EXPERT_CONTROL_GML = "expertControl.gml"; //$NON-NLS-1$
+
+  private static final String FILE_PARAMETER_GML = "parameter.gml"; //$NON-NLS-1$
+
+  private static final String FILE_HYDROTOP_GML = "hydrotop.gml"; //$NON-NLS-1$
+
+  private static final String FILE_SUDS_GML = "suds.gml"; //$NON-NLS-1$
+
+  private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
+
+  private static final String FILE_LZSIM_GML = "lzsim.gml"; //$NON-NLS-1$
 
   private final IFolder m_scenarioFolder;
 
   public RrmScenario( final IFolder scenarioFolder )
   {
     m_scenarioFolder = scenarioFolder;
-  }
-
-// public IFolder getViewsFolder( )
-// {
-//    return m_scenarioFolder.getFolder( ".views" ); //$NON-NLS-1$
-// }
-
-  public IFolder getModelsFolder( )
-  {
-    return m_scenarioFolder.getFolder( FOLDER_MODELS );
-  }
-
-  public IFolder getSimulationsFolder( )
-  {
-    return m_scenarioFolder.getFolder( FOLDER_RECHENVARIANTEN );
   }
 
   /**
@@ -97,20 +94,53 @@ public class RrmScenario
     return true;
   }
 
+  public IFolder getModelsFolder( )
+  {
+    return m_scenarioFolder.getFolder( FOLDER_MODELS );
+  }
+
+  public IFolder getLzsimFolder( )
+  {
+    return m_scenarioFolder.getFolder( FOLDER_ANFANGSWERTE );
+  }
+
+  public IFolder getSimulationsFolder( )
+  {
+    return m_scenarioFolder.getFolder( FOLDER_RECHENVARIANTEN );
+  }
+
   public IFile getModelFile( )
   {
     return getModelsFolder().getFile( FILE_MODELL_GML );
   }
 
-  public IFile getHydrotopeFile( )
+  public IFile getExpertControlGml( )
+  {
+    return getModelsFolder().getFile( FILE_EXPERT_CONTROL_GML );
+  }
+
+  public IFile getParameterGml( )
+  {
+    return getModelsFolder().getFile( FILE_PARAMETER_GML );
+  }
+
+  public IFile getHydrotopGml( )
   {
     return getModelsFolder().getFile( FILE_HYDROTOP_GML );
   }
 
-// private IFile getViewsFile( final String filename )
-// {
-// final IFolder viewsFolder = getViewsFolder();
-//
-//    return viewsFolder.getFile( filename ); //$NON-NLS-1$
-// }
+  public IFile getSudsGml( )
+  {
+    return getModelsFolder().getFile( FILE_SUDS_GML );
+  }
+
+  public IFile getSyntnGml( )
+  {
+    return getModelsFolder().getFile( FILE_SYNTHN_GML );
+  }
+
+  public IFile getLzsimGml( )
+  {
+    return getLzsimFolder().getFile( FILE_LZSIM_GML );
+  }
 }

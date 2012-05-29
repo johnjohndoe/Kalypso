@@ -89,11 +89,6 @@ public class LinearSumCatchmentModelInfo implements ICatchmentModelInfo
   private final String m_parameterType;
 
   /**
-   * True, if the catchment models should be calculated. False, if only the links should be set to the model.
-   */
-  private final boolean m_calculateCatchmentModels;
-
-  /**
    * The constructor.
    * 
    * @param simulation
@@ -108,10 +103,8 @@ public class LinearSumCatchmentModelInfo implements ICatchmentModelInfo
    *          The target link.
    * @param parameterType
    *          The parameter type.
-   * @param calculateCatchmentModels
-   *          True, if the catchment models should be calculated. False, if only the links should be set to the model.
    */
-  public LinearSumCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final ILinearSumGenerator generator, final QName targetLink, final String parameterType, final boolean calculateCatchmentModels )
+  public LinearSumCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final ILinearSumGenerator generator, final QName targetLink, final String parameterType )
   {
     m_simulation = simulation;
     m_control = control;
@@ -119,7 +112,6 @@ public class LinearSumCatchmentModelInfo implements ICatchmentModelInfo
     m_generator = generator;
     m_targetLink = targetLink;
     m_parameterType = parameterType;
-    m_calculateCatchmentModels = calculateCatchmentModels;
   }
 
   @Override
@@ -156,12 +148,6 @@ public class LinearSumCatchmentModelInfo implements ICatchmentModelInfo
   public String getParameterType( )
   {
     return m_parameterType;
-  }
-
-  @Override
-  public boolean isCalculateCatchmentModels( )
-  {
-    return m_calculateCatchmentModels;
   }
 
   @Override
