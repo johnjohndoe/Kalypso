@@ -65,6 +65,8 @@ import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
@@ -81,7 +83,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts one calc case.
- * 
+ *
  * @author Gernot Belger
  */
 public class CalcCaseConverter extends AbstractLoggingOperation
@@ -142,12 +144,13 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     fixTimeseriesLinks( naModel, getLog() );
 
     final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel );
+    final TimeseriesMappingBuilder timeseriesMappingBuilder = guessTimeseriesMappings( naModel );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     naModel.getWorkspace().dispose();
 
     /* Add the simulation. */
-    final NAControl simulation = addSimulation( newControl, catchmentModelBuilder );
+    final NAControl simulation = addSimulation( newControl, catchmentModelBuilder, timeseriesMappingBuilder );
 
     /* Save the calculation.gml. */
     m_data.saveModel( newControl, INaCalcCaseConstants.CALCULATION_GML_PATH );
@@ -370,20 +373,43 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, catchmentModel, m_targetCalcCaseDir, timeseriesIndex );
 
-    gueCatchmentModel( builder, Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
-    gueCatchmentModel( builder, Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
-    gueCatchmentModel( builder, Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
+    guessCatchmentModel( builder, Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
+    guessCatchmentModel( builder, Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
+    guessCatchmentModel( builder, Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
 
     return builder;
   }
 
-  private void gueCatchmentModel( final CatchmentModelBuilder builder, final QName propLink, final String parameterType )
+  private void guessCatchmentModel( final CatchmentModelBuilder builder, final QName propLink, final String parameterType )
   {
     final IStatus status = builder.execute( propLink, parameterType );
     getLog().add( status );
   }
 
-  private NAControl addSimulation( final NAControl newControl, final CatchmentModelBuilder catchmentModelBuilder )
+  private TimeseriesMappingBuilder guessTimeseriesMappings( final NaModell naModel )
+  {
+    final ITimeseriesMappingCollection mappings = m_globalData.getTimeseriesMappings();
+    if( mappings == null )
+      return null;
+
+    final TimeseriesIndex timeseriesIndex = m_globalData.getTimeseriesIndex();
+
+    final TimeseriesMappingBuilder builder = new TimeseriesMappingBuilder( naModel, mappings, m_targetCalcCaseDir, timeseriesIndex );
+
+    guessTimeseriesMapping( builder, TimeseriesMappingType.gaugeMeasurement );
+    guessTimeseriesMapping( builder, TimeseriesMappingType.nodeInflow );
+    guessTimeseriesMapping( builder, TimeseriesMappingType.storageEvaporation );
+
+    return builder;
+  }
+
+  private void guessTimeseriesMapping( final TimeseriesMappingBuilder builder, final TimeseriesMappingType mappingType )
+  {
+    final IStatus status = builder.execute( mappingType );
+    getLog().add( status );
+  }
+
+  private NAControl addSimulation( final NAControl newControl, final CatchmentModelBuilder catchmentModelBuilder, final TimeseriesMappingBuilder timeseriesMappingBuilder )
   {
     try
     {
@@ -397,6 +423,18 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
         final String cmRefT = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
         newControl.setGeneratorReferenceT( cmRefT );
+      }
+
+      if( timeseriesMappingBuilder != null )
+      {
+        final String tmRefGauge = timeseriesMappingBuilder.getMappingPath( TimeseriesMappingType.gaugeMeasurement );
+        newControl.setMappingReferenceGauge( tmRefGauge );
+
+        final String tmRefInflow = timeseriesMappingBuilder.getMappingPath( TimeseriesMappingType.nodeInflow );
+        newControl.setMappingReferenceNodeInflow( tmRefInflow );
+
+        final String tmRefStorageEvaporation = timeseriesMappingBuilder.getMappingPath( TimeseriesMappingType.storageEvaporation );
+        newControl.setMappingReferenceStorageEvaporation( tmRefStorageEvaporation );
       }
 
       final SimulationCollection simulations = m_globalData.getSimulations();
