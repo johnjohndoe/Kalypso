@@ -47,12 +47,14 @@ import org.eclipse.core.runtime.Path;
 
 /**
  * Just a wrapper that facilitates to access certain folders of a RRM project.
- *
+ * 
  * @author Gernot Belger
  */
 public class RrmProject
 {
   static final String FOLDER_MODEL = ".model"; //$NON-NLS-1$
+
+  static final String FOLDER_CALC_CASE_TEMPLATE = "calcCaseTemplate"; //$NON-NLS-1$
 
   static final String FOLDER_OBSERVATION_CONF = "observationConf"; //$NON-NLS-1$
 
@@ -78,6 +80,11 @@ public class RrmProject
   public IFolder getBaseFolder( )
   {
     return m_project.getFolder( FOLDER_BASIS );
+  }
+
+  public IFolder getCalcCaseTemplateFolder( )
+  {
+    return getModelFolder().getFolder( FOLDER_CALC_CASE_TEMPLATE );
   }
 
   public IFolder getObservationConfFolder( )

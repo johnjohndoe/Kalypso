@@ -161,7 +161,7 @@ public class LinearSumCatchmentModelTest
   private void executeCatchmentModels( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws CoreException
   {
     /* Create the catchment model info. */
-    final LinearSumCatchmentModelInfo info = new LinearSumCatchmentModelInfo( simulation, control, model, (ILinearSumGenerator) generator, targetLink, parameterType );
+    final LinearSumCatchmentModelInfo info = new LinearSumCatchmentModelInfo( simulation, control, model, (ILinearSumGenerator) generator, targetLink, parameterType, true );
 
     /* Create the catchment model runner. */
     final LinearSumCatchmentModelRunner runner = new LinearSumCatchmentModelRunner( null );
