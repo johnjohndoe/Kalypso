@@ -99,7 +99,6 @@ import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.i18n.I10nString;
@@ -162,6 +161,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -180,7 +180,7 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
 
   private TreeViewer m_eventViewer;
 
-  protected SzenarioDataProvider m_dataProvider;
+  protected IScenarioDataProvider m_dataProvider;
 
   private IFloodModel m_model;
 
@@ -195,10 +195,6 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
     m_infoWidget.setNoThemesTooltip( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.4" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.IMapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -210,7 +206,7 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
 
     final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = service.getCurrentState();
-    final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IScenarioDataProvider dataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName() );
@@ -901,7 +897,7 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
 
     final MoveFeatureCommand command = new MoveFeatureCommand( parentFeature, pt, selectedFeature, step );
 
-    final SzenarioDataProvider sdProvider = m_dataProvider;
+    final IScenarioDataProvider sdProvider = m_dataProvider;
     try
     {
       sdProvider.postCommand( IFloodModel.class.getName(), command );

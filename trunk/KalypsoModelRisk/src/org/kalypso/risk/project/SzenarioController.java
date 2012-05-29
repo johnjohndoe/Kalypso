@@ -45,7 +45,6 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.services.LanduseStyleUpdateListener;
 import org.kalypso.risk.plugin.RiskZonesChangeListener;
@@ -53,6 +52,7 @@ import org.kalypso.risk.plugin.RiskZonesThemeInfo;
 
 import de.renew.workflow.connector.cases.IModel;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioDataListener;
 
 /**
  * A central place for controlling scenario specific stuff for Kalypso1d2d.

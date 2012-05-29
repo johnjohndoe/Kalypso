@@ -11,7 +11,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
@@ -31,6 +30,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author Gernot Belger
  */
@@ -38,11 +39,11 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
 {
   private final Object[] m_treeSelection;
 
-  protected final SzenarioDataProvider m_provider;
+  protected final IScenarioDataProvider m_provider;
 
   private final IKalypsoCascadingTheme m_wspThemes;
 
-  public RemoveEventOperation( final Object[] treeSelection, final SzenarioDataProvider provider, final IKalypsoCascadingTheme wspThemes )
+  public RemoveEventOperation( final Object[] treeSelection, final IScenarioDataProvider provider, final IKalypsoCascadingTheme wspThemes )
   {
     m_treeSelection = treeSelection;
     m_provider = provider;

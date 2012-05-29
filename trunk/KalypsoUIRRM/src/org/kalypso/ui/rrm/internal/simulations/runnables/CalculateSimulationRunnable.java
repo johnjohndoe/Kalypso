@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.runnables;
 
@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusWithTime;
@@ -65,9 +64,11 @@ import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * This runnable calculates the simulation.
- * 
+ *
  * @author Holger Albert
  */
 public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
@@ -94,7 +95,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
   /**
    * The constructor.
-   * 
+   *
    * @param simulations
    *          The simulations to calculate.
    * @param calculateCatchmentModels
@@ -154,7 +155,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
   /**
    * This function calculates one simulation.
-   * 
+   *
    * @param simulation
    *          The simulation to calculate.
    * @param monitor
@@ -259,7 +260,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
   /**
    * This function returns the rrm simulation.
-   * 
+   *
    * @param simulation
    *          The simulation to calculate.
    */
@@ -269,7 +270,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     final String description = simulation.getDescription();
 
     /* Get the folder of the simulation. */
-    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
     final IContainer scenarioFolder = dataProvider.getScenarioFolder();
     final IFolder calcCasesFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_RECHENVARIANTEN ) );
     final IFolder simulationFolder = calcCasesFolder.getFolder( description );

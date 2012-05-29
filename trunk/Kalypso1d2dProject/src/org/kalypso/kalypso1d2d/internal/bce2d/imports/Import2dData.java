@@ -1,11 +1,12 @@
 package org.kalypso.kalypso1d2d.internal.bce2d.imports;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -18,13 +19,13 @@ class Import2dData extends AbstractModelObject
 
   private String m_coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-  private SzenarioDataProvider m_szenarioDataProvider;
+  private IScenarioDataProvider m_szenarioDataProvider;
 
   private final FileAndHistoryData m_inputFileData = new FileAndHistoryData( "importFile" ); //$NON-NLS-1$
 
   private boolean m_importRoughness = false;
 
-  public void init( final SzenarioDataProvider szenarioDataProvider, final IDialogSettings settings )
+  public void init( final IScenarioDataProvider szenarioDataProvider, final IDialogSettings settings )
   {
     m_szenarioDataProvider = szenarioDataProvider;
 
@@ -66,7 +67,7 @@ class Import2dData extends AbstractModelObject
     return m_inputFileData;
   }
 
-  public SzenarioDataProvider getSzenarioDataProvider( )
+  public IScenarioDataProvider getSzenarioDataProvider( )
   {
     return m_szenarioDataProvider;
   }

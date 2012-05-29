@@ -60,7 +60,6 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Button;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -72,6 +71,8 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * A wizard showing the progress of a RMA·Kalypso calculation.
@@ -99,9 +100,9 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 
   private final IContainer m_unitFolder;
 
-  private final SzenarioDataProvider m_caseDataProvider;
+  private final IScenarioDataProvider m_caseDataProvider;
 
-  public RMA10CalculationWizard( final SzenarioDataProvider caseDataProvider, final IGeoLog geoLog ) throws CoreException
+  public RMA10CalculationWizard( final IScenarioDataProvider caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     m_caseDataProvider = caseDataProvider;
     final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName() );

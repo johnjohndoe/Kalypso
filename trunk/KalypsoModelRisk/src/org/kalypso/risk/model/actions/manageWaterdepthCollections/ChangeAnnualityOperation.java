@@ -6,7 +6,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
@@ -18,19 +17,21 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
 {
   private final IRasterDataModel m_model;
 
   private final IKalypsoCascadingTheme m_wspThemes;
 
-  private final SzenarioDataProvider m_provider;
+  private final IScenarioDataProvider m_provider;
 
   private final int m_newReturnPeriod;
 
   private final IAnnualCoverageCollection m_coverageCollection;
 
-  public ChangeAnnualityOperation( final IAnnualCoverageCollection selection, final int returnPeriod, final IRasterDataModel model, final IKalypsoCascadingTheme wspThemes, final SzenarioDataProvider provider )
+  public ChangeAnnualityOperation( final IAnnualCoverageCollection selection, final int returnPeriod, final IRasterDataModel model, final IKalypsoCascadingTheme wspThemes, final IScenarioDataProvider provider )
   {
     m_coverageCollection = selection;
     m_newReturnPeriod = returnPeriod;

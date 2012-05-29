@@ -50,7 +50,7 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.kalypso.afgui.scenarios.CatalogStorage;
+import org.kalypso.afgui.helper.CatalogStorage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;

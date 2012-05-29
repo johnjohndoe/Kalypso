@@ -44,7 +44,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.services.RoughnessAssignListener;
 import org.kalypso.kalypsomodel1d2d.services.RoughnessStyleUpdateListener;
@@ -53,6 +52,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 
 import de.renew.workflow.connector.cases.IModel;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioDataListener;
 
 /**
  * A central place for controlling scenario specific stuff for Kalypso1d2d.

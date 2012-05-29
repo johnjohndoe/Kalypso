@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
@@ -68,6 +67,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 import com.google.common.collect.TreeMultimap;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * This class contains functions which are used by the linear sum generator, Thiessen Method and Inverse Distance
@@ -96,7 +97,7 @@ public class LinearSumHelper
     try
     {
       /* Get the NA model. */
-      final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
       final NaModell model = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL );
 
       /* Create the linear sum bean. */
@@ -124,7 +125,7 @@ public class LinearSumHelper
     try
     {
       /* Timeseries file. */
-      final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
       final IContainer scenarioFolder = scenarioDataProvider.getScenarioFolder();
       final IFile stationFile = scenarioFolder.getFile( new Path( INaProjectConstants.GML_THIESSEN_STATION_PATH ) );
 
@@ -150,7 +151,7 @@ public class LinearSumHelper
   {
     try
     {
-      final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
       final IContainer scenarioFolder = scenarioDataProvider.getScenarioFolder();
       final IFile stationFile = scenarioFolder.getFile( new Path( INaProjectConstants.GML_THIESSEN_STATION_PATH ) );
       stationFile.delete( true, new NullProgressMonitor() );

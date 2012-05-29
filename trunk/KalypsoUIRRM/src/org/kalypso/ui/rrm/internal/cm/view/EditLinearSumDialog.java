@@ -68,7 +68,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.dialog.DatabindingTitleAreaDialog;
 import org.kalypso.commons.databinding.validation.ValidationStatusUtilities;
@@ -99,6 +98,8 @@ import org.kalypso.ui.rrm.internal.cm.view.provider.TimestepColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * This dialog allows the editing of the properties of a linear sum catchment model.
@@ -543,7 +544,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
   {
     try
     {
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final CommandableWorkspace generatorsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
 
       /* Apply the changes. */

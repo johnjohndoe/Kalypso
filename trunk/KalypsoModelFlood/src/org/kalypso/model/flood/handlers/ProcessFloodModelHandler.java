@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
@@ -79,6 +78,7 @@ import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -97,7 +97,7 @@ public class ProcessFloodModelHandler extends AbstractHandler
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final Shell shell = HandlerUtil.getActiveShellChecked( event );
       final String commandName = HandlerUtils.getCommandName( event );
-      final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider dataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
       final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName() );
@@ -156,7 +156,7 @@ public class ProcessFloodModelHandler extends AbstractHandler
     }
   }
 
-  private void saveModel( final Shell shell, final String title, final SzenarioDataProvider dataProvider )
+  private void saveModel( final Shell shell, final String title, final IScenarioDataProvider dataProvider )
   {
     try
     {
@@ -184,7 +184,7 @@ public class ProcessFloodModelHandler extends AbstractHandler
   }
 
   // FIXME: still too slow: we save the (quite big) model for every event!
-  private IStatus deleteExistingResults( final IRunoffEvent[] eventsToProcess, final SzenarioDataProvider dataProvider )
+  private IStatus deleteExistingResults( final IRunoffEvent[] eventsToProcess, final IScenarioDataProvider dataProvider )
   {
     final Collection<IStatus> results = new ArrayList<IStatus>();
 

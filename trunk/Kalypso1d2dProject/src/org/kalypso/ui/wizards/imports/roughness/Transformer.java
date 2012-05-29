@@ -7,7 +7,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -26,6 +25,8 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Implements the transformation algorithm from a shape file into a IRoughnessPolygonCollection
@@ -163,7 +164,7 @@ public class Transformer implements ICoreRunnableWithProgress
       }
     }
     // use (dummy) command to make workspace dirty
-    final SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
+    final IScenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
     if( caseDataProvider != null )
     {
       caseDataProvider.postCommand( ITerrainModel.class.getName(), new AddRoughnessPolygonsCmd() );

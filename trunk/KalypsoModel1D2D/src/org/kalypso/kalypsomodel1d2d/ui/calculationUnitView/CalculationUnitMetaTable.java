@@ -74,7 +74,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -105,6 +104,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Calculation unit widget component that shows the table of existing calculation units, with the corresponding buttons
@@ -414,7 +415,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   {
     final KeyBasedDataModel dataModel = getDataModel();
     final ICalculationUnit calcUnitToDel = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) getDataModel().getData( ICommonKeys.KEY_DATA_PROVIDER );
+    final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) getDataModel().getData( ICommonKeys.KEY_DATA_PROVIDER );
     if( calcUnitToDel != null )
     {
       // TODO: check for existing results

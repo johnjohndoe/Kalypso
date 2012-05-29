@@ -8,14 +8,14 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Holds utility methods
- * 
+ *
  * @author Patrice Congo
  */
 public class Util
@@ -40,14 +40,14 @@ public class Util
   /**
    * Gets the szenario data provider
    */
-  public static final SzenarioDataProvider getCaseDataProvider( )
+  public static final IScenarioDataProvider getCaseDataProvider( )
   {
     try
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
-      final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       return caseDataProvider;
     }
     catch( final Throwable th )

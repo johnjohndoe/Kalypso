@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -48,6 +47,8 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Convert from GML to RMAKalypso format
@@ -126,7 +127,7 @@ public class PreRMAKalypso implements ISimulation
       IFEDiscretisationModel1d2d discretisationModel = null;
       try
       {
-        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       }
       catch( final Exception e )
@@ -166,7 +167,7 @@ public class PreRMAKalypso implements ISimulation
       IFlowRelationshipModel flowRelationshipModel = null;
       try
       {
-        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName() );
       }
       catch( final Exception e )
@@ -182,7 +183,7 @@ public class PreRMAKalypso implements ISimulation
       IRoughnessClsCollection roughnessModel = null;
       try
       {
-        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         roughnessModel = caseDataProvider.getModel( IRoughnessClsCollection.class.getName() );
       }
       catch( final Exception e )
@@ -199,7 +200,7 @@ public class PreRMAKalypso implements ISimulation
       IWindModel windModel = null;
       try
       {
-        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         windModel = caseDataProvider.getModel( IWindModel.class.getName() );
       }
       catch( final Exception e )

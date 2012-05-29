@@ -52,7 +52,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -93,6 +92,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author Thomas Jung
  */
@@ -118,7 +119,7 @@ public class DeleteFeElementsHelper
     {
       // to be allowed to delete the 2D element, no continuity line cannot be positioned on that element
       // to be allowed to delete the 1D element, that element cannot be the last one that touches some continuity line
-      final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
       final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       if( discretisationModel == null )
         throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.3" ) ); //$NON-NLS-1$
@@ -317,7 +318,7 @@ public class DeleteFeElementsHelper
     {
       // to allow continuity line to be deleted, no boundary conditions cannot be positioned on that line
       // also, this line cannot be a part of any transition or junction element
-      final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
       final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class.getName() );
 

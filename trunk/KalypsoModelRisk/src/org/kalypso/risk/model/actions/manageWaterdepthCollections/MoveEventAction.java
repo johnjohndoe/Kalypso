@@ -51,7 +51,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Event;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -62,18 +61,20 @@ import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author Gernot Belger
  */
 public class MoveEventAction extends Action implements IUpdateable
 {
-  private final SzenarioDataProvider m_dataProvider;
+  private final IScenarioDataProvider m_dataProvider;
 
   private final TreeViewer m_eventViewer;
 
   private final int m_amount;
 
-  public MoveEventAction( final SzenarioDataProvider dataProvider, final TreeViewer eventViewer, final int amount )
+  public MoveEventAction( final IScenarioDataProvider dataProvider, final TreeViewer eventViewer, final int amount )
   {
     m_dataProvider = dataProvider;
     m_eventViewer = eventViewer;
@@ -99,7 +100,7 @@ public class MoveEventAction extends Action implements IUpdateable
 
     final MoveFeatureCommand command = new MoveFeatureCommand( parentFeature, pt, selectedFeature, m_amount );
 
-    final SzenarioDataProvider sdProvider = m_dataProvider;
+    final IScenarioDataProvider sdProvider = m_dataProvider;
     try
     {
       sdProvider.postCommand( IRasterDataModel.class.getName(), command );

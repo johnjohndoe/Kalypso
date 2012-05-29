@@ -51,12 +51,12 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ui.rrm.internal.diagram.RrmDiagramView;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dirk Kuch
@@ -96,7 +96,7 @@ public class ResultManagementTaskHandler extends AbstractHandler
       rrmDiagramView.setSelectionTraverseLevel( 4 );
 
       // TODO
-      final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final RrmScenario scenario = new RrmScenario( (IFolder) modelProvider.getScenarioFolder() );
 
       managementView.setInput( scenario );

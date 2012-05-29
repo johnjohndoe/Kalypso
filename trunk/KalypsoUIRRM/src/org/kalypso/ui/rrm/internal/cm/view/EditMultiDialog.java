@@ -69,7 +69,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.dialog.DatabindingTitleAreaDialog;
 import org.kalypso.commons.databinding.validation.ValidationStatusUtilities;
@@ -97,6 +96,8 @@ import org.kalypso.ui.rrm.internal.cm.view.provider.ValidToColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * This dialog allows the editing of the properties of a multi catchment model.
@@ -456,7 +457,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
     try
     {
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final CommandableWorkspace generatorsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
 
       final ICatchmentModel rootFeature = (ICatchmentModel) generatorsWorkspace.getRootFeature();
@@ -485,7 +486,7 @@ public class EditMultiDialog extends TitleAreaDialog
   {
     try
     {
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final CommandableWorkspace generatorsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
 
       /* Apply the changes. */

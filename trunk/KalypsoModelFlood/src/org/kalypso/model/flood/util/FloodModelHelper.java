@@ -52,7 +52,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
@@ -75,6 +74,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author Thomas Jung
  */
@@ -82,7 +83,7 @@ public class FloodModelHelper
 {
   /**
    * gets the index of a given wsp theme inside the cascading "wasserspiegellagen" theme.
-   * 
+   *
    * @return index of the wsp theme or -1 if none is found
    */
   public static int findWspTheme( final IRunoffEvent runoffEvent, final IKalypsoCascadingTheme wspTheme )
@@ -109,7 +110,7 @@ public class FloodModelHelper
 
   /**
    * gets the index of a given result theme inside the cascading "wasserspiegellagen" theme.
-   * 
+   *
    * @return index of the result theme or -1 if none is found
    */
   public static int findResultTheme( final IRunoffEvent runoffEvent, final IKalypsoCascadingTheme wspTheme )
@@ -205,7 +206,7 @@ public class FloodModelHelper
     layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
 
     final String infoFormat = String.format( Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.10" ), event.getName() ); //$NON-NLS-1$
-    final String infoValue = String.format( "%s?format=%s", CoverageThemeInfo.class.getName(), infoFormat );//$NON-NLS-1$ 
+    final String infoValue = String.format( "%s?format=%s", CoverageThemeInfo.class.getName(), infoFormat );//$NON-NLS-1$
     layerPropertyThemeInfoId.setValue( infoValue );
 
     final List<Property> layerPropertyList = wspLayer.getProperty();
@@ -231,9 +232,9 @@ public class FloodModelHelper
    * Removes the specified coverage file.<br/>
    * The model is NOT automatically saved after this operation.
    */
-  public static IStatus removeResultCoverages( final SzenarioDataProvider dataProvider, final ICoverageCollection resultCoverages )
+  public static IStatus removeResultCoverages( final IScenarioDataProvider dataProvider, final ICoverageCollection resultCoverages )
   {
-    IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
+    final IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
     final ICoverage[] coverages = resultCoveragesList.toArray( new ICoverage[resultCoveragesList.size()] );
     try
     {
@@ -262,11 +263,11 @@ public class FloodModelHelper
 
   /**
    * shows a {@link ListSelectionDialog} in which the user can select {@link IRunoffEvent} for further processing
-   * 
+   *
    * @param shell
    * @param events
    *          the RunoffEvents
-   * 
+   *
    * @return a array of selected {@link IRunoffEvent}
    */
   public static IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureBindingCollection<IRunoffEvent> events )

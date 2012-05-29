@@ -15,13 +15,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.statistics.project.SzenarioController;
 import org.kalypso.statistics.types.EStatisticsImage;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -63,7 +63,7 @@ public class KalypsoStatisticsPlugin extends AbstractUIPlugin
       @Override
       protected IStatus run( final IProgressMonitor arg0 )
       {
-        final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+        final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
         setSzenarioController( new SzenarioController() );
         dataProvider.addScenarioDataListener( getSzenarioController() );
         getSzenarioController().scenarioChanged( dataProvider.getScenario() );
@@ -91,7 +91,7 @@ public class KalypsoStatisticsPlugin extends AbstractUIPlugin
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
-      final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       caseDataProvider.removeScenarioDataListener( getSzenarioController() );
     }
 

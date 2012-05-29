@@ -60,12 +60,12 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.wizards.IWizardDescriptor;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author ig
@@ -74,14 +74,11 @@ public class ImportWindDataHandler extends AbstractHandler
 {
   private static final String WIZARD_ID = "org.kalypso.kalypsomodel1d2d.ui.wizard.windmodel.ImportWindDataWizard"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IScenarioDataProvider szenarioDataProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       /* Always open the manage dtm widget - now the widget will be opened after the operation with the wizard */

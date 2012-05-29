@@ -50,13 +50,14 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -67,9 +68,9 @@ public class AddEventAction extends Action implements IUpdateable
 
   private final TreeViewer m_eventViewer;
 
-  private final SzenarioDataProvider m_dataProvider;
+  private final IScenarioDataProvider m_dataProvider;
 
-  public AddEventAction( final IRasterDataModel model, final SzenarioDataProvider dataProvider, final TreeViewer eventViewer )
+  public AddEventAction( final IRasterDataModel model, final IScenarioDataProvider dataProvider, final TreeViewer eventViewer )
   {
     super( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.56" ) ); //$NON-NLS-1$
 

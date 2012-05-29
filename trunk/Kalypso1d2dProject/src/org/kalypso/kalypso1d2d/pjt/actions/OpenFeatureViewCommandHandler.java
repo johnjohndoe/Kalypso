@@ -22,7 +22,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
@@ -62,7 +62,7 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
 
       final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_resource );
+      final IFolder folder = ScenarioHelper.findModelContext( szenarioFolder, m_resource );
       if( folder == null )
         throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.1", m_resource )); //$NON-NLS-1$
 
