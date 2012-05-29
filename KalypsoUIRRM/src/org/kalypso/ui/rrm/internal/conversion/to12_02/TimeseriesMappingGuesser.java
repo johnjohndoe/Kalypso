@@ -1,0 +1,190 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ *
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ *
+ *  and
+ *
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contact:
+ *
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.ui.rrm.internal.conversion.to12_02;
+
+import java.io.File;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
+import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
+
+/**
+ * Guesses the global timeseries that was used to create a local timeseries in the calculation case.
+ *
+ * @author Gernot Belger
+ */
+public class TimeseriesMappingGuesser
+{
+  private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+  private final ZmlLink m_modelTimeseriesLink;
+
+  private final TimeseriesMappingType m_mappingType;
+
+  private final TimeseriesIndex m_timeseriesIndex;
+
+  private String m_result;
+
+  public TimeseriesMappingGuesser( final ZmlLink modelTimeseriesLink, final TimeseriesMappingType mappingType, final TimeseriesIndex timeseriesIndex )
+  {
+    m_modelTimeseriesLink = modelTimeseriesLink;
+    m_mappingType = mappingType;
+    m_timeseriesIndex = timeseriesIndex;
+  }
+
+  public String getResult( )
+  {
+    return m_result;
+  }
+
+  public IStatus execute( )
+  {
+    if( validateTargetLink() )
+      m_result = guessTimeseries();
+
+    if( m_result != null )
+      m_log.add( IStatus.OK, Messages.getString( "CatchmentTimeseriesGuesser_0" ), null, m_result ); //$NON-NLS-1$
+
+    final String message = String.format( "Guess timeseries for element '%s'", m_modelTimeseriesLink.getFeature().getName() );
+    return m_log.asMultiStatusOrOK( message, message );
+  }
+
+  private boolean validateTargetLink( )
+  {
+    if( !m_modelTimeseriesLink.isLinkExisting() )
+    {
+      final String message = String.format( Messages.getString( "CatchmentTimeseriesGuesser_3" ) ); //$NON-NLS-1$
+      m_log.add( IStatus.WARNING, message );
+    }
+
+    return true;
+  }
+
+  private String guessTimeseries( )
+  {
+    final TimeseriesIndexEntry guess1 = guessByMapping();
+    if( guess1 != null )
+      return guess1.getHref();
+
+    final TimeseriesIndexEntry guess2 = guessByValues();
+    if( guess2 != null )
+      return guess2.getHref();
+
+    final TimeseriesIndexEntry guess3 = guessByFilename();
+    if( guess3 != null )
+      return guess3.getHref();
+
+    return null;
+  }
+
+  private TimeseriesIndexEntry guessByMapping( )
+  {
+    // TODO: try 1: use mapping file
+    return null;
+  }
+
+  private TimeseriesIndexEntry guessByValues( )
+  {
+    // TODO: try 2: search a timeseries that has the right values
+    return null;
+  }
+
+  private TimeseriesIndexEntry guessByFilename( )
+  {
+    m_log.add( IStatus.INFO, Messages.getString( "CatchmentTimeseriesGuesser_4" ) ); //$NON-NLS-1$
+
+    final String existingTimeseriesFilename = findExistingFilename();
+
+    if( StringUtils.isBlank( existingTimeseriesFilename ) )
+    {
+      m_log.add( IStatus.WARNING, Messages.getString( "CatchmentTimeseriesGuesser_5" ) ); //$NON-NLS-1$
+      return null;
+    }
+
+    /* find timeseries with same name and parameter type */
+    final TimeseriesIndexEntry infos[] = m_timeseriesIndex.findTimeseries( existingTimeseriesFilename );
+    return findBuestGuess( infos );
+  }
+
+  private TimeseriesIndexEntry findBuestGuess( final TimeseriesIndexEntry[] infos )
+  {
+    if( ArrayUtils.isEmpty( infos ) )
+    {
+      m_log.add( IStatus.WARNING, Messages.getString( "CatchmentTimeseriesGuesser_6" ) ); //$NON-NLS-1$
+      return null;
+    }
+
+    if( infos.length == 1 )
+      return infos[0];
+
+    final String neededParameterType = m_mappingType.getLinkParameterType();
+
+    for( final TimeseriesIndexEntry info : infos )
+    {
+      final String parameterType = info.getParameterType();
+      if( parameterType.equals( neededParameterType ) )
+      {
+        // TODO: also use timestep to determine best guess; find all infos with same type
+        m_log.add( IStatus.INFO, Messages.getString( "CatchmentTimeseriesGuesser_7" ) ); //$NON-NLS-1$
+        return info;
+      }
+    }
+
+    m_log.add( IStatus.WARNING, Messages.getString( "CatchmentTimeseriesGuesser_8" ), null, neededParameterType ); //$NON-NLS-1$
+
+    return null;
+  }
+
+  private String findExistingFilename( )
+  {
+    final File targetFile = m_modelTimeseriesLink.getJavaFile();
+    if( targetFile == null )
+      return null;
+
+    return targetFile.getName();
+  }
+}

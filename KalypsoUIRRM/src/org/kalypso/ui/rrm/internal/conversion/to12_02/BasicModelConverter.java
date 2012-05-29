@@ -143,6 +143,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     importer.copyTimeseries( new SubProgressMonitor( monitor, 90 / 7 ) ); //$NON-NLS-1$
   }
 
+  // FIXME: remove
   /**
    * Copy observationConf.
    */
@@ -152,7 +153,6 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
     getLog().add( converter.execute( "ObsQZuMapping.gml" ) ); //$NON-NLS-1$
     getLog().add( converter.execute( "ObsQMapping.gml" ) ); //$NON-NLS-1$
-    // FIXME: remove everything from the mapping except sea evaporation timeseries
     getLog().add( converter.execute( "ObsEMapping.gml" ) ); //$NON-NLS-1$
   }
 

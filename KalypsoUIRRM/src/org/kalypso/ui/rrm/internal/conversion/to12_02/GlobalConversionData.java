@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -67,6 +68,8 @@ public class GlobalConversionData
 
   private ICatchmentModel m_catchmentModel;
 
+  private ITimeseriesMappingCollection m_timeseriesMappings;
+
   private SimulationCollection m_simulations;
 
   public GlobalConversionData( final String chosenExe, final TimeseriesIndex timeseriesIndex )
@@ -78,6 +81,7 @@ public class GlobalConversionData
   void readGlobalModels( final File targetDir, final IStatusCollector log )
   {
     m_catchmentModel = readModel( targetDir, log, INaProjectConstants.GML_CATCHMENT_MODEL_PATH, ICatchmentModel.class );
+    m_timeseriesMappings = readModel( targetDir, log, INaProjectConstants.GML_CATCHMENT_MODEL_PATH, ITimeseriesMappingCollection.class );
     m_simulations = readModel( targetDir, log, INaProjectConstants.GML_SIMULATIONS_PATH, SimulationCollection.class );
   }
 
@@ -102,6 +106,7 @@ public class GlobalConversionData
   void saveGlobalModels( final File targetDir, final IStatusCollector log )
   {
     saveModel( m_catchmentModel, targetDir, log, INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
+    saveModel( m_timeseriesMappings, targetDir, log, INaProjectConstants.GML_TIMESERIES_MAPPINGS_PATH );
     saveModel( m_simulations, targetDir, log, INaProjectConstants.GML_SIMULATIONS_PATH );
   }
 
@@ -147,5 +152,10 @@ public class GlobalConversionData
   public SimulationCollection getSimulations( )
   {
     return m_simulations;
+  }
+
+  ITimeseriesMappingCollection getTimeseriesMappings( )
+  {
+    return m_timeseriesMappings;
   }
 }
