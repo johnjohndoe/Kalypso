@@ -105,6 +105,12 @@ public class NAControl extends Feature_Impl
 
   public static final QName PROP_GENERATOR_E = new QName( NS_CONTROL, "generatorE" ); //$NON-NLS-1$
 
+  private static final QName PROPERTY_MAPPING_GAUGE = new QName( NS_CONTROL, "mappingGaugeMeasurement" ); //$NON-NLS-1$
+
+  private static final QName PROPERTY_MAPPING_NODE_INFLOW = new QName( NS_CONTROL, "mappingNodeInflow" ); //$NON-NLS-1$
+
+  private static final QName PROPERTY_MAPPING_STORAGE_EVAPORATION = new QName( NS_CONTROL, "mappingStorageEvaporation" ); //$NON-NLS-1$
+
   private static final QName PROP_INITIAL_VALUE_SOURCE = new QName( NS_CONTROL, "initialValueSource" ); //$NON-NLS-1$
 
   private static final QName PROPERTY_LAST_MODIFIED = new QName( NS_CONTROL, "lastModified" ); //$NON-NLS-1$
@@ -399,5 +405,20 @@ public class NAControl extends Feature_Impl
       ex.printStackTrace();
       return -1;
     }
+  }
+
+  public void setMappingReferenceGauge( final String href )
+  {
+    setLink( PROPERTY_MAPPING_GAUGE, href );
+  }
+
+  public void setMappingReferenceNodeInflow( final String href )
+  {
+    setLink( PROPERTY_MAPPING_NODE_INFLOW, href );
+  }
+
+  public void setMappingReferenceStorageEvaporation( final String href )
+  {
+    setLink( PROPERTY_MAPPING_STORAGE_EVAPORATION, href );
   }
 }
