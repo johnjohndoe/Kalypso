@@ -81,7 +81,7 @@ public class GlobalConversionData
   void readGlobalModels( final File targetDir, final IStatusCollector log )
   {
     m_catchmentModel = readModel( targetDir, log, INaProjectConstants.GML_CATCHMENT_MODEL_PATH, ICatchmentModel.class );
-    m_timeseriesMappings = readModel( targetDir, log, INaProjectConstants.GML_CATCHMENT_MODEL_PATH, ITimeseriesMappingCollection.class );
+    m_timeseriesMappings = readModel( targetDir, log, INaProjectConstants.GML_TIMESERIES_MAPPINGS_FILE, ITimeseriesMappingCollection.class );
     m_simulations = readModel( targetDir, log, INaProjectConstants.GML_SIMULATIONS_PATH, SimulationCollection.class );
   }
 
