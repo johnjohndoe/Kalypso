@@ -88,11 +88,6 @@ public class GenericCatchmentModelInfo implements ICatchmentModelInfo
   private final String m_parameterType;
 
   /**
-   * True, if the catchment models should be calculated. False, if only the links should be set to the model.
-   */
-  private final boolean m_calculateCatchmentModels;
-
-  /**
    * The timestep.
    */
   private final Period m_timestep;
@@ -122,8 +117,6 @@ public class GenericCatchmentModelInfo implements ICatchmentModelInfo
    *          The target link.
    * @param parameterType
    *          The parameter type.
-   * @param calculateCatchmentModels
-   *          True, if the catchment models should be calculated. False, if only the links should be set to the model.
    * @param timestep
    *          The timestep.
    * @param timestamp
@@ -131,7 +124,7 @@ public class GenericCatchmentModelInfo implements ICatchmentModelInfo
    * @param range
    *          The range.
    */
-  public GenericCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final boolean calculateCatchmentModels, final Period timestep, final LocalTime timestamp, final DateRange range )
+  public GenericCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final Period timestep, final LocalTime timestamp, final DateRange range )
   {
     m_simulation = simulation;
     m_control = control;
@@ -139,7 +132,6 @@ public class GenericCatchmentModelInfo implements ICatchmentModelInfo
     m_generator = generator;
     m_targetLink = targetLink;
     m_parameterType = parameterType;
-    m_calculateCatchmentModels = calculateCatchmentModels;
     m_timestep = timestep;
     m_timestamp = timestamp;
     m_range = range;
@@ -179,12 +171,6 @@ public class GenericCatchmentModelInfo implements ICatchmentModelInfo
   public String getParameterType( )
   {
     return m_parameterType;
-  }
-
-  @Override
-  public boolean isCalculateCatchmentModels( )
-  {
-    return m_calculateCatchmentModels;
   }
 
   @Override

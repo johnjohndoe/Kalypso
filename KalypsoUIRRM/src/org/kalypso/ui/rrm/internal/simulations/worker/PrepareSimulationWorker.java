@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
@@ -70,19 +71,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 public class PrepareSimulationWorker implements ICoreRunnableWithProgress
 {
   /**
-   * The simulation.
-   */
-  private final NAControl m_simulation;
-
-  /**
    * The rrm simulation.
    */
   private final RrmSimulation m_rrmSimulation;
-
-  /**
-   * The model.
-   */
-  private final NaModell m_model;
 
   /**
    * True, if the start conditions should be calculated.
@@ -90,23 +81,25 @@ public class PrepareSimulationWorker implements ICoreRunnableWithProgress
   private final boolean m_calculateStartConditions;
 
   /**
+   * The simulation data.
+   */
+  private final INaSimulationData m_simulationData;
+
+  /**
    * The constructor.
    * 
-   * @param simulation
-   *          The simulation.
    * @param rrmSimulation
    *          The rrm simulation.
-   * @param model
-   *          The model.
    * @param calculateStartConditions
    *          True, if the start conditions should be calculated.
+   * @param simulationData
+   *          The simulation data.
    */
-  public PrepareSimulationWorker( final NAControl simulation, final RrmSimulation rrmSimulation, final NaModell model, final boolean calculateStartConditions )
+  public PrepareSimulationWorker( final RrmSimulation rrmSimulation, final boolean calculateStartConditions, final INaSimulationData simulationData )
   {
-    m_simulation = simulation;
     m_rrmSimulation = rrmSimulation;
-    m_model = model;
     m_calculateStartConditions = calculateStartConditions;
+    m_simulationData = simulationData;
   }
 
   /**
@@ -128,8 +121,12 @@ public class PrepareSimulationWorker implements ICoreRunnableWithProgress
       monitor.beginTask( "Preparing simulation...", 200 );
       monitor.subTask( "Preparing simulation..." );
 
+      /* Get the some data of the simulation data. */
+      final NaModell naModel = m_simulationData.getNaModel();
+      final NAControl simulation = m_simulationData.getMetaControl();
+
       /* Determine, if it is a longterm simulation. */
-      final boolean isLongterm = isLongterm( m_simulation );
+      final boolean isLongterm = isLongterm( simulation );
       if( isLongterm )
       {
         /* Update status. */
@@ -142,11 +139,11 @@ public class PrepareSimulationWorker implements ICoreRunnableWithProgress
           collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Start conditions should be calculated." ) );
 
           /* We need to manipulate the model.gml, activating all result flags. */
-          final IFeatureBindingCollection<Node> nodes = m_model.getNodes();
+          final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
           for( final Node node : nodes )
             node.setGenerateResults( true );
 
-          /* Copy expertcontrol.gml. */
+          /* Copy expertControl.gml. */
           // TODO
 
           /* Set list of start condition times of the referencing shortterm simulations (first time there). */
@@ -158,7 +155,7 @@ public class PrepareSimulationWorker implements ICoreRunnableWithProgress
           collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Start conditions should not be calculated." ) );
 
           /* HINT: Longterm simulations without calculation of the start conditions */
-          /* HINT: will use the global expertcontrol.gml later. */
+          /* HINT: will use the global expertControl.gml later. */
         }
       }
       else
@@ -167,14 +164,14 @@ public class PrepareSimulationWorker implements ICoreRunnableWithProgress
         collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "This is a shortterm simulation." ) );
 
         /* If a longterm simulation is referenced. */
-        final String initialValueSource = m_simulation.getInitialValueSource();
+        final String initialValueSource = simulation.getInitialValueSource();
         if( initialValueSource != null && initialValueSource.length() > 0 )
         {
           /* Update status. */
           collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "It does reference a longterm simulation." ) );
 
           /* Copy the lzsim data. */
-          copyInitialCondition( m_simulation, m_rrmSimulation );
+          copyInitialCondition( simulation, m_rrmSimulation );
         }
         else
         {
@@ -184,11 +181,13 @@ public class PrepareSimulationWorker implements ICoreRunnableWithProgress
           /* HINT: In this case the lzsim data is not copied. */
         }
 
-        /* HINT: Shortterm simulations will use the global expertcontrol.gml later. */
+        /* HINT: Shortterm simulations will use the global expertControl.gml later. */
       }
 
       /* Monitor. */
       monitor.worked( 200 );
+
+      // TODO Loading of modell and calculation copy here...
 
       return collector.asMultiStatus( "Peparation of the simulation was successfull." );
     }

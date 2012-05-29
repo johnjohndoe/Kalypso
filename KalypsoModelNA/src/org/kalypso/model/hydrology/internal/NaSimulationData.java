@@ -80,6 +80,9 @@ public class NaSimulationData implements INaSimulationData
 
   private final GMLWorkspace m_lzsimWorkspace;
 
+  // TODO Add timeseries mappings
+  // TODO Add catchment models
+
   private final NAModellControl m_naModellControl;
 
   private final NAControl m_metaControl;

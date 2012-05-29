@@ -117,7 +117,7 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
     final RrmProject rrmProject = new RrmProject( project );
     final RrmScenario baseScenario = rrmProject.getBaseScenario();
 
-    final IFile hydrotopeFile = baseScenario.getHydrotopeFile();
+    final IFile hydrotopeFile = baseScenario.getHydrotopGml();
 
     return hydrotopeFile.exists();
   }

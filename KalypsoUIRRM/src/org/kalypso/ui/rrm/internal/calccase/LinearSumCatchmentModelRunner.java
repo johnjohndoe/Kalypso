@@ -120,7 +120,6 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     final IRainfallGenerator generator = info.getGenerator();
     final QName targetLink = info.getTargetLink();
     final String parameterType = info.getParameterType();
-    final boolean calculateCatchmentModels = info.isCalculateCatchmentModels();
     final Period timestep = info.getTimestep();
 
     /* HINT: The range may be the adjusted simulation range, if executed as standalone generator. */

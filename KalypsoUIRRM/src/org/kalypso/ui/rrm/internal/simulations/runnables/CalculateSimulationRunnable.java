@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.runnables;
 
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -55,13 +56,17 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.hydrology.INaSimulationData;
+import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.simulations.worker.CalculateCatchmentModelsWorker;
 import org.kalypso.ui.rrm.internal.simulations.worker.CalculateSimulationWorker;
@@ -69,6 +74,10 @@ import org.kalypso.ui.rrm.internal.simulations.worker.CleanupSimulationWorker;
 import org.kalypso.ui.rrm.internal.simulations.worker.CreateSimulationWorker;
 import org.kalypso.ui.rrm.internal.simulations.worker.PrepareSimulationWorker;
 import org.kalypso.utils.log.GeoStatusLog;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -183,11 +192,9 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       final Date startTime = new Date();
       collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Calculation started at %s.", DF.format( startTime ) ) ) );
 
-      /* Get the rrm simulation. */
+      /* Get the rrm simulation and rrm scenario. */
       final RrmSimulation rrmSimulation = getRrmSimulation( simulation );
-
-      /* The model. */
-      NaModell model = null;
+      final RrmScenario scenario = rrmSimulation.getScenario();
 
       /* Copy given flags. */
       boolean calculateCatchmentModels = m_calculateCatchmentModels;
@@ -200,14 +207,11 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         /* HINT: We keep the selection of the user. */
 
         /* Clean up. */
-        final CleanupSimulationWorker cleanupWorker = new CleanupSimulationWorker( simulation, rrmSimulation );
+        final CleanupSimulationWorker cleanupWorker = new CleanupSimulationWorker( rrmSimulation, calculateCatchmentModels );
         final IStatus cleanupStatus = cleanupWorker.execute( new SubProgressMonitor( monitor, 200 ) );
         collector.add( cleanupStatus );
         if( cleanupStatus.getSeverity() >= IStatus.ERROR )
           return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
-
-        /* Get model. */
-        model = cleanupWorker.getModel();
       }
       else
       {
@@ -216,21 +220,39 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         calculateCatchmentModels = true;
 
         /* Create. */
-        final CreateSimulationWorker createWorker = new CreateSimulationWorker( simulation, rrmSimulation );
+        final CreateSimulationWorker createWorker = new CreateSimulationWorker( rrmSimulation );
         final IStatus createStatus = createWorker.execute( new SubProgressMonitor( monitor, 200 ) );
         collector.add( createStatus );
         if( createStatus.getSeverity() >= IStatus.ERROR )
           return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
-
-        /* Get model. */
-        model = createWorker.getModel();
       }
 
       /* Monitor. */
       monitor.subTask( "Prepare..." );
 
+      /* Save the calculation.gml. */
+      final IFile calculationGml = rrmSimulation.getCalculationGml();
+      final GMLWorkspace simulationWorkspace = FeatureFactory.createGMLWorkspace( simulation.getFeatureType(), null, null );
+      final Feature simulationFeature = simulationWorkspace.getRootFeature();
+      FeatureHelper.copyData( simulation, simulationFeature );
+      GmlSerializer.saveWorkspace( simulationWorkspace, calculationGml );
+
+      /* Create the URLs. */
+      final URL modelURL = ResourceUtilities.createURL( scenario.getModelFile() );
+      final URL controlURL = ResourceUtilities.createURL( scenario.getExpertControlGml() );
+      final URL metaURL = ResourceUtilities.createURL( calculationGml );
+      final URL parameterURL = ResourceUtilities.createURL( scenario.getParameterGml() );
+      final URL hydrotopURL = ResourceUtilities.createURL( scenario.getHydrotopGml() );
+      final URL sudsURL = ResourceUtilities.createURL( scenario.getSudsGml() );
+      final URL syntNURL = ResourceUtilities.createURL( scenario.getSyntnGml() );
+      final URL lzsimURL = ResourceUtilities.createURL( scenario.getLzsimGml() );
+      // TODO Add catchment models and timeseries mappings...
+
+      /* Load all simulation data. */
+      final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, null, null );
+
       /* Prepare. */
-      final PrepareSimulationWorker prepareWorker = new PrepareSimulationWorker( simulation, rrmSimulation, model, calculateStartConditions );
+      final PrepareSimulationWorker prepareWorker = new PrepareSimulationWorker( rrmSimulation, calculateStartConditions, simulationData );
       final IStatus prepareStatus = prepareWorker.execute( new SubProgressMonitor( monitor, 200 ) );
       collector.add( prepareStatus );
       if( prepareStatus.getSeverity() >= IStatus.ERROR )
@@ -240,7 +262,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       monitor.subTask( "Calculate the catchment models..." );
 
       /* Calculate the catchment models. */
-      final CalculateCatchmentModelsWorker catchmentModelsWorker = new CalculateCatchmentModelsWorker( simulation, rrmSimulation, model, calculateCatchmentModels );
+      final CalculateCatchmentModelsWorker catchmentModelsWorker = new CalculateCatchmentModelsWorker( rrmSimulation, calculateCatchmentModels, simulationData );
       final IStatus catchmentModelsStatus = catchmentModelsWorker.execute( new SubProgressMonitor( monitor, 200 ) );
       collector.add( catchmentModelsStatus );
       if( catchmentModelsStatus.getSeverity() >= IStatus.ERROR )
@@ -250,7 +272,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       monitor.subTask( "Calculate the simulation..." );
 
       /* Calculate the simulation. */
-      final CalculateSimulationWorker calculateWorker = new CalculateSimulationWorker( rrmSimulation );
+      final CalculateSimulationWorker calculateWorker = new CalculateSimulationWorker( rrmSimulation, simulationData );
       final IStatus calculateStatus = calculateWorker.execute( new SubProgressMonitor( monitor, 200 ) );
       collector.add( calculateStatus );
       if( calculateStatus.getSeverity() >= IStatus.ERROR )

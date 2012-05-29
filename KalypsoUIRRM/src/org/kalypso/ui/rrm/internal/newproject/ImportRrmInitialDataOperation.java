@@ -186,7 +186,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
 
       /* save changed workspace */
       GmlSerializer.serializeWorkspace( m_scenario.getModelFile(), m_modelWS, new NullProgressMonitor() );
-      GmlSerializer.serializeWorkspace( m_scenario.getHydrotopeFile(), m_hydWS, new NullProgressMonitor() );
+      GmlSerializer.serializeWorkspace( m_scenario.getHydrotopGml(), m_hydWS, new NullProgressMonitor() );
 
       return Status.OK_STATUS;
     }
@@ -205,7 +205,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
     try
     {
       m_modelWS = GmlSerializer.createGMLWorkspace( m_scenario.getModelFile() );
-      m_hydWS = GmlSerializer.createGMLWorkspace( m_scenario.getHydrotopeFile() );
+      m_hydWS = GmlSerializer.createGMLWorkspace( m_scenario.getHydrotopGml() );
     }
     catch( final Exception e1 )
     {
@@ -480,7 +480,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
    * generates an ID based on the FeatureType. If the idColKey variable is set, then use this field to generate the ID
    * and check if the ID doesn´t exist in the idMap. if the idColKey is not set, use the ID of the sourceFeature (shape
    * file).
-   *
+   * 
    * @param idColKey
    * @param sourceFeature
    * @param IDText

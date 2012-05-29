@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NASimulationOperation;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -63,14 +64,22 @@ public class CalculateSimulationWorker implements ICoreRunnableWithProgress
   private final RrmSimulation m_rrmSimulation;
 
   /**
+   * The simulation data.
+   */
+  private final INaSimulationData m_simulationData;
+
+  /**
    * The constructor.
    * 
    * @param rrmSimulation
    *          The rrm simulation.
+   * @param simulationData
+   *          The simulation data.
    */
-  public CalculateSimulationWorker( final RrmSimulation rrmSimulation )
+  public CalculateSimulationWorker( final RrmSimulation rrmSimulation, final INaSimulationData simulationData )
   {
     m_rrmSimulation = rrmSimulation;
+    m_simulationData = simulationData;
   }
 
   /**
@@ -93,6 +102,7 @@ public class CalculateSimulationWorker implements ICoreRunnableWithProgress
       monitor.subTask( "Calculating simulation..." );
 
       /* Calculate. */
+      // TODO Give simulation data to the operation...
       final NASimulationOperation operation = new NASimulationOperation( m_rrmSimulation.getSimulationFolder() );
       final IStatus calculateStatus = operation.execute( new SubProgressMonitor( monitor, 200 ) );
       collector.add( calculateStatus );
