@@ -54,7 +54,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAOptimize;
@@ -165,11 +165,11 @@ public class TsFileWriter
 
       final TimeseriesLinkType linkT = catchment.getTemperatureLink();
       final File targetFileT = m_tsFileManager.getTemperaturEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-      writeExtTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_TEMPERATURE, "1.0", simulationRange ); //$NON-NLS-1$
+      writeExtTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, "1.0", simulationRange ); //$NON-NLS-1$
 
       final TimeseriesLinkType linkV = catchment.getEvaporationLink();
       final File targetFileV = m_tsFileManager.getVerdunstungEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-      writeExtTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION, "0.5", simulationRange ); //$NON-NLS-1$
+      writeExtTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, "0.5", simulationRange ); //$NON-NLS-1$
     }
   }
 
@@ -264,7 +264,7 @@ public class TsFileWriter
     final String href = link.getHref();
     final String hrefWithFilter = filter == null ? href : ZmlURL.insertFilter( href, filter );
 
-    final URL location = new UrlUtilities().resolveURL( zmlContext, hrefWithFilter );
+    final URL location = UrlResolverSingleton.getDefault().resolveURL( zmlContext, hrefWithFilter );
 
     final IObservation observation = ZmlFactory.parseXML( location ); //$NON-NLS-1$
     return observation;
