@@ -49,12 +49,15 @@ import java.util.Date;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -69,13 +72,14 @@ import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.simulations.SimulationUtilities;
 import org.kalypso.ui.rrm.internal.simulations.worker.CalculateCatchmentModelsWorker;
 import org.kalypso.ui.rrm.internal.simulations.worker.CalculateSimulationWorker;
 import org.kalypso.ui.rrm.internal.simulations.worker.CleanupSimulationWorker;
 import org.kalypso.ui.rrm.internal.simulations.worker.CreateSimulationWorker;
-import org.kalypso.ui.rrm.internal.simulations.worker.PrepareSimulationWorker;
+import org.kalypso.ui.rrm.internal.simulations.worker.PrepareLongtermSimulationWorker;
+import org.kalypso.ui.rrm.internal.simulations.worker.PrepareShorttermSimulationWorker;
 import org.kalypso.utils.log.GeoStatusLog;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -183,6 +187,9 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
 
+    /* The rrm simulation. */
+    RrmSimulation rrmSimulation = null;
+
     try
     {
       /* Monitor. */
@@ -194,7 +201,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Calculation started at %s.", DF.format( startTime ) ) ) );
 
       /* Get the rrm simulation and rrm scenario. */
-      final RrmSimulation rrmSimulation = getRrmSimulation( simulation );
+      rrmSimulation = getRrmSimulation( simulation );
       final RrmScenario scenario = rrmSimulation.getScenario();
 
       /* Copy given flags. */
@@ -231,34 +238,47 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.subTask( "Prepare..." );
 
-      /* Save the calculation.gml. */
-      final IFile calculationGml = rrmSimulation.getCalculationGml();
-      final GMLWorkspace simulationWorkspace = FeatureFactory.createGMLWorkspace( simulation.getFeatureType(), null, null );
-      final Feature simulationFeature = simulationWorkspace.getRootFeature();
-      FeatureHelper.copyData( simulation, simulationFeature );
-      GmlSerializer.saveWorkspace( simulationWorkspace, calculationGml );
-
       /* Create the URLs. */
       final URL modelURL = ResourceUtilities.createURL( scenario.getModelFile() );
       final URL controlURL = ResourceUtilities.createURL( scenario.getExpertControlGml() );
-      final URL metaURL = ResourceUtilities.createURL( calculationGml );
       final URL parameterURL = ResourceUtilities.createURL( scenario.getParameterGml() );
       final URL hydrotopURL = ResourceUtilities.createURL( scenario.getHydrotopGml() );
       final URL sudsURL = ResourceUtilities.createURL( scenario.getSudsGml() );
       final URL syntNURL = ResourceUtilities.createURL( scenario.getSyntnGml() );
-      final URL lzsimURL = ResourceUtilities.createURL( scenario.getLzsimGml() );
       final URL catchmentModelsUrl = ResourceUtilities.createURL( scenario.getCatchmentModelsGml() );
       final URL timeseriesMappingsUrl = ResourceUtilities.createURL( scenario.getTimeseriesMappingsGml() );
 
       /* Load all simulation data. */
-      final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
+      final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, controlURL, null, parameterURL, hydrotopURL, sudsURL, syntNURL, null, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
 
-      /* Prepare. */
-      final PrepareSimulationWorker prepareWorker = new PrepareSimulationWorker( rrmSimulation, calculateStartConditions, simulationData );
-      final IStatus prepareStatus = prepareWorker.execute( new SubProgressMonitor( monitor, 200 ) );
-      collector.add( prepareStatus );
-      if( prepareStatus.getSeverity() >= IStatus.ERROR )
-        return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+      /* Load and clone the simulation. */
+      final GMLWorkspace simulationWorkspace = FeatureFactory.createGMLWorkspace( simulation.getFeatureType(), modelURL, simulationData.getFeatureProviderFactory() );
+      final NAControl simulationFeature = (NAControl) simulationWorkspace.getRootFeature();
+      FeatureHelper.copyData( simulation, simulationFeature );
+
+      /* Set the metacontrol to the simulation data. */
+      simulationData.setMetaControl( simulationFeature );
+
+      /* Prepare longterm/shortterm simulation. */
+      final boolean isLongterm = SimulationUtilities.isLongterm( simulation );
+      if( isLongterm )
+      {
+        /* Prepare longterm simulation. */
+        final PrepareLongtermSimulationWorker prepareLongtermWorker = new PrepareLongtermSimulationWorker( calculateStartConditions, simulationData );
+        final IStatus prepareLongtermStatus = prepareLongtermWorker.execute( new SubProgressMonitor( monitor, 200 ) );
+        collector.add( prepareLongtermStatus );
+        if( prepareLongtermStatus.getSeverity() >= IStatus.ERROR )
+          return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+      }
+      else
+      {
+        /* Prepare shortterm simulation. */
+        final PrepareShorttermSimulationWorker prepareShorttermWorker = new PrepareShorttermSimulationWorker( rrmSimulation, simulationData );
+        final IStatus prepareShorttermStatus = prepareShorttermWorker.execute( new SubProgressMonitor( monitor, 200 ) );
+        collector.add( prepareShorttermStatus );
+        if( prepareShorttermStatus.getSeverity() >= IStatus.ERROR )
+          return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+      }
 
       /* Monitor. */
       monitor.subTask( "Calculate the catchment models..." );
@@ -281,23 +301,18 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
 
       /* Monitor. */
-      monitor.subTask( "Save the log..." );
+      monitor.subTask( "Saving..." );
 
       /* Save a copy. */
       final NaModell naModel = simulationData.getNaModel();
       final NAControl metaControl = simulationData.getMetaControl();
       GmlSerializer.saveWorkspace( naModel.getWorkspace(), rrmSimulation.getModelGml() );
       GmlSerializer.saveWorkspace( metaControl.getWorkspace(), rrmSimulation.getExpertControlGml() );
+      GmlSerializer.saveWorkspace( simulationWorkspace, rrmSimulation.getCalculationGml() );
 
       /* Mark a status with the current time. */
       final Date endTime = new Date();
       collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Calculation finished at %s.", DF.format( endTime ) ) ) );
-
-      /* Save the status in the simulation folder. */
-      final IFile calculationStatusGml = rrmSimulation.getCalculationStatusGml();
-      final GeoStatusLog geoStatusLog = new GeoStatusLog( calculationStatusGml );
-      geoStatusLog.log( collector.asMultiStatus( String.format( "Calculation of '%s'", simulation.getDescription() ) ) );
-      geoStatusLog.serialize();
 
       /* Monitor. */
       monitor.worked( 200 );
@@ -313,8 +328,37 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     }
     finally
     {
+      /* Save the log. */
+      saveLog( simulation, rrmSimulation, collector );
+
       /* Monitor. */
       monitor.done();
+    }
+  }
+
+  private void saveLog( final NAControl simulation, final RrmSimulation rrmSimulation, final IStatusCollector collector )
+  {
+    try
+    {
+      /* Get the log folder and create it, if necessary. */
+      final IFolder logFolder = rrmSimulation.getLogFolder();
+      final ContainerGenerator generator = new ContainerGenerator( logFolder.getFullPath() );
+      generator.generateContainer( null );
+
+      /* Get the calculationStatus.gml. */
+      final IFile calculationStatusGml = rrmSimulation.getCalculationStatusGml();
+
+      /* Save the status in the simulation folder. */
+      final GeoStatusLog geoStatusLog = new GeoStatusLog( calculationStatusGml );
+      geoStatusLog.log( collector.asMultiStatus( String.format( "Calculation of '%s'", simulation.getDescription() ) ) );
+      geoStatusLog.serialize();
+
+      /* Refresh. */
+      calculationStatusGml.refreshLocal( IResource.DEPTH_ZERO, null );
+    }
+    catch( final CoreException ex )
+    {
+      ex.printStackTrace();
     }
   }
 

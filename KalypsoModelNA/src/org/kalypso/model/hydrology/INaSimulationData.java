@@ -52,6 +52,7 @@ import org.kalypso.model.hydrology.internal.NaOptimizeData;
 import org.kalypso.model.hydrology.internal.binding.cm.CatchmentModel;
 import org.kalypso.model.hydrology.internal.binding.timeseriesMappings.TimeseriesMappingCollection;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author Gernot Belger
@@ -68,6 +69,8 @@ public interface INaSimulationData
 
   NAControl getMetaControl( );
 
+  void setMetaControl( NAControl metaControl );
+
   GMLWorkspace getParameterWorkspace( );
 
   GMLWorkspace getSudsWorkspace( );
@@ -78,6 +81,8 @@ public interface INaSimulationData
 
   InitialValues getInitialValues( );
 
+  void setLzsimWorkspace( GMLWorkspace lzsimWorkspace );
+
   NaOptimizeData getOptimizeData( );
 
   NAOptimize getNaOptimize( );
@@ -87,4 +92,6 @@ public interface INaSimulationData
   CatchmentModel getCatchmentModels( );
 
   TimeseriesMappingCollection getTimeseriesMappings( );
+
+  IFeatureProviderFactory getFeatureProviderFactory( );
 }

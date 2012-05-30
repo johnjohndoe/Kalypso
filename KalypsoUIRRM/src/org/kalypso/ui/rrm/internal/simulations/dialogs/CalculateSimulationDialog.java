@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.simulations.SimulationUtilities;
 
 /**
  * This dialog asks the user, if he wants to calculate the simulation and offers some options.
@@ -247,11 +248,7 @@ public class CalculateSimulationDialog extends TitleAreaDialog
   {
     for( final NAControl simulation : simulations )
     {
-      final Integer timestep = simulation.getMinutesOfTimestep();
-      if( timestep == null )
-        continue;
-
-      if( timestep.intValue() == 1440 )
+      if( SimulationUtilities.isLongterm( simulation ) )
         return true;
     }
 

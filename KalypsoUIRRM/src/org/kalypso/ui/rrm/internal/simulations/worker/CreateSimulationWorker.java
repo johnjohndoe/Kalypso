@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.simulations.worker;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -126,6 +127,9 @@ public class CreateSimulationWorker implements ICoreRunnableWithProgress
   {
     final IResource[] members = calcCaseTemplateFolder.members();
     for( final IResource member : members )
-      member.copy( simulationFolder.getFullPath(), false, null );
+    {
+      final IPath target = simulationFolder.getFullPath().append( member.getName() );
+      member.copy( target, false, null );
+    }
   }
 }
