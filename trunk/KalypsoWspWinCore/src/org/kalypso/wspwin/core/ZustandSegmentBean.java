@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wspwin.core;
 
@@ -107,6 +107,6 @@ public class ZustandSegmentBean
 
   public String formatLine( )
   {
-    return String.format( Locale.US, "%.4f %.4f %.4f %.4f %.4f %s %s", m_stationFrom, m_stationTo, m_distanceVL, m_distanceHF, m_distanceVR, m_fileNameFrom, m_fileNameTo );
+    return String.format( Locale.US, "%.6f %.6f %.4f %.4f %.4f %s %s", m_stationFrom, m_stationTo, m_distanceVL, m_distanceHF, m_distanceVR, m_fileNameFrom, m_fileNameTo );
   }
 }

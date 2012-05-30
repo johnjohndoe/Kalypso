@@ -41,7 +41,6 @@
 package org.kalypso.wspwin.core;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -56,7 +55,6 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
@@ -149,13 +147,10 @@ public class RunOffEventBean
     }
   }
 
-  public static void write( final File outputFile, final RunOffEventBean[] fixation ) throws FileNotFoundException
+  public static void write( final File outputFile, final RunOffEventBean[] fixation ) throws IOException
   {
-    PrintWriter pw = null;
-    try
+    try( final PrintWriter pw = new PrintWriter( outputFile) )
     {
-      pw = new PrintWriter( outputFile );
-
       for( final RunOffEventBean runOff : fixation )
       {
         final String name = runOff.getName();
@@ -169,18 +164,14 @@ public class RunOffEventBean
         {
           final BigDecimal station = entry.getKey();
           final BigDecimal value = entry.getValue();
-          pw.format( Locale.US, "%.4f %.3f%n", station, value );
+          pw.format( Locale.US, "%.4f %.4f%n", station, value );
         }
       }
 
-      pw.checkError();
+      if( pw.checkError() )
+        throw new IOException();
 
-      pw.flush();
       pw.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( pw );
     }
   }
 }

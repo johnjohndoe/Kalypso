@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,19 +36,23 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wspwin.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.apache.commons.lang3.StringUtils;
+import org.kalypso.wspwin.core.WspCfg.TYPE;
 import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
@@ -140,5 +144,46 @@ public class CalculationBean
     {
       LineIterator.closeQuietly( lineIt );
     }
+  }
+
+  public static void writeBerFile( final File outputFile, final CalculationBean[] calculations ) throws IOException
+  {
+    try( final PrintWriter pw = new PrintWriter( outputFile) )
+    {
+      pw.println( calculations.length );
+
+      for( final CalculationBean calculation : calculations )
+      {
+        final String name = calculation.getName();
+        final String shortName = StringUtils.abbreviateMiddle( name, ".", 57 );
+
+        final double fromStation = calculation.getFromStation();
+        final double toStation = calculation.getToStation();
+        final String calcFilename = calculation.getFileName();
+
+        pw.format( Locale.US, "%-57s %9.4f %9.4f  %12s%n", shortName, fromStation, toStation, calcFilename );
+      }
+
+      if( pw.checkError() )
+        throw new IOException();
+
+      pw.close();
+    }
+  }
+
+  public ICalculationContentBean readContent( final TYPE projectType, final File profDir ) throws IOException
+  {
+    final File file = new File( profDir, getFileName() );
+
+    switch( projectType )
+    {
+      case PASCHE:
+        return CalculationContentBeanPasche.read( this, file );
+
+      case KNAUF:
+        return CalculationContentBeanKnauf.read( this, file );
+    }
+
+    throw new IllegalArgumentException();
   }
 }

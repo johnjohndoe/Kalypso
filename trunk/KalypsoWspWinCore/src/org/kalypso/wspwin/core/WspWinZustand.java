@@ -75,7 +75,7 @@ public class WspWinZustand
 
   private final Collection<LocalEnergyLossBean> m_losses = new ArrayList<LocalEnergyLossBean>();
 
-  private final Collection<CalculationBean> m_calculations = new ArrayList<CalculationBean>();
+  private final Collection<ICalculationContentBean> m_calculations = new ArrayList<ICalculationContentBean>();
 
   private final ZustandBean m_bean;
 
@@ -196,6 +196,9 @@ public class WspWinZustand
       final BigDecimal stationFrom = fromProfile.getStation();
       final BigDecimal stationTo = toProfile.getStation();
 
+      // FIXME: strange things happens for (knauf) profiles with mehrfeld-code. In that case
+      // the distance should be calculated to the next real profile instead.
+
       minStation = Math.min( minStation, stationFrom.doubleValue() );
       minStation = Math.min( minStation, stationTo.doubleValue() );
       maxStation = Math.max( maxStation, stationFrom.doubleValue() );
@@ -231,6 +234,8 @@ public class WspWinZustand
     for( final ProfileBean profile : m_profileBeans )
       pw.append( profile.formatLine() ).append( SystemUtils.LINE_SEPARATOR );
 
+    pw.append( SystemUtils.LINE_SEPARATOR );
+
     /* Segments */
     for( final ZustandSegmentBean segment : m_segmentBeans )
       pw.append( segment.formatLine() ).append( SystemUtils.LINE_SEPARATOR );
@@ -253,7 +258,7 @@ public class WspWinZustand
     m_losses.add( loss );
   }
 
-  public void addCalculation( final CalculationBean calculation )
+  public void addCalculation( final ICalculationContentBean calculation )
   {
     m_calculations.add( calculation );
   }
@@ -273,8 +278,8 @@ public class WspWinZustand
     return m_losses.toArray( new LocalEnergyLossBean[m_losses.size()] );
   }
 
-  public CalculationBean[] getCalculations( )
+  public ICalculationContentBean[] getCalculations( )
   {
-    return m_calculations.toArray( new CalculationBean[m_calculations.size()] );
+    return m_calculations.toArray( new ICalculationContentBean[m_calculations.size()] );
   }
 }

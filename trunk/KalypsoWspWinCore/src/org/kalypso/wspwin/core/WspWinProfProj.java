@@ -50,7 +50,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
@@ -78,7 +78,7 @@ public class WspWinProfProj
 
     final File profprojFile = wspwinProject.getProfProjFile();
 
-    final Map<String, String> profileStateHash = new HashMap<String, String>();
+    final Map<String, String> profileStateHash = new LinkedHashMap<String, String>();
     for( final ProfileBean profile : m_profiles )
     {
       final String prfFilename = profile.getFileName();
@@ -94,6 +94,7 @@ public class WspWinProfProj
 
     for( final ProfileBean profile : m_profiles )
       pw.append( profile.formatLine() ).append( SystemUtils.LINE_SEPARATOR );
+
     pw.append( SystemUtils.LINE_SEPARATOR );
 
     for( final Entry<String, String> entry : profileStateHash.entrySet() )
