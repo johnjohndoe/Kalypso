@@ -47,29 +47,39 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 
 /**
  * Helper that guesses timeseries mappings for each existing calculation case.
- *
+ * 
  * @author Gernot Belger
  */
 public class TimeseriesMappingBuilder
 {
   private final Map<TimeseriesMappingType, String> m_mappingIndex = new HashMap<>();
+
+  private final Map<String, TimeseriesIndexEntry> m_oldMappings = new HashMap<>();
 
   private final NaModell m_naModel;
 
@@ -79,8 +89,11 @@ public class TimeseriesMappingBuilder
 
   private final TimeseriesIndex m_timeseriesIndex;
 
-  public TimeseriesMappingBuilder( final NaModell naModel, final ITimeseriesMappingCollection mappings, final File targetDir, final TimeseriesIndex timeseriesIndex )
+  private final File m_sourceProjectDir;
+
+  public TimeseriesMappingBuilder( final File sourceProjectDir, final NaModell naModel, final ITimeseriesMappingCollection mappings, final File targetDir, final TimeseriesIndex timeseriesIndex )
   {
+    m_sourceProjectDir = sourceProjectDir;
     m_naModel = naModel;
     m_mappings = mappings;
     m_targetDir = targetDir;
@@ -99,6 +112,10 @@ public class TimeseriesMappingBuilder
   public IStatus execute( final TimeseriesMappingType mappingType )
   {
     final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    /* Read old mapping */
+    final IStatus oldMappingStatus = readOldMapping( mappingType );
+    log.add( oldMappingStatus );
 
     /* Always create a new mapping, even if it is empty */
     final IFeatureBindingCollection<ITimeseriesMapping> mappings = m_mappings.getTimeseriesMappings();
@@ -130,7 +147,7 @@ public class TimeseriesMappingBuilder
         newElement.setLinkedFeature( modelElementRef );
 
         /* Guess timeseries link */
-        final TimeseriesMappingGuesser timeseriesGuesser = new TimeseriesMappingGuesser( link, mappingType, m_timeseriesIndex );
+        final TimeseriesMappingGuesser timeseriesGuesser = new TimeseriesMappingGuesser( link, mappingType, m_timeseriesIndex, m_oldMappings );
         final IStatus guessStatus = timeseriesGuesser.execute();
         final String timeseriesPath = timeseriesGuesser.getResult();
 
@@ -140,8 +157,74 @@ public class TimeseriesMappingBuilder
       }
     }
 
+    /* Delete mapping if it is empty */
+    if( newMapping.getMappings().size() == 0 )
+    {
+      mappings.remove( newMapping );
+      log.add( IStatus.OK, "Keine Zeitreihenverweise von diesem Typ vorhanden. Es wird keine Zuordnung definiert." );
+    }
+
     final String typeLabel = mappingType.getLabel();
     final String message = String.format( "Convert timeseries mapping of type '%s' from existing timeseries references", typeLabel );
-    return log.asMultiStatusOrOK( message, message );
+    return log.asMultiStatus( message );
+  }
+
+  private IStatus readOldMapping( final TimeseriesMappingType mappingType )
+  {
+    final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final String filename = getObervationConfFilename( mappingType );
+
+    try
+    {
+      final IPath observationConfPath = RrmProject.getObservationConfPath();
+
+      final File mappingSourceFolder = new File( m_sourceProjectDir, observationConfPath.toOSString() );
+      final File mappingSourceFile = new File( mappingSourceFolder, filename );
+
+      final GMLWorkspace mappingWorkspace = GmlSerializer.createGMLWorkspace( mappingSourceFile, GmlSerializer.DEFAULT_FACTORY );
+      final Feature rootFeature = mappingWorkspace.getRootFeature();
+      final FeatureList mappingList = (FeatureList) rootFeature.getProperty( UrlCatalogUpdateObservationMapping.RESULT_LIST_PROP );
+      for( final Object object : mappingList )
+      {
+        final Feature feature = (Feature) object;
+        final ZmlLink oldLink = new ZmlLink( feature, UrlCatalogUpdateObservationMapping.RESULT_TS_IN_PROP );
+
+        final String name = feature.getName();
+        final String href = oldLink.getHref();
+        final String projectRelativeHref = StringUtils.removeStart( href, UrlResolver.PROJECT_PROTOCOLL + "/" ); //$NON-NLS-1$
+
+        if( !StringUtils.isBlank( href ) )
+        {
+          final TimeseriesIndexEntry entry = m_timeseriesIndex.findTimeseriesByOldHref( projectRelativeHref );
+          m_oldMappings.put( name, entry );
+        }
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      log.add( IStatus.WARNING, Messages.getString( "ObservationconfConverter_3" ), e, filename ); //$NON-NLS-1$
+    }
+
+    final String msg = String.format( Messages.getString( "ObservationconfConverter_4" ), filename ); //$NON-NLS-1$
+    return log.asMultiStatus( msg );
+  }
+
+  private String getObervationConfFilename( final TimeseriesMappingType mappingType )
+  {
+    switch( mappingType )
+    {
+      case gaugeMeasurement:
+        return "ObsQZuMapping.gml"; //$NON-NLS-1$
+
+      case nodeInflow:
+        return "ObsQMapping.gml"; //$NON-NLS-1$
+
+      case storageEvaporation:
+        return "ObsEMapping.gml"; //$NON-NLS-1$
+    }
+
+    throw new IllegalArgumentException();
   }
 }

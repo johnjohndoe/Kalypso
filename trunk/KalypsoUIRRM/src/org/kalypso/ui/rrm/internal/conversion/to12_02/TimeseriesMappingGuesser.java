@@ -41,7 +41,9 @@
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
+import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -69,11 +71,14 @@ public class TimeseriesMappingGuesser
 
   private String m_result;
 
-  public TimeseriesMappingGuesser( final ZmlLink modelTimeseriesLink, final TimeseriesMappingType mappingType, final TimeseriesIndex timeseriesIndex )
+  private final Map<String, TimeseriesIndexEntry> m_oldMappings;
+
+  public TimeseriesMappingGuesser( final ZmlLink modelTimeseriesLink, final TimeseriesMappingType mappingType, final TimeseriesIndex timeseriesIndex, final Map<String, TimeseriesIndexEntry> oldMappings )
   {
     m_modelTimeseriesLink = modelTimeseriesLink;
     m_mappingType = mappingType;
     m_timeseriesIndex = timeseriesIndex;
+    m_oldMappings = oldMappings;
   }
 
   public String getResult( )
@@ -98,7 +103,7 @@ public class TimeseriesMappingGuesser
     if( !m_modelTimeseriesLink.isLinkExisting() )
     {
       final String message = String.format( Messages.getString( "CatchmentTimeseriesGuesser_3" ) ); //$NON-NLS-1$
-      m_log.add( IStatus.WARNING, message );
+      m_log.add( IStatus.INFO, message );
     }
 
     return true;
@@ -123,8 +128,26 @@ public class TimeseriesMappingGuesser
 
   private TimeseriesIndexEntry guessByMapping( )
   {
-    // TODO: try 1: use mapping file
-    return null;
+    final File targetFile = m_modelTimeseriesLink.getJavaFile();
+    if( targetFile == null )
+      return null;
+
+    m_log.add( IStatus.INFO, "Try to find timeseries via old timeseries mapping" );
+
+    final String name = targetFile.getName();
+    final String timeseriesName = FilenameUtils.removeExtension( name );
+
+    final TimeseriesIndexEntry entry = m_oldMappings.get( timeseriesName );
+
+    if( entry != null )
+    {
+      final String message = String.format( "Found old mapping entry, using timeseries: %s", entry.getOldProjectRelativePath() );
+      m_log.add( IStatus.OK, message );
+    }
+    else
+      m_log.add( IStatus.INFO, "No old mapping entry found" );
+
+    return entry;
   }
 
   private TimeseriesIndexEntry guessByValues( )

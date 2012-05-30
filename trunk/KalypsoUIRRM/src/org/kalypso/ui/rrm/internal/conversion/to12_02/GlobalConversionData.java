@@ -72,8 +72,11 @@ public class GlobalConversionData
 
   private SimulationCollection m_simulations;
 
-  public GlobalConversionData( final String chosenExe, final TimeseriesIndex timeseriesIndex )
+  private final File m_sourceProjectDir;
+
+  public GlobalConversionData( final File sourceProjectDir, final String chosenExe, final TimeseriesIndex timeseriesIndex )
   {
+    m_sourceProjectDir = sourceProjectDir;
     m_chosenExe = chosenExe;
     m_timeseriesIndex = timeseriesIndex;
   }
@@ -81,7 +84,7 @@ public class GlobalConversionData
   void readGlobalModels( final File targetDir, final IStatusCollector log )
   {
     m_catchmentModel = readModel( targetDir, log, INaProjectConstants.GML_CATCHMENT_MODEL_PATH, ICatchmentModel.class );
-    m_timeseriesMappings = readModel( targetDir, log, INaProjectConstants.GML_TIMESERIES_MAPPINGS_FILE, ITimeseriesMappingCollection.class );
+    m_timeseriesMappings = readModel( targetDir, log, INaProjectConstants.GML_TIMESERIES_MAPPINGS_PATH, ITimeseriesMappingCollection.class );
     m_simulations = readModel( targetDir, log, INaProjectConstants.GML_SIMULATIONS_PATH, SimulationCollection.class );
   }
 
@@ -132,6 +135,11 @@ public class GlobalConversionData
   {
     final File basisDir = new File( targetDir, INaProjectConstants.FOLDER_BASIS );
     return new File( basisDir, path );
+  }
+
+  File getSourceProjectDir( )
+  {
+    return m_sourceProjectDir;
   }
 
   String getChosenExe( )
