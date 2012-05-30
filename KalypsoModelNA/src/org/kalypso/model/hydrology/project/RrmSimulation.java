@@ -265,10 +265,10 @@ public class RrmSimulation
     folders.add( climateFolder );
     final IFolder precipitationFolder = getPrecipitationFolder();
     folders.add( precipitationFolder );
-    final IFolder waterLevelFolder = getGaugeFolder();
-    folders.add( waterLevelFolder );
-    final IFolder inflowFolder = getNodeInflowFolder();
-    folders.add( inflowFolder );
+    final IFolder gaugeFolder = getGaugeFolder();
+    folders.add( gaugeFolder );
+    final IFolder nodeInflowFolder = getNodeInflowFolder();
+    folders.add( nodeInflowFolder );
 
     return folders.toArray( new IFolder[] {} );
   }

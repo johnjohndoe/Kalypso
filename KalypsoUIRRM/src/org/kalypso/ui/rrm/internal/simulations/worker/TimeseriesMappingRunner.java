@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.Status;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
@@ -78,7 +79,7 @@ import org.kalypsodeegree.model.feature.IXLinkedFeature;
  * 
  * @author Gernot Belger
  */
-public class TimeseriesMappingRunner
+public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
 {
   private final RrmSimulation m_rrmSimulation;
 
@@ -93,6 +94,7 @@ public class TimeseriesMappingRunner
     m_mappingType = mappingType;
   }
 
+  @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );

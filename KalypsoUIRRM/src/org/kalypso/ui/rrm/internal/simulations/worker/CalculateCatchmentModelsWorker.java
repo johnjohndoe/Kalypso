@@ -122,7 +122,7 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
     {
       /* Monitor. */
       monitor.beginTask( "Calculating timeseries mappings...", 600 );
-      monitor.subTask( "Calculating timeseries Mappings..." );
+      monitor.subTask( "Calculating timeseries mappings..." );
 
       /* Get the some data of the simulation data. */
       final NaModell naModel = m_simulationData.getNaModel();
@@ -146,26 +146,26 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
       final AbstractCatchmentModelRunner runnerE = getCatchmentModelRunner( infoE );
       runnerE.executeCatchmentModel( infoE, new SubProgressMonitor( monitor, 100 ) );
 
-      /* Gauge measurement */
+      /* Gauge measurement. */
       final TimeseriesMappingRunner mappingGaugeRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.gaugeMeasurement );
       mappingGaugeRunner.execute( new SubProgressMonitor( monitor, 100 ) );
 
-      /* Node inflow */
+      /* Node inflow. */
       final TimeseriesMappingRunner mappingInflowRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.nodeInflow );
       mappingInflowRunner.execute( new SubProgressMonitor( monitor, 100 ) );
 
-      /* Sea evaporation for stroages */
+      /* Sea evaporation for stroages. */
       final TimeseriesMappingRunner mappingStorageEvaporationRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.storageEvaporation );
       mappingStorageEvaporationRunner.execute( new SubProgressMonitor( monitor, 100 ) );
 
-      return collector.asMultiStatus( "Calculation of the catchment models was successfull." );
+      return collector.asMultiStatus( "Calculation of the timeseries mappings was successfull." );
     }
     catch( final Exception ex )
     {
       /* Add the exception to the log. */
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
 
-      return collector.asMultiStatus( "Error during calculation of the catchment models." );
+      return collector.asMultiStatus( "Error during calculation of the timeseries mappings." );
     }
     finally
     {
