@@ -51,9 +51,9 @@
             <element name="generatorT" type="na:generatorLinkProperty" />
             <element name="generatorE" type="na:generatorLinkProperty" />
 
-            <element name="mappingGaugeMeasurement" type="na:mappingLinkProperty" />
-            <element name="mappingNodeInflow" type="na:mappingLinkProperty" />
-            <element name="mappingStorageEvaporation" type="na:mappingLinkProperty" />
+            <element name="mappingGaugeMeasurement" type="na:mappingLinkProperty" minOccurs="0"/>
+            <element name="mappingNodeInflow" type="na:mappingLinkProperty" minOccurs="0" />
+            <element name="mappingStorageEvaporation" type="na:mappingLinkProperty" minOccurs="0"/>
 
             <!-- Source for initial values -->
             <element name="initialValueSource" type="string" minOccurs="0" />

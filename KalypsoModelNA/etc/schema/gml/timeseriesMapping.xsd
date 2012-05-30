@@ -50,7 +50,7 @@
       <complexContent>
         <extension base="gml:AbstractFeatureType">
           <sequence>
-            <element name="fatureLink" minOccurs="1" maxOccurs="1">
+            <element name="modelElementLink" minOccurs="1" maxOccurs="1">
               <complexType>
                 <sequence>
                   <element ref="gml:_Feature" minOccurs="0" maxOccurs="0" />
