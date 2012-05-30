@@ -57,6 +57,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -420,5 +421,20 @@ public class NAControl extends Feature_Impl
   public void setMappingReferenceStorageEvaporation( final String href )
   {
     setLink( PROPERTY_MAPPING_STORAGE_EVAPORATION, href );
+  }
+
+  public ITimeseriesMapping getMappingGauge( )
+  {
+    return (ITimeseriesMapping) resolveMember( PROPERTY_MAPPING_GAUGE );
+  }
+
+  public ITimeseriesMapping getMappingNodeInflow( )
+  {
+    return (ITimeseriesMapping) resolveMember( PROPERTY_MAPPING_NODE_INFLOW );
+  }
+
+  public ITimeseriesMapping getMappingStorageEvaporation( )
+  {
+    return (ITimeseriesMapping) resolveMember( PROPERTY_MAPPING_STORAGE_EVAPORATION );
   }
 }

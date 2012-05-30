@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
@@ -217,7 +217,8 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
       else
       {
         /* Otherwise create a new link. */
-        final String link = CatchmentModelHelper.buildLink( simulation, m_prefix, parameterType, catchment );
+        final String folderName = CatchmentModelHelper.getTargetLinkFolderName( simulation, parameterType );
+        final String link = CatchmentModelHelper.buildLink( simulation, m_prefix, folderName, parameterType, catchment );
 
         /* Set the link. */
         CatchmentModelHelper.setLink( catchment, targetLink, link );

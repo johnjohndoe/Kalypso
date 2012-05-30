@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
@@ -94,6 +94,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.MultiBean;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -126,15 +127,13 @@ public class CatchmentModelHelper
    * @param catchment
    *          The catchment, the timeseries is for.
    */
-  public static String buildLink( final RrmSimulation simulation, final String prefix, final String parameterType, final Catchment catchment ) throws UnsupportedEncodingException
+  public static String buildLink( final RrmSimulation simulation, final String prefix, final String folderName, final String parameterType, final Feature modelElement ) throws UnsupportedEncodingException
   {
-    final String folderName = getTargetLinkFolderName( simulation, parameterType );
-
     String relativeLink = null;
     if( prefix == null || prefix.length() == 0 )
-      relativeLink = String.format( "%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
+      relativeLink = String.format( "%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( modelElement.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
     else
-      relativeLink = String.format( "%s/%s_%s_%s.zml", folderName, prefix, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
+      relativeLink = String.format( "%s/%s_%s_%s.zml", folderName, prefix, parameterType, URLEncoder.encode( modelElement.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
 
     final IFolder simulationFolder = simulation.getSimulationFolder();
     final IPath simulationPath = simulationFolder.getFullPath();
@@ -143,7 +142,7 @@ public class CatchmentModelHelper
     return UrlResolver.createProjectPath( fullLink );
   }
 
-  private static String getTargetLinkFolderName( final RrmSimulation simulation, final String parameterType )
+  public static String getTargetLinkFolderName( final RrmSimulation simulation, final String parameterType )
   {
     switch( parameterType )
     {

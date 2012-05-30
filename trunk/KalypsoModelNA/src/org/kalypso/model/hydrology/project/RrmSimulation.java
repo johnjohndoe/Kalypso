@@ -265,9 +265,9 @@ public class RrmSimulation
     folders.add( climateFolder );
     final IFolder precipitationFolder = getPrecipitationFolder();
     folders.add( precipitationFolder );
-    final IFolder waterLevelFolder = getWaterLevelFolder();
+    final IFolder waterLevelFolder = getGaugeFolder();
     folders.add( waterLevelFolder );
-    final IFolder inflowFolder = getInflowFolder();
+    final IFolder inflowFolder = getNodeInflowFolder();
     folders.add( inflowFolder );
 
     return folders.toArray( new IFolder[] {} );
@@ -283,12 +283,12 @@ public class RrmSimulation
     return m_simulation.getFolder( Messages.getString( "RrmSimulation.1" ) ); // $NON-NLS-1$
   }
 
-  public IFolder getWaterLevelFolder( )
+  public IFolder getGaugeFolder( )
   {
     return m_simulation.getFolder( Messages.getString( "RrmSimulation.2" ) ); // $NON-NLS-1$
   }
 
-  public IFolder getInflowFolder( )
+  public IFolder getNodeInflowFolder( )
   {
     return m_simulation.getFolder( Messages.getString( "RrmSimulation.3" ) ); // $NON-NLS-1$
   }

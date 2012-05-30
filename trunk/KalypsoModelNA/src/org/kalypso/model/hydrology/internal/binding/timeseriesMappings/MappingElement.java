@@ -62,7 +62,7 @@ public class MappingElement extends Feature_Impl implements IMappingElement
   }
 
   @Override
-  public IXLinkedFeature getLinkedFeature( )
+  public IXLinkedFeature getLinkedModelElement( )
   {
     return (IXLinkedFeature) getMember( MEMBER_MODEL_ELEMENT_LINK );
   }
@@ -74,7 +74,7 @@ public class MappingElement extends Feature_Impl implements IMappingElement
   }
 
   @Override
-  public void setLinkedFeature( final String href )
+  public void setLinkedModelElement( final String href )
   {
     setLink( MEMBER_MODEL_ELEMENT_LINK, href );
   }

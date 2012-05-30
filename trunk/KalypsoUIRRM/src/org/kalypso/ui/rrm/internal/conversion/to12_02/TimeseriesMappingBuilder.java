@@ -144,7 +144,7 @@ public class TimeseriesMappingBuilder
         final IMappingElement newElement = mappingElements.addNew( IMappingElement.FEATURE_MAPPING_ELEMENT );
         newElement.setName( modelElement.getName() );
         newElement.setDescription( modelElement.getDescription() );
-        newElement.setLinkedFeature( modelElementRef );
+        newElement.setLinkedModelElement( modelElementRef );
 
         /* Guess timeseries link */
         final TimeseriesMappingGuesser timeseriesGuesser = new TimeseriesMappingGuesser( link, mappingType, m_timeseriesIndex, m_oldMappings );
