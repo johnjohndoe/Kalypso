@@ -63,6 +63,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
@@ -281,6 +282,12 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
       /* Monitor. */
       monitor.subTask( "Save the log..." );
+
+      /* Save a copy. */
+      final NaModell naModel = simulationData.getNaModel();
+      final NAControl metaControl = simulationData.getMetaControl();
+      GmlSerializer.saveWorkspace( naModel.getWorkspace(), rrmSimulation.getModelGml() );
+      GmlSerializer.saveWorkspace( metaControl.getWorkspace(), rrmSimulation.getExpertControlGml() );
 
       /* Mark a status with the current time. */
       final Date endTime = new Date();

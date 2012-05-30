@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,8 +47,6 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.poi.ss.formula.eval.NotImplementedException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -57,7 +54,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -147,7 +143,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
         throw new CoreException( status );
 
       /* Create the rainfall generation operation. */
-      final IRainfallCatchmentModel rainfallModel = createRainfallModel( simulation, model, linearGenerator, targetLink, range );
+      final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, linearGenerator, targetLink, range );
 
       /* Initialize the generator. */
       final ILinearSumGenerator clonedGenerator = (ILinearSumGenerator) rainfallModel.getGenerators().get( 0 );
@@ -198,9 +194,6 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     /* Hash for the already created links. */
     final Map<String, String> linkHash = new HashMap<String, String>();
 
-    /* The workspace to save. */
-    GMLWorkspace workspaceToSave = null;
-
     /* Get the catchments. */
     final List<ICatchment> generatorCatchments = generator.getCatchments();
     for( final ICatchment generatorCatchment : generatorCatchments )
@@ -208,10 +201,6 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
       /* Get the area. */
       final IXLinkedFeature areaLink = (IXLinkedFeature) generatorCatchment.getAreaLink();
       final Catchment catchment = (Catchment) areaLink.getFeature();
-
-      /* Find the workspace to save. */
-      if( workspaceToSave == null )
-        workspaceToSave = catchment.getWorkspace();
 
       /* Build the hash. */
       final String hash = CatchmentHelper.buildHash( generatorCatchment );
@@ -237,19 +226,12 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
         linkHash.put( hash, link );
       }
     }
-
-    /* Save the workspace, because it is reloaded in the rainfall operation. */
-    /* HINT: This is the linked workspace of the modell.gml, not the loaded one here. */
-    final IFile modelFile = simulation.getModelGml();
-    GmlSerializer.saveWorkspace( workspaceToSave, modelFile );
   }
 
-  private IRainfallCatchmentModel createRainfallModel( final RrmSimulation simulation, final NaModell model, final ILinearSumGenerator generator, final QName targetLink, final DateRange targetRange ) throws Exception
+  private IRainfallCatchmentModel createRainfallModel( final NaModell model, final ILinearSumGenerator generator, final QName targetLink, final DateRange targetRange ) throws Exception
   {
     /* Rainfall model. */
-    final IFolder modelsFolder = simulation.getModelsFolder();
-    final URL context = ResourceUtilities.createQuietURL( modelsFolder );
-    final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_RAINFALL_CATCHMENT_MODEL, context, GmlSerializer.DEFAULT_FACTORY );
+    final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_RAINFALL_CATCHMENT_MODEL, model.getWorkspace().getContext(), GmlSerializer.DEFAULT_FACTORY );
     final IRainfallCatchmentModel rainfallModel = (IRainfallCatchmentModel) modelWorkspace.getRootFeature();
 
     /* Add a COPY of the generator into the model, because we are going to change it later */

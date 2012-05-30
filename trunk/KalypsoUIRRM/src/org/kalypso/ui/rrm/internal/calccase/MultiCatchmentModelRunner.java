@@ -67,14 +67,12 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -154,7 +152,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
       monitor.subTask( "Modify model.gml and save the results..." );
 
       /* The model.gml links needs to be adjusted. */
-      adjustSimulationModelGml( simulation, targetLink, parameterType, mergedObservations );
+      adjustSimulationModelGml( simulation, model, targetLink, parameterType, mergedObservations );
 
       /* Monitor. */
       monitor.worked( 100 );
@@ -228,11 +226,8 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
       /* Calculate the catchment model. */
       runner.executeCatchmentModel( genericInfo, new SubProgressMonitor( monitor, 500 ) );
 
-      /* Load the model.gml of the simulation. */
-      final NaModell simulationModel = loadSimulationModelGml( simulation );
-
       /* Get the catchments. */
-      final IFeatureBindingCollection<Catchment> catchments = simulationModel.getCatchments();
+      final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
       for( final Catchment catchment : catchments )
       {
         /* The feature id of the catchment must be unique. */
@@ -252,9 +247,6 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
         /* Store the timeseries link. */
         hash.put( id, link );
       }
-
-      /* Dispose the workspace again. */
-      simulationModel.getWorkspace().dispose();
 
       /* Monitor. */
       monitor.worked( 500 );
@@ -280,16 +272,13 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
    * @param observations
    *          The catchment->observation hash.
    */
-  private void adjustSimulationModelGml( final RrmSimulation simulation, final QName targetLink, final String parameterType, final Map<String, IObservation> observations ) throws Exception
+  private void adjustSimulationModelGml( final RrmSimulation simulation, final NaModell model, final QName targetLink, final String parameterType, final Map<String, IObservation> observations ) throws Exception
   {
     /* Memory for the already used hash codes and their filenames. */
     final Map<String, String> usedHashCodes = new HashMap<String, String>();
 
-    /* Load the model.gml of the simulation. */
-    final NaModell simulationModel = loadSimulationModelGml( simulation );
-
     /* Get the catchments. */
-    final IFeatureBindingCollection<Catchment> catchments = simulationModel.getCatchments();
+    final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
     for( final Catchment catchment : catchments )
     {
       /* Get the feature id. */
@@ -327,49 +316,5 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
       if( hashCode != null && hashCode.length() > 0 )
         usedHashCodes.put( hashCode, link );
     }
-
-    /* Save the model.gml of the simulation. */
-    saveModelGml( simulation, simulationModel );
-
-    /* Dispose the workspace. */
-    simulationModel.getWorkspace().dispose();
-  }
-
-  /**
-   * This function loads the model.gml of the simulation.
-   * 
-   * @param simulation
-   *          The simulation.
-   * @return The model of the simulation.
-   */
-  private NaModell loadSimulationModelGml( final RrmSimulation simulation ) throws Exception
-  {
-    /* Get the file of the model.gml in the simulation. */
-    final IFile modelFile = simulation.getModelGml();
-
-    /* Get the workspace. */
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelFile );
-
-    /* Get the model. */
-    final NaModell simulationModel = (NaModell) workspace.getRootFeature();
-
-    return simulationModel;
-  }
-
-  /**
-   * This function saves the model.gml of the simulation.
-   * 
-   * @param simulation
-   *          The simulation.
-   * @param simulationModel
-   *          The model of the simulation.
-   */
-  private void saveModelGml( final RrmSimulation simulation, final NaModell simulationModel ) throws Exception
-  {
-    /* Get the file of the model.gml in the simulation. */
-    final IFile modelFile = simulation.getModelGml();
-
-    /* Save the model.gml, of the simulation. */
-    GmlSerializer.saveWorkspace( simulationModel.getWorkspace(), modelFile );
   }
 }
