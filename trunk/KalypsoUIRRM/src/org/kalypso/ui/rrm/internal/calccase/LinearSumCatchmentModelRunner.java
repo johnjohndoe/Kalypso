@@ -228,7 +228,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
       else
       {
         /* Otherwise create a new link. */
-        final String link = CatchmentModelHelper.buildLink( m_prefix, parameterType, catchment );
+        final String link = CatchmentModelHelper.buildLink( simulation, m_prefix, parameterType, catchment );
 
         /* Set the link. */
         CatchmentModelHelper.setLink( catchment, targetLink, link );
@@ -249,7 +249,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     /* Rainfall model. */
     final IFolder modelsFolder = simulation.getModelsFolder();
     final URL context = ResourceUtilities.createQuietURL( modelsFolder );
-    final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_FAINFALL_CATCHMENT_MODEL, context, GmlSerializer.DEFAULT_FACTORY );
+    final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_RAINFALL_CATCHMENT_MODEL, context, GmlSerializer.DEFAULT_FACTORY );
     final IRainfallCatchmentModel rainfallModel = (IRainfallCatchmentModel) modelWorkspace.getRootFeature();
 
     /* Add a COPY of the generator into the model, because we are going to change it later */

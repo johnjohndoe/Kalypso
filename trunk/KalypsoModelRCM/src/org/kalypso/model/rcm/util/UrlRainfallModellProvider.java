@@ -83,7 +83,7 @@ public class UrlRainfallModellProvider implements IRainfallModelProvider
       final Feature rootFeature = rcmWorkspace.getRootFeature();
       if( !(rootFeature instanceof IRainfallCatchmentModel) )
       {
-        final String msg = String.format( "Root feature must be of type %s", IRainfallCatchmentModel.FEATURE_FAINFALL_CATCHMENT_MODEL );
+        final String msg = String.format( "Root feature must be of type %s", IRainfallCatchmentModel.FEATURE_RAINFALL_CATCHMENT_MODEL );
         final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, msg );
         throw new CoreException( status );
       }

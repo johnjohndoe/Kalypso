@@ -69,22 +69,27 @@ import org.kalypso.simulation.core.refactoring.local.LocalSimulationMonitor;
 
 /**
  * Runs a simulation directly from a workspace folder (calc case).
- *
+ * 
  * @author Gernot Belger
  */
 public class NASimulationOperation implements ICoreRunnableWithProgress
 {
   private final RrmSimulation m_calcCase;
 
-  public NASimulationOperation( final IFolder calcCase )
+  private final INaSimulationData m_simulationData;
+
+  public NASimulationOperation( final IFolder calcCase, final INaSimulationData simulationData )
   {
     m_calcCase = new RrmSimulation( calcCase );
+    m_simulationData = simulationData;
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final INaSimulationData data = loadData();
+    INaSimulationData data = m_simulationData;
+    if( data == null )
+      data = loadData();
 
     final File simulationDir = FileUtilities.createNewTempDir( "naSimulation" ); //$NON-NLS-1$
 
@@ -190,7 +195,7 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
       final URL syntNURL = ResourceUtilities.createURL( m_calcCase.getSyntnGml() );
       final URL lzsimURL = ResourceUtilities.createURL( m_calcCase.getLzsimGml() );
 
-      return NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, null, null );
+      return NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, null, null, null, null );
     }
     catch( final MalformedURLException e )
     {

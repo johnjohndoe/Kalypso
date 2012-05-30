@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {org.kalypso.namodell.control_v2}NAModellControl.
- *
+ * 
  * @author Gernot Belger
  */
 public class NAModellControl extends Feature_Impl

@@ -49,6 +49,8 @@ import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
+import org.kalypso.model.hydrology.internal.binding.cm.CatchmentModel;
+import org.kalypso.model.hydrology.internal.binding.timeseriesMappings.TimeseriesMappingCollection;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -81,4 +83,8 @@ public interface INaSimulationData
   NAOptimize getNaOptimize( );
 
   URL getPreprocessedASCII( );
+
+  CatchmentModel getCatchmentModels( );
+
+  TimeseriesMappingCollection getTimeseriesMappings( );
 }

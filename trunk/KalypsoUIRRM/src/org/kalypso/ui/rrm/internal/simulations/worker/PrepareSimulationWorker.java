@@ -41,6 +41,8 @@
 package org.kalypso.ui.rrm.internal.simulations.worker;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
@@ -57,7 +59,10 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.INaSimulationData;
+import org.kalypso.model.hydrology.binding.InitialValue;
 import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.control.NAModellControl;
+import org.kalypso.model.hydrology.binding.control.SimulationCollection;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmScenario;
@@ -143,11 +148,19 @@ public class PrepareSimulationWorker implements ICoreRunnableWithProgress
           for( final Node node : nodes )
             node.setGenerateResults( true );
 
-          /* Copy expertControl.gml. */
-          // TODO
+          /* Change expertControl.gml. */
+          final NAModellControl naControl = m_simulationData.getNaControl();
+          final IFeatureBindingCollection<InitialValue> initialValues = naControl.getInitialValues();
 
           /* Set list of start condition times of the referencing shortterm simulations (first time there). */
-          // TODO
+          final NAControl[] referencingSimulations = findReferencingShortTermSimulations( simulation );
+          for( final NAControl referencingSimulation : referencingSimulations )
+          {
+            final Date simulationStart = referencingSimulation.getSimulationStart();
+            final InitialValue initialValue = initialValues.addNew( InitialValue.FEATURE_INITIAL_VALUE );
+            initialValue.setActive( true );
+            initialValue.setInitialDate( simulationStart );
+          }
         }
         else
         {
@@ -155,7 +168,7 @@ public class PrepareSimulationWorker implements ICoreRunnableWithProgress
           collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Start conditions should not be calculated." ) );
 
           /* HINT: Longterm simulations without calculation of the start conditions */
-          /* HINT: will use the global expertControl.gml later. */
+          /* HINT: will use an unchanged expertControl.gml later. */
         }
       }
       else
@@ -181,13 +194,11 @@ public class PrepareSimulationWorker implements ICoreRunnableWithProgress
           /* HINT: In this case the lzsim data is not copied. */
         }
 
-        /* HINT: Shortterm simulations will use the global expertControl.gml later. */
+        /* HINT: Shortterm simulations will use an unchanged expertControl.gml later. */
       }
 
       /* Monitor. */
       monitor.worked( 200 );
-
-      // TODO Loading of modell and calculation copy here...
 
       return collector.asMultiStatus( "Peparation of the simulation was successfull." );
     }
@@ -203,6 +214,30 @@ public class PrepareSimulationWorker implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  private NAControl[] findReferencingShortTermSimulations( final NAControl simulation )
+  {
+    final Collection<NAControl> results = new ArrayList<NAControl>();
+
+    final String description = simulation.getDescription();
+    final SimulationCollection owner = (SimulationCollection) simulation.getOwner();
+    final IFeatureBindingCollection<NAControl> allSimulations = owner.getSimulations();
+    for( final NAControl oneSimulation : allSimulations )
+    {
+      final Integer timestep = oneSimulation.getMinutesOfTimestep();
+      if( timestep != null && timestep.intValue() == 1440 )
+        continue;
+
+      final String initialValueSource = oneSimulation.getInitialValueSource();
+      if( initialValueSource == null || initialValueSource.length() == 0 )
+        continue;
+
+      if( initialValueSource.equals( description ) )
+        results.add( oneSimulation );
+    }
+
+    return results.toArray( new NAControl[results.size()] );
   }
 
   /**

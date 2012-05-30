@@ -41,6 +41,9 @@
 package org.kalypso.ui.rrm.internal.simulations.worker;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -101,17 +104,22 @@ public class CleanupSimulationWorker implements ICoreRunnableWithProgress
         calculationGml.delete( false, new SubProgressMonitor( monitor, 100 ) );
 
       /* Delete the model.gml (only if the cms should be calculated). */
-      // TODO Implement the condition for the case the cms should be calculated...
+      // TODO Implement the condition for the case the cms should not be calculated...
       final IFile modelGml = m_rrmSimulation.getModelGml();
       if( modelGml.exists() )
         modelGml.delete( false, new SubProgressMonitor( monitor, 100 ) );
 
       /* Delete the timeseries results (only if the cms should be calculated). */
-      // TODO Implement the condition for the case the cms should be calculated...
-      // TODO
+      // TODO Implement the condition for the case the cms should not be calculated...
+      final IFolder[] folders = m_rrmSimulation.getTimeseriesFolders();
+      for( final IFolder folder : folders )
+      {
+        /* Empty the folder. */
+        emptyFolder( folder );
 
-      /* Monitor. */
-      monitor.worked( 200 );
+        /* Monitor. */
+        monitor.worked( 100 / folders.length );
+      }
 
       return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Cleanup of the simulation was successfull." );
     }
@@ -124,5 +132,15 @@ public class CleanupSimulationWorker implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  private void emptyFolder( final IFolder folder ) throws CoreException
+  {
+    if( folder == null || !folder.exists() )
+      return;
+
+    final IResource[] members = folder.members();
+    for( final IResource member : members )
+      member.delete( false, null );
   }
 }

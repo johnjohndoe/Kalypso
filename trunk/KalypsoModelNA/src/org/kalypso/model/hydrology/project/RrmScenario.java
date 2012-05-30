@@ -42,6 +42,7 @@ package org.kalypso.model.hydrology.project;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 
 /**
  * Helper that encapsulates the constants to access data inside a rrm scenario.
@@ -67,6 +68,10 @@ public class RrmScenario
   private static final String FILE_SUDS_GML = "suds.gml"; //$NON-NLS-1$
 
   private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
+
+  private static final String FILE_CATCHMENT_MODELS_GML = "catchmentModels.gml"; //$NON-NLS-1$
+
+  private static final String FILE_TIMESERIES_MAPPINGS_GML = "timeseriesMappings.gml"; //$NON-NLS-1$
 
   private static final String FILE_LZSIM_GML = "lzsim.gml"; //$NON-NLS-1$
 
@@ -137,6 +142,16 @@ public class RrmScenario
   public IFile getSyntnGml( )
   {
     return getModelsFolder().getFile( FILE_SYNTHN_GML );
+  }
+
+  public IResource getCatchmentModelsGml( )
+  {
+    return getModelsFolder().getFile( FILE_CATCHMENT_MODELS_GML );
+  }
+
+  public IResource getTimeseriesMappingsGml( )
+  {
+    return getModelsFolder().getFile( FILE_TIMESERIES_MAPPINGS_GML );
   }
 
   public IFile getLzsimGml( )

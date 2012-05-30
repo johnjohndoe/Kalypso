@@ -246,10 +246,11 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       final URL sudsURL = ResourceUtilities.createURL( scenario.getSudsGml() );
       final URL syntNURL = ResourceUtilities.createURL( scenario.getSyntnGml() );
       final URL lzsimURL = ResourceUtilities.createURL( scenario.getLzsimGml() );
-      // TODO Add catchment models and timeseries mappings...
+      final URL catchmentModelsUrl = ResourceUtilities.createURL( scenario.getCatchmentModelsGml() );
+      final URL timeseriesMappingsUrl = ResourceUtilities.createURL( scenario.getTimeseriesMappingsGml() );
 
       /* Load all simulation data. */
-      final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, null, null );
+      final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
 
       /* Prepare. */
       final PrepareSimulationWorker prepareWorker = new PrepareSimulationWorker( rrmSimulation, calculateStartConditions, simulationData );

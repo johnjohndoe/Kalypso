@@ -91,7 +91,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.MultiBean;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -116,6 +115,8 @@ public class CatchmentModelHelper
   /**
    * This function bulds a link for the timeseries of the given catchment.
    * 
+   * @param simulation
+   *          The rrm simulation.
    * @param prefix
    *          This prefix will be used, if set. May be null.
    * @param parameterType
@@ -123,9 +124,9 @@ public class CatchmentModelHelper
    * @param catchment
    *          The catchment, the timeseries is for.
    */
-  public static String buildLink( final String prefix, final String parameterType, final Catchment catchment ) throws UnsupportedEncodingException
+  public static String buildLink( final RrmSimulation simulation, final String prefix, final String parameterType, final Catchment catchment ) throws UnsupportedEncodingException
   {
-    final String folderName = getTargetLinkFolderName( parameterType );
+    final String folderName = getTargetLinkFolderName( simulation, parameterType );
 
     if( prefix == null || prefix.length() == 0 )
       return String.format( "../%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
@@ -133,16 +134,16 @@ public class CatchmentModelHelper
     return String.format( "../%s/%s_%s_%s.zml", folderName, prefix, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
   }
 
-  // FIXME: use CalcCaseAccessor for that?
-  private static String getTargetLinkFolderName( final String parameterType )
+  private static String getTargetLinkFolderName( final RrmSimulation simulation, final String parameterType )
   {
     switch( parameterType )
     {
       case ITimeseriesConstants.TYPE_RAINFALL:
-        return Messages.getString( "UpdateSimulationWorker.3" ); // $NON-NLS-1$
+        return simulation.getPrecipitationFolder().getName();
       case ITimeseriesConstants.TYPE_MEAN_TEMPERATURE:
+        return simulation.getClimateFolder().getName();
       case ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED:
-        return Messages.getString( "UpdateSimulationWorker.4" ); // $NON-NLS-1$
+        return simulation.getClimateFolder().getName();
     }
 
     throw new IllegalArgumentException();
