@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
@@ -60,6 +59,7 @@ import org.kalypso.wspwin.core.CalculationBean;
 import org.kalypso.wspwin.core.CalculationContentBeanKnauf;
 import org.kalypso.wspwin.core.CalculationContentBeanKnauf.LAW_OF_FLOW;
 import org.kalypso.wspwin.core.CalculationContentBeanKnauf.START_CONDITION;
+import org.kalypso.wspwin.core.ICalculationContentBean;
 
 /**
  * Converts calculations of WspWin Knauf projects to WSPM.
@@ -82,11 +82,10 @@ public class CalculationKnauf2WspmConverter implements ICalculationWspmConverter
   }
 
   @Override
-  public void convert( final CalculationBean bean, final File profDir ) throws IOException, GMLSchemaException
+  public void convert( final ICalculationContentBean calculation, final File profDir ) throws GMLSchemaException
   {
-    final File file = new File( profDir, bean.getFileName() );
-    final CalculationContentBeanKnauf contentBean = new CalculationContentBeanKnauf();
-    contentBean.read( file );
+    final CalculationContentBeanKnauf contentBean = (CalculationContentBeanKnauf) calculation;
+    final CalculationBean bean = contentBean.getCalculationBean();
 
     // create calculation
     final TuhhWspmProject project = (TuhhWspmProject) m_reach.getWaterBody().getProject();
@@ -100,12 +99,12 @@ public class CalculationKnauf2WspmConverter implements ICalculationWspmConverter
     final FLIESSGESETZ lawOfFlow = findLawOfFlow( contentBean );
     calc.setFliessgesetz( lawOfFlow );
 
-    calc.setSubReachDef( contentBean.getStartStation(), contentBean.getEndStation() );
+    calc.setSubReachDef( contentBean.getStartStation().doubleValue(), contentBean.getEndStation().doubleValue() );
 
     final START_KONDITION_KIND type = findStartConditionType( contentBean );
 
-    final double startSlope = contentBean.getStationarySlope();
-    final double startWsp = contentBean.getStartWaterlevel();
+    final double startSlope = contentBean.getStationarySlope().doubleValue();
+    final double startWsp = contentBean.getStartWaterlevel().doubleValue();
     calc.setStartCondition( type, startWsp, startSlope );
 
     final WSP_ITERATION_TYPE iterationType = WSP_ITERATION_TYPE.EXACT;
@@ -127,7 +126,7 @@ public class CalculationKnauf2WspmConverter implements ICalculationWspmConverter
     calc.setRunOffRef( runOffRef );
 
     // set q-Range
-    calc.setQRange( contentBean.getQMin(), contentBean.getQMax(), contentBean.getQStep() );
+    calc.setQRange( contentBean.getQMin().doubleValue(), contentBean.getQMax().doubleValue(), contentBean.getQStep().doubleValue() );
   }
 
   private START_KONDITION_KIND findStartConditionType( final CalculationContentBeanKnauf contentBean )
