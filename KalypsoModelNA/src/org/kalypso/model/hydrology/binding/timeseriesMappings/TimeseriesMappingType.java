@@ -51,6 +51,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -131,5 +132,23 @@ public enum TimeseriesMappingType
   public QName getModelLinkProperty( )
   {
     return m_modelLinkProperty;
+  }
+
+  public String getTargetFolderName( final RrmSimulation simulation )
+  {
+    switch( this )
+    {
+      case gaugeMeasurement:
+        return simulation.getGaugeFolder().getName();
+
+      case nodeInflow:
+        return simulation.getNodeInflowFolder().getName();
+
+      case storageEvaporation:
+        // TODO: bad; sea evaporation does not belong into climate folder in my opinion
+        return simulation.getClimateFolder().getName();
+    }
+
+    throw new IllegalArgumentException();
   }
 }

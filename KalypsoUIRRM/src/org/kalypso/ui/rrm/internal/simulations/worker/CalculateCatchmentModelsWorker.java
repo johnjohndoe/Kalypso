@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.worker;
 
@@ -56,6 +56,7 @@ import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -120,8 +121,8 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Calculating catchment models...", 300 );
-      monitor.subTask( "Calculating catchment models..." );
+      monitor.beginTask( "Calculating timeseries mappings...", 600 );
+      monitor.subTask( "Calculating timeseries Mappings..." );
 
       /* Get the some data of the simulation data. */
       final NaModell naModel = m_simulationData.getNaModel();
@@ -144,6 +145,18 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
       final ICatchmentModelInfo infoE = getCatchmentModelInfo( m_rrmSimulation, simulation, naModel, simulation.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
       final AbstractCatchmentModelRunner runnerE = getCatchmentModelRunner( infoE );
       runnerE.executeCatchmentModel( infoE, new SubProgressMonitor( monitor, 100 ) );
+
+      /* Gauge measurement */
+      final TimeseriesMappingRunner mappingGaugeRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.gaugeMeasurement );
+      mappingGaugeRunner.execute( new SubProgressMonitor( monitor, 100 ) );
+
+      /* Node inflow */
+      final TimeseriesMappingRunner mappingInflowRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.nodeInflow );
+      mappingInflowRunner.execute( new SubProgressMonitor( monitor, 100 ) );
+
+      /* Sea evaporation for stroages */
+      final TimeseriesMappingRunner mappingStorageEvaporationRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.storageEvaporation );
+      mappingStorageEvaporationRunner.execute( new SubProgressMonitor( monitor, 100 ) );
 
       return collector.asMultiStatus( "Calculation of the catchment models was successfull." );
     }

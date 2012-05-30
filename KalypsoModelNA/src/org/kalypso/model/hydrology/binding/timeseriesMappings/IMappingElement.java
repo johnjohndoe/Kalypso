@@ -60,9 +60,9 @@ public interface IMappingElement extends Feature
 
   public static final QName PROPERTY_TIMESERIES_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "timeseriesLink" ); //$NON-NLS-1$
 
-  IXLinkedFeature getLinkedFeature( );
+  IXLinkedFeature getLinkedModelElement( );
 
-  void setLinkedFeature( String href );
+  void setLinkedModelElement( String href );
 
   ZmlLink getLinkedTimeseries( );
 

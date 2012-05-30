@@ -137,7 +137,7 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
         final IFeatureBindingCollection<IMappingElement> mappings = mapping.getMappings();
         for( final IMappingElement existingMappingElement : mappings )
         {
-          final IXLinkedFeature linkedFeature = existingMappingElement.getLinkedFeature();
+          final IXLinkedFeature linkedFeature = existingMappingElement.getLinkedModelElement();
           final ZmlLink linkedTimeseries = existingMappingElement.getLinkedTimeseries();
           final String linkedHref = linkedTimeseries.getHref();
 
