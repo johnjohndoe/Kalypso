@@ -103,14 +103,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
       /* Copy timeseries */
       monitor.subTask( Messages.getString( "BasicModelConverter.3" ) ); //$NON-NLS-1$
-      m_timeseriesIndex = copyBasicTimeseries( parameterIndex, new SubProgressMonitor( monitor, 90 ) );
-
-      /* timeseries links */
-      monitor.subTask( Messages.getString( "BasicModelConverter.4" ) ); //$NON-NLS-1$
-
-      copyObservationConf( m_timeseriesIndex );
-
-      monitor.worked( 5 );
+      m_timeseriesIndex = copyBasicTimeseries( parameterIndex, new SubProgressMonitor( monitor, 95 ) );
     }
     finally
     {
@@ -141,19 +134,6 @@ public class BasicModelConverter extends AbstractLoggingOperation
   {
     monitor.subTask( Messages.getString( "BasicModelConverter.8", INaProjectConstants.FOLDER_ZEITREIHEN ) ); //$NON-NLS-1$
     importer.copyTimeseries( new SubProgressMonitor( monitor, 90 / 7 ) ); //$NON-NLS-1$
-  }
-
-  // FIXME: remove
-  /**
-   * Copy observationConf.
-   */
-  private void copyObservationConf( final TimeseriesIndex timeseriesIndex )
-  {
-    final ObservationconfConverter converter = new ObservationconfConverter( timeseriesIndex, m_sourceDir, m_targetDir );
-
-    getLog().add( converter.execute( "ObsQZuMapping.gml" ) ); //$NON-NLS-1$
-    getLog().add( converter.execute( "ObsQMapping.gml" ) ); //$NON-NLS-1$
-    getLog().add( converter.execute( "ObsEMapping.gml" ) ); //$NON-NLS-1$
   }
 
   private void copyFile( final IPath sourcePath, final IPath targetPath ) throws IOException

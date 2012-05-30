@@ -143,8 +143,13 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     fixTimeseriesLinks( naModel, getLog() );
 
-    final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel );
-    final TimeseriesMappingBuilder timeseriesMappingBuilder = guessTimeseriesMappings( naModel );
+    final IStatusCollector mappingLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel, mappingLog );
+    final TimeseriesMappingBuilder timeseriesMappingBuilder = guessTimeseriesMappings( naModel, mappingLog );
+
+    final IStatus mappingStatus = mappingLog.asMultiStatus( "Zeitreihenzuordnungen automatisch bestimmen" );
+    getLog().add( mappingStatus );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     naModel.getWorkspace().dispose();
@@ -363,7 +368,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     log.add( status );
   }
 
-  private CatchmentModelBuilder guessCatchmentModel( final NaModell naModel )
+  private CatchmentModelBuilder guessCatchmentModel( final NaModell naModel, final IStatusCollector mappingLog )
   {
     final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
     if( catchmentModel == null )
@@ -373,20 +378,20 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, catchmentModel, m_targetCalcCaseDir, timeseriesIndex );
 
-    guessCatchmentModel( builder, Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
-    guessCatchmentModel( builder, Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
-    guessCatchmentModel( builder, Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
+    guessCatchmentModel( builder, Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, mappingLog );
+    guessCatchmentModel( builder, Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, mappingLog );
+    guessCatchmentModel( builder, Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, mappingLog );
 
     return builder;
   }
 
-  private void guessCatchmentModel( final CatchmentModelBuilder builder, final QName propLink, final String parameterType )
+  private void guessCatchmentModel( final CatchmentModelBuilder builder, final QName propLink, final String parameterType, final IStatusCollector mappingLog )
   {
     final IStatus status = builder.execute( propLink, parameterType );
-    getLog().add( status );
+    mappingLog.add( status );
   }
 
-  private TimeseriesMappingBuilder guessTimeseriesMappings( final NaModell naModel )
+  private TimeseriesMappingBuilder guessTimeseriesMappings( final NaModell naModel, final IStatusCollector mappingLog )
   {
     final ITimeseriesMappingCollection mappings = m_globalData.getTimeseriesMappings();
     if( mappings == null )
@@ -394,19 +399,21 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     final TimeseriesIndex timeseriesIndex = m_globalData.getTimeseriesIndex();
 
-    final TimeseriesMappingBuilder builder = new TimeseriesMappingBuilder( naModel, mappings, m_targetCalcCaseDir, timeseriesIndex );
+    final File sourceProjectDir = m_globalData.getSourceProjectDir();
 
-    guessTimeseriesMapping( builder, TimeseriesMappingType.gaugeMeasurement );
-    guessTimeseriesMapping( builder, TimeseriesMappingType.nodeInflow );
-    guessTimeseriesMapping( builder, TimeseriesMappingType.storageEvaporation );
+    final TimeseriesMappingBuilder builder = new TimeseriesMappingBuilder( sourceProjectDir, naModel, mappings, m_targetCalcCaseDir, timeseriesIndex );
+
+    guessTimeseriesMapping( builder, TimeseriesMappingType.gaugeMeasurement, mappingLog );
+    guessTimeseriesMapping( builder, TimeseriesMappingType.nodeInflow, mappingLog );
+    guessTimeseriesMapping( builder, TimeseriesMappingType.storageEvaporation, mappingLog );
 
     return builder;
   }
 
-  private void guessTimeseriesMapping( final TimeseriesMappingBuilder builder, final TimeseriesMappingType mappingType )
+  private void guessTimeseriesMapping( final TimeseriesMappingBuilder builder, final TimeseriesMappingType mappingType, final IStatusCollector mappingLog )
   {
     final IStatus status = builder.execute( mappingType );
-    getLog().add( status );
+    mappingLog.add( status );
   }
 
   private NAControl addSimulation( final NAControl newControl, final CatchmentModelBuilder catchmentModelBuilder, final TimeseriesMappingBuilder timeseriesMappingBuilder )

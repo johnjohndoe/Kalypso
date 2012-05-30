@@ -219,7 +219,7 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
     final IRelationType mappingRelation = (IRelationType) parentMapping.getFeatureType().getProperty( ITimeseriesMapping.MEMBER_MAPPING );
 
     final IFeatureType mappingElementType = GMLSchemaUtilities.getFeatureTypeQuiet( IMappingElement.FEATURE_MAPPING_ELEMENT );
-    final IRelationType mappingElementLinkRelation = (IRelationType) mappingElementType.getProperty( IMappingElement.MEMBER_FEATURE_LINK );
+    final IRelationType mappingElementLinkRelation = (IRelationType) mappingElementType.getProperty( IMappingElement.MEMBER_MODEL_ELEMENT_LINK );
 
     /* delete all lost mappings */
     for( final MappingElementBean lostMapping : m_lostMappings )
