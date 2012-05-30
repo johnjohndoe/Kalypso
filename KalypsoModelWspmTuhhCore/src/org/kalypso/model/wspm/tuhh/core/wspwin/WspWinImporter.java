@@ -89,6 +89,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.CalculationBean;
+import org.kalypso.wspwin.core.ICalculationContentBean;
 import org.kalypso.wspwin.core.LocalEnergyLossBean;
 import org.kalypso.wspwin.core.ProfileBean;
 import org.kalypso.wspwin.core.RunOffEventBean;
@@ -535,14 +536,15 @@ public final class WspWinImporter
     final File profDir = wspwinProject.getProfDir();
     final CalculationResultConverter resultConverter = new CalculationResultConverter( projectType, baseName, log, targetContainer );
 
-    final CalculationBean[] calcBeans = zustand.getCalculations();
-    for( final CalculationBean bean : calcBeans )
+    final ICalculationContentBean[] calculations = zustand.getCalculations();
+    for( final ICalculationContentBean calculation : calculations )
     {
       try
       {
-        converter.convert( bean, profDir );
+        converter.convert( calculation, profDir );
 
-        resultConverter.convert( bean, dathDir );
+        final CalculationBean calculationBean = calculation.getCalculationBean();
+        resultConverter.convert( calculationBean, dathDir );
       }
       catch( final Exception e )
       {

@@ -265,6 +265,8 @@ public class WspWinProjectWriter
       profileWriter.write( outPrfFile );
     }
 
+    m_wspCfg.updateSegmentInfo();
+
     m_wspCfg.write();
   }
 }
