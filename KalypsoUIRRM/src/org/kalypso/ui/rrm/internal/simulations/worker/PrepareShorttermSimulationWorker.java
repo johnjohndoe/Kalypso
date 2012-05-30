@@ -43,8 +43,6 @@ package org.kalypso.ui.rrm.internal.simulations.worker;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -57,14 +55,13 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.INaSimulationData;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.simulations.SimulationUtilities;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Holger Albert
@@ -190,7 +187,7 @@ public class PrepareShorttermSimulationWorker implements ICoreRunnableWithProgre
 
     try
     {
-      final GMLWorkspace lzsimWorkspace = FeatureFactory.createGMLWorkspace( new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ), simulationData.getModelWorkspace().getContext(), simulationData.getFeatureProviderFactory() );
+      final GMLWorkspace lzsimWorkspace = GmlSerializer.createGMLWorkspace( initialValuesSourceFile, simulationData.getModelWorkspace().getContext(), simulationData.getFeatureProviderFactory(), null );
       simulationData.setLzsimWorkspace( lzsimWorkspace );
 
       return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Initial values were loaded from simulation '%s'.", sourceCalcCase.getName() ) );

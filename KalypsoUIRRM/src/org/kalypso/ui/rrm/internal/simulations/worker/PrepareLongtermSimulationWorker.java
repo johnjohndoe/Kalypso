@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.worker;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -55,10 +53,10 @@ import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.InitialValue;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
-import org.kalypso.model.hydrology.binding.control.SimulationCollection;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.simulations.SimulationAccessor;
 import org.kalypso.ui.rrm.internal.simulations.SimulationUtilities;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -78,17 +76,25 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
   private final INaSimulationData m_simulationData;
 
   /**
+   * The simulation accessor.
+   */
+  private final SimulationAccessor m_simulationAccessor;
+
+  /**
    * The constructor.
    * 
    * @param calculateStartConditions
    *          True, if the start conditions should be calculated.
    * @param simulationData
    *          The simulation data.
+   * @param simulationAccessor
+   *          The simulation accessor.
    */
-  public PrepareLongtermSimulationWorker( final boolean calculateStartConditions, final INaSimulationData simulationData )
+  public PrepareLongtermSimulationWorker( final boolean calculateStartConditions, final INaSimulationData simulationData, final SimulationAccessor simulationAccessor )
   {
     m_calculateStartConditions = calculateStartConditions;
     m_simulationData = simulationData;
+    m_simulationAccessor = simulationAccessor;
   }
 
   /**
@@ -137,7 +143,7 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
           final IFeatureBindingCollection<InitialValue> initialValues = naControl.getInitialValues();
 
           /* Set list of start condition times of the referencing shortterm simulations (first time there). */
-          final NAControl[] referencingSimulations = findReferencingShortTermSimulations( simulation );
+          final NAControl[] referencingSimulations = m_simulationAccessor.findReferencingShortTermSimulations();
           for( final NAControl referencingSimulation : referencingSimulations )
           {
             final Date simulationStart = referencingSimulation.getSimulationStart();
@@ -173,28 +179,5 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
       /* Monitor. */
       monitor.done();
     }
-  }
-
-  private NAControl[] findReferencingShortTermSimulations( final NAControl simulation )
-  {
-    final Collection<NAControl> results = new ArrayList<NAControl>();
-
-    final String description = simulation.getDescription();
-    final SimulationCollection owner = (SimulationCollection) simulation.getOwner();
-    final IFeatureBindingCollection<NAControl> allSimulations = owner.getSimulations();
-    for( final NAControl oneSimulation : allSimulations )
-    {
-      if( SimulationUtilities.isLongterm( oneSimulation ) )
-        continue;
-
-      final String initialValueSource = oneSimulation.getInitialValueSource();
-      if( initialValueSource == null || initialValueSource.length() == 0 )
-        continue;
-
-      if( initialValueSource.equals( description ) )
-        results.add( oneSimulation );
-    }
-
-    return results.toArray( new NAControl[results.size()] );
   }
 }

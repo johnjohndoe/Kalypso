@@ -72,6 +72,7 @@ import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.simulations.SimulationAccessor;
 import org.kalypso.ui.rrm.internal.simulations.SimulationUtilities;
 import org.kalypso.ui.rrm.internal.simulations.worker.CalculateCatchmentModelsWorker;
 import org.kalypso.ui.rrm.internal.simulations.worker.CalculateSimulationWorker;
@@ -264,7 +265,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       if( isLongterm )
       {
         /* Prepare longterm simulation. */
-        final PrepareLongtermSimulationWorker prepareLongtermWorker = new PrepareLongtermSimulationWorker( calculateStartConditions, simulationData );
+        final PrepareLongtermSimulationWorker prepareLongtermWorker = new PrepareLongtermSimulationWorker( calculateStartConditions, simulationData, new SimulationAccessor( simulation ) );
         final IStatus prepareLongtermStatus = prepareLongtermWorker.execute( new SubProgressMonitor( monitor, 200 ) );
         collector.add( prepareLongtermStatus );
         if( prepareLongtermStatus.getSeverity() >= IStatus.ERROR )
