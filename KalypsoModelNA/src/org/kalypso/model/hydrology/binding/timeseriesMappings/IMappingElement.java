@@ -56,7 +56,7 @@ public interface IMappingElement extends Feature
 {
   public static final QName FEATURE_MAPPING_ELEMENT = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "MappingElement" ); //$NON-NLS-1$
 
-  public static final QName MEMBER_FEATURE_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "fatureLink" ); //$NON-NLS-1$
+  public static final QName MEMBER_MODEL_ELEMENT_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "modelElementLink" ); //$NON-NLS-1$
 
   public static final QName PROPERTY_TIMESERIES_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "timeseriesLink" ); //$NON-NLS-1$
 
