@@ -64,7 +64,7 @@ public class MappingElement extends Feature_Impl implements IMappingElement
   @Override
   public IXLinkedFeature getLinkedFeature( )
   {
-    return (IXLinkedFeature) getMember( MEMBER_FEATURE_LINK );
+    return (IXLinkedFeature) getMember( MEMBER_MODEL_ELEMENT_LINK );
   }
 
   @Override
@@ -76,20 +76,20 @@ public class MappingElement extends Feature_Impl implements IMappingElement
   @Override
   public void setLinkedFeature( final String href )
   {
-    setLink( MEMBER_FEATURE_LINK, href );
+    setLink( MEMBER_MODEL_ELEMENT_LINK, href );
   }
 
   @Override
   public void setLinkedTimeseries( final String href )
   {
     if( StringUtils.isBlank( href ) )
-      setProperty( MEMBER_FEATURE_LINK, null );
+      setProperty( MEMBER_MODEL_ELEMENT_LINK, null );
     else
     {
       final TimeseriesLinkType link = new TimeseriesLinkType();
       link.setHref( href );
 
-      setProperty( MEMBER_FEATURE_LINK, link );
+      setProperty( PROPERTY_TIMESERIES_LINK, link );
     }
   }
 }
