@@ -152,7 +152,7 @@ public class NaPreprocessingTest
     final URL syntNUrl = null;
     final URL lzsimUrl = checkUrlExists( new URL( base, "Anfangswerte/lzsim.gml" ) ); //$NON-NLS-1$
 
-    return NaSimulationDataFactory.load( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, null, null );
+    return NaSimulationDataFactory.load( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, null, null, null, null );
   }
 
   private URL checkUrlExists( final URL url )

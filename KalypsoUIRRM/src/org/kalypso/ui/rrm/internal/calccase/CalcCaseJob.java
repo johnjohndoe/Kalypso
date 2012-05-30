@@ -71,7 +71,7 @@ public class CalcCaseJob extends Job
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString("CalcCaseJob_0"), m_calcCases.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "CalcCaseJob_0" ), m_calcCases.length ); //$NON-NLS-1$
 
     final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
@@ -81,7 +81,7 @@ public class CalcCaseJob extends Job
       {
         monitor.subTask( calcCase.getName() );
 
-        final NASimulationOperation operation = new NASimulationOperation( calcCase );
+        final NASimulationOperation operation = new NASimulationOperation( calcCase, null );
         final IStatus status = operation.execute( new SubProgressMonitor( monitor, 1 ) );
         log.add( status );
       }
@@ -91,6 +91,6 @@ public class CalcCaseJob extends Job
       }
     }
 
-    return log.asMultiStatusOrOK( Messages.getString("CalcCaseJob_1"), Messages.getString("CalcCaseJob_2") ); //$NON-NLS-1$ //$NON-NLS-2$
+    return log.asMultiStatusOrOK( Messages.getString( "CalcCaseJob_1" ), Messages.getString( "CalcCaseJob_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

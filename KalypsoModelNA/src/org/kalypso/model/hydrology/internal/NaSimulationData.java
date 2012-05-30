@@ -52,6 +52,8 @@ import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.internal.binding.cm.CatchmentModel;
+import org.kalypso.model.hydrology.internal.binding.timeseriesMappings.TimeseriesMappingCollection;
 import org.kalypso.model.hydrology.util.optimize.NaOptimizeLoader;
 import org.kalypso.ogc.gml.serialize.FeatureProviderWithCacheFactory;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -80,9 +82,6 @@ public class NaSimulationData implements INaSimulationData
 
   private final GMLWorkspace m_lzsimWorkspace;
 
-  // TODO Add timeseries mappings
-  // TODO Add catchment models
-
   private final NAModellControl m_naModellControl;
 
   private final NAControl m_metaControl;
@@ -91,19 +90,20 @@ public class NaSimulationData implements INaSimulationData
 
   private final NaModell m_naModel;
 
+  private final CatchmentModel m_catchmentModels;
+
+  private final TimeseriesMappingCollection m_timeseriesMappings;
+
   private NaOptimizeData m_optimizeData;
 
   private final URL m_preprocessedASCIIlocation;
 
-  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessedASCIIlocation ) throws Exception
+  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final URL catchmentModelsUrl, final URL timeseriesMappingsUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessedASCIIlocation ) throws Exception
   {
     m_preprocessedASCIIlocation = preprocessedASCIIlocation;
-    /*
-     * Loading model workspace first, it is used as context for all other models (i.e. we assume they all live in the
-     * same directory)
-     */
+    /* Loading model workspace first, it is used as context for all other models. */
+    /* We assume they all live in the same directory. */
     m_modelWorkspace = readWorkspaceOrNull( modelUrl );
-
     m_naModellControl = readModel( controlURL, NAModellControl.class );
     m_metaControl = readModel( metaUrl, NAControl.class );
 
@@ -113,17 +113,17 @@ public class NaSimulationData implements INaSimulationData
       m_optimizeData = optimizeLoader.load( m_modelWorkspace, m_factory );
 
     m_naModel = m_modelWorkspace == null ? null : (NaModell) m_modelWorkspace.getRootFeature();
-
     m_parameterWorkspace = readWorkspaceOrNull( parameterUrl );
-
     m_hydrotopeCollection = readModel( hydrotopUrl, NAHydrotop.class );
-
     m_sudsWorkspace = loadAndCheckForFile( sudsUrl );
     m_lzsimWorkspace = loadAndCheckForFile( lzsimUrl );
 
     final String syntNpath = syntNUrl == null ? null : syntNUrl.getFile();
     final File syntNGML = syntNpath == null ? null : new File( syntNpath, "calcSynthN.gml" ); //$NON-NLS-1$
     m_synthNWorkspace = loadAndCheckForFile( syntNGML );
+
+    m_catchmentModels = readCatchmentModels( catchmentModelsUrl );
+    m_timeseriesMappings = readTimeseriesMappings( timeseriesMappingsUrl );
 
     if( m_hydrotopeCollection != null && m_modelWorkspace != null )
       transformModelToHydrotopeCrs();
@@ -136,6 +136,24 @@ public class NaSimulationData implements INaSimulationData
       return null;
 
     return type.cast( workspace.getRootFeature() );
+  }
+
+  private CatchmentModel readCatchmentModels( final URL location ) throws Exception
+  {
+    final GMLWorkspace workspace = readWorkspaceOrNull( location );
+    if( workspace == null )
+      return null;
+
+    return (CatchmentModel) workspace.getRootFeature();
+  }
+
+  private TimeseriesMappingCollection readTimeseriesMappings( final URL location ) throws Exception
+  {
+    final GMLWorkspace workspace = readWorkspaceOrNull( location );
+    if( workspace == null )
+      return null;
+
+    return (TimeseriesMappingCollection) workspace.getRootFeature();
   }
 
   private GMLWorkspace readWorkspaceOrNull( final URL location ) throws Exception
@@ -319,5 +337,17 @@ public class NaSimulationData implements INaSimulationData
   public URL getPreprocessedASCII( )
   {
     return m_preprocessedASCIIlocation;
+  }
+
+  @Override
+  public CatchmentModel getCatchmentModels( )
+  {
+    return m_catchmentModels;
+  }
+
+  @Override
+  public TimeseriesMappingCollection getTimeseriesMappings( )
+  {
+    return m_timeseriesMappings;
   }
 }

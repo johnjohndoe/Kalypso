@@ -59,9 +59,9 @@ public final class NaSimulationDataFactory
   {
   }
 
-  public static INaSimulationData load( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessASCIIlocation ) throws Exception
+  public static INaSimulationData load( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final URL catchmentModelsUrl, final URL timeseriesMappingsUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessASCIIlocation ) throws Exception
   {
-    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader, preprocessASCIIlocation );
+    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, catchmentModelsUrl, timeseriesMappingsUrl, optimizeLoader, preprocessASCIIlocation );
   }
 
   public static INaSimulationData load( final ISimulationDataProvider inputProvider ) throws SimulationException
@@ -80,7 +80,7 @@ public final class NaSimulationDataFactory
 
       final NaOptimizeLoader optimizeLoader = new NaOptimizeLoader( inputProvider );
 
-      return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader, preprocessedASCIIlocation );
+      return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, null, null, optimizeLoader, preprocessedASCIIlocation );
     }
     catch( final SimulationException e )
     {
@@ -88,7 +88,7 @@ public final class NaSimulationDataFactory
     }
     catch( final Exception e )
     {
-      throw new SimulationException( Messages.getString("NaSimulationDataFactory_0"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "NaSimulationDataFactory_0" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -105,7 +105,7 @@ public final class NaSimulationDataFactory
     }
     catch( final MalformedURLException e )
     {
-      throw new SimulationException( Messages.getString("NaSimulationDataFactory_1"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "NaSimulationDataFactory_1" ), e ); //$NON-NLS-1$
     }
   }
 }

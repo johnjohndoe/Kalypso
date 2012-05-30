@@ -40,11 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.project;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 
 /**
  * Represents a simulation of the rrm model (i.e. one calculation case folder) and allows access to its data-
@@ -251,5 +255,41 @@ public class RrmSimulation
   public static IPath getCalculationGmlPath( )
   {
     return new Path( FOLDER_MODELS ).append( FILE_CALCULATION_GML );
+  }
+
+  public IFolder[] getTimeseriesFolders( )
+  {
+    final List<IFolder> folders = new ArrayList<IFolder>();
+
+    final IFolder climateFolder = getClimateFolder();
+    folders.add( climateFolder );
+    final IFolder precipitationFolder = getPrecipitationFolder();
+    folders.add( precipitationFolder );
+    final IFolder waterLevelFolder = getWaterLevelFolder();
+    folders.add( waterLevelFolder );
+    final IFolder inflowFolder = getInflowFolder();
+    folders.add( inflowFolder );
+
+    return folders.toArray( new IFolder[] {} );
+  }
+
+  public IFolder getClimateFolder( )
+  {
+    return m_simulation.getFolder( Messages.getString( "RrmSimulation.0" ) ); // $NON-NLS-1$
+  }
+
+  public IFolder getPrecipitationFolder( )
+  {
+    return m_simulation.getFolder( Messages.getString( "RrmSimulation.1" ) ); // $NON-NLS-1$
+  }
+
+  public IFolder getWaterLevelFolder( )
+  {
+    return m_simulation.getFolder( Messages.getString( "RrmSimulation.2" ) ); // $NON-NLS-1$
+  }
+
+  public IFolder getInflowFolder( )
+  {
+    return m_simulation.getFolder( Messages.getString( "RrmSimulation.3" ) ); // $NON-NLS-1$
   }
 }

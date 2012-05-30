@@ -102,8 +102,7 @@ public class CalculateSimulationWorker implements ICoreRunnableWithProgress
       monitor.subTask( "Calculating simulation..." );
 
       /* Calculate. */
-      // TODO Give simulation data to the operation...
-      final NASimulationOperation operation = new NASimulationOperation( m_rrmSimulation.getSimulationFolder() );
+      final NASimulationOperation operation = new NASimulationOperation( m_rrmSimulation.getSimulationFolder(), m_simulationData );
       final IStatus calculateStatus = operation.execute( new SubProgressMonitor( monitor, 200 ) );
       collector.add( calculateStatus );
       if( calculateStatus.getSeverity() >= IStatus.ERROR )

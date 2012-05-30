@@ -313,7 +313,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* HINT: If the hash code is null, create a new link for the catchment. */
       /* HINT: If the hash code is a new one, create a new link for the catchment. */
-      final String link = CatchmentModelHelper.buildLink( null, parameterType, catchment );
+      final String link = CatchmentModelHelper.buildLink( simulation, null, parameterType, catchment );
 
       /* Set the link. */
       CatchmentModelHelper.setLink( catchment, targetLink, link );
