@@ -69,7 +69,6 @@ import org.kalypso.model.rcm.binding.IRainfallCatchmentModel;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.binding.ITarget;
 import org.kalypso.model.rcm.util.PlainRainfallModelProvider;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
@@ -79,6 +78,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * This class executes a catchment model with a linear sum generator.
@@ -230,8 +230,11 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
 
   private IRainfallCatchmentModel createRainfallModel( final NaModell model, final ILinearSumGenerator generator, final QName targetLink, final DateRange targetRange ) throws Exception
   {
+    final GMLWorkspace workspace = model.getWorkspace();
+    final IFeatureProviderFactory featureProviderFactory = workspace.getFeatureProviderFactory();
+
     /* Rainfall model. */
-    final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_RAINFALL_CATCHMENT_MODEL, model.getWorkspace().getContext(), GmlSerializer.DEFAULT_FACTORY );
+    final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_RAINFALL_CATCHMENT_MODEL, model.getWorkspace().getContext(), featureProviderFactory );
     final IRainfallCatchmentModel rainfallModel = (IRainfallCatchmentModel) modelWorkspace.getRootFeature();
 
     /* Add a COPY of the generator into the model, because we are going to change it later */
