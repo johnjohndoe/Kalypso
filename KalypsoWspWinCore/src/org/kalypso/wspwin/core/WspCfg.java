@@ -107,7 +107,7 @@ public class WspCfg
 
   private String m_projectName = StringUtils.EMPTY;
 
-  private final WspWinProject m_project;
+  private WspWinProject m_project;
 
   public WspCfg( final WspWinProject project )
   {
@@ -171,13 +171,16 @@ public class WspCfg
     final IStatus wspCfgStatus = readWspCfg( profDir, zustandBeans );
     log.add( wspCfgStatus );
 
+    final IStatus probezStatus = readProbez( profDir );
+    log.add( probezStatus );
+
     /* Read zusteande */
     for( final ZustandBean zustandBean : zustandBeans )
     {
       try
       {
         // TODO: improve error handling: import completely fails if we get an error here
-        final WspWinZustand wspwinZustand = zustandBean.readZustand( profDir );
+        final WspWinZustand wspwinZustand = zustandBean.readZustand( m_type, profDir );
         m_zustaende.add( wspwinZustand );
       }
       catch( ParseException | IOException e )
@@ -199,6 +202,23 @@ public class WspCfg
     }
 
     return log.asMultiStatus( String.format( Messages.getString( "WspCfg.2" ), WspWinFiles.WSP_CFG ) ); //$NON-NLS-1$
+  }
+
+  private IStatus readProbez( final File profDir )
+  {
+    try
+    {
+      final File probezFile = new File( profDir, WspWinFiles.PROBEZ_TXT );
+      if( probezFile.isFile() )
+        m_projectName = FileUtils.readFileToString( probezFile );
+
+      return Status.OK_STATUS;
+    }
+    catch( final IOException e )
+    {
+      final String message = String.format( "Failed to read project description from '%s'", WspWinFiles.PROBEZ_TXT );
+      return new Status( IStatus.WARNING, KalypsoWspWinCorePlugin.PLUGIN_ID, message, e );
+    }
   }
 
   private IStatus readWspCfg( final File profDir, final Collection<ZustandBean> zustandBeans )
@@ -271,8 +291,6 @@ public class WspCfg
 
   public void write( ) throws IOException
   {
-    updateSegmentInfo();
-
     final File profDir = m_project.getProfDir();
     profDir.mkdirs();
 
@@ -302,10 +320,9 @@ public class WspCfg
 
     final BufferedWriter pw = new BufferedWriter( new FileWriter( wspCfgFile ) );
 
-    // TODO
-    final int xxx = 0;
+    final int numProfiles = m_profProj.getProfiles().length;
     final int yyyy = 0;
-    pw.append( String.format( "%5d %4d %4d %s%n", xxx, m_zustaende.size(), yyyy, getType().getCode() ) ); //$NON-NLS-1$
+    pw.append( String.format( "%5d %4d %4d %s%n", numProfiles, m_zustaende.size(), yyyy, getType().getCode() ) ); //$NON-NLS-1$
 
     for( final WspWinZustand zustand : m_zustaende )
     {
@@ -316,7 +333,10 @@ public class WspCfg
     pw.close();
   }
 
-  private void updateSegmentInfo( )
+  /**
+   * Recalculates the segments (i.e. profile from-to and distances) for the reach.
+   */
+  public void updateSegmentInfo( )
   {
     for( final WspWinZustand zustand : m_zustaende )
       zustand.updateSegmentInfo();
@@ -330,5 +350,10 @@ public class WspCfg
     final ProfileBean bean = new ProfileBean( waterName, stateName, station, fileName, mehrfeldCode, vzk );
     m_profProj.add( bean );
     return bean;
+  }
+
+  public void setProject( final WspWinProject project )
+  {
+    m_project = project;
   }
 }

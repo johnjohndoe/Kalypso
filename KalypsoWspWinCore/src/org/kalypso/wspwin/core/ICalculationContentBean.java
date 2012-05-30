@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,24 +36,21 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wspwin.core;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
- * Constants for WspWin filenames.
+ * Implementors represent the contents of a calculation definition.
  * 
  * @author Gernot Belger
  */
-public interface WspWinFiles
+public interface ICalculationContentBean
 {
-  String PROFPROJ_TXT = "profproj.txt"; //$NON-NLS-1$
+  CalculationBean getCalculationBean( );
 
-  String WSP_CFG = "WSP.CFG"; //$NON-NLS-1$
-
-  String DATH = "DATH"; //$NON-NLS-1$
-
-  String PROF = "PROF"; //$NON-NLS-1$
-
-  String PROBEZ_TXT = "probez.txt"; //$NON-NLS-1$
+  void write( File profDir ) throws IOException;
 }

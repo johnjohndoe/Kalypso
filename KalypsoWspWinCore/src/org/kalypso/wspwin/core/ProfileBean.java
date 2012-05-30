@@ -176,7 +176,7 @@ public class ProfileBean
     final String waterName = shortenName( getWaterName(), MAX_WATERNAME_LENGTH );
     final String stateName = shortenName( getStateName(), MAX_STATENAME_LENGTH );
 
-    return String.format( Locale.US, "%-9s%9.4f 0        0    %-10s %-12s", waterName, m_station, stateName, m_fileName );
+    return String.format( Locale.US, "%-9s%9.4f  %-4s  %4d   %-10s %-12s", waterName, m_station, m_mehrfeldCode, m_vzk, stateName, m_fileName );
   }
 
   public static String shortenName( final String name, final int maxLength )

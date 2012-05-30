@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wspwin.core;
 
@@ -44,16 +44,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-
-import org.apache.commons.io.IOUtils;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.util.Locale;
 
 /**
  * represents the contents of one calculation (.001, .002, ... file)
  * 
  * @author Belger
  */
-public class CalculationContentBeanPasche
+public class CalculationContentBeanPasche extends AbstractCalculationContentBean
 {
+  // REMARK: Important: we use the ordinal of the enum constants, to ORDER of constants IS IMPORTANT, do not change
   public static enum KIND
   {
     WATERLEVEL,
@@ -114,23 +116,23 @@ public class CalculationContentBeanPasche
 
   private final boolean m_ergebnislistenErstellen;
 
-  private final double m_gefaelle;
+  private final BigDecimal m_gefaelle;
 
-  private final double m_min;
+  private final BigDecimal m_min;
 
-  private final double m_step;
+  private final BigDecimal m_step;
 
-  private final double m_max;
+  private final BigDecimal m_max;
 
   private final int m_abfluss;
 
-  private final double m_anfang;
+  private final BigDecimal m_anfang;
 
-  private final double m_ende;
+  private final BigDecimal m_ende;
 
   private final String m_strInfo;
 
-  private final double m_hoehe;
+  private final BigDecimal m_hoehe;
 
   private final boolean m_nhmo;
 
@@ -145,12 +147,17 @@ public class CalculationContentBeanPasche
   private final boolean m_kalMin;
 
   /**
-   * @param min minimal runoff [dl/s]
-   * @param max maximal runoff [dl/s]
-   * @param step runoff step [dl/s]
+   * @param min
+   *          minimal runoff [dl/s]
+   * @param max
+   *          maximal runoff [dl/s]
+   * @param step
+   *          runoff step [dl/s]
    */
-  public CalculationContentBeanPasche( final KIND calcKind, final FLIESSGESETZ fliessgesetz, final OUTPUT output, final boolean ausgabeProfilnummer, final boolean isSimpleBerechnungWSPInt, final boolean reibungsverlustNachTrapezformal, final VERZOEGERUNSVERLUST verzoegerungsVerlust, final ART_ANFANGS_WSP artAnfangswasserspiegel, final boolean berechneBruecken, final boolean berechneWehre, final boolean ausgabewerteInLiter, final boolean erstelleWQDateien, final boolean ergebnislistenErstellen, final double gefaelle, final double min, final double step, final double max, final int abfluss, final double anfang, final double ende, final String strInfo, final double hoehe, final boolean nhmo, final boolean nwsfq, final boolean nwsfl, final String strQ, final boolean nusg, final boolean kalMin )
+  public CalculationContentBeanPasche( final CalculationBean bean, final KIND calcKind, final FLIESSGESETZ fliessgesetz, final OUTPUT output, final boolean ausgabeProfilnummer, final boolean isSimpleBerechnungWSPInt, final boolean reibungsverlustNachTrapezformal, final VERZOEGERUNSVERLUST verzoegerungsVerlust, final ART_ANFANGS_WSP artAnfangswasserspiegel, final boolean berechneBruecken, final boolean berechneWehre, final boolean ausgabewerteInLiter, final boolean erstelleWQDateien, final boolean ergebnislistenErstellen, final BigDecimal gefaelle, final BigDecimal min, final BigDecimal step, final BigDecimal max, final int abfluss, final BigDecimal anfang, final BigDecimal ende, final String strInfo, final BigDecimal hoehe, final boolean nhmo, final boolean nwsfq, final boolean nwsfl, final String strQ, final boolean nusg, final boolean kalMin )
   {
+    super( bean );
+
     m_calcKind = calcKind;
     m_fliessgesetz = fliessgesetz;
     m_output = output;
@@ -186,7 +193,7 @@ public class CalculationContentBeanPasche
     return m_abfluss;
   }
 
-  public double getAnfang( )
+  public BigDecimal getAnfang( )
   {
     return m_anfang;
   }
@@ -221,7 +228,7 @@ public class CalculationContentBeanPasche
     return m_calcKind;
   }
 
-  public double getEnde( )
+  public BigDecimal getEnde( )
   {
     return m_ende;
   }
@@ -241,12 +248,12 @@ public class CalculationContentBeanPasche
     return m_fliessgesetz;
   }
 
-  public double getGefaelle( )
+  public BigDecimal getGefaelle( )
   {
     return m_gefaelle;
   }
 
-  public double getHoehe( )
+  public BigDecimal getHoehe( )
   {
     return m_hoehe;
   }
@@ -261,12 +268,12 @@ public class CalculationContentBeanPasche
     return m_kalMin;
   }
 
-  public double getMax( )
+  public BigDecimal getMax( )
   {
     return m_max;
   }
 
-  public double getMin( )
+  public BigDecimal getMin( )
   {
     return m_min;
   }
@@ -301,7 +308,7 @@ public class CalculationContentBeanPasche
     return m_reibungsverlustNachTrapezformel;
   }
 
-  public double getStep( )
+  public BigDecimal getStep( )
   {
     return m_step;
   }
@@ -321,14 +328,10 @@ public class CalculationContentBeanPasche
     return m_verzoegerungsVerlust;
   }
 
-  public static CalculationContentBeanPasche read( final File file ) throws IOException
+  public static CalculationContentBeanPasche read( final CalculationBean bean, final File file ) throws IOException
   {
-    LineNumberReader lnr = null;
-
-    try
+    try (LineNumberReader lnr = new LineNumberReader( new FileReader( file ) ))
     {
-      lnr = new LineNumberReader( new FileReader( file ) );
-
       // ZEILE 0 //
       final int calcKindInt = readInt( lnr );
       final KIND calcKind;
@@ -442,23 +445,23 @@ public class CalculationContentBeanPasche
       // aber wiederspruch: wird auch noch mal unten extra gelesen?? -> nWSFQ
       final boolean ergebnislistenErstellen = readBoolean( lnr );
 
-      final double dGefaelle = readDouble( lnr );
+      final BigDecimal dGefaelle = readBigDecimal( lnr );
 
-      final double dQMin = readDouble( lnr );
+      final BigDecimal dQMin = readBigDecimal( lnr );
 
-      final double dQStep = readDouble( lnr );
+      final BigDecimal dQStep = readBigDecimal( lnr );
 
-      final double dQMax = readDouble( lnr );
+      final BigDecimal dQMax = readBigDecimal( lnr );
 
       final int nAbfluss = readInt( lnr );
 
-      final double dAnfang = readDouble( lnr );
+      final BigDecimal dAnfang = readBigDecimal( lnr );
 
-      final double dEnde = readDouble( lnr );
+      final BigDecimal dEnde = readBigDecimal( lnr );
 
       final String strInfo = expectNextLine( lnr ).trim();
 
-      final double dHoehe = readDouble( lnr );
+      final BigDecimal dHoehe = readBigDecimal( lnr );
 
       final boolean nHMO = readBoolean( lnr );
 
@@ -472,41 +475,96 @@ public class CalculationContentBeanPasche
 
       final boolean nKalMin = readBoolean( lnr );
 
-      return new CalculationContentBeanPasche( calcKind, fliessgesetz, output, ausgabeProfilnummer, isSimpleBerechnungWSPInt, reibungsverlustNachTrapezformal, verzoegerungsVerlust, artAnfangswasserspiegel, berechneBruecken, berechneWehre, ausgabewerteInLiter, erstelleWQDateien, ergebnislistenErstellen, dGefaelle, dQMin, dQStep, dQMax, nAbfluss, dAnfang, dEnde, strInfo, dHoehe, nHMO, nWSFQ, nWSFL, strQ, nUSG, nKalMin );
+      return new CalculationContentBeanPasche( bean, calcKind, fliessgesetz, output, ausgabeProfilnummer, isSimpleBerechnungWSPInt, reibungsverlustNachTrapezformal, verzoegerungsVerlust, artAnfangswasserspiegel, berechneBruecken, berechneWehre, ausgabewerteInLiter, erstelleWQDateien, ergebnislistenErstellen, dGefaelle, dQMin, dQStep, dQMax, nAbfluss, dAnfang, dEnde, strInfo, dHoehe, nHMO, nWSFQ, nWSFL, strQ, nUSG, nKalMin );
     }
-    finally
+  }
+
+  @Override
+  public void write( final File profDir ) throws IOException
+  {
+    final CalculationBean calculationBean = getCalculationBean();
+    final String fileName = calculationBean.getFileName();
+    final File file = new File( profDir, fileName );
+
+    try (PrintWriter pw = new PrintWriter( file ))
     {
-      IOUtils.closeQuietly( lnr );
+      // ZEILE 0 //
+      pw.println( m_calcKind.ordinal() + 1 );
+
+      // ZEILE 1 //
+      pw.println( m_fliessgesetz.ordinal() + 1 );
+
+      // ZEILE 2 //
+      pw.println( m_output.ordinal() + 1 );
+
+      // ZEILE 3 //
+      printBoolean( pw, m_ausgabeProfilnummer );
+
+      // ZEILE 4 //
+      printBoolean( pw, m_isSimpleBerechnungWSPInt );
+
+      // ZEILE 5 //
+      printBoolean( pw, m_reibungsverlustNachTrapezformel );
+
+      // ZEILE 6 //
+      pw.println( m_verzoegerungsVerlust.ordinal() + 1 );
+
+      // ZEILE 7 //
+      pw.println( m_artAnfangswasserspiegel.ordinal() + 1 );
+
+      // ZEILE 8 //
+      printBoolean( pw, m_berechneBruecken );
+
+      // ZEILE 9 //
+      printBoolean( pw, m_berechneWehre );
+
+      // ZEILE 10 //
+      printBoolean( pw, m_ausgabewerteInLiter );
+
+      // ZEILE 11 //
+      // bei Berechnungsart WSP bedeutet dieser Parameter: WSP-Fixierung in Längsschnitt eintragen
+      // aber wiederspruch: wird auch noch mal unten extra gelesen?? -> nWSFL
+      printBoolean( pw, m_erstelleWQDateien );
+
+      // ZEILE 12 //
+      // bei Berechnungsart WSP bedeutet dieser Parameter: WSP-Fixierung in Querprofile eintragen
+      // aber wiederspruch: wird auch noch mal unten extra gelesen?? -> nWSFQ
+      printBoolean( pw, m_ergebnislistenErstellen );
+
+      pw.format( Locale.US, "%f", m_gefaelle );
+
+      pw.format( Locale.US, "%f%n", m_min );
+      pw.format( Locale.US, "%f%n", m_step );
+      pw.format( Locale.US, "%f%n", m_max );
+
+      pw.println( m_abfluss );
+
+      pw.format( Locale.US, "%f%n", m_anfang );
+      pw.format( Locale.US, "%f%n", m_ende );
+
+      pw.println( m_strInfo );
+
+      pw.format( Locale.US, "%f%n", m_hoehe );
+
+      printBoolean( pw, m_nhmo );
+
+      printBoolean( pw, m_nwsfq );
+
+      printBoolean( pw, m_nwsfl );
+
+      pw.println( m_strQ );
+
+      printBoolean( pw, m_nusg );
+
+      printBoolean( pw, m_kalMin );
     }
   }
 
-  static double readDouble( final LineNumberReader lnr ) throws IOException
+  private static void printBoolean( final PrintWriter pw, final boolean flag )
   {
-    final String line = expectNextLine( lnr );
-    return line.length() == 0 ? 0.0 : Double.parseDouble( line );
+    if( flag )
+      pw.println( 1 );
+    else
+      pw.println( 0 );
   }
-
-  static boolean readBoolean( final LineNumberReader lnr ) throws IOException
-  {
-    return readInt( lnr ) == 1 ? true : false;
-  }
-
-  static int readInt( final LineNumberReader lnr ) throws IOException
-  {
-    final String line = expectNextLine( lnr );
-    return line.length() == 0 ? 0 : Integer.parseInt( line );
-  }
-
-  /** Returns the empty the, if no more lines are available. */
-  static String expectNextLine( final LineNumberReader lnr ) throws IOException
-  {
-    final String line = lnr.ready() ? lnr.readLine() : null;
-    if( line == null )
-////      throw new ParseException( "More lines expected", lnr.getLineNumber() );
-      return ""; //$NON-NLS-1$
-
-    return line;
-  }
-
-
 }

@@ -41,14 +41,16 @@
 package org.kalypso.wspwin.core;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.wspwin.core.WspCfg.TYPE;
 
 /**
  * Represents one line of a wsp.cfg file.
@@ -108,7 +110,7 @@ public class ZustandBean
     return m_waterName;
   }
 
-  public WspWinZustand readZustand( final File profDir ) throws IOException, ParseException
+  public WspWinZustand readZustand( final TYPE projectType, final File profDir ) throws IOException, ParseException
   {
     final WspWinZustand zustand = new WspWinZustand( this );
     zustand.read( new File( profDir, getFileName() ) );
@@ -127,8 +129,8 @@ public class ZustandBean
     for( final LocalEnergyLossBean loss : localEnergyLosses )
       zustand.addLoss( loss );
 
-    final CalculationBean[] calculations = readCalculations( profDir );
-    for( final CalculationBean calculation : calculations )
+    final ICalculationContentBean[] calculations = readCalculations( projectType, profDir );
+    for( final ICalculationContentBean calculation : calculations )
       zustand.addCalculation( calculation );
 
     return zustand;
@@ -153,11 +155,24 @@ public class ZustandBean
     return RunOffEventBean.read( wsfFile );
   }
 
-
-  private void writeWspFixes( final File profDir, final RunOffEventBean[] fixation ) throws FileNotFoundException
+  private void writeWspFixes( final File profDir, final RunOffEventBean[] fixation ) throws IOException
   {
     final File wsfFile = new File( profDir, getWspFixFilename() ); //$NON-NLS-1$
     RunOffEventBean.write( wsfFile, fixation );
+  }
+
+  private void writeCalculations( final File profDir, final ICalculationContentBean[] calculations ) throws IOException
+  {
+    final CalculationBean[] beans = new CalculationBean[calculations.length];
+    for( int i = 0; i < calculations.length; i++ )
+    {
+      beans[i] = calculations[i].getCalculationBean();
+
+      calculations[i].write( profDir );
+    }
+
+    final File berFile = new File( profDir, getCalculationsFilename() ); //$NON-NLS-1$
+    CalculationBean.writeBerFile( berFile, beans );
   }
 
   private LocalEnergyLossBean[] readLocalEnergyLosses( final File profDir ) throws ParseException, IOException
@@ -181,10 +196,35 @@ public class ZustandBean
     return getZustandFile( "wsf" ); //$NON-NLS-1$
   }
 
-  private CalculationBean[] readCalculations( final File profDir ) throws ParseException, IOException
+  private String getCalculationsFilename( )
   {
-    final File berFile = new File( profDir, getZustandFile( "ber" ) ); //$NON-NLS-1$
-    return CalculationBean.readBerFile( berFile );
+    return getZustandFile( "BER" ); //$NON-NLS-1$
+  }
+
+  private ICalculationContentBean[] readCalculations( final TYPE projectType, final File profDir ) throws ParseException, IOException
+  {
+    /* Read ber file */
+    final File berFile = new File( profDir, getCalculationsFilename() );
+    final CalculationBean[] calculationBeans = CalculationBean.readBerFile( berFile );
+
+
+    final Collection<ICalculationContentBean> contentBeans = new ArrayList<>( calculationBeans.length );
+
+    for( final CalculationBean calculationBean : calculationBeans )
+    {
+      try
+      {
+        final ICalculationContentBean contentBean = calculationBean.readContent( projectType, profDir );
+        contentBeans.add( contentBean );
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+        // TODO: collect status and inform user about failed calculation contents
+      }
+    }
+
+    return contentBeans.toArray( new ICalculationContentBean[contentBeans.size()] );
   }
 
   private String getZustandFile( final String suffix )
@@ -198,8 +238,8 @@ public class ZustandBean
   {
     final String waterName = ProfileBean.shortenName( m_waterName, ProfileBean.MAX_WATERNAME_LENGTH );
     final String stateName = ProfileBean.shortenName( m_name, ProfileBean.MAX_STATENAME_LENGTH );
-    final String dateText = new SimpleDateFormat( "dd.MM.yyyy" ).format( m_date );
-    return String.format( Locale.US, "%-14s %-14s %s  %13.6f  %13.6f  %13s", waterName, stateName, dateText, m_startStation, m_endStation, m_fileName );
+    final String dateText = new SimpleDateFormat( "d.M.yyyy" ).format( m_date );
+    return String.format( Locale.US, "%-14s %-14s %-10s  %13.6f  %13.6f  %13s", waterName, stateName, dateText, m_startStation, m_endStation, m_fileName );
   }
 
   public void setStartStation( final double startStation )
@@ -222,6 +262,8 @@ public class ZustandBean
     writeRunOffs( profDir, zustand.getRunOffEvents() );
     writeWspFixes( profDir, zustand.getWspFixations() );
 
-    // TODO: write calculations and losses
+    writeCalculations( profDir, zustand.getCalculations() );
+
+    // TODO: write losses
   }
 }
