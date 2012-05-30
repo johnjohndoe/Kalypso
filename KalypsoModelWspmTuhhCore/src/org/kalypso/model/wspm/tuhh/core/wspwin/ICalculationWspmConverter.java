@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,20 +36,19 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.wspwin.core.CalculationBean;
+import org.kalypso.wspwin.core.ICalculationContentBean;
 
 /**
  * @author Gernot Belger
  */
 public interface ICalculationWspmConverter
 {
-  void convert( CalculationBean bean, File profDir ) throws IOException, GMLSchemaException;
+  void convert( ICalculationContentBean calculation, File profDir ) throws GMLSchemaException;
 }

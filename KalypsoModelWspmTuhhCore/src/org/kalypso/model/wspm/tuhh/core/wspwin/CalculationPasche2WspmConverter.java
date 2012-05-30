@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
@@ -60,6 +59,7 @@ import org.kalypso.wspwin.core.CalculationContentBeanPasche;
 import org.kalypso.wspwin.core.CalculationContentBeanPasche.ART_ANFANGS_WSP;
 import org.kalypso.wspwin.core.CalculationContentBeanPasche.FLIESSGESETZ;
 import org.kalypso.wspwin.core.CalculationContentBeanPasche.KIND;
+import org.kalypso.wspwin.core.ICalculationContentBean;
 
 /**
  * Converts calculations of WspWin Pasche projects to wspm.
@@ -82,10 +82,10 @@ public class CalculationPasche2WspmConverter implements ICalculationWspmConverte
   }
 
   @Override
-  public void convert( final CalculationBean bean, final File profDir ) throws IOException, GMLSchemaException
+  public void convert( final ICalculationContentBean calculation, final File profDir ) throws GMLSchemaException
   {
-    final File file = new File( profDir, bean.getFileName() );
-    final CalculationContentBeanPasche contentBean = CalculationContentBeanPasche.read( file );
+    final CalculationContentBeanPasche contentBean = (CalculationContentBeanPasche) calculation;
+    final CalculationBean bean = contentBean.getCalculationBean();
 
     // create calculation
     final TuhhWspmProject project = (TuhhWspmProject) m_reach.getWaterBody().getProject();
@@ -100,13 +100,13 @@ public class CalculationPasche2WspmConverter implements ICalculationWspmConverte
     final org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.FLIESSGESETZ lawOfFlow = findLawOfFlow( fliessgesetz );
     calc.setFliessgesetz( lawOfFlow );
 
-    calc.setSubReachDef( contentBean.getAnfang(), contentBean.getEnde() );
+    calc.setSubReachDef( contentBean.getAnfang().doubleValue(), contentBean.getEnde().doubleValue() );
 
     final ART_ANFANGS_WSP artAnfangswasserspiegel = contentBean.getArtAnfangswasserspiegel();
     final START_KONDITION_KIND type = findStartConditionType( artAnfangswasserspiegel );
 
-    final double startSlope = contentBean.getGefaelle();
-    final double startWsp = contentBean.getHoehe();
+    final double startSlope = contentBean.getGefaelle().doubleValue();
+    final double startWsp = contentBean.getHoehe().doubleValue();
     calc.setStartCondition( type, startWsp, startSlope );
 
     final TuhhCalculation.WSP_ITERATION_TYPE iterationType = findIterationType( contentBean );
@@ -127,7 +127,10 @@ public class CalculationPasche2WspmConverter implements ICalculationWspmConverte
     calc.setRunOffRef( runOffRef );
 
     // set q-Range. Remember: Q-Range in CalculationcontentBean is in dl/s
-    calc.setQRange( contentBean.getMin() / 100.0, contentBean.getMax() / 100.0, contentBean.getStep() / 100.0 );
+    final double minQ = contentBean.getMin().doubleValue();
+    final double maxQ = contentBean.getMax().doubleValue();
+    final double stepQ = contentBean.getStep().doubleValue();
+    calc.setQRange( minQ / 100.0, maxQ / 100.0, stepQ / 100.0 );
   }
 
   private MODE findCalcMode( final KIND calcKind )
