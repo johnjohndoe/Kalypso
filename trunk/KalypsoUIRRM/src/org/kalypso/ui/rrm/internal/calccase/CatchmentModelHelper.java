@@ -56,6 +56,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
@@ -66,6 +67,7 @@ import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.math.IntervalUtilities;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -128,10 +130,17 @@ public class CatchmentModelHelper
   {
     final String folderName = getTargetLinkFolderName( simulation, parameterType );
 
+    String relativeLink = null;
     if( prefix == null || prefix.length() == 0 )
-      return String.format( "../%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
+      relativeLink = String.format( "%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
+    else
+      relativeLink = String.format( "%s/%s_%s_%s.zml", folderName, prefix, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
 
-    return String.format( "../%s/%s_%s_%s.zml", folderName, prefix, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
+    final IFolder simulationFolder = simulation.getSimulationFolder();
+    final IPath simulationPath = simulationFolder.getFullPath();
+    final IPath fullLink = simulationPath.append( relativeLink );
+
+    return UrlResolver.createProjectPath( fullLink );
   }
 
   private static String getTargetLinkFolderName( final RrmSimulation simulation, final String parameterType )

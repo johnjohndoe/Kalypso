@@ -61,6 +61,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
@@ -80,11 +81,11 @@ public class NaSimulationData implements INaSimulationData
 
   private final GMLWorkspace m_modelWorkspace;
 
-  private final GMLWorkspace m_lzsimWorkspace;
+  private GMLWorkspace m_lzsimWorkspace;
 
   private final NAModellControl m_naModellControl;
 
-  private final NAControl m_metaControl;
+  private NAControl m_metaControl;
 
   private final NAHydrotop m_hydrotopeCollection;
 
@@ -277,6 +278,12 @@ public class NaSimulationData implements INaSimulationData
   }
 
   @Override
+  public void setMetaControl( final NAControl metaControl )
+  {
+    m_metaControl = metaControl;
+  }
+
+  @Override
   public GMLWorkspace getParameterWorkspace( )
   {
     return m_parameterWorkspace;
@@ -310,6 +317,15 @@ public class NaSimulationData implements INaSimulationData
   }
 
   /**
+   * @see org.kalypso.model.hydrology.INaSimulationData#setLzsimWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
+   */
+  @Override
+  public void setLzsimWorkspace( final GMLWorkspace lzsimWorkspace )
+  {
+    m_lzsimWorkspace = lzsimWorkspace;
+  }
+
+  /**
    * @see org.kalypso.model.hydrology.INaSimulationData#getOptimizeData()
    */
   @Override
@@ -318,9 +334,6 @@ public class NaSimulationData implements INaSimulationData
     return m_optimizeData;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.INaSimulationData#getNaOptimize()
-   */
   @Override
   public NAOptimize getNaOptimize( )
   {
@@ -330,9 +343,6 @@ public class NaSimulationData implements INaSimulationData
     return m_optimizeData.getNaOptimize();
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.INaSimulationData#getPreprocessedASCII()
-   */
   @Override
   public URL getPreprocessedASCII( )
   {
@@ -349,5 +359,11 @@ public class NaSimulationData implements INaSimulationData
   public TimeseriesMappingCollection getTimeseriesMappings( )
   {
     return m_timeseriesMappings;
+  }
+
+  @Override
+  public IFeatureProviderFactory getFeatureProviderFactory( )
+  {
+    return m_factory;
   }
 }
