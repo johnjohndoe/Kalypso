@@ -42,6 +42,7 @@ package org.kalypso.wspwin.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,13 +65,13 @@ public class ZustandBean
 
   private final String m_fileName;
 
-  private double m_startStation;
+  private BigDecimal m_startStation;
 
-  private double m_endStation;
+  private BigDecimal m_endStation;
 
   private final Date m_date;
 
-  public ZustandBean( final String name, final String waterName, final String fileName, final double startStation, final double endStation, final Date date )
+  public ZustandBean( final String name, final String waterName, final String fileName, final BigDecimal startStation, final BigDecimal endStation, final Date date )
   {
     m_name = name;
     m_waterName = waterName;
@@ -85,7 +86,7 @@ public class ZustandBean
     return m_date;
   }
 
-  public double getEndStation( )
+  public BigDecimal getEndStation( )
   {
     return m_endStation;
   }
@@ -100,7 +101,7 @@ public class ZustandBean
     return m_name;
   }
 
-  public double getStartStation( )
+  public BigDecimal getStartStation( )
   {
     return m_startStation;
   }
@@ -242,16 +243,6 @@ public class ZustandBean
     return String.format( Locale.US, "%-14s %-14s %-10s  %13.6f  %13.6f  %13s", waterName, stateName, dateText, m_startStation, m_endStation, m_fileName );
   }
 
-  public void setStartStation( final double startStation )
-  {
-    m_startStation = startStation;
-  }
-
-  public void setEndStation( final double endStation )
-  {
-    m_endStation = endStation;
-  }
-
   public void writeZustand( final File wspwinDir, final WspWinZustand zustand ) throws IOException
   {
     zustand.write( wspwinDir );
@@ -265,5 +256,15 @@ public class ZustandBean
     writeCalculations( profDir, zustand.getCalculations() );
 
     // TODO: write losses
+  }
+
+  void setStartStation( final BigDecimal startStation )
+  {
+    m_startStation = startStation;
+  }
+
+  void setEndStation( final BigDecimal endStation )
+  {
+    m_endStation = endStation;
   }
 }

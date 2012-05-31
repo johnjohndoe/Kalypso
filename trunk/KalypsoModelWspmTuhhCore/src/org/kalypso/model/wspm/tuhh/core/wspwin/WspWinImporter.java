@@ -54,6 +54,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -181,8 +182,7 @@ public final class WspWinImporter
       // /////////////////// //
       // Load WspWin Project //
       // /////////////////// //
-      // FIXME: add status of reading wspcfg to logStatus
-      final WspCfg wspCfgBean = new WspCfg( wspWinProject );
+      final WspCfg wspCfgBean = new WspCfg( wspWinProject, StringUtils.EMPTY );
       final IStatus wspCfgStatus = wspCfgBean.read();
       logStatus.add( wspCfgStatus );
 

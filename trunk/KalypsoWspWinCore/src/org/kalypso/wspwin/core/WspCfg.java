@@ -107,17 +107,26 @@ public class WspCfg
 
   private String m_projectName = StringUtils.EMPTY;
 
-  private WspWinProject m_project;
+  private final WspWinProject m_project;
 
+  /**
+   * Creates an empty {@link WspCfg}. Should only be used in order to call {@link #read()} afterwards.
+   */
   public WspCfg( final WspWinProject project )
   {
-    this( project, TYPE.PASCHE );
+    this( project, StringUtils.EMPTY );
   }
 
-  public WspCfg( final WspWinProject project, final TYPE type )
+  public WspCfg( final WspWinProject project, final String projectName )
+  {
+    this( project, TYPE.PASCHE, projectName );
+  }
+
+  public WspCfg( final WspWinProject project, final TYPE type, final String projectName )
   {
     m_project = project;
     m_type = type;
+    m_projectName = projectName;
   }
 
   public void setProjectName( final String name )
@@ -254,8 +263,8 @@ public class WspCfg
           final DateFormat dateInstance = SimpleDateFormat.getDateInstance( SimpleDateFormat.SHORT, Locale.GERMAN );
           final String dateString = trimmedLine.substring( 30, 41 ).trim();
           final Date date = dateInstance.parse( dateString );
-          final Double start = new Double( trimmedLine.substring( 41, 56 ) );
-          final Double end = new Double( trimmedLine.substring( 56, 71 ) );
+          final BigDecimal start = new BigDecimal( trimmedLine.substring( 41, 56 ).trim() );
+          final BigDecimal end = new BigDecimal( trimmedLine.substring( 56, 71 ).trim() );
           final String fileName = trimmedLine.substring( 71 ).trim();
 
           final ZustandBean zustandBean = new ZustandBean( name, waterName, fileName, start, end, date );
@@ -278,7 +287,12 @@ public class WspCfg
 
   public WspWinZustand createZustand( final String name, final String filename, final String waterName, final Date creationDate )
   {
-    final ZustandBean bean = new ZustandBean( name, waterName, filename, Double.NaN, Double.NaN, creationDate );
+    return createZustand( name, filename, waterName, creationDate, null, null );
+  }
+
+  public WspWinZustand createZustand( final String name, final String filename, final String waterName, final Date creationDate, final BigDecimal startStation, final BigDecimal endStation )
+  {
+    final ZustandBean bean = new ZustandBean( name, waterName, filename, startStation, endStation, creationDate );
     final WspWinZustand zustand = new WspWinZustand( bean );
     m_zustaende.add( zustand );
     return zustand;
@@ -352,8 +366,23 @@ public class WspCfg
     return bean;
   }
 
-  public void setProject( final WspWinProject project )
+  /**
+   * Returns the profile with the given name.
+   */
+  public ProfileBean findProfile( final String fileName )
   {
-    m_project = project;
+    final ProfileBean[] profileBeans = m_profProj.getProfiles();
+    for( final ProfileBean profileBean : profileBeans )
+    {
+      if( fileName.equals( profileBean.getFileName() ) )
+        return profileBean;
+    }
+
+    return null;
+  }
+
+  public String getProjectName( )
+  {
+    return m_projectName;
   }
 }

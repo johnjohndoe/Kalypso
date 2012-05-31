@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.core.wspwin;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -54,9 +53,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.core.gml.IObservationFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IRunOffEvent;
@@ -92,10 +89,10 @@ public class WspWinProjectWriter
 
   private int m_prfCount = 1;
 
-  public WspWinProjectWriter( final String roughnessType, final TYPE projectType, final File outputDir )
+  public WspWinProjectWriter( final String roughnessType, final TYPE projectType, final File outputDir, final String projectName )
   {
     m_roughnessType = roughnessType;
-    m_wspCfg = new WspCfg( new WspWinProject( outputDir ), projectType );
+    m_wspCfg = new WspCfg( new WspWinProject( outputDir ), projectType, projectName );
   }
 
   /**
@@ -106,12 +103,6 @@ public class WspWinProjectWriter
   {
     for( final TuhhReach tuhhReach : reaches )
       Assert.isTrue( tuhhReach.getWaterBody() == waterBody );
-
-    /* Add the water body */
-    final URL context = waterBody.getWorkspace().getContext();
-    final IProject project = ResourceUtilities.findProjectFromURL( context );
-    if( project != null )
-      m_wspCfg.setProjectName( project.getName() );
 
     /* Add all profiles of water body */
     final Map<IProfileFeature, ProfileBean> profileIndex = new HashMap<IProfileFeature, ProfileBean>();

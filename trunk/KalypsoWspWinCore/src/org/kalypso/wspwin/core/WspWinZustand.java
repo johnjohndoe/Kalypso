@@ -186,8 +186,8 @@ public class WspWinZustand
   {
     m_segmentBeans.clear();
 
-    double minStation = Double.MAX_VALUE;
-    double maxStation = -Double.MAX_VALUE;
+    BigDecimal minStation = new BigDecimal( Double.MAX_VALUE );
+    BigDecimal maxStation = new BigDecimal( -Double.MAX_VALUE );
     for( int i = 0; i < m_profileBeans.size() - 1; i++ )
     {
       final ProfileBean fromProfile = m_profileBeans.get( i );
@@ -199,10 +199,10 @@ public class WspWinZustand
       // FIXME: strange things happens for (knauf) profiles with mehrfeld-code. In that case
       // the distance should be calculated to the next real profile instead.
 
-      minStation = Math.min( minStation, stationFrom.doubleValue() );
-      minStation = Math.min( minStation, stationTo.doubleValue() );
-      maxStation = Math.max( maxStation, stationFrom.doubleValue() );
-      maxStation = Math.max( maxStation, stationTo.doubleValue() );
+      minStation = minStation.min( stationFrom );
+      minStation = minStation.min( stationTo );
+      maxStation = maxStation.max( stationFrom );
+      maxStation = maxStation.max( stationTo );
 
       final String fileNameFrom = fromProfile.getFileName();
       final String fileNameTo = toProfile.getFileName();
