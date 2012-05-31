@@ -67,9 +67,11 @@ public class ProfileBean
   public static final int DEFAULT_VZK = 0;
 
   private final String m_waterName;
+
   private final String m_stateName;
 
   private final BigDecimal m_station;
+
   private final String m_fileName;
 
   private final String m_mehrfeldCode;

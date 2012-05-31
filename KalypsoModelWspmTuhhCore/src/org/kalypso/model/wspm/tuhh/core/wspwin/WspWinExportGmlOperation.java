@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,18 +36,22 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -81,7 +85,9 @@ public class WspWinExportGmlOperation implements ICoreRunnableWithProgress
 
       final TYPE projectType = m_data.getProjectType();
 
-      final WspWinProjectWriter wspWinWriter = new WspWinProjectWriter( null, projectType, outputDir );
+      final String probez = getProjectName( waters );
+
+      final WspWinProjectWriter wspWinWriter = new WspWinProjectWriter( null, projectType, outputDir, probez );
 
       for( final WspmWaterBody waterBody : waters )
       {
@@ -105,5 +111,18 @@ public class WspWinExportGmlOperation implements ICoreRunnableWithProgress
     {
       monitor.done();
     }
+  }
+
+  private String getProjectName( final WspmWaterBody[] waters )
+  {
+    if( waters.length == 0 )
+      return StringUtils.EMPTY;
+
+    final URL context = waters[0].getWorkspace().getContext();
+    final IProject project = ResourceUtilities.findProjectFromURL( context );
+    if( project == null )
+      return StringUtils.EMPTY;
+
+    return project.getName();
   }
 }

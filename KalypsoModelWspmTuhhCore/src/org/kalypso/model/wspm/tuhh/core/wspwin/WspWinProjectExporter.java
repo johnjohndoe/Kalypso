@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,17 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IProject;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.wspwin.core.WspCfg.TYPE;
@@ -68,11 +71,15 @@ public class WspWinProjectExporter
     m_projectType = projectType;
   }
 
-  public void export( final File outputDir, final IProgressMonitor monitor ) throws IOException
+  public void export( final File outputDir ) throws IOException
   {
     outputDir.mkdirs();
 
-    final WspWinProjectWriter wspWinProjectWriter = new WspWinProjectWriter( null, m_projectType, outputDir );
+    final URL context = m_waterBody.getWorkspace().getContext();
+    final IProject project = ResourceUtilities.findProjectFromURL( context );
+    final String probez = project == null ? StringUtils.EMPTY : project.getName();
+
+    final WspWinProjectWriter wspWinProjectWriter = new WspWinProjectWriter( null, m_projectType, outputDir, probez );
     wspWinProjectWriter.addReaches( m_waterBody, m_reaches );
 
     wspWinProjectWriter.write();
