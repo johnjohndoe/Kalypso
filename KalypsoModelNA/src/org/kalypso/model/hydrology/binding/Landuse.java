@@ -66,10 +66,10 @@ public class Landuse extends Feature_Impl
 
   public static final QName QNAME_PROP_CORRSEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DRAINAGETYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "drainageType" ); //$NON-NLS-1$
-
+  @Deprecated
   public static final QName QNAME_PROP_SUD_MEMBERS = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
 
+  @Deprecated
   private final IFeatureBindingCollection<Feature> m_suds = new FeatureBindingCollection<Feature>( this, Feature.class, QNAME_PROP_SUD_MEMBERS );
 
   public Landuse( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
@@ -77,11 +77,13 @@ public class Landuse extends Feature_Impl
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Deprecated
   public IFeatureBindingCollection<Feature> getSudCollection( )
   {
     return m_suds;
   }
 
+  @Deprecated
   public Feature[] getSuds( )
   {
     return m_suds.toArray( new Feature[] {} );
@@ -120,15 +122,5 @@ public class Landuse extends Feature_Impl
   public void setCorrSealing( final Double corrSealing )
   {
     setProperty( QNAME_PROP_CORRSEALING, corrSealing );
-  }
-
-  public String getDrainageType( )
-  {
-    return getProperty( QNAME_PROP_DRAINAGETYPE, String.class );
-  }
-
-  public void setDrainageType( final String drainageType )
-  {
-    setProperty( QNAME_PROP_DRAINAGETYPE, drainageType );
   }
 }
