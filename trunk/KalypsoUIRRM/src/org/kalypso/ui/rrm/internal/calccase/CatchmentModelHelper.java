@@ -65,6 +65,7 @@ import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.math.IntervalUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -77,6 +78,7 @@ import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.hydrology.util.cm.CatchmentHelper;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
@@ -637,45 +639,50 @@ public class CatchmentModelHelper
    */
   public static IStatus compareTimeseries( final IFolder simulationFolder, final IFolder simulationTmpFolder ) throws Exception
   {
-    /* The catchments. */
-    IFeatureBindingCollection<Catchment> catchments = null;
-    IFeatureBindingCollection<Catchment> tmpCatchments = null;
+    /* The models. */
+    NaModell model = null;
+    NaModell tmpModel = null;
 
     try
     {
       /* The status collector. */
-      final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+      final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-      /* Load the model. */
-      final NaModell model = loadModel( new RrmSimulation( simulationFolder ) );
-      catchments = model.getCatchments();
+      /* Load the models. */
+      model = loadModel( new RrmSimulation( simulationFolder ) );
+      tmpModel = loadModel( new RrmSimulation( simulationTmpFolder ) );
 
-      /* Load the temporary model. */
-      final NaModell tmpModel = loadModel( new RrmSimulation( simulationTmpFolder ) );
-      tmpCatchments = tmpModel.getCatchments();
+      /* Get the contexts. */
+      final URL context = model.getWorkspace().getContext();
+      final URL tmpContext = tmpModel.getWorkspace().getContext();
 
       /* Compare the catchments. */
-      /* Both lists must be in the same order, because the temporary one is a copy. */
-      for( int i = 0; i < catchments.size(); i++ )
+      final QName[] linkProperties = new QName[] { Catchment.PROP_PRECIPITATION_LINK, Catchment.PROP_TEMPERATURE_LINK, Catchment.PROP_EVAPORATION_LINK };
+      final String[] linkLabels = new String[] { "Precipitation", "Temperature", "Evaporation" };
+      for( int i = 0; i < linkLabels.length; i++ )
       {
-        final Catchment catchment = catchments.get( i );
-        final Catchment tmpCatchment = tmpCatchments.get( i );
-
-        final IStatus status = compareCatchments( catchment, tmpCatchment );
+        final IStatus status = compareCatchments( model, tmpModel, context, tmpContext, linkProperties[i], linkLabels[i] );
         collector.add( status );
       }
 
-      return collector.asMultiStatus( "Verifying of the timeseries finished." );
+      /* Compare other timeseries (created by timeseries mappings), */
+      for( final TimeseriesMappingType mappingType : TimeseriesMappingType.values() )
+      {
+        final IStatus status = compareMapping( model, tmpModel, context, tmpContext, mappingType );
+        collector.add( status );
+      }
+
+      return collector.asMultiStatus( "Verification of the timeseries finished." );
     }
     finally
     {
-      /* Dispose the catchments. */
-      if( catchments != null )
-        catchments.getParentFeature().getWorkspace().dispose();
+      /* Dispose the model. */
+      if( model != null )
+        model.getWorkspace().dispose();
 
-      /* Dispose the temporary catchments. */
-      if( tmpCatchments != null )
-        tmpCatchments.getParentFeature().getWorkspace().dispose();
+      /* Dispose the temporary model. */
+      if( tmpModel != null )
+        tmpModel.getWorkspace().dispose();
     }
   }
 
@@ -693,63 +700,93 @@ public class CatchmentModelHelper
     return (NaModell) workspace.getRootFeature();
   }
 
-  private static IStatus compareCatchments( final Catchment catchment, final Catchment tmpCatchment ) throws MalformedURLException, SensorException
+  private static IStatus compareCatchments( final NaModell model, final NaModell tmpModel, final URL context, final URL tmpContext, final QName linkProperty, final String linkLabel ) throws MalformedURLException, SensorException
   {
     /* The status collector. */
     final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    /* Get the timeseries links of the catchment. */
-    final URL context = catchment.getWorkspace().getContext();
-    final TimeseriesLinkType precipitationLink = catchment.getPrecipitationLink();
-    final TimeseriesLinkType evaporationLink = catchment.getEvaporationLink();
-    final TimeseriesLinkType temperatureLink = catchment.getTemperatureLink();
+    /* Both lists must be in the same order, because the temporary one is a copy. */
+    final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
+    final IFeatureBindingCollection<Catchment> tmpCatchments = tmpModel.getCatchments();
 
-    /* Get the timeseries links of the temporary catchment. */
-    final URL tmpContext = tmpCatchment.getWorkspace().getContext();
-    final TimeseriesLinkType tmpPrecipitationLink = tmpCatchment.getPrecipitationLink();
-    final TimeseriesLinkType tmpEvaporationLink = tmpCatchment.getEvaporationLink();
-    final TimeseriesLinkType tmpTemperatureLink = tmpCatchment.getTemperatureLink();
+    for( int i = 0; i < catchments.size(); i++ )
+    {
+      final Catchment catchment = catchments.get( i );
+      final Catchment tmpCatchment = tmpCatchments.get( i );
 
-    /* Compare the precipitation timeseries. */
-    final IStatus precipitationStatus = compareTimeseries( context, precipitationLink, tmpContext, tmpPrecipitationLink, "Precipitation" );
-    collector.add( precipitationStatus );
+      final IStatus status = compareCatchment( catchment, tmpCatchment, context, tmpContext, linkProperty );
+      collector.add( status );
+    }
 
-    /* Compare the evaporation timeseries. */
-    final IStatus evaporationStatus = compareTimeseries( context, evaporationLink, tmpContext, tmpEvaporationLink, "Evaporation" );
-    collector.add( evaporationStatus );
-
-    /* Compare the temperature timeseries. */
-    final IStatus temperatureStatus = compareTimeseries( context, temperatureLink, tmpContext, tmpTemperatureLink, "Temperature" );
-    collector.add( temperatureStatus );
-
-    return collector.asMultiStatus( String.format( "Verifying the imported timeseries of the catchment '%s'.", catchment.getDescription() ) );
+    return collector.asMultiStatus( String.format( "Verifying the catchment model '%s'", linkLabel ) );
   }
 
-  private static IStatus compareTimeseries( final URL context, final TimeseriesLinkType link, final URL tmpContext, final TimeseriesLinkType tmpLink, final String timeseriesType ) throws MalformedURLException, SensorException
+  private static IStatus compareCatchment( final Catchment catchment, final Catchment tmpCatchment, final URL context, final URL tmpContext, final QName linkProperty ) throws MalformedURLException, SensorException
+  {
+    /* Get the timeseries links of the catchment. */
+    final TimeseriesLinkType link = (TimeseriesLinkType) catchment.getProperty( linkProperty );
+  
+    /* Get the timeseries links of the temporary catchment. */
+    final TimeseriesLinkType tmpLink = (TimeseriesLinkType) tmpCatchment.getProperty( linkProperty );
+  
+    /* Compare the temperature timeseries. */
+    return compareTimeseries( context, link, tmpContext, tmpLink, catchment.getName() );
+  
+  }
+
+  private static IStatus compareMapping( final NaModell model, final NaModell tmpModel, final URL context, final URL tmpContext, final TimeseriesMappingType mappingType ) throws MalformedURLException, SensorException
   {
     /* The status collector. */
-    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+  
+    /* Both lists must be in the same order, because the temporary one is a copy. */
+    final Feature[] modelElements = mappingType.getModelElements( model );
+    final Feature[] tmpModelElements = mappingType.getModelElements( tmpModel );
+  
+    final QName modelLinkProperty = mappingType.getModelLinkProperty();
+    for( int i = 0; i < modelElements.length; i++ )
+    {
+      final Feature modelElement = modelElements[i];
+      final Feature tmpModelElement = tmpModelElements[i];
+  
+      final TimeseriesLinkType modelLink = (TimeseriesLinkType) modelElement.getProperty( modelLinkProperty );
+      final TimeseriesLinkType tmpModelLink = (TimeseriesLinkType) tmpModelElement.getProperty( modelLinkProperty );
+  
+      final IStatus status = compareTimeseries( context, modelLink, tmpContext, tmpModelLink, modelElement.getName() );
+      collector.add( status );
+    }
+  
+    return collector.asMultiStatus( String.format( "Verifying the timeseries mapping of type '%s'", mappingType.getLabel() ) );
+  }
 
+  private static IStatus compareTimeseries( final URL context, final TimeseriesLinkType link, final URL tmpContext, final TimeseriesLinkType tmpLink, final String statusLabel ) throws MalformedURLException, SensorException
+  {
+    if( link == null && tmpLink == null )
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), statusLabel );
+  
+    /* The status collector. */
+    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+  
     /* Load the timeseries. */
     /* The time zone may be different to that of the newly generated timeseries. */
     final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
     final IObservation observation = ZmlFactory.parseXML( location );
-
+  
     /* Load the temporary timeseries. */
     /* The time zone may be different to that of the original timeseries. */
     final URL tmpLocation = UrlResolverSingleton.resolveUrl( tmpContext, tmpLink.getHref() );
     final IObservation tmpObservation = ZmlFactory.parseXML( tmpLocation );
-
+  
     /* Get the values of both timeseries. */
     final ITupleModel values = observation.getValues( null );
     final ITupleModel tmpValues = tmpObservation.getValues( null );
-
+  
     /* Build a hash date->value for the old timeseries. */
     final Map<Long, Double> hash = buildHash( values );
-
+  
     /* Build a hash date->value for the new timeseries. */
     final Map<Long, Double> tmpHash = buildHash( tmpValues );
-
+  
     /* Loop through the new hash. */
     int differences = 0;
     for( final Entry<Long, Double> tmpEntry : tmpHash.entrySet() )
@@ -757,24 +794,24 @@ public class CatchmentModelHelper
       /* Get the key and the value of the new timeseries. */
       final Long tmpKey = tmpEntry.getKey();
       final Double tmpValue = tmpEntry.getValue();
-
+  
       /* Get the value of the old timeseries. */
       final Double value = hash.get( tmpKey );
-
+  
       /* Compare the values of the new timeseries with the ones in the old timeseries. */
       // TODO 0.01 different with other datatypes?
       if( value == null || Math.abs( tmpValue.doubleValue() - value.doubleValue() ) > 0.01 )
         differences++;
     }
-
+  
     /* Calculate the procentual difference. */
     if( differences > 0 )
     {
       final int percent = (differences * 100) / tmpHash.size();
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "The new timeseries' values differ by %d%% (%d differences).", percent, differences ) ) );
+      collector.add( IStatus.WARNING, "The new timeseries' values differ by %d%% (%d differences).", null, percent, differences );
     }
-
-    return collector.asMultiStatus( timeseriesType );
+  
+    return collector.asMultiStatus( statusLabel );
   }
 
   private static Map<Long, Double> buildHash( final ITupleModel values ) throws SensorException
