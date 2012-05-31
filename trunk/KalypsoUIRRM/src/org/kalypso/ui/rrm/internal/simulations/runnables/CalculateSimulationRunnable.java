@@ -191,6 +191,12 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     /* The rrm simulation. */
     RrmSimulation rrmSimulation = null;
 
+    /* The simulation data. */
+    INaSimulationData simulationData = null;
+
+    /* The workspace of the simulation. */
+    GMLWorkspace simulationWorkspace = null;
+
     try
     {
       /* Monitor. */
@@ -203,7 +209,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
       /* Get the rrm simulation and rrm scenario. */
       rrmSimulation = getRrmSimulation( simulation );
-      final RrmScenario scenario = rrmSimulation.getScenario();
+      final RrmScenario rrmScenario = rrmSimulation.getScenario();
 
       /* Copy given flags. */
       boolean calculateCatchmentModels = m_calculateCatchmentModels;
@@ -240,24 +246,24 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       monitor.subTask( "Prepare..." );
 
       /* Create the URLs. */
-      final URL modelURL = ResourceUtilities.createURL( scenario.getModelFile() );
-      final URL controlURL = ResourceUtilities.createURL( scenario.getExpertControlGml() );
-      final URL parameterURL = ResourceUtilities.createURL( scenario.getParameterGml() );
-      final URL hydrotopURL = ResourceUtilities.createURL( scenario.getHydrotopGml() );
-      final URL sudsURL = ResourceUtilities.createURL( scenario.getSudsGml() );
-      final URL syntNURL = ResourceUtilities.createURL( scenario.getSyntnGml() );
-      final URL catchmentModelsUrl = ResourceUtilities.createURL( scenario.getCatchmentModelsGml() );
-      final URL timeseriesMappingsUrl = ResourceUtilities.createURL( scenario.getTimeseriesMappingsGml() );
+      final URL modelURL = ResourceUtilities.createURL( rrmScenario.getModelFile() );
+      final URL controlURL = ResourceUtilities.createURL( rrmScenario.getExpertControlGml() );
+      final URL parameterURL = ResourceUtilities.createURL( rrmScenario.getParameterGml() );
+      final URL hydrotopURL = ResourceUtilities.createURL( rrmScenario.getHydrotopGml() );
+      final URL sudsURL = ResourceUtilities.createURL( rrmScenario.getSudsGml() );
+      final URL syntNURL = ResourceUtilities.createURL( rrmScenario.getSyntnGml() );
+      final URL catchmentModelsUrl = ResourceUtilities.createURL( rrmScenario.getCatchmentModelsGml() );
+      final URL timeseriesMappingsUrl = ResourceUtilities.createURL( rrmScenario.getTimeseriesMappingsGml() );
 
       /* Load all simulation data. */
-      final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, controlURL, null, parameterURL, hydrotopURL, sudsURL, syntNURL, null, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
+      simulationData = NaSimulationDataFactory.load( modelURL, controlURL, null, parameterURL, hydrotopURL, sudsURL, syntNURL, null, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
 
-      /* Load and clone the simulation. */
-      final GMLWorkspace simulationWorkspace = FeatureFactory.createGMLWorkspace( simulation.getFeatureType(), modelURL, simulationData.getFeatureProviderFactory() );
+      /* Clone the simulation. */
+      simulationWorkspace = FeatureFactory.createGMLWorkspace( simulation.getFeatureType(), modelURL, simulationData.getFeatureProviderFactory() );
       final NAControl simulationFeature = (NAControl) simulationWorkspace.getRootFeature();
       FeatureHelper.copyData( simulation, simulationFeature );
 
-      /* Set the metacontrol to the simulation data. */
+      /* Set the meta control to the simulation data. */
       simulationData.setMetaControl( simulationFeature );
 
       /* Prepare longterm/shortterm simulation. */
@@ -302,14 +308,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
 
       /* Monitor. */
-      monitor.subTask( "Saving..." );
-
-      /* Save a copy. */
-      final NaModell naModel = simulationData.getNaModel();
-      final NAControl metaControl = simulationData.getMetaControl();
-      GmlSerializer.saveWorkspace( naModel.getWorkspace(), rrmSimulation.getModelGml() );
-      GmlSerializer.saveWorkspace( metaControl.getWorkspace(), rrmSimulation.getExpertControlGml() );
-      GmlSerializer.saveWorkspace( simulationWorkspace, rrmSimulation.getCalculationGml() );
+      monitor.subTask( "Finished..." );
 
       /* Mark a status with the current time. */
       final Date endTime = new Date();
@@ -329,11 +328,38 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     }
     finally
     {
+      /* Save a copy. */
+      saveCopy( rrmSimulation, simulationData, simulationWorkspace );
+
       /* Save the log. */
       saveLog( simulation, rrmSimulation, collector );
 
       /* Monitor. */
       monitor.done();
+    }
+  }
+
+  private void saveCopy( final RrmSimulation rrmSimulation, final INaSimulationData simulationData, final GMLWorkspace simulationWorkspace )
+  {
+    try
+    {
+      if( rrmSimulation == null || simulationData == null )
+        return;
+
+      final NaModell naModel = simulationData.getNaModel();
+      if( naModel != null )
+        GmlSerializer.saveWorkspace( naModel.getWorkspace(), rrmSimulation.getModelGml() );
+
+      final NAControl metaControl = simulationData.getMetaControl();
+      if( metaControl != null )
+        GmlSerializer.saveWorkspace( metaControl.getWorkspace(), rrmSimulation.getExpertControlGml() );
+
+      if( simulationWorkspace != null )
+        GmlSerializer.saveWorkspace( simulationWorkspace, rrmSimulation.getCalculationGml() );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
     }
   }
 

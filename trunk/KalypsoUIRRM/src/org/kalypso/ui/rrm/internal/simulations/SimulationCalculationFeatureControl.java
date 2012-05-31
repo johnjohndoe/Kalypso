@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.core.status.StatusComposite;
@@ -84,7 +85,10 @@ import org.kalypso.ui.rrm.internal.simulations.jobs.ValidateSimulationJob;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
+import de.renew.workflow.base.ITask;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
+import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
 
 /**
  * The simulation calculation feature control.
@@ -362,6 +366,14 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       MessageDialog.openWarning( shell, title, message );
       return;
     }
+
+    /* Ask the user to save. */
+    final KalypsoAFGUIFrameworkPlugin activator = KalypsoAFGUIFrameworkPlugin.getDefault();
+    final ITaskExecutionAuthority executionAuthority = activator.getTaskExecutionAuthority();
+    final ITaskExecutor taskExecutor = activator.getTaskExecutor();
+    final ITask task = taskExecutor.getActiveTask();
+    if( !executionAuthority.canStopTask( task ) )
+      return;
 
     /* Calculate the simulations. */
     handler.calculateSimulation( shell, simulations );
