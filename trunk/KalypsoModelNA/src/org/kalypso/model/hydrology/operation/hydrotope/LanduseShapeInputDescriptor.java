@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
@@ -65,41 +65,29 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
 
   private final String m_landuseclassColumn;
 
-  private final String m_drainageTypeColumn;
-
   private final String m_corrSealingColumn;
 
   private ShapeFile m_shape;
 
-  public LanduseShapeInputDescriptor( final File shapeFile, final String landuseclassColumn, final String corrSealingColumn, final String drainageTypeColumn )
+  public LanduseShapeInputDescriptor( final File shapeFile, final String landuseclassColumn, final String corrSealingColumn )
   {
     m_shapeFile = shapeFile;
     m_landuseclassColumn = landuseclassColumn;
     m_corrSealingColumn = corrSealingColumn;
-    m_drainageTypeColumn = drainageTypeColumn;
   }
 
-  /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getName(int)
-   */
   @Override
   public String getName( final int index )
   {
-    return "" + index; //$NON-NLS-1$
+    return Integer.toString( index );
   }
 
-  /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getDescription(int)
-   */
   @Override
   public String getDescription( final int index )
   {
     return Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getGeometry(int)
-   */
   @Override
   public GM_MultiSurface getGeometry( final int index ) throws CoreException
   {
@@ -124,9 +112,6 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
     }
   }
 
-  /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getSealingCorrectionFactor(int)
-   */
   @Override
   public double getSealingCorrectionFactor( final int index ) throws CoreException
   {
@@ -138,19 +123,6 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
     throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
   }
 
-  /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getDrainageType(long)
-   */
-  @Override
-  public String getDrainageType( final int index ) throws CoreException
-  {
-    final Object property = getProperty( index, m_drainageTypeColumn );
-    return property == null ? null : property.toString();
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getLanduseclass(long)
-   */
   @Override
   public String getLanduseclass( final int index ) throws CoreException
   {
@@ -158,9 +130,6 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
     return property == null ? null : property.toString();
   }
 
-  /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getSize()
-   */
   @Override
   public int size( )
   {
@@ -222,9 +191,6 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
     }
   }
 
-  /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getSuds(int)
-   */
   @Override
   public AbstractSud[] getSuds( final int index )
   {
