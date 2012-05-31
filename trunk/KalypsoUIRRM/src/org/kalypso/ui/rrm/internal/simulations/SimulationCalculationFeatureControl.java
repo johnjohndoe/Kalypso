@@ -69,6 +69,8 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
@@ -82,6 +84,7 @@ import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ReadCalculationStatusJob;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ValidateSimulationJob;
+import org.kalypso.util.command.WaitForFeatureChanges;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -366,6 +369,10 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       MessageDialog.openWarning( shell, title, message );
       return;
     }
+
+    /* Must wait for eventually done changes to the feature. */
+    final ICoreRunnableWithProgress commandWaiter = new WaitForFeatureChanges();
+    ProgressUtilities.busyCursorWhile( commandWaiter );
 
     /* Ask the user to save. */
     final KalypsoAFGUIFrameworkPlugin activator = KalypsoAFGUIFrameworkPlugin.getDefault();
