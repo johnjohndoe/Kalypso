@@ -75,7 +75,7 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author Dejan Antanaskovic
  */
-public class FeatureListGeometryIntersector
+class FeatureListGeometryIntersector
 {
   private static final double MIN_AREA = 0.01;
 

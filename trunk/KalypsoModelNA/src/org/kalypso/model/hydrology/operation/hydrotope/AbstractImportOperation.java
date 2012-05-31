@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,9 +36,12 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,6 +55,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -68,6 +72,8 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
   private final IStatusCollector m_log = new StatusCollector( ModelNA.PLUGIN_ID );
 
   private final InputDescriptor<T> m_inputDescriptor;
+
+  private Feature[] m_newFeatures;
 
   public interface InputDescriptor<T>
   {
@@ -93,6 +99,9 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
     init();
     ProgressUtilities.worked( progess, 10 );
 
+    final Collection<Feature> newFeatures = new ArrayList<>( size );
+
+
     // traverse input workspace and import all single input soilTypes, if the soilType class exists
     for( int i = 0; i < size; i++ )
     {
@@ -102,7 +111,9 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
         final T geometry = m_inputDescriptor.getGeometry( i );
         checkGeometry( geometry, label );
 
-        importRow( i, label, geometry, m_log );
+        final Feature newFeature = importRow( i, label, geometry, m_log );
+        if( newFeature != null )
+          newFeatures.add( newFeature );
       }
       catch( final CoreException e )
       {
@@ -123,6 +134,8 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
 
       ProgressUtilities.worked( progess, 1 );
     }
+
+    m_newFeatures = newFeatures.toArray( new Feature[newFeatures.size()] );
 
     return m_log.asMultiStatusOrOK( STR_PROBLEMS_DURING_IMPORT, STR_IMPORT_SUCCESSFULLY_TERMINATED );
   }
@@ -158,7 +171,12 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
     }
   }
 
+  public Feature[] getNewFeatures( )
+  {
+    return m_newFeatures;
+  }
+
   protected abstract void init( );
 
-  protected abstract void importRow( int i, String label, T geometry, IStatusCollector log ) throws CoreException;
+  protected abstract Feature importRow( int i, String label, T geometry, IStatusCollector log ) throws CoreException;
 }

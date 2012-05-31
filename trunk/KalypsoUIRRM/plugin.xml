@@ -99,14 +99,20 @@
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected">
 			<with variable="selection">
-				<and>
-					<count value="1"/>
+			    <!--
+			    <or>
+			    -->
 					<iterate ifEmpty="false" operator="and">
 					    <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
 						  <test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>
 					    </adapt>
 					</iterate>
-				</and>
+					<!-- FIXME: introduce context/source for gis-table and implement tester against it
+					<iterate ifEmpty="false" operator="and">
+					   <instanceof value="org.kalypso.model.hydrology.binding.Landuse"/>
+					</iterate>
+    	       </or>
+    	            -->
 			</with>
 		</definition>
 		<definition id="org.kalypso.ui.rrm.definition.onePedologyThemeSelected">
@@ -219,11 +225,8 @@
           locationURI="menu:org.eclipse.ui.main.menu?after=edit">
        <menu label="%org.kalypso.simulation.ui.menu.calcCase.label" mnemonic="%org.kalypso.simulation.ui.menu.calcCase.mnemonic">
           <separator name="calcCaseStart" visible="false"/>
-          <command commandId="org.kalypso.ui.rrm.command.calccase.newCalcCase" style="push"/>
           <command commandId="org.kalypso.ui.rrm.command.calccase.copyCalcCase" style="push"/>
-          <command commandId="org.kalypso.ui.rrm.command.calccase.updateCalcCaseTimeseries" style="push"/>
           <command commandId="org.kalypso.ui.rrm.command.calccase.setBasicModel" style="push"/>
-          <command commandId="org.kalypso.ui.rrm.command.calccase.runCalcCase" style="push"/>
           <separator name="additions" visible="false"/>
           <visibleWhen checkEnabled="false">
              <with variable="activeWorkbenchWindow.activePerspective">
@@ -405,8 +408,7 @@
       <wizardEnablement
             wizardID="org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizard">
          <enablement>
-            <reference definitionId="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected">
-            </reference>
+            <reference definitionId="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected"/>
          </enablement>
       </wizardEnablement>
       <wizardEnablement

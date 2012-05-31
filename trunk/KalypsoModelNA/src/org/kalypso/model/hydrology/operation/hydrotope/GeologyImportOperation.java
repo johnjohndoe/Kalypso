@@ -45,6 +45,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
@@ -92,7 +93,7 @@ public class GeologyImportOperation extends AbstractImportOperation<GM_MultiSurf
   }
 
   @Override
-  protected void importRow( final int i, final String label, final GM_MultiSurface geometry, final IStatusCollector log ) throws CoreException
+  protected Feature importRow( final int i, final String label, final GM_MultiSurface geometry, final IStatusCollector log ) throws CoreException
   {
     final Geology geology = m_output.importGeology( label, geometry, m_importType, log );
     if( geology != null )
@@ -101,5 +102,7 @@ public class GeologyImportOperation extends AbstractImportOperation<GM_MultiSurf
       geology.setMaxPerkulationsRate( m_inputDescriptor.getMaxPerkulationsRate( i ) );
       geology.setGWFactor( m_inputDescriptor.getGWFactor( i ) );
     }
+
+    return geology;
   }
 }
