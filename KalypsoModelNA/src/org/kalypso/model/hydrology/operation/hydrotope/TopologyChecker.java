@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
@@ -57,7 +57,7 @@ import com.vividsolutions.jts.operation.valid.TopologyValidationError;
  * 
  * @author kurzbach
  */
-public final class TopologyChecker
+final class TopologyChecker
 {
   private TopologyChecker( )
   {

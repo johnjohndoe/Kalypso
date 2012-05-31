@@ -43,139 +43,55 @@ package org.kalypso.ui.rrm.internal.hydrotops;
 
 import java.io.File;
 
-import org.apache.commons.lang3.CharEncoding;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
+import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.operation.hydrotope.DefaultLanduseClassDelegate;
 import org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation;
 import org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.InputDescriptor;
 import org.kalypso.model.hydrology.operation.hydrotope.LanduseShapeInputDescriptor;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dejan Antanaskovic
  */
-public class ImportLanduseWizard extends Wizard implements IWorkbenchWizard
+public class ImportLanduseWizard extends AbstractHydrotopeDataImportWizard
 {
   private final static String PROPERTY_LANDUSE = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.12" ); //$NON-NLS-1$
 
   private final static String PROPERTY_SEALING_FACTOR = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.14" ); //$NON-NLS-1$
 
-  private final static String PROPERTY_DRAINAGE_TYPE = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.15" ); //$NON-NLS-1$
-
-  protected ImportShapeWizardPage m_wizardPage;
-
-  private FeatureList m_featureList;
-
   public ImportLanduseWizard( )
   {
     setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.0" ) ); //$NON-NLS-1$
-    setNeedsProgressMonitor( true );
   }
 
   @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  protected String[] getProperties( )
   {
-    final IKalypsoTheme[] themes = MapHandlerUtils.getSelectedThemes( selection );
-    if( themes.length != 1 )
-      throw new IllegalArgumentException();
-
-    m_featureList = ((IKalypsoFeatureTheme) themes[0]).getFeatureList();
-
-    final String[] properties = new String[] { PROPERTY_LANDUSE, PROPERTY_SEALING_FACTOR, PROPERTY_DRAINAGE_TYPE };
-    m_wizardPage = new ImportShapeWizardPage( "shapePage", properties ); //$NON-NLS-1$
-    m_wizardPage.setDescription( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.3" ) ); //$NON-NLS-1$
-
-    addPage( m_wizardPage );
+    return new String[] { PROPERTY_LANDUSE, PROPERTY_SEALING_FACTOR };
   }
 
-  /**
-   * This method is called by the wizard framework when the user presses the Finish button.
-   */
   @Override
-  public boolean performFinish( )
+  protected String getDescription( )
   {
-    final String landuseProperty = m_wizardPage.getProperty( PROPERTY_LANDUSE );
-    final String sealingFactorProperty = m_wizardPage.getProperty( PROPERTY_SEALING_FACTOR );
-    final String drainageTypeProperty = m_wizardPage.getProperty( PROPERTY_DRAINAGE_TYPE );
-
-    final File shapeFile = m_wizardPage.getShapeFile();
-    final InputDescriptor inputDescriptor = new LanduseShapeInputDescriptor( shapeFile, landuseProperty, sealingFactorProperty, drainageTypeProperty );
-
-    final Feature parentFeature = m_featureList.getOwner();
-    final LanduseCollection lc = (LanduseCollection) parentFeature;
-
-    final GMLWorkspace landuseWorkspace = lc.getWorkspace();
-
-    final IFile landuseFile = ResourceUtilities.findFileFromURL( landuseWorkspace.getContext() );
-    final IFile parameterFile = landuseFile.getParent().getFile( new Path( "parameter.gml" ) ); //$NON-NLS-1$
-    if( parameterFile.exists() )
-    {
-      try
-      {
-        final GMLWorkspace landuseClassesWorkspace = GmlSerializer.createGMLWorkspace( parameterFile.getContents(), null, null );
-
-        final LanduseCollection output = (LanduseCollection) landuseWorkspace.getRootFeature();
-        final DefaultLanduseClassDelegate delegate = new DefaultLanduseClassDelegate( landuseClassesWorkspace );
-
-        // call importer
-        final LanduseImportOperation op = new LanduseImportOperation( inputDescriptor, output, delegate, ImportType.CLEAR_OUTPUT );
-        final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
-        new StatusDialog( getShell(), execute, getWindowTitle() ).open();
-        if( execute.matches( IStatus.ERROR ) )
-          return false;
-
-        final File outputFile = landuseFile.getLocation().toFile();
-        GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, CharEncoding.UTF_8 );
-        landuseFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
-      }
-      catch( final Exception e )
-      {
-        Display.getDefault().asyncExec( new Runnable()
-        {
-          @Override
-          public void run( )
-          {
-            MessageDialog.openError( getShell(), getWindowTitle(), e.getLocalizedMessage() );
-          }
-        } );
-        return false;
-      }
-    }
-    else
-    {
-      Display.getDefault().asyncExec( new Runnable()
-      {
-        @Override
-        public void run( )
-        {
-          MessageDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-      } );
-    }
-    return true;
+    return Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.3" ); //$NON-NLS-1$
   }
 
+  @Override
+  protected ICoreRunnableWithProgress createImportOperation( final ImportShapeWizardPage wizardPage, final GMLWorkspace landuseWorkspace, final Parameter parameter )
+  {
+    final String landuseProperty = wizardPage.getProperty( PROPERTY_LANDUSE );
+    final String sealingFactorProperty = wizardPage.getProperty( PROPERTY_SEALING_FACTOR );
+    final File shapeFile = wizardPage.getShapeFile();
+
+    final InputDescriptor inputDescriptor = new LanduseShapeInputDescriptor( shapeFile, landuseProperty, sealingFactorProperty );
+
+    final LanduseCollection output = (LanduseCollection) landuseWorkspace.getRootFeature();
+    final DefaultLanduseClassDelegate delegate = new DefaultLanduseClassDelegate( parameter.getWorkspace() );
+    return new LanduseImportOperation( inputDescriptor, output, delegate, ImportType.CLEAR_OUTPUT );
+  }
 }

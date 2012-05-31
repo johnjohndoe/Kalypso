@@ -84,7 +84,7 @@ public class LanduseCollection extends UnversionedModel
    *
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public void importLanduse( final ImportType importType, final String name, final GM_MultiSurface geometry, final String description, final Double corrSealing, final String drainageType, final String landuseRef, final AbstractSud[] suds )
+  public Landuse importLanduse( final ImportType importType, final String name, final GM_MultiSurface geometry, final String description, final Double corrSealing, final String landuseRef, final AbstractSud[] suds )
   {
     // Handle existing landuses that intersect the new one
     final List<Landuse> existingLanduses = m_landuses.query( geometry.getEnvelope() );
@@ -107,10 +107,9 @@ public class LanduseCollection extends UnversionedModel
         landuse.setGeometry( geometry );
         landuse.setDescription( description );
         landuse.setCorrSealing( corrSealing );
-        landuse.setDrainageType( drainageType );
         addLanduseLink( landuseRef, landuse );
         addSudsToLanduse( suds, landuse );
-        return;
+        return landuse;
       }
 
       case UPDATE:
@@ -138,11 +137,6 @@ public class LanduseCollection extends UnversionedModel
             else
               landuse.setDescription( existingLanduse.getDescription() );
 
-            if( drainageType != null )
-              landuse.setDrainageType( drainageType );
-            else
-              landuse.setDrainageType( existingLanduse.getDrainageType() );
-
             if( landuseRef != null )
               addLanduseLink( landuseRef, landuse );
             else
@@ -159,8 +153,12 @@ public class LanduseCollection extends UnversionedModel
               addSudsToLanduse( existingLanduse.getSuds(), landuse );
           }
         }
+
+        return null;
       }
     }
+
+    return null;
   }
 
   private void addLanduseLink( final String landuseRef, final Landuse landuse )

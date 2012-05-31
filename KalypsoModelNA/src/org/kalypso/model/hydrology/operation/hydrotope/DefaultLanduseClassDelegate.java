@@ -49,7 +49,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class DefaultLanduseClassDelegate implements ILanduseClassDelegate
 {
-
   private final Map<String, String> m_mapping;
 
   public DefaultLanduseClassDelegate( final GMLWorkspace landuseClassesWorkspace )
@@ -57,9 +56,6 @@ public class DefaultLanduseClassDelegate implements ILanduseClassDelegate
     m_mapping = LanduseClassHelper.resolve( landuseClassesWorkspace );
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.operation.hydrotope.ILanduseClassDelegate#getReference(java.lang.String)
-   */
   @Override
   public String getReference( final String name )
   {

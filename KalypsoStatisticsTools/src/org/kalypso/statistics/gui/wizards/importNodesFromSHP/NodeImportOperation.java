@@ -46,41 +46,50 @@ import org.kalypso.model.hydrology.operation.hydrotope.AbstractImportOperation;
 import org.kalypso.statistics.project.SessionDataProvider;
 import org.kalypso.statistics.types.ENodeProfileType;
 import org.kalypso.statistics.types.data.NodeProfile;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger, Dejan Antanaskovic
  */
-public class NodeImportOperation extends AbstractImportOperation<GM_Point> {
-	public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_Point> {
-		String getDescription(int index);
+public class NodeImportOperation extends AbstractImportOperation<GM_Point>
+{
+  public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_Point>
+  {
+    String getDescription( int index );
 
-		String getNodeLabel(int index) throws CoreException;
-	}
+    String getNodeLabel( int index ) throws CoreException;
+  }
 
-	private final InputDescriptor m_inputDescriptor;
-	private final ENodeProfileType m_profileType;
+  private final InputDescriptor m_inputDescriptor;
 
-	/**
-	 * @param profileType
-	 * @param output
-	 *            An (empty) list containing rrmgeology:geology features
-	 */
-	public NodeImportOperation(final InputDescriptor inputDescriptor, ENodeProfileType profileType) {
-		super(inputDescriptor);
-		m_inputDescriptor = inputDescriptor;
-		m_profileType = profileType == null ? ENodeProfileType.HYDROLOGICAL_NODE : profileType;
-	}
+  private final ENodeProfileType m_profileType;
 
-	@Override
-	protected void init() {
-	}
+  /**
+   * @param profileType
+   * @param output
+   *          An (empty) list containing rrmgeology:geology features
+   */
+  public NodeImportOperation( final InputDescriptor inputDescriptor, final ENodeProfileType profileType )
+  {
+    super( inputDescriptor );
+    m_inputDescriptor = inputDescriptor;
+    m_profileType = profileType == null ? ENodeProfileType.HYDROLOGICAL_NODE : profileType;
+  }
 
-	@Override
-	protected void importRow(final int i, final String label, final GM_Point geometry, final IStatusCollector log) throws CoreException {
-		NodeProfile profile = new NodeProfile(0, m_inputDescriptor.getNodeLabel(i));
-		profile.setDescription(m_inputDescriptor.getDescription(i));
-		profile.setNodeProfileType(m_profileType);
-		SessionDataProvider.getInstance().getDataProvider().getDbHandlerNodeProfile().saveRecord(profile);
-	}
+  @Override
+  protected void init( )
+  {
+  }
+
+  @Override
+  protected Feature importRow( final int i, final String label, final GM_Point geometry, final IStatusCollector log ) throws CoreException
+  {
+    final NodeProfile profile = new NodeProfile( 0, m_inputDescriptor.getNodeLabel( i ) );
+    profile.setDescription( m_inputDescriptor.getDescription( i ) );
+    profile.setNodeProfileType( m_profileType );
+    SessionDataProvider.getInstance().getDataProvider().getDbHandlerNodeProfile().saveRecord( profile );
+
+    return null;
+  }
 }

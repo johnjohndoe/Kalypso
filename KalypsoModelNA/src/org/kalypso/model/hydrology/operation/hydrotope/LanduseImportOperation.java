@@ -49,6 +49,7 @@ import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.suds.AbstractSud;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
@@ -66,8 +67,6 @@ public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurf
     String getLanduseclass( int index ) throws CoreException;
 
     double getSealingCorrectionFactor( int index ) throws CoreException;
-
-    String getDrainageType( int index ) throws CoreException;
 
     AbstractSud[] getSuds( int index ) throws CoreException;
   }
@@ -106,7 +105,7 @@ public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurf
   }
 
   @Override
-  protected void importRow( final int i, final String label, final GM_MultiSurface geometry, final IStatusCollector log ) throws CoreException
+  protected Feature importRow( final int i, final String label, final GM_MultiSurface geometry, final IStatusCollector log ) throws CoreException
   {
     // find landuse-class
     final String landuseclass = m_inputDescriptor.getLanduseclass( i );
@@ -119,21 +118,21 @@ public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurf
 
       final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
 
-      m_output.importLanduse( ImportType.UPDATE, label, geometry, null, null, null, null, suds );
+      return m_output.importLanduse( ImportType.UPDATE, label, geometry, null, null, null, suds );
     }
     else
     {
       final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
       final String desc = m_inputDescriptor.getDescription( i );
       final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
-      final String drainageType = m_inputDescriptor.getDrainageType( i );
       final String landuseRef = m_landuseClasses.getReference( landuseclass );
       if( landuseRef == null )
       {
         final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
         throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
       }
-      m_output.importLanduse( m_importType, label, geometry, desc, corrSealing, drainageType, landuseRef, suds );
+
+      return m_output.importLanduse( m_importType, label, geometry, desc, corrSealing, landuseRef, suds );
     }
   }
 }

@@ -50,6 +50,7 @@ import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
@@ -98,7 +99,7 @@ public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSur
   }
 
   @Override
-  protected void importRow( final int i, final String label, final GM_MultiSurface geometry, final IStatusCollector log ) throws CoreException
+  protected Feature importRow( final int i, final String label, final GM_MultiSurface geometry, final IStatusCollector log ) throws CoreException
   {
     final String soilTypeLink = m_inputDescriptor.getSoilType( i );
 
@@ -121,5 +122,7 @@ public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSur
 
       soilType.setSoilType( href );
     }
+
+    return soilType;
   }
 }
