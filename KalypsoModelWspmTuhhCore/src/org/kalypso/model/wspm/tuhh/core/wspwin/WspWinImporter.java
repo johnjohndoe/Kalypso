@@ -489,11 +489,10 @@ public final class WspWinImporter
     // /////////////////////////////////////////// //
 
     // map is used to remember station of local energy loss (Einzelverlust/Verlustbeiwert)
-    final Map<Double, Integer> readLocEnergyLosses = new HashMap<Double, Integer>();
-    LocalEnergyLossBean[] locEnergyLossBeans = null;
+    final Map<BigDecimal, Integer> readLocEnergyLosses = new HashMap<BigDecimal, Integer>();
     try
     {
-      locEnergyLossBeans = zustand.getLosses();
+      final LocalEnergyLossBean[] locEnergyLossBeans = zustand.getLosses();
 
       int count = 0;
       for( final LocalEnergyLossBean bean : locEnergyLossBeans )

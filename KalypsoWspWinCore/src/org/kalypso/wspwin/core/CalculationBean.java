@@ -43,6 +43,7 @@ package org.kalypso.wspwin.core;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,11 +67,11 @@ public class CalculationBean
 
   private final String m_fileName;
 
-  private final double m_fromStation;
+  private final BigDecimal m_fromStation;
 
-  private final double m_toStation;
+  private final BigDecimal m_toStation;
 
-  public CalculationBean( final String name, final String fileName, final double fromStation, final double toStation )
+  public CalculationBean( final String name, final String fileName, final BigDecimal fromStation, final BigDecimal toStation )
   {
     m_name = name;
     m_fileName = fileName;
@@ -83,7 +84,7 @@ public class CalculationBean
     return m_fileName;
   }
 
-  public double getFromStation( )
+  public BigDecimal getFromStation( )
   {
     return m_fromStation;
   }
@@ -93,7 +94,7 @@ public class CalculationBean
     return m_name;
   }
 
-  public double getToStation( )
+  public BigDecimal getToStation( )
   {
     return m_toStation;
   }
@@ -131,8 +132,8 @@ public class CalculationBean
         if( tokenizer.countTokens() != 3 )
           throw new ParseException( Messages.getString("org.kalypso.wspwin.core.CalculationBean.1") + line, count ); //$NON-NLS-1$
 
-        final double fromStation = Double.parseDouble( tokenizer.nextToken() );
-        final double toStation = Double.parseDouble( tokenizer.nextToken() );
+        final BigDecimal fromStation = new BigDecimal( tokenizer.nextToken() );
+        final BigDecimal toStation = new BigDecimal( tokenizer.nextToken() );
         final String fileName = tokenizer.nextToken();
 
         beans.add( new CalculationBean( name, fileName, fromStation, toStation ) );
@@ -157,8 +158,8 @@ public class CalculationBean
         final String name = calculation.getName();
         final String shortName = StringUtils.abbreviateMiddle( name, ".", 57 );
 
-        final double fromStation = calculation.getFromStation();
-        final double toStation = calculation.getToStation();
+        final BigDecimal fromStation = calculation.getFromStation();
+        final BigDecimal toStation = calculation.getToStation();
         final String calcFilename = calculation.getFileName();
 
         pw.format( Locale.US, "%-57s %9.4f %9.4f  %12s%n", shortName, fromStation, toStation, calcFilename );

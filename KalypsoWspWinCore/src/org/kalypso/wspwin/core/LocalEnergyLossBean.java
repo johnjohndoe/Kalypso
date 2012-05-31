@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wspwin.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +61,7 @@ import org.kalypso.wspwin.core.i18n.Messages;
  */
 public class LocalEnergyLossBean
 {
-  private final double m_station;
+  private final BigDecimal m_station;
 
   private final Map<LOSSKIND, Double> m_entries;
 
@@ -75,13 +76,13 @@ public class LocalEnergyLossBean
     ZUSATZVERLUST;
   }
 
-  public LocalEnergyLossBean( final Double station, final Map<LOSSKIND, Double> entries )
+  public LocalEnergyLossBean( final BigDecimal station, final Map<LOSSKIND, Double> entries )
   {
     m_station = station;
     m_entries = new TreeMap<LOSSKIND, Double>( entries );
   }
 
-  public Double getStation( )
+  public BigDecimal getStation( )
   {
     return m_station;
   }
@@ -94,7 +95,7 @@ public class LocalEnergyLossBean
   /**
    * Reads a psi file (Energieverluste/Verlustbeiwerte/local energy losses)
    */
-  public static LocalEnergyLossBean[] read( File lelFile ) throws ParseException, IOException
+  public static LocalEnergyLossBean[] read( final File lelFile ) throws ParseException, IOException
   {
     final List<LocalEnergyLossBean> beans = new ArrayList<LocalEnergyLossBean>( 0 );
 
@@ -115,7 +116,7 @@ public class LocalEnergyLossBean
           final String key = tokenizer.nextToken();
           if( !STATION.equalsIgnoreCase( key ) )
             throw new ParseException( Messages.getString("org.kalypso.wspwin.core.LocalEnergyLossBean.2") + STATION + "': " + nextLine, count ); //$NON-NLS-1$ //$NON-NLS-2$
-          final Double station = Double.parseDouble( tokenizer.nextToken() );
+          final BigDecimal station = new BigDecimal( tokenizer.nextToken() );
 
           // read pairs: kind -> value
           final Map<LOSSKIND, Double> entries = new HashMap<LOSSKIND, Double>( countKinds );
