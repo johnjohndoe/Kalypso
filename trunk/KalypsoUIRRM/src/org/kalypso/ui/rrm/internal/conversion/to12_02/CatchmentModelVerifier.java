@@ -67,11 +67,8 @@ import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
 import org.kalypso.ui.rrm.internal.simulations.worker.CalculateCatchmentModelsWorker;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * This class verifies catchment models by copying its simultion and calculates them. After that it compares the
@@ -298,20 +295,14 @@ public class CatchmentModelVerifier
 
     /* Create the URLs. */
     final URL modelURL = ResourceUtilities.createURL( rrmScenario.getModelFile() );
+    final URL metaUrl = ResourceUtilities.createURL( rrmSimulation.getCalculationGml() );
     final URL catchmentModelsUrl = ResourceUtilities.createURL( rrmScenario.getCatchmentModelsGml() );
     final URL timeseriesMappingsUrl = ResourceUtilities.createURL( rrmScenario.getTimeseriesMappingsGml() );
 
     /* Load all simulation data. */
-    final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, null, null, null, null, null, null, null, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
+    final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, null, metaUrl, null, null, null, null, null, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
 
-    /* Clone the simulation. */
-    final GMLWorkspace simulationWorkspace = FeatureFactory.createGMLWorkspace( m_simulation.getFeatureType(), modelURL, simulationData.getFeatureProviderFactory() );
-    final NAControl simulationFeature = (NAControl) simulationWorkspace.getRootFeature();
-    FeatureHelper.copyData( m_simulation, simulationFeature );
-
-    /* Set the meta control to the simulation data. */
-    simulationData.setMetaControl( simulationFeature );
-
+    /* Calculate the catchment models. */
     final CalculateCatchmentModelsWorker catchmentModelsWorker = new CalculateCatchmentModelsWorker( rrmSimulation, true, simulationData );
     final IStatus status = catchmentModelsWorker.execute( new NullProgressMonitor() );
     if( !status.isOK() )

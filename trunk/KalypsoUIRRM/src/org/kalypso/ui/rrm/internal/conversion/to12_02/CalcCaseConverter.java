@@ -83,7 +83,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts one calc case.
- *
+ * 
  * @author Gernot Belger
  */
 public class CalcCaseConverter extends AbstractLoggingOperation
@@ -159,6 +159,10 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     /* Save the calculation.gml. */
     m_data.saveModel( newControl, INaCalcCaseConstants.CALCULATION_GML_PATH );
+
+    /* Save the global models. */
+    // TODO
+    // m_globalData.saveGlobalModels( m_targetDir, collector );
 
     /* Verify timeseries of the catchment models. */
     final CatchmentModelVerifier verifier = new CatchmentModelVerifier( m_globalData, simulation, m_targetCalcCaseDir.getParentFile() );
@@ -255,7 +259,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     m_data.saveModel( newMetaControl, INaCalcCaseConstants.CALCULATION_GML_PATH );
 
-    /* Convert modell control */
+    /* Convert model control */
     final org.kalypso.model.hydrology.binding._11_6.NAModellControl modelControl = m_data.loadControl();
     final NAModellControl newModelControl = convertModelControl( modelControl );
 
