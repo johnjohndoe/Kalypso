@@ -42,33 +42,36 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.hydrology.INaSimulationData;
+import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.cm.ICatchment;
 import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
-import org.kalypso.ui.rrm.internal.calccase.UpdateSimulationWorker;
+import org.kalypso.ui.rrm.internal.simulations.worker.CalculateCatchmentModelsWorker;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
-
-import com.google.common.base.Charsets;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * This class verifies catchment models by copying its simultion and calculates them. After that it compares the
@@ -172,23 +175,15 @@ public class CatchmentModelVerifier
   }
 
   /**
-   * This function copies the simulation to a temporary one and saves the data to it, which is needed to calculate the
-   * catchment models.
+   * This function copies the simulation to a temporary one.
    * 
    * @param simulationDir
    *          The directory of the simulation.
    */
-  private void createTemporarySimulation( final File simulationDir, final File simulationTmpDir ) throws IOException, GmlSerializeException
+  private void createTemporarySimulation( final File simulationDir, final File simulationTmpDir ) throws IOException
   {
     /* Copy the existing simulation. */
     FileUtils.copyDirectory( simulationDir, simulationTmpDir );
-
-    /* Save the catchmentModels.gml into the temporary simulation. */
-    // FIXME If the .models folder in a calc case is emptied, this file needs to be saved to the Basis/.models folder.
-    // FIXME At the moment the file in the calc case is used to calculate the catchment models.
-    final File catchmentModelsTmpFile = new File( simulationTmpDir, INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
-    final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
-    GmlSerializer.serializeWorkspace( catchmentModelsTmpFile, catchmentModel.getWorkspace(), Charsets.UTF_8.name() );
   }
 
   /**
@@ -295,10 +290,30 @@ public class CatchmentModelVerifier
    *          The folder of the temporary simulation.
    * @return A status indicating the results of the operation.
    */
-  private IStatus calculateCatchmentModels( final IFolder simulationTmpFolder ) throws CoreException
+  private IStatus calculateCatchmentModels( final IFolder simulationTmpFolder ) throws Exception
   {
-    final UpdateSimulationWorker updateWorker = new UpdateSimulationWorker( simulationTmpFolder );
-    final IStatus status = updateWorker.execute( new NullProgressMonitor() );
+    /* Create the rrm simulation and get the rrm scenario. */
+    final RrmSimulation rrmSimulation = new RrmSimulation( simulationTmpFolder );
+    final RrmScenario rrmScenario = rrmSimulation.getScenario();
+
+    /* Create the URLs. */
+    final URL modelURL = ResourceUtilities.createURL( rrmScenario.getModelFile() );
+    final URL catchmentModelsUrl = ResourceUtilities.createURL( rrmScenario.getCatchmentModelsGml() );
+    final URL timeseriesMappingsUrl = ResourceUtilities.createURL( rrmScenario.getTimeseriesMappingsGml() );
+
+    /* Load all simulation data. */
+    final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, null, null, null, null, null, null, null, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
+
+    /* Clone the simulation. */
+    final GMLWorkspace simulationWorkspace = FeatureFactory.createGMLWorkspace( m_simulation.getFeatureType(), modelURL, simulationData.getFeatureProviderFactory() );
+    final NAControl simulationFeature = (NAControl) simulationWorkspace.getRootFeature();
+    FeatureHelper.copyData( m_simulation, simulationFeature );
+
+    /* Set the meta control to the simulation data. */
+    simulationData.setMetaControl( simulationFeature );
+
+    final CalculateCatchmentModelsWorker catchmentModelsWorker = new CalculateCatchmentModelsWorker( rrmSimulation, true, simulationData );
+    final IStatus status = catchmentModelsWorker.execute( new NullProgressMonitor() );
     if( !status.isOK() )
       return status;
 
