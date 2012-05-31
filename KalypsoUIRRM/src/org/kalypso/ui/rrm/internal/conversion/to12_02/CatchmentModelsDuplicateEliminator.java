@@ -126,7 +126,7 @@ public class CatchmentModelsDuplicateEliminator
         collector.add( status );
       }
 
-      /* Save the global models (catchmentModels.gml and simulations.gml). */
+      /* Save the global models. */
       m_globalData.saveGlobalModels( m_targetDir, collector );
 
       return collector.asMultiStatusOrOK( "Check catchment models for duplicates" );
