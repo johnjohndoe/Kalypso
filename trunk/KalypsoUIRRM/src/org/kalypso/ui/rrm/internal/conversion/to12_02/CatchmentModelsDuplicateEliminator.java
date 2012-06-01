@@ -105,6 +105,7 @@ public class CatchmentModelsDuplicateEliminator
    * 
    * @return A status object, indicating the result of the operation.
    */
+  // TODO
   public IStatus execute( )
   {
     /* The status collector. */
@@ -126,8 +127,7 @@ public class CatchmentModelsDuplicateEliminator
         collector.add( status );
       }
 
-      /* Save the global models. */
-      m_globalData.saveGlobalModels( m_targetDir, collector );
+      // TODO Save catchmentsModels.gml...
 
       return collector.asMultiStatusOrOK( "Check catchment models for duplicates" );
     }
@@ -211,12 +211,9 @@ public class CatchmentModelsDuplicateEliminator
 
     /* Adjust the CC calculation.gml. */
     adjustCalculationGml( usedGenerator, generatorName );
-
-    /* Adjust the catchmentModels.gml in the CC? */
-    // TODO At the moment it is not uptodate after an project import...
-    // TODO A new calculation of the simulation copies the global one to the calculation case...
   }
 
+  // TODO
   private void adjustSimulationsGml( final ILinearSumGenerator usedGenerator, final String generatorName )
   {
     /* Adjust the corresponding simulation. */
@@ -231,8 +228,11 @@ public class CatchmentModelsDuplicateEliminator
         return;
       }
     }
+
+    // TODO Save simulations.gml...
   }
 
+  // TODO
   private void adjustCalculationGml( final ILinearSumGenerator usedGenerator, final String generatorName ) throws Exception
   {
     /* Create the file handle to the calculation.gml file. */

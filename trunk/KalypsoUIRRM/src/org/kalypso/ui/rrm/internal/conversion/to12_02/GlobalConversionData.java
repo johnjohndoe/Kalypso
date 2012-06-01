@@ -40,130 +40,189 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
-import org.kalypso.model.hydrology.binding.control.SimulationCollection;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.io.IOUtils;
+import org.kalypso.afgui.scenarios.ObjectFactory;
+import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.ScenarioList;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import com.google.common.base.Charsets;
+import de.renew.workflow.cases.Case;
+import de.renew.workflow.cases.CaseList;
 
 /**
- * grants access to some global data to the calc case converter.
- *
+ * Grants access to some global data to the calc case converter.
+ * 
  * @author Gernot Belger
+ * @author Holger Albert
  */
 public class GlobalConversionData
 {
+  private final static JAXBContext JAXB_CONTEXT = JaxbUtilities.createQuiet( org.kalypso.afgui.scenarios.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
+
+  private final static ObjectFactory OBJECT_FACTORY = new org.kalypso.afgui.scenarios.ObjectFactory();
+
+  /**
+   * The directory of the project to be imported.
+   */
+  private final File m_sourceDir;
+
+  /**
+   * The directory of the new project.
+   */
+  private final File m_targetDir;
+
+  /**
+   * The choosen exe.
+   */
   private final String m_chosenExe;
 
+  /**
+   * The timeseries index.
+   */
   private final TimeseriesIndex m_timeseriesIndex;
 
-  private ICatchmentModel m_catchmentModel;
+  private final File m_baseScenarioDir;
 
-  private ITimeseriesMappingCollection m_timeseriesMappings;
+  /**
+   * The case list.
+   */
+  private CaseList m_caseList;
 
-  private SimulationCollection m_simulations;
-
-  private final File m_sourceProjectDir;
-
-  public GlobalConversionData( final File sourceProjectDir, final String chosenExe, final TimeseriesIndex timeseriesIndex )
+  /**
+   * The constructor.
+   * 
+   * @param sourceDir
+   *          The directory of the project to be imported.
+   * @param targetDir
+   *          The directory of the new project.
+   * @param chosenExe
+   *          The choosen exe.
+   * @param timeseriesIndex
+   *          The timeseries index.
+   */
+  public GlobalConversionData( final File sourceDir, final File targetDir, final String chosenExe, final TimeseriesIndex timeseriesIndex )
   {
-    m_sourceProjectDir = sourceProjectDir;
+    m_sourceDir = sourceDir;
+    m_targetDir = targetDir;
     m_chosenExe = chosenExe;
     m_timeseriesIndex = timeseriesIndex;
+    m_baseScenarioDir = new File( targetDir, INaProjectConstants.FOLDER_BASIS );
+    m_caseList = null;
   }
 
-  void readGlobalModels( final File targetDir, final IStatusCollector log )
+  /**
+   * This function returns the directory of the project to be imported.
+   * 
+   * @return The directory of the project to be imported.
+   */
+  public File getSourceDir( )
   {
-    m_catchmentModel = readModel( targetDir, log, INaProjectConstants.GML_CATCHMENT_MODEL_PATH, ICatchmentModel.class );
-    m_timeseriesMappings = readModel( targetDir, log, INaProjectConstants.GML_TIMESERIES_MAPPINGS_PATH, ITimeseriesMappingCollection.class );
-    m_simulations = readModel( targetDir, log, INaProjectConstants.GML_SIMULATIONS_PATH, SimulationCollection.class );
+    return m_sourceDir;
   }
 
-  private <T extends Feature> T readModel( final File targetDir, final IStatusCollector log, final String path, final Class<T> type )
+  /**
+   * This function returns the directory of the new project.
+   * 
+   * @return The directory of the new project.
+   */
+  public File getTargetDir( )
   {
-    try
-    {
-      final File modelFile = getModelFile( targetDir, path );
-
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelFile, GmlSerializer.DEFAULT_FACTORY );
-
-      return type.cast( workspace.getRootFeature() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      log.add( IStatus.WARNING, Messages.getString("GlobalConversionData_0"), e, path ); //$NON-NLS-1$
-      return null;
-    }
+    return m_targetDir;
   }
 
-  void saveGlobalModels( final File targetDir, final IStatusCollector log )
-  {
-    saveModel( m_catchmentModel, targetDir, log, INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
-    saveModel( m_timeseriesMappings, targetDir, log, INaProjectConstants.GML_TIMESERIES_MAPPINGS_PATH );
-    saveModel( m_simulations, targetDir, log, INaProjectConstants.GML_SIMULATIONS_PATH );
-  }
-
-  private void saveModel( final Feature model, final File targetDir, final IStatusCollector log, final String path )
-  {
-    if( model == null )
-      return;
-
-    try
-    {
-      final File modelFile = getModelFile( targetDir, path );
-
-      GmlSerializer.serializeWorkspace( modelFile, model.getWorkspace(), Charsets.UTF_8.name() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      log.add( IStatus.WARNING, Messages.getString("GlobalConversionData_1"), e, path ); //$NON-NLS-1$
-    }
-  }
-
-  private File getModelFile( final File targetDir, final String path )
-  {
-    final File basisDir = new File( targetDir, INaProjectConstants.FOLDER_BASIS );
-    return new File( basisDir, path );
-  }
-
-  File getSourceProjectDir( )
-  {
-    return m_sourceProjectDir;
-  }
-
-  String getChosenExe( )
+  /**
+   * This function returns the choosen exe.
+   * 
+   * @return The choosen exe.
+   */
+  public String getChosenExe( )
   {
     return m_chosenExe;
   }
 
-  ICatchmentModel getCatchmentModel( )
-  {
-    return m_catchmentModel;
-  }
-
+  /**
+   * This function returns the timeseries index.
+   * 
+   * @return The timeseries index.
+   */
   public TimeseriesIndex getTimeseriesIndex( )
   {
     return m_timeseriesIndex;
   }
 
-  public SimulationCollection getSimulations( )
+  /**
+   * This function returns the directory of the base scenario.
+   * 
+   * @return The directory of the base scenario.
+   */
+  public File getBaseScenarioDir( )
   {
-    return m_simulations;
+    return m_baseScenarioDir;
   }
 
-  ITimeseriesMappingCollection getTimeseriesMappings( )
+  public void updateCasesFile( final File scenarioDir ) throws JAXBException, IOException
   {
-    return m_timeseriesMappings;
+    /* Load the existing cases.xml. */
+    if( m_caseList == null )
+      m_caseList = loadCaseList();
+
+    /* Update the cases.xml. */
+    final List<Case> allCases = m_caseList.getCases();
+    for( final Case oneCase : allCases )
+    {
+      if( oneCase.getName().equals( "Basis" ) )
+      {
+        updateCase( (Scenario) oneCase, scenarioDir );
+        break;
+      }
+    }
+
+    /* Save the cases.xml. */
+    saveCaseList();
+  }
+
+  private CaseList loadCaseList( ) throws MalformedURLException, JAXBException
+  {
+    final File casesXml = new File( m_targetDir, ".metadata/cases.xml" );
+    final URL url = casesXml.toURI().toURL();
+    return (CaseList) JAXB_CONTEXT.createUnmarshaller().unmarshal( url );
+  }
+
+  private void updateCase( final Scenario oneCase, final File scenarioDir )
+  {
+    final Scenario scenario = OBJECT_FACTORY.createScenario();
+    scenario.setName( scenarioDir.getName() );
+    scenario.setParentScenario( oneCase );
+    scenario.setURI( String.format( "%s/%s/%s", oneCase.getURI(), ScenariosExclusionFileFilter.SCENARIOS_FOLDER, scenarioDir.getName() ) );
+
+    final ScenarioList derivedScenarios = oneCase.getDerivedScenarios();
+    derivedScenarios.getScenarios().add( scenario );
+  }
+
+  private void saveCaseList( ) throws JAXBException, IOException
+  {
+    ByteArrayOutputStream bos = null;
+
+    try
+    {
+      bos = new ByteArrayOutputStream();
+      JAXB_CONTEXT.createMarshaller().marshal( m_caseList, bos );
+      bos.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( bos );
+    }
   }
 }

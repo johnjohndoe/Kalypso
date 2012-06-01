@@ -47,24 +47,43 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.conversion.ITimeseriesVisitor;
+import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * @author Gernot Belger
  */
 public class BasicModelConverter extends AbstractLoggingOperation
 {
+  /**
+   * The directory of the project to be imported.
+   */
   private final File m_sourceDir;
 
+  /**
+   * The directory of the new project.
+   */
   private final File m_targetDir;
 
+  /**
+   * The global conversion data.
+   */
   private final ConverterData m_data;
 
+  /**
+   * The timeseries index.
+   */
   private TimeseriesIndex m_timeseriesIndex;
 
   public BasicModelConverter( final File sourceDir, final File targetDir )
@@ -73,9 +92,8 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
-
-    final File basisDir = new File( m_targetDir, INaProjectConstants.FOLDER_BASIS );
-    m_data = new ConverterData( basisDir );
+    m_data = new ConverterData( new File( m_targetDir, INaProjectConstants.FOLDER_BASIS ) );
+    m_timeseriesIndex = null;
   }
 
   @Override
@@ -85,7 +103,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
     try
     {
-      /* Copy basic .gml files */
+      /* Copy basic .gml files. */
       monitor.subTask( Messages.getString( "BasicModelConverter.1" ) ); //$NON-NLS-1$
       final IPath basisPath = new Path( INaProjectConstants.FOLDER_BASIS );
 
@@ -101,7 +119,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
       final IParameterTypeIndex parameterIndex = fixTimeseries();
 
-      /* Copy timeseries */
+      /* Copy timeseries. */
       monitor.subTask( Messages.getString( "BasicModelConverter.3" ) ); //$NON-NLS-1$
       m_timeseriesIndex = copyBasicTimeseries( parameterIndex, new SubProgressMonitor( monitor, 95 ) );
     }
@@ -120,7 +138,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     importer.readStations();
     monitor.worked( 5 );
 
-    /* Copy known folders */
+    /* Copy known folders. */
     copyTimeseries( importer, monitor );
 
     monitor.subTask( Messages.getString( "BasicModelConverter.7" ) ); //$NON-NLS-1$
@@ -146,17 +164,47 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   private IParameterTypeIndex fixTimeseries( ) throws Exception
   {
-    final NaModell naModel = m_data.loadNaModel();
+    final NaModell naModel = m_data.loadModel( INaProjectConstants.GML_MODELL_PATH );
 
-    // IMPORTANT: index parameter types before the links have been fixed, so file pathes are correct
-    final IParameterTypeIndex parameterIndex = CalcCaseConverter.collectTimeseriesParameterTypes( naModel, m_sourceDir );
-    CalcCaseConverter.fixTimeseriesLinks( naModel, getLog() );
+    /* IMPORTANT: index parameter types before the links have been fixed, so file paths are correct. */
+    final IParameterTypeIndex parameterIndex = collectTimeseriesParameterTypes( naModel, m_sourceDir );
+    fixTimeseriesLinks( naModel, getLog() );
 
     naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
 
-    m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
+    m_data.saveModel( INaProjectConstants.GML_MODELL_PATH, naModel );
 
     return parameterIndex;
+  }
+
+  /**
+   * Add an additional '../' to every timeseries path.
+   */
+  public static void fixTimeseriesLinks( final NaModell naModel, final IStatusCollector log ) throws Exception
+  {
+    final IStatusCollector localLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    visitModel( naModel, new FixDotDotTimeseriesVisitor(), localLog );
+    naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
+
+    final IStatus status = localLog.asMultiStatus( "Anpassen der Zeitreihenreferenzen" );
+    log.add( status );
+  }
+
+  private static IParameterTypeIndex collectTimeseriesParameterTypes( final NaModell naModel, final File sourceModelDir )
+  {
+    final IStatusCollector localLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final ParameterTypeIndexVisitor visitor = new ParameterTypeIndexVisitor( sourceModelDir );
+    visitModel( naModel, visitor, localLog );
+
+    return visitor;
+  }
+
+  private static void visitModel( final NaModell naModel, final ITimeseriesVisitor visitor, final IStatusCollector log )
+  {
+    final TimeseriesWalker walker = new TimeseriesWalker( visitor, log );
+    naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
   }
 
   public TimeseriesIndex getTimeseriesIndex( )

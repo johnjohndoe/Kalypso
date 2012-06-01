@@ -43,8 +43,10 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,58 +54,68 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
+ * Converts calc cases to scenarios.
+ * 
  * @author Gernot Belger
+ * @author Holger Albert
  */
 public class CalcCasesConverter extends AbstractLoggingOperation
 {
-  private final File m_sourceDir;
-
-  private final File m_targetDir;
-
+  /**
+   * The global conversion data.
+   */
   private final GlobalConversionData m_globalData;
 
-  public CalcCasesConverter( final File sourceDir, final File targetDir, final GlobalConversionData globalData )
+  /**
+   * The constructor.
+   * 
+   * @param globalData
+   *          The global conversion data.
+   */
+  public CalcCasesConverter( final GlobalConversionData globalData )
   {
     super( Messages.getString( "CalcCasesConverter_0" ) ); //$NON-NLS-1$
 
-    m_sourceDir = sourceDir;
-    m_targetDir = targetDir;
     m_globalData = globalData;
   }
 
+  /**
+   * @see org.kalypso.module.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws InterruptedException
   {
     try
     {
+      /* Monitor. */
       final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "CalcCasesConverter_1" ), 101 ); //$NON-NLS-1$
 
-      m_globalData.readGlobalModels( m_targetDir, getLog() );
-
-      final CalcCaseConvertWalker walker = new CalcCaseConvertWalker( m_sourceDir );
+      /* Find all calc cases. */
+      final CalcCaseConvertWalker walker = new CalcCaseConvertWalker( m_globalData.getSourceDir() );
       final File[] calcCases = walker.execute();
-      ProgressUtilities.worked( progress, 1 );
 
+      /* Monitor. */
+      ProgressUtilities.worked( progress, 1 );
       progress.setWorkRemaining( calcCases.length );
 
+      /* Convert all calc cases into scenarios. */
       for( int i = 0; i < calcCases.length; i++ )
       {
-        final File sourceDir = calcCases[i];
-        final String calcCaseName = sourceDir.getName();
+        /* Monitor. */
+        progress.subTask( String.format( Messages.getString( "CalcCasesConverter_2" ), calcCases[i].getName(), i + 1, calcCases.length ) ); //$NON-NLS-1$
 
-        progress.subTask( String.format( Messages.getString( "CalcCasesConverter_2" ), calcCaseName, i + 1, calcCases.length ) ); //$NON-NLS-1$
+        /* Determine the directories. */
+        final File sourceDir = calcCases[i];
         final File targetDir = determineTargetDir( sourceDir );
 
         try
         {
-          prepareCalcCase( targetDir );
-
+          /* Convert the calc case to a scenario. */
           final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir, m_globalData );
           final IStatus status = calcCaseConverter.execute( progress.newChild( 1 ) );
           getLog().add( status );
@@ -118,22 +130,13 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         }
         catch( final InvocationTargetException e )
         {
-          final Throwable targetException = e.getTargetException();
-          getLog().add( IStatus.ERROR, Messages.getString( "CalcCasesConverter_4" ), targetException, calcCaseName ); //$NON-NLS-1$
+          getLog().add( IStatus.ERROR, Messages.getString( "CalcCasesConverter_4" ), e.getTargetException(), calcCases[i].getName() ); //$NON-NLS-1$
         }
         catch( final Throwable e )
         {
-          getLog().add( IStatus.ERROR, Messages.getString( "CalcCasesConverter_4" ), e, calcCaseName ); //$NON-NLS-1$
+          getLog().add( IStatus.ERROR, Messages.getString( "CalcCasesConverter_4" ), e, calcCases[i].getName() ); //$NON-NLS-1$
         }
       }
-
-      /* Save the global models. */
-      m_globalData.saveGlobalModels( m_targetDir, getLog() );
-
-      /* Check for identical catchment models. */
-      final CatchmentModelsDuplicateEliminator eliminator = new CatchmentModelsDuplicateEliminator( m_targetDir, m_globalData );
-      final IStatus eliminatorStatus = eliminator.execute();
-      getLog().add( eliminatorStatus );
     }
     catch( final IOException e )
     {
@@ -142,35 +145,55 @@ public class CalcCasesConverter extends AbstractLoggingOperation
     }
   }
 
-  /** Copy calc-case template of target */
-  private void prepareCalcCase( final File calcCaseDir ) throws IOException
+  /**
+   * This function determines the directory of the scenario.
+   * 
+   * @param sourceDir
+   *          The directory of the source calc case.
+   * @return The directory of the scenario.
+   */
+  private File determineTargetDir( final File sourceDir )
   {
-    final File calcCaseTemplateDir = new File( m_targetDir, INaProjectConstants.CALC_CASE_TEMPLATE_DIR );
-    FileUtils.copyDirectory( calcCaseTemplateDir, calcCaseDir );
-
-    final File basisDir = new File( m_targetDir, INaProjectConstants.FOLDER_BASIS );
-    final File basisModelDir = new File( basisDir, INaProjectConstants.FOLDER_MODELS );
-    final File calcCaseModelDir = new File( calcCaseDir, INaProjectConstants.FOLDER_MODELS );
-
-    calcCaseModelDir.mkdirs();
-    FileUtils.copyFile( new File( basisModelDir, INaCalcCaseConstants.CATCHMENT_FILE ), new File( calcCaseModelDir, INaCalcCaseConstants.CATCHMENT_FILE ) );
+    final File baseScenarioDir = m_globalData.getBaseScenarioDir();
+    final IPath baseScenarioPath = Path.fromOSString( baseScenarioDir.getAbsolutePath() );
+    final IPath scenariosPath = baseScenarioPath.append( ScenariosExclusionFileFilter.SCENARIOS_FOLDER );
+    final String scenarioName = findScenarioName( sourceDir );
+    final IPath scenarioPath = scenariosPath.append( scenarioName );
+    return scenarioPath.toFile();
   }
 
-  private File determineTargetDir( final File directory )
+  /**
+   * This function adds all segments after the segment 'Rechenvarianten' to a string. They will be separated by '_'.
+   * 
+   * @param sourceDir
+   *          The directory of the source calc case.
+   * @return The name of the scenario.
+   */
+  private String findScenarioName( final File sourceDir )
   {
-    final IPath basePath = Path.fromOSString( m_sourceDir.getAbsolutePath() );
-    final IPath calcCaseSourcePath = basePath.append( INaProjectConstants.FOLDER_RECHENVARIANTEN );
-    final IPath currentPath = Path.fromOSString( directory.getAbsolutePath() );
+    /* All segments after 'Rechenvarianten'. */
+    final List<String> segmentsAfter = new ArrayList<String>();
 
-    // If we are inside the 'Rechenvarianten', keep this relative order.
-    // If we are outside, we move it into 'Rechenvarianten/Andere' in the target.
-    IPath targetRelativePath;
-    if( calcCaseSourcePath.isPrefixOf( currentPath ) )
-      targetRelativePath = currentPath.makeRelativeTo( calcCaseSourcePath );
-    else
-      targetRelativePath = new Path( Messages.getString( "CalcCasesConverter_6" ) ).append( calcCaseSourcePath.makeRelativeTo( basePath ) ); //$NON-NLS-1$
+    /* Get the source path. */
+    final IPath sourcePath = Path.fromOSString( sourceDir.getAbsolutePath() );
 
-    final IPath calcCaseTargetPath = new Path( m_targetDir.getAbsolutePath() ).append( INaProjectConstants.PATH_RECHENVARIANTEN );
-    return calcCaseTargetPath.append( targetRelativePath ).toFile();
+    /* Found the segment 'Rechenvarianten'? */
+    boolean foundCalcCasesSegment = false;
+
+    /* Get all segments. */
+    final String[] segments = sourcePath.segments();
+    for( final String segment : segments )
+    {
+      if( foundCalcCasesSegment )
+      {
+        segmentsAfter.add( segment );
+        continue;
+      }
+
+      if( segment.equals( INaProjectConstants.PATH_RECHENVARIANTEN ) )
+        foundCalcCasesSegment = true;
+    }
+
+    return StringUtils.join( segmentsAfter, "_" );
   }
 }
