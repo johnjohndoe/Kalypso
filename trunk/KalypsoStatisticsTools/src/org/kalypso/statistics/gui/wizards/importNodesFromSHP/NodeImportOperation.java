@@ -56,8 +56,6 @@ public class NodeImportOperation extends AbstractImportOperation<GM_Point>
 {
   public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_Point>
   {
-    String getDescription( int index );
-
     String getNodeLabel( int index ) throws CoreException;
   }
 

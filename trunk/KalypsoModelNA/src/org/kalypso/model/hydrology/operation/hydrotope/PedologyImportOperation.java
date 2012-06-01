@@ -63,8 +63,6 @@ public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSur
 {
   public interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_MultiSurface>
   {
-    String getDescription( int index );
-
     String getSoilType( int index ) throws CoreException;
   }
 

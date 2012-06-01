@@ -77,10 +77,14 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
 
   public interface InputDescriptor<T>
   {
+    void dispose( );
+
     /** Number of elements contained in this descriptor. All other methods allow for indices in the range 0..size-1 */
     int size( ) throws CoreException;
 
     String getName( int index );
+
+    String getDescription( int index );
 
     T getGeometry( int index ) throws CoreException;
   }
@@ -100,7 +104,6 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
     ProgressUtilities.worked( progess, 10 );
 
     final Collection<Feature> newFeatures = new ArrayList<>( size );
-
 
     // traverse input workspace and import all single input soilTypes, if the soilType class exists
     for( int i = 0; i < size; i++ )
@@ -132,8 +135,11 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
         throw new CoreException( status );
       }
 
+
       ProgressUtilities.worked( progess, 1 );
     }
+
+    m_inputDescriptor.dispose();
 
     m_newFeatures = newFeatures.toArray( new Feature[newFeatures.size()] );
 
@@ -150,6 +156,7 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
     else
     {
       // supported geometries are GM_MultiSurface and GM_Point
+      // FIXME: what is the meaning of gm_point here?
       if( geometry instanceof GM_MultiSurface )
       {
         final GM_MultiSurface surface = (GM_MultiSurface) geometry;
