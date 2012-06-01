@@ -40,8 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -59,6 +60,7 @@ import org.kalypso.model.hydrology.project.INaProjectConstants;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.cases.CaseList;
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * Grants access to some global data to the calc case converter.
@@ -92,6 +94,9 @@ public class GlobalConversionData
    */
   private final TimeseriesIndex m_timeseriesIndex;
 
+  /**
+   * The directory of the base scenario.
+   */
   private final File m_baseScenarioDir;
 
   /**
@@ -199,6 +204,7 @@ public class GlobalConversionData
     {
       final Scenario baseScenario = OBJECT_FACTORY.createScenario();
       baseScenario.setName( "Basis" );
+      baseScenario.setURI( IScenario.NEW_CASE_BASE_URI + "Basis" );
 
       final CaseList cases = new de.renew.workflow.cases.ObjectFactory().createCaseList();
       cases.getCases().add( baseScenario );
@@ -217,23 +223,34 @@ public class GlobalConversionData
     scenario.setParentScenario( oneCase );
     scenario.setURI( String.format( "%s/%s/%s", oneCase.getURI(), ScenariosExclusionFileFilter.SCENARIOS_FOLDER, scenarioDir.getName() ) );
 
-    final ScenarioList derivedScenarios = oneCase.getDerivedScenarios();
+    ScenarioList derivedScenarios = oneCase.getDerivedScenarios();
+    if( derivedScenarios == null )
+    {
+      derivedScenarios = OBJECT_FACTORY.createScenarioList();
+      oneCase.setDerivedScenarios( derivedScenarios );
+    }
+
     derivedScenarios.getScenarios().add( scenario );
   }
 
   private void saveCaseList( ) throws JAXBException, IOException
   {
-    ByteArrayOutputStream bos = null;
+    BufferedOutputStream stream = null;
 
     try
     {
-      bos = new ByteArrayOutputStream();
-      JAXB_CONTEXT.createMarshaller().marshal( m_caseList, bos );
-      bos.close();
+      final File metaDir = new File( m_targetDir, ".metadata" );
+      if( !metaDir.exists() )
+        metaDir.mkdirs();
+
+      final File casesXml = new File( metaDir, "cases.xml" );
+      stream = new BufferedOutputStream( new FileOutputStream( casesXml ) );
+      JAXB_CONTEXT.createMarshaller().marshal( m_caseList, stream );
+      stream.close();
     }
     finally
     {
-      IOUtils.closeQuietly( bos );
+      IOUtils.closeQuietly( stream );
     }
   }
 }
