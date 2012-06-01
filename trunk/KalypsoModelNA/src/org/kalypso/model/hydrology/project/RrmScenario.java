@@ -40,9 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.project;
 
+import java.net.URL;
+
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Helper that encapsulates the constants to access data inside a rrm scenario.
@@ -65,6 +70,15 @@ public class RrmScenario
 
   private static final String FILE_HYDROTOP_GML = "hydrotop.gml"; //$NON-NLS-1$
 
+  private static final String FILE_GEOLOGIE = "geologie.gml";//$NON-NLS-1$
+
+  // private static final String GML_GEOLOGIE_PATH = FOLDER_MODELS + "/" + GML_GEOLOGIE_FILE;
+
+  private static final String FILE_LANDUSE = "landuse.gml";//$NON-NLS-1$
+
+// String GML_LANDUSE_PATH = FOLDER_MODELS + "/" + GML_LANDUSE_FILE;
+  private static final String FILE_PEDOLOGIE = "pedologie.gml";//$NON-NLS-1$
+
   private static final String FILE_SUDS_GML = "suds.gml"; //$NON-NLS-1$
 
   private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
@@ -73,7 +87,28 @@ public class RrmScenario
 
   private static final String FILE_TIMESERIES_MAPPINGS_GML = "timeseriesMappings.gml"; //$NON-NLS-1$
 
+// String GML_PEDOLOGIE_PATH = FOLDER_MODELS + "/" + GML_PEDOLOGIE_FILE;
   private final IFolder m_scenarioFolder;
+
+  /**
+   * Find a {@link RrmScenario} for a given model workspace.
+   */
+  public static RrmScenario forAnyModelGml( final GMLWorkspace oneOfTheModels )
+  {
+    final URL context = oneOfTheModels.getContext();
+    final IFile modelFile = ResourceUtilities.findFileFromURL( context );
+    if( modelFile == null )
+      return null;
+
+    final IContainer modelFolder = modelFile.getParent();
+
+    final IContainer scenarioFolder = modelFolder.getParent();
+
+    if( scenarioFolder instanceof IFolder )
+      return new RrmScenario( (IFolder) scenarioFolder );
+
+    return null;
+  }
 
   public RrmScenario( final IFolder scenarioFolder )
   {
@@ -150,5 +185,20 @@ public class RrmScenario
   public IResource getTimeseriesMappingsGml( )
   {
     return getModelsFolder().getFile( FILE_TIMESERIES_MAPPINGS_GML );
+  }
+
+  public IFile getLanduseFile( )
+  {
+    return getModelsFolder().getFile( FILE_LANDUSE );
+  }
+
+  public IFile getPedologyFile( )
+  {
+    return getModelsFolder().getFile( FILE_PEDOLOGIE );
+  }
+
+  public IFile getGeologyFile( )
+  {
+    return getModelsFolder().getFile( FILE_GEOLOGIE );
   }
 }

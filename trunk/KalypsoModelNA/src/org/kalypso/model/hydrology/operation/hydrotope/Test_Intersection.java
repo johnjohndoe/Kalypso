@@ -103,9 +103,9 @@ public class Test_Intersection extends TestCase
     final NaModell naModel = (NaModell) catchmentWS.getRootFeature();
     final List< ? > catchments = naModel.getCatchments();
 
-    final FeatureList landuseFeatureList = (FeatureList) landuseWS.getRootFeature().getProperty( LanduseCollection.QNAME_PROP_LANDUSEMEMBER );
-    final FeatureList soilTypesFeatureList = (FeatureList) pedologyWS.getRootFeature().getProperty( SoilTypeCollection.QNAME_PROP_SOILTYPEMEMBER );
-    final FeatureList geologiesFeatureList = (FeatureList) geologyWS.getRootFeature().getProperty( GeologyCollection.QNAME_PROP_GEOLOGYMEMBER );
+    final FeatureList landuseFeatureList = (FeatureList) landuseWS.getRootFeature().getProperty( LanduseCollection.MEMBER_LANDUSE );
+    final FeatureList soilTypesFeatureList = (FeatureList) pedologyWS.getRootFeature().getProperty( SoilTypeCollection.MEMBER_SOIL_TYPE );
+    final FeatureList geologiesFeatureList = (FeatureList) geologyWS.getRootFeature().getProperty( GeologyCollection.MEMBER_GEOLOGY );
 
     final NAHydrotop hydrotopeCollection = (NAHydrotop) outputWS.getRootFeature();
     final IFeatureBindingCollection<IHydrotope> hydrotopes = hydrotopeCollection.getHydrotopes();

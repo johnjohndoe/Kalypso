@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  */
 public class GeologyCollection extends UnversionedModel
 {
-  public static final QName QNAME_PROP_GEOLOGYMEMBER = new QName( NaModelConstants.NS_NAGEOLOGIE, "geologieMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_GEOLOGY = new QName( NaModelConstants.NS_NAGEOLOGIE, "geologieMember" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<Geology> m_geologyMembers;
 
@@ -71,7 +71,7 @@ public class GeologyCollection extends UnversionedModel
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_geologyMembers = new FeatureBindingCollection<Geology>( this, Geology.class, QNAME_PROP_GEOLOGYMEMBER );
+    m_geologyMembers = new FeatureBindingCollection<Geology>( this, Geology.class, MEMBER_GEOLOGY );
   }
 
   public IFeatureBindingCollection<Geology> getGeologies( )

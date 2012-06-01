@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  */
 public class SoilTypeCollection extends UnversionedModel
 {
-  public static final QName QNAME_PROP_SOILTYPEMEMBER = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soiltypeMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_SOIL_TYPE = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soiltypeMember" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<SoilType> m_soilTypes;
 
@@ -71,7 +71,7 @@ public class SoilTypeCollection extends UnversionedModel
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_soilTypes = new FeatureBindingCollection<SoilType>( this, SoilType.class, QNAME_PROP_SOILTYPEMEMBER );
+    m_soilTypes = new FeatureBindingCollection<SoilType>( this, SoilType.class, MEMBER_SOIL_TYPE );
   }
 
   public IFeatureBindingCollection<SoilType> getSoilTypes( )
