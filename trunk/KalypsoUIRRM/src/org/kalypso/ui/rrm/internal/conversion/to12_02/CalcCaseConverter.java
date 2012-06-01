@@ -71,9 +71,12 @@ import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingT
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -83,6 +86,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * Converts one calc case.
  * 
  * @author Gernot Belger
+ * @author Holger Albert
  */
 public class CalcCaseConverter extends AbstractLoggingOperation
 {
@@ -192,14 +196,14 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       final ICatchmentModel catchmentModel = m_data.loadModel( INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
       final ITimeseriesMappingCollection mappings = m_data.loadModel( INaProjectConstants.GML_TIMESERIES_MAPPINGS_PATH );
 
-      /* Fix timeseries links. */
-      BasicModelConverter.fixTimeseriesLinks( naModel, getLog() );
-
       /* Do the timeseries mappings. */
       final IStatusCollector mappingLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
       final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel, catchmentModel, mappingLog );
       final TimeseriesMappingBuilder timeseriesMappingBuilder = guessTimeseriesMappings( naModel, mappings, mappingLog );
       getLog().add( mappingLog.asMultiStatus( "Zeitreihenzuordnungen automatisch bestimmen" ) );
+
+      /* Empty timeseries links. */
+      BasicModelConverter.emptyTimeseriesLinks( naModel, getLog() );
 
       /* Save the models. */
       m_data.saveModel( INaProjectConstants.GML_MODELL_PATH, naModel );
@@ -231,11 +235,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       monitor.worked( 200 );
       monitor.subTask( "Finalizing..." );
 
-      /* Copy the model.gml and the expertMappings.gml into the simulation for reference. */
-      /* The calculation.gml is already saved there. */
-      /* This is only a copy and will not be used except for the result view. */
-      FileUtils.copyFile( new File( m_targetScenarioDir, INaCalcCaseConstants.EXPERT_CONTROL_PATH ), new File( m_targetScenarioDir, m_simulationPath + "/" + INaCalcCaseConstants.EXPERT_CONTROL_PATH ), true );
-      FileUtils.copyFile( new File( m_targetScenarioDir, INaProjectConstants.GML_MODELL_PATH ), new File( m_targetScenarioDir, m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH ), true );
+      /* Finalize the simulation. */
+      finalizeSimulation();
 
       /* Monitor. */
       monitor.worked( 100 );
@@ -566,5 +567,37 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       getLog().add( IStatus.WARNING, Messages.getString( "CalcCaseConverter.10" ), e ); //$NON-NLS-1$
       return null;
     }
+  }
+
+  /**
+   * This function finzalizes a simulation. It copies some files for reference and fixes links in one of them.
+   */
+  private void finalizeSimulation( ) throws IOException, Exception, GmlSerializeException
+  {
+    /* Copy the model.gml and the expertMappings.gml into the simulation for reference. */
+    /* The calculation.gml is already saved there. */
+    /* This is only a copy and will not be used except for the result view. */
+    FileUtils.copyFile( new File( m_targetScenarioDir, INaCalcCaseConstants.EXPERT_CONTROL_PATH ), new File( m_targetScenarioDir, m_simulationPath + "/" + INaCalcCaseConstants.EXPERT_CONTROL_PATH ), true );
+    FileUtils.copyFile( new File( m_targetScenarioDir, INaProjectConstants.GML_MODELL_PATH ), new File( m_targetScenarioDir, m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH ), true );
+
+    /* Load the model in the simulation. */
+    final NaModell simModel = m_data.loadModel( m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH );
+
+    /* Fix timeseries links there, that all is correct within a simulation. */
+    fixTimeseriesLinks( simModel, getLog() );
+
+    /* Save the model in the simulation. */
+    m_data.saveModel( m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH, simModel );
+  }
+
+  private void fixTimeseriesLinks( final NaModell naModel, final IStatusCollector log ) throws Exception
+  {
+    final IStatusCollector localLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final TimeseriesWalker walker = new TimeseriesWalker( new FixDotDotTimeseriesVisitor(), localLog );
+    naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
+
+    final IStatus status = localLog.asMultiStatus( "Anpassen der Zeitreihenreferenzen" );
+    log.add( status );
   }
 }

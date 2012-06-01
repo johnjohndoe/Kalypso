@@ -325,7 +325,7 @@ public class TimeseriesImporter
 
   private String getForcedParameterType( final IObservation observation, final String relativePath )
   {
-    final String parmaterType = m_parameterIndex.getParmaterType( relativePath );
+    final String parmaterType = m_parameterIndex.getParameterType( relativePath );
     if( StringUtils.equals( ITimeseriesConstants.TYPE_TEMPERATURE, parmaterType ) )
       return ITimeseriesConstants.TYPE_MEAN_TEMPERATURE;
 

@@ -40,10 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
+import javax.xml.namespace.QName;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.ui.rrm.internal.conversion.ITimeseriesVisitor;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.feature.Feature;
+
 /**
+ * Empties every timeseries link it encounters.
+ * 
  * @author Gernot Belger
+ * @author Holger Albert
  */
-public interface IParameterTypeIndex
+public class EmptyTimeseriesVisitor implements ITimeseriesVisitor
 {
-  String getParameterType( String zmlRelativePath );
+  @Override
+  public IStatus visit( final Feature feature, final QName linkProperty )
+  {
+    final TimeseriesLinkType link = (TimeseriesLinkType) feature.getProperty( linkProperty );
+    if( link == null )
+      return Status.OK_STATUS;
+
+    final String href = link.getHref();
+    if( StringUtils.isBlank( href ) )
+      return Status.OK_STATUS;
+
+    link.setHref( null );
+
+    return Status.OK_STATUS;
+  }
 }

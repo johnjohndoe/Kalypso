@@ -75,6 +75,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  * Helper that guesses a CatchmentModel for each existing calculation case.
  * 
  * @author Gernot Belger
+ * @author Holger Albert
  */
 public class CatchmentModelBuilder
 {

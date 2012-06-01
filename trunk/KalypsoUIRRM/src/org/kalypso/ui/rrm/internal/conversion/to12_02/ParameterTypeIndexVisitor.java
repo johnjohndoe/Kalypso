@@ -147,7 +147,7 @@ public class ParameterTypeIndexVisitor implements ITimeseriesVisitor, IParameter
   }
 
   @Override
-  public String getParmaterType( final String zmlRelativePath )
+  public String getParameterType( final String zmlRelativePath )
   {
     return m_index.get( zmlRelativePath );
   }

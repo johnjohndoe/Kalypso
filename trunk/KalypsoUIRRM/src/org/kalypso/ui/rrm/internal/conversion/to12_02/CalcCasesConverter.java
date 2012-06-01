@@ -190,7 +190,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         continue;
       }
 
-      if( segment.equals( INaProjectConstants.PATH_RECHENVARIANTEN ) )
+      if( segment.equals( INaProjectConstants.FOLDER_RECHENVARIANTEN ) )
         foundCalcCasesSegment = true;
     }
 
