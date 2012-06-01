@@ -73,7 +73,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Helper that guesses a CatchmentModel for each existing calculation case.
- *
+ * 
  * @author Gernot Belger
  */
 public class CatchmentModelBuilder
@@ -103,9 +103,9 @@ public class CatchmentModelBuilder
     /* Create and add new generator */
     final IFeatureBindingCollection<IRainfallGenerator> generators = m_catchmentModel.getGenerators();
     final ILinearSumGenerator generator = generators.addNew( ILinearSumGenerator.FEATURE_LINEAR_SUM_GENERATOR, ILinearSumGenerator.class );
-
     m_generatorIds.put( parameterType, generator.getId() );
 
+    /* Set the properties. */
     generator.setParameterType( parameterType );
     generator.setDescription( m_simulationDir.getName() );
     generator.setComment( Messages.getString( "CatchmentModelBuilder_0" ) ); //$NON-NLS-1$

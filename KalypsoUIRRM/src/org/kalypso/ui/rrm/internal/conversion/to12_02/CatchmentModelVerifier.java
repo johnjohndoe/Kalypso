@@ -61,6 +61,7 @@ import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
@@ -84,6 +85,11 @@ public class CatchmentModelVerifier
   private final GlobalConversionData m_globalData;
 
   /**
+   * The converter data.
+   */
+  private final ConverterData m_data;
+
+  /**
    * The simulation with the catchment models to verify.
    */
   private final NAControl m_simulation;
@@ -91,23 +97,26 @@ public class CatchmentModelVerifier
   /**
    * The base folder of the simulations.
    */
-  private final File m_baseFolder;
+  private final File m_simulationsFolder;
 
   /**
    * The constructor.
    * 
    * @param globalData
    *          The global conversion data.
+   * @param data
+   *          The converter data.
    * @param simulation
    *          The simulation with the catchment models to verify.
-   * @param baseFolder
+   * @param simulationsFolder
    *          The base folder of the simulations.
    */
-  public CatchmentModelVerifier( final GlobalConversionData globalData, final NAControl simulation, final File baseFolder )
+  public CatchmentModelVerifier( final GlobalConversionData globalData, final ConverterData data, final NAControl simulation, final File simulationsFolder )
   {
     m_globalData = globalData;
+    m_data = data;
     m_simulation = simulation;
-    m_baseFolder = baseFolder;
+    m_simulationsFolder = simulationsFolder;
   }
 
   /**
@@ -130,10 +139,10 @@ public class CatchmentModelVerifier
       collector.add( status );
 
       /* Create the file handle to the directory of the simulation. */
-      final File simulationDir = new File( m_baseFolder, m_simulation.getDescription() );
+      final File simulationDir = new File( m_simulationsFolder, m_simulation.getDescription() );
 
       /* Create the file handle to the directory of the temporary simulation. */
-      simulationTmpDir = new File( m_baseFolder, String.format( "tmp_%s", m_simulation.getDescription() ) );
+      simulationTmpDir = new File( m_simulationsFolder, String.format( "tmp_%s", m_simulation.getDescription() ) );
 
       /* Create the temporary simulation. */
       createTemporarySimulation( simulationDir, simulationTmpDir );
@@ -189,12 +198,12 @@ public class CatchmentModelVerifier
    * @return A WARNING status if generators are missing or if they have no factorized timeseries (hence no factors).
    *         Then no comparison makes sense. Otherwise a OK Status is returned.
    */
-  private IStatus checkGenerators( )
+  private IStatus checkGenerators( ) throws Exception
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
+    final ICatchmentModel catchmentModel = m_data.loadModel( INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
     final IFeatureBindingCollection<IRainfallGenerator> generators = catchmentModel.getGenerators();
 
     final String generatorIdN = ((IXLinkedFeature) m_simulation.getProperty( NAControl.PROP_GENERATOR_N )).getFeatureId();

@@ -85,18 +85,18 @@ public class TimeseriesMappingBuilder
 
   private final ITimeseriesMappingCollection m_mappings;
 
-  private final File m_targetDir;
+  private final File m_simulationDir;
 
   private final TimeseriesIndex m_timeseriesIndex;
 
   private final File m_sourceProjectDir;
 
-  public TimeseriesMappingBuilder( final File sourceProjectDir, final NaModell naModel, final ITimeseriesMappingCollection mappings, final File targetDir, final TimeseriesIndex timeseriesIndex )
+  public TimeseriesMappingBuilder( final File sourceProjectDir, final NaModell naModel, final ITimeseriesMappingCollection mappings, final File simulationDir, final TimeseriesIndex timeseriesIndex )
   {
     m_sourceProjectDir = sourceProjectDir;
     m_naModel = naModel;
     m_mappings = mappings;
-    m_targetDir = targetDir;
+    m_simulationDir = simulationDir;
     m_timeseriesIndex = timeseriesIndex;
   }
 
@@ -122,7 +122,7 @@ public class TimeseriesMappingBuilder
     final ITimeseriesMapping newMapping = mappings.addNew( ITimeseriesMapping.FEATURE_TIMESERIES_MAPPING );
 
     /* set metadata of mapping */
-    newMapping.setDescription( m_targetDir.getName() );
+    newMapping.setDescription( m_simulationDir.getName() );
     newMapping.setComment( Messages.getString( "CatchmentModelBuilder_0" ) ); //$NON-NLS-1$;
     newMapping.setType( mappingType );
     newMapping.setLastModified( new Date() );

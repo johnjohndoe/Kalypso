@@ -75,9 +75,7 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
   public IStatus preConversion( final Shell shell )
   {
     final ChooseExeConverter exeChooser = new ChooseExeConverter();
-
     final IStatus status = exeChooser.execute( shell );
-
     m_chosenExe = exeChooser.getChosenExe();
 
     return status;
@@ -86,32 +84,33 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
-    final String projectName = m_sourceDir.getName();
-    monitor.beginTask( String.format( Messages.getString( "RrmProjectConverter103to230_1" ), projectName ), 100 ); //$NON-NLS-1$
+    /* MOnitor. */
+    monitor.beginTask( String.format( Messages.getString( "RrmProjectConverter103to230_1" ), m_sourceDir.getName() ), 100 ); //$NON-NLS-1$
 
     try
     {
-      /* Convert basic model */
-      final BasicModelConverter basicModelConverter = new BasicModelConverter( m_sourceDir, m_targetDir );
+      /* Convert basic model. */
       monitor.subTask( Messages.getString( "RrmProjectConverter103to230_2" ) ); //$NON-NLS-1$
+      final BasicModelConverter basicModelConverter = new BasicModelConverter( m_sourceDir, m_targetDir );
       final IStatus basicStatus = basicModelConverter.execute( new SubProgressMonitor( monitor, 33 ) );
       getLog().add( basicStatus );
 
-      /* Build global data */
+      /* Build global data. */
       final TimeseriesIndex timeseriesIndex = basicModelConverter.getTimeseriesIndex();
-      final GlobalConversionData globalData = new GlobalConversionData( m_sourceDir, m_chosenExe, timeseriesIndex );
+      final GlobalConversionData globalData = new GlobalConversionData( m_sourceDir, m_targetDir, m_chosenExe, timeseriesIndex );
 
-      /* Convert calc cases */
+      /* Convert calc cases. */
       monitor.subTask( Messages.getString( "RrmProjectConverter103to230_3" ) ); //$NON-NLS-1$
-      final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir, globalData );
+      final CalcCasesConverter casesConverter = new CalcCasesConverter( globalData );
       final IStatus calcCaseStatus = casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
       getLog().add( calcCaseStatus );
-
-      /* Save the log as text file. */
-      saveLogQuietly( projectName );
     }
     finally
     {
+      /* Save the log as text file. */
+      saveLogQuietly( m_sourceDir.getName() );
+
+      /* Monitor. */
       monitor.done();
     }
   }
