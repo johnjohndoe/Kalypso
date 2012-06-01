@@ -584,6 +584,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final NaModell simModel = m_data.loadModel( m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH );
 
     /* Fix timeseries links there, that all is correct within a simulation. */
+    // TODO The copied one does already have no links, must copy before emptying it...
     fixTimeseriesLinks( simModel, getLog() );
 
     /* Save the model in the simulation. */
