@@ -62,8 +62,6 @@ public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurf
 {
   public interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_MultiSurface>
   {
-    String getDescription( int index );
-
     String getLanduseclass( int index ) throws CoreException;
 
     double getSealingCorrectionFactor( int index ) throws CoreException;

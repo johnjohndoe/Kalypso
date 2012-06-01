@@ -42,6 +42,7 @@
 package org.kalypso.ui.rrm.internal.hydrotops;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,8 +92,10 @@ public class ImportPedologyWizard extends AbstractHydrotopeDataImportWizard
   {
     final String soilTypeProperty = wizardPage.getProperty( PROPERTY_SOIL_TYPE );
     final File shapeFile = wizardPage.getShapeFile();
+    final String crs = wizardPage.getSelectedCRS();
+    final Charset charset = wizardPage.getSelectedCharset();
 
-    final InputDescriptor inputDescriptor = new PedologyShapeInputDescriptor( shapeFile, soilTypeProperty );
+    final InputDescriptor inputDescriptor = new PedologyShapeInputDescriptor( shapeFile, soilTypeProperty, crs, charset );
 
     final SoilTypeCollection output = (SoilTypeCollection) dataWorkspace.getRootFeature();
 

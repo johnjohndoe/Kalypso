@@ -42,6 +42,7 @@
 package org.kalypso.ui.rrm.internal.hydrotops;
 
 import java.io.File;
+import java.nio.charset.Charset;
 
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage;
@@ -87,7 +88,10 @@ public class ImportGeologyWizard extends AbstractHydrotopeDataImportWizard
     final String gwFactorProperty = wizardPage.getProperty( PROPERTY_GW_FACTOR );
 
     final File shapeFile = wizardPage.getShapeFile();
-    final InputDescriptor inputDescriptor = new GeologyShapeInputDescriptor( shapeFile, maxPerculationsRateProperty, gwFactorProperty );
+    final String crs = wizardPage.getSelectedCRS();
+    final Charset charset = wizardPage.getSelectedCharset();
+
+    final InputDescriptor inputDescriptor = new GeologyShapeInputDescriptor( shapeFile, maxPerculationsRateProperty, gwFactorProperty, crs, charset );
 
     final GeologyCollection output = (GeologyCollection) dataWorkspace.getRootFeature();
     return new GeologyImportOperation( inputDescriptor, output, ImportType.CLEAR_OUTPUT );

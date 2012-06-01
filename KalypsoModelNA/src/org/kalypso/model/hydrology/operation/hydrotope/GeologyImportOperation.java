@@ -58,8 +58,6 @@ public class GeologyImportOperation extends AbstractImportOperation<GM_MultiSurf
 {
   public interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_MultiSurface>
   {
-    String getDescription( int index );
-
     double getMaxPerkulationsRate( int index ) throws CoreException;
 
     double getGWFactor( int index ) throws CoreException;

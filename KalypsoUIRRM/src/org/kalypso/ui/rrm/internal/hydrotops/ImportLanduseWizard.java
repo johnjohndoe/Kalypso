@@ -42,6 +42,7 @@
 package org.kalypso.ui.rrm.internal.hydrotops;
 
 import java.io.File;
+import java.nio.charset.Charset;
 
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage;
@@ -87,8 +88,10 @@ public class ImportLanduseWizard extends AbstractHydrotopeDataImportWizard
     final String landuseProperty = wizardPage.getProperty( PROPERTY_LANDUSE );
     final String sealingFactorProperty = wizardPage.getProperty( PROPERTY_SEALING_FACTOR );
     final File shapeFile = wizardPage.getShapeFile();
+    final String crs = wizardPage.getSelectedCRS();
+    final Charset charset = wizardPage.getSelectedCharset();
 
-    final InputDescriptor inputDescriptor = new LanduseShapeInputDescriptor( shapeFile, landuseProperty, sealingFactorProperty );
+    final InputDescriptor inputDescriptor = new LanduseShapeInputDescriptor( shapeFile, landuseProperty, sealingFactorProperty, crs, charset );
 
     final LanduseCollection output = (LanduseCollection) landuseWorkspace.getRootFeature();
     final DefaultLanduseClassDelegate delegate = new DefaultLanduseClassDelegate( parameter.getWorkspace() );
