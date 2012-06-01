@@ -195,6 +195,17 @@ public class GlobalConversionData
   private CaseList loadCaseList( ) throws MalformedURLException, JAXBException
   {
     final File casesXml = new File( m_targetDir, ".metadata/cases.xml" );
+    if( !casesXml.exists() )
+    {
+      final Scenario baseScenario = OBJECT_FACTORY.createScenario();
+      baseScenario.setName( "Basis" );
+
+      final CaseList cases = new de.renew.workflow.cases.ObjectFactory().createCaseList();
+      cases.getCases().add( baseScenario );
+
+      return cases;
+    }
+
     final URL url = casesXml.toURI().toURL();
     return (CaseList) JAXB_CONTEXT.createUnmarshaller().unmarshal( url );
   }

@@ -56,13 +56,13 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.conversion.ITimeseriesVisitor;
 import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * @author Gernot Belger
+ * @author Holger Albert
  */
 public class BasicModelConverter extends AbstractLoggingOperation
 {
@@ -99,34 +99,47 @@ public class BasicModelConverter extends AbstractLoggingOperation
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
+    /* Monitor. */
     monitor.beginTask( Messages.getString( "BasicModelConverter.0" ), 100 ); //$NON-NLS-1$
 
     try
     {
-      /* Copy basic .gml files. */
+      /* Monitor. */
       monitor.subTask( Messages.getString( "BasicModelConverter.1" ) ); //$NON-NLS-1$
-      final IPath basisPath = new Path( INaProjectConstants.FOLDER_BASIS );
 
-      copyFile( new Path( INaProjectConstants.GML_MODELL_FILE ), basisPath.append( INaProjectConstants.GML_MODELL_PATH ) );
-      copyFile( new Path( INaProjectConstants.GML_HYDROTOP_FILE ), basisPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) );
-      copyFile( new Path( INaProjectConstants.GML_PARAMETER_FILE ), basisPath.append( INaProjectConstants.GML_PARAMETER_PATH ) );
-      copyFile( new Path( "calcSynthN.gml" ), basisPath.append( INaProjectConstants.GML_SYNTH_N_PATH ) ); //$NON-NLS-1$
-      copyFile( new Path( INaProjectConstants.GML_LANDUSE_FILE ), basisPath.append( INaProjectConstants.GML_LANDUSE_PATH ) );
-      copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
-      copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_PEDOLOGIE_PATH ) );
+      /* Copy the basic gml files. */
+      copyBasicFiles();
 
+      /* Monitor. */
       monitor.worked( 5 );
 
+      /* Monitor. */
+      monitor.subTask( Messages.getString( "BasicModelConverter.3" ) ); //$NON-NLS-1$
+
+      /* Fix the timeseries. */
       final IParameterTypeIndex parameterIndex = fixTimeseries();
 
       /* Copy timeseries. */
-      monitor.subTask( Messages.getString( "BasicModelConverter.3" ) ); //$NON-NLS-1$
       m_timeseriesIndex = copyBasicTimeseries( parameterIndex, new SubProgressMonitor( monitor, 95 ) );
     }
     finally
     {
+      /* Monitor. */
       monitor.done();
     }
+  }
+
+  private void copyBasicFiles( ) throws IOException
+  {
+    final IPath basisPath = new Path( INaProjectConstants.FOLDER_BASIS );
+
+    copyFile( new Path( INaProjectConstants.GML_MODELL_FILE ), basisPath.append( INaProjectConstants.GML_MODELL_PATH ) );
+    copyFile( new Path( INaProjectConstants.GML_HYDROTOP_FILE ), basisPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) );
+    copyFile( new Path( INaProjectConstants.GML_PARAMETER_FILE ), basisPath.append( INaProjectConstants.GML_PARAMETER_PATH ) );
+    copyFile( new Path( "calcSynthN.gml" ), basisPath.append( INaProjectConstants.GML_SYNTH_N_PATH ) ); //$NON-NLS-1$
+    copyFile( new Path( INaProjectConstants.GML_LANDUSE_FILE ), basisPath.append( INaProjectConstants.GML_LANDUSE_PATH ) );
+    copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
+    copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_PEDOLOGIE_PATH ) );
   }
 
   private TimeseriesIndex copyBasicTimeseries( final IParameterTypeIndex parameterIndex, final IProgressMonitor monitor ) throws CoreException
@@ -164,47 +177,46 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   private IParameterTypeIndex fixTimeseries( ) throws Exception
   {
+    /* Load the na model. */
     final NaModell naModel = m_data.loadModel( INaProjectConstants.GML_MODELL_PATH );
 
-    /* IMPORTANT: index parameter types before the links have been fixed, so file paths are correct. */
-    final IParameterTypeIndex parameterIndex = collectTimeseriesParameterTypes( naModel, m_sourceDir );
-    fixTimeseriesLinks( naModel, getLog() );
+    /* IMPORTANT: Index parameter types before the links have been fixed, so file paths are correct. */
+    final IParameterTypeIndex parameterIndex = collectTimeseriesParameterTypes( naModel, m_sourceDir, getLog() );
 
+    /* IMPORTANT: Update the categories before the links have been fixed. */
     naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
 
+    /* Empty the timeseries links. */
+    emptyTimeseriesLinks( naModel, getLog() );
+
+    /* Save the na model. */
     m_data.saveModel( INaProjectConstants.GML_MODELL_PATH, naModel );
 
     return parameterIndex;
   }
 
-  /**
-   * Add an additional '../' to every timeseries path.
-   */
-  public static void fixTimeseriesLinks( final NaModell naModel, final IStatusCollector log ) throws Exception
+  private IParameterTypeIndex collectTimeseriesParameterTypes( final NaModell naModel, final File sourceModelDir, final IStatusCollector log )
   {
     final IStatusCollector localLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    visitModel( naModel, new FixDotDotTimeseriesVisitor(), localLog );
-    naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
+    final TimeseriesWalker walker = new TimeseriesWalker( new ParameterTypeIndexVisitor( sourceModelDir ), localLog );
+    naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
+
+    final IStatus status = localLog.asMultiStatus( "Sammeln der Zeitreihentypen" );
+    log.add( status );
+
+    return new ParameterTypeIndexVisitor( sourceModelDir );
+  }
+
+  public static void emptyTimeseriesLinks( final NaModell naModel, final IStatusCollector log ) throws Exception
+  {
+    final IStatusCollector localLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final TimeseriesWalker walker = new TimeseriesWalker( new EmptyTimeseriesVisitor(), localLog );
+    naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
 
     final IStatus status = localLog.asMultiStatus( "Anpassen der Zeitreihenreferenzen" );
     log.add( status );
-  }
-
-  private static IParameterTypeIndex collectTimeseriesParameterTypes( final NaModell naModel, final File sourceModelDir )
-  {
-    final IStatusCollector localLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
-
-    final ParameterTypeIndexVisitor visitor = new ParameterTypeIndexVisitor( sourceModelDir );
-    visitModel( naModel, visitor, localLog );
-
-    return visitor;
-  }
-
-  private static void visitModel( final NaModell naModel, final ITimeseriesVisitor visitor, final IStatusCollector log )
-  {
-    final TimeseriesWalker walker = new TimeseriesWalker( visitor, log );
-    naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
   }
 
   public TimeseriesIndex getTimeseriesIndex( )

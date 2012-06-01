@@ -47,17 +47,16 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
 
 /**
- * sets empty result categories by existing qberechnet properties
+ * Sets empty result categories by existing qberechnet properties.
  * 
  * @author Dirk Kuch
  */
 public class UpdateResultCategoriesVisitor implements IFeatureBindingCollectionVisitor<Node>
 {
-
   @Override
   public void visit( final Node node )
   {
-    /* result category exists? so leave existing result category */
+    /* Result category exists? So leave existing result category. */
     if( StringUtils.isNotBlank( node.getResultCategory() ) )
       return;
 
@@ -72,29 +71,29 @@ public class UpdateResultCategoriesVisitor implements IFeatureBindingCollectionV
 
   private String doCategorize( final String href )
   {
-// final CharMatcher matcher = new CharMatcher()
-// {
-// @Override
-// public boolean matches( final char c )
-// {
-// switch( c )
-// {
-//          case '/': //$NON-NLS-1$
-//          case '\\': //$NON-NLS-1$
-// return true;
-// }
-//
-// return false;
-// }
-// };
-//
-// /* keep existing manually set zml file name (notation = ${FILE_NAME} */
-// final Iterable<String> splitted = Splitter.on( matcher ).trimResults().omitEmptyStrings().split( href );
-// String name = Iterables.getLast( splitted );
-// if( name.contains( "." ) )
-// name = name.substring( 0, name.indexOf( '.' ) );
-//
-//    return String.format( "Pegel/${%s}", name ); //$NON-NLS-1$
+    // final CharMatcher matcher = new CharMatcher()
+    // {
+    // @Override
+    // public boolean matches( final char c )
+    // {
+    // switch( c )
+    // {
+    //          case '/': //$NON-NLS-1$
+    //          case '\\': //$NON-NLS-1$
+    // return true;
+    // }
+    //
+    // return false;
+    // }
+    // };
+    //
+    // /* keep existing manually set zml file name (notation = ${FILE_NAME} */
+    // final Iterable<String> splitted = Splitter.on( matcher ).trimResults().omitEmptyStrings().split( href );
+    // String name = Iterables.getLast( splitted );
+    // if( name.contains( "." ) )
+    // name = name.substring( 0, name.indexOf( '.' ) );
+    //
+    // return String.format( "Pegel/${%s}", name ); //$NON-NLS-1$
 
     return "Pegel";
   }
@@ -111,5 +110,4 @@ public class UpdateResultCategoriesVisitor implements IFeatureBindingCollectionV
 
     return timeseriesLink.getHref();
   }
-
 }
