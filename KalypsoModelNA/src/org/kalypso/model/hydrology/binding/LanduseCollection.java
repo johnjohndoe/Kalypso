@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  */
 public class LanduseCollection extends UnversionedModel
 {
-  public static final QName QNAME_PROP_LANDUSEMEMBER = new QName( NaModelConstants.NS_NALANDUSE, "landuseMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "landuseMember" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<Landuse> m_landuses;
 
@@ -71,7 +71,7 @@ public class LanduseCollection extends UnversionedModel
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_landuses = new FeatureBindingCollection<Landuse>( this, Landuse.class, QNAME_PROP_LANDUSEMEMBER );
+    m_landuses = new FeatureBindingCollection<Landuse>( this, Landuse.class, MEMBER_LANDUSE );
   }
 
   public IFeatureBindingCollection<Landuse> getLanduses( )

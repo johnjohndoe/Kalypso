@@ -48,7 +48,7 @@
 	 <extension  point="org.eclipse.ui.commandImages">
 	    <image commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" disabledIcon="icons/commands/edit_relation_gray.gif" icon="icons/commands/edit_relation.gif" />
 
-	    <image commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" icon="icons/geologyImport.gif"/>
+	    <image commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" icon="icons/hydrotope/hydrotope.png"/>
 	 </extension>
 
 	<extension point="org.eclipse.ui.handlers">
@@ -69,7 +69,7 @@
 
 		<handler commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" class="org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler">
 			<activeWhen>
-				<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
+				<reference definitionId="org.kalypso.ui.rrm.definition.oneHydrotopeThemeSelected"/>
 			</activeWhen>
 		</handler>
 		<!--
@@ -85,7 +85,7 @@
    		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
 			<command commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" style="push">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
+                   <reference definitionId="org.kalypso.ui.rrm.definition.oneHydrotopeThemeSelected"/>
 				</visibleWhen>
 			</command>
 			<!--
@@ -93,6 +93,14 @@
 				<visibleWhen checkEnabled="true"/>
 			</command>
 			-->
+		</menuContribution>
+
+   		<menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline?after=additions">
+			<command commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" style="push">
+				<visibleWhen checkEnabled="false">
+                   <reference definitionId="org.kalypso.ui.rrm.definition.oneHydrotopeThemeSelected"/>
+				</visibleWhen>
+			</command>
 		</menuContribution>
 	</extension>
 
@@ -151,42 +159,7 @@
 				</and>
 			</with>
 		</definition>
-		<definition id="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected">
-			<with variable="selection">
-				<and>
-					<count value="+"/>
-					<or>
-						<iterate ifEmpty="false" operator="or">
-                            <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
-    							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
-                            </adapt>
-						</iterate>
-						<iterate ifEmpty="false" operator="or">
-                            <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
-    							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype"/>
-                            </adapt>
-						</iterate>
-						<iterate ifEmpty="false" operator="or">
-                            <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
-    							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>
-                            </adapt>
-						</iterate>
-						<iterate ifEmpty="false" operator="or">
-                            <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
-    							<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/hydrotop}Hydrotop"/>
-                            </adapt>
-						</iterate>
-						<iterate ifEmpty="false" operator="or">
-                            <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
-    							<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/kalypsoNA}Catchment"/>
-                            </adapt>
-						</iterate>
-					</or>
-				</and>
-			</with>
-		</definition>
 	</extension>
-
 
  <extension
        point="org.eclipse.ui.commands">
