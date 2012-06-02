@@ -42,258 +42,214 @@ package org.kalypso.model.hydrology.operation.hydrotope;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.model.sort.SplitSortSpatialIndex;
+import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.IntersectionMatrix;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.util.PolygonExtracter;
 
 /**
- * Utility class for intersecting a number of feature geometry layers
- * <p>
- * refactored by Stefan Kurzbach
- * <p>
+ * Utility class for intersecting a number of feature geometry layers<br/>
+ * Intersects features given as a list of feature lists, produces the result into the resultList<br>
+ * <br/>
+ * refactored by Stefan Kurzbach <br/>
  * commented out some code for fixing bad geometries
- *
+ * 
  * @author Dejan Antanaskovic
  */
-class FeatureListGeometryIntersector
+class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
 {
-  private static final double MIN_AREA = 0.01;
+  static final double MIN_AREA = 0.001;
 
-  private final Map<List<Feature>, SplitSortSpatialIndex> m_index = new HashMap<List<Feature>, SplitSortSpatialIndex>();
+  private final List<Polygon> m_resultGeometryList = new ArrayList<>();
 
-  private final List<List<Feature>> m_sourceLayers = new ArrayList<List<Feature>>();
+  double m_totalAreaDiscarded = 0;
 
-  private final List<IStatus> m_log = new ArrayList<IStatus>( 1000 );
+  private final String m_logLabel;
 
-  public void addFeatureList( final List<Feature> list )
+  private final SpatialIndexExt[] m_indices;
+
+  public FeatureListGeometryIntersector( final SpatialIndexExt[] indices, final String logLabel )
   {
-    if( list != null && list.size() > 0 )
-      m_sourceLayers.add( list );
+    m_indices = indices;
+    m_logLabel = logLabel;
   }
 
-  private void init( )
+  @Override
+  public IStatus execute( final IProgressMonitor monitor )
   {
-    for( final List<Feature> list : m_sourceLayers )
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
+    final String taskName = Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.0" ); //$NON-NLS-1$
+
+    final SubMonitor progress = SubMonitor.convert( monitor, taskName, 100 );
+
+    /* Do the intersection */
+    final SpatialIndexExt sourceIndex = m_indices[0];
+
+    final List< ? > sourcePolygons = sourceIndex.query( sourceIndex.getBoundingBox() );
+    final int countSourcePolygons = sourcePolygons.size();
+
+    progress.setWorkRemaining( countSourcePolygons );
+
+    for( int i = 0; i < countSourcePolygons; i++ )
     {
-      Envelope boundingBox = new Envelope();
-      if( list instanceof FeatureList )
+      if( i % 10 == 0 )
       {
-        boundingBox = JTSAdapter.export( ((FeatureList) list).getBoundingBox() );
+        final String msg = Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", i + 1, countSourcePolygons ); //$NON-NLS-1$
+        progress.subTask( msg ); //$NON-NLS-1$
+        ProgressUtilities.worked( progress, 10 );
       }
-      else
-      {
-        for( final Feature feature : list )
-        {
-          final GM_Object value = feature.getDefaultGeometryPropertyValue();
-          if( value != null )
-          {
-            final GM_Envelope envelope = value.getEnvelope();
-            boundingBox.expandToInclude( JTSAdapter.export( envelope ) );
-          }
-        }
-      }
-      m_index.put( list, new SplitSortSpatialIndex( boundingBox ) );
+
+      final Polygon sourcePolygon = (Polygon) sourcePolygons.get( i );
+
+      intersectSource( sourcePolygon, m_indices, log );
     }
+    log.add( IStatus.INFO, Messages.getString( "FeatureListGeometryIntersector.9", m_totalAreaDiscarded ), null ); //$NON-NLS-1$
+
+    return log.asMultiStatus( m_logLabel );
   }
 
-  /**
-   * Intersects features given as a list of feature lists, produces the result into the resultList<br>
-   */
-  public List<Polygon> intersect( final IProgressMonitor monitor )
+  private void intersectSource( final Polygon sourcePolygon, final SpatialIndexExt[] indices, final IStatusCollector log )
   {
-    if( m_sourceLayers.isEmpty() )
-      return Collections.emptyList();
+    List<Polygon> currentIntersections = Collections.singletonList( sourcePolygon );
 
-    final int layerCount = m_sourceLayers.size();
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.0" ), layerCount * (layerCount + 1) / 2 + 1 ); //$NON-NLS-1$
-    progress.subTask( Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.1" ) ); //$NON-NLS-1$
-    init();
-    progress.worked( 2 );
-
-    final Map<List<Feature>, Integer> sizeMap = new HashMap<List<Feature>, Integer>( m_sourceLayers.size() );
-    for( final List<Feature> featureList : m_sourceLayers )
+    for( int j = 1; j < indices.length; j++ )
     {
-      int polyCount = 0;
-      final SplitSortSpatialIndex index = m_index.get( featureList );
-      for( final Feature feature : featureList )
-      {
-        final GM_Object gmObj = feature.getDefaultGeometryPropertyValue();
+      final SpatialIndexExt targetIndex = indices[j];
 
-        Geometry export = null;
+      final List<Polygon> newIntersections = new ArrayList<>();
+
+      for( final Polygon source : currentIntersections )
+      {
+        findIntersections( source, targetIndex, log, newIntersections );
+      }
+
+      currentIntersections = newIntersections;
+    }
+
+    /* Add all intersections as to result set */
+    m_resultGeometryList.addAll( currentIntersections );
+  }
+
+  private void findIntersections( final Polygon sourcePolygon, final SpatialIndexExt targetIndex, final IStatusCollector log, final List<Polygon> result )
+  {
+    final HydrotopeBean sourceData = (HydrotopeBean) sourcePolygon.getUserData();
+    final int dim1 = sourcePolygon.getDimension();
+
+    @SuppressWarnings("unchecked")
+    final List<Polygon> targetPolygons = targetIndex.query( sourcePolygon.getEnvelopeInternal() );
+
+    for( final Polygon targetPolygon : targetPolygons )
+    {
+      final HydrotopeBean targetData = (HydrotopeBean) targetPolygon.getUserData();
+
+      final int dim2 = targetPolygon.getDimension();
+
+      final IntersectionMatrix relate = sourcePolygon.relate( targetPolygon );
+      if( relate.isEquals( dim1, dim2 ) )
+      {
+        final HydrotopeBean mergedData = sourceData.merge( targetData, targetPolygon );
+        sourcePolygon.setUserData( mergedData );
+
+        addResult( result, sourcePolygon );
+      }
+      else if( relate.isIntersects() && !relate.isTouches( dim1, dim2 ) )
+      {
+        Geometry intersection = buildIntersection( sourcePolygon, targetPolygon, log );
+
         try
         {
-          export = JTSAdapter.export( gmObj );
-          if( !export.isEmpty() )
-          {
-            for( int n = 0; n < export.getNumGeometries(); n++ )
-            {
-              final Geometry geometryN = export.getGeometryN( n );
-              geometryN.setUserData( new FeatureIntersection( feature ) );
-              index.insert( geometryN.getEnvelopeInternal(), geometryN );
-              polyCount++;
-            }
-          }
+          intersection = intersection.buffer( 0 );
         }
-        catch( final Exception e )
+        catch( final Throwable e )
         {
-          m_log.add( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "FeatureListGeometryIntersector.0", feature.getName() ), e ) ); //$NON-NLS-1$
+          final String sourceLabel = ((HydrotopeBean) sourcePolygon.getUserData()).toErrorString();
+          final String targetLabel = ((HydrotopeBean) targetPolygon.getUserData()).toErrorString();
+
+          log.add( IStatus.WARNING, Messages.getString( "FeatureListGeometryIntersector.4", sourceLabel, targetLabel ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        @SuppressWarnings("unchecked")
+        final List<Polygon> intersectionPolygons = PolygonExtracter.getPolygons( intersection );
+        final Polygon[] polygons = intersectionPolygons.toArray( new Polygon[intersectionPolygons.size()] );
+        for( final Polygon polygon : polygons )
+        {
+          final HydrotopeBean mergedData = sourceData.merge( targetData, polygon );
+          polygon.setUserData( mergedData );
+
+          addResult( result, polygon );
         }
       }
-      sizeMap.put( featureList, polyCount );
     }
+  }
 
-    // sort by real number of polygons
-    Collections.sort( m_sourceLayers, new Comparator<List<Feature>>()
-        {
-
-      @Override
-      public int compare( final List<Feature> o1, final List<Feature> o2 )
-      {
-        return sizeMap.get( o1 ) - sizeMap.get( o2 );
-      }
-        } );
-
-    final Iterator<List<Feature>> sourceListIterator = m_sourceLayers.iterator();
-    final List<Feature> sourceList = sourceListIterator.next();
-    final SplitSortSpatialIndex sourceIndex = m_index.get( sourceList );
-    List< ? > sourcePolygons = sourceIndex.query( sourceIndex.getBoundingBox() );
-    List<Polygon> resultGeometryList = null;
-    int layer = 0;
-    double totalAreaDiscarded = 0;
-    while( sourceListIterator.hasNext() )
+  private void addResult( final List<Polygon> result, final Polygon polygon )
+  {
+    // discard small (in sum) intersections
+    final double area = polygon.getArea();
+    if( area < MIN_AREA )
     {
-      resultGeometryList = new ArrayList<>();
-      final List<Feature> targetList = sourceListIterator.next();
-      layer++;
-      final int countSourceFeatures = sourcePolygons.size();
-      final int countTargetFeatures = sizeMap.get( targetList );
-      final SubMonitor childProgress = SubMonitor.convert( progress.newChild( layer + 1 ), countSourceFeatures );
-      int count = 0;
-      for( final Object thisObject : sourcePolygons )
+      m_totalAreaDiscarded += area;
+      return;
+    }
+
+    result.add( polygon );
+  }
+
+  private Geometry buildIntersection( final Polygon sourcePolygon, final Polygon targetPolygon, final IStatusCollector log )
+  {
+    // try intersection
+    try
+    {
+      return sourcePolygon.intersection( targetPolygon );
+    }
+    catch( final Throwable e )
+    {
+      try
       {
-        if( count % 10 == 0 )
+        // try different way of getting intersection via symmetrical difference
+        final Geometry symDifference = targetPolygon.symDifference( sourcePolygon );
+        final Geometry part1 = sourcePolygon.difference( symDifference );
+        final Geometry part2 = targetPolygon.difference( symDifference );
+        return part1.union( part2 );
+      }
+      catch( final Throwable e2 )
+      {
+        try
         {
-          final String msg = Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", count, countSourceFeatures, countTargetFeatures, layer + 1 ); //$NON-NLS-1$
-          progress.subTask( msg ); //$NON-NLS-1$
-          ProgressUtilities.worked( childProgress, 10 );
+          // TODO: why 0.001?
+          return sourcePolygon.buffer( 0.001 ).intersection( targetPolygon.buffer( 0.001 ) );
         }
-        count++;
-
-        final Polygon featurePolygon = (Polygon) thisObject;
-
-        final Object userData1 = featurePolygon.getUserData();
-        final int dim1 = featurePolygon.getDimension();
-
-        final SplitSortSpatialIndex targetIndex = m_index.get( targetList );
-        final List<Object> candidates = targetIndex.query( featurePolygon.getEnvelopeInternal() );
-
-        for( final Object candidateObject : candidates )
+        catch( final Throwable e3 )
         {
-          final Geometry candidatePolygon = (Geometry) candidateObject;
+          // intersection has failed, we cannot use this geometry
+          // calculate error?
+          final String sourceLabel = ((HydrotopeBean) sourcePolygon.getUserData()).toErrorString();
+          final String targetLabel = ((HydrotopeBean) targetPolygon.getUserData()).toErrorString();
 
-          final Object userData2 = candidatePolygon.getUserData();
-          final int dim2 = candidatePolygon.getDimension();
-
-          final FeatureIntersection userData = new FeatureIntersection( (FeatureIntersection) userData1, (FeatureIntersection) userData2 );
-
-          final IntersectionMatrix relate = featurePolygon.relate( candidatePolygon );
-          if( relate.isEquals( dim1, dim2 ) )
-          {
-            featurePolygon.setUserData( userData );
-            resultGeometryList.add( featurePolygon );
-          }
-          else if( relate.isIntersects() && !relate.isTouches( dim1, dim2 ) )
-          {
-            // try intersection
-            Geometry intersection = null;
-            try
-            {
-              intersection = featurePolygon.intersection( candidatePolygon );
-            }
-            catch( final Throwable e )
-            {
-              try
-              {
-                // try different way of getting intersection via symmetrical difference
-                final Geometry symDifference = candidatePolygon.symDifference( featurePolygon );
-                final Geometry part1 = featurePolygon.difference( symDifference );
-                final Geometry part2 = candidatePolygon.difference( symDifference );
-                intersection = part1.union( part2 );
-              }
-              catch( final Throwable e2 )
-              {
-                try
-                {
-                  intersection = featurePolygon.buffer( 0.001 ).intersection( candidatePolygon.buffer( 0.001 ) );
-                }
-                catch( final Throwable e3 )
-                {
-                  // intersection has failed, we cannot use this geometry
-                  // calculate error?
-                  m_log.add( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("FeatureListGeometryIntersector.5") + featurePolygon + "\n" + candidatePolygon, e2 ) ); //$NON-NLS-1$ //$NON-NLS-2$
-                  continue;
-                }
-              }
-            }
-
-            // discard small (in sum) intersections
-            double area = intersection.getArea();
-            if( area < MIN_AREA )
-            {
-              totalAreaDiscarded += area;
-              continue;
-            }
-
-            // try merging multipart polygons
-            try
-            {
-              intersection = intersection.buffer( 0 );
-            }
-            catch( final Throwable e )
-            {
-              m_log.add( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("FeatureListGeometryIntersector.4") + featurePolygon + "\n" + candidatePolygon, e ) ); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-
-            for( int n = 0; n < intersection.getNumGeometries(); n++ )
-            {
-              final Geometry geometryN = intersection.getGeometryN( n );
-              area = geometryN.getArea();
-              // discard small parts of multipart polygons
-              if( area < MIN_AREA )
-              {
-                totalAreaDiscarded += area;
-                continue;
-              }
-              geometryN.setUserData( userData );
-              resultGeometryList.add( (Polygon) geometryN );
-            }
-
-          }
+          final String message = Messages.getString( "FeatureListGeometryIntersector.5", sourceLabel, targetLabel );
+          log.add( IStatus.ERROR, message, e2 );
+          return null;
         }
       }
-      sourcePolygons = resultGeometryList;
     }
-    m_log.add( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("FeatureListGeometryIntersector.9") + totalAreaDiscarded, null ) ); //$NON-NLS-1$
-    return resultGeometryList;
+  }
+
+  public List<Polygon> getResult( )
+  {
+    return Collections.unmodifiableList( m_resultGeometryList );
   }
 }

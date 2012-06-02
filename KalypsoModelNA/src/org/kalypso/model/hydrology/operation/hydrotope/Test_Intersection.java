@@ -46,6 +46,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Ignore;
 import org.kalypso.model.hydrology.binding.Geology;
@@ -60,7 +61,6 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -69,6 +69,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
@@ -101,7 +102,7 @@ public class Test_Intersection extends TestCase
     final GMLWorkspace outputWS = GmlSerializer.createGMLWorkspace( template, null );
 
     final NaModell naModel = (NaModell) catchmentWS.getRootFeature();
-    final List< ? > catchments = naModel.getCatchments();
+    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
 
     final FeatureList landuseFeatureList = (FeatureList) landuseWS.getRootFeature().getProperty( LanduseCollection.MEMBER_LANDUSE );
     final FeatureList soilTypesFeatureList = (FeatureList) pedologyWS.getRootFeature().getProperty( SoilTypeCollection.MEMBER_SOIL_TYPE );
@@ -110,20 +111,27 @@ public class Test_Intersection extends TestCase
     final NAHydrotop hydrotopeCollection = (NAHydrotop) outputWS.getRootFeature();
     final IFeatureBindingCollection<IHydrotope> hydrotopes = hydrotopeCollection.getHydrotopes();
 
-    final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
-    geometryIntersector.addFeatureList( (List<Feature>) catchments );
-    geometryIntersector.addFeatureList( soilTypesFeatureList );
-    geometryIntersector.addFeatureList( geologiesFeatureList );
-    geometryIntersector.addFeatureList( landuseFeatureList );
-    final List<Polygon> intersectionList = geometryIntersector.intersect( new NullProgressMonitor() );
+    final FeatureListIndexer indexer = new FeatureListIndexer( "indexer" ); //$NON-NLS-1$
+    indexer.addFeatureList( catchments.getFeatureList(), "Catchments" );
+    indexer.addFeatureList( landuseFeatureList, "Landuse" );
+    indexer.addFeatureList( soilTypesFeatureList, "Pedology" );
+    indexer.addFeatureList( geologiesFeatureList, "Geology" );
 
+    final IStatus indexStatus = indexer.execute( new NullProgressMonitor() );
+    final SpatialIndexExt[] indices = indexer.getIndices();
+
+    final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector( indices, "test" ); //$NON-NLS-1$
+
+    final IStatus intersectStatus = geometryIntersector.execute( new NullProgressMonitor() );
+
+    final List<Polygon> intersectionList = geometryIntersector.getResult();
     for( final Geometry geometry : intersectionList )
     {
       final IHydrotope hydrotop = hydrotopes.addNew( IHydrotope.QNAME );
       final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
 
-      final List<Catchment> catchmentList = ((IFeatureBindingCollection<Catchment>) catchments).query( envelope );
+      final List<Catchment> catchmentList = catchments.query( envelope );
       Catchment catchment = null;
       if( catchmentList.size() == 0 )
         continue;

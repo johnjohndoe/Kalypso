@@ -40,26 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.hydrotops;
 
-
 import java.net.URL;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
@@ -68,6 +67,7 @@ import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -76,8 +76,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Gernot Belger
@@ -91,8 +91,8 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked( event );
 
-    final NAHydrotop hydrotopes = findHydrotopes( selection );
-    final GMLWorkspace workspace = hydrotopes.getWorkspace();
+    final CommandableWorkspace workspace = findHydrotopes( selection );
+    final NAHydrotop hydrotopes = (NAHydrotop) workspace.getRootFeature();
 
     final RrmScenario scenario = RrmScenario.forAnyModelGml( workspace );
     if( scenario == null )
@@ -103,23 +103,55 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     final GeologyCollection geologyCollection = findData( hydrotopes, scenario.getGeologyFile().getName(), GeologyCollection.class );
     final NaModell naModel = findData( hydrotopes, scenario.getModelFile().getName(), NaModell.class );
 
-    final IFile outputFile = ResourceUtilities.findFileFromURL( workspace.getContext() );
-
     final FeatureList fflLanduse = landuseCollection.getLanduses().getFeatureList();
     final FeatureList fflPedology = pedologyCollection.getSoilTypes().getFeatureList();
     final FeatureList fflGeology = geologyCollection.getGeologies().getFeatureList();
     final FeatureList fflCatchment = naModel.getCatchments().getFeatureList();
     final IFeatureBindingCollection<IHydrotope> fflHydrotops = hydrotopes.getHydrotopes();
 
-    if( !MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.4" ), Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.5" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    final String windowTitle = HandlerUtils.getCommandName( event );
+    if( !MessageDialog.openConfirm( shell, windowTitle, Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.5" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
-    final ICoreRunnableWithProgress operation = new CreateHydrotopesOperation( workspace, outputFile, fflCatchment, fflHydrotops, fflPedology, fflGeology, fflLanduse );
+    /* Clear old list */
+    fflHydrotops.clear();
+
+    final HydrotopeCreationOperation operation = new HydrotopeCreationOperation( fflLanduse, fflPedology, fflGeology, fflCatchment, fflHydrotops, null );
+
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+
+    /* Undo changes if an error happens */
+    handleResult( workspace, status );
+
+    /* Show result to user */
     final String commandName = HandlerUtils.getCommandName( event );
     StatusDialog.open( shell, status, commandName );
 
     return null;
+  }
+
+  private void handleResult( final CommandableWorkspace workspace, final IStatus status )
+  {
+    if( status.matches( IStatus.CANCEL ) )
+    {
+      final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+      final KeyInfo info = pool.getInfo( workspace );
+      if( info != null )
+        info.reload( true );
+    }
+    else
+    {
+      try
+      {
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, workspace.getRootFeature(), (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        workspace.postCommand( new EmptyCommand( StringUtils.EMPTY, false ) );
+      }
+      catch( final Exception e )
+      {
+        // should never happen
+        e.printStackTrace();
+      }
+    }
   }
 
   private <T extends Feature> T findData( final NAHydrotop context, final String gmlFileName, final Class<T> type ) throws ExecutionException
@@ -144,7 +176,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     throw new ExecutionException( String.format( "Failed to find input data: %s", type.getName() ) );
   }
 
-  private NAHydrotop findHydrotopes( final IStructuredSelection selection ) throws ExecutionException
+  private CommandableWorkspace findHydrotopes( final IStructuredSelection selection ) throws ExecutionException
   {
     final IKalypsoTheme[] themes = MapHandlerUtils.getSelectedThemes( selection );
     for( final IKalypsoTheme theme : themes )
@@ -157,7 +189,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
         {
           final Feature owner = featureList.getOwner();
           if( owner instanceof NAHydrotop )
-            return (NAHydrotop) owner;
+            return featureTheme.getWorkspace();
         }
       }
     }

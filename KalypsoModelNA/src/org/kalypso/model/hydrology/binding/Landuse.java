@@ -47,6 +47,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -58,13 +59,13 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class Landuse extends Feature_Impl
 {
-  public static final QName QNAME = new QName( NaModelConstants.NS_NALANDUSE, "Landuse" ); //$NON-NLS-1$
+  public static final QName FEATURE_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "Landuse" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NALANDUSE, "location" ); //$NON-NLS-1$
+  public static final QName PROPERTY_GEOMETRY = new QName( NaModelConstants.NS_NALANDUSE, "location" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "landuseclassLink" ); //$NON-NLS-1$
+  public static final QName LINK_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "landuseclassLink" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CORRSEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
+  public static final QName PROPERTY_CORRSEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
 
   @Deprecated
   public static final QName QNAME_PROP_SUD_MEMBERS = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
@@ -91,12 +92,12 @@ public class Landuse extends Feature_Impl
 
   public GM_MultiSurface getGeometry( )
   {
-    return getProperty( QNAME_PROP_GEOMETRY, GM_MultiSurface.class );
+    return getProperty( PROPERTY_GEOMETRY, GM_MultiSurface.class );
   }
 
   public void setGeometry( final GM_MultiSurface geometry )
   {
-    setProperty( QNAME_PROP_GEOMETRY, geometry );
+    setProperty( PROPERTY_GEOMETRY, geometry );
   }
 
   /**
@@ -104,23 +105,24 @@ public class Landuse extends Feature_Impl
    *          Must be either a {@link org.kalypsodeegree.model.feature.Feature} (maybe xlinked) or a {@link String}-ref
    *          to a feature.
    */
+  // FIXME: bad; better give href
   public void setLanduse( final Object landuseClass )
   {
-    setProperty( QNAME_PROP_LANDUSE, landuseClass );
+    setProperty( LINK_LANDUSE, landuseClass );
   }
 
-  public Object getLanduse( )
+  public IXLinkedFeature getLanduse( )
   {
-    return getProperty( QNAME_PROP_LANDUSE );
+    return (IXLinkedFeature) getMember( LINK_LANDUSE );
   }
 
   public Double getCorrSealing( )
   {
-    return getDoubleProperty( QNAME_PROP_CORRSEALING, 1.0 );
+    return getDoubleProperty( PROPERTY_CORRSEALING, 1.0 );
   }
 
   public void setCorrSealing( final Double corrSealing )
   {
-    setProperty( QNAME_PROP_CORRSEALING, corrSealing );
+    setProperty( PROPERTY_CORRSEALING, corrSealing );
   }
 }
