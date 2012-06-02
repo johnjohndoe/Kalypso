@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -55,11 +56,11 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class SoilType extends Feature_Impl
 {
-  public static final QName QNAME = new QName( NaModelConstants.NS_NAPEDOLOGIE, "Soiltype" ); //$NON-NLS-1$
+  static final QName FEATURE_SOIL_TYPE = new QName( NaModelConstants.NS_NAPEDOLOGIE, "Soiltype" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAPEDOLOGIE, "location" ); //$NON-NLS-1$
+  private static final QName PROPERTY_GEOMETRY = new QName( NaModelConstants.NS_NAPEDOLOGIE, "location" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_SOILTYPE = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soilTypeLink" ); //$NON-NLS-1$
+  private static final QName LINK_SOILTYPE = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soilTypeLink" ); //$NON-NLS-1$
 
   public SoilType( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -68,12 +69,12 @@ public class SoilType extends Feature_Impl
 
   public GM_MultiSurface getGeometry( )
   {
-    return getProperty( QNAME_PROP_GEOMETRY, GM_MultiSurface.class );
+    return getProperty( PROPERTY_GEOMETRY, GM_MultiSurface.class );
   }
 
   public void setGeometry( final GM_MultiSurface geometry )
   {
-    setProperty( QNAME_PROP_GEOMETRY, geometry );
+    setProperty( PROPERTY_GEOMETRY, geometry );
   }
 
   /**
@@ -83,12 +84,11 @@ public class SoilType extends Feature_Impl
    */
   public void setSoilType( final String href )
   {
-    setLink( QNAME_PROP_SOILTYPE, href );
+    setLink( LINK_SOILTYPE, href );
   }
 
-  public Object getSoilType( )
+  public IXLinkedFeature getSoilType( )
   {
-    return getProperty( QNAME_PROP_SOILTYPE );
+    return (IXLinkedFeature) getMember( LINK_SOILTYPE );
   }
-
 }

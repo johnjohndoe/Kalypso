@@ -102,7 +102,7 @@ public class LanduseCollection extends UnversionedModel
 
       case CLEAR_OUTPUT:
       {
-        final Landuse landuse = m_landuses.addNew( Landuse.QNAME );
+        final Landuse landuse = m_landuses.addNew( Landuse.FEATURE_LANDUSE );
         landuse.setName( name );
         landuse.setGeometry( geometry );
         landuse.setDescription( description );
@@ -124,7 +124,7 @@ public class LanduseCollection extends UnversionedModel
           if( intersection != null && intersection.getArea() > 0.01 )
           {
             // clone existing landuse
-            final Landuse landuse = m_landuses.addNew( Landuse.QNAME );
+            final Landuse landuse = m_landuses.addNew( Landuse.FEATURE_LANDUSE );
             landuse.setGeometry( intersection );
 
             if( corrSealing != null )
@@ -165,7 +165,7 @@ public class LanduseCollection extends UnversionedModel
   {
     final String href = "parameter.gml#" + landuseRef; //$NON-NLS-1$
     final IFeatureType lcFT = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) ); //$NON-NLS-1$
-    landuse.setLink( Landuse.QNAME_PROP_LANDUSE, href, lcFT );
+    landuse.setLink( Landuse.LINK_LANDUSE, href, lcFT );
   }
 
   private void clipExistingLanduse( final Landuse existingLanduse, final GM_MultiSurface geometry )

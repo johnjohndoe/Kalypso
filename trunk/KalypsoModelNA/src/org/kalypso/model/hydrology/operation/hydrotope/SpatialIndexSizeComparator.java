@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,60 +36,19 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
-import org.kalypsodeegree.model.feature.Feature;
+import java.util.Comparator;
 
-/**
- * Represents an (unordered) intersection of a list of features
- * 
- * @author kurzbach
- */
-class FeatureIntersection
+import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
+
+final class SpatialIndexSizeComparator implements Comparator<SpatialIndexExt>
 {
-  private final Feature[] m_features;
-
-  /**
-   * Create a new intersection from a feature list
-   */
-  public FeatureIntersection( final Feature... features )
+  @Override
+  public int compare( final SpatialIndexExt o1, final SpatialIndexExt o2 )
   {
-    m_features = features;
-  }
-
-  /**
-   * Creates an intersection of intersected features by merging the lists
-   */
-  public FeatureIntersection( final FeatureIntersection... features )
-  {
-    int size = 0;
-    for( final FeatureIntersection featureIntersection : features )
-    {
-      size += featureIntersection.size();
-    }
-    m_features = new Feature[size];
-    int count = 0;
-    for( final FeatureIntersection featureIntersection : features )
-    {
-      for( final Feature feature : featureIntersection.getFeatures() )
-      {
-        m_features[count++] = feature;
-      }
-    }
-  }
-
-  /**
-   * The number of intersected features
-   */
-  public int size( )
-  {
-    return m_features.length;
-  }
-
-  public Feature[] getFeatures( )
-  {
-    return m_features;
+    return o1.size() - o2.size();
   }
 }

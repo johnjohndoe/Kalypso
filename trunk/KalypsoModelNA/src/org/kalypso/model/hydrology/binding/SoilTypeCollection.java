@@ -120,7 +120,7 @@ public class SoilTypeCollection extends UnversionedModel
     }
 
     // Create new soilType
-    final SoilType pedology = m_soilTypes.addNew( SoilType.QNAME );
+    final SoilType pedology = m_soilTypes.addNew( SoilType.FEATURE_SOIL_TYPE );
     pedology.setName( label );
     pedology.setGeometry( geometry );
     return pedology;

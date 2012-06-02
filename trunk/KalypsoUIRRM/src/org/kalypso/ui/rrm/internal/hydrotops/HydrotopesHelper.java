@@ -53,7 +53,7 @@ import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
@@ -103,7 +103,7 @@ public final class HydrotopesHelper
   {
     final URL contextLocation = contextWorkspace.getContext();
 
-    final IPoolableObjectType poolKey = new PoolableObjectType( "gml", INaProjectConstants.GML_PARAMETER_FILE, contextLocation );
+    final IPoolableObjectType poolKey = new PoolableObjectType( "gml", RrmScenario.FILE_PARAMETER_GML, contextLocation );
 
     try
     {

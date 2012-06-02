@@ -101,9 +101,9 @@ public class Hydrotop extends Feature_Impl implements IHydrotope
   }
 
   @Override
-  public void setLanduse( final String value )
+  public void setLanduse( final String href )
   {
-    setProperty( PROPERTY_LANDUSE, value );
+    setProperty( PROPERTY_LANDUSE, href );
   }
 
   @Override
@@ -197,5 +197,4 @@ public class Hydrotop extends Feature_Impl implements IHydrotope
     }
     return false;
   }
-
 }
