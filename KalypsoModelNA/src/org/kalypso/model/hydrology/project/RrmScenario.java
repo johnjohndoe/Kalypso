@@ -66,17 +66,14 @@ public class RrmScenario
 
   private static final String FILE_EXPERT_CONTROL_GML = "expertControl.gml"; //$NON-NLS-1$
 
-  private static final String FILE_PARAMETER_GML = "parameter.gml"; //$NON-NLS-1$
+  public static final String FILE_PARAMETER_GML = "parameter.gml"; //$NON-NLS-1$
 
   private static final String FILE_HYDROTOP_GML = "hydrotop.gml"; //$NON-NLS-1$
 
   private static final String FILE_GEOLOGIE = "geologie.gml";//$NON-NLS-1$
 
-  // private static final String GML_GEOLOGIE_PATH = FOLDER_MODELS + "/" + GML_GEOLOGIE_FILE;
-
   private static final String FILE_LANDUSE = "landuse.gml";//$NON-NLS-1$
 
-// String GML_LANDUSE_PATH = FOLDER_MODELS + "/" + GML_LANDUSE_FILE;
   private static final String FILE_PEDOLOGIE = "pedologie.gml";//$NON-NLS-1$
 
   private static final String FILE_SUDS_GML = "suds.gml"; //$NON-NLS-1$
@@ -87,7 +84,6 @@ public class RrmScenario
 
   private static final String FILE_TIMESERIES_MAPPINGS_GML = "timeseriesMappings.gml"; //$NON-NLS-1$
 
-// String GML_PEDOLOGIE_PATH = FOLDER_MODELS + "/" + GML_PEDOLOGIE_FILE;
   private final IFolder m_scenarioFolder;
 
   /**
