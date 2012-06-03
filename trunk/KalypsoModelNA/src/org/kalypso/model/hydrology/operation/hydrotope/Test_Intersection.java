@@ -69,7 +69,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
@@ -111,16 +110,16 @@ public class Test_Intersection extends TestCase
     final NAHydrotop hydrotopeCollection = (NAHydrotop) outputWS.getRootFeature();
     final IFeatureBindingCollection<IHydrotope> hydrotopes = hydrotopeCollection.getHydrotopes();
 
-    final FeatureListIndexer indexer = new FeatureListIndexer( "indexer" ); //$NON-NLS-1$
-    indexer.addFeatureList( catchments.getFeatureList(), "Catchments" );
-    indexer.addFeatureList( landuseFeatureList, "Landuse" );
-    indexer.addFeatureList( soilTypesFeatureList, "Pedology" );
-    indexer.addFeatureList( geologiesFeatureList, "Geology" );
+    final HydrotopeInputIndexer indexer = new HydrotopeInputIndexer( "indexer" ); //$NON-NLS-1$
+    indexer.addInput( new CatchmentHydrotopeInput( catchments.getFeatureList() ) );
+    indexer.addInput( new LanduseHydrotopeInput( landuseFeatureList ) );
+    indexer.addInput( new PedologyHydrotopeInput( soilTypesFeatureList ) );
+    indexer.addInput( new GeologyHydrotopeInput( geologiesFeatureList ) );
 
     final IStatus indexStatus = indexer.execute( new NullProgressMonitor() );
-    final SpatialIndexExt[] indices = indexer.getIndices();
+    final IHydrotopeInput[] input = indexer.getIndices();
 
-    final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector( indices, "test" ); //$NON-NLS-1$
+    final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector( input, "test" ); //$NON-NLS-1$
 
     final IStatus intersectStatus = geometryIntersector.execute( new NullProgressMonitor() );
 

@@ -83,9 +83,9 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
 
   private final String m_logMessage;
 
-  private final Collection<HydrotopeBean> m_hydrotopeBeans;
+  private final Collection<HydrotopeUserData> m_hydrotopeBeans;
 
-  public HydrotopeBuilder( final Collection<HydrotopeBean> hydrotopeBeans, final IFeatureBindingCollection<IHydrotope> outputList, final String logMessage )
+  public HydrotopeBuilder( final Collection<HydrotopeUserData> hydrotopeBeans, final IFeatureBindingCollection<IHydrotope> outputList, final String logMessage )
   {
     m_hydrotopeBeans = hydrotopeBeans;
     m_outputList = outputList;
@@ -104,7 +104,7 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
     removeOverlappingGeometriesFromExisting();
 
     int count = 0;
-    for( final HydrotopeBean bean : m_hydrotopeBeans )
+    for( final HydrotopeUserData bean : m_hydrotopeBeans )
     {
       if( count % 100 == 0 )
       {
@@ -193,7 +193,7 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
   {
     final Collection<Polygon> allPolygons = new ArrayList<>();
 
-    for( final HydrotopeBean hydrotopeBean : m_hydrotopeBeans )
+    for( final HydrotopeUserData hydrotopeBean : m_hydrotopeBeans )
       allPolygons.addAll( Arrays.asList( hydrotopeBean.getGeometry() ) );
 
     final Polygon[] polygonArray = allPolygons.toArray( new Polygon[allPolygons.size()] );
