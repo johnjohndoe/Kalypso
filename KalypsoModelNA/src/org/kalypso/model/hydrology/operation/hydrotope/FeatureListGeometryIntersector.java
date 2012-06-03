@@ -79,11 +79,11 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
 
   private final String m_logLabel;
 
-  private final SpatialIndexExt[] m_indices;
+  private final IHydrotopeInput[] m_input;
 
-  public FeatureListGeometryIntersector( final SpatialIndexExt[] indices, final String logLabel )
+  public FeatureListGeometryIntersector( final IHydrotopeInput[] input, final String logLabel )
   {
-    m_indices = indices;
+    m_input = input;
     m_logLabel = logLabel;
   }
 
@@ -97,7 +97,7 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
     final SubMonitor progress = SubMonitor.convert( monitor, taskName, 100 );
 
     /* Do the intersection */
-    final SpatialIndexExt sourceIndex = m_indices[0];
+    final SpatialIndexExt sourceIndex = m_input[0].getIndex();
 
     final List< ? > sourcePolygons = sourceIndex.query( sourceIndex.getBoundingBox() );
     final int countSourcePolygons = sourcePolygons.size();
@@ -115,20 +115,20 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
 
       final Polygon sourcePolygon = (Polygon) sourcePolygons.get( i );
 
-      intersectSource( sourcePolygon, m_indices, log );
+      intersectSource( sourcePolygon, m_input, log );
     }
     log.add( IStatus.INFO, Messages.getString( "FeatureListGeometryIntersector.9", m_totalAreaDiscarded ), null ); //$NON-NLS-1$
 
     return log.asMultiStatus( m_logLabel );
   }
 
-  private void intersectSource( final Polygon sourcePolygon, final SpatialIndexExt[] indices, final IStatusCollector log )
+  private void intersectSource( final Polygon sourcePolygon, final IHydrotopeInput[] input, final IStatusCollector log )
   {
     List<Polygon> currentIntersections = Collections.singletonList( sourcePolygon );
 
-    for( int j = 1; j < indices.length; j++ )
+    for( int j = 1; j < input.length; j++ )
     {
-      final SpatialIndexExt targetIndex = indices[j];
+      final SpatialIndexExt targetIndex = input[j].getIndex();
 
       final List<Polygon> newIntersections = new ArrayList<>();
 
@@ -146,7 +146,7 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
 
   private void findIntersections( final Polygon sourcePolygon, final SpatialIndexExt targetIndex, final IStatusCollector log, final List<Polygon> result )
   {
-    final HydrotopeBean sourceData = (HydrotopeBean) sourcePolygon.getUserData();
+    final HydrotopeUserData sourceData = (HydrotopeUserData) sourcePolygon.getUserData();
     final int dim1 = sourcePolygon.getDimension();
 
     @SuppressWarnings("unchecked")
@@ -154,14 +154,14 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
 
     for( final Polygon targetPolygon : targetPolygons )
     {
-      final HydrotopeBean targetData = (HydrotopeBean) targetPolygon.getUserData();
+      final HydrotopeUserData targetData = (HydrotopeUserData) targetPolygon.getUserData();
 
       final int dim2 = targetPolygon.getDimension();
 
       final IntersectionMatrix relate = sourcePolygon.relate( targetPolygon );
       if( relate.isEquals( dim1, dim2 ) )
       {
-        final HydrotopeBean mergedData = sourceData.merge( targetData, targetPolygon );
+        final HydrotopeUserData mergedData = sourceData.merge( targetData, targetPolygon );
         sourcePolygon.setUserData( mergedData );
 
         addResult( result, sourcePolygon );
@@ -176,8 +176,8 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
         }
         catch( final Throwable e )
         {
-          final String sourceLabel = ((HydrotopeBean) sourcePolygon.getUserData()).toErrorString();
-          final String targetLabel = ((HydrotopeBean) targetPolygon.getUserData()).toErrorString();
+          final String sourceLabel = ((HydrotopeUserData) sourcePolygon.getUserData()).toErrorString();
+          final String targetLabel = ((HydrotopeUserData) targetPolygon.getUserData()).toErrorString();
 
           log.add( IStatus.WARNING, Messages.getString( "FeatureListGeometryIntersector.4", sourceLabel, targetLabel ), e ); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -187,7 +187,7 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
         final Polygon[] polygons = intersectionPolygons.toArray( new Polygon[intersectionPolygons.size()] );
         for( final Polygon polygon : polygons )
         {
-          final HydrotopeBean mergedData = sourceData.merge( targetData, polygon );
+          final HydrotopeUserData mergedData = sourceData.merge( targetData, polygon );
           polygon.setUserData( mergedData );
 
           addResult( result, polygon );
@@ -237,8 +237,8 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
         {
           // intersection has failed, we cannot use this geometry
           // calculate error?
-          final String sourceLabel = ((HydrotopeBean) sourcePolygon.getUserData()).toErrorString();
-          final String targetLabel = ((HydrotopeBean) targetPolygon.getUserData()).toErrorString();
+          final String sourceLabel = ((HydrotopeUserData) sourcePolygon.getUserData()).toErrorString();
+          final String targetLabel = ((HydrotopeUserData) targetPolygon.getUserData()).toErrorString();
 
           final String message = Messages.getString( "FeatureListGeometryIntersector.5", sourceLabel, targetLabel );
           log.add( IStatus.ERROR, message, e2 );

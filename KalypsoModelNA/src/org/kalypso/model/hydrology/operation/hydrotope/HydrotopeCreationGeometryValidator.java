@@ -131,7 +131,7 @@ public class HydrotopeCreationGeometryValidator
 
   private static void addWarning( final IStatusCollector log, final String format, final Polygon polygon )
   {
-    final HydrotopeBean data = (HydrotopeBean) polygon.getUserData();
+    final HydrotopeUserData data = (HydrotopeUserData) polygon.getUserData();
     final String label = data.toErrorString();
     log.add( IStatus.WARNING, format, null, label );
   }

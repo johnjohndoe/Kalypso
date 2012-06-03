@@ -102,7 +102,7 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final SpatialIndexExt index = FeatureListIndexer.buildIndex( m_outputList.getFeatureList(), "Hydrotopes", log );
+    final SpatialIndexExt index = AbstractHydrotopeInput.buildIndex( m_outputList.getFeatureList(), log );
 
     final IStatus status = log.asMultiStatus( "Index hydrotopes" );
     ModelNA.getDefault().getLog().log( status );

@@ -40,29 +40,39 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
 /**
+ * Holds and build indices for hydrotopes intersection
+ * 
  * @author Gernot Belger
  */
-class HydrotopeCreationGeometryValidation implements ICoreRunnableWithProgress
+class HydrotopeInputIndexer implements ICoreRunnableWithProgress
 {
-  private final SpatialIndexExt[] m_indices;
+  private final List<IHydrotopeInput> m_input = new ArrayList<>();
 
   private final String m_logLabel;
 
-  public HydrotopeCreationGeometryValidation( final SpatialIndexExt[] indices, final String logLabel )
+  public HydrotopeInputIndexer( final String logLabel )
   {
-    m_indices = indices;
     m_logLabel = logLabel;
+  }
+
+  public void addInput( final IHydrotopeInput input )
+  {
+    m_input.add( input );
   }
 
   @Override
@@ -74,33 +84,27 @@ class HydrotopeCreationGeometryValidation implements ICoreRunnableWithProgress
 
     final SubMonitor progress = SubMonitor.convert( monitor, taskName, 100 );
 
-    for( int i = 0; i < m_indices.length; i++ )
+    int count = 0;
+    for( final IHydrotopeInput input : m_input )
     {
-      final SpatialIndexExt index = m_indices[i];
+      progress.subTask( String.format( "%d of %d - %s", count, m_input.size(), input.getLabel() ) );
 
-      final String label = (String) index.getUserData();
+      input.buildIndex( log );
 
-      final String subTask = String.format( "Validating layer %d of %d - %s", i + 1, m_indices.length, label );
-      progress.subTask( subTask );
+      ProgressUtilities.worked( progress, 1 );
 
-      final IStatus status = validateIndex( index, subTask );
-      log.add( status );
+      count++;
     }
+
+    // sort by number of polygons
+    Collections.sort( m_input, new HydrotopeInputComparator() );
+    Collections.reverse( m_input );
 
     return log.asMultiStatus( m_logLabel );
   }
 
-  private static IStatus validateIndex( final SpatialIndexExt index, final String logLabel )
+  public IHydrotopeInput[] getIndices( )
   {
-    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
-
-
-    /* run checks */
-    final HydrotopeCreationGeometryValidator validator = new HydrotopeCreationGeometryValidator( index );
-
-    log.add( validator.checkGeometryCorrectness() );
-    log.add( validator.checkSelfIntersection() );
-
-    return log.asMultiStatus( logLabel );
+    return m_input.toArray( new IHydrotopeInput[m_input.size()] );
   }
 }

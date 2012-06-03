@@ -40,22 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -70,76 +58,38 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.util.PolygonExtracter;
 
 /**
- * Holds and build indices for hydrotopes intersection
- * 
  * @author Gernot Belger
  */
-class FeatureListIndexer implements ICoreRunnableWithProgress
+abstract class AbstractHydrotopeInput implements IHydrotopeInput
 {
-  private final Map<FeatureList, String> m_sourceLayers = new LinkedHashMap<FeatureList, String>();
+  private SpatialIndexExt m_index = null;
 
-  private SpatialIndexExt[] m_indices;
+  private final FeatureList m_features;
 
-  private final String m_logLabel;
-
-  public FeatureListIndexer( final String logLabel )
+  public AbstractHydrotopeInput( final FeatureList features )
   {
-    m_logLabel = logLabel;
-  }
-
-  public void addFeatureList( final FeatureList list, final String label )
-  {
-    m_sourceLayers.put( list, label );
+    m_features = features;
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public FeatureList getFeatures( )
   {
-    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
-
-    final String taskName = Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.1" ); //$NON-NLS-1$
-
-    final SubMonitor progress = SubMonitor.convert( monitor, taskName, 100 );
-
-    final List<SpatialIndexExt> indices = new ArrayList<>();
-
-    int count = 0;
-    for( final Entry<FeatureList, String> entry : m_sourceLayers.entrySet() )
-    {
-      final String label = entry.getValue();
-
-      progress.subTask( String.format( "%d of %d - %s", count, m_sourceLayers.size(), label ) );
-
-      final FeatureList featureList = entry.getKey();
-
-      final SpatialIndexExt index = buildIndex( featureList, label, log );
-      indices.add( index );
-
-      ProgressUtilities.worked( progress, 1 );
-
-      count++;
-    }
-
-    for( int i = 0; i < m_sourceLayers.size(); i++ )
-    {
-    }
-
-    // sort by number of polygons
-    m_indices = indices.toArray( new SpatialIndexExt[indices.size()] );
-    Arrays.sort( m_indices, new SpatialIndexSizeComparator() );
-    ArrayUtils.reverse( m_indices );
-
-    return log.asMultiStatus( m_logLabel );
+    return m_features;
   }
 
-  static SpatialIndexExt buildIndex( final FeatureList featureList, final String label, final IStatusCollector log )
+  @Override
+  public void buildIndex( final IStatusCollector log )
   {
-    final Envelope boundingBox = JTSAdapter.export( featureList.getBoundingBox() );
+    m_index = buildIndex( m_features, log );
+  }
+
+  static SpatialIndexExt buildIndex( final FeatureList features, final IStatusCollector log )
+  {
+    final Envelope boundingBox = JTSAdapter.export( features.getBoundingBox() );
 
     final SpatialIndexExt index = new SplitSortSpatialIndex( boundingBox );
-    index.setUserData( label );
 
-    for( final Object element : featureList )
+    for( final Object element : features )
     {
       final Feature feature = (Feature) element;
       final GM_Object gmObj = feature.getDefaultGeometryPropertyValue();
@@ -153,7 +103,7 @@ class FeatureListIndexer implements ICoreRunnableWithProgress
         for( final Polygon polygon : polygons )
         {
           polygon.setSRID( export.getSRID() );
-          polygon.setUserData( new HydrotopeBean( polygon, feature ) );
+          polygon.setUserData( new HydrotopeUserData( polygon, feature ) );
 
           // FIXME: only add valid polygons:
           // - do not overlap with existing ones
@@ -167,11 +117,13 @@ class FeatureListIndexer implements ICoreRunnableWithProgress
         log.add( IStatus.WARNING, Messages.getString( "FeatureListGeometryIntersector.0", feature.getName() ), e ); //$NON-NLS-1$
       }
     }
+
     return index;
   }
 
-  public SpatialIndexExt[] getIndices( )
+  @Override
+  public SpatialIndexExt getIndex( )
   {
-    return m_indices;
+    return m_index;
   }
 }

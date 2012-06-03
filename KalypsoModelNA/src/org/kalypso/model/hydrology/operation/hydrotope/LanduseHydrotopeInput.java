@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,19 +36,33 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
-import java.util.Comparator;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypsodeegree.model.feature.FeatureList;
 
-import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
-
-final class SpatialIndexSizeComparator implements Comparator<SpatialIndexExt>
+/**
+ * @author Gernot Belger
+ */
+class LanduseHydrotopeInput extends AbstractHydrotopeInput
 {
-  @Override
-  public int compare( final SpatialIndexExt o1, final SpatialIndexExt o2 )
+  public LanduseHydrotopeInput( final FeatureList landuseList )
   {
-    return o1.size() - o2.size();
+    super( landuseList );
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    return "Landuse";
+  }
+
+  @Override
+  public void validateInput( final IStatusCollector log )
+  {
+    // TODO Auto-generated method stub
+
   }
 }

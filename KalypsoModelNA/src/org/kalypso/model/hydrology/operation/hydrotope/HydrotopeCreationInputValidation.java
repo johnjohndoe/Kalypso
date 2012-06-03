@@ -40,39 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.internal.ModelNA;
-
-import com.vividsolutions.jts.geom.Polygon;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
 /**
  * @author Gernot Belger
  */
-public class HydrotopeDissolver implements ICoreRunnableWithProgress
+class HydrotopeCreationInputValidation implements ICoreRunnableWithProgress
 {
-  private Collection<HydrotopeUserData> m_result;
+  private final IHydrotopeInput[] m_input;
 
-  private final String m_logMessage;
+  private final String m_logLabel;
 
-  private final List<Polygon> m_intersections;
-
-  public HydrotopeDissolver( final List<Polygon> intersections, final String logMessage )
+  public HydrotopeCreationInputValidation( final IHydrotopeInput[] input, final String logLabel )
   {
-    m_intersections = intersections;
-    m_logMessage = logMessage;
+    m_input = input;
+    m_logLabel = logLabel;
   }
 
   @Override
@@ -80,52 +70,39 @@ public class HydrotopeDissolver implements ICoreRunnableWithProgress
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final SubMonitor progress = SubMonitor.convert( monitor, "Dissolving hydrotopes", 100 );
+    final String taskName = Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.1" ); //$NON-NLS-1$
 
-    final Map<String, HydrotopeUserData> hash = new HashMap<>();
+    final SubMonitor progress = SubMonitor.convert( monitor, taskName, 100 );
 
-    final int intersectionsSize = m_intersections.size();
-
-    progress.setWorkRemaining( intersectionsSize * 2 );
-
-    for( int i = 0; i < intersectionsSize; i++ )
+    for( int i = 0; i < m_input.length; i++ )
     {
-      if( i % 10 == 0 )
-      {
-        progress.subTask( String.format( "Hashing geometry %d of %d", i, intersectionsSize ) );
-        ProgressUtilities.worked( progress, 10 );
-      }
+      final IHydrotopeInput input = m_input[i];
 
-      try
-      {
-        final Polygon polygon = m_intersections.get( i );
+      final String subTask = String.format( "Validating layer %d of %d - %s", i + 1, m_input.length, input.getLabel() );
+      progress.subTask( subTask );
 
-        final HydrotopeUserData hydrotope = (HydrotopeUserData) polygon.getUserData();
-        final String key = hydrotope.getHydrotopeHash();
-
-        /* Add or merge element */
-        final HydrotopeUserData existingBean = hash.get( key );
-        if( existingBean == null )
-          hash.put( key, hydrotope );
-        else
-        {
-          final HydrotopeUserData newBean = existingBean.mergeGeometries( hydrotope );
-          hash.put( key, newBean );
-        }
-      }
-      catch( final CoreException e )
-      {
-        log.add( e.getStatus() );
-      }
+      final IStatus status = validateIndex( input, subTask );
+      log.add( status );
     }
 
-    m_result = hash.values();
-
-    return log.asMultiStatus( m_logMessage );
+    return log.asMultiStatus( m_logLabel );
   }
 
-  public Collection<HydrotopeUserData> getResult( )
+  private static IStatus validateIndex( final IHydrotopeInput input, final String logLabel )
   {
-    return Collections.unmodifiableCollection( m_result );
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
+    /* run checks */
+    final SpatialIndexExt index = input.getIndex();
+    final HydrotopeCreationGeometryValidator validator = new HydrotopeCreationGeometryValidator( index );
+
+    /* General geometric validation */
+    log.add( validator.checkGeometryCorrectness() );
+    log.add( validator.checkSelfIntersection() );
+
+    /* special type dependend validation */
+    input.validateInput( log );
+
+    return log.asMultiStatus( logLabel );
   }
 }

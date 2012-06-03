@@ -56,7 +56,6 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -102,15 +101,15 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     /* Build the indices */
     final String stepIndex = formatStep( 1, 6, "Initialisation" );
     progress.setTaskName( stepIndex );
-    final FeatureListIndexer geometryIndexer = configureIndexer( stepIndex );
+    final HydrotopeInputIndexer geometryIndexer = configureIndexer( stepIndex );
     final IStatus initStatus = geometryIndexer.execute( progress.newChild( 10 ) );
     log.add( initStatus );
 
     /* Input validation */
     final String stepValidate = formatStep( 2, 6, "Validation" );
     progress.setTaskName( stepValidate );
-    final SpatialIndexExt[] indices = geometryIndexer.getIndices();
-    final HydrotopeCreationGeometryValidation geometryValidator = new HydrotopeCreationGeometryValidation( indices, stepValidate );
+    final IHydrotopeInput[] indices = geometryIndexer.getIndices();
+    final HydrotopeCreationInputValidation geometryValidator = new HydrotopeCreationInputValidation( indices, stepValidate );
     final IStatus validationStatus = geometryValidator.execute( progress.newChild( 10 ) );
     log.add( validationStatus );
 
@@ -132,7 +131,7 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     /* Build hydrotopes */
     final String stepBuildHydrotopes = formatStep( 5, 6, Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.2" ) ); //$NON-NLS-1$
     progress.setTaskName( stepBuildHydrotopes );
-    final Collection<HydrotopeBean> hydrotopeBeans = dissolver.getResult();
+    final Collection<HydrotopeUserData> hydrotopeBeans = dissolver.getResult();
     final HydrotopeBuilder hydrotopeBuilder = new HydrotopeBuilder( hydrotopeBeans, m_outputList, stepBuildHydrotopes );
     final IStatus buildStatus = hydrotopeBuilder.execute( progress.newChild( 10 ) );
     log.add( buildStatus );
@@ -152,17 +151,16 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     return Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.5", step, stepCount, message );
   }
 
-  private FeatureListIndexer configureIndexer( final String logLabel )
+  private HydrotopeInputIndexer configureIndexer( final String logLabel )
   {
-    final FeatureListIndexer geometryIntersector = new FeatureListIndexer( logLabel );
+    final HydrotopeInputIndexer indexer = new HydrotopeInputIndexer( logLabel );
 
     if( m_workingArea == null )
     {
-      geometryIntersector.addFeatureList( m_catchmentsList, "Catchments" );
-      geometryIntersector.addFeatureList( m_landuseList, "Landuse" );
-      geometryIntersector.addFeatureList( m_pedologyList, "Pedology" );
-      geometryIntersector.addFeatureList( m_geologyList, "Geology" );
-      m_outputList.clear();
+      indexer.addInput( new CatchmentHydrotopeInput( m_catchmentsList ) );
+      indexer.addInput( new LanduseHydrotopeInput( m_landuseList ) );
+      indexer.addInput( new PedologyHydrotopeInput( m_pedologyList ) );
+      indexer.addInput( new GeologyHydrotopeInput( m_geologyList ) );
     }
     else
     {
@@ -181,6 +179,6 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
       throw new UnsupportedOperationException();
     }
 
-    return geometryIntersector;
+    return indexer;
   }
 }
