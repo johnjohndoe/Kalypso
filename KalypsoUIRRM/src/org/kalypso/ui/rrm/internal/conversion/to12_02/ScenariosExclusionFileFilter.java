@@ -44,16 +44,16 @@ import java.io.File;
 import java.io.FileFilter;
 
 /**
- * This file filter accepts everything except the "Szenarios" folder.
+ * This file filter accepts everything except the "Szenarien" folder.
  * 
  * @author Holger Albert
  */
 public class ScenariosExclusionFileFilter implements FileFilter
 {
   /**
-   * The name of the "Szenarios" folder.
+   * The name of the "Szenarien" folder.
    */
-  public static final String SCENARIOS_FOLDER = "Szenarios";
+  public static final String SCENARIOS_FOLDER = "Szenarien";
 
   /**
    * The constructor.
