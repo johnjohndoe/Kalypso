@@ -63,9 +63,12 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.wspwin.core.LocalEnergyLossBean;
+import org.kalypso.wspwin.core.LocalEnergyLossBean.LOSSKIND;
 import org.kalypso.wspwin.core.ProfileBean;
 import org.kalypso.wspwin.core.RunOffEventBean;
 import org.kalypso.wspwin.core.WspCfg;
@@ -76,7 +79,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Writes the state for calculation with kalypso-1d.exe (which is different from wspwin format!).
- *
+ * 
  * @author Gernot Belger
  */
 public class WspWinProjectWriter
@@ -156,7 +159,63 @@ public class WspWinProjectWriter
     for( final WspmFixation fixation : fixations )
       addFixation( fixation, zustand );
 
-    // TODO: losses + calculations
+    // TODO: calculations
+    for( final TuhhReachProfileSegment segment : segments )
+      addEnergyloss( segment, zustand );
+
+  }
+
+  private void addEnergyloss( final TuhhReachProfileSegment segment, final WspWinZustand zustand )
+  {
+    final IProfileFeature profileMember = segment.getProfileMember();
+    final IProfil profile = profileMember.getProfil();
+    final IEnergylossProfileObject[] losses = profile.getProfileObjects( IEnergylossProfileObject.class );
+    final BigDecimal station = profileMember.getBigStation();
+    for( int i = 0; i < losses.length; i++ )
+    {
+      final LocalEnergyLossBean bean = convertToEnergylossBean( station, losses[i] );
+      zustand.addLoss( bean );
+    }
+  }
+
+  final private LOSSKIND getLosskind( final TupleResult result, final int index )
+  {
+    if( index < result.size() )
+    {
+      final int iType = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
+      final IRecord rec = result.get( index );
+      try
+      {
+        final String id = rec.getValue( iType ).toString();
+        LOSSKIND lk = LOSSKIND.valueOf( id.replace( "ü", "UE" ).toUpperCase() );
+        return lk;
+      }
+      catch( IllegalArgumentException e )
+      {
+        // do nothing, just catch IllegalArgumentException
+      }
+    }
+    return LOSSKIND.ZUSATZVERLUST;
+  }
+
+  private final LocalEnergyLossBean convertToEnergylossBean( final BigDecimal station, final IEnergylossProfileObject loss )
+  {
+    final Map<LocalEnergyLossBean.LOSSKIND, Double> lossMap = new HashMap<LocalEnergyLossBean.LOSSKIND, Double>();
+    final TupleResult res = loss.getObservation().getResult();
+    for( int i = 0; i < res.size(); i++ )
+    {
+      final LOSSKIND lk = getLosskind( res, i );
+      if(lossMap.containsKey( lk  ))
+      {
+        lossMap.put( lk,lossMap.get( lk )+ loss.getValue( i ).doubleValue() );
+      }
+      else
+      {
+        lossMap.put( lk, loss.getValue( i ).doubleValue() );
+      }
+    }
+    final LocalEnergyLossBean bean = new LocalEnergyLossBean( station, lossMap);
+    return bean;
   }
 
   private void addRunoffEvent( final IRunOffEvent runoffEvent, final WspWinZustand zustand )
