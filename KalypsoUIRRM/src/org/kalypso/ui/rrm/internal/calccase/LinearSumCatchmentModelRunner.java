@@ -73,7 +73,6 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -134,7 +133,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString( "UpdateSimulationWorker_14" ), 100 ); //$NON-NLS-1$
+      monitor.beginTask( "Apply catchment model", 100 );
       monitor.subTask( TimeseriesUtils.getName( parameterType ) );
 
       /* Compare the catchments of the model and the catchments of the generator. */
@@ -161,7 +160,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     }
     catch( final Exception ex )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "UpdateSimulationWorker_15" ), ex ) ); // $NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to execute catchment model", ex ) );
     }
     finally
     {
