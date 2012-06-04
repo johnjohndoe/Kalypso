@@ -85,6 +85,8 @@ import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -92,6 +94,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.CalculationBean;
 import org.kalypso.wspwin.core.ICalculationContentBean;
 import org.kalypso.wspwin.core.LocalEnergyLossBean;
+import org.kalypso.wspwin.core.LocalEnergyLossBean.LOSSKIND;
 import org.kalypso.wspwin.core.ProfileBean;
 import org.kalypso.wspwin.core.RunOffEventBean;
 import org.kalypso.wspwin.core.WspCfg;
@@ -506,10 +509,21 @@ public final class WspWinImporter
       log.add( IStatus.ERROR, e.getLocalizedMessage(), e );
     }
 
-    // TODO: don't forget to add the local energy losses to profiles: handle multiple losses at one profile - mean
-    // value?
-    // each zustand can have losses defined for a station / profile. They are preserved in locEnergyLossBeans /
-    // readLocEnergyLosses
+    for( LocalEnergyLossBean energyLossBean : zustand.getLosses() )
+    {
+      EnergylossProfileObject energyLoss = new EnergylossProfileObject();
+      final Map<LOSSKIND, Double> entries = energyLossBean.getEntries();
+      for( LOSSKIND kind : entries.keySet() )
+      {
+        IRecord loss = energyLoss.getObservation().getResult().createRecord();
+        final int iType = energyLoss.getObservation().getResult().indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
+        final int iValue = energyLoss.getObservation().getResult().indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
+        loss.setValue( iType, kind.name() );
+        loss.setValue( iValue, entries.get( kind ) );
+        energyLoss.getObservation().getResult().add( loss );
+      }
+      reach.findProfile( energyLossBean.getStation() ).getProfil().addProfileObjects( energyLoss );
+    }
 
     // ///////////////////////////// //
     // add calculations (.ber, .001) //

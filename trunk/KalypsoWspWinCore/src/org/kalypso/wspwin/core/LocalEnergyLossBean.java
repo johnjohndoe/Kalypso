@@ -42,6 +42,7 @@ package org.kalypso.wspwin.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.kalypso.wspwin.core.i18n.Messages;
 
@@ -61,12 +63,6 @@ import org.kalypso.wspwin.core.i18n.Messages;
  */
 public class LocalEnergyLossBean
 {
-  private final BigDecimal m_station;
-
-  private final Map<LOSSKIND, Double> m_entries;
-
-  private static String STATION = "STATION"; //$NON-NLS-1$
-
   public static enum LOSSKIND
   {
     EINLAUF,
@@ -74,22 +70,6 @@ public class LocalEnergyLossBean
     KRUEMMER,
     RECHEN,
     ZUSATZVERLUST;
-  }
-
-  public LocalEnergyLossBean( final BigDecimal station, final Map<LOSSKIND, Double> entries )
-  {
-    m_station = station;
-    m_entries = new TreeMap<LOSSKIND, Double>( entries );
-  }
-
-  public BigDecimal getStation( )
-  {
-    return m_station;
-  }
-
-  public Map<LOSSKIND, Double> getEntries( )
-  {
-    return Collections.unmodifiableMap( m_entries );
   }
 
   /**
@@ -111,11 +91,11 @@ public class LocalEnergyLossBean
           count++;
           final StringTokenizer tokenizer = new StringTokenizer( nextLine );
           if( tokenizer.countTokens() % 2 != 0 )
-            throw new ParseException( Messages.getString("org.kalypso.wspwin.core.LocalEnergyLossBean.1") + nextLine, count ); //$NON-NLS-1$
+            throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.LocalEnergyLossBean.1" ) + nextLine, count ); //$NON-NLS-1$
           final int countKinds = tokenizer.countTokens() / 2 - 1;
           final String key = tokenizer.nextToken();
           if( !STATION.equalsIgnoreCase( key ) )
-            throw new ParseException( Messages.getString("org.kalypso.wspwin.core.LocalEnergyLossBean.2") + STATION + "': " + nextLine, count ); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.LocalEnergyLossBean.2" ) + STATION + "': " + nextLine, count ); //$NON-NLS-1$ //$NON-NLS-2$
           final BigDecimal station = new BigDecimal( tokenizer.nextToken() );
 
           // read pairs: kind -> value
@@ -139,5 +119,49 @@ public class LocalEnergyLossBean
     {
       LineIterator.closeQuietly( lineIt );
     }
+  }
+
+  private final BigDecimal m_station;
+
+  private final Map<LOSSKIND, Double> m_entries;
+
+  private static String STATION = "STATION"; //$NON-NLS-1$
+
+  public LocalEnergyLossBean( final BigDecimal station, final Map<LOSSKIND, Double> entries )
+  {
+    m_station = station;
+    m_entries = new TreeMap<LOSSKIND, Double>( entries );
+  }
+
+  public static void write( final File lelFile, final LocalEnergyLossBean[] beans ) throws IOException
+  {
+    final PrintWriter psiWriter = new PrintWriter( lelFile );
+    try
+    {
+      for( LocalEnergyLossBean localEnergyLossBean : beans )
+      {
+        psiWriter.print( "STATION " + localEnergyLossBean.getStation() );//$NON-NLS-1$
+        final Map<LOSSKIND, Double> entries = localEnergyLossBean.getEntries();
+        for( LOSSKIND losskind : entries.keySet() )
+        {
+          psiWriter.print( " " + losskind + " " + entries.get( losskind ) );//$NON-NLS-1$ $NON-NLS-2$
+        }
+        psiWriter.println();
+      }
+    }
+    finally
+    {
+      IOUtils.closeQuietly( psiWriter );
+    }
+  }
+
+  public Map<LOSSKIND, Double> getEntries( )
+  {
+    return Collections.unmodifiableMap( m_entries );
+  }
+
+  public BigDecimal getStation( )
+  {
+    return m_station;
   }
 }

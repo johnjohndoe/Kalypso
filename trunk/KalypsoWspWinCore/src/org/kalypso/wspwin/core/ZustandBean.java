@@ -55,6 +55,7 @@ import org.kalypso.wspwin.core.WspCfg.TYPE;
 
 /**
  * Represents one line of a wsp.cfg file.
+ * 
  * @author thuel2
  */
 public class ZustandBean
@@ -137,7 +138,6 @@ public class ZustandBean
     return zustand;
   }
 
-
   private RunOffEventBean[] readRunOffs( final File profDir ) throws ParseException, IOException
   {
     final File qwtFile = new File( profDir, getRunoffFilename() );
@@ -160,6 +160,12 @@ public class ZustandBean
   {
     final File wsfFile = new File( profDir, getWspFixFilename() ); //$NON-NLS-1$
     RunOffEventBean.write( wsfFile, fixation );
+  }
+
+  private void writeLosses( final File profDir, final LocalEnergyLossBean[] losses ) throws IOException
+  {
+    final File lelFile = new File( profDir, getLossFilename() );
+    LocalEnergyLossBean.write( lelFile, losses );
   }
 
   private void writeCalculations( final File profDir, final ICalculationContentBean[] calculations ) throws IOException
@@ -208,7 +214,6 @@ public class ZustandBean
     final File berFile = new File( profDir, getCalculationsFilename() );
     final CalculationBean[] calculationBeans = CalculationBean.readBerFile( berFile );
 
-
     final Collection<ICalculationContentBean> contentBeans = new ArrayList<>( calculationBeans.length );
 
     for( final CalculationBean calculationBean : calculationBeans )
@@ -254,8 +259,7 @@ public class ZustandBean
     writeWspFixes( profDir, zustand.getWspFixations() );
 
     writeCalculations( profDir, zustand.getCalculations() );
-
-    // TODO: write losses
+    writeLosses( profDir, zustand.getLosses() );
   }
 
   void setStartStation( final BigDecimal startStation )
