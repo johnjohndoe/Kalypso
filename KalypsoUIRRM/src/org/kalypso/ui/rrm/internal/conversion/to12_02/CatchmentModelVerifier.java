@@ -65,9 +65,11 @@ import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
 import org.kalypso.ui.rrm.internal.simulations.worker.CalculateCatchmentModelsWorker;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
@@ -79,11 +81,6 @@ import org.kalypsodeegree.model.feature.IXLinkedFeature;
  */
 public class CatchmentModelVerifier
 {
-  /**
-   * The global conversion data.
-   */
-  private final GlobalConversionData m_globalData;
-
   /**
    * The converter data.
    */
@@ -102,8 +99,6 @@ public class CatchmentModelVerifier
   /**
    * The constructor.
    * 
-   * @param globalData
-   *          The global conversion data.
    * @param data
    *          The converter data.
    * @param simulation
@@ -111,9 +106,8 @@ public class CatchmentModelVerifier
    * @param simulationsFolder
    *          The base folder of the simulations.
    */
-  public CatchmentModelVerifier( final GlobalConversionData globalData, final ConverterData data, final NAControl simulation, final File simulationsFolder )
+  public CatchmentModelVerifier( final ConverterData data, final NAControl simulation, final File simulationsFolder )
   {
-    m_globalData = globalData;
     m_data = data;
     m_simulation = simulation;
     m_simulationsFolder = simulationsFolder;
@@ -304,12 +298,18 @@ public class CatchmentModelVerifier
 
     /* Create the URLs. */
     final URL modelURL = ResourceUtilities.createURL( rrmScenario.getModelFile() );
-    final URL metaUrl = ResourceUtilities.createURL( rrmSimulation.getCalculationGml() );
     final URL catchmentModelsUrl = ResourceUtilities.createURL( rrmScenario.getCatchmentModelsGml() );
     final URL timeseriesMappingsUrl = ResourceUtilities.createURL( rrmScenario.getTimeseriesMappingsGml() );
 
     /* Load all simulation data. */
-    final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, null, metaUrl, null, null, null, null, null, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
+    final INaSimulationData simulationData = NaSimulationDataFactory.load( modelURL, null, null, null, null, null, null, null, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
+
+    /* Load the simulation. */
+    final GMLWorkspace simulationWorkspace = GmlSerializer.createGMLWorkspace( rrmSimulation.getCalculationGml(), modelURL, simulationData.getFeatureProviderFactory(), null );
+    final NAControl simulationFeature = (NAControl) simulationWorkspace.getRootFeature();
+
+    /* Set the meta control to the simulation data. */
+    simulationData.setMetaControl( simulationFeature );
 
     /* Calculate the catchment models. */
     final CalculateCatchmentModelsWorker catchmentModelsWorker = new CalculateCatchmentModelsWorker( rrmSimulation, true, simulationData );

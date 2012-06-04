@@ -60,6 +60,11 @@ public class ConverterData
     m_baseDir = baseDir;
   }
 
+  public File getBaseDir( )
+  {
+    return m_baseDir;
+  }
+
   @SuppressWarnings("unchecked")
   <F extends Feature> F loadModel( final String path ) throws Exception
   {

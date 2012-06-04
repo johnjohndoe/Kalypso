@@ -154,7 +154,7 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
       final TimeseriesMappingRunner mappingInflowRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.nodeInflow );
       mappingInflowRunner.execute( new SubProgressMonitor( monitor, 100 ) );
 
-      /* Sea evaporation for stroages. */
+      /* Sea evaporation for storages. */
       final TimeseriesMappingRunner mappingStorageEvaporationRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.storageEvaporation );
       mappingStorageEvaporationRunner.execute( new SubProgressMonitor( monitor, 100 ) );
 

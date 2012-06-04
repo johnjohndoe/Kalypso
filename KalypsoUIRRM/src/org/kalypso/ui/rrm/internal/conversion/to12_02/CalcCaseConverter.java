@@ -202,6 +202,10 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       final TimeseriesMappingBuilder timeseriesMappingBuilder = guessTimeseriesMappings( naModel, mappings, mappingLog );
       getLog().add( mappingLog.asMultiStatus( "Zeitreihenzuordnungen automatisch bestimmen" ) );
 
+      /* SPECIAL CASE: Must save and copy the modell.gml before emptying the timeseries links. */
+      m_data.saveModel( INaProjectConstants.GML_MODELL_PATH, naModel );
+      FileUtils.copyFile( new File( m_targetScenarioDir, INaProjectConstants.GML_MODELL_PATH ), new File( m_targetScenarioDir, m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH ), true );
+
       /* Empty timeseries links. */
       BasicModelConverter.emptyTimeseriesLinks( naModel, getLog() );
 
@@ -224,15 +228,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Verify the catchment models and timeseries mappings..." );
-
-      /* Verify timeseries of the catchment models of the created simulation. */
-      final CatchmentModelVerifier verifier = new CatchmentModelVerifier( m_globalData, m_data, simulation, new File( m_targetScenarioDir, INaProjectConstants.FOLDER_RECHENVARIANTEN ) );
-      final IStatus verifierStatus = verifier.execute();
-      getLog().add( verifierStatus );
-
-      /* Monitor. */
-      monitor.worked( 200 );
       monitor.subTask( "Finalizing..." );
 
       /* Finalize the simulation. */
@@ -240,6 +235,15 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
       /* Monitor. */
       monitor.worked( 100 );
+      monitor.subTask( "Verify the catchment models and timeseries mappings..." );
+
+      /* Verify timeseries of the catchment models of the created simulation. */
+      final CatchmentModelVerifier verifier = new CatchmentModelVerifier( m_data, simulation, new File( m_targetScenarioDir, INaProjectConstants.FOLDER_RECHENVARIANTEN ) );
+      final IStatus verifierStatus = verifier.execute();
+      getLog().add( verifierStatus );
+
+      /* Monitor. */
+      monitor.worked( 200 );
     }
     finally
     {
@@ -546,7 +550,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       }
 
       /* Save the meta control. */
-      m_data.saveModel( INaCalcCaseConstants.CALCULATION_GML_PATH, metaControl );
+      m_data.saveModel( m_simulationPath + "/" + INaCalcCaseConstants.CALCULATION_GML_PATH, metaControl );
 
       /* Load the simulations. */
       final SimulationCollection simulations = m_data.loadModel( INaProjectConstants.GML_SIMULATIONS_PATH );
@@ -574,17 +578,16 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    */
   private void finalizeSimulation( ) throws IOException, Exception, GmlSerializeException
   {
-    /* Copy the model.gml and the expertMappings.gml into the simulation for reference. */
-    /* The calculation.gml is already saved there. */
-    /* This is only a copy and will not be used except for the result view. */
+    /* Copy the expertMappings.gml into the simulation for reference. */
     FileUtils.copyFile( new File( m_targetScenarioDir, INaCalcCaseConstants.EXPERT_CONTROL_PATH ), new File( m_targetScenarioDir, m_simulationPath + "/" + INaCalcCaseConstants.EXPERT_CONTROL_PATH ), true );
-    FileUtils.copyFile( new File( m_targetScenarioDir, INaProjectConstants.GML_MODELL_PATH ), new File( m_targetScenarioDir, m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH ), true );
+
+    /* The calculation.gml is already saved there. */
+    /* The model.gml is already saved there, because it must be copied before its timeseries links are emptied. */
 
     /* Load the model in the simulation. */
     final NaModell simModel = m_data.loadModel( m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH );
 
     /* Fix timeseries links there, that all is correct within a simulation. */
-    // TODO The copied one does already have no links, must copy before emptying it...
     fixTimeseriesLinks( simModel, getLog() );
 
     /* Save the model in the simulation. */

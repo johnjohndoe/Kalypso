@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +52,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
@@ -77,27 +77,19 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 public class CatchmentModelsDuplicateEliminator
 {
   /**
-   * The target directory.
+   * The converter data (of the current scenario).
    */
-  private final File m_targetDir;
-
-  /**
-   * The global conversion data.
-   */
-  private final GlobalConversionData m_globalData;
+  private final ConverterData m_data;
 
   /**
    * The constructor.
    * 
-   * @param targetDir
-   *          The target directory.
-   * @param globalData
-   *          The global conversion data.
+   * @param data
+   *          The converter data (of the current scenario).
    */
-  public CatchmentModelsDuplicateEliminator( final File targetDir, final GlobalConversionData globalData )
+  public CatchmentModelsDuplicateEliminator( final ConverterData data )
   {
-    m_targetDir = targetDir;
-    m_globalData = globalData;
+    m_data = data;
   }
 
   /**
@@ -105,7 +97,6 @@ public class CatchmentModelsDuplicateEliminator
    * 
    * @return A status object, indicating the result of the operation.
    */
-  // TODO
   public IStatus execute( )
   {
     /* The status collector. */
@@ -114,7 +105,8 @@ public class CatchmentModelsDuplicateEliminator
     try
     {
       /* All generators. */
-      final IFeatureBindingCollection<IRainfallGenerator> allGenerators = m_globalData.getCatchmentModel().getGenerators();
+      final ICatchmentModel catchmentModel = m_data.loadModel( INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
+      final IFeatureBindingCollection<IRainfallGenerator> allGenerators = catchmentModel.getGenerators();
 
       /* Used generators. */
       final List<ILinearSumGenerator> usedGenerators = new ArrayList<ILinearSumGenerator>();
@@ -127,7 +119,8 @@ public class CatchmentModelsDuplicateEliminator
         collector.add( status );
       }
 
-      // TODO Save catchmentsModels.gml...
+      /* Save the catchments models. */
+      m_data.saveModel( INaProjectConstants.GML_CATCHMENT_MODEL_PATH, catchmentModel );
 
       return collector.asMultiStatusOrOK( "Check catchment models for duplicates" );
     }
@@ -213,11 +206,10 @@ public class CatchmentModelsDuplicateEliminator
     adjustCalculationGml( usedGenerator, generatorName );
   }
 
-  // TODO
-  private void adjustSimulationsGml( final ILinearSumGenerator usedGenerator, final String generatorName )
+  private void adjustSimulationsGml( final ILinearSumGenerator usedGenerator, final String generatorName ) throws Exception
   {
     /* Adjust the corresponding simulation. */
-    final SimulationCollection simulations = m_globalData.getSimulations();
+    final SimulationCollection simulations = m_data.loadModel( INaProjectConstants.GML_SIMULATIONS_PATH );
     for( final NAControl simulation : simulations.getSimulations() )
     {
       final String simulationName = simulation.getDescription();
@@ -229,15 +221,14 @@ public class CatchmentModelsDuplicateEliminator
       }
     }
 
-    // TODO Save simulations.gml...
+    /* Save the simulations */
+    m_data.saveModel( INaProjectConstants.GML_SIMULATIONS_PATH, simulations );
   }
 
-  // TODO
   private void adjustCalculationGml( final ILinearSumGenerator usedGenerator, final String generatorName ) throws Exception
   {
     /* Create the file handle to the calculation.gml file. */
-    final IPath targetPath = Path.fromOSString( m_targetDir.getAbsolutePath() );
-    final IPath basePath = targetPath.append( INaProjectConstants.FOLDER_BASIS );
+    final IPath basePath = Path.fromOSString( m_data.getBaseDir().getAbsolutePath() );
     final IPath simulationsPath = basePath.append( INaProjectConstants.FOLDER_RECHENVARIANTEN );
     final IPath simulationPath = simulationsPath.append( generatorName );
     final IPath modelsPath = simulationPath.append( INaProjectConstants.FOLDER_MODELS );
