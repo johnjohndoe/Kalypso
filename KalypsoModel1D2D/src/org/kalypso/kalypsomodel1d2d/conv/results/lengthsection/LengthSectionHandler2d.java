@@ -44,15 +44,10 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.observation.IObservation;

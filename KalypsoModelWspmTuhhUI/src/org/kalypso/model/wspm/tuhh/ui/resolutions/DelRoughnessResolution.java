@@ -40,12 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
@@ -59,123 +53,47 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
 
   private String m_roughness;
 
-  private String[] m_roughnessTyps;
-
   public DelRoughnessResolution( )
   {
-    this( new String[] { "" }, null ); //$NON-NLS-1$
+    this( null );
+
     m_initialized = false;
   }
 
-  /**
-   * @param roughnessToDelete
-   *          or null or "" to add one
-   */
-  public DelRoughnessResolution( final String[] roughnessTyps, final String roughnessToDelete )
+  public DelRoughnessResolution( final String roughnessToDelete )
   {
     super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution.0" ), null, null ); //$NON-NLS-1$
-    m_roughnessTyps = roughnessTyps;
+
     m_roughness = roughnessToDelete;
     m_initialized = true;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#getSerializedParameter()
-   */
   @Override
   public String getSerializedParameter( )
   {
-    final StringBuffer params = new StringBuffer( super.getSerializedParameter() );
-    params.append( ";" + (m_roughness == null ? "-" : m_roughness) ); //$NON-NLS-1$ //$NON-NLS-2$
-    for( final String roughness : m_roughnessTyps )
-    {
-      params.append( ";" + roughness ); //$NON-NLS-1$
-    }
-    return params.toString(); //$NON-NLS-1$ //$NON-NLS-2$
+    final StringBuilder params = new StringBuilder( super.getSerializedParameter() );
+    params.append( ';' );
+
+    params.append( m_roughness );
+
+    return params.toString();
   }
 
-  @Override
-  public String getUIresult( final Shell shell, final IProfil profil )
-  {
-    if( m_roughness != null )
-      return m_roughness;
-
-    final LabelProvider labelProvider = new LabelProvider()
-    {
-      @Override
-      public String getText( final Object element )
-      {
-        try
-        {
-          return profil.getPointPropertyFor( element.toString() ).getName();
-        }
-        catch( final Exception e )
-        {
-          return element.toString();
-        }
-      }
-    };
-
-    final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution.4" ); //$NON-NLS-1$
-    final ListSelectionDialog lsd = new ListSelectionDialog( shell, m_roughnessTyps, new ArrayContentProvider(), labelProvider, msg );
-    if( lsd.open() == Window.OK )
-    {
-      final Object[] roughness = lsd.getResult();
-      if( roughness.length > 0 && roughness[0] instanceof String )
-        return (String) roughness[0];
-      return m_roughness;
-    }
-    else
-      return null;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#hasUI()
-   */
-  @Override
-  public boolean hasUI( )
-  {
-    return true;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.eclipse.core.resources.IMarker)
-   */
   @Override
   public boolean resolve( final IProfil profil )
   {
     if( m_initialized )
     {
       if( m_roughness == null )
-      {
-        try
-        {
-          m_roughness = getUIresult( PlatformUI.getWorkbench().getDisplay().getActiveShell(), profil );
-        }
-        catch( final Exception e )
-        {
-          // handle exception: no shell available here
-          return false;
-        }
-      }
-
-      /* Return on cancel */
-      if( m_roughness == null )
         return false;
 
       final IComponent comp = profil.hasPointProperty( m_roughness );
       if( comp != null )
-      {
         profil.removePointProperty( comp );
-      }
-      else
-      {
-        profil.addPointProperty( profil.getPointPropertyFor( m_roughness ), 0.0 );
-      }
-      return true;
 
+      return true;
     }
+
     throw new IllegalStateException();
   }
 
@@ -185,24 +103,13 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
     final String[] params = getParameter( parameterStream );
     try
     {
-      m_roughness = "-".equals( params[1] ) ? null : params[1]; //$NON-NLS-1$
-      final String[] rt = new String[params.length - 2];
-      for( int i = 2; i < params.length; i++ )
-      {
-        rt[i - 2] = params[i];
-      }
-      m_roughnessTyps = rt;
+      m_roughness = params[1];
+
       m_initialized = true;
     }
     catch( final Exception e )
     {
       throw new IllegalArgumentException();
     }
-  }
-
-  @Override
-  public void setUIresult( final String result )
-  {
-    m_roughness = result;
   }
 }

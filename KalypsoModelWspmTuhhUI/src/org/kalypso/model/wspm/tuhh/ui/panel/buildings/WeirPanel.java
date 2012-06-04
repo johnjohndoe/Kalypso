@@ -79,6 +79,10 @@ public class WeirPanel extends AbstractProfilView
 
   private final GridData m_deviderGroupData;
 
+  protected Label m_parameterLabel;
+
+  protected ParameterLine m_wehrParameter;
+
   private DeviderLine m_wehrStart;
 
   private DeviderLine m_wehrEnd;
@@ -145,20 +149,17 @@ public class WeirPanel extends AbstractProfilView
 
     final IProfilPointMarker[] devider = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     final IProfilPointMarker leftTF = devider.length < 1 ? null : devider[0];
-    final IProfilPointMarker rightTF = devider.length < 2 ? null : devider[1];
+    // final IProfilPointMarker rightTF = devider.length < 2 ? null : devider[1];
 
-    m_wehrStart = new DeviderLine( m_toolkit, panel, leftTF, true, profile );
-
-    if( leftTF != null )
-      new ParameterLine( m_toolkit, panel, leftTF, false, profile );
+    m_wehrStart = new DeviderLine( m_toolkit, panel, 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, true, profile );
+    m_wehrParameter = new ParameterLine( m_toolkit, panel, leftTF, false, profile );
 
     // Wehrparameter Group
     m_deviderGroup = toolkit.createComposite( panel );
     m_deviderGroup.setLayout( new GridLayout( 1, false ) );
     m_deviderGroup.setLayoutData( m_deviderGroupData );
 
-    m_wehrEnd = new DeviderLine( m_toolkit, panel, rightTF, false, profile );
-
+    m_wehrEnd = new DeviderLine( m_toolkit, panel, 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, false, profile );
     updateControls();
     return panel;
   }
@@ -179,13 +180,9 @@ public class WeirPanel extends AbstractProfilView
     {
       m_wehrart.setSelection( new StructuredSelection( id ) );
     }
-
-    if( m_wehrStart != null )
-      m_wehrStart.refresh();
-
-    if( m_wehrEnd != null )
-      m_wehrEnd.refresh();
-
+    m_wehrStart.refresh();
+    m_wehrEnd.refresh();
+    m_wehrParameter.refresh();
     updateDeviderGroup( profile );
     m_deviderGroup.getParent().layout( true, true );
   }
@@ -202,10 +199,10 @@ public class WeirPanel extends AbstractProfilView
     }
     final IComponent cmpWehrTrenner = profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
     final IProfilPointMarker[] deviders = profile.getPointMarkerFor( cmpWehrTrenner );
-
+    int i = 0;
     for( final IProfilPointMarker devider : deviders )
     {
-      final DeviderLine devLine = new DeviderLine( m_toolkit, m_deviderGroup, devider, true, profile );
+      final DeviderLine devLine = new DeviderLine( m_toolkit, m_deviderGroup, i++, IWspmTuhhConstants.MARKER_TYP_WEHR, true, profile );
       devLine.refresh();
       new ParameterLine( m_toolkit, m_deviderGroup, devider, true, profile );
     }

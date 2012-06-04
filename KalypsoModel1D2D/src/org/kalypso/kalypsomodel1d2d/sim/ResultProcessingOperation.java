@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -76,37 +76,11 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
   private File m_outputDir;
 
-  private final ICalcUnitResultMeta m_calcUnitMeta;
+  private ICalcUnitResultMeta m_calcUnitMeta;
 
   private String[] m_originalStepsToDelete;
 
   private final ProcessResultsBean m_bean;
-
-  public ResultProcessingOperation( final ResultManager resultManager, final ProcessResultsBean bean )
-  {
-    this( resultManager, bean, null );
-  }
-
-  public ResultProcessingOperation( final ResultManager resultManager, final ProcessResultsBean bean, final ICalcUnitResultMeta calcunitMeta )
-  {
-    m_resultManager = resultManager;
-    m_geoLog = m_resultManager.getGeoLog();
-    m_bean = bean;
-
-    m_calcUnitMeta = findCalcUnitMeta( calcunitMeta );
-  }
-
-  private ICalcUnitResultMeta findCalcUnitMeta( final ICalcUnitResultMeta calcUnitMeta )
-  {
-    if( calcUnitMeta != null )
-      return calcUnitMeta;
-
-    final IControlModel1D2D controlModel = m_resultManager.getControlModel();
-    final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
-
-    final IScenarioResultMeta scenarioMeta = m_resultManager.getScenarioMeta();
-    return scenarioMeta.findCalcUnitMetaResult( calculationUnit.getId() );
-  }
 
   public String[] getOriginalStepsToDelete( )
   {
@@ -118,6 +92,16 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     return m_outputDir;
   }
 
+  public ResultProcessingOperation( final ResultManager resultManager, final ProcessResultsBean bean )
+  {
+    m_resultManager = resultManager;
+    m_geoLog = m_resultManager.getGeoLog();
+    m_bean = bean;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
@@ -143,7 +127,15 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
   {
     try
     {
+      final IControlModel1D2D controlModel = m_resultManager.getControlModel();
+      final IScenarioResultMeta scenarioMeta = m_resultManager.getScenarioMeta();
+      final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
+
       final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+
+      m_calcUnitMeta = m_resultManager.getCalcUnitMeta();
+      if( m_calcUnitMeta == null )
+        m_calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getId() );
 
       m_originalStepsToDelete = findStepsToDelete( m_calcUnitMeta, m_bean );
 
@@ -181,17 +173,20 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     for( final Date dateTest : processBean.userCalculatedSteps )
     {
       if( dateTest != null )
-      {
         allCalculatedDates.add( dateTest );
-      }
     }
+
+    /* Nothing to do ? */
+    if( allCalculatedDates.isEmpty() )
+      return new String[0];
 
     final List<String> ids = new ArrayList<String>();
 
-    if( processBean.deleteFollowers && !allCalculatedDates.isEmpty() )
+    if( processBean.deleteFollowers )
     {
-      allCalculatedDates.remove( MAXI_DATE );
-      allCalculatedDates.remove( STEADY_DATE );
+      /* Remove maxi and steady, does conflict with followers search */
+      final boolean hasMaxi = allCalculatedDates.remove( MAXI_DATE );
+      final boolean hasSteady = allCalculatedDates.remove( STEADY_DATE );
 
       if( allCalculatedDates.size() > 0 )
       {
@@ -199,6 +194,14 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
         for( final String id : existingSteps.keySet() )
         {
           final Date date = existingSteps.get( id );
+
+          /* do not forget to delete maxi and steady */
+          if( MAXI_DATE.equals( date ) && hasMaxi )
+            ids.add( id );
+
+          if( STEADY_DATE.equals( date ) && hasSteady )
+            ids.add( id );
+
           if( date == null )
           {
             ids.add( id );
@@ -214,11 +217,12 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
         ids.addAll( existingSteps.keySet() );
       }
     }
-    else if( !allCalculatedDates.isEmpty() )
+    else
     {
       for( final String id : existingSteps.keySet() )
       {
         final Date date = existingSteps.get( id );
+        // TODO: why this check?
         if( date == null || date.getTime() == 0 )
         {
           ids.add( id );
@@ -232,5 +236,4 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
     return ids.toArray( new String[ids.size()] );
   }
-
 }

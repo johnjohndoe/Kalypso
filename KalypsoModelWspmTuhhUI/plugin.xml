@@ -212,6 +212,11 @@
                name="%org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution.name">
          </reparator>
          <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.AddRoughnessResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.AddRoughnessResolution"
+               name="Rauheit hinzufügen">
+         </reparator>
+         <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution"
                description="Entfernt eine Komponente aus dem Profil"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution"
