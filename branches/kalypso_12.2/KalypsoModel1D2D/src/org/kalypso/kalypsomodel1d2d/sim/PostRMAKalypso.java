@@ -6,7 +6,6 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;

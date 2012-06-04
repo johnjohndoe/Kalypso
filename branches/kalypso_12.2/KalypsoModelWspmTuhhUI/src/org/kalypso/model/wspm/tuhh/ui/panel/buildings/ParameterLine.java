@@ -49,6 +49,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
@@ -77,6 +78,8 @@ public class ParameterLine
 
   Text m_valueText;
 
+  protected Label m_label;
+
   ParameterLine( final FormToolkit toolkit, final Composite parent, final IProfilPointMarker devider, final boolean canDelete, final IProfil profile )
   {
     m_profile = profile;
@@ -89,12 +92,11 @@ public class ParameterLine
     m_devider = devider;
     final BuildingWehr weir = WspmSohlpunkte.getBuilding( m_profile, BuildingWehr.class );
     final String weirType = weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString();
-    toolkit.createLabel( m_composite, m_labelProvider.getDescription( weirType ) );
+    m_label = toolkit.createLabel( m_composite, m_labelProvider.getDescription( weirType ) ); //$NON-NLS-1$
 
     m_valueText = toolkit.createText( m_composite, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_valueText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_valueText.setEnabled( m_devider != null );
-    m_valueText.setToolTipText( m_labelProvider.getDescription( weirType ) );
 
     final Double coefficientValue;
     if( devider.getComponent().getId().equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
@@ -140,6 +142,13 @@ public class ParameterLine
 
     final DeleteWeirMarkerAction deleteMarkerAction = new DeleteWeirMarkerAction( m_devider, canDelete, profile );
     ActionButton.createButton( toolkit, m_composite, deleteMarkerAction );
+  }
+
+  public final void refresh( )
+  {
+    final BuildingWehr weir = WspmSohlpunkte.getBuilding( m_profile, BuildingWehr.class );
+    final String weirType = weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString();
+    m_label.setText( m_labelProvider.getDescription( weirType ) );
   }
 
   protected void changeValue( final String text )
