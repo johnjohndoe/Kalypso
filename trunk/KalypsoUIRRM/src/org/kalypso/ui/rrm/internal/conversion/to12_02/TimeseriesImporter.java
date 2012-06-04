@@ -325,18 +325,25 @@ public class TimeseriesImporter
 
   private String getForcedParameterType( final IObservation observation, final String relativePath )
   {
-    final String parmaterType = m_parameterIndex.getParameterType( relativePath );
-    if( StringUtils.equals( ITimeseriesConstants.TYPE_TEMPERATURE, parmaterType ) )
+
+    final String parmeterType = m_parameterIndex.getParameterType( relativePath );
+    if( StringUtils.equals( ITimeseriesConstants.TYPE_TEMPERATURE, parmeterType ) )
       return ITimeseriesConstants.TYPE_MEAN_TEMPERATURE;
 
-    if( parmaterType == null )
+    if( StringUtils.equals( ITimeseriesConstants.TYPE_EVAPORATION, parmeterType ) )
+      return ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED;
+
+    if( parmeterType == null )
     {
       final IAxis valueAxis = AxisUtils.findValueAxis( observation.getAxes(), true );
       if( valueAxis != null && StringUtils.equals( ITimeseriesConstants.TYPE_TEMPERATURE, valueAxis.getType() ) )
         return ITimeseriesConstants.TYPE_MEAN_TEMPERATURE;
+
+      if( valueAxis != null && StringUtils.equals( ITimeseriesConstants.TYPE_EVAPORATION, valueAxis.getType() ) )
+        return ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED;
     }
 
-    return parmaterType;
+    return parmeterType;
   }
 
   // REMARK: heavy, but necessary as we cannot assume that we always have a simple tuple model

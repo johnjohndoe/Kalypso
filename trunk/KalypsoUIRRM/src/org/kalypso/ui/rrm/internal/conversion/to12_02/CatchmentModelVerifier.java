@@ -47,6 +47,7 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -148,6 +149,11 @@ public class CatchmentModelVerifier
       /* Create the IFolder. */
       final IContainer[] simulationTmpContainer = ResourcesPlugin.getWorkspace().getRoot().findContainersForLocationURI( simulationTmpDir.toURI() );
       final IFolder simulationTmpFolder = (IFolder) simulationTmpContainer[0];
+
+      /* Create the IFolder. */
+      final IContainer[] scenarioContainer = ResourcesPlugin.getWorkspace().getRoot().findContainersForLocationURI( m_data.getBaseDir().toURI() );
+      final IFolder scenarioFolder = (IFolder) scenarioContainer[0];
+      scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
 
       /* Calculate the catchment models. */
       final IStatus calculateStatus = calculateCatchmentModels( simulationTmpFolder );
