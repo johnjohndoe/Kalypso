@@ -511,18 +511,21 @@ public final class WspWinImporter
 
     for( LocalEnergyLossBean energyLossBean : zustand.getLosses() )
     {
-      EnergylossProfileObject energyLoss = new EnergylossProfileObject();
+      final IProfileFeature profileFeature = reach.findProfile( energyLossBean.getStation() );
+      final EnergylossProfileObject energyLoss = new EnergylossProfileObject();
       final Map<LOSSKIND, Double> entries = energyLossBean.getEntries();
+      final TupleResult lossRes = energyLoss.getObservation().getResult();
+      final int iType = lossRes.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
+      final int iValue = lossRes.indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
       for( LOSSKIND kind : entries.keySet() )
       {
-        IRecord loss = energyLoss.getObservation().getResult().createRecord();
-        final int iType = energyLoss.getObservation().getResult().indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
-        final int iValue = energyLoss.getObservation().getResult().indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
+        IRecord loss = lossRes.createRecord();
         loss.setValue( iType, kind.name() );
         loss.setValue( iValue, entries.get( kind ) );
-        energyLoss.getObservation().getResult().add( loss );
+        lossRes.add( loss );
       }
-      reach.findProfile( energyLossBean.getStation() ).getProfil().addProfileObjects( energyLoss );
+
+      ((ProfileFeatureBinding) profileFeature).addProfileObject( energyLoss );
     }
 
     // ///////////////////////////// //
