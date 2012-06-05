@@ -83,7 +83,7 @@ public class Geology extends Feature_Impl
     setProperty( QNAME_PROP_MAXPERKULATIONSRATE, value );
   }
 
-  public double getMaxPerkulationsRate( )
+  public Double getMaxPerkulationsRate( )
   {
     return getProperty( QNAME_PROP_MAXPERKULATIONSRATE, Double.class );
   }
@@ -93,7 +93,7 @@ public class Geology extends Feature_Impl
     setProperty( QNAME_PROP_GWFACTOR, value );
   }
 
-  public double getGWFactor( )
+  public Double getGWFactor( )
   {
     return getProperty( QNAME_PROP_GWFACTOR, Double.class );
   }

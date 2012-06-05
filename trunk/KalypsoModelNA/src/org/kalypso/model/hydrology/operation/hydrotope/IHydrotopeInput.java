@@ -49,7 +49,7 @@ import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
  * 
  * @author Gernot Belger
  */
-public interface IHydrotopeInput
+interface IHydrotopeInput
 {
   String getLabel( );
 

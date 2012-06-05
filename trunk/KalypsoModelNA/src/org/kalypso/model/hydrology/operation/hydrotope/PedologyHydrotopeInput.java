@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.hydrology.binding.SoilType;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * @author Gernot Belger
@@ -62,7 +67,23 @@ class PedologyHydrotopeInput extends AbstractHydrotopeInput
   @Override
   public void validateInput( final IStatusCollector log )
   {
-    // TODO Auto-generated method stub
+    log.add( validateAttributes() );
+  }
 
+  private IStatus validateAttributes( )
+  {
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
+    final FeatureList features = getFeatures();
+    for( final Object element : features )
+    {
+      final SoilType pedology = (SoilType) element;
+
+      final IXLinkedFeature soilType = pedology.getSoilType();
+      if( soilType == null )
+        log.add( IStatus.ERROR, formatMessage( "soil type not set", pedology ) );
+    }
+
+    return log.asMultiStatus( STR_ATTRIBUTES );
   }
 }

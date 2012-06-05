@@ -106,12 +106,17 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     log.add( initStatus );
 
     /* Input validation */
-    final String stepValidate = formatStep( 2, 6, "Validation" );
+    final String stepValidate = formatStep( 2, 6, "Input validation" );
     progress.setTaskName( stepValidate );
     final IHydrotopeInput[] indices = geometryIndexer.getIndices();
     final HydrotopeCreationInputValidation geometryValidator = new HydrotopeCreationInputValidation( indices, stepValidate );
     final IStatus validationStatus = geometryValidator.execute( progress.newChild( 10 ) );
     log.add( validationStatus );
+    if( validationStatus.matches( IStatus.ERROR ) )
+    {
+      log.add( IStatus.ERROR, "Critical during inut validation. Unable to proceed." );
+      return log.asMultiStatusOrOK( taskName );
+    }
 
     /* Geometry intersection */
     final String stepIntersect = formatStep( 3, 6, Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.1" ) ); //$NON-NLS-1$
