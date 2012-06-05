@@ -60,6 +60,7 @@ import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -113,9 +114,10 @@ public class MultiCatchmentModelTest
   {
     /* Get the simulation folder. */
     final IFolder baseFolder = m_project.getFolder( INaProjectConstants.FOLDER_BASIS );
-    final IFolder calcCasesFolder = baseFolder.getFolder( INaProjectConstants.FOLDER_RECHENVARIANTEN );
-    final IFolder actualSimulationFolder = calcCasesFolder.getFolder( "Actual" );
-    final IFolder expectedSimulationFolder = calcCasesFolder.getFolder( "Expected" );
+    final RrmScenario rrmScenario = new RrmScenario( baseFolder );
+    final IFolder simulationsFolder = rrmScenario.getSimulationsFolder();
+    final IFolder actualSimulationFolder = simulationsFolder.getFolder( "Actual" );
+    final IFolder expectedSimulationFolder = simulationsFolder.getFolder( "Expected" );
 
     /* Create the simulation. */
     final RrmSimulation simulation = new RrmSimulation( actualSimulationFolder );

@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class RrmScenario
 {
-  private static final String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
+  public static final String FOLDER_SIMULATIONEN = "Simulationen";//$NON-NLS-1$
 
   private static final String FOLDER_MODELS = ".models"; //$NON-NLS-1$
 
@@ -140,7 +140,7 @@ public class RrmScenario
 
   public IFolder getSimulationsFolder( )
   {
-    return m_scenarioFolder.getFolder( FOLDER_RECHENVARIANTEN );
+    return m_scenarioFolder.getFolder( FOLDER_SIMULATIONEN );
   }
 
   public IFile getModelFile( )

@@ -70,6 +70,7 @@ import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -141,7 +142,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     m_targetScenarioDir = targetScenarioDir;
     m_globalData = globalData;
     m_data = new ConverterData( m_targetScenarioDir );
-    m_simulationPath = INaProjectConstants.FOLDER_RECHENVARIANTEN + "/" + sourceCalcCaseDir.getName();
+    m_simulationPath = RrmScenario.FOLDER_SIMULATIONEN + "/" + sourceCalcCaseDir.getName();
   }
 
   /**
@@ -238,7 +239,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       monitor.subTask( "Verify the catchment models and timeseries mappings..." );
 
       /* Verify timeseries of the catchment models of the created simulation. */
-      final CatchmentModelVerifier verifier = new CatchmentModelVerifier( m_data, simulation, new File( m_targetScenarioDir, INaProjectConstants.FOLDER_RECHENVARIANTEN ) );
+      final CatchmentModelVerifier verifier = new CatchmentModelVerifier( m_data, simulation, new File( m_targetScenarioDir, RrmScenario.FOLDER_SIMULATIONEN ) );
       final IStatus verifierStatus = verifier.execute();
       getLog().add( verifierStatus );
 

@@ -68,6 +68,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -75,7 +76,7 @@ import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -257,7 +258,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     /* Get the folder of the current simulation. */
     final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
     final IContainer scenarioFolder = dataProvider.getScenarioFolder();
-    final IFolder calcCasesFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_RECHENVARIANTEN ) );
+    final IFolder calcCasesFolder = scenarioFolder.getFolder( new Path( RrmScenario.FOLDER_SIMULATIONEN ) );
     final IFolder simulationFolder = calcCasesFolder.getFolder( description );
 
     return new RrmSimulation( simulationFolder );
@@ -386,7 +387,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     handler.calculateSimulation( shell, simulations );
 
     /* Update the control. */
-    updateControl();
+    fireFeatureChange( new EmptyCommand( "Refresh", true ) );
   }
 
   protected void setCalculationStatus( final IStatus calculationStatus )

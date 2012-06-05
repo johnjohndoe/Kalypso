@@ -68,7 +68,6 @@ import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -404,7 +403,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     /* Get the folder of the simulation. */
     final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
     final IContainer scenarioFolder = dataProvider.getScenarioFolder();
-    final IFolder calcCasesFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_RECHENVARIANTEN ) );
+    final IFolder calcCasesFolder = scenarioFolder.getFolder( new Path( RrmScenario.FOLDER_SIMULATIONEN ) );
     final IFolder simulationFolder = calcCasesFolder.getFolder( description );
 
     return new RrmSimulation( simulationFolder );

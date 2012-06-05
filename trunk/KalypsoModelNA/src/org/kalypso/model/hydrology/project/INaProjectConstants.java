@@ -43,7 +43,7 @@ package org.kalypso.model.hydrology.project;
 /**
  * Constants relevant for the project structure of an na model.<br/>
  * Most pathes are relative to the project root.
- *
+ * 
  * @author Gernot Belger
  * @deprecated Use {@link ScenarioAccessor} instead. Move all constant into that class.
  */
@@ -60,8 +60,18 @@ public interface INaProjectConstants
 
   String FOLDER_MODELS = ".models"; //$NON-NLS-1$
 
+  /**
+   * Do not use any more. A calc case is now called simulation. Hence "Rechenvarianten" has changed to "Simulationen".
+   * 
+   * @deprecated Use {@link RrmScenario#FOLDER_SIMULATIONEN} instead.
+   */
+  @Deprecated
   String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
 
+  /**
+   * @deprecated see {@link #FOLDER_RECHENVARIANTEN}
+   */
+  @Deprecated
   String PATH_RECHENVARIANTEN = RrmProject.FOLDER_BASIS + "/" + FOLDER_RECHENVARIANTEN; //$NON-NLS-1$
 
   String FOLDER_TIMESERIES = "timeseries"; //$NON-NLS-1$

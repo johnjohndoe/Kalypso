@@ -58,6 +58,7 @@ import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -229,7 +230,7 @@ public class CatchmentModelsDuplicateEliminator
   {
     /* Create the file handle to the calculation.gml file. */
     final IPath basePath = Path.fromOSString( m_data.getBaseDir().getAbsolutePath() );
-    final IPath simulationsPath = basePath.append( INaProjectConstants.FOLDER_RECHENVARIANTEN );
+    final IPath simulationsPath = basePath.append( RrmScenario.FOLDER_SIMULATIONEN );
     final IPath simulationPath = simulationsPath.append( generatorName );
     final IPath modelsPath = simulationPath.append( INaProjectConstants.FOLDER_MODELS );
     final IPath calculationGmlPath = modelsPath.append( INaCalcCaseConstants.CALCULATION_GML_FILE );
