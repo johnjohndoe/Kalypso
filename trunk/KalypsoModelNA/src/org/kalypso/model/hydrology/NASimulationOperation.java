@@ -62,10 +62,14 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.simulation.NaModelInnerCalcJob;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.KalypsoSimulationCoreDebug;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.refactoring.local.LocalSimulationMonitor;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.commons.StatusCollection;
 
 /**
  * Runs a simulation directly from a workspace folder (calc case).
@@ -74,34 +78,67 @@ import org.kalypso.simulation.core.refactoring.local.LocalSimulationMonitor;
  */
 public class NASimulationOperation implements ICoreRunnableWithProgress
 {
-  private final RrmSimulation m_calcCase;
+  /**
+   * The rrm simulation.
+   */
+  private final RrmSimulation m_simulation;
 
+  /**
+   * The simulation data.
+   */
   private final INaSimulationData m_simulationData;
 
-  public NASimulationOperation( final IFolder calcCase, final INaSimulationData simulationData )
+  /**
+   * The constructor.
+   * 
+   * @param simulationFolder
+   *          The folder of the simulation
+   * @param simulationData
+   *          The simulation data.
+   */
+  public NASimulationOperation( final IFolder simulationFolder, final INaSimulationData simulationData )
   {
-    m_calcCase = new RrmSimulation( calcCase );
+    m_simulation = new RrmSimulation( simulationFolder );
     m_simulationData = simulationData;
   }
 
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
+    /* If one simulation data object was provided, we will use this one. */
+    /* Otherwise we load a new one. */
     INaSimulationData data = m_simulationData;
     if( data == null )
       data = loadData();
 
-    final File simulationDir = FileUtilities.createNewTempDir( "naSimulation" ); //$NON-NLS-1$
+    /* Create the temporary directory for the simulation. */
+    final File simulationTmpDir = FileUtilities.createNewTempDir( "naSimulation" ); //$NON-NLS-1$
 
+    /* The calc job which calculates the simulation. */
     NaModelInnerCalcJob calcJob = null;
+
     try
     {
-      calcJob = new NaModelInnerCalcJob( data, simulationDir );
+      /* Create the calc job. */
+      calcJob = new NaModelInnerCalcJob( data, simulationTmpDir );
 
+      /* A simulation monitor. */
       final ISimulationMonitor simulationMonitor = new LocalSimulationMonitor( monitor );
 
+      /* Calculate the simulation. */
       calcJob.run( simulationMonitor );
 
+      /* Load the simulation log. */
+      /* If one is available, it should contain all messages. */
+      final IStatus simulationLog = loadSimulationLog( simulationTmpDir );
+      if( simulationLog != null )
+        return simulationLog;
+
+      /* If not, there was an error and the log could not be written. */
+      /* So we take the message of the simulation monitor. */
       final int finishSeverity = simulationMonitor.getFinishStatus();
       final String finishMessage = simulationMonitor.getFinishText();
       if( StringUtils.isBlank( finishMessage ) )
@@ -117,14 +154,96 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     finally
     {
       if( calcJob != null )
-        finalizeSimulation( calcJob, simulationDir );
+        finalizeSimulation( calcJob, simulationTmpDir );
     }
   }
 
-  private void finalizeSimulation( final NaModelInnerCalcJob calcJob, final File simulationDir )
+  /**
+   * This function loads the simulation data.
+   * 
+   * @return The simulation data.
+   */
+  private INaSimulationData loadData( ) throws CoreException
   {
     try
     {
+      final URL modelURL = ResourceUtilities.createURL( m_simulation.getModelGml() );
+      final URL controlURL = ResourceUtilities.createURL( m_simulation.getExpertControlGml() );
+      final URL metaURL = ResourceUtilities.createURL( m_simulation.getCalculationGml() );
+      final URL parameterURL = ResourceUtilities.createURL( m_simulation.getParameterGml() );
+      final URL hydrotopURL = ResourceUtilities.createURL( m_simulation.getHydrotopGml() );
+      final URL sudsURL = ResourceUtilities.createURL( m_simulation.getSudsGml() );
+      final URL syntNURL = ResourceUtilities.createURL( m_simulation.getSyntnGml() );
+      final URL lzsimURL = ResourceUtilities.createURL( m_simulation.getLzsimGml() );
+
+      return NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, null, null, null, null );
+    }
+    catch( final MalformedURLException e )
+    {
+      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to access model file", e ) );
+    }
+    catch( final Exception e )
+    {
+      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to load model data", e ) );
+    }
+  }
+
+  /**
+   * This function loads the simulation log. Afterwards it deletes the log file.
+   * 
+   * @param simulationTmpDir
+   *          The temporary directory of the simulation.
+   * @return The simulation log.
+   */
+  private IStatus loadSimulationLog( final File simulationTmpDir )
+  {
+    /* The simulation log. */
+    File simulationLogFile = null;
+
+    try
+    {
+      /* Get the simulation log file. */
+      final File resultDir = new File( simulationTmpDir, "results/Ergebnisse/Aktuell" );
+      final File logDir = new File( resultDir, "Log" );
+      simulationLogFile = new File( logDir, "simulationLog.gml" );
+      if( !simulationLogFile.exists() )
+        return new Status( IStatus.INFO, ModelNA.PLUGIN_ID, "The simulation log does not exist." );
+
+      /* Load the workspace. */
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( simulationLogFile, null );
+
+      /* Get the root feature. */
+      final Feature rootFeature = workspace.getRootFeature();
+
+      /* Cast to status collection. */
+      final StatusCollection statusCollection = (StatusCollection) rootFeature;
+
+      return statusCollection.toStatus();
+    }
+    catch( final Exception ex )
+    {
+      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "The simulation log could not be loaded.", ex );
+    }
+    finally
+    {
+      if( simulationLogFile != null )
+        FileUtils.deleteQuietly( simulationLogFile );
+    }
+  }
+
+  /**
+   * This function finalizes the simulation and deletes the temporary directory of the simulation, if debug is enabled.
+   * 
+   * @param calcJob
+   *          The calc job which calculates the simulation.
+   * @param simulationTmpDir
+   *          The temporary directory of the simulation.
+   */
+  private void finalizeSimulation( final NaModelInnerCalcJob calcJob, final File simulationTmpDir )
+  {
+    try
+    {
+      /* Handle the results. */
       handleResults( calcJob.getResultDir() );
     }
     catch( final CoreException e )
@@ -135,9 +254,9 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
 
     try
     {
-
+      /* Delete the temporary directory of the simulation, if debug is enabled. */
       if( !KalypsoSimulationCoreDebug.KEEP_SIMULATION_FILES.isEnabled() )
-        FileUtils.forceDelete( simulationDir );
+        FileUtils.forceDelete( simulationTmpDir );
     }
     catch( final IOException e )
     {
@@ -146,66 +265,49 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     }
   }
 
+  /**
+   * This function deletes the old results and moves the new results to the results directory. The new results will also
+   * be copied to a directory with a timestamp.
+   * 
+   * @param resultDir
+   *          The directory of the results.
+   */
   private void handleResults( final File resultDir ) throws CoreException
   {
-    final IFolder calcResultFolder = m_calcCase.getResultsFolder();
-    final IFolder currentResultFolder = m_calcCase.getCurrentResultsFolder();
-
+    /* Create a filename with the timestamp format. */
     final SimpleDateFormat timestampFormat = new SimpleDateFormat( "yyyy.MM.dd_(HH_mm_ss)" );
     final String timestampFilename = timestampFormat.format( new Date() );
-    final IFolder timestampFolder = calcResultFolder.getFolder( timestampFilename );
 
+    /* Get the current result directory. */
+    final IFolder currentResultFolder = m_simulation.getCurrentResultsFolder();
     final File currentResultDir = currentResultFolder.getLocation().toFile();
+
+    /* Get the timestamp directory. */
+    final IFolder calcResultFolder = m_simulation.getResultsFolder();
+    final IFolder timestampFolder = calcResultFolder.getFolder( timestampFilename );
     final File timestampDir = timestampFolder.getLocation().toFile();
 
     try
     {
-      /* Remove old 'Aktuell' dir */
+      /* Remove old 'Aktuell' dir. */
       if( currentResultDir.exists() )
         FileUtils.forceDelete( currentResultDir );
 
-      /* move new result to calc Folder: move is way faster... */
+      /* Move new result to calc Folder: move is way faster... */
       FileUtils.moveDirectory( new File( resultDir, "Aktuell" ), currentResultDir );
 
-      /* make copy with timestamp */
+      /* Make copy with timestamp. */
       FileUtils.copyDirectory( currentResultDir, timestampDir );
     }
     catch( final IOException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to copy result data", e );
-      throw new CoreException( status );
+      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to copy result data", e ) );
     }
     finally
     {
+      /* Refresh the folders. */
       currentResultFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
       timestampFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
-    }
-  }
-
-  private INaSimulationData loadData( ) throws CoreException
-  {
-    try
-    {
-      final URL modelURL = ResourceUtilities.createURL( m_calcCase.getModelGml() );
-      final URL controlURL = ResourceUtilities.createURL( m_calcCase.getExpertControlGml() );
-      final URL metaURL = ResourceUtilities.createURL( m_calcCase.getCalculationGml() );
-      final URL parameterURL = ResourceUtilities.createURL( m_calcCase.getParameterGml() );
-      final URL hydrotopURL = ResourceUtilities.createURL( m_calcCase.getHydrotopGml() );
-      final URL sudsURL = ResourceUtilities.createURL( m_calcCase.getSudsGml() );
-      final URL syntNURL = ResourceUtilities.createURL( m_calcCase.getSyntnGml() );
-      final URL lzsimURL = ResourceUtilities.createURL( m_calcCase.getLzsimGml() );
-
-      return NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, null, null, null, null );
-    }
-    catch( final MalformedURLException e )
-    {
-      final Status status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to access model file", e );
-      throw new CoreException( status );
-    }
-    catch( final Exception e )
-    {
-      final Status status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to load model data", e );
-      throw new CoreException( status );
     }
   }
 }

@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Translates the id's of the error.gml (written by KalypsoNA.exe) into id's of the KalypsoHydrology model.
- *
+ * 
  * @author Gernot Belger
  */
 public class NaFortranLogTranslater

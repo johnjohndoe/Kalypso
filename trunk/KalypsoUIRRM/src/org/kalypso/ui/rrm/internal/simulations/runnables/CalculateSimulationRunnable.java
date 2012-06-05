@@ -244,7 +244,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       }
 
       /* Monitor. */
-      monitor.subTask( "Prepare..." );
+      monitor.subTask( "Preparing..." );
 
       /* Create the URLs. */
       final URL modelURL = ResourceUtilities.createURL( rrmScenario.getModelFile() );
@@ -289,7 +289,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       }
 
       /* Monitor. */
-      monitor.subTask( "Calculate the catchment models..." );
+      monitor.subTask( "Calculating the catchment models..." );
 
       /* Calculate the catchment models. */
       final CalculateCatchmentModelsWorker catchmentModelsWorker = new CalculateCatchmentModelsWorker( rrmSimulation, calculateCatchmentModels, simulationData );
@@ -299,7 +299,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
 
       /* Monitor. */
-      monitor.subTask( "Calculate the simulation..." );
+      monitor.subTask( "Calculating the simulation..." );
 
       /* Calculate the simulation. */
       final CalculateSimulationWorker calculateWorker = new CalculateSimulationWorker( rrmSimulation, simulationData );
@@ -309,7 +309,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
 
       /* Monitor. */
-      monitor.subTask( "Finished..." );
+      monitor.subTask( "Finishing..." );
 
       /* Mark a status with the current time. */
       final Date endTime = new Date();

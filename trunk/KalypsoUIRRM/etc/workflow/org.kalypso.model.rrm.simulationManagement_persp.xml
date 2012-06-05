@@ -3,9 +3,9 @@
   <descriptor class="org.kalypso.afgui.perspective.Perspective" id="org.kalypso.kalypso1d2d.pjt.perspective.Perspective" label="Kalypso Workflow" />
   <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly" />
   <view id="org.kalypso.kalypso1d2d.pjt.views.WorklistView" />
-  <view id="org.kalypso.ui.editor.gistableeditor.GttViewPart" />
   <view id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" />
   <view id="org.kalypso.featureview.views.FeatureView" />
+  <view id="org.kalypso.ui.editor.gistableeditor.GttViewPart" />
   <fastViewBars />
   <viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView" />
   <viewLayoutRec closeable="false" id="org.kalypso.ui.views.mapView" />
@@ -80,13 +80,10 @@
           <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory" />
         </folder>
       </info>
-      <info folder="true" part="org.eclipse.ui.internal.ViewStack@53045f59" ratio="0.54231626" ratioLeft="487" ratioRight="411" relationship="4" relative="rightTop">
-        <folder activePageID="org.kalypso.featureview.views.FeatureView" appearance="2" expanded="2">
+      <info folder="true" part="org.eclipse.ui.internal.ViewStack@53045f59" ratio="0.5256125" ratioLeft="472" ratioRight="426" relationship="4" relative="rightTop">
+        <folder appearance="2" expanded="2">
           <page content="org.kalypso.featureview.views.FeatureView" label="Feature View" />
-          <page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound" />
-          <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-            <part id="0" />
-          </presentation>
+          <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory" />
         </folder>
       </info>
       <info folder="true" part="leftBottom" ratio="0.72270745" ratioLeft="662" ratioRight="254" relationship="4" relative="leftTop">
