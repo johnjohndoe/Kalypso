@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.hydrology.binding.Landuse;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * @author Gernot Belger
@@ -62,7 +67,27 @@ class LanduseHydrotopeInput extends AbstractHydrotopeInput
   @Override
   public void validateInput( final IStatusCollector log )
   {
-    // TODO Auto-generated method stub
+    log.add( validateAttributes() );
+  }
 
+  private IStatus validateAttributes( )
+  {
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
+    final FeatureList features = getFeatures();
+    for( final Object element : features )
+    {
+      final Landuse landuse = (Landuse) element;
+
+      final IXLinkedFeature landuseClass = landuse.getLanduse();
+      if( landuseClass == null )
+        log.add( IStatus.ERROR, formatMessage( "landuse class not set", landuse ) );
+
+      final double sealingFactor = landuse.getCorrSealing();
+      if( sealingFactor < 0 || sealingFactor > 1.0 )
+        log.add( IStatus.ERROR, formatMessage( CatchmentHydrotopeInput.STR_SEALING_FACTOR_OUTSIDE_VALID_RANGE_0_0_1_0, landuse ) );
+    }
+
+    return log.asMultiStatus( STR_ATTRIBUTES );
   }
 }

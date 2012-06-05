@@ -181,8 +181,7 @@ public class HydrotopePrototype
    */
   private double getSealingfactor( )
   {
-    final double corrSealing = m_catchment.getCorrSealing() * m_landuse.getCorrSealing();
-    return corrSealing;
+    return m_catchment.getCorrSealing() * m_landuse.getCorrSealing();
   }
 
   private double getGroundwaterFactor( )

@@ -40,7 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.hydrology.binding.Geology;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
@@ -62,7 +66,30 @@ class GeologyHydrotopeInput extends AbstractHydrotopeInput
   @Override
   public void validateInput( final IStatusCollector log )
   {
-    // TODO Auto-generated method stub
+    log.add( validateAttributes() );
+  }
 
+  private IStatus validateAttributes( )
+  {
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
+    final FeatureList features = getFeatures();
+    for( final Object element : features )
+    {
+      final Geology geology = (Geology) element;
+
+      final Double gwFactor = geology.getGWFactor();
+      if( gwFactor == null )
+        log.add( IStatus.ERROR, formatMessage( "groundwater factor is not set", geology ) );
+      else if( gwFactor < 0.0 || gwFactor > 1.0 )
+        log.add( IStatus.ERROR, formatMessage( "groundwater factor is outside it's valid range [0.0 - 1.0]", geology ) );
+
+      final Double maxPerkRate = geology.getMaxPerkulationsRate();
+      if( maxPerkRate == null )
+        log.add( IStatus.ERROR, formatMessage( "maximal perkolation rate is not set", geology ) );
+      // TODO: range check?
+    }
+
+    return log.asMultiStatus( STR_ATTRIBUTES );
   }
 }
