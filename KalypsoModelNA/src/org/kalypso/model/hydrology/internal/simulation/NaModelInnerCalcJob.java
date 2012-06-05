@@ -44,6 +44,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.model.hydrology.INaSimulationData;
@@ -53,6 +54,7 @@ import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.utils.log.GeoStatusLog;
 
 /**
  * @author doemming, huebsch
@@ -80,15 +82,20 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
     final Logger logger = naCalculationLogger.getLogger();
 
     NAModelSimulation simulation = null;
+    IStatus status = null;
+
     try
     {
       simulation = new NAModelSimulation( m_simDirs, m_data, logger );
-      simulation.runSimulation( monitor );
+      status = simulation.runSimulation( monitor );
+
+      if( status.getSeverity() == IStatus.CANCEL )
+        throw new OperationCanceledException();
+
+      if( status.getSeverity() == IStatus.ERROR )
+        throw new CoreException( status );
+
       return true;
-    }
-    catch( final SimulationException se )
-    {
-      throw se;
     }
     catch( final OperationCanceledException e )
     {
@@ -105,30 +112,47 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
     }
     finally
     {
+      saveSimulationLog( status );
       naCalculationLogger.stopLogging();
     }
   }
 
-  public boolean isSucceeded( )
+  @Override
+  public File getOptimizeResult( )
   {
-    return m_succeeded;
+    return null;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.internal.simulation.INaSimulation#getResultDir()
-   */
   @Override
   public File getResultDir( )
   {
     return m_simDirs.resultDir;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable#getOptimizeResult()
-   */
-  @Override
-  public File getOptimizeResult( )
+  private void saveSimulationLog( final IStatus status )
   {
-    return null;
+    try
+    {
+      if( status == null )
+        return;
+
+      final File resultDir = m_simDirs.currentResultDir;
+      final File logDir = new File( resultDir, "Log" );
+      final File simulationLogFile = new File( logDir, "simulationLog.gml" );
+
+      final GeoStatusLog geoStatusLog = new GeoStatusLog( simulationLogFile );
+      geoStatusLog.log( status );
+      geoStatusLog.serialize();
+    }
+    catch( final Exception ex )
+    {
+      /* Ignore. */
+      ex.printStackTrace();
+    }
+  }
+
+  public boolean isSucceeded( )
+  {
+    return m_succeeded;
   }
 }
