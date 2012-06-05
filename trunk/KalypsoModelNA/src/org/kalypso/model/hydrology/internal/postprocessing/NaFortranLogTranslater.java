@@ -41,15 +41,23 @@
 package org.kalypso.model.hydrology.internal.postprocessing;
 
 import java.io.File;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.MultiStatusWithTime;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -65,22 +73,31 @@ public class NaFortranLogTranslater
 {
   private static final QName QNAME_ERRLOG_RECORD = new QName( NaModelConstants.NS_NAFORTRANLOG, "record" ); //$NON-NLS-1$
 
+  private static final QName QNAME_ERRLOG_LEVEL = new QName( NaModelConstants.NS_NAFORTRANLOG, "level" ); //$NON-NLS-1$
+
+  private static final QName QNAME_ERRLOG_MESSAGE = new QName( NaModelConstants.NS_NAFORTRANLOG, "message" ); //$NON-NLS-1$
+
   private static final QName QNAME_ERRLOG_ELEMENT = new QName( NaModelConstants.NS_NAFORTRANLOG, "element" ); //$NON-NLS-1$
+
+  private static final QName QNAME_ERRLOG_PARAM = new QName( NaModelConstants.NS_NAFORTRANLOG, "param" ); //$NON-NLS-1$  
 
   private final File m_logFile;
 
   private final IDManager m_idManager;
 
+  private final Logger m_logger;
+
   private GMLWorkspace m_workspace;
 
-  private final Logger m_logger;
+  private final IStatusCollector m_errorLog;
 
   public NaFortranLogTranslater( final File asciiDir, final IDManager idManager, final Logger logger )
   {
-    m_logger = logger;
     m_logFile = new File( asciiDir, "start/error.gml" ); //$NON-NLS-1$
-
     m_idManager = idManager;
+    m_logger = logger;
+    m_workspace = null;
+    m_errorLog = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
   }
 
   public void translate( final File resultFile )
@@ -88,6 +105,11 @@ public class NaFortranLogTranslater
     readLog();
     translateLog();
     writeLog( resultFile );
+  }
+
+  public IStatusCollector getErrorLog( )
+  {
+    return m_errorLog;
   }
 
   private void readLog( )
@@ -110,7 +132,6 @@ public class NaFortranLogTranslater
       return;
 
     final Feature[] recordFEs = FeatureHelper.getFeaturesWithName( m_workspace, QNAME_ERRLOG_RECORD );
-
     for( final Feature feature : recordFEs )
     {
       final String elementString = (String) feature.getProperty( QNAME_ERRLOG_ELEMENT ); //$NON-NLS-1$
@@ -120,7 +141,6 @@ public class NaFortranLogTranslater
       {
         final Integer asciiID = NumberUtils.parseQuietInteger( fortranID );
         final int asciiIDBoxed = asciiID == null ? 0 : asciiID;
-
         final String asciiType = findAsciiType( elementString );
         final int type = findType( elementString );
 
@@ -130,14 +150,52 @@ public class NaFortranLogTranslater
           final String element = elementString.substring( 0, i );
           final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.242", element, fortranID ); //$NON-NLS-1$ //$NON-NLS-2$
           m_logger.warning( msg );
+          continue;
         }
-        else
-        {
-          final String gmlName = feature2.getName();
-          feature.setName( asciiType + " " + gmlName.trim() ); //$NON-NLS-1$
-          feature.setDescription( "FeatureID: " + gmlName.trim() ); //$NON-NLS-1$
-        }
+
+        final String gmlName = feature2.getName();
+        feature.setName( asciiType + " " + gmlName.trim() ); //$NON-NLS-1$
+        feature.setDescription( "FeatureID: " + gmlName.trim() ); //$NON-NLS-1$
+
+        m_errorLog.add( toStatus( feature ) );
       }
+    }
+  }
+
+  private IStatus toStatus( final Feature feature )
+  {
+    final String level = (String) feature.getProperty( QNAME_ERRLOG_LEVEL );
+    final String message = (String) feature.getProperty( QNAME_ERRLOG_MESSAGE );
+    final String element = (String) feature.getProperty( QNAME_ERRLOG_ELEMENT );
+    final String param = (String) feature.getProperty( QNAME_ERRLOG_PARAM );
+
+    final int severity = findSeverity( level );
+    final String text = String.format( "%s: %s", element, message );
+
+    final MultiStatus status = new MultiStatusWithTime( ModelNA.PLUGIN_ID, severity, text, new Date(), null );
+    status.add( new Status( severity, ModelNA.PLUGIN_ID, param ) );
+
+    return status;
+  }
+
+  private int findSeverity( final String level )
+  {
+    switch( level.trim() )
+    {
+      case "FINEST":
+        return IStatus.OK;
+
+      case "INFO":
+        return IStatus.INFO;
+
+      case "WARNING":
+        return IStatus.WARNING;
+
+      case "SEVERE":
+        return IStatus.ERROR;
+
+      default:
+        return IStatus.INFO;
     }
   }
 

@@ -50,11 +50,15 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime;
+import org.kalypso.contribs.eclipse.core.runtime.MultiStatusWithTime;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusWithTime;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.cm.ICatchment;
@@ -321,8 +325,50 @@ public class CatchmentModelVerifier
     final CalculateCatchmentModelsWorker catchmentModelsWorker = new CalculateCatchmentModelsWorker( rrmSimulation, true, simulationData );
     final IStatus status = catchmentModelsWorker.execute( new NullProgressMonitor() );
     if( !status.isOK() )
-      return status;
+      return convertStatus( status );
 
     return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Catchment model generation successfully tested." );
+  }
+
+  private IStatus convertStatus( final IStatus status )
+  {
+    if( status instanceof MultiStatus )
+      return convertMultiStatus( (MultiStatus) status );
+
+    return convertSingleStatus( status );
+  }
+
+  private IStatus convertMultiStatus( final MultiStatus multiStatus )
+  {
+    MultiStatus resultMultiStatus = null;
+    if( multiStatus instanceof IStatusWithTime )
+      resultMultiStatus = new MultiStatusWithTime( KalypsoUIRRMPlugin.getID(), multiStatus.getCode(), multiStatus.getMessage(), ((IStatusWithTime) multiStatus).getTime(), multiStatus.getException() );
+    else
+      resultMultiStatus = new MultiStatus( KalypsoUIRRMPlugin.getID(), multiStatus.getCode(), multiStatus.getMessage(), multiStatus.getException() );
+
+    final IStatus[] children = multiStatus.getChildren();
+    for( final IStatus status : children )
+    {
+      final IStatus resultStatus = convertStatus( status );
+      resultMultiStatus.add( resultStatus );
+    }
+
+    return resultMultiStatus;
+  }
+
+  private IStatus convertSingleStatus( final IStatus status )
+  {
+    int severity = status.getSeverity();
+    if( severity >= IStatus.ERROR )
+      severity = IStatus.WARNING;
+
+    final String plugin = status.getPlugin();
+    final String message = status.getMessage();
+    final Throwable exception = status.getException();
+
+    if( status instanceof IStatusWithTime )
+      return new StatusWithTime( severity, plugin, message, ((IStatusWithTime) status).getTime(), exception );
+
+    return new Status( severity, plugin, message, exception );
   }
 }

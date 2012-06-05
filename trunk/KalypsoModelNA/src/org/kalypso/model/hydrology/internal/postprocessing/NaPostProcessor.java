@@ -55,6 +55,7 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.internal.IDManager;
@@ -91,6 +92,8 @@ public class NaPostProcessor
 
   private ENACoreResultsFormat m_coreResultsFormat;
 
+  private IStatusCollector m_errorLog;
+
   public NaPostProcessor( final IDManager idManager, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final HydroHash hydroHash )
   {
     m_idManager = idManager;
@@ -98,6 +101,7 @@ public class NaPostProcessor
     m_modelWorkspace = modelWorkspace;
     m_naControl = naControl;
     m_hydroHash = hydroHash;
+    m_errorLog = null;
   }
 
   // FIXME: we need (much) better error handling! and error recovery...
@@ -155,6 +159,9 @@ public class NaPostProcessor
     resultFile.getParentFile().mkdirs();
 
     logTranslater.translate( resultFile );
+
+    final IStatusCollector errorLog = logTranslater.getErrorLog();
+    m_errorLog = errorLog;
   }
 
   /**
@@ -265,5 +272,10 @@ public class NaPostProcessor
   public ENACoreResultsFormat getCoreResultsFormat( )
   {
     return m_coreResultsFormat;
+  }
+
+  public IStatusCollector getErrorLog( )
+  {
+    return m_errorLog;
   }
 }

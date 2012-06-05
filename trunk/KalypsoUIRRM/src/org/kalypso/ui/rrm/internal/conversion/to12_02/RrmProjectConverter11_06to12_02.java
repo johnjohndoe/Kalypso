@@ -84,7 +84,7 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
-    /* MOnitor. */
+    /* Monitor. */
     monitor.beginTask( String.format( Messages.getString( "RrmProjectConverter103to230_1" ), m_sourceDir.getName() ), 100 ); //$NON-NLS-1$
 
     try

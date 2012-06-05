@@ -48,6 +48,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
@@ -110,7 +111,7 @@ public class NAModelSimulation
       }
 
       /* Processing. */
-      final IStatus processStatus = process( m_data, monitor );
+      final MultiStatus processStatus = process( m_data, monitor );
       collector.add( processStatus );
       if( monitor.isCanceled() )
       {
@@ -119,7 +120,7 @@ public class NAModelSimulation
       }
 
       /* Post processing. */
-      final IStatus postProcessStatus = postProcess( m_data, monitor );
+      final IStatus postProcessStatus = postProcess( m_data, processStatus, monitor );
       collector.add( postProcessStatus );
 
       return collector.asMultiStatus( "Simulation finished" );
@@ -142,7 +143,7 @@ public class NAModelSimulation
     if( monitor.isCanceled() )
       return;
 
-    postProcess( m_data, monitor );
+    postProcess( m_data, null, monitor );
   }
 
   private IStatus preProcess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
@@ -169,7 +170,7 @@ public class NAModelSimulation
     }
   }
 
-  private IStatus process( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
+  private MultiStatus process( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
@@ -184,7 +185,7 @@ public class NAModelSimulation
     return collector.asMultiStatus( "Processing" );
   }
 
-  private IStatus postProcess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws Exception
+  private IStatus postProcess( final INaSimulationData simulationData, final MultiStatus processStatus, final ISimulationMonitor monitor ) throws Exception
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
@@ -203,6 +204,13 @@ public class NAModelSimulation
 
     final NaPostProcessor postProcessor = new NaPostProcessor( idManager, m_logger, modelWorkspace, naControl, hydroHash );
     postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
+
+    if( processStatus != null )
+    {
+      final IStatusCollector errorLog = postProcessor.getErrorLog();
+      if( errorLog != null )
+        processStatus.add( errorLog.asMultiStatus( "Error Log" ) );
+    }
 
     return collector.asMultiStatus( "Post processing" );
   }
