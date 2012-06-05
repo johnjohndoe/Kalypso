@@ -10,6 +10,7 @@
 <view id="org.kalypso.ui.editor.gistableeditor.GttViewPart:Landuse"/>
 <view id="org.kalypso.ui.editor.gistableeditor.GttViewPart:Geologie"/>
 <view id="org.kalypso.ui.editor.gistableeditor.GttViewPart:Pedologie"/>
+<view id="org.kalypso.ui.editor.gistableeditor.GttViewPart:Overlay"/>
 <view id="org.kalypso.ui.editor.gistableeditor.GttViewPart:Hydrotopes"/>
 <view id="org.kalypso.featureview.views.FeatureView"/>
 <fastViewBars/>
@@ -54,6 +55,7 @@
 <page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:Landuse" label="Landnutzung"/>
 <page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:Geologie" label="Geologie"/>
 <page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:Pedologie" label="Pedologie"/>
+<page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:Overlay" label="Overlay (DRWBM)"/>
 <page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:Hydrotopes" label="Hydrotope"/>
 <page content="org.kalypso.ui.editor.gistableeditor.GttViewPart" label="LabelNotFound"/>
 <page content="org.kalypso.ui.views.featuretemplateview" label="LabelNotFound"/>

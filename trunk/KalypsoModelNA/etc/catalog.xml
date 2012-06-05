@@ -6,6 +6,9 @@
   <uri name="org.kalypso.na.control" uri="schema/gml/11.6/control.xsd" />
   <uri name="org.kalypso.namodell.control" uri="schema/gml/11.6/nacontrol.xsd" />
   <uri name="http://org.kalypso.ombrometer" uri="schema/gml/11.6/ombrometer.xsd" />
+  
+  <!--  TODO: if we remove the 11.6 schemta, this one needs to go into planer-client -->
+  <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/11.6/suds" uri="schema/gml/suds.xsd" />
 
   <uri name="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement" uri="schema/gml/timeseriesManagement.xsd" />
   <uri name="http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel" uri="schema/gml/catchmentModel.xsd" />
@@ -23,7 +26,7 @@
   <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/landuse" uri="schema/gml/landuse.xsd" />
   <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/pedologie" uri="schema/gml/pedologie.xsd" />
   <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/geologie" uri="schema/gml/geologie.xsd" />
-  <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/suds" uri="schema/gml/suds.xsd" />
+  <uri name="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" uri="schema/gml/hydrotopeOverlay.xsd" />
 
   <public publicId="urn:ogc:gml:kalypso:model:rrm:stationClasses" uri="catalog/rrmStationClasses.gml" />
 

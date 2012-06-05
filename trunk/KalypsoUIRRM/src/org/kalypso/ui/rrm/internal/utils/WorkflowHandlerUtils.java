@@ -69,21 +69,6 @@ public final class WorkflowHandlerUtils
     throw new UnsupportedOperationException( "Do not instantiate" ); //$NON-NLS-1$
   }
 
-// public static void setGttInput( final IWorkbenchPage activePage, final String secondaryId, final IFile input, final
-// String title )
-// {
-// final IViewReference viewReference = activePage.findViewReference( GttViewPart.ID, secondaryId );
-// final IWorkbenchPart part = viewReference.getPart( false );
-// if( part instanceof GttViewPart )
-// {
-// final GttViewPart gttView = (GttViewPart) part;
-// gttView.setInput( new FileEditorInput( input ) );
-//
-// gttView.setPartName( title );
-// gttView.setTitleToolTip( title );
-// }
-// }
-
   public static void setGttInput( final IWorkbenchPage activePage, final String secondaryId, final String resource, final String title, final IFolder context ) throws ExecutionException
   {
     try
@@ -92,7 +77,7 @@ public final class WorkflowHandlerUtils
       if( viewReference == null )
         return;
 
-      final IWorkbenchPart part = viewReference.getPart( false );
+      final IWorkbenchPart part = viewReference.getPart( true );
       if( part instanceof GttViewPart )
       {
         final GttViewPart gttView = (GttViewPart) part;

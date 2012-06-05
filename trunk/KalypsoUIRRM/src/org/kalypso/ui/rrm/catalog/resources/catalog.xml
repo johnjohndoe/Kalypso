@@ -73,6 +73,7 @@
   <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Landuse:gtt" uri="Hydrotopes_Landuse.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Geologie:gtt" uri="Hydrotopes_Geologie.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Pedologie:gtt" uri="Hydrotopes_Pedologie.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Overlay:gtt" uri="Hydrotopes_Overlay.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Hydrotopes:gtt" uri="Hydrotopes_Hydrotopes.gtt" />
 
 

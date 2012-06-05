@@ -61,6 +61,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
   {
     catalog.put( NaModelConstants.NS_NAMETA_11_6, myClass.getResource( "/etc/schema/gml/11.6/control.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NACONTROL_11_6, myClass.getResource( "/etc/schema/gml/11.6/nacontrol.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NASUDS, myClass.getResource( "/etc/schema/gml/11.6/suds.xsd" ) ); //$NON-NLS-1$
 
     catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "/etc/schema/gml/control.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "/etc/schema/gml/namodell.xsd" ) ); //$NON-NLS-1$
@@ -76,7 +77,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     catalog.put( NaModelConstants.NS_NALANDUSE, myClass.getResource( "/etc/schema/gml/landuse.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAPEDOLOGIE, myClass.getResource( "/etc/schema/gml/pedologie.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAGEOLOGIE, myClass.getResource( "/etc/schema/gml/geologie.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NASUDS, myClass.getResource( "/etc/schema/gml/suds.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAOVERLAY, myClass.getResource( "/etc/schema/gml/hydrotopeOverlay.xsd" ) ); //$NON-NLS-1$
 
 
     // REMARK: these prefix definition are crucial for the optimisation, as the
@@ -95,6 +96,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     prefixes.put( NaModelConstants.NS_NALANDUSE, "rrmLanduse" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NAPEDOLOGIE, "rrmPedo" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NAGEOLOGIE, "rrmGeo" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NAOVERLAY, "rrmHydo" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NASUDS, "rrmSuds" ); //$NON-NLS-1$
 
     catalog.put( NaModelConstants.NS_TIMESERIES_MANAGEMENT, myClass.getResource( "/etc/schema/gml/timeseriesManagement.xsd" ) ); //$NON-NLS-1$
