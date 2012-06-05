@@ -164,37 +164,37 @@ public class PrepareShorttermSimulationWorker implements ICoreRunnableWithProgre
 
   private IStatus updateSimulationData( final RrmSimulation rrmSimulation, final INaSimulationData simulationData, final NAControl control )
   {
-    final String calcCaseNameSource = control.getInitialValueSource();
-    if( StringUtils.isBlank( calcCaseNameSource ) )
+    final String sourceSimulationName = control.getInitialValueSource();
+    if( StringUtils.isBlank( sourceSimulationName ) )
       return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "No longterm simulation is set." );
 
     final RrmScenario scenario = rrmSimulation.getScenario();
-    final IFolder folderCalcCases = scenario.getSimulationsFolder();
-    final RrmSimulation sourceCalcCase = new RrmSimulation( folderCalcCases.getFolder( new Path( calcCaseNameSource ) ) );
-    if( !sourceCalcCase.exists() )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "Failed to copy initial values from simulation '%s': Simulation does not exist.", sourceCalcCase.getName() ) );
+    final IFolder folderSimulations = scenario.getSimulationsFolder();
+    final RrmSimulation sourceSimulation = new RrmSimulation( folderSimulations.getFolder( new Path( sourceSimulationName ) ) );
+    if( !sourceSimulation.exists() )
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "Failed to copy initial values from simulation '%s': Simulation does not exist.", sourceSimulation.getName() ) );
 
-    final IFolder currentSourceFolder = sourceCalcCase.getCurrentResultsFolder();
+    final IFolder currentSourceFolder = sourceSimulation.getCurrentResultsFolder();
     if( !currentSourceFolder.exists() )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "Failed to copy initial values from simulation '%s': No results available.", sourceCalcCase.getName() ) );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "Failed to copy initial values from simulation '%s': No results available.", sourceSimulation.getName() ) );
 
-    final IFolder initialValuesSourceFolder = sourceCalcCase.getCurrentLzimResultFolder();
+    final IFolder initialValuesSourceFolder = sourceSimulation.getCurrentLzimResultFolder();
     final Date startDate = control.getSimulationStart();
     final String initialValuesSourceFilename = new SimpleDateFormat( "yyyyMMdd'.gml'" ).format( startDate );
     final IFile initialValuesSourceFile = initialValuesSourceFolder.getFile( initialValuesSourceFilename );
     if( !initialValuesSourceFile.exists() )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "Failed to copy initial values from simulation '%s': Initial values missing (%s).", sourceCalcCase.getName(), initialValuesSourceFilename ) );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "Failed to copy initial values from simulation '%s': Initial values missing (%s).", sourceSimulation.getName(), initialValuesSourceFilename ) );
 
     try
     {
       final GMLWorkspace lzsimWorkspace = GmlSerializer.createGMLWorkspace( initialValuesSourceFile, simulationData.getModelWorkspace().getContext(), simulationData.getFeatureProviderFactory(), null );
       simulationData.setLzsimWorkspace( lzsimWorkspace );
 
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Initial values were loaded from simulation '%s'.", sourceCalcCase.getName() ) );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Initial values were loaded from simulation '%s'.", sourceSimulation.getName() ) );
     }
     catch( final Exception e )
     {
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "Failed to load initial values from simulation '%s'.", sourceCalcCase.getName() ), e );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "Failed to load initial values from simulation '%s'.", sourceSimulation.getName() ), e );
     }
   }
 }

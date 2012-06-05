@@ -51,7 +51,7 @@ import org.kalypso.model.hydrology.project.INaProjectConstants;
 
 /**
  * Searches for calc case folders.
- *
+ * 
  * @author Gernot Belger
  */
 public class CalcCaseConvertWalker extends DirectoryWalker<File>
@@ -81,6 +81,7 @@ public class CalcCaseConvertWalker extends DirectoryWalker<File>
   {
     if( directory.equals( m_templateDir ) )
       return false;
+
     /* Happened in Krückau Model: .calculation inside .models folder */
     if( directory.equals( new File( m_sourceDir, INaProjectConstants.FOLDER_MODEL ) ) )
       return false;
