@@ -739,7 +739,7 @@ public class Control1D2DConverter
               boundaryCondition.setHasDirection( true );
 
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
-            formatter.format( "QC *%12d%8d%16.3e%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
+            formatter.format( "QC *%12d%8d%16.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {

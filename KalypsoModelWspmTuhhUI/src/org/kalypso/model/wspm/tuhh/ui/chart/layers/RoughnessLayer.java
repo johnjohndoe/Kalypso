@@ -99,8 +99,10 @@ public class RoughnessLayer extends AbstractProfilLayer
     final FullRectangleFigure fr = new FullRectangleFigure();
 
     final IPointStyle ps = getPointStyle();
+    // FIXME: why the heck is this translation needed??
     final AreaStyle as = new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), ps.isVisible() );
     fr.setStyle( as );
+
     final IAxis dom = getDomainAxis();
     final IAxis tar = getTargetAxis();
 

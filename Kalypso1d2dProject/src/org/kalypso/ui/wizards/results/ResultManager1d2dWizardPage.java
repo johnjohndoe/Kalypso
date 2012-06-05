@@ -225,7 +225,15 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
               bean.deleteFollowers = false;
               bean.evaluateFullResults = true;
 
-              bean.userCalculatedSteps = new Date[] { stepResult.getStepTime() };
+              if( stepResult.getFullPath().toOSString().contains( ResultManager.STEADY_PREFIX ) ){
+                bean.userCalculatedSteps = new Date[] { ResultManager.STEADY_DATE };
+              }
+              else if( stepResult.getFullPath().toOSString().contains( ResultManager.MAXI_PREFIX ) ){
+                bean.userCalculatedSteps = new Date[] { ResultManager.MAXI_DATE };
+              }
+              else{
+                bean.userCalculatedSteps = new Date[] { stepResult.getStepTime() };
+              }
               FileObject actResult = null;
               FileObject fileObjSWANResult = null;
               ResultManager resultManager = null;

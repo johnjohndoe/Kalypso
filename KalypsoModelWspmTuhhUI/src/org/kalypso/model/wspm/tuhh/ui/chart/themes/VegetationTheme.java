@@ -176,7 +176,6 @@ public class VegetationTheme extends AbstractProfilTheme
   @Override
   public String getTooltipInfo( final IProfileRecord point )
   {
-
     return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", WspmClassifications.getAx( point ), WspmClassifications.getAy( point ), WspmClassifications.getDp( point ) ); //$NON-NLS-1$
   }
 
@@ -242,9 +241,9 @@ public class VegetationTheme extends AbstractProfilTheme
 
   final boolean segmenthasVegetation( final IProfileRecord point )
   {
-    final Double ax = WspmClassifications.getAx( point );
-    final Double ay = WspmClassifications.getAy( point );
-    final Double dp = WspmClassifications.getDp( point );
+    final double ax = WspmClassifications.getAx( point );
+    final double ay = WspmClassifications.getAy( point );
+    final double dp = WspmClassifications.getDp( point );
 
     if( Doubles.isNaN( ax, ax, dp ) )
       return false;
