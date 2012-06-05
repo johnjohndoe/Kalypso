@@ -44,7 +44,8 @@ public class WindDataWizardMainPage extends WizardPage
 
   public Text m_tileTitle;
 
-  public Text m_height;
+  //removed - not usable in case of actually needed data(wind field)
+//  public Text m_height;
 
   public Text m_tileDescription;
 
@@ -145,21 +146,20 @@ public class WindDataWizardMainPage extends WizardPage
     gridData_3.horizontalSpan = 2;
     m_tileTitle.setLayoutData( gridData_3 );
 
-    final Label label_hight = new Label( container, SWT.NONE );
-    label_hight.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-    label_hight.setText( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.8" ) ); //$NON-NLS-1$
-    m_height = new Text( container, SWT.BORDER );
-    m_height.addModifyListener( new ModifyListener()
-    {
-      @Override
-      public void modifyText( final ModifyEvent e )
-      {
-        updatePageComplete();
-      }
-    } );
-    final GridData gridData_hight = new GridData( GridData.FILL_HORIZONTAL );
-    gridData_hight.horizontalSpan = 2;
-    m_height.setLayoutData( gridData_hight );
+//    final Label label_hight = new Label( container, SWT.NONE );
+//    label_hight.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
+//    label_hight.setText( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.8" ) ); //$NON-NLS-1$
+//    m_height = new Text( container, SWT.BORDER );
+//    m_height.addModifyListener( new ModifyListener()
+//    {
+//      public void modifyText( final ModifyEvent e )
+//      {
+//        updatePageComplete();
+//      }
+//    } );
+//    final GridData gridData_hight = new GridData( GridData.FILL_HORIZONTAL );
+//    gridData_hight.horizontalSpan = 2;
+//    m_height.setLayoutData( gridData_hight );
 
     final Label label_4 = new Label( container, SWT.NONE );
     label_4.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING ) );
@@ -180,6 +180,7 @@ public class WindDataWizardMainPage extends WizardPage
    * @param selection
    *          the selection or <code>null</code> if none
    */
+    @SuppressWarnings("unchecked")
   public void init( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
@@ -250,19 +251,17 @@ public class WindDataWizardMainPage extends WizardPage
       setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.3" ) ); //$NON-NLS-1$
       return;
     }
-    if( m_height.getText().trim().length() != 0 )
-    {
-      try
-      {
-        Double.parseDouble( m_height.getText().trim() );
-      }
-      catch( final Exception e )
-      {
-        setMessage( null );
-        setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.5" ) ); //$NON-NLS-1$
-      }
-      return;
-    }
+//    if( m_height.getText().trim().length() != 0 )
+//    {
+//      try{
+//        Double.parseDouble( m_height.getText().trim() );
+//      }
+//      catch (Exception e) {
+//        setMessage( null );
+//        setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.5" ) ); //$NON-NLS-1$
+//        return;
+//      }
+//    }
     setPageComplete( true );
     setMessage( null );
     setErrorMessage( null );

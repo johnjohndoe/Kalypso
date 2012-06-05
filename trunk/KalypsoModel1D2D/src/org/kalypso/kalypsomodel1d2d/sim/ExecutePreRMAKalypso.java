@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,25 +52,28 @@ import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author kurzbach
- *
+ * 
  */
 public class ExecutePreRMAKalypso
 {
@@ -92,6 +97,10 @@ public class ExecutePreRMAKalypso
 
   private String m_windCoordFileUrl;
 
+  private final IScenarioDataProvider m_caseDataProvider;
+
+  private final IContainer m_scenarioFolder;
+
   /**
    * Create execute request to PreRMAKalypso WPS with no restart infos and default calcUnit defined in control model
    */
@@ -113,6 +122,10 @@ public class ExecutePreRMAKalypso
    */
   public ExecutePreRMAKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos, final String calcUnitID )
   {
+
+    m_caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+    m_scenarioFolder = m_caseDataProvider.getScenarioFolder();
+
     m_serviceEndpoint = serviceEndpoint;
     m_modelInput = createInputs( restartInfos );
     m_calcUnitID = calcUnitID;
@@ -196,17 +209,48 @@ public class ExecutePreRMAKalypso
     {
       // fill restart inputs
       int restartCount = 0;
-      for( final IRestartInfo restartInfo : restartInfos )
+      if( restartInfos.size() > 0 && !WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
       {
-        final IPath restartFilePath = restartInfo.getRestartFilePath();
+        final String restartFilePath = zipRestartInfos( restartInfos );
         if( restartFilePath != null )
-          inputs.put( PreRMAKalypso.INPUT_RESTART_FILE_PREFIX + restartCount++, restartFilePath.toString() );
+          inputs.put( PreRMAKalypso.INPUT_RESTART_FILE_PREFIX + restartCount++, restartFilePath );
       }
     }
 
     // here the outputs are ignored, we will only use the Modeldata for inputs
     final Map<String, String> outputs = Collections.emptyMap();
-    return SimulationUtilitites.createModelData( RMAKalypsoSimulation.ID, inputs, true, outputs, true );
+    final Modeldata data = SimulationUtilitites.createModelData( RMAKalypsoSimulation.ID, inputs, true, outputs, true );
+
+    /* Special case for roughness.gml: NOT relative to calc case */
+    final Input input = SimulationUtilitites.createInput( PreRMAKalypso.INPUT_ROUGHNESS, ".metadata/roughness.gml", false, false ); //$NON-NLS-1$
+    data.getInput().add( input );
+
+    return data;
+  }
+
+  private String zipRestartInfos( final List<IRestartInfo> restartInfos )
+  {
+    try
+    {
+      final File zipOutput = File.createTempFile( "kalypsoMultiRestartFile" + new Date().getTime(), ".zip" ); //$NON-NLS-1$  //$NON-NLS-2$
+      zipOutput.delete();
+      final List<File> files = new ArrayList<File>();
+      for( final IRestartInfo restartInfo : restartInfos )
+      {
+        final IPath restartFilePath = restartInfo.getRestartFilePath();
+        final IResource foundPath = m_scenarioFolder.findMember( restartFilePath );
+
+        if( restartFilePath != null )
+          files.add( new File( foundPath.getLocationURI() ) );
+      }
+      ZipUtilities.zip( zipOutput, files.toArray( new File[files.size()] ), new File( m_scenarioFolder.getLocationURI() ) );
+      return zipOutput.toURI().toURL().toExternalForm();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+    return ""; //$NON-NLS-1$
   }
 
   private IStatus checkResults( final Map<String, ComplexValueReference> references )
@@ -235,7 +279,7 @@ public class ExecutePreRMAKalypso
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("ExecutePreRMAKalypso.0") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "ExecutePreRMAKalypso.0" ) ); //$NON-NLS-1$
     }
   }
 

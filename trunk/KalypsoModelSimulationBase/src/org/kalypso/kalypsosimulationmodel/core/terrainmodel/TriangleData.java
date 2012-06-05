@@ -40,8 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import javax.vecmath.Point3d;
+
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -51,6 +52,7 @@ import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.model.geometry.Plane;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -61,14 +63,11 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author Patrice Congo
  * @author Madanagopal
  */
-
 class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 {
   private final LinearRing m_ring;
 
   private final Polygon m_polygon;
-
-  private final double[] relativePlaneEquation;
 
   private final double centerElevation;
 
@@ -84,8 +83,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
     this.m_ring = ring;
     m_polygon = new Polygon( ring, null, ring.getFactory() );
     final Coordinate[] coords = ring.getCoordinates();
-    // planeEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
-    relativePlaneEquation = JTSUtilities.calculateRelativeTrianglePlaneEquation( coords );
+    // relativePlaneEquation = JTSUtilities.calculateRelativeTrianglePlaneEquation( coords );
     centerElevation = calculateCenterElevation( coords );
 
     final GM_Position pos1 = JTSAdapter.wrap( ring.getCoordinateN( 0 ) );
@@ -210,9 +208,22 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
   public double computeZOfTrianglePlanePoint( final double x, final double y )
   {
     final Coordinate[] coords = m_ring.getCoordinates();
+    final Coordinate c0 = coords[0];
+    final Coordinate c1 = coords[1];
+    final Coordinate c2 = coords[2];
 
     // use relative plane equation and relative coords
-    return JTSUtilities.calculateTriangleZ( relativePlaneEquation, x - coords[0].x, y - coords[0].y );
+    final double relativeX = x - coords[0].x;
+    final double relativeY = y - coords[0].y;
+
+    // FIXME: use apache commons math Plane instead
+    // FIXME: was cached before; check if this is needed; memory consumption!
+    final Plane plane = new Plane();
+    final Point3d p0 = new Point3d( c0.x, c0.y, c0.z );
+    final Point3d p1 = new Point3d( c1.x, c1.y, c1.z );
+    final Point3d p2 = new Point3d( c2.x, c2.y, c2.z );
+    plane.setPlane( p0, p1, p2 );
+    return plane.z( relativeX, relativeY );
   }
 
   public LinearRing getRing( )

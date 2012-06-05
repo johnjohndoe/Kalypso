@@ -140,7 +140,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     final SelectResultWizardPage masterResultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_MASTER_RESULTS_NAME );
     final IResultMeta[] masterResults = masterResultPage.getSelectedResults();
 
-    if( masterResults.length == 0 )
+    if( masterResults.length == 0 || !(masterResults[0] instanceof IDocumentResultMeta) )
     {
       MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.7"), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.8") ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
@@ -157,7 +157,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     final SelectResultWizardPage slaveResultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_SLAVE_RESULTS_NAME );
     final IResultMeta[] slaveResults = slaveResultPage.getSelectedResults();
 
-    if( slaveResults.length == 0 )
+    if( slaveResults.length == 0 || !(slaveResults[0] instanceof IDocumentResultMeta) )
     {
       MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.9"), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.10") ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;

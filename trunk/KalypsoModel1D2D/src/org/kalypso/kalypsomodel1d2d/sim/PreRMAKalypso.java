@@ -4,15 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -23,6 +26,7 @@ import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.SWANResults2RmaConverter;
 import org.kalypso.kalypsomodel1d2d.conv.WQboundaryConditions1D2DConverter;
+import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
 import org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter;
 import org.kalypso.kalypsomodel1d2d.conv.wind.RMA10WindDataWriter;
@@ -52,11 +56,12 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Convert from GML to RMAKalypso format
- *
+ * 
  * @author kurzbach
  */
 public class PreRMAKalypso implements ISimulation
 {
+  private static final String SERVER_INPUT_LOCAL = "InputLocal"; //$NON-NLS-1$
 
   public static final String INPUT_RESTART_FILE_PREFIX = "restartFile"; //$NON-NLS-1$
 
@@ -84,6 +89,8 @@ public class PreRMAKalypso implements ISimulation
 
   public static final String OUTPUT_CONTROL = ISimulation1D2DConstants.R10_File;
 
+  public static final String INPUT_RESTART_FILE = "restartFile0"; //$NON-NLS-1$
+
   public static final String OUTPUT_RMA_VERSION = "rmaVersion"; //$NON-NLS-1$
 
   private static final String MODEL_SPEC = "resource/preRMAKalypso.xml"; //$NON-NLS-1$
@@ -91,6 +98,8 @@ public class PreRMAKalypso implements ISimulation
   public static final String ID = "org.kalypso.simulation.rma.preRMAKalypso"; //$NON-NLS-1$
 
   private IGeoLog m_log;
+
+  private String m_input;
 
   @Override
   public URL getSpezifikation( )
@@ -102,6 +111,13 @@ public class PreRMAKalypso implements ISimulation
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     final SimulationMonitorAdaptor progressMonitor = new SimulationMonitorAdaptor( monitor );
+    m_input = System.getProperty( "org.kalypso.service.wps.input" ); //$NON-NLS-1$
+    IContainer scenarioFolder = null;
+    if( m_input == null || m_input.equals( "" ) || SERVER_INPUT_LOCAL.equals( m_input ) )
+    {
+      final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+      scenarioFolder = caseDataProvider.getScenarioFolder();
+    }
 
     try
     {
@@ -148,7 +164,7 @@ public class PreRMAKalypso implements ISimulation
         final String calcUnitID = (String) inputProvider.getInputForID( INPUT_CALCULATION_UNIT_ID );
         for( final IControlModel1D2D existingControlModel : controlModel1d2dCollection.getControlModels() )
         {
- 		  try
+          try
           {
             final ICalculationUnit existingCalculationUnit = existingControlModel.getCalculationUnit();
             if( existingCalculationUnit.getId().equals( calcUnitID ) )
@@ -161,7 +177,8 @@ public class PreRMAKalypso implements ISimulation
           catch( final Exception e )
           {
             e.printStackTrace();
-          }        }
+          }
+        }
       }
 
       IFlowRelationshipModel flowRelationshipModel = null;
@@ -213,18 +230,30 @@ public class PreRMAKalypso implements ISimulation
         windModel = (IWindModel) windWorkspace.getRootFeature().getAdapter( IWindModel.class );
       }
 
+      final FileObject workingDir = manager.toFileObject( tmpdir );
+
       final RestartNodes restartNodes;
       if( controlModel.getRestart() )
       {
-        restartNodes = new RestartNodes();
-        for( int i = 0; i < 3; i++ )
+        URL restartPrefixURL = scenarioFolder.getLocationURI().toURL();
+        if( m_input != null && !m_input.equals( "" ) && !SERVER_INPUT_LOCAL.equals( m_input ) )
         {
-          final String restartFileInputName = INPUT_RESTART_FILE_PREFIX + i;
-          if( inputProvider.hasID( restartFileInputName ) )
-          {
-            final URL restartURL = (URL) inputProvider.getInputForID( restartFileInputName );
-            restartNodes.addResultUrl( restartURL );
-          }
+          final URL restartFileUrl = (URL) inputProvider.getInputForID( INPUT_RESTART_FILE );
+          ZipUtilities.unzip( restartFileUrl, tmpdir );
+          restartPrefixURL = workingDir.getURL();
+        }
+
+        final List<IRestartInfo> restartInfos = controlModel.getRestartInfos();
+        restartNodes = new RestartNodes();
+
+        for( final Object element : restartInfos )
+        {
+          final IRestartInfo iRestartInfo = (IRestartInfo) element;
+          URL fullPrefixURL = restartPrefixURL;
+          if( !restartPrefixURL.toString().endsWith( "/" ) ) //$NON-NLS-1$
+            fullPrefixURL = new URL( restartPrefixURL.toString() + "/" ); //$NON-NLS-1$
+          final URL restartURL = new URL( fullPrefixURL, iRestartInfo.getRestartFilePath().toPortableString() );
+          restartNodes.addResultUrl( restartURL );
         }
       }
       else
@@ -232,7 +261,16 @@ public class PreRMAKalypso implements ISimulation
         restartNodes = null;
       }
 
-      final FileObject workingDir = manager.toFileObject( tmpdir );
+      // for( int i = 0; i < 3; i++ )
+      // {
+      // final String restartFileInputName = INPUT_RESTART_FILE_PREFIX + i;
+      // if( inputProvider.hasID( restartFileInputName ) )
+      // {
+      // final URL restartURL = (URL) inputProvider.getInputForID( restartFileInputName );
+      // restartNodes.addResultUrl( restartURL );
+      // }
+      // }
+
       writeRma10Files( workingDir, progressMonitor, discretisationModel, flowRelationshipModel, windModel, roughnessModel, restartNodes, controlModel, calculationUnit );
 
       resultEater.addResult( OUTPUT_MESH, new File( tmpdir, OUTPUT_MESH ) );

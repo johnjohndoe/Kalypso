@@ -50,13 +50,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -77,13 +78,17 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.DisposeButtonImageListener;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -92,6 +97,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CloneCalculationUnitWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -159,6 +165,8 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
   private Button m_btnCreateCalcUnit;
 
+  private Button m_btnCloneCalcUnit;
+
   private Button m_btnRunCalculation;
 
   private Button m_btnEditCalcUnit;
@@ -173,16 +181,11 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     final Composite composite = toolkit.createComposite( parent, SWT.NONE );
-    final GridLayout gridLayout = new GridLayout( 2, false );
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    composite.setLayout( gridLayout );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( composite );
 
     final TableViewer tableViewer = createTableControl( composite, toolkit );
     final Table table = tableViewer.getTable();
-    toolkit.adapt( table );
-    table.setLinesVisible( true );
-    table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Display display = parent.getDisplay();
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
@@ -240,19 +243,37 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
   private TableViewer createTableControl( final Composite parent, final FormToolkit toolkit )
   {
-    final DefaultTableViewer tableViewer = new DefaultTableViewer( parent, SWT.FULL_SELECTION | SWT.NONE );
+    final Table table = toolkit.createTable( parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL );
+    table.setLinesVisible( true );
+    table.setHeaderVisible( true );
 
-    tableViewer.addColumn( "Name", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.0" ), null, 100, 100, false, SWT.LEFT, false, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final TableViewer viewer = new TableViewer( table );
 
-    tableViewer.setContentProvider( new ArrayContentProvider() );
-    tableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( parent.getDisplay() ) );
+    table.addControlListener( new ColumnsResizeControlListener() );
 
-    tableViewer.setInput( getCalcUnits() );
-    tableViewer.addSelectionChangedListener( m_selectListener );
+    /* Name column */
+    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    final ViewerColumnItem nameItem = new ViewerColumnItem( nameColumn );
 
+    final CalculationUnitViewerLabelProvider nameLabelProvider = new CalculationUnitViewerLabelProvider( parent.getDisplay() );
+
+    nameItem.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.0" ) ); //$NON-NLS-1$
+    nameItem.setResizable( true );
+    ColumnsResizeControlListener.setMinimumPackWidth( nameItem.getColumn() );
+    nameColumn.setLabelProvider( nameLabelProvider );
+    ColumnViewerSorter.registerSorter( nameColumn, new ViewerComparator() );
+
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setInput( getCalcUnits() );
+
+    ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
+
+    viewer.addSelectionChangedListener( m_selectListener );
+
+    // TODO: replace with toolbar and actions
     final Composite btnComposite = toolkit.createComposite( parent, SWT.NONE );
     btnComposite.setLayout( new GridLayout( 1, false ) );
-    btnComposite.setLayoutData( new GridData() );
+    btnComposite.setLayoutData( new GridData( SWT.CENTER, SWT.TOP, false, true ) );
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_UP ) )
     {
       final Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
@@ -264,7 +285,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         public void widgetSelected( final SelectionEvent event )
         {
           moveSelection( -1 );
-          tableViewer.refresh();
+          viewer.refresh();
         }
       } );
 
@@ -282,7 +303,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         public void widgetSelected( final SelectionEvent event )
         {
           moveSelection( 1 );
-          tableViewer.refresh();
+          viewer.refresh();
         }
       } );
       moveDownBtn.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.2" ) ); //$NON-NLS-1$
@@ -321,7 +342,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
             if( MessageDialog.openConfirm( parent.getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.15" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.14" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
             {
               deleteSelected();
-              tableViewer.refresh();
+              viewer.refresh();
             }
           }
           catch( final Throwable th )
@@ -347,8 +368,8 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           try
           {
             createFeatureWrapper();
-            final int newEntryPosition = tableViewer.getTable().getItemCount() - 1;
-            tableViewer.getTable().select( newEntryPosition );
+            final int newEntryPosition = viewer.getTable().getItemCount() - 1;
+            viewer.getTable().select( newEntryPosition );
           }
           catch( final Throwable th )
           {
@@ -357,6 +378,40 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         }
       } );
       m_btnCreateCalcUnit.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.Tooltip.BTN_ADD" ) ); //$NON-NLS-1$
+    }
+
+    if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_CLONE ) )
+    {
+      m_btnCloneCalcUnit = new Button( btnComposite, SWT.PUSH );
+      m_btnCloneCalcUnit.setImage( AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/35_clone_calculationunit.gif" ).createImage() );//$NON-NLS-1$
+      DisposeButtonImageListener.hookToButton( m_btnCloneCalcUnit );
+
+      try
+      {
+        m_btnCloneCalcUnit.addSelectionListener( new SelectionAdapter()
+        {
+          @Override
+          public void widgetSelected( final SelectionEvent event )
+          {
+            try
+            {
+              cloneFeatureWrapper();
+              final int newEntryPosition = viewer.getTable().getItemCount() - 1;
+              viewer.getTable().select( newEntryPosition );
+            }
+            catch( final Throwable th )
+            {
+              th.printStackTrace();
+            }
+          }
+        } );
+      }
+      catch( Exception e )
+      {
+        // TODO: handle exception
+      }
+      m_btnCloneCalcUnit.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.Tooltip.BTN_CLONE" ) ); //$NON-NLS-1$
+      m_btnCloneCalcUnit.setEnabled( false );
     }
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_EDIT ) )
@@ -404,11 +459,11 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       m_btnRunCalculation.setEnabled( false );
     }
 
-    final TextCellEditor textCellEditor = new TextCellEditor( tableViewer.getTable() );
-    final CellEditor[] editors = new CellEditor[] { textCellEditor };
-    tableViewer.setCellEditors( editors );
+    // final TextCellEditor textCellEditor = new TextCellEditor( viewer.getTable() );
+    // final CellEditor[] editors = new CellEditor[] { textCellEditor };
+    // viewer.setCellEditors( editors );
 
-    return tableViewer;
+    return viewer;
   }
 
   protected IStatus deleteSelected( )
@@ -469,7 +524,8 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     return Status.OK_STATUS;
   }
 
-  protected void moveSelection( @SuppressWarnings("unused") final int delta )
+  protected void moveSelection( @SuppressWarnings("unused")
+  final int delta )
   {
     throw new UnsupportedOperationException();
   }
@@ -480,6 +536,20 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
     final CreateCalculationUnitWizard calculationWizard = new CreateCalculationUnitWizard( getDataModel() );
     final WizardDialog wizardDialog = new WizardDialog( shell, calculationWizard );
+    wizardDialog.open();
+  }
+
+  protected void cloneFeatureWrapper( )
+  {
+    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    final KeyBasedDataModel dataModel = getDataModel();
+    final ICalculationUnit calcUnitToClone = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    if( calcUnitToClone == null )
+    {
+      return;
+    }
+    final CloneCalculationUnitWizard calculationCloneWizard = new CloneCalculationUnitWizard( getDataModel(), calcUnitToClone, m_dataModel );
+    final WizardDialog wizardDialog = new WizardDialog( shell, calculationCloneWizard );
     wizardDialog.open();
   }
 
@@ -580,6 +650,10 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         if( m_btnRunCalculation != null )
         {
           m_btnRunCalculation.setEnabled( isEnabled );
+        }
+        if( m_btnCloneCalcUnit != null )
+        {
+          m_btnCloneCalcUnit.setEnabled( isEnabled && currentSelection instanceof ICalculationUnit1D2D );
         }
       }
     };

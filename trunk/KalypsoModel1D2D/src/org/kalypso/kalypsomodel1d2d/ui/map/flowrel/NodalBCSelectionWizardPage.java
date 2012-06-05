@@ -84,7 +84,7 @@ public class NodalBCSelectionWizardPage extends WizardPage
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( final Composite parent )
+  public synchronized void createControl( final Composite parent )
   {
     final Composite container = new Composite( parent, SWT.NULL );
     final GridLayout gridLayout = new GridLayout();

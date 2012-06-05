@@ -169,7 +169,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
           return StatusUtilities.statusFromThrowable( e1 );
         }
 
-        final ResultProcessingOperation processingOperation = new ResultProcessingOperation( resultManager, bean, calcunitMeta );
+        final ResultProcessingOperation processingOperation = new ResultProcessingOperation( resultManager, bean );
 
         IStatus resultStatus = processingOperation.execute( monitor );
         // if anything happened during the processing, restore the original results db from disk

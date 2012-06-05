@@ -15,9 +15,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public interface IRiverProfileNetworkCollection extends Feature
 {
-  public static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RiverProfileNetworkCollection" ); //$NON-NLS-1$
+  QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RiverProfileNetworkCollection" ); //$NON-NLS-1$
 
-  public static QName QNAME_PROP_PROFILE_NETWORK = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetwork" ); //$NON-NLS-1$
+  QName QNAME_PROP_PROFILE_NETWORK = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetwork" ); //$NON-NLS-1$
 
   /**
    * Select river profile network base which names matches the given regular expression
@@ -26,7 +26,7 @@ public interface IRiverProfileNetworkCollection extends Feature
    *          the regular expressen to match with
    * @return a {@link List} of river profile networks that matches the the given regular expression
    */
-  public List<IRiverProfileNetwork> selectRiverProfileNetwork( String regExp );
-  
-  public IFeatureBindingCollection<IRiverProfileNetwork> getRiverProfileNetworks( );
+  List<IRiverProfileNetwork> selectRiverProfileNetwork( String regExp );
+
+  IFeatureBindingCollection<IRiverProfileNetwork> getRiverProfileNetworks( );
 }

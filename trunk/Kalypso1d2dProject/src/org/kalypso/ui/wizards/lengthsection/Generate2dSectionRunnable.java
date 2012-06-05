@@ -41,7 +41,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
 {
@@ -107,7 +107,7 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
               monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.11" ) ); //$NON-NLS-1$
               surface = getSurface( docResult );
               if( surface != null )
-                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues );
+                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues, monitor );
               else
                 return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.12" ) ); //$NON-NLS-1$
               monitor.worked( 4 );
@@ -117,7 +117,7 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
               monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.13" ) ); //$NON-NLS-1$
               surface = getSurface( docResult );
               if( surface != null )
-                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues );
+                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues, monitor );
               else
                 return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.14" ) ); //$NON-NLS-1$
               monitor.worked( 4 );
@@ -146,7 +146,7 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
                 surface = getSurface( docResult );
                 if( surface != null )
                 {
-                  LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues );
+                  LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues, monitor );
                 }
                 else
                   return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.16" ) ); //$NON-NLS-1$
@@ -192,17 +192,17 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
               final IDocumentResultMeta docResult = (IDocumentResultMeta) child;
               if( docResult.getDocumentType() == DOCUMENTTYPE.lengthSection )
               {
-                if( docResult.getName().equals( sectionName ))
+                if( docResult.getName().equals( sectionName ) )
                 {
                   stepResult.removeChild( docResult );
-//                  break;
+                  // break;
                 }
               }
             }
           }
           final BigDecimal min = new BigDecimal( 0 );
           final BigDecimal max = new BigDecimal( 0 );
-//          ResultMeta1d2dHelper.addDocument( stepResult, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.20" ), Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.21" ), IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          //          ResultMeta1d2dHelper.addDocument( stepResult, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.20" ), Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.21" ), IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           ResultMeta1d2dHelper.addDocument( stepResult, sectionName, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.21" ), IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( lengthSecionFileName ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         else

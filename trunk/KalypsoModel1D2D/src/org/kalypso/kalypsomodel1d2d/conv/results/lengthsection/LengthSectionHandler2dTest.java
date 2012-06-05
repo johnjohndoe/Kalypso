@@ -46,6 +46,7 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -64,7 +65,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class LengthSectionHandler2dTest extends TestCase
 {
@@ -90,7 +91,7 @@ public class LengthSectionHandler2dTest extends TestCase
       final BigDecimal minDecimal = min.setScale( 1, BigDecimal.ROUND_FLOOR );
       final BigDecimal maxDecimal = max.setScale( 1, BigDecimal.ROUND_CEILING );
 
-      final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue() + 1;
+      final int numOfClasses = maxDecimal.subtract( minDecimal ).divide( stepWidth ).intValue() + 1;
 
       // Demo Station List
       final BigDecimal[] stationList = new BigDecimal[numOfClasses];
@@ -124,7 +125,7 @@ public class LengthSectionHandler2dTest extends TestCase
       {
         surface = (GM_TriangulatedSurface) geometryProperty;
       }
-      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, false );
+      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, false, new NullProgressMonitor() );
 
       final URL resource2 = getClass().getResource( "resources/tin_WATERLEVEL.gml" ); //$NON-NLS-1$
       w = GmlSerializer.createGMLWorkspace( resource2, null );
@@ -139,7 +140,7 @@ public class LengthSectionHandler2dTest extends TestCase
 
       }
 
-      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinWsp, false );
+      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinWsp, false, new NullProgressMonitor() );
 
       if( lsObs.getResult().size() > 0 )
       {
@@ -187,6 +188,5 @@ public class LengthSectionHandler2dTest extends TestCase
 
     return ShapeSerializer.deserialize( shape, cSystem );
   }
-
 
 }

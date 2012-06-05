@@ -186,6 +186,8 @@ public class CalculationUnitLogComponent
           }
 
           parent.layout();
+          // parent.getParent().layout( true, true );
+          // // parent.getParent().getParent().layout( true, true );
         }
       }
     } );
