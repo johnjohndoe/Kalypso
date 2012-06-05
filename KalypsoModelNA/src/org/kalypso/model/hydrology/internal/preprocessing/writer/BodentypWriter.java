@@ -174,6 +174,8 @@ public class BodentypWriter extends AbstractCoreFileWriter
    */
   private final void addSudsSoilLayers( final Map<String, List<Layer>> soilTypes )
   {
+    // @Dirk: siehe BodenartWrite for Layer-Definitions
+
     // add Greenroof type
     final List<Layer> greenroofExternalLayers = new ArrayList<Layer>();
     greenroofExternalLayers.add( new Layer( "GR-stau", 1.35, false ) ); //$NON-NLS-1$
@@ -194,13 +196,6 @@ public class BodentypWriter extends AbstractCoreFileWriter
     mrsTypes.put( "mrs_60", 6.0 ); //$NON-NLS-1$
     mrsTypes.put( "mrs_80", 8.0 ); //$NON-NLS-1$
 
-    final Map<String, Double> muldeTypes = new LinkedHashMap<String, Double>();
-    // default is 4.0
-    muldeTypes.put( "mulde_b", 4.0 ); //$NON-NLS-1$
-    muldeTypes.put( "mulde_30", 3.0 ); //$NON-NLS-1$
-    muldeTypes.put( "mulde_60", 6.0 ); //$NON-NLS-1$
-    muldeTypes.put( "mulde_80", 8.0 ); //$NON-NLS-1$
-
     // add Mulde-Rigole types
     for( final String typeName : mrsTypes.keySet() )
     {
@@ -211,6 +206,13 @@ public class BodentypWriter extends AbstractCoreFileWriter
       layers.add( new Layer( "base", 1.0, false ) ); //$NON-NLS-1$
       soilTypes.put( typeName, layers );
     }
+
+    final Map<String, Double> muldeTypes = new LinkedHashMap<String, Double>();
+    // default is 4.0
+    muldeTypes.put( "mulde_b", 4.0 ); //$NON-NLS-1$
+    muldeTypes.put( "mulde_30", 3.0 ); //$NON-NLS-1$
+    muldeTypes.put( "mulde_60", 6.0 ); //$NON-NLS-1$
+    muldeTypes.put( "mulde_80", 8.0 ); //$NON-NLS-1$
 
     // add Mulde types
     for( final String typeName : muldeTypes.keySet() )
