@@ -46,7 +46,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -90,7 +89,7 @@ public class QIntervallResult extends Feature_Impl
 
   public static final QName QNAME_F_WPointsObservation = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "WPointsObservation" ); //$NON-NLS-1$
 
-  public static final QName QNAME_F_BuildingObservation = new QName( NS.OM, "Observation" ); //$NON-NLS-1$
+  public static final QName QNAME_F_BuildingObservation = IObservation.QNAME_OBSERVATION;
 
   public QIntervallResult( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
