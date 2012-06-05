@@ -199,6 +199,16 @@
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype">
         </feature>
      </extension>
+     <extension point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.model.hydrology.binding.OverlayCollection"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay}OverlayCollection">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.OverlaySoilType"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay}Soiltype">
+        </feature>
+     </extension>
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
