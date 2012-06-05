@@ -80,6 +80,7 @@ public class HydrotopesTaskHandler extends AbstractHandler
     WorkflowHandlerUtils.setGttInput( activePage, "Landuse", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Landuse:gtt", Messages.getString( "HydrotopesTaskHandler_1" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     WorkflowHandlerUtils.setGttInput( activePage, "Geologie", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Geologie:gtt", Messages.getString( "HydrotopesTaskHandler_2" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     WorkflowHandlerUtils.setGttInput( activePage, "Pedologie", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Pedologie:gtt", Messages.getString( "HydrotopesTaskHandler_3" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "Overlay", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Overlay:gtt", "Overlay (DRWBM)", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
     WorkflowHandlerUtils.setGttInput( activePage, "Hydrotopes", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Hydrotopes:gtt", Messages.getString( "HydrotopesTaskHandler_4" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return null;
@@ -99,6 +100,7 @@ public class HydrotopesTaskHandler extends AbstractHandler
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Hydrotopes_Landuse.gft" ) ); //$NON-NLS-1$
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Hydrotopes_Geologie.gft" ) ); //$NON-NLS-1$
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Hydrotopes_Pedologie.gft" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Hydrotopes_Overlay.gft" ) ); //$NON-NLS-1$
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Hydrotopes_Hydrotope.gft" ) ); //$NON-NLS-1$
   }
 }

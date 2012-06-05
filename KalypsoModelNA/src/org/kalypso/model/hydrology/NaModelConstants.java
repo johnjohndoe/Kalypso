@@ -89,8 +89,11 @@ public interface NaModelConstants
 
   String NS_NAGEOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/geologie"; //$NON-NLS-1$
 
+  String NS_NAOVERLAY = "http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay"; //$NON-NLS-1$
+
   String NS_NASIMPLESHAPECATCHMENT = "http://sourceforge.kalypso.org/schemata/hydrology/simpleShapeCatchment"; //$NON-NLS-1$
 
+  @Deprecated
   String NS_NASUDS = "http://sourceforge.kalypso.org/schemata/hydrology/suds"; //$NON-NLS-1$
 
   String NS_NAOPTIMIZE = "http://kalypso.sorgeforge.net/schemata/hydrology/optimize"; //$NON-NLS-1$
