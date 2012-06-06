@@ -60,6 +60,10 @@
   <system systemId="urn:org.kalypso.model.rrm.soilDefinition:Layers:gtt" uri="Parameters_SoilLayers.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.soilDefinition:Profiles:gtt" uri="Parameters_SoilProfiles.gtt" />
 
+
+  <system systemId="urn:org.kalypso.model.rrm.drwbmSoilDefinition:Layers:gtt" uri="Parameters_DRWBMSoilLayers.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.drwbmSoilDefinition:Profiles:gtt" uri="Parameters_DRWBMSoilProfiles.gtt" />
+
   <system systemId="urn:org.kalypso.model.rrm.landuseDefinition:Sealing:gtt" uri="Parameters_SealingClasses.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.landuseDefinition:SeasonalCycle:gtt" uri="Parameters_SeasonalCycle.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.landuseDefinition:LanduseGroups:gtt" uri="Parameters_LanduseGroups.gtt" />
