@@ -52,6 +52,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 
@@ -60,7 +61,7 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
  * 
  * @author Holger Albert
  */
-public class OpenTextLogAction extends Action
+public class OpenTextLogAction extends Action implements IUpdateable
 {
   /**
    * The text file.
@@ -133,14 +134,14 @@ public class OpenTextLogAction extends Action
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#isEnabled()
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IUpdateable#update()
    */
   @Override
-  public boolean isEnabled( )
+  public void update( )
   {
     if( m_textFile.exists() )
-      return true;
-
-    return false;
+      setEnabled( true );
+    else
+      setEnabled( false );
   }
 }

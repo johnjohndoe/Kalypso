@@ -68,9 +68,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -112,6 +112,21 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
   protected StatusComposite m_validationStatusComposite;
 
   /**
+   * The actions for opening a file.
+   */
+  private List<Action> m_actions;
+
+  /**
+   * The read calculation job.
+   */
+  private ReadCalculationStatusJob m_calculationJob;
+
+  /**
+   * The validate simulation job.
+   */
+  private ValidateSimulationJob m_validationJob;
+
+  /**
    * The constructor.
    * 
    * @param ftp
@@ -122,6 +137,9 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
     m_calculationStatusComposite = null;
     m_validationStatusComposite = null;
+    m_actions = null;
+    m_calculationJob = null;
+    m_validationJob = null;
   }
 
   /**
@@ -133,6 +151,12 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
   public SimulationCalculationFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
+
+    m_calculationStatusComposite = null;
+    m_validationStatusComposite = null;
+    m_actions = null;
+    m_calculationJob = null;
+    m_validationJob = null;
   }
 
   /**
@@ -181,23 +205,22 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       final RrmSimulation simulation = getSimulation();
 
       /* Create the actions. */
-      final List<Action> actions = new ArrayList<Action>();
-      actions.add( new OpenTextLogAction( "Calculation log", "Displays the calculation log.", simulation.getCalculationLog() ) );
-
-      // TODO This action may be added and implemented later (only the stub exists)...
-      // actions.add( new OpenErrorGmlAction( "Error log", "Displays the error log.", simulation ) );
-
-      actions.add( new OpenOutputZipAction( "Error log (calculation core)", "Displays the error log.", simulation, true ) );
-      actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
-      actions.add( new OpenTextLogAction( "Mass Balance", "Displays the mass balance.", simulation.getBilanzTxt() ) );
-      actions.add( new OpenTextLogAction( "Statistics", "Displays the statistics.", simulation.getStatisticsCsv() ) );
+      m_actions = new ArrayList<Action>();
+      m_actions.add( new OpenTextLogAction( "Calculation log", "Displays the calculation log.", simulation.getCalculationLog() ) );
+      m_actions.add( new OpenOutputZipAction( "Error log (calculation core)", "Displays the error log.", simulation, true ) );
+      m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
+      m_actions.add( new OpenTextLogAction( "Mass Balance", "Displays the mass balance.", simulation.getBilanzTxt() ) );
+      m_actions.add( new OpenTextLogAction( "Statistics", "Displays the statistics.", simulation.getStatisticsCsv() ) );
 
       /* Create the image hyperlinks. */
-      for( final Action action : actions )
+      for( final Action action : m_actions )
       {
         final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, resultsGroup, SWT.NONE, action );
         imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
         imageHyperlink.setText( action.getText() );
+
+        if( action instanceof IUpdateable )
+          ((IUpdateable) action).update();
       }
 
       /* Create a empty label. */
@@ -238,7 +261,15 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
   @Override
   public void updateControl( )
   {
-    // TODO Update here...
+    /* Update the controls. */
+    initialize( getSimulation() );
+
+    /* Update the actions. */
+    for( final Action action : m_actions )
+    {
+      if( action instanceof IUpdateable )
+        ((IUpdateable) action).update();
+    }
   }
 
   /**
@@ -267,10 +298,12 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
   private void initialize( final RrmSimulation simulation )
   {
-    /* Create the read calculation status job. */
-    final ReadCalculationStatusJob calculationJob = new ReadCalculationStatusJob( simulation );
-    calculationJob.setUser( false );
-    calculationJob.addJobChangeListener( new JobChangeAdapter()
+    if( m_calculationJob != null || m_validationJob != null )
+      return;
+
+    m_calculationJob = new ReadCalculationStatusJob( simulation );
+    m_calculationJob.setUser( false );
+    m_calculationJob.addJobChangeListener( new JobChangeAdapter()
     {
       @Override
       public void done( final IJobChangeEvent event )
@@ -293,10 +326,9 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       }
     } );
 
-    /* Create the validate simulation job. */
-    final ValidateSimulationJob validationJob = new ValidateSimulationJob( simulation, (NAControl) getFeature() );
-    validationJob.setUser( false );
-    validationJob.addJobChangeListener( new JobChangeAdapter()
+    m_validationJob = new ValidateSimulationJob( simulation, (NAControl) getFeature() );
+    m_validationJob.setUser( false );
+    m_validationJob.addJobChangeListener( new JobChangeAdapter()
     {
       @Override
       public void done( final IJobChangeEvent event )
@@ -319,8 +351,8 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     } );
 
     /* Schedule the jobs. */
-    calculationJob.schedule();
-    validationJob.schedule();
+    m_calculationJob.schedule();
+    m_validationJob.schedule();
   }
 
   private NAControl[] findAllSimulations( )
@@ -388,7 +420,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     handler.calculateSimulation( shell, simulations );
 
     /* Update the control. */
-    fireFeatureChange( new EmptyCommand( "Refresh", true ) );
+    updateControl();
   }
 
   protected void setCalculationStatus( final IStatus calculationStatus )
@@ -404,6 +436,8 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
         m_calculationStatusComposite.setStatus( calculationStatus );
       }
     } );
+
+    m_calculationJob = null;
   }
 
   protected void setValidationStatus( final IStatus validationStatus )
@@ -419,5 +453,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
         m_validationStatusComposite.setStatus( validationStatus );
       }
     } );
+
+    m_validationJob = null;
   }
 }

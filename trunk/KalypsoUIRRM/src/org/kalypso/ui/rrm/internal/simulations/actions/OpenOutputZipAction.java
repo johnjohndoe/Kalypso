@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
@@ -66,7 +67,7 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
  * 
  * @author Holger Albert
  */
-public class OpenOutputZipAction extends Action
+public class OpenOutputZipAction extends Action implements IUpdateable
 {
   /**
    * The simulation.
@@ -174,16 +175,16 @@ public class OpenOutputZipAction extends Action
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#isEnabled()
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IUpdateable#update()
    */
   @Override
-  public boolean isEnabled( )
+  public void update( )
   {
     final IFile outputZip = m_simulation.getOutputZip();
     if( outputZip.exists() )
-      return true;
-
-    return false;
+      setEnabled( true );
+    else
+      setEnabled( false );
   }
 
   /**
