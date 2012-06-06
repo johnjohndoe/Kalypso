@@ -509,7 +509,7 @@ public final class WspWinImporter
       log.add( IStatus.ERROR, e.getLocalizedMessage(), e );
     }
 
-    for( LocalEnergyLossBean energyLossBean : zustand.getLosses() )
+    for( final LocalEnergyLossBean energyLossBean : zustand.getLosses() )
     {
       final IProfileFeature profileFeature = reach.findProfile( energyLossBean.getStation() );
       final EnergylossProfileObject energyLoss = new EnergylossProfileObject();
@@ -517,9 +517,9 @@ public final class WspWinImporter
       final TupleResult lossRes = energyLoss.getObservation().getResult();
       final int iType = lossRes.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
       final int iValue = lossRes.indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
-      for( LOSSKIND kind : entries.keySet() )
+      for( final LOSSKIND kind : entries.keySet() )
       {
-        IRecord loss = lossRes.createRecord();
+        final IRecord loss = lossRes.createRecord();
         loss.setValue( iType, kind.name() );
         loss.setValue( iValue, entries.get( kind ) );
         lossRes.add( loss );
