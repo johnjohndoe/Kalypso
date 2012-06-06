@@ -12,7 +12,7 @@
             <element name="soiltypeMember" minOccurs="0" maxOccurs="unbounded">
               <complexType>
                 <sequence minOccurs="1">
-                  <element ref="hydo:Soiltype" />
+                  <element ref="hydo:OverlayElemente" />
                 </sequence>
               </complexType>
             </element>
@@ -23,7 +23,7 @@
   </element>
 
   <!-- Definition of the members of the above collection. Just a simple feature. -->
-  <element name="Soiltype" substitutionGroup="gml:_Feature">
+  <element name="OverlayElement" substitutionGroup="gml:_Feature">
     <complexType>
       <complexContent>
         <extension base="gml:AbstractFeatureType">
