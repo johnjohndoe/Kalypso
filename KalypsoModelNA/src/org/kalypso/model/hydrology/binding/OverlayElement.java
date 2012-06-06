@@ -60,8 +60,7 @@ public class OverlayElement extends Feature_Impl
 
   private static final QName PROPERTY_GEOMETRY = new QName( NaModelConstants.NS_NAOVERLAY, "location" ); //$NON-NLS-1$
 
-  // FIXME
-  private static final QName LINK_SOILTYPE = new QName( NaModelConstants.NS_NAOVERLAY, "soilTypeLink" ); //$NON-NLS-1$
+  private static final QName LINK_DRWBM_DEFINITION = new QName( NaModelConstants.NS_NAOVERLAY, "lnkDefinition" ); //$NON-NLS-1$
 
   public OverlayElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -79,17 +78,17 @@ public class OverlayElement extends Feature_Impl
   }
 
   /**
-   * @param landuseClass
+   * @param href
    *          Must be either a {@link org.kalypsodeegree.model.feature.Feature} (maybe xlinked) or a {@link String}-ref
    *          to a feature.
    */
-  public void setDRWBMSoilType( final String href )
+  public void setDRWBMDefinition( final String href )
   {
-    setLink( LINK_SOILTYPE, href );
+    setLink( LINK_DRWBM_DEFINITION, href );
   }
 
-  public IXLinkedFeature getDRWBMSoilType( )
+  public IXLinkedFeature getDRWBMDefinition( )
   {
-    return (IXLinkedFeature) getMember( LINK_SOILTYPE );
+    return (IXLinkedFeature) getMember( LINK_DRWBM_DEFINITION );
   }
 }

@@ -65,7 +65,7 @@ public class OverlayCollection extends UnversionedModel
 {
   public static final QName FEATURE_OVERLAY_COLLECTION = new QName( NaModelConstants.NS_NAOVERLAY, "OverlayCollection" ); //$NON-NLS-1$
 
-  public static final QName MEMBER_SOIL_TYPE = new QName( NaModelConstants.NS_NAOVERLAY, "soiltypeMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_ELEMENTS = new QName( NaModelConstants.NS_NAOVERLAY, "elementMembers" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<OverlayElement> m_soilTypes;
 
@@ -73,7 +73,7 @@ public class OverlayCollection extends UnversionedModel
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_soilTypes = new FeatureBindingCollection<OverlayElement>( this, OverlayElement.class, MEMBER_SOIL_TYPE );
+    m_soilTypes = new FeatureBindingCollection<OverlayElement>( this, OverlayElement.class, MEMBER_ELEMENTS );
   }
 
   public IFeatureBindingCollection<OverlayElement> getOverlayElements( )
