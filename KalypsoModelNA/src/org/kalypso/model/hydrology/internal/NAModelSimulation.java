@@ -170,17 +170,24 @@ public class NAModelSimulation
     }
   }
 
-  private MultiStatus process( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
+  private MultiStatus process( final INaSimulationData simulationData, final ISimulationMonitor monitor )
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
 
-    /* Processing. */
-    final NAControl metaControl = simulationData.getMetaControl();
-    final String exeVersion = metaControl.getExeVersion();
-    m_processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
-    m_processor.prepare();
-    m_processor.run( monitor );
+    try
+    {
+      /* Processing. */
+      final NAControl metaControl = simulationData.getMetaControl();
+      final String exeVersion = metaControl.getExeVersion();
+      m_processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
+      m_processor.prepare();
+      m_processor.run( monitor );
+    }
+    catch( final SimulationException e )
+    {
+      collector.add( IStatus.ERROR, e.getLocalizedMessage(), e );
+    }
 
     return collector.asMultiStatus( "Processing" );
   }
@@ -209,7 +216,11 @@ public class NAModelSimulation
     {
       final IStatusCollector errorLog = postProcessor.getErrorLog();
       if( errorLog != null )
-        processStatus.add( errorLog.asMultiStatus( "Error Log" ) );
+      {
+        final IStatus[] allStati = errorLog.getAllStati();
+        for( final IStatus status : allStati )
+          processStatus.add( status );
+      }
     }
 
     return collector.asMultiStatus( "Post processing" );
