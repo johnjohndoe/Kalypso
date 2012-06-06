@@ -50,12 +50,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
@@ -78,26 +76,31 @@ public class WspWinProfProj
 
     final File profprojFile = wspwinProject.getProfProjFile();
 
-    final Map<String, String> profileStateHash = new LinkedHashMap<String, String>();
+    final Collection<Pair<String, String>> profileStateMapping = new ArrayList<>();
+
     for( final ProfileBean profile : m_profiles )
     {
       final String prfFilename = profile.getFileName();
       final String stateName = profile.getStateName();
       final String stateFilename = findStateFilename( stateName, zustaende );
       if( stateFilename != null )
-        profileStateHash.put( prfFilename, stateFilename );
+        profileStateMapping.add( Pair.of( prfFilename, stateFilename ) );
+      else
+      {
+        System.out.println();
+      }
     }
 
     final BufferedWriter pw = new BufferedWriter( new FileWriter( profprojFile ) );
 
-    pw.append( String.format( "%d %d%n", m_profiles.size(), profileStateHash.size() ) );
+    pw.append( String.format( "%d %d%n", m_profiles.size(), profileStateMapping.size() ) );
 
     for( final ProfileBean profile : m_profiles )
       pw.append( profile.formatLine() ).append( SystemUtils.LINE_SEPARATOR );
 
     pw.append( SystemUtils.LINE_SEPARATOR );
 
-    for( final Entry<String, String> entry : profileStateHash.entrySet() )
+    for( final Pair<String, String> entry : profileStateMapping )
     {
       final String prfFilename = entry.getKey();
       final String stateFilename = entry.getValue();
