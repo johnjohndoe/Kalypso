@@ -164,6 +164,10 @@ public class ZustandBean
 
   private void writeLosses( final File profDir, final LocalEnergyLossBean[] losses ) throws IOException
   {
+    /* Do not write empty loss file */
+    if( losses.length == 0 )
+      return;
+
     final File lelFile = new File( profDir, getLossFilename() );
     LocalEnergyLossBean.write( lelFile, losses );
   }
