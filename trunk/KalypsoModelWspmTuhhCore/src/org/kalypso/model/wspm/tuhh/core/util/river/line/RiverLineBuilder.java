@@ -89,7 +89,6 @@ public class RiverLineBuilder
 
     final GeometryFactory factory = new GeometryFactory();
     return factory.createLineString( interpolatedCrds );
-
   }
 
   private Coordinate[] buildCoordinates( )
