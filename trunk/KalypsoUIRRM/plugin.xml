@@ -440,6 +440,9 @@
             definition="etc/workflow/workflow.xml"
             id="org.kalypso.model.rrm.workflow"
             name="KalypsoHydrology Workflow">
+         <scenarioConfiguration
+               derivedFolder="Szenarios">
+         </scenarioConfiguration>
       </workflowSystem>
    </extension>
    <extension
