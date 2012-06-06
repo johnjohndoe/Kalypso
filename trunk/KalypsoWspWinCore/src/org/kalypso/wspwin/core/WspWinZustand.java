@@ -54,20 +54,21 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * Represents the contents of a .str file
- *
- * @author Belger
+ * 
+ * @author Gernot Belger
  */
 public class WspWinZustand
 {
   private final List<ProfileBean> m_profileBeans = new ArrayList<ProfileBean>();
 
-  private final Collection<ZustandSegmentBean> m_segmentBeans = new ArrayList<ZustandSegmentBean>();
+  private final List<ZustandSegmentBean> m_segmentBeans = new ArrayList<ZustandSegmentBean>();
 
   private final Collection<RunOffEventBean> m_runoffs = new ArrayList<RunOffEventBean>();
 
@@ -196,23 +197,67 @@ public class WspWinZustand
       final BigDecimal stationFrom = fromProfile.getStation();
       final BigDecimal stationTo = toProfile.getStation();
 
-      // FIXME: strange things happens for (knauf) profiles with mehrfeld-code. In that case
-      // the distance should be calculated to the next real profile instead.
-
+      /* calculate global min/max station */
       minStation = minStation.min( stationFrom );
       minStation = minStation.min( stationTo );
       maxStation = maxStation.max( stationFrom );
       maxStation = maxStation.max( stationTo );
 
+      /* recalculate distance to next profile */
+      // REMARK: special handling for the distance of Profiles with 'Mehrfeld-Code': here the distance must be
+      // the distance to the next real profile (i.e. the next profile without Mehfeld-Code and with a different station)
+      final ProfileBean nextRealProfile = findNextRealProfile( fromProfile, i + 1 );
+
+      final double distance;
+      if( nextRealProfile == null )
+      {
+        // should never happen
+        distance = Math.abs( stationTo.doubleValue() - stationFrom.doubleValue() );
+        System.out.println( "Error in zustand" );
+      }
+      else
+      {
+        final BigDecimal nextStation = nextRealProfile.getStation();
+        distance = Math.abs( nextStation.doubleValue() - stationFrom.doubleValue() );
+      }
+
       final String fileNameFrom = fromProfile.getFileName();
       final String fileNameTo = toProfile.getFileName();
-      final double distance = Math.abs( stationTo.doubleValue() - stationFrom.doubleValue() );
+
       final ZustandSegmentBean segment = new ZustandSegmentBean( stationFrom, stationTo, fileNameFrom, fileNameTo, distance, distance, distance );
       m_segmentBeans.add( segment );
     }
 
     m_bean.setStartStation( minStation );
     m_bean.setEndStation( maxStation );
+  }
+
+  private ProfileBean findNextRealProfile( final ProfileBean fromProfile, final int startIndex )
+  {
+    final String fromCode = fromProfile.getMehrfeldCode();
+    final BigDecimal fromStation = fromProfile.getStation();
+
+    for( int i = startIndex; i < m_profileBeans.size(); i++ )
+    {
+      final ProfileBean nextProfile = m_profileBeans.get( i );
+      final String nextCode = nextProfile.getMehrfeldCode();
+      final BigDecimal nextStation = nextProfile.getStation();
+
+      /* If stations are different, we assume that it is not a mehfeld-bridge */
+      if( nextStation.compareTo( fromStation ) != 0 )
+        return nextProfile;
+
+      /*
+       * If codes are euqal, both are probably code '0' (two codes in same bridge are not allowed), so we assume it is
+       * not a mehfeld bridge
+       */
+      if( ObjectUtils.equals( nextCode, fromCode ) )
+        return nextProfile;
+
+      /* continue search */
+    }
+
+    return null;
   }
 
   public void write( final File wspwinDir ) throws IOException
@@ -281,5 +326,18 @@ public class WspWinZustand
   public ICalculationContentBean[] getCalculations( )
   {
     return m_calculations.toArray( new ICalculationContentBean[m_calculations.size()] );
+  }
+
+  public void updateSegmentDistances( final ZustandSegmentBean segmentBean, final double distanceVL, final double distanceHF, final double distanceVR )
+  {
+    final int index = m_segmentBeans.indexOf( segmentBean );
+    if( index == -1 )
+      throw new IllegalArgumentException( "Segment bean is not element of this state" ); //$NON-NLS-1$
+
+    final ZustandSegmentBean oldSegmentBean = m_segmentBeans.get( index );
+
+    final ZustandSegmentBean newSegmentBean = new ZustandSegmentBean( oldSegmentBean.getStationFrom(), oldSegmentBean.getStationTo(), oldSegmentBean.getFileNameFrom(), oldSegmentBean.getFileNameTo(), distanceVL, distanceHF, distanceVR );
+
+    m_segmentBeans.set( index, newSegmentBean );
   }
 }
