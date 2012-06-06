@@ -147,6 +147,18 @@
 				</and>
 			</with>
 		</definition>
+		<definition id="org.kalypso.ui.rrm.definition.oneOverlayThemeSelected">
+            <with variable="selection">
+                <and>
+                    <count value="1"/>
+                    <iterate ifEmpty="false" operator="and">
+                        <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+                          <test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay}OverlayElement"/>
+                        </adapt>
+                    </iterate>
+                </and>
+            </with>
+        </definition>
 		<definition id="org.kalypso.ui.rrm.definition.oneHydrotopeThemeSelected">
 			<with variable="selection">
 				<and>
@@ -376,6 +388,11 @@
             id="org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizard"
             name="%command.name.2">
       </wizard>
+      <wizard
+            class="org.kalypso.ui.rrm.internal.hydrotops.ImportOverlayWizard"
+            id="org.kalypso.ui.rrm.wizards.importGeologyData.ImportOverlayWizard"
+            name="%command.name.4">
+      </wizard>
    </extension>
    <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
       <wizardEnablement
@@ -395,6 +412,13 @@
             wizardID="org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizard">
          <enablement>
             <reference definitionId="org.kalypso.ui.rrm.definition.oneGeologyThemeSelected">
+            </reference>
+         </enablement>
+      </wizardEnablement>
+      <wizardEnablement
+            wizardID="org.kalypso.ui.rrm.wizards.importGeologyData.ImportOverlayWizard">
+         <enablement>
+            <reference definitionId="org.kalypso.ui.rrm.definition.oneOverlayThemeSelected">
             </reference>
          </enablement>
       </wizardEnablement>
@@ -499,6 +523,8 @@
             <command id="org.kalypso.model.rrm.snowDefinition" name="%org.kalypso.model.rrm.snowDefinition.name" description="%org.kalypso.model.rrm.snowDefinition.description" />
             <command id="org.kalypso.model.rrm.soilDefinition" name="%org.kalypso.model.rrm.soilDefinition.name" description="%org.kalypso.model.rrm.soilDefinition.description" />
             <command id="org.kalypso.model.rrm.landuseDefinition" name="%org.kalypso.model.rrm.landuseDefinition.name" description="%org.kalypso.model.rrm.landuseDefinition.description" />
+            <command id="org.kalypso.model.rrm.drwbmDefinition" name="%org.kalypso.model.rrm.drwbmDefinition.name" description="%org.kalypso.model.rrm.drwbmDefinition.description" />
+
 
             <command id="org.kalypso.model.rrm.modelConstruction" name="%org.kalypso.model.rrm.modelConstruction.name" description="%org.kalypso.model.rrm.modelConstruction.description" />
             <command id="org.kalypso.model.rrm.editNetElements" name="%org.kalypso.model.rrm.editNetElements.name" description="%org.kalypso.model.rrm.editNetElements.description" />
@@ -546,6 +572,8 @@
             <image commandId="org.kalypso.model.rrm.snowDefinition" icon="icons/parameters/snow.png"/>
             <image commandId="org.kalypso.model.rrm.soilDefinition" icon="icons/parameters/soil.png"/>
             <image commandId="org.kalypso.model.rrm.landuseDefinition" icon="icons/parameters/landuse.png"/>
+            <image commandId="org.kalypso.model.rrm.drwbmDefinition" icon="icons/parameters/drwbmDefinition.png"/>
+
             <image
                   commandId="org.kalypso.model.rrm.modelConstruction"
                   icon="icons/model/1334146824_package_graphics.png">
@@ -599,6 +627,7 @@
       <handler class="org.kalypso.ui.rrm.internal.parameters.SnowTaskHandler" commandId="org.kalypso.model.rrm.snowDefinition"/>
       <handler class="org.kalypso.ui.rrm.internal.parameters.SoilTaskHandler" commandId="org.kalypso.model.rrm.soilDefinition"/>
       <handler class="org.kalypso.ui.rrm.internal.parameters.LanduseTaskHandler" commandId="org.kalypso.model.rrm.landuseDefinition"/>
+      <handler class="org.kalypso.ui.rrm.internal.parameters.DrwbmDefinitionTaskHandler" commandId="org.kalypso.model.rrm.drwbmDefinition"/>
 
       <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetElementsTaskHandler" commandId="org.kalypso.model.rrm.editNetElements"/>
       <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetRelationsTaskHandler" commandId="org.kalypso.model.rrm.editNetRelations"/>
@@ -668,7 +697,7 @@
               <with variable="activeMapPanel">
                  <test args="isCascading" property="org.kalypso.ui.test.map.themeProperty.hasProperty" value="movieTheme"/>
               </with>
-    
+
            </visibleWhen>
            -->
         </command>

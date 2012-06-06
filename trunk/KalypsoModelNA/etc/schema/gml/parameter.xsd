@@ -17,13 +17,20 @@
             <element name="drwbmSoiltypeMember" minOccurs="0" maxOccurs="unbounded">
               <complexType>
                 <sequence>
-                  <element ref="par:DRWBMSoiltype"/>
+                  <element ref="par:DRWBMSoiltype" />
                 </sequence>
               </complexType>
             </element>
             <element name="landuseMember" type="par:LanduseMemberType" minOccurs="0" maxOccurs="unbounded" />
             <element name="idealLandUseMember" type="par:IdealLandUseMemberType" minOccurs="0" maxOccurs="unbounded" />
             <element name="sealingMember" type="par:SealingMemberType" minOccurs="0" maxOccurs="unbounded" />
+            <element name="drwbmDefinitionMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element ref="par:DRWBMDefintions" />
+                </sequence>
+              </complexType>
+            </element>
           </sequence>
         </extension>
       </complexContent>
@@ -117,6 +124,8 @@
     </sequence>
     <attributeGroup ref="gml:AssociationAttributeGroup" />
   </complexType>
+
+
 
   <complexType name="SoilLayerMemberType">
     <sequence>
@@ -310,4 +319,55 @@
       </complexContent>
     </complexType>
   </element>
+
+
+  <complexType name="DRWBMSoilLayerLinkType">
+    <sequence>
+      <!-- Set maxOccurs to 0, so only links are allowed: we get Combo-Boxes in UI -->
+      <element ref="par:DRWBMSoiltype" minOccurs="0" maxOccurs="0" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+
+   <complexType name="DRWBMLanduseLinkType">
+    <sequence>
+      <!-- Set maxOccurs to 0, so only links are allowed: we get Combo-Boxes in UI -->
+      <element ref="par:Landuse" minOccurs="0" maxOccurs="0" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+
+
+  <!-- DRWBM Definition -->
+  <element name="DRWBMDefintions" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="definitions" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element ref="par:DRWBMDefinition" />
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="DRWBMDefinition" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="soilLayerLink" type="par:DRWBMSoilLayerLinkType" />
+            <element name="landuseclassLink" type="par:DRWBMLanduseLinkType" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
 </schema>

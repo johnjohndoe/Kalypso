@@ -76,17 +76,17 @@ public class OverlayCollection extends UnversionedModel
     m_soilTypes = new FeatureBindingCollection<OverlayElement>( this, OverlayElement.class, MEMBER_SOIL_TYPE );
   }
 
-  public IFeatureBindingCollection<OverlayElement> getSoilTypes( )
+  public IFeatureBindingCollection<OverlayElement> getOverlayElements( )
   {
     return m_soilTypes;
   }
 
   /**
    * Create/Import a new soilType into this collection.
-   *
+   * 
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public OverlayElement importSoilType( final String label, final GM_MultiSurface geometry, final ImportType importType, final IStatusCollector log )
+  public OverlayElement importOverlayElement( final String label, final GM_MultiSurface geometry, final ImportType importType, final IStatusCollector log )
   {
     if( geometry == null )
       return null;
