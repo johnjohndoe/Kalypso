@@ -105,7 +105,6 @@ public class OverlayCollection extends UnversionedModel
           if( difference != null )
           {
             existingSoiltype.setGeometry( difference );
-            // TODO: dirk: change translation
             final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.OverlayCollection.3", existingSoiltype.getId(), label ); //$NON-NLS-1$
             log.add( IStatus.INFO, message );
           }
