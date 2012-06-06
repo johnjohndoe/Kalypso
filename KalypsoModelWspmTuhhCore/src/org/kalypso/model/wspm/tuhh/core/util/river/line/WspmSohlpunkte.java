@@ -74,11 +74,23 @@ public final class WspmSohlpunkte
    */
   public static double findSohlpunkt( final IProfil profile, final double fuziness )
   {
+    final IProfileRecord startPoint;
+    final IProfileRecord endPoint;
+
     final IProfilPointMarker[] dbs = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( dbs.length != 2 )
-      throw new IllegalStateException();
+    {
+      startPoint = profile.getFirstPoint();
+      endPoint = profile.getLastPoint();
+// throw new IllegalStateException();
+    }
+    else
+    {
+      startPoint = dbs[0].getPoint();
+      endPoint = dbs[1].getPoint();
+    }
 
-    final IProfileRecord[] points = ProfileVisitors.findPointsBetween( profile, dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
+    final IProfileRecord[] points = ProfileVisitors.findPointsBetween( profile, startPoint.getBreite(), endPoint.getBreite(), true );
 
     final List<IProfileRecord> sohle = new ArrayList<>();
     boolean lastIterationAdd = false;
