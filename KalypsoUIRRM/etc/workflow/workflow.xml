@@ -55,7 +55,6 @@
       <con:WorkbenchSiteContext id="ParameterDefinition_Soil" parent="ContextHydrology">
         <con:ViewContext id="ParameterDefinition_Soil_GttView_Layers" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Layers" parent="ParameterDefinition_Soil" />
         <con:ViewContext id="ParameterDefinition_Soil_GttView_Profiles" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Profiles" parent="ParameterDefinition_Soil" />
-        <con:ViewContext id="ParameterDefinition_Soil_GttView_Drwbm" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" parent="ParameterDefinition_Soil" />
 
         <con:ViewContext id="ParameterDefinition_Soil_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ParameterDefinition_Soil" />
       </con:WorkbenchSiteContext>
@@ -71,7 +70,7 @@
 
       <con:WorkbenchSiteContext id="ParameterDefinition_Drwbm" parent="ContextHydrology">
         <con:ViewContext id="ParameterDefinition_Drwbm_GttView_Drwbm" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" parent="ParameterDefinition_Drwbm" />
-        <con:ViewContext id="ParameterDefinition_Drwbm_GttView_DrwbmLanduseMapping" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" parent="ParameterDefinition_Drwbm" />
+        <con:ViewContext id="ParameterDefinition_Drwbm_GttView_DrwbmDefinition" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:DrwbmDefinition" parent="ParameterDefinition_Drwbm" />
 
         <con:ViewContext id="ParameterDefinition_Drwbm_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ParameterDefinition_Soil" />
       </con:WorkbenchSiteContext>
