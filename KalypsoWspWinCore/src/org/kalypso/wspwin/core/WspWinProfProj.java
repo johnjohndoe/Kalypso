@@ -78,19 +78,20 @@ public class WspWinProfProj
 
     final Collection<Pair<String, String>> profileStateMapping = new ArrayList<>();
 
-    for( final ProfileBean profile : m_profiles )
+    /* Map profile files to state files */
+    for( final WspWinZustand zustand : zustaende )
     {
-      final String prfFilename = profile.getFileName();
-      final String stateName = profile.getStateName();
-      final String stateFilename = findStateFilename( stateName, zustaende );
-      if( stateFilename != null )
-        profileStateMapping.add( Pair.of( prfFilename, stateFilename ) );
-      else
+      final String stateFilename = zustand.getBean().getFileName();
+
+      final ProfileBean[] profileBeans = zustand.getProfileBeans();
+      for( final ProfileBean profileBean : profileBeans )
       {
-        System.out.println();
+        final String prfFilename = profileBean.getFileName();
+        profileStateMapping.add( Pair.of( prfFilename, stateFilename ) );
       }
     }
 
+    /* Write list of profiles */
     final BufferedWriter pw = new BufferedWriter( new FileWriter( profprojFile ) );
 
     pw.append( String.format( "%d %d%n", m_profiles.size(), profileStateMapping.size() ) );
@@ -100,6 +101,8 @@ public class WspWinProfProj
 
     pw.append( SystemUtils.LINE_SEPARATOR );
 
+    /* Write mapping from .prf to .str */
+
     for( final Pair<String, String> entry : profileStateMapping )
     {
       final String prfFilename = entry.getKey();
@@ -108,17 +111,6 @@ public class WspWinProfProj
     }
 
     pw.close();
-  }
-
-  private String findStateFilename( final String stateName, final WspWinZustand[] zustaende )
-  {
-    for( final WspWinZustand zustand : zustaende )
-    {
-      final ZustandBean bean = zustand.getBean();
-      if( stateName.equals( bean.getName() ) )
-        return bean.getFileName();
-    }
-    return null;
   }
 
   public ProfileBean[] getProfiles( )
