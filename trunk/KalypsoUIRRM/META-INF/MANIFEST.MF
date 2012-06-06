@@ -6,24 +6,25 @@ Bundle-Version: 11.6.5.qualifier
 Bundle-Activator: org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
+Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.core.runtime,
- org.kalypso.core,
- org.eclipse.core.expressions,
- org.kalypso.ui,
+ org.eclipse.ui,
+ org.eclipse.ui.console,
  org.eclipse.ui.intro,
- org.kalypso.model.rrm.core,
+ org.junit4;bundle-version="4.8.1";resolution:=optional,
  org.kalypso.afgui,
+ org.kalypso.core,
+ org.kalypso.featureview,
+ org.kalypso.gml.ui,
+ org.kalypso.model.rcm,
+ org.kalypso.model.rrm.core,
+ org.kalypso.model.rrm.project.template,
+ org.kalypso.ModelSimulationBase,
+ org.kalypso.module,
  org.kalypso.project.database.client,
  org.kalypso.simulation.ui,
- org.kalypso.model.rrm.project.template,
- org.kalypso.module,
- org.kalypso.ModelSimulationBase,
- org.kalypso.gml.ui,
- org.kalypso.zml.ui;bundle-version="11.6.4",
- org.kalypso.model.rcm;bundle-version="11.6.4",
- org.kalypso.featureview;bundle-version="11.6.4",
- org.junit4;bundle-version="4.8.1";resolution:=optional
+ org.kalypso.ui,
+ org.kalypso.zml.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.ui.rrm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

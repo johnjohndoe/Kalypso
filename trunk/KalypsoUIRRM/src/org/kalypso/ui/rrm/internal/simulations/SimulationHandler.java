@@ -48,18 +48,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.simulations.dialogs.CalculateSimulationDialog;
+import org.kalypso.ui.rrm.internal.simulations.dialogs.SimulationProgressMonitorDialog;
 import org.kalypso.ui.rrm.internal.simulations.runnables.CalculateSimulationRunnable;
 
 /**
@@ -150,13 +144,8 @@ public class SimulationHandler
     final CalculateSimulationRunnable operation = new CalculateSimulationRunnable( simulations, dialog.isCalculateCatchmentModels(), dialog.isCalculateStartConditions() );
 
     /* Execute the operation. */
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-    final IWorkbenchPage page = workbenchWindow.getActivePage();
-    final IWorkbenchPart part = page.getActivePart();
-    final IWorkbenchPartSite site = part.getSite();
-    final IProgressService progressService = (IProgressService) site.getService( IProgressService.class );
-    final IStatus status = RunnableContextHelper.execute( progressService, true, true, operation );
+    final SimulationProgressMonitorDialog progressDialog = new SimulationProgressMonitorDialog( shell );
+    final IStatus status = RunnableContextHelper.execute( progressDialog, true, true, operation );
 
     /* Always show dialog. */
     final StatusDialog statusDialog = new StatusDialog( shell, status, "Calculate Simulations" );
