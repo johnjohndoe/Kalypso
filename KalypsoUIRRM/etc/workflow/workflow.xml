@@ -8,6 +8,7 @@
     <Task URI="org.kalypso.model.rrm.snowDefinition" context="ParameterDefinition_Snow" />
     <Task URI="org.kalypso.model.rrm.soilDefinition" context="ParameterDefinition_Soil" />
     <Task URI="org.kalypso.model.rrm.landuseDefinition" context="ParameterDefinition_Landuse" />
+    <Task URI="org.kalypso.model.rrm.drwbmDefinition" context="ParameterDefinition_Drwbm" />
   </TaskGroup>
 
   <TaskGroup URI="org.kalypso.model.rrm.modelConstruction">
@@ -65,6 +66,14 @@
         <con:ViewContext id="ParameterDefinition_Landuse_GttView_LanduseGroups" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:LanduseGroups" parent="ParameterDefinition_Landuse" />
 
         <con:ViewContext id="ParameterDefinition_Landuse_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ParameterDefinition_Landuse" />
+      </con:WorkbenchSiteContext>
+
+
+      <con:WorkbenchSiteContext id="ParameterDefinition_Drwbm" parent="ContextHydrology">
+        <con:ViewContext id="ParameterDefinition_Drwbm_GttView_Drwbm" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" parent="ParameterDefinition_Drwbm" />
+        <con:ViewContext id="ParameterDefinition_Drwbm_GttView_DrwbmLanduseMapping" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" parent="ParameterDefinition_Drwbm" />
+
+        <con:ViewContext id="ParameterDefinition_Drwbm_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ParameterDefinition_Soil" />
       </con:WorkbenchSiteContext>
 
       <!-- Model construction -->

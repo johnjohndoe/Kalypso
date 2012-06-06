@@ -4,8 +4,6 @@
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 <view id="org.kalypso.kalypso1d2d.pjt.views.WorklistView"/>
 <view id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"/>
-<view id="org.kalypso.ui.editor.gistableeditor.GttViewPart:Layers"/>
-<view id="org.kalypso.ui.editor.gistableeditor.GttViewPart:Profiles"/>
 <view id="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm"/>
 <view id="org.kalypso.featureview.views.FeatureView"/>
 <fastViewBars/>
@@ -15,10 +13,9 @@
 <viewLayoutRec closeable="false" id="org.kalypso.zml.ui.table.view.TableViewPart"/>
 <viewLayoutRec closeable="false" id="org.kalypso.zml.ui.chart.view.DiagramViewPart"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.views.featuretemplateview"/>
-<viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"/>
+<viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"/>
 <viewLayoutRec closeable="false" id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"/>
-<viewLayoutRec closeable="false" id="org.kalypso.featureview.views.FeatureView"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"/>
 <viewLayoutRec closeable="false" id="org.kalypso.kalypso1d2d.pjt.views.WorklistView"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.editor.gistableeditor.GttViewPart"/>
@@ -42,15 +39,15 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info part="org.eclipse.ui.editorss" ratio="0.19542947" ratioLeft="248" ratioRight="1021" relationship="2" relative="leftTop"/>
+<info part="org.eclipse.ui.editorss" ratio="0.17572892" ratioLeft="223" ratioRight="1046" relationship="2" relative="leftTop"/>
 <info folder="true" part="rightTop" ratio="0.94949496" ratioLeft="846" ratioRight="45" relationship="2" relative="org.eclipse.ui.editorss">
 <folder appearance="2" expanded="2">
-<page content="org.kalypso.ui.editor.gistableeditor.GttViewPart" label="LabelNotFound"/>
+<page content="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" label="LabelNotFound"/>
 <page content="org.kalypso.ui.views.mapView" label="LabelNotFound"/>
+<page content="org.kalypso.ui.editor.gistableeditor.GttViewPart" label="LabelNotFound"/>
 <page content="org.kalypso.ui.views.featuretemplateview" label="LabelNotFound"/>
 <page content="org.kalypso.zml.ui.chart.view.DiagramViewPart" label="LabelNotFound"/>
 <page content="org.kalypso.risk.views.RiskStatisticsResultView" label="LabelNotFound"/>
-<page content="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" label="LabelNotFound"/>
 <page content="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
@@ -66,31 +63,27 @@
 <page content="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@70e2b9f0" ratio="0.5275049" ratioLeft="537" ratioRight="481" relationship="2" relative="rightTop">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@70e2b9f0" ratio="0.42761266" ratioLeft="446" ratioRight="597" relationship="2" relative="rightTop">
 <folder appearance="2" expanded="2">
 <page content="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@38e77c19" ratio="0.42030567" ratioLeft="385" ratioRight="531" relationship="4" relative="org.eclipse.ui.internal.ViewStack@70e2b9f0">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@38e77c19" ratio="0.44432315" ratioLeft="407" ratioRight="509" relationship="4" relative="org.eclipse.ui.internal.ViewStack@70e2b9f0">
 <folder appearance="2" expanded="2">
 <page content="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@36da1eca" ratio="0.6414538" ratioLeft="653" ratioRight="365" relationship="2" relative="rightTop">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@3256aef9" ratio="0.6404715" ratioLeft="652" ratioRight="366" relationship="2" relative="rightTop">
 <folder activePageID="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" appearance="2" expanded="2">
-<page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:Layers" label="Horizonte"/>
-<page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:Profiles" label="Profile"/>
 <page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" label="DRWBM-Profile"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
-<part id="1"/>
-<part id="2"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@5d5cc19" ratio="0.49946064" ratioLeft="463" ratioRight="464" relationship="4" relative="org.eclipse.ui.internal.ViewStack@36da1eca">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@22bf87f2" ratio="0.49946064" ratioLeft="463" ratioRight="464" relationship="4" relative="org.eclipse.ui.internal.ViewStack@3256aef9">
 <folder activePageID="org.kalypso.featureview.views.FeatureView" appearance="2" expanded="2">
 <page content="org.kalypso.featureview.views.FeatureView" label="Feature View"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
@@ -98,7 +91,7 @@
 </presentation>
 </folder>
 </info>
-<info folder="true" part="leftBottom" ratio="0.7347162" ratioLeft="673" ratioRight="243" relationship="4" relative="leftTop">
+<info folder="true" part="leftBottom" ratio="0.720524" ratioLeft="660" ratioRight="256" relationship="4" relative="leftTop">
 <folder activePageID="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" appearance="2" expanded="2">
 <page content="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" label="Szenarien"/>
 <page content="org.kalypso.ui.views.outline" label="LabelNotFound"/>
