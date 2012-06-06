@@ -5,6 +5,7 @@
 <view id="org.kalypso.kalypso1d2d.pjt.views.WorklistView"/>
 <view id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"/>
 <view id="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm"/>
+<view id="org.kalypso.ui.editor.gistableeditor.GttViewPart:DrwbmDefinition"/>
 <view id="org.kalypso.featureview.views.FeatureView"/>
 <fastViewBars/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"/>
@@ -76,10 +77,12 @@
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@3256aef9" ratio="0.6404715" ratioLeft="652" ratioRight="366" relationship="2" relative="rightTop">
-<folder activePageID="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" appearance="2" expanded="2">
-<page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" label="DRWBM-Profile"/>
+<folder activePageID="org.kalypso.ui.editor.gistableeditor.GttViewPart:DrwbmDefinition" appearance="2" expanded="2">
+<page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" label="DRWBM Profile"/>
+<page content="org.kalypso.ui.editor.gistableeditor.GttViewPart:DrwbmDefinition" label="DRWBM Definitionen"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
+<part id="1"/>
 </presentation>
 </folder>
 </info>

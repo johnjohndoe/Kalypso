@@ -74,7 +74,8 @@ public class DrwbmDefinitionTaskHandler extends AbstractHandler
     final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
     final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-    WorkflowHandlerUtils.setGttInput( activePage, "Drwbm", "urn:org.kalypso.model.rrm.drwbmSoilDefinition:Profiles:gtt", "DRWBM-Profile", scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "Drwbm", "urn:org.kalypso.model.rrm.drwbmSoilDefinition:Profiles:gtt", "DRWBM Profile", scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "DrwbmDefinition", "urn:org.kalypso.model.rrm.drwbmDefinition:Definitions:gtt", "DRWBM Definitionen", scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-3$
 
     return null;
   }

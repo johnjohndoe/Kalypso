@@ -77,7 +77,6 @@ public class SoilTaskHandler extends AbstractHandler
 
     WorkflowHandlerUtils.setGttInput( activePage, "Layers", "urn:org.kalypso.model.rrm.soilDefinition:Layers:gtt", Messages.getString( "SoilTaskHandler_0" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     WorkflowHandlerUtils.setGttInput( activePage, "Profiles", "urn:org.kalypso.model.rrm.soilDefinition:Profiles:gtt", Messages.getString( "SoilTaskHandler_1" ), scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$
-    WorkflowHandlerUtils.setGttInput( activePage, "Drwbm", "urn:org.kalypso.model.rrm.drwbmSoilDefinition:Profiles:gtt", "DRWBM-Profile", scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-3$
 
     return null;
   }
@@ -94,6 +93,5 @@ public class SoilTaskHandler extends AbstractHandler
 
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_SoilProfile.gft" ) ); //$NON-NLS-1$
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_SoilLayer.gft" ) ); //$NON-NLS-1$
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_DRWBMSoilProfile.gft" ) ); //$NON-NLS-1$
   }
 }
