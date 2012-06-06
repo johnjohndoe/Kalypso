@@ -27,7 +27,7 @@
             <element name="drwbmDefinitionMember" minOccurs="0" maxOccurs="unbounded">
               <complexType>
                 <sequence>
-                  <element ref="par:DRWBMDefintions" />
+                  <element ref="par:DRWBMDefintion" />
                 </sequence>
               </complexType>
             </element>
@@ -329,7 +329,7 @@
     <attributeGroup ref="gml:AssociationAttributeGroup" />
   </complexType>
 
-   <complexType name="DRWBMLanduseLinkType">
+  <complexType name="DRWBMLanduseLinkType">
     <sequence>
       <!-- Set maxOccurs to 0, so only links are allowed: we get Combo-Boxes in UI -->
       <element ref="par:Landuse" minOccurs="0" maxOccurs="0" />
@@ -339,25 +339,7 @@
 
 
   <!-- DRWBM Definition -->
-  <element name="DRWBMDefintions" substitutionGroup="gml:_Feature">
-    <complexType>
-      <complexContent>
-        <extension base="gml:AbstractFeatureType">
-          <sequence>
-            <element name="definitions" maxOccurs="unbounded">
-              <complexType>
-                <sequence>
-                  <element ref="par:DRWBMDefinition" />
-                </sequence>
-              </complexType>
-            </element>
-          </sequence>
-        </extension>
-      </complexContent>
-    </complexType>
-  </element>
-
-  <element name="DRWBMDefinition" substitutionGroup="gml:_Feature">
+  <element name="DRWBMDefintion" substitutionGroup="gml:_Feature">
     <complexType>
       <complexContent>
         <extension base="gml:AbstractFeatureType">

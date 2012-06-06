@@ -91,5 +91,6 @@ public class DrwbmDefinitionTaskHandler extends AbstractHandler
     final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
 
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_DRWBMSoilProfile.gft" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_DRWBMDefinition.gft" ) ); //$NON-NLS-1$
   }
 }

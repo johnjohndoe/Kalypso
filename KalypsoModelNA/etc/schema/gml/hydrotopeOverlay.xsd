@@ -38,7 +38,7 @@
               </annotation>
               <complexType>
                 <sequence minOccurs="0" maxOccurs="0">
-                  <element ref="par:DRWBMDefinition" />
+                  <element ref="par:DRWBMDefintion" />
                 </sequence>
                 <attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
               </complexType>
