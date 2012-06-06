@@ -54,7 +54,6 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.kalypso.wspwin.core.i18n.Messages;
 
@@ -135,23 +134,18 @@ public class LocalEnergyLossBean
 
   public static void write( final File lelFile, final LocalEnergyLossBean[] beans ) throws IOException
   {
-    final PrintWriter psiWriter = new PrintWriter( lelFile );
-    try
+    try (final PrintWriter psiWriter = new PrintWriter( lelFile ))
     {
-      for( LocalEnergyLossBean localEnergyLossBean : beans )
+      for( final LocalEnergyLossBean localEnergyLossBean : beans )
       {
         psiWriter.print( "STATION " + localEnergyLossBean.getStation() );//$NON-NLS-1$
         final Map<LOSSKIND, Double> entries = localEnergyLossBean.getEntries();
-        for( LOSSKIND losskind : entries.keySet() )
+        for( final LOSSKIND losskind : entries.keySet() )
         {
           psiWriter.print( " " + losskind + " " + entries.get( losskind ) );//$NON-NLS-1$ $NON-NLS-2$
         }
         psiWriter.println();
       }
-    }
-    finally
-    {
-      IOUtils.closeQuietly( psiWriter );
     }
   }
 
