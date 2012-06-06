@@ -123,6 +123,7 @@ public class NaFortranLogTranslater
       e.printStackTrace();
       final String msg = String.format( Messages.getString( "NaFortranLogTranslater.2" ), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.warning( msg );
+      m_errorLog.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, msg, e ) );
     }
   }
 
