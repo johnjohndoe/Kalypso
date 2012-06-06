@@ -67,16 +67,16 @@ public class OverlayCollection extends UnversionedModel
 
   public static final QName MEMBER_SOIL_TYPE = new QName( NaModelConstants.NS_NAOVERLAY, "soiltypeMember" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<OverlaySoilType> m_soilTypes;
+  private final IFeatureBindingCollection<OverlayElement> m_soilTypes;
 
   public OverlayCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_soilTypes = new FeatureBindingCollection<OverlaySoilType>( this, OverlaySoilType.class, MEMBER_SOIL_TYPE );
+    m_soilTypes = new FeatureBindingCollection<OverlayElement>( this, OverlayElement.class, MEMBER_SOIL_TYPE );
   }
 
-  public IFeatureBindingCollection<OverlaySoilType> getSoilTypes( )
+  public IFeatureBindingCollection<OverlayElement> getSoilTypes( )
   {
     return m_soilTypes;
   }
@@ -86,14 +86,14 @@ public class OverlayCollection extends UnversionedModel
    *
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public OverlaySoilType importSoilType( final String label, final GM_MultiSurface geometry, final ImportType importType, final IStatusCollector log )
+  public OverlayElement importSoilType( final String label, final GM_MultiSurface geometry, final ImportType importType, final IStatusCollector log )
   {
     if( geometry == null )
       return null;
 
     // Handle existing soilTypes that intersect the new one
-    final List<OverlaySoilType> existingSoilTypes = m_soilTypes.query( geometry.getEnvelope() );
-    for( final OverlaySoilType existingSoiltype : existingSoilTypes )
+    final List<OverlayElement> existingSoilTypes = m_soilTypes.query( geometry.getEnvelope() );
+    for( final OverlayElement existingSoiltype : existingSoilTypes )
     {
       switch( importType )
       {
@@ -125,7 +125,7 @@ public class OverlayCollection extends UnversionedModel
 
     // TODO: dirk: check
     // Create new soilType
-    final OverlaySoilType pedology = m_soilTypes.addNew( OverlaySoilType.FEATURE_SOIL_TYPE );
+    final OverlayElement pedology = m_soilTypes.addNew( OverlayElement.FEATURE_SOIL_TYPE );
     pedology.setName( label );
     pedology.setGeometry( geometry );
     return pedology;

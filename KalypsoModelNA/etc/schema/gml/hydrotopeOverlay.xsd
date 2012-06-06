@@ -12,7 +12,7 @@
             <element name="soiltypeMember" minOccurs="0" maxOccurs="unbounded">
               <complexType>
                 <sequence minOccurs="1">
-                  <element ref="hydo:OverlayElemente" />
+                  <element ref="hydo:OverlayElement" />
                 </sequence>
               </complexType>
             </element>

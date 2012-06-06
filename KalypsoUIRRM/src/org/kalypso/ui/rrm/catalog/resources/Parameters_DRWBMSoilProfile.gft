@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview xmlns:rrmParam="http://www.tuhh.de/parameter" typename="rrmParam:Soiltype" style="SWT.NONE" xmlns="featureview.template.kalypso.org" >
+  <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+  <gridLayout numColumns="3" />
+
+  <label xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text xmlns:gml="http://www.opengis.net/gml" editable="true" property="gml:name" style="SWT.BORDER">
+    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  </text>
+  <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+
+  <label xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text xmlns:gml="http://www.opengis.net/gml" editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.FILL" heightHint="30" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  </text>
+  <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+
+  <table showToolbar="true" property="rrmParam:soilLayerParameterMember" style="SWT.BORDER">
+    <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" heightHint="200" horizontalSpan="4" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+
+    <gtt:gistableview xmlns:gtt="gistableview.template.kalypso.org">
+      <gtt:layer id="xxx" linktype="">
+        <gtt:column name="soilLayerLink" alignment="SWT.LEFT" width="100" editable="true" sortEnabled="false"/>
+        <gtt:column name="xtief" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false"/>
+        <gtt:column name="xret" alignment="SWT.CENTER" width="100" editable="true" sortEnabled="false"/>
+        <gtt:column name="description" alignment="SWT.LEFT" width="150" editable="true" sortEnabled="false"/>
+      </gtt:layer>
+    </gtt:gistableview>
+  </table>
+</featureview>

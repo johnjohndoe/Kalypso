@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * 
  * @author Gernot Belger
  */
-public class OverlaySoilType extends Feature_Impl
+public class OverlayElement extends Feature_Impl
 {
   static final QName FEATURE_SOIL_TYPE = new QName( NaModelConstants.NS_NAPEDOLOGIE, "Soiltype" ); //$NON-NLS-1$
 
@@ -63,7 +63,7 @@ public class OverlaySoilType extends Feature_Impl
   // FIXME
   private static final QName LINK_SOILTYPE = new QName( NaModelConstants.NS_NAOVERLAY, "soilTypeLink" ); //$NON-NLS-1$
 
-  public OverlaySoilType( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public OverlayElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
