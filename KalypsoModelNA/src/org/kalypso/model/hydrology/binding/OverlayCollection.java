@@ -67,18 +67,18 @@ public class OverlayCollection extends UnversionedModel
 
   public static final QName MEMBER_ELEMENTS = new QName( NaModelConstants.NS_NAOVERLAY, "elementMembers" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<OverlayElement> m_soilTypes;
+  private final IFeatureBindingCollection<OverlayElement> m_overlayElements;
 
   public OverlayCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_soilTypes = new FeatureBindingCollection<OverlayElement>( this, OverlayElement.class, MEMBER_ELEMENTS );
+    m_overlayElements = new FeatureBindingCollection<OverlayElement>( this, OverlayElement.class, MEMBER_ELEMENTS );
   }
 
   public IFeatureBindingCollection<OverlayElement> getOverlayElements( )
   {
-    return m_soilTypes;
+    return m_overlayElements;
   }
 
   /**
@@ -86,13 +86,13 @@ public class OverlayCollection extends UnversionedModel
    * 
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public OverlayElement importOverlayElement( final String label, final GM_MultiSurface geometry, final ImportType importType, final IStatusCollector log )
+  public OverlayElement importOverlayElement( final String label, final GM_MultiSurface geometry, final ImportType importType, final String refDRWBMDefinition, final IStatusCollector log )
   {
     if( geometry == null )
       return null;
 
     // Handle existing soilTypes that intersect the new one
-    final List<OverlayElement> existingSoilTypes = m_soilTypes.query( geometry.getEnvelope() );
+    final List<OverlayElement> existingSoilTypes = m_overlayElements.query( geometry.getEnvelope() );
     for( final OverlayElement existingSoiltype : existingSoilTypes )
     {
       switch( importType )
@@ -106,13 +106,13 @@ public class OverlayCollection extends UnversionedModel
           {
             existingSoiltype.setGeometry( difference );
             // TODO: dirk: change translation
-            final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.3", existingSoiltype.getId(), label ); //$NON-NLS-1$
+            final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.OverlayCollection.3", existingSoiltype.getId(), label ); //$NON-NLS-1$
             log.add( IStatus.INFO, message );
           }
           else
           {
-            m_soilTypes.remove( existingSoiltype );
-            final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.4", existingSoiltype.getId(), label ); //$NON-NLS-1$
+            m_overlayElements.remove( existingSoiltype );
+            final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.OverlayCollection.4", existingSoiltype.getId(), label ); //$NON-NLS-1$
             log.add( IStatus.INFO, message );
           }
         }
@@ -123,11 +123,12 @@ public class OverlayCollection extends UnversionedModel
       }
     }
 
-    // TODO: dirk: check
-    // Create new soilType
-    final OverlayElement pedology = m_soilTypes.addNew( OverlayElement.FEATURE_SOIL_TYPE );
-    pedology.setName( label );
-    pedology.setGeometry( geometry );
-    return pedology;
+    // Create a new overlay element
+    final OverlayElement element = m_overlayElements.addNew( OverlayElement.FEATURE_OVERLAY_ELEMENT );
+    element.setName( label );
+    element.setGeometry( geometry );
+    element.setDRWBMDefinition( refDRWBMDefinition );
+
+    return element;
   }
 }

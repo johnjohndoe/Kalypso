@@ -52,17 +52,14 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 /**
  * Imports overlays into a 'overlay.gml' file from another gml-workspace (probably a shape-file).
  * 
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
 public class OverlayImportOperation extends AbstractImportOperation<GM_MultiSurface>
 {
   public interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_MultiSurface>
   {
 
-    // TODO
-// String getLanduseclass( int index ) throws CoreException;
-
-    String getDrwmProfile( int index ) throws CoreException;
+    String getDRWBMDefinition( int index ) throws CoreException;
   }
 
   private final OverlayCollection m_output;
@@ -101,30 +98,11 @@ public class OverlayImportOperation extends AbstractImportOperation<GM_MultiSurf
   protected Feature importRow( final int i, final String label, final GM_MultiSurface geometry, final IStatusCollector log ) throws CoreException
   {
     // find landuse and drwbm soil type
-    final String drwmProfile = m_inputDescriptor.getDrwmProfile( i );
+    final String definition = m_inputDescriptor.getDRWBMDefinition( i );
 
-    // if there is no landuse class, we just update the original landuses with suds information
-// if( landuseclass == null )
-// {
-// // FIXME: is this a hack just for Planer-Client?? In that case -> do error handling in case of 'normal' landuse
-// // import, else the user never gets an error message here...!
-// return m_output.importOverlayElement( label, geometry, m_importType, log );
-// }
-// else
-// {
-// final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
-// final String desc = m_inputDescriptor.getDescription( i );
-// final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
-// final String landuseRef = m_landuseClasses.getReference( landuseclass );
-// if( landuseRef == null )
-// {
-//        final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
-// throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
-// }
-//
-// return m_output.importOverlayElement( label, geometry, m_importType, log );
-// }
+    if( definition == null )
+      return null;
 
-    throw new UnsupportedOperationException();
+    return m_output.importOverlayElement( label, geometry, m_importType, definition, log );
   }
 }

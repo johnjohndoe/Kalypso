@@ -37,6 +37,10 @@
       <templ:showChildren>true</templ:showChildren>
       <templ:property name="deleteable">true</templ:property>
     </mapv:layer>
+    <mapv:layer visible="false" name="%hydrotop.gmt.overlay" featurePath="elementMembers" id="ID_7_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../.models/overlay.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
     <mapv:layer visible="true" name="%hydrotop.gmt.hydrotopes" featurePath="hydrotopMember" id="ID_8" linktype="gml" xlink:actuate="onRequest" xlink:href="../.models/hydrotop.gml" xlink:type="simple">
       <templ:showChildren>true</templ:showChildren>
       <templ:property name="deleteable">false</templ:property>

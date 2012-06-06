@@ -47,10 +47,12 @@ import java.nio.charset.Charset;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage;
 import org.kalypso.model.hydrology.binding.OverlayCollection;
+import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.operation.hydrotope.DefaultLanduseClassDelegate;
-import org.kalypso.model.hydrology.operation.hydrotope.GeologyImportOperation.InputDescriptor;
-import org.kalypso.model.hydrology.operation.hydrotope.GeologyShapeInputDescriptor;
+import org.kalypso.model.hydrology.operation.hydrotope.OverlayImportOperation;
+import org.kalypso.model.hydrology.operation.hydrotope.OverlayImportOperation.InputDescriptor;
+import org.kalypso.model.hydrology.operation.hydrotope.OverlayShapeInputDescriptor;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -60,9 +62,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
 {
 
-  private final static String PROPERTY_DRWBM_SOIL_PROFILE = "DRWBM";
-
-  private final static String PROPERTY_LANDUSE = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.12" ); //$NON-NLS-1$
+  private final static String PROPERTY_DRWBM_DEFINITION = "DRWBM";
 
   public ImportOverlayWizard( )
   {
@@ -72,7 +72,7 @@ public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
   @Override
   protected String[] getProperties( )
   {
-    return new String[] { PROPERTY_DRWBM_SOIL_PROFILE, PROPERTY_LANDUSE };
+    return new String[] { PROPERTY_DRWBM_DEFINITION };
   }
 
   @Override
@@ -84,19 +84,17 @@ public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
   @Override
   protected ICoreRunnableWithProgress createImportOperation( final ImportShapeWizardPage wizardPage, final GMLWorkspace overlayWorkspace, final Parameter parameter )
   {
-    final String drwbpmProperty = wizardPage.getProperty( PROPERTY_DRWBM_SOIL_PROFILE );
-    final String landuseProperty = wizardPage.getProperty( PROPERTY_LANDUSE );
+    final String drwbpmProperty = wizardPage.getProperty( PROPERTY_DRWBM_DEFINITION );
 
     final File shapeFile = wizardPage.getShapeFile();
     final String crs = wizardPage.getSelectedCRS();
     final Charset charset = wizardPage.getSelectedCharset();
 
-    final InputDescriptor inputDescriptor = new GeologyShapeInputDescriptor( shapeFile, drwbpmProperty, landuseProperty, crs, charset );
+    final InputDescriptor inputDescriptor = new OverlayShapeInputDescriptor( shapeFile, drwbpmProperty, crs, charset );
 
     final OverlayCollection output = (OverlayCollection) overlayWorkspace.getRootFeature();
     final DefaultLanduseClassDelegate landuseClassDelegate = new DefaultLanduseClassDelegate( parameter.getWorkspace() );
 
-    throw new UnsupportedOperationException();
-// return new OverlayImportOperation( inputDescriptor, output, landuseClassDelegate, ImportType.CLEAR_OUTPUT );
+    return new OverlayImportOperation( inputDescriptor, output, landuseClassDelegate, ImportType.CLEAR_OUTPUT );
   }
 }
