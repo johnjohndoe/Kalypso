@@ -105,7 +105,7 @@ public class WspWinZustand
     m_profileBeans.add( profile );
   }
 
-  private void addSegment( final ZustandSegmentBean segment )
+  public void addSegment( final ZustandSegmentBean segment )
   {
     m_segmentBeans.add( segment );
   }
@@ -326,18 +326,5 @@ public class WspWinZustand
   public ICalculationContentBean[] getCalculations( )
   {
     return m_calculations.toArray( new ICalculationContentBean[m_calculations.size()] );
-  }
-
-  public void updateSegmentDistances( final ZustandSegmentBean segmentBean, final double distanceVL, final double distanceHF, final double distanceVR )
-  {
-    final int index = m_segmentBeans.indexOf( segmentBean );
-    if( index == -1 )
-      throw new IllegalArgumentException( "Segment bean is not element of this state" ); //$NON-NLS-1$
-
-    final ZustandSegmentBean oldSegmentBean = m_segmentBeans.get( index );
-
-    final ZustandSegmentBean newSegmentBean = new ZustandSegmentBean( oldSegmentBean.getStationFrom(), oldSegmentBean.getStationTo(), oldSegmentBean.getFileNameFrom(), oldSegmentBean.getFileNameTo(), distanceVL, distanceHF, distanceVR );
-
-    m_segmentBeans.set( index, newSegmentBean );
   }
 }
