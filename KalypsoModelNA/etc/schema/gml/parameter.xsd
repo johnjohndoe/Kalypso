@@ -27,7 +27,7 @@
             <element name="drwbmDefinitionMember" minOccurs="0" maxOccurs="unbounded">
               <complexType>
                 <sequence>
-                  <element ref="par:DRWBMDefintion" />
+                  <element ref="par:DRWBMDefinition" />
                 </sequence>
               </complexType>
             </element>
@@ -339,7 +339,7 @@
 
 
   <!-- DRWBM Definition -->
-  <element name="DRWBMDefintion" substitutionGroup="gml:_Feature">
+  <element name="DRWBMDefinition" substitutionGroup="gml:_Feature">
     <complexType>
       <complexContent>
         <extension base="gml:AbstractFeatureType">
