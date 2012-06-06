@@ -205,8 +205,8 @@
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay}OverlayCollection">
         </feature>
         <feature
-              class="org.kalypso.model.hydrology.binding.OverlaySoilType"
-              qname="{http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay}Soiltype">
+              class="org.kalypso.model.hydrology.binding.OverlayElement"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay}OverlayElement">
         </feature>
      </extension>
      <extension
@@ -220,7 +220,7 @@
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie">
         </feature>
      </extension>
-     
+
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
@@ -248,7 +248,7 @@
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}PlaningArea">
         </feature>
      </extension>
-     
+
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
@@ -414,7 +414,7 @@
                 qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}MultiGenerator">
           </feature>
      </extension>
-     
+
    <extension
          point="org.kalypso.deegree.featureBinding">
       <feature
@@ -456,8 +456,8 @@
             class="org.kalypso.model.hydrology.internal.binding.timeseriesMappings.MappingElement"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping}MappingElement">
       </feature>
-   </extension>     
-     
+   </extension>
+
      <extension
            point="org.eclipse.wst.xml.core.catalogContributions">
         <catalogContribution>
@@ -466,7 +466,7 @@
            </nextCatalog>
         </catalogContribution>
      </extension>
-     
+
      <extension
            point="org.kalypso.gmlschema.typeHandlers">
         <typeHandler
