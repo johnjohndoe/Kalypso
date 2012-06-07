@@ -10,6 +10,7 @@
     <column width="110" name="corrSealing" format="%.2f" editable="false" alignment="SWT.RIGHT"/>
     <column width="100" name="m_perkm" format="" editable="false" alignment="SWT.RIGHT" />
     <column width="120" name="m_f1gws" format="%.2f" editable="false" alignment="SWT.RIGHT" />
+    <column width="120" name="lnkDefinition" format="%.2f" editable="false" alignment="SWT.RIGHT" />
     <sort propertyName="catchmentLinkMember" inverse="false" />
   </layer>
 </gistableview>
