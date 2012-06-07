@@ -82,7 +82,6 @@ public final class WspmSohlpunkte
     {
       startPoint = profile.getFirstPoint();
       endPoint = profile.getLastPoint();
-// throw new IllegalStateException();
     }
     else
     {
