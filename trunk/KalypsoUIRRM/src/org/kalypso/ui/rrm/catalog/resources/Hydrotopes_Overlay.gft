@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<featureview xmlns:rrmHydo="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" typename="rrmHydo:Soiltype" style="SWT.NONE" xmlns="featureview.template.kalypso.org">
+<featureview xmlns:rrmHydo="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" typename="rrmHydo:OverlayElement" style="SWT.NONE" xmlns="featureview.template.kalypso.org">
   <gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
   <gridLayout numColumns="3" />
 
@@ -23,13 +23,13 @@
     <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 
-  <label property="rrmHydo:soilTypeLink" style="SWT.NONE" visible="true">
+  <label property="rrmHydo:lnkDefinition" style="SWT.NONE" visible="true">
     <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
-  <combo property="rrmHydo:soilTypeLink" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+  <combo property="rrmHydo:lnkDefinition" style="SWT.DROP_DOWN | SWT.READ_ONLY">
     <gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
   </combo>
-  <validatorlabel property="rrmHydo:soilTypeLink" style="SWT.NONE" visible="true">
+  <validatorlabel property="rrmHydo:lnkDefinition" style="SWT.NONE" visible="true">
     <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
   

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
-<schema xmlns:hyd="http://www.tuhh.de/hydrotop" targetNamespace="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
-  xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:naModel="http://www.tuhh.de/kalypsoNA" xmlns:par="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.9">
+<schema xmlns:hyd="http://www.tuhh.de/hydrotop" targetNamespace="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:naModel="http://www.tuhh.de/kalypsoNA" xmlns:par="http://www.tuhh.de/parameter" elementFormDefault="qualified"
+  version="0.9">
 
   <import namespace="http://www.opengis.net/gml" />
-  <import namespace="http://www.tuhh.de/kalypsoNA"/>
-  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/suds"/>
+  <import namespace="http://www.tuhh.de/kalypsoNA" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" />
   <import namespace="http://www.tuhh.de/parameter" />
 
   <element name="NAHydrotop" substitutionGroup="gml:_Feature">
@@ -45,25 +45,25 @@
             <!-- DEPRECATED: not used any more -->
             <element name="hydType" type="hyd:hydTypeEnumerationType" minOccurs="0" />
 
-            <!-- deprecated, do not use any more -->            
+            <!-- deprecated, do not use any more -->
             <element ref="suds:sudLinkMember" minOccurs="0" maxOccurs="unbounded" />
-            
+
             <element ref="naModel:catchmentLinkMember" minOccurs="0" />
-            
+
             <element name="lnkDefinition" minOccurs="0">
-              <annotation>
-                <appinfo xmlns:kapp="org.kalypso.appinfo">
-                  <kapp:documentReference>parameter.gml</kapp:documentReference>
-                </appinfo>
-              </annotation>
               <complexType>
+                <annotation>
+                  <appinfo xmlns:kapp="org.kalypso.appinfo">
+                    <kapp:documentReference>parameter.gml</kapp:documentReference>
+                  </appinfo>
+                </annotation>
                 <sequence minOccurs="0" maxOccurs="0">
                   <element ref="par:DRWBMDefinition" />
                 </sequence>
                 <attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
               </complexType>
             </element>
-            
+
           </sequence>
         </extension>
       </complexContent>
@@ -78,7 +78,7 @@
       </restriction>
     </simpleType>
   </element>
-  
+
   <element name="drainageType" type="string" />
 
   <element name="m_perkm" type="double" />
