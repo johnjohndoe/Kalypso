@@ -42,6 +42,8 @@ package org.kalypso.model.hydrology.operation.hydrotope;
 
 import java.util.Arrays;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -128,9 +130,12 @@ public class HydrotopeUserData
 
     for( final Feature feature : m_features )
     {
-      buffer.append( feature.getQualifiedName() );
+      final QName featureType = feature == null ? null : feature.getQualifiedName();
+      final String id = feature == null ? null : feature.getId();
+
+      buffer.append( featureType );
       buffer.append( '#' );
-      buffer.append( feature.getId() );
+      buffer.append( id );
       buffer.append( '#' );
     }
 

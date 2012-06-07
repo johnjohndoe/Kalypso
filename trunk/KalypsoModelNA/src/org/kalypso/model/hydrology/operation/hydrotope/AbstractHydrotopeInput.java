@@ -78,10 +78,27 @@ abstract class AbstractHydrotopeInput<T extends Feature> implements IHydrotopeIn
     return m_features;
   }
 
+  protected Polygon[] buildInverseMask( )
+  {
+    return new Polygon[0];
+  }
+
   @Override
   public void buildIndex( final IStatusCollector log )
   {
     m_index = buildIndex( m_features, log );
+
+    /*
+     * Sepcial case (mainly used for overlay): allow index to insert an 'inverse' element that covers the rest of the
+     * area
+     */
+    final Polygon[] inverseMask = buildInverseMask();
+    for( final Polygon mask : inverseMask )
+    {
+      // using 'null' feature here; inverse elements never have any attributes
+      mask.setUserData( new HydrotopeUserData( mask, null ) );
+      m_index.insert( mask.getEnvelopeInternal(), mask );
+    }
   }
 
   static <F extends Feature> SpatialIndexExt buildIndex( final IFeatureBindingCollection<F> features, final IStatusCollector log )
@@ -90,9 +107,8 @@ abstract class AbstractHydrotopeInput<T extends Feature> implements IHydrotopeIn
 
     final SpatialIndexExt index = new SplitSortSpatialIndex( boundingBox );
 
-    for( final Object element : features )
+    for( final Feature feature : features )
     {
-      final Feature feature = (Feature) element;
       final GM_Object gmObj = feature.getDefaultGeometryPropertyValue();
 
       try

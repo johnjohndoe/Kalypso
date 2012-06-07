@@ -172,7 +172,7 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
       indexer.addInput( new LanduseHydrotopeInput( m_landuse ) );
       indexer.addInput( new PedologyHydrotopeInput( m_pedology ) );
       indexer.addInput( new GeologyHydrotopeInput( m_geology ) );
-      indexer.addInput( new OverlayHydrotopeInput( m_overlay ) );
+      indexer.addInput( new OverlayHydrotopeInput( m_overlay, m_naModel ) );
     }
     else
     {

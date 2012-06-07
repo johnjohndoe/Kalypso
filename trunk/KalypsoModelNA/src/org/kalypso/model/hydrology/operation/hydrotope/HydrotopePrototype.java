@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
+import org.kalypso.model.hydrology.binding.OverlayElement;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -76,7 +77,7 @@ public class HydrotopePrototype
 
   SoilType m_pedology = null;
 
-  // TODO: add suds
+  OverlayElement m_overlay = null;
 
   public HydrotopePrototype( final Feature[] features, final Polygon[] polygons ) throws CoreException
   {
@@ -93,8 +94,11 @@ public class HydrotopePrototype
         m_geology = (Geology) feature;
       else if( feature instanceof SoilType )
         m_pedology = (SoilType) feature;
+      else if( feature instanceof OverlayElement )
+        m_overlay = (OverlayElement) feature;
     }
 
+    // REMARK: not checking for overlay: may be null
     if( m_catchment == null || m_landuse == null || m_geology == null || m_pedology == null )
     {
       final IStatus status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Data missing" ); //$NON-NLS-1$
@@ -129,12 +133,13 @@ public class HydrotopePrototype
     hydrotope.setMaxPerkolationRate( getMaxPerkulationRate() );
 
     hydrotope.setGWFactor( getGroundwaterFactor() );
+
+    // FIXME: add overlay attributes
   }
 
   public String buildAttributeHashKey( )
   {
     final StringBuilder buffer = new StringBuilder();
-
 
     /* catchment */
     final String catchmentId = getCatchmentId();
@@ -151,12 +156,14 @@ public class HydrotopePrototype
     buffer.append( '#' );
 
     /* numeric values */
-    // FIXME: REMEARK: using 3 decimal points for all values to build hash.
+    // FIXME: REMARK: using 3 decimal points for all values to build hash.
     buffer.append( String.format( "%.3f", getSealingfactor() ) );
     buffer.append( '#' );
     buffer.append( String.format( "%.3f", getMaxPerkulationRate() ) );
     buffer.append( '#' );
     buffer.append( String.format( "%.3f", getGroundwaterFactor() ) );
+
+    // FIXME: add overlay attributes
 
     return buffer.toString();
   }
@@ -172,8 +179,7 @@ public class HydrotopePrototype
 
   private String getCatchmentId( )
   {
-    final String catchmentId = m_catchment.getId();
-    return catchmentId;
+    return m_catchment.getId();
   }
 
   /**

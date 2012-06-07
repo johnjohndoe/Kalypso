@@ -40,28 +40,113 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.OverlayElement;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.util.PolygonExtracter;
 
 /**
  * @author Gernot Belger
  */
 class OverlayHydrotopeInput extends AbstractHydrotopeInput<OverlayElement>
 {
-  public OverlayHydrotopeInput( final OverlayCollection overlay )
+  private final NaModell m_naModel;
+
+  public OverlayHydrotopeInput( final OverlayCollection overlay, final NaModell naModel )
   {
     super( overlay.getOverlayElements() );
+
+    m_naModel = naModel;
   }
 
   @Override
   public String getLabel( )
   {
     return "Overlay";
+  }
+
+  @Override
+  protected Polygon[] buildInverseMask( )
+  {
+    /* Build area of catchments */
+    final GeometryFactory factory = new GeometryFactory();
+
+    Geometry catchmentArea = factory.createPolygon( null, null );
+
+    final IFeatureBindingCollection<Catchment> catchments = m_naModel.getCatchments();
+    for( final Catchment catchment : catchments )
+    {
+      try
+      {
+        final GM_Surface< ? > geometry = catchment.getGeometry();
+        final Polygon catchmentPolygon = (Polygon) JTSAdapter.export( geometry );
+        catchmentArea = catchmentArea.union( catchmentPolygon );
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    /* Cleanup catchment area */
+    if( catchmentArea.getNumGeometries() > 1 )
+    {
+      catchmentArea = catchmentArea.union();
+      catchmentArea = catchmentArea.buffer( 0.0 );
+    }
+
+    /* Substract all overlay */
+    Geometry mask = catchmentArea;
+
+    final IFeatureBindingCollection<OverlayElement> overlayElements = getFeatures();
+    for( final OverlayElement overlayElement : overlayElements )
+    {
+      try
+      {
+        final GM_Object geometry = overlayElement.getGeometry();
+        final Geometry overlayGeometry = JTSAdapter.export( geometry );
+
+        @SuppressWarnings("unchecked")
+        final List<Polygon> overlayPolygons = PolygonExtracter.getPolygons( overlayGeometry );
+
+        for( final Polygon overlayPolygon : overlayPolygons )
+        {
+          mask = mask.difference( overlayPolygon );
+        }
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    /* Cleanup */
+    if( mask.getNumGeometries() > 1 )
+    {
+      mask = mask.union();
+      mask = mask.buffer( 0.0 );
+    }
+
+    /* Return result */
+    @SuppressWarnings("unchecked")
+    final List<Polygon> polygons = PolygonExtracter.getPolygons( mask );
+    return polygons.toArray( new Polygon[polygons.size()] );
   }
 
   @Override
