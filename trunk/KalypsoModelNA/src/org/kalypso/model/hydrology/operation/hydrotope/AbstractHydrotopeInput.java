@@ -46,7 +46,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
@@ -60,21 +60,20 @@ import com.vividsolutions.jts.geom.util.PolygonExtracter;
 /**
  * @author Gernot Belger
  */
-abstract class AbstractHydrotopeInput implements IHydrotopeInput
+abstract class AbstractHydrotopeInput<T extends Feature> implements IHydrotopeInput
 {
   protected static final String STR_ATTRIBUTES = "Attributes";
 
   private SpatialIndexExt m_index = null;
 
-  private final FeatureList m_features;
+  private final IFeatureBindingCollection<T> m_features;
 
-  public AbstractHydrotopeInput( final FeatureList features )
+  public AbstractHydrotopeInput( final IFeatureBindingCollection<T> features )
   {
     m_features = features;
   }
 
-  @Override
-  public FeatureList getFeatures( )
+  protected IFeatureBindingCollection<T> getFeatures( )
   {
     return m_features;
   }
@@ -85,7 +84,7 @@ abstract class AbstractHydrotopeInput implements IHydrotopeInput
     m_index = buildIndex( m_features, log );
   }
 
-  static SpatialIndexExt buildIndex( final FeatureList features, final IStatusCollector log )
+  static <F extends Feature> SpatialIndexExt buildIndex( final IFeatureBindingCollection<F> features, final IStatusCollector log )
   {
     final Envelope boundingBox = JTSAdapter.export( features.getBoundingBox() );
 

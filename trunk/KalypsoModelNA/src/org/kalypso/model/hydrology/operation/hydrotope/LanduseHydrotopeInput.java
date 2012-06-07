@@ -44,18 +44,19 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.Landuse;
+import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.internal.ModelNA;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * @author Gernot Belger
  */
-class LanduseHydrotopeInput extends AbstractHydrotopeInput
+class LanduseHydrotopeInput extends AbstractHydrotopeInput<Landuse>
 {
-  public LanduseHydrotopeInput( final FeatureList landuseList )
+  public LanduseHydrotopeInput( final LanduseCollection landuse )
   {
-    super( landuseList );
+    super( landuse.getLanduses() );
   }
 
   @Override
@@ -74,11 +75,9 @@ class LanduseHydrotopeInput extends AbstractHydrotopeInput
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final FeatureList features = getFeatures();
-    for( final Object element : features )
+    final IFeatureBindingCollection<Landuse> features = getFeatures();
+    for( final Landuse landuse : features )
     {
-      final Landuse landuse = (Landuse) element;
-
       final IXLinkedFeature landuseClass = landuse.getLanduse();
       if( landuseClass == null )
         log.add( IStatus.ERROR, formatMessage( "landuse class not set", landuse ) );

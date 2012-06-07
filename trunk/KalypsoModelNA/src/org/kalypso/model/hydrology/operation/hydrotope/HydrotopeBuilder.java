@@ -56,6 +56,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.binding.IHydrotope;
+import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -79,16 +80,16 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
   // FIXME: check! Probably this should be the one of the hydrotopes
   private static final String COORDINATE_SYSTEM = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-  private final IFeatureBindingCollection<IHydrotope> m_outputList;
-
   private final String m_logMessage;
 
   private final Collection<HydrotopeUserData> m_hydrotopeBeans;
 
-  public HydrotopeBuilder( final Collection<HydrotopeUserData> hydrotopeBeans, final IFeatureBindingCollection<IHydrotope> outputList, final String logMessage )
+  private final NAHydrotop m_hydrotopes;
+
+  public HydrotopeBuilder( final Collection<HydrotopeUserData> hydrotopeBeans, final NAHydrotop hydrotopes, final String logMessage )
   {
     m_hydrotopeBeans = hydrotopeBeans;
-    m_outputList = outputList;
+    m_hydrotopes = hydrotopes;
     m_logMessage = logMessage;
   }
 
@@ -103,6 +104,8 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
 
     removeOverlappingGeometriesFromExisting();
 
+    final IFeatureBindingCollection<IHydrotope> hydrotopes = m_hydrotopes.getHydrotopes();
+
     int count = 0;
     for( final HydrotopeUserData bean : m_hydrotopeBeans )
     {
@@ -115,7 +118,7 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
 
       try
       {
-        final IHydrotope hydrotop = m_outputList.addNew( IHydrotope.QNAME );
+        final IHydrotope hydrotop = hydrotopes.addNew( IHydrotope.QNAME );
         bean.configureHydrotope( hydrotop, count );
       }
       catch( final CoreException e )
@@ -135,13 +138,15 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
   {
     try
     {
-      if( CollectionUtils.isEmpty( m_outputList ) )
+      final IFeatureBindingCollection<IHydrotope> hydrotopes = m_hydrotopes.getHydrotopes();
+
+      if( CollectionUtils.isEmpty( hydrotopes ) )
         return;
 
       final Geometry intersectionArea = buildIntersectionArea();
 
       final GM_Envelope gmEnvelope = JTSAdapter.wrap( intersectionArea.getEnvelopeInternal(), COORDINATE_SYSTEM );
-      final List<IHydrotope> list = m_outputList.query( gmEnvelope );
+      final List<IHydrotope> list = hydrotopes.query( gmEnvelope );
 
       for( final IHydrotope hydrotop : list )
       {
@@ -150,13 +155,13 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
           continue;
 
         if( hydrotopGeom.coveredBy( intersectionArea ) )
-          m_outputList.remove( hydrotop );
+          hydrotopes.remove( hydrotop );
         else
         {
           final Geometry difference = hydrotopGeom.difference( intersectionArea );
           final GM_MultiSurface newHydrotopGeometry = toMultiSurface( difference, COORDINATE_SYSTEM );
           if( newHydrotopGeometry.isEmpty() )
-            m_outputList.remove( hydrotop );
+            hydrotopes.remove( hydrotop );
           else
             hydrotop.setGeometry( newHydrotopGeometry );
         }

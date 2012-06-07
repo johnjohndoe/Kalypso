@@ -55,13 +55,13 @@ import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -85,36 +85,36 @@ public class Test_Intersection extends TestCase
     final File landuseGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\landuse.gml" ); //$NON-NLS-1$
     final File pedologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\pedologie.gml" ); //$NON-NLS-1$
     final File geologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\geologie.gml" ); //$NON-NLS-1$
+    final File overlayGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\overlay.gml" ); //$NON-NLS-1$
 
     final File template = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\hydrotop.gml" ); //$NON-NLS-1$
-// final File template = new File( "D:\\eclipse_runtime_Connector\\01-Kollau-NA-PlanerClient\\template.gml" );
     final File outputGML = new File( "d:\\temp\\__test_output_" + new Date().getTime() + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
     if( outputGML.exists() )
       outputGML.delete();
-    outputGML.createNewFile();
 
     final GMLWorkspace catchmentWS = GmlSerializer.createGMLWorkspace( catchmentGML, null );
     final GMLWorkspace landuseWS = GmlSerializer.createGMLWorkspace( landuseGML, null );
     final GMLWorkspace pedologyWS = GmlSerializer.createGMLWorkspace( pedologyGML, null );
     final GMLWorkspace geologyWS = GmlSerializer.createGMLWorkspace( geologyGML, null );
+    final GMLWorkspace overlayWS = GmlSerializer.createGMLWorkspace( overlayGML, null );
 
     final GMLWorkspace outputWS = GmlSerializer.createGMLWorkspace( template, null );
 
     final NaModell naModel = (NaModell) catchmentWS.getRootFeature();
-    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
 
-    final FeatureList landuseFeatureList = (FeatureList) landuseWS.getRootFeature().getProperty( LanduseCollection.MEMBER_LANDUSE );
-    final FeatureList soilTypesFeatureList = (FeatureList) pedologyWS.getRootFeature().getProperty( SoilTypeCollection.MEMBER_SOIL_TYPE );
-    final FeatureList geologiesFeatureList = (FeatureList) geologyWS.getRootFeature().getProperty( GeologyCollection.MEMBER_GEOLOGY );
+    final LanduseCollection landuseRoot = (LanduseCollection) landuseWS.getRootFeature();
+    final SoilTypeCollection pedology = (SoilTypeCollection) pedologyWS.getRootFeature();
+    final GeologyCollection geologyRoot = (GeologyCollection) geologyWS.getRootFeature();
+    final OverlayCollection overlay = (OverlayCollection) overlayWS.getRootFeature();
 
-    final NAHydrotop hydrotopeCollection = (NAHydrotop) outputWS.getRootFeature();
-    final IFeatureBindingCollection<IHydrotope> hydrotopes = hydrotopeCollection.getHydrotopes();
+    final NAHydrotop naHydrotopes = (NAHydrotop) outputWS.getRootFeature();
 
     final HydrotopeInputIndexer indexer = new HydrotopeInputIndexer( "indexer" ); //$NON-NLS-1$
-    indexer.addInput( new CatchmentHydrotopeInput( catchments.getFeatureList() ) );
-    indexer.addInput( new LanduseHydrotopeInput( landuseFeatureList ) );
-    indexer.addInput( new PedologyHydrotopeInput( soilTypesFeatureList ) );
-    indexer.addInput( new GeologyHydrotopeInput( geologiesFeatureList ) );
+    indexer.addInput( new CatchmentHydrotopeInput( naModel ) );
+    indexer.addInput( new LanduseHydrotopeInput( landuseRoot ) );
+    indexer.addInput( new PedologyHydrotopeInput( pedology ) );
+    indexer.addInput( new GeologyHydrotopeInput( geologyRoot ) );
+    indexer.addInput( new OverlayHydrotopeInput( overlay ) );
 
     final IStatus indexStatus = indexer.execute( new NullProgressMonitor() );
     final IHydrotopeInput[] input = indexer.getIndices();
@@ -122,6 +122,9 @@ public class Test_Intersection extends TestCase
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector( input, "test" ); //$NON-NLS-1$
 
     final IStatus intersectStatus = geometryIntersector.execute( new NullProgressMonitor() );
+
+    final IFeatureBindingCollection<IHydrotope> hydrotopes = naHydrotopes.getHydrotopes();
+    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
 
     final List<Polygon> intersectionList = geometryIntersector.getResult();
     for( final Geometry geometry : intersectionList )
@@ -148,7 +151,7 @@ public class Test_Intersection extends TestCase
           continue;
       }
 
-      final List<Landuse> landuseList = landuseFeatureList.query( envelope, null );
+      final List<Landuse> landuseList = landuseRoot.getLanduses().query( envelope );
       if( landuseList.size() > 0 )
       {
         Landuse landuse = null;
@@ -175,7 +178,7 @@ public class Test_Intersection extends TestCase
       else
         continue;
 
-      final List<SoilType> soilTypesList = soilTypesFeatureList.query( envelope, null );
+      final List<SoilType> soilTypesList = pedology.getSoilTypes().query( envelope );
       if( soilTypesList.size() > 0 )
       {
         SoilType soilType = null;
@@ -203,7 +206,7 @@ public class Test_Intersection extends TestCase
       else
         continue;
 
-      final List<Geology> geologyList = geologiesFeatureList.query( envelope, null );
+      final List<Geology> geologyList = geologyRoot.getGeologies().query( envelope );
       if( geologyList.size() > 0 )
       {
         Geology geology = null;
