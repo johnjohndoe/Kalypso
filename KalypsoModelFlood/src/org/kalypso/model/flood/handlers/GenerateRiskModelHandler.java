@@ -36,8 +36,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -108,7 +108,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
 
       /* Check if project creation succeeded */
       final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
-      final CaseHandlingProjectNature nature = activeWorkContext.getCurrentProject();
+      final ScenarioHandlingProjectNature nature = activeWorkContext.getCurrentProject();
       if( !nature.getProject().hasNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) ) //$NON-NLS-1$
       {
         // we simply return, because that means no new project was created (maybe user cancelled the dialog)
