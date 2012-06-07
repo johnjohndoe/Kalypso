@@ -48,7 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,9 +55,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -76,8 +73,6 @@ import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
-
 /**
  * @author Dejan Antanaskovic
  */
@@ -89,23 +84,15 @@ public class LanduseStyleUpdateService extends Job
 
   private final IFile m_riskZonesSymbolizerSldFile;
 
-  // private final IFile m_riskValuesSymbolizerSldFile;
-
   public LanduseStyleUpdateService( final IFile file )
   {
     super( Messages.getString( "org.kalypso.risk.model.services.LanduseStyleUpdateService.0" ) ); //$NON-NLS-1$
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
     m_dbFile = file;
     m_landuseVectorSymbolizerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" ); //$NON-NLS-1$
     m_riskZonesSymbolizerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {

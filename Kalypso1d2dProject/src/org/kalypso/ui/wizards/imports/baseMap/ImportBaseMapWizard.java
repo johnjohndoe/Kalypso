@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports.baseMap;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -50,15 +49,13 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.i18n.Messages;
-
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * FIXME: wrong dependency: this wizard/handler is referenced from risk, flood as well; so they will not work of 1d2d is
@@ -119,9 +116,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    m_scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     initialSelection = selection;
     setNeedsProgressMonitor( true );

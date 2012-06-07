@@ -61,11 +61,11 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
 
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
@@ -92,7 +92,7 @@ public class ImportWindDataHandler extends AbstractHandler
 
       /* Open import elevation model wizard */
       final IWindModel lWindModel = szenarioDataProvider.getModel( IWindModel.class.getName() );
-      final IFolder modelFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+      final IFolder modelFolder = ScenarioHelper.getScenarioFolder();
 
       final IFolder temFolder = modelFolder.getFolder( "models/native_tem" ); //$NON-NLS-1$
 

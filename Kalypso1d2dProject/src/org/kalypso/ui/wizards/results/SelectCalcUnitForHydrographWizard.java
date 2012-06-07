@@ -61,6 +61,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.map.HydrographUtils;
@@ -76,7 +77,6 @@ import org.kalypso.ui.wizards.results.filters.NonCalcUnitResultViewerFilter;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Thomas Jung
@@ -207,7 +207,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     m_dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-    m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    m_scenarioFolder = ScenarioHelper.getScenarioFolder();
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?

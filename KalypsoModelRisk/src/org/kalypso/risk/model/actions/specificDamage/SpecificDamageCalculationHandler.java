@@ -42,27 +42,24 @@ package org.kalypso.risk.model.actions.specificDamage;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.risk.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class SpecificDamageCalculationHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-
     final Shell shell = HandlerUtil.getActiveShell( event );
 
     // TODO: command should have a name
@@ -73,7 +70,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
       return null;
 
     final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     final SpecificDamageOperation operation = new SpecificDamageOperation( scenarioDataProvider, scenarioFolder );
 

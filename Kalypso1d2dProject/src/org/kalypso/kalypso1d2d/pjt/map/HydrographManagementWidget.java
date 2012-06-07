@@ -98,6 +98,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -151,8 +152,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * A widget with option pane, which allows the user to create, edit and delete hydrographs for 1d2d result files.<BR>
@@ -563,9 +562,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     final Map<IPath, Date> results = m_hydrographs.getResults();
 
     /* get the scenario folder */
-    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     /* process */
     final ICoreRunnableWithProgress processOperation = new HydrographProcessResultOperation( m_hydrographs, results, scenarioFolder );

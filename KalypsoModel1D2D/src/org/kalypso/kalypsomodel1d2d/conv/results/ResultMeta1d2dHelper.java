@@ -70,7 +70,6 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -80,8 +79,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -107,8 +105,6 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
-
 public class ResultMeta1d2dHelper
 {
   public static final String SHORT_DATE_TIME_FORMAT_RESULT_STEP = "dd.MM.yyyy_HH_mm_z"; //$NON-NLS-1$
@@ -125,15 +121,6 @@ public class ResultMeta1d2dHelper
 
   public static final String TIME_STEP_PREFIX = "timestep-"; //$NON-NLS-1$
 
-  // TODO: remove!
-  private static IFolder getScenarioFolder( )
-  {
-    /* get the scenario folder */
-    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    return (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-  }
-
   /**
    * removes the specified resultMeta file
    */
@@ -148,7 +135,7 @@ public class ResultMeta1d2dHelper
   private static IStatus removeResultMetaFile( final IResultMeta resultMeta, final boolean removeOriginalRawRes )
   {
     /* get the scenario folder */
-    final IFolder scenarioFolder = getScenarioFolder();
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     final IPath fullResultPath = resultMeta.getFullPath();
     final IPath resultPath = resultMeta.getPath();
@@ -728,7 +715,7 @@ public class ResultMeta1d2dHelper
       if( url.toExternalForm().contains( ResultManager.MAXI_PREFIX ) ){
         return ResultManager.MAXI_DATE;
       }
-      
+
       final String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP;
       final String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP;
       final SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );

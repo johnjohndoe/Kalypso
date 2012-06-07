@@ -43,17 +43,15 @@ package org.kalypso.ui.rrm.internal.simulations;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
-
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Gernot Belger
@@ -63,14 +61,12 @@ public class SimulationManagementTaskHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-
     final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
     final IWorkbenchPage page = window.getActivePage();
 
     configureFeatureView( page );
 
-    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     WorkflowHandlerUtils.setGttInput( page, null, "urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt", null, scenarioFolder ); //$NON-NLS-1$
 
