@@ -67,7 +67,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -288,7 +287,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     final String description = feature.getDescription();
 
     /* Get the folder of the current simulation. */
-    final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IContainer scenarioFolder = dataProvider.getScenarioFolder();
     final IFolder calcCasesFolder = scenarioFolder.getFolder( new Path( RrmScenario.FOLDER_SIMULATIONEN ) );
     final IFolder simulationFolder = calcCasesFolder.getFolder( description );
@@ -409,9 +408,8 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     ProgressUtilities.busyCursorWhile( commandWaiter );
 
     /* Ask the user to save. */
-    final KalypsoAFGUIFrameworkPlugin activator = KalypsoAFGUIFrameworkPlugin.getDefault();
-    final ITaskExecutionAuthority executionAuthority = activator.getTaskExecutionAuthority();
-    final ITaskExecutor taskExecutor = activator.getTaskExecutor();
+    final ITaskExecutionAuthority executionAuthority = KalypsoAFGUIFrameworkPlugin.getTaskExecutionAuthority();
+    final ITaskExecutor taskExecutor = KalypsoAFGUIFrameworkPlugin.getTaskExecutor();
     final ITask task = taskExecutor.getActiveTask();
     if( !executionAuthority.canStopTask( task ) )
       return;

@@ -261,7 +261,7 @@ public class FloodModelProcess
     if( resultCoverages.getCoverages().size() != 0 )
       throw new IllegalStateException( Messages.getString( "org.kalypso.model.flood.core.FloodModelProcess.1" ) + event.getName() ); //$NON-NLS-1$
 
-    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
     final IFolder eventsFolder = scenarioFolder.getFolder( "events" ); //$NON-NLS-1$
     final IFolder eventFolder = eventsFolder.getFolder( event.getDataPath().toPortableString() );
 

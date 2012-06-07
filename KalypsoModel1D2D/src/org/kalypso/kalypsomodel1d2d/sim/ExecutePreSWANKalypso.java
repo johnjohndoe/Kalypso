@@ -61,6 +61,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -126,7 +127,7 @@ public class ExecutePreSWANKalypso
    */
   public ExecutePreSWANKalypso( final String serviceEndpoint, final String calcUnitID, final URI rmaCalcPath ) throws CoreException
   {
-    final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     m_scenarioFolder = caseDataProvider.getScenarioFolder();
     final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName() );
     final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();

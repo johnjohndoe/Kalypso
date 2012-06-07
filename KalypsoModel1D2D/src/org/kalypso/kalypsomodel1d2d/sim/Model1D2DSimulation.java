@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -103,7 +104,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     final Date startTime = geoLog.getStartTime();
     final String calcUnitId = calculationUnit.getId();
 
-    final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
     try
     {

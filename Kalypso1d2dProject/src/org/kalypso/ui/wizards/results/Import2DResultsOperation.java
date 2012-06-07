@@ -155,7 +155,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      final IContainer scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+      final IContainer scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
 
       final IFolder calcUnitFolder = scenarioFolder.getFolder( calcMeta.getFullPath() );
       removeOldResults( calcMeta, resultsToRemove );

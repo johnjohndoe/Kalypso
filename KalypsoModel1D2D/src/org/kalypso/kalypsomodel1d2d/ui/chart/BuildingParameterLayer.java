@@ -396,7 +396,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     // HACK: we post the command directly to the flow-model.... it would be of course much better to get the commandable
     // workspace from outside...
 
-    KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class.getName(), command );
+    KalypsoAFGUIFrameworkPlugin.getDataProvider().postCommand( IFlowRelationshipModel.class.getName(), command );
 
     ProgressUtilities.worked( monitor, 1 );
 

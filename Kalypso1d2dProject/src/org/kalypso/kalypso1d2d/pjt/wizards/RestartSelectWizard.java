@@ -55,6 +55,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
@@ -99,7 +100,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     m_scenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     m_controlModel = controlModel;
-    m_modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?

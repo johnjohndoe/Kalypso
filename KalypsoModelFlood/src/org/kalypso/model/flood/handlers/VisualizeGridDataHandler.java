@@ -49,7 +49,7 @@ public class VisualizeGridDataHandler extends AbstractHandler implements IHandle
     }
 
     final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "org.kalypso.model.flood.handlers.VisualizeGridDataHandler.3" ), Messages.getString( "org.kalypso.model.flood.handlers.VisualizeGridDataHandler.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
     coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
     coverageManagementWidget.setAllowUserChangeGridFolder( false );
 

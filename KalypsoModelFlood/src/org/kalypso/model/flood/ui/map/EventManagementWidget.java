@@ -48,7 +48,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -94,10 +93,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -162,7 +159,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * A widget with option pane, which allows the user to manage (add/remove) run-off events and to import water level data
@@ -204,9 +200,7 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
 
     super.activate( commandPoster, mapPanel );
 
-    final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    final IEvaluationContext context = service.getCurrentState();
-    final IScenarioDataProvider dataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     try
     {
       final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName() );
@@ -583,16 +577,16 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
     return eventsFolder.getFolder( event.getDataPath() );
   }
 
-  public static IFolder getResultFolder( final IRunoffEvent event ) throws CoreException
+  public static IFolder getResultFolder( final IRunoffEvent event )
   {
     final IFolder eventsFolder = getEventsFolder();
     final IFolder folder = eventsFolder.getFolder( event.getDataPath() );
     return folder.getFolder( "results" ); //$NON-NLS-1$
   }
 
-  public static IFolder getEventsFolder( ) throws CoreException
+  public static IFolder getEventsFolder( )
   {
-    final IFolder szenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+    final IFolder szenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
     return szenarioFolder.getFolder( "events" ); //$NON-NLS-1$
   }
 
@@ -932,27 +926,20 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
     if( dialog.open() != Window.OK )
       return;
 
-    try
+    final String eventName = dialog.getValue();
+    final IFolder eventsFolder = getEventsFolder();
+
+    final IFloodModel model = m_model;
+    final IKalypsoCascadingTheme wspThemes = findWspTheme();
+
+    final ICoreRunnableWithProgress operation = new AddEventOperation( eventName, model, eventsFolder, wspThemes, m_dataProvider, SLD_TEMPLATE_LOCATION );
+
+    final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
+    if( !resultStatus.isOK() )
     {
-      final String eventName = dialog.getValue();
-      final IFolder eventsFolder = getEventsFolder();
-
-      final IFloodModel model = m_model;
-      final IKalypsoCascadingTheme wspThemes = findWspTheme();
-
-      final ICoreRunnableWithProgress operation = new AddEventOperation( eventName, model, eventsFolder, wspThemes, m_dataProvider, SLD_TEMPLATE_LOCATION );
-
-      final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
-      if( !resultStatus.isOK() )
-      {
-        KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
-      }
-      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.49" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.50" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
     }
-    catch( final CoreException e )
-    {
-      KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.49" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.50" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private IKalypsoCascadingTheme findWspTheme( )
@@ -1064,9 +1051,6 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
   {
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final java.awt.Point p )
   {

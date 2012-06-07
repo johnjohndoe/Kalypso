@@ -49,6 +49,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
@@ -71,7 +72,7 @@ public class DrwbmDefinitionTaskHandler extends AbstractHandler
 
     configureFeatureView( activePage );
 
-    final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
     WorkflowHandlerUtils.setGttInput( activePage, "Drwbm", "urn:org.kalypso.model.rrm.drwbmSoilDefinition:Profiles:gtt", "DRWBM Profile", scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-3$

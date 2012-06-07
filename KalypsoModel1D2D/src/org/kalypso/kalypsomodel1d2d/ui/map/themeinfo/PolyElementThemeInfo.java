@@ -27,7 +27,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
       return;
     }
 
-    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     if( dataProvider == null )
       return;
 

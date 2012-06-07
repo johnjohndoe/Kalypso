@@ -39,7 +39,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class GenerateRiskModelHandler extends AbstractHandler implements IHandler
 {
@@ -66,7 +65,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
 
       /* collect the flood model data, that is needed for Risk Modeller */
       // get the data provider
-      final IScenarioDataProvider dataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IFolder floodModelScenarioFolder = (IFolder) dataProvider.getScenarioFolder().findMember( "/models/" ); //$NON-NLS-1$
 
       // get the flood model
@@ -107,7 +106,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       action.run();
 
       /* Check if project creation succeeded */
-      final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+      final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
       final ScenarioHandlingProjectNature nature = activeWorkContext.getCurrentProject();
       if( !nature.getProject().hasNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) ) //$NON-NLS-1$
       {

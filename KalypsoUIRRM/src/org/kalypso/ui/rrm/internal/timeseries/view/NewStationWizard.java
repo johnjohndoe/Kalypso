@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.core.status.StatusDialog;
@@ -103,7 +104,7 @@ public class NewStationWizard extends Wizard
     {
       final Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
 
-      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
 
       final IStationCollection collection = (IStationCollection) stationsWorkspace.getRootFeature();

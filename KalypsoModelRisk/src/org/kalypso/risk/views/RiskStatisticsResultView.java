@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.views;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -53,8 +52,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.ogc.gml.featureview.control.EmbeddedToolbarExecutionListener;
 import org.kalypso.ogc.gml.om.table.command.ToolbarCommandUtils;
@@ -63,7 +62,6 @@ import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.widget.StatisticResultComposite;
 
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
@@ -80,9 +78,7 @@ public class RiskStatisticsResultView extends ViewPart
   {
     try
     {
-      final IHandlerService handlerService = (IHandlerService) getSite().getService( IHandlerService.class );
-      final IEvaluationContext context = handlerService.getCurrentState();
-      final IScenarioDataProvider modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IRasterizationControlModel model = modelProvider.getModel( IRasterizationControlModel.class.getName() );
 
       if( model == null )

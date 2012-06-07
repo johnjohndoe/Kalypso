@@ -202,7 +202,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
       m_reevaluateButton.setEnabled( false );
       final IResultMeta[] selectedResults = getSelectedResults();
 
-      final IContainer scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+      final IContainer scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
 
       // final ICoreRunnableWithProgress calculationOperation = new ICoreRunnableWithProgress()
       final IRunnableWithProgress calculationOperation = new IRunnableWithProgress()

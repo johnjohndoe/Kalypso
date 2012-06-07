@@ -96,7 +96,7 @@ class PreviewModelDtm extends Action
 
   private IFile findFile( final String path )
   {
-    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
     final IContainer scenarioFolder = dataProvider.getScenarioFolder();
 

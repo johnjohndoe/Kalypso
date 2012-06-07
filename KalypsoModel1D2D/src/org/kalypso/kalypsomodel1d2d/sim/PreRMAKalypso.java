@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -115,7 +116,7 @@ public class PreRMAKalypso implements ISimulation
     IContainer scenarioFolder = null;
     if( m_input == null || m_input.equals( "" ) || SERVER_INPUT_LOCAL.equals( m_input ) )
     {
-      final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       scenarioFolder = caseDataProvider.getScenarioFolder();
     }
 
@@ -143,7 +144,7 @@ public class PreRMAKalypso implements ISimulation
       IFEDiscretisationModel1d2d discretisationModel = null;
       try
       {
-        final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
         discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       }
       catch( final Exception e )
@@ -184,7 +185,7 @@ public class PreRMAKalypso implements ISimulation
       IFlowRelationshipModel flowRelationshipModel = null;
       try
       {
-        final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
         flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName() );
       }
       catch( final Exception e )
@@ -200,7 +201,7 @@ public class PreRMAKalypso implements ISimulation
       IRoughnessClsCollection roughnessModel = null;
       try
       {
-        final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
         roughnessModel = caseDataProvider.getModel( IRoughnessClsCollection.class.getName() );
       }
       catch( final Exception e )
@@ -217,7 +218,7 @@ public class PreRMAKalypso implements ISimulation
       IWindModel windModel = null;
       try
       {
-        final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
         windModel = caseDataProvider.getModel( IWindModel.class.getName() );
       }
       catch( final Exception e )

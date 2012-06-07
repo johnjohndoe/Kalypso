@@ -58,6 +58,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.ui.dialogs.ContainerGenerator;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -401,7 +402,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     final String description = simulation.getDescription();
 
     /* Get the folder of the simulation. */
-    final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IContainer scenarioFolder = dataProvider.getScenarioFolder();
     final IFolder calcCasesFolder = scenarioFolder.getFolder( new Path( RrmScenario.FOLDER_SIMULATIONEN ) );
     final IFolder simulationFolder = calcCasesFolder.getFolder( description );

@@ -43,7 +43,6 @@ package org.kalypso.ui.rrm.internal.results.view;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -51,11 +50,11 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ui.rrm.internal.diagram.RrmDiagramView;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView;
 
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
@@ -66,8 +65,6 @@ public class ResultManagementTaskHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-
     final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
     final IWorkbenchPage page = window.getActivePage();
     final ResultManagementView managementView = (ResultManagementView) page.findView( ResultManagementView.ID );
@@ -96,7 +93,7 @@ public class ResultManagementTaskHandler extends AbstractHandler
       rrmDiagramView.setSelectionTraverseLevel( 4 );
 
       // TODO
-      final IScenarioDataProvider modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final RrmScenario scenario = new RrmScenario( (IFolder) modelProvider.getScenarioFolder() );
 
       managementView.setInput( scenario );

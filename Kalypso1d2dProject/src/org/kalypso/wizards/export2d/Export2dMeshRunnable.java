@@ -86,7 +86,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
   {
     monitor.beginTask( Messages.getString( "org.kalypso.wizards.export2d.Export2dMeshRunnable.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
-    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
     final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class.getName() );
     final IRoughnessClsCollection roughnessModel = m_exportRoughness ? (IRoughnessClsCollection) dataProvider.getModel( IRoughnessClsCollection.class.getName() ) : null;
