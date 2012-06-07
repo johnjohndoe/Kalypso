@@ -50,9 +50,10 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.IHydrotope;
+import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -63,16 +64,16 @@ import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
  */
 public class HydrotopeValidator implements ICoreRunnableWithProgress
 {
-  private final IFeatureBindingCollection<IHydrotope> m_outputList;
-
   private final String m_logLabel;
 
-  private final FeatureList m_catchments;
+  private final NAHydrotop m_hydrotopes;
 
-  public HydrotopeValidator( final IFeatureBindingCollection<IHydrotope> outputList, final FeatureList catchments, final String logLabel )
+  private final NaModell m_naModel;
+
+  public HydrotopeValidator( final NAHydrotop hydrotopes, final NaModell naModel, final String logLabel )
   {
-    m_outputList = outputList;
-    m_catchments = catchments;
+    m_hydrotopes = hydrotopes;
+    m_naModel = naModel;
     m_logLabel = logLabel;
   }
 
@@ -102,7 +103,8 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final SpatialIndexExt index = AbstractHydrotopeInput.buildIndex( m_outputList.getFeatureList(), log );
+    final IFeatureBindingCollection<IHydrotope> hydrotopes = m_hydrotopes.getHydrotopes();
+    final SpatialIndexExt index = AbstractHydrotopeInput.buildIndex( hydrotopes, log );
 
     final IStatus status = log.asMultiStatus( "Index hydrotopes" );
     ModelNA.getDefault().getLog().log( status );
@@ -117,7 +119,9 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
     final Map<Catchment, Double> areaSums = new HashMap<>();
 
     /* Build sums */
-    for( final IHydrotope hydrotope : m_outputList )
+    final IFeatureBindingCollection<IHydrotope> hydrotopes = m_hydrotopes.getHydrotopes();
+
+    for( final IHydrotope hydrotope : hydrotopes )
     {
       final GM_MultiSurface geometry = hydrotope.getGeometry();
       final double area = geometry.getArea();
@@ -132,10 +136,9 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
     }
 
     /* Check sums */
-    for( final Object c : m_catchments )
+    final IFeatureBindingCollection<Catchment> catchments = m_naModel.getCatchments();
+    for( final Catchment catchment : catchments )
     {
-      final Catchment catchment = (Catchment) c;
-
       final Double sum = areaSums.get( catchment );
       if( sum == null )
         log.add( IStatus.WARNING, "Catchment '%s' is not covered by any hydrotope", null, catchment.getName() );

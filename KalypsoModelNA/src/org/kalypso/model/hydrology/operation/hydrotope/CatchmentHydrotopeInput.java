@@ -44,19 +44,20 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
  */
-class CatchmentHydrotopeInput extends AbstractHydrotopeInput
+class CatchmentHydrotopeInput extends AbstractHydrotopeInput<Catchment>
 {
   static final String STR_SEALING_FACTOR_OUTSIDE_VALID_RANGE_0_0_1_0 = "sealing factor outside it's valid range [0.0 - 1.0]";
 
-  public CatchmentHydrotopeInput( final FeatureList catchmentsList )
+  public CatchmentHydrotopeInput( final NaModell naModel )
   {
-    super( catchmentsList );
+    super( naModel.getCatchments() );
   }
 
   @Override
@@ -75,11 +76,9 @@ class CatchmentHydrotopeInput extends AbstractHydrotopeInput
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final FeatureList features = getFeatures();
-    for( final Object element : features )
+    final IFeatureBindingCollection<Catchment> features = getFeatures();
+    for( final Catchment catchment : features )
     {
-      final Catchment catchment = (Catchment) element;
-
       final double sealingFactor = catchment.getCorrSealing();
       if( sealingFactor < 0 || sealingFactor > 1.0 )
         log.add( IStatus.ERROR, formatMessage( STR_SEALING_FACTOR_OUTSIDE_VALID_RANGE_0_0_1_0, catchment ) );

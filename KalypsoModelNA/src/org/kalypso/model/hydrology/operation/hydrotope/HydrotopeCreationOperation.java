@@ -50,11 +50,14 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.hydrology.binding.IHydrotope;
+import org.kalypso.model.hydrology.binding.GeologyCollection;
+import org.kalypso.model.hydrology.binding.LanduseCollection;
+import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.OverlayCollection;
+import org.kalypso.model.hydrology.binding.SoilTypeCollection;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -68,25 +71,28 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
 {
-  private final FeatureList m_landuseList;
+  private final LanduseCollection m_landuse;
 
-  private final FeatureList m_pedologyList;
+  private final SoilTypeCollection m_pedology;
 
-  private final FeatureList m_geologyList;
+  private final GeologyCollection m_geology;
 
-  private final FeatureList m_catchmentsList;
+  private final OverlayCollection m_overlay;
 
-  private final IFeatureBindingCollection<IHydrotope> m_outputList;
+  private final NaModell m_naModel;
+
+  private final NAHydrotop m_hydrotopes;
 
   private GM_MultiSurface m_workingArea = null;
 
-  public HydrotopeCreationOperation( final FeatureList landuseList, final FeatureList pedologyList, final FeatureList geologyList, final FeatureList catchmentsList, final IFeatureBindingCollection<IHydrotope> outputList, final GM_MultiSurface workingArea )
+  public HydrotopeCreationOperation( final NaModell namodel, final LanduseCollection landuse, final SoilTypeCollection pedology, final GeologyCollection geology, final OverlayCollection overlay, final NAHydrotop hydrotopes, final GM_MultiSurface workingArea )
   {
-    m_landuseList = landuseList;
-    m_pedologyList = pedologyList;
-    m_geologyList = geologyList;
-    m_catchmentsList = catchmentsList;
-    m_outputList = outputList;
+    m_naModel = namodel;
+    m_landuse = landuse;
+    m_pedology = pedology;
+    m_geology = geology;
+    m_overlay = overlay;
+    m_hydrotopes = hydrotopes;
     m_workingArea = workingArea;
   }
 
@@ -137,14 +143,14 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     final String stepBuildHydrotopes = formatStep( 5, 6, Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.2" ) ); //$NON-NLS-1$
     progress.setTaskName( stepBuildHydrotopes );
     final Collection<HydrotopeUserData> hydrotopeBeans = dissolver.getResult();
-    final HydrotopeBuilder hydrotopeBuilder = new HydrotopeBuilder( hydrotopeBeans, m_outputList, stepBuildHydrotopes );
+    final HydrotopeBuilder hydrotopeBuilder = new HydrotopeBuilder( hydrotopeBeans, m_hydrotopes, stepBuildHydrotopes );
     final IStatus buildStatus = hydrotopeBuilder.execute( progress.newChild( 10 ) );
     log.add( buildStatus );
 
     /* Validate hydrotopes */
     final String stepValidateHydrotopes = formatStep( 6, 6, "Validate Hydrotopes" );
     progress.setTaskName( stepValidateHydrotopes );
-    final HydrotopeValidator hydrotopeValidator = new HydrotopeValidator( m_outputList, m_catchmentsList, stepValidateHydrotopes );
+    final HydrotopeValidator hydrotopeValidator = new HydrotopeValidator( m_hydrotopes, m_naModel, stepValidateHydrotopes );
     final IStatus validationHydrotopesStatus = hydrotopeValidator.execute( progress.newChild( 10 ) );
     log.add( validationHydrotopesStatus );
 
@@ -162,10 +168,11 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
 
     if( m_workingArea == null )
     {
-      indexer.addInput( new CatchmentHydrotopeInput( m_catchmentsList ) );
-      indexer.addInput( new LanduseHydrotopeInput( m_landuseList ) );
-      indexer.addInput( new PedologyHydrotopeInput( m_pedologyList ) );
-      indexer.addInput( new GeologyHydrotopeInput( m_geologyList ) );
+      indexer.addInput( new CatchmentHydrotopeInput( m_naModel ) );
+      indexer.addInput( new LanduseHydrotopeInput( m_landuse ) );
+      indexer.addInput( new PedologyHydrotopeInput( m_pedology ) );
+      indexer.addInput( new GeologyHydrotopeInput( m_geology ) );
+      indexer.addInput( new OverlayHydrotopeInput( m_overlay ) );
     }
     else
     {

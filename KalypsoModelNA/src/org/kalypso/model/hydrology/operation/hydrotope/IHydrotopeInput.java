@@ -41,7 +41,6 @@
 package org.kalypso.model.hydrology.operation.hydrotope;
 
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
 /**
@@ -53,7 +52,7 @@ interface IHydrotopeInput
 {
   String getLabel( );
 
-  FeatureList getFeatures( );
+// FeatureList getFeatures( );
 
   void buildIndex( IStatusCollector log );
 

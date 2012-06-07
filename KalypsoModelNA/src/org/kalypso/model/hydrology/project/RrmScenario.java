@@ -76,13 +76,17 @@ public class RrmScenario
 
   private static final String FILE_PEDOLOGIE = "pedologie.gml";//$NON-NLS-1$
 
+  @Deprecated
   private static final String FILE_SUDS_GML = "suds.gml"; //$NON-NLS-1$
+
+  private static final String FILE_OVERLAY = "overlay.gml"; //$NON-NLS-1$
 
   private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
 
   private static final String FILE_CATCHMENT_MODELS_GML = "catchmentModels.gml"; //$NON-NLS-1$
 
   private static final String FILE_TIMESERIES_MAPPINGS_GML = "timeseriesMappings.gml"; //$NON-NLS-1$
+
 
   private final IFolder m_scenarioFolder;
 
@@ -163,6 +167,7 @@ public class RrmScenario
     return getModelsFolder().getFile( FILE_HYDROTOP_GML );
   }
 
+  @Deprecated
   public IFile getSudsGml( )
   {
     return getModelsFolder().getFile( FILE_SUDS_GML );
@@ -196,5 +201,10 @@ public class RrmScenario
   public IFile getGeologyFile( )
   {
     return getModelsFolder().getFile( FILE_GEOLOGIE );
+  }
+
+  public IFile getOverlayFile( )
+  {
+    return getModelsFolder().getFile( FILE_OVERLAY );
   }
 }

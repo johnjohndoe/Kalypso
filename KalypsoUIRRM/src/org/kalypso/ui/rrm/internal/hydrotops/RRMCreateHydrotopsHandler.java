@@ -62,9 +62,9 @@ import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
-import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation;
@@ -76,7 +76,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -98,25 +97,20 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     if( scenario == null )
       throw new ExecutionException( "Invalid project structure" ); //$NON-NLS-1$
 
-    final LanduseCollection landuseCollection = findData( hydrotopes, scenario.getLanduseFile().getName(), LanduseCollection.class );
-    final SoilTypeCollection pedologyCollection = findData( hydrotopes, scenario.getPedologyFile().getName(), SoilTypeCollection.class );
-    final GeologyCollection geologyCollection = findData( hydrotopes, scenario.getGeologyFile().getName(), GeologyCollection.class );
+    final LanduseCollection landuse = findData( hydrotopes, scenario.getLanduseFile().getName(), LanduseCollection.class );
+    final SoilTypeCollection pedology = findData( hydrotopes, scenario.getPedologyFile().getName(), SoilTypeCollection.class );
+    final GeologyCollection geology = findData( hydrotopes, scenario.getGeologyFile().getName(), GeologyCollection.class );
+    final OverlayCollection overlay = findData( hydrotopes, scenario.getOverlayFile().getName(), OverlayCollection.class );
     final NaModell naModel = findData( hydrotopes, scenario.getModelFile().getName(), NaModell.class );
-
-    final FeatureList fflLanduse = landuseCollection.getLanduses().getFeatureList();
-    final FeatureList fflPedology = pedologyCollection.getSoilTypes().getFeatureList();
-    final FeatureList fflGeology = geologyCollection.getGeologies().getFeatureList();
-    final FeatureList fflCatchment = naModel.getCatchments().getFeatureList();
-    final IFeatureBindingCollection<IHydrotope> fflHydrotops = hydrotopes.getHydrotopes();
 
     final String windowTitle = HandlerUtils.getCommandName( event );
     if( !MessageDialog.openConfirm( shell, windowTitle, Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.5" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     /* Clear old list */
-    fflHydrotops.clear();
+    hydrotopes.getHydrotopes().clear();
 
-    final HydrotopeCreationOperation operation = new HydrotopeCreationOperation( fflLanduse, fflPedology, fflGeology, fflCatchment, fflHydrotops, null );
+    final HydrotopeCreationOperation operation = new HydrotopeCreationOperation( naModel, landuse, pedology, geology, overlay, hydrotopes, null );
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
 

@@ -43,26 +43,25 @@ package org.kalypso.model.hydrology.operation.hydrotope;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.model.hydrology.binding.SoilType;
-import org.kalypso.model.hydrology.binding.SoilTypeCollection;
+import org.kalypso.model.hydrology.binding.OverlayCollection;
+import org.kalypso.model.hydrology.binding.OverlayElement;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * @author Gernot Belger
  */
-class PedologyHydrotopeInput extends AbstractHydrotopeInput<SoilType>
+class OverlayHydrotopeInput extends AbstractHydrotopeInput<OverlayElement>
 {
-  public PedologyHydrotopeInput( final SoilTypeCollection pedology )
+  public OverlayHydrotopeInput( final OverlayCollection overlay )
   {
-    super( pedology.getSoilTypes() );
+    super( overlay.getOverlayElements() );
   }
 
   @Override
   public String getLabel( )
   {
-    return "Pedology";
+    return "Overlay";
   }
 
   @Override
@@ -75,12 +74,22 @@ class PedologyHydrotopeInput extends AbstractHydrotopeInput<SoilType>
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final IFeatureBindingCollection<SoilType> features = getFeatures();
-    for( final SoilType pedology : features )
+    final IFeatureBindingCollection<OverlayElement> features = getFeatures();
+    for( final OverlayElement overlay : features )
     {
-      final IXLinkedFeature soilType = pedology.getSoilType();
-      if( soilType == null )
-        log.add( IStatus.ERROR, formatMessage( "soil type not set", pedology ) );
+      // FIXME: what to check?
+      overlay.getDRWBMDefinition();
+
+// final Double gwFactor = overlay.getGWFactor();
+// if( gwFactor == null )
+// log.add( IStatus.ERROR, formatMessage( "groundwater factor is not set", overlay ) );
+// else if( gwFactor < 0.0 || gwFactor > 1.0 )
+// log.add( IStatus.ERROR, formatMessage( "groundwater factor is outside it's valid range [0.0 - 1.0]", overlay ) );
+//
+// final Double maxPerkRate = overlay.getMaxPerkulationsRate();
+// if( maxPerkRate == null )
+// log.add( IStatus.ERROR, formatMessage( "maximal perkolation rate is not set", overlay ) );
+// // TODO: range check?
     }
 
     return log.asMultiStatus( STR_ATTRIBUTES );

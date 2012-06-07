@@ -44,17 +44,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.Geology;
+import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.internal.ModelNA;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
  */
-class GeologyHydrotopeInput extends AbstractHydrotopeInput
+class GeologyHydrotopeInput extends AbstractHydrotopeInput<Geology>
 {
-  public GeologyHydrotopeInput( final FeatureList geologyFeatures )
+  public GeologyHydrotopeInput( final GeologyCollection geology )
   {
-    super( geologyFeatures );
+    super( geology.getGeologies() );
   }
 
   @Override
@@ -73,11 +74,9 @@ class GeologyHydrotopeInput extends AbstractHydrotopeInput
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final FeatureList features = getFeatures();
-    for( final Object element : features )
+    final IFeatureBindingCollection<Geology> features = getFeatures();
+    for( final Geology geology : features )
     {
-      final Geology geology = (Geology) element;
-
       final Double gwFactor = geology.getGWFactor();
       if( gwFactor == null )
         log.add( IStatus.ERROR, formatMessage( "groundwater factor is not set", geology ) );
