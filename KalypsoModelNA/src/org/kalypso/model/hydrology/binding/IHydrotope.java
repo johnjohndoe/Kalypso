@@ -74,6 +74,8 @@ public interface IHydrotope extends Feature
 
   QName LINK_CATCHMENT = new QName( NaModelConstants.NS_NAMODELL, "catchmentLinkMember" ); //$NON-NLS-1$
 
+  QName LINK_DRWBM_DEFINITION = new QName( NaModelConstants.NS_NAHYDROTOP, "lnkDefinition" ); //$NON-NLS-1$
+
   IFeatureBindingCollection<ISuds> getSudCollection( );
 
   Feature[] getSuds( );
@@ -106,5 +108,7 @@ public interface IHydrotope extends Feature
 
   void setCatchmentMember( final String href );
 
-  boolean isEqualByPropertiesWith( final Feature feature );
+  void setDRWBMDefinition( final String href );
+
+  IXLinkedFeature getDRWBMDefinition( );
 }

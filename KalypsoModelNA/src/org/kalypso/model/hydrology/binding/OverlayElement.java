@@ -77,11 +77,6 @@ public class OverlayElement extends Feature_Impl
     setProperty( PROPERTY_GEOMETRY, geometry );
   }
 
-  /**
-   * @param href
-   *          Must be either a {@link org.kalypsodeegree.model.feature.Feature} (maybe xlinked) or a {@link String}-ref
-   *          to a feature.
-   */
   public void setDRWBMDefinition( final String href )
   {
     setLink( LINK_DRWBM_DEFINITION, href );

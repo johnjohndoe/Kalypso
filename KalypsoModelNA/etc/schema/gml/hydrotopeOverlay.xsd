@@ -44,7 +44,6 @@
               </complexType>
             </element>
 
-
             <!-- TODO: 1:n link auf knoten/drwbm/xxx -->
 
           </sequence>

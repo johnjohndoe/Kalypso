@@ -167,34 +167,14 @@ public class Hydrotop extends Feature_Impl implements IHydrotope
   }
 
   @Override
-  public boolean isEqualByPropertiesWith( final Feature feature )
+  public void setDRWBMDefinition( final String href )
   {
-    if( feature instanceof Hydrotop )
-    {
-      final IHydrotope other = (IHydrotope) feature;
-      if( !getLanduse().equals( other.getLanduse() ) )
-        return false;
-      if( !getSoilType().equals( other.getSoilType() ) )
-        return false;
-      if( getCatchmentMember() == null || other.getCatchmentMember() == null || !getCatchmentMember().getFeatureId().equals( other.getCatchmentMember().getFeatureId() ) )
-        return false;
-      if( getCorrSealing() != other.getCorrSealing() )
-        return false;
-      if( getMaxPerkolationRate() != other.getMaxPerkolationRate() )
-        return false;
-      if( getGWFactor() != other.getGWFactor() )
-        return false;
-      if( getSudCollection().size() != other.getSudCollection().size() )
-        return false;
-      boolean eq = true;
-      final Feature[] suds = getSuds();
-      final Feature[] otherSuds = other.getSuds();
-      for( int i = 0; i < suds.length; i++ )
-      {
-        eq &= suds[i].equals( otherSuds[i] );
-      }
-      return eq;
-    }
-    return false;
+    setLink( LINK_DRWBM_DEFINITION, href );
+  }
+
+  @Override
+  public IXLinkedFeature getDRWBMDefinition( )
+  {
+    return (IXLinkedFeature) getMember( LINK_DRWBM_DEFINITION );
   }
 }
