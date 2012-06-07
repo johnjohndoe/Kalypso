@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.services;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -48,11 +47,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
-
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 
 /**
  * @author Dejan Antanaskovic
@@ -64,10 +59,7 @@ public class LanduseStyleUpdateListener implements IResourceChangeListener
   @Override
   public void resourceChanged( final IResourceChangeEvent event )
   {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
     // if no scenario is active, just return
     if( scenarioFolder == null )
       return;

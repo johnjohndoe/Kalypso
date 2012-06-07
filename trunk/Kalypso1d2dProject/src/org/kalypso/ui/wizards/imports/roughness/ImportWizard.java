@@ -6,7 +6,6 @@ package org.kalypso.ui.wizards.imports.roughness;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -17,8 +16,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
@@ -32,7 +31,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -69,8 +67,7 @@ public class ImportWizard extends Wizard implements INewWizard
   {
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.Title" ) );//$NON-NLS-1$
     m_selection = selection;
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
+
     final IScenarioDataProvider szenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
     m_operation = new Transformer( m_data ); //$NON-NLS-1$
@@ -85,7 +82,7 @@ public class ImportWizard extends Wizard implements INewWizard
     {
       e.printStackTrace();
     }
-    m_szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    m_szenarioFolder = ScenarioHelper.getScenarioFolder();
     m_project = m_szenarioFolder.getProject();
     m_data.setProjectBaseFolder( m_szenarioFolder.getFullPath().segment( 0 ) );
     m_data.loadUserSelection( "/.metadata/roughnessUserSelection.dat" ); //$NON-NLS-1$

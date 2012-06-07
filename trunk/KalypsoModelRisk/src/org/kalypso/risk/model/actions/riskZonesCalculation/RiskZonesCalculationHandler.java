@@ -42,26 +42,22 @@ package org.kalypso.risk.model.actions.riskZonesCalculation;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.risk.i18n.Messages;
-
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class RiskZonesCalculationHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final Shell shell = workbench.getDisplay().getActiveShell();
 
@@ -69,7 +65,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
     if( !MessageDialog.openConfirm( shell, title, Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.2" ) ) )
       return null;
 
-    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     final RiskZonesOperation operation = new RiskZonesOperation( scenarioFolder );
 

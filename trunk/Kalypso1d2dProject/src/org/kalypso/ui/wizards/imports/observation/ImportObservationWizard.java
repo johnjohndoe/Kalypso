@@ -64,6 +64,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.afgui.perspective.Perspective;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
@@ -83,8 +84,6 @@ import org.kalypso.zml.ui.imports.ImportObservationAxisMappingWizardPage;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 import org.kalypso.zml.ui.imports.ImportObservationOperation;
 import org.kalypso.zml.ui.imports.ObservationImportSelection;
-
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  *
@@ -115,10 +114,6 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
@@ -127,7 +122,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
 
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final IFolder scenarioFolder = ((IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME ));
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage page = window == null ? null : window.getActivePage();

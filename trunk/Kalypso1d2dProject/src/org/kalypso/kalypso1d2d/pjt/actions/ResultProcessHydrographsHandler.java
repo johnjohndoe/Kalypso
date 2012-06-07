@@ -60,6 +60,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -70,8 +71,6 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultsAcessor;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-
 /**
  * @author Gernot Belger
  */
@@ -79,15 +78,12 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
 {
   private static final String DIALOG_TITEL = Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultProcessHydrographsHandler.0" ); //$NON-NLS-1$
 
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final IFolder scenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     // find all timesteps to process
 

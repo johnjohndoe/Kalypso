@@ -9,7 +9,6 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -18,9 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
@@ -33,8 +30,6 @@ import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.project.KalypsoRiskProjectNature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
-
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo
 {
@@ -110,7 +105,7 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        final IFolder scenarioFolder = getScenarioFolder();
+        final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
         if( scenarioFolder == null )
           return Status.OK_STATUS;
         try
@@ -163,15 +158,6 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
       job.setPriority( Job.LONG );
       job.schedule( 500 );
     }
-  }
-
-  protected static final IFolder getScenarioFolder( )
-  {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    return scenarioFolder;
   }
 
   protected static final String getResourcePath( final IFolder scenarioFolder ) throws CoreException

@@ -10,6 +10,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -17,6 +18,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
@@ -29,8 +31,6 @@ import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
-
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
  * Opens the feature view on a given template
@@ -60,13 +60,13 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
       if( activeWorkbenchWindow == null )
         throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.0") ); //$NON-NLS-1$
 
-      final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+      final IFolder szenarioFolder = ScenarioHelper.getScenarioFolder();
 
-      final IFolder folder = ScenarioHelper.findModelContext( szenarioFolder, m_resource );
+      final IContainer folder = ScenarioHelper.findModelContext( szenarioFolder, m_resource );
       if( folder == null )
         throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.1", m_resource )); //$NON-NLS-1$
 
-      final IFile file = folder.getFile( m_resource );
+      final IFile file = folder.getFile( Path.fromPortableString( m_resource ) );
       if( !file.exists() )
         throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.2" , file.getFullPath() )); //$NON-NLS-1$
 

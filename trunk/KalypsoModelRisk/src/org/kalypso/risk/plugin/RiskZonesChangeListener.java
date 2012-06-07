@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.plugin;
 
@@ -49,6 +49,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 
 /**
  * Risk user have the possibility to rename the risk zones (boundaries, descriptions). On landuse import, risk zone
@@ -59,9 +60,6 @@ import org.eclipse.core.runtime.IPath;
  */
 public class RiskZonesChangeListener implements IResourceChangeListener
 {
-  /**
-   * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-   */
   @Override
   public void resourceChanged( final IResourceChangeEvent event )
   {
@@ -69,7 +67,7 @@ public class RiskZonesChangeListener implements IResourceChangeListener
     if( rootDelta == null )
       return;
 
-    final IFolder scenarioFolder = RiskZonesThemeInfo.getScenarioFolder();
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
     if( scenarioFolder == null )
       return;
 

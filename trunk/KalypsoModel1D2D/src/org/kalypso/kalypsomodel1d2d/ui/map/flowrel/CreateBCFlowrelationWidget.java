@@ -46,7 +46,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
@@ -62,8 +62,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
-
 /**
  * 
  * @author Gernot Belger
@@ -75,18 +73,12 @@ public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
     super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.1"), IBoundaryCondition.QNAME ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#createNewFeature(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.relation.IRelationType,
-   *      org.kalypso.gmlschema.feature.IFeatureType)
-   */
   @Override
   protected IBoundaryCondition createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
   {
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
-    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    final IFolder scenarioFolder = (IFolder) handlerService.getCurrentState().getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     final IBoundaryConditionDescriptor[] descriptors = createTimeserieDescriptors( modelElement, scenarioFolder );
 
@@ -116,16 +108,16 @@ public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
     // TODO: ask ingenieurs what is right here:
     if( modelElement instanceof IElement1D )
       return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser };
-//    return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser, wqDescriptor };
+    //    return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser, wqDescriptor };
 
     if( modelElement instanceof IPolyElement )
       return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
-//    return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser, wqDescriptor };
+    //    return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser, wqDescriptor };
 
     // TODO: probably comment the next two lines out
     if( modelElement instanceof IFE1D2DNode )
       return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
-//    return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
+    //    return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
 
     if( modelElement instanceof IFELine )
       return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor, waveDescriptor };

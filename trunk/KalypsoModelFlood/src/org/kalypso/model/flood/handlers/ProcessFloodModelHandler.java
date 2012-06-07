@@ -59,6 +59,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
@@ -80,7 +81,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Gernot Belger
@@ -99,7 +99,7 @@ public class ProcessFloodModelHandler extends AbstractHandler
       final Shell shell = HandlerUtil.getActiveShellChecked( event );
       final String commandName = HandlerUtils.getCommandName( event );
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-      final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+      final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
       final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName() );
       final IFeatureBindingCollection<IRunoffEvent> events = model.getEvents();
