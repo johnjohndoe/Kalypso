@@ -337,20 +337,6 @@
 	        </and>
          </filterExpression>
       </commonFilter>
-      <commonFilter
-            activeByDefault="false"
-            description="%org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter.description"
-            id="org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter"
-            name="%org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter.name">
-         <filterExpression>
-         	   <not>
-               <test
-                     forcePluginActivation="true"
-                     property="org.kalypso.kalypso1d2d.activeCaseUri">
-               </test>
-               </not>
-         </filterExpression>
-      </commonFilter>
    </extension>
    <extension
          point="org.kalypso.deegree.functionProperty">
