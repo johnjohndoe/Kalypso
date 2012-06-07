@@ -117,8 +117,8 @@ public class HydrotopePrototype
     hydrotope.setName( name );
 
     final String catchmentId = getCatchmentId();
-    final String href = String.format( "modell.gml#%s", catchmentId ); //$NON-NLS-1$
-    hydrotope.setCatchmentMember( href );
+    final String catchmentRef = String.format( "modell.gml#%s", catchmentId ); //$NON-NLS-1$
+    hydrotope.setCatchmentMember( catchmentRef );
 
     final String landuseClassName = getLanduseClass();
     if( landuseClassName != null )
@@ -134,7 +134,8 @@ public class HydrotopePrototype
 
     hydrotope.setGWFactor( getGroundwaterFactor() );
 
-    // FIXME: add overlay attributes
+    final String drwbDefinitionRef = getDRWBMDefinition();
+    hydrotope.setDRWBMDefinition( drwbDefinitionRef );
   }
 
   public String buildAttributeHashKey( )
@@ -147,12 +148,19 @@ public class HydrotopePrototype
 
     buffer.append( '#' );
 
+    /* landuse */
     final String landuseClassName = getLanduseClass();
     buffer.append( landuseClassName );
     buffer.append( '#' );
 
+    /* pedology */
     final String soilTypeClassName = getSoilTypeClass();
     buffer.append( soilTypeClassName );
+    buffer.append( '#' );
+
+    /* overlay */
+    final String drwbDefinitionRef = getDRWBMDefinition();
+    buffer.append( drwbDefinitionRef );
     buffer.append( '#' );
 
     /* numeric values */
@@ -163,9 +171,19 @@ public class HydrotopePrototype
     buffer.append( '#' );
     buffer.append( String.format( "%.3f", getGroundwaterFactor() ) );
 
-    // FIXME: add overlay attributes
-
     return buffer.toString();
+  }
+
+  private String getDRWBMDefinition( )
+  {
+    if( m_overlay == null )
+      return null;
+
+    final IXLinkedFeature drwbmDefinition = m_overlay.getDRWBMDefinition();
+    if( drwbmDefinition == null )
+      return null;
+
+    return drwbmDefinition.getHref();
   }
 
   private String getSoilTypeClass( )
