@@ -42,20 +42,20 @@ package org.kalypso.model.hydrology.binding.parameter;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {http://www.tuhh.de/parameter}Parameter
  * 
  * @author Gernot Belger
  */
-public class Parameter extends Feature_Impl
+public class Parameter extends UnversionedModel
 {
   private static final String NS_NAPARAMETER = NaModelConstants.NS_NAPARAMETER;
 
