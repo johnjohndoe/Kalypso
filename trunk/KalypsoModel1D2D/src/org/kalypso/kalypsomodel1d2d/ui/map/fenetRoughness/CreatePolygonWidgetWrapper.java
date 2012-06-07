@@ -303,7 +303,7 @@ public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
     {
       final GM_Object poly = m_builder.finish();
 
-      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final ITerrainModel model = dataProvider.getModel( ITerrainModel.class.getName() );
 
       final IRoughnessClsCollection clsCollection = dataProvider.getModel( IRoughnessClsCollection.class.getName() );

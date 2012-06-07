@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -97,7 +98,7 @@ public class LinearSumHelper
     try
     {
       /* Get the NA model. */
-      final IScenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final NaModell model = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL );
 
       /* Create the linear sum bean. */
@@ -125,7 +126,7 @@ public class LinearSumHelper
     try
     {
       /* Timeseries file. */
-      final IScenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IContainer scenarioFolder = scenarioDataProvider.getScenarioFolder();
       final IFile stationFile = scenarioFolder.getFile( new Path( INaProjectConstants.GML_THIESSEN_STATION_PATH ) );
 
@@ -151,7 +152,7 @@ public class LinearSumHelper
   {
     try
     {
-      final IScenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IContainer scenarioFolder = scenarioDataProvider.getScenarioFolder();
       final IFile stationFile = scenarioFolder.getFile( new Path( INaProjectConstants.GML_THIESSEN_STATION_PATH ) );
       stationFile.delete( true, new NullProgressMonitor() );

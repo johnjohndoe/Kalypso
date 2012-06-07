@@ -7,6 +7,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -17,7 +18,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.wizards.i18n.Messages;
-import org.kalypso.ui.wizards.imports.utils.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -164,7 +164,7 @@ public class Transformer implements ICoreRunnableWithProgress
       }
     }
     // use (dummy) command to make workspace dirty
-    final IScenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
+    final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     if( caseDataProvider != null )
     {
       caseDataProvider.postCommand( ITerrainModel.class.getName(), new AddRoughnessPolygonsCmd() );

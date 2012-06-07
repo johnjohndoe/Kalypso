@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
@@ -97,7 +98,7 @@ public class ProcessFloodModelHandler extends AbstractHandler
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final Shell shell = HandlerUtil.getActiveShellChecked( event );
       final String commandName = HandlerUtils.getCommandName( event );
-      final IScenarioDataProvider dataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
       final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName() );

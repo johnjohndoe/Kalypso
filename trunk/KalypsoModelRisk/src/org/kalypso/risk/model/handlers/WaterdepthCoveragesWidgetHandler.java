@@ -49,7 +49,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     RiskModelHelper.activateEventTheme( mapPanel );
 
     final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.4" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
     widget.setGridFolder( scenarioFolder.getFolder( "models/raster/input" ) ); //$NON-NLS-1$
     widget.setAllowUserChangeGridFolder( false );
 

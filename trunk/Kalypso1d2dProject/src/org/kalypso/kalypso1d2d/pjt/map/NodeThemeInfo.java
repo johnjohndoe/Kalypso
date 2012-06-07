@@ -11,6 +11,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
@@ -87,7 +88,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 //    if( m_listSWANProps.contains( m_propertyNameFromTheme ) )
     {
       m_boolResolveNodesFromDiscrModel = true;
-      final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
       try
       {

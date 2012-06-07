@@ -50,7 +50,6 @@ import java.util.Map;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Status;
@@ -61,6 +60,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
@@ -85,7 +85,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
@@ -103,10 +102,9 @@ public class AddProfileToMapHandler extends AbstractHandler
   {
     try
     {
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
-      final ITerrainModel terrainModel = getTerrainModel( context );
+      final ITerrainModel terrainModel = getTerrainModel();
       final IRiverProfileNetworkCollection riverProfileNetworkCollection = terrainModel.getRiverProfileNetworkCollection();
 
       /* ask user and add everything to map */
@@ -177,9 +175,9 @@ public class AddProfileToMapHandler extends AbstractHandler
     mapView.postCommand( cascadingCommand, null );
   }
 
-  protected ITerrainModel getTerrainModel( final IEvaluationContext context ) throws ExecutionException
+  protected ITerrainModel getTerrainModel( ) throws ExecutionException
   {
-    final IScenarioDataProvider modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     try
     {
       return modelProvider.getModel( ITerrainModel.class.getName() );

@@ -183,7 +183,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
 
   protected void startCalculation( final Shell shell, final IFlowRelationship[] flowRels )
   {
-    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
     try
     {

@@ -49,6 +49,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
@@ -73,7 +74,7 @@ public class CompleteNetElementsTaskHandler extends AbstractHandler
 
     configureFeatureView( activePage );
 
-    final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
     //WorkflowHandlerUtils.setGttInput( activePage, "Nodes", "urn:org.kalypso.model.rrm.completeNetElements:workflow:Nodes:gtt", "Nodes", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$

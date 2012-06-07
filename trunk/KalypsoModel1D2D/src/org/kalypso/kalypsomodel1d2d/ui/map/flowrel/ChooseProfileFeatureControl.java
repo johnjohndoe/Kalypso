@@ -192,7 +192,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       // TODO: add filter depending on relation type (bridge, weir, normal)
 
       // find network
-      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final ITerrainModel terrainModel = dataProvider.getModel( ITerrainModel.class.getName() );
 
       final GMLWorkspace root = terrainModel.getWorkspace();

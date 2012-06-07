@@ -52,6 +52,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.cm.ICatchment;
@@ -282,7 +283,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     try
     {
       /* Get the stations. */
-      final IScenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IStationCollection stationCollection = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
       final IFeatureBindingCollection<IStation> stations = stationCollection.getStations();
       for( final IStation station : stations )

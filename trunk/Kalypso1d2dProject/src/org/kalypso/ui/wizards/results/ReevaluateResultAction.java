@@ -109,7 +109,7 @@ public class ReevaluateResultAction extends Action
 
       final IResultMeta[] selectedResults = m_page.getSelectedResults();
 
-      final IContainer scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+      final IContainer scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
 
       final IGeoLog log = m_page.getLog();
       final ICoreRunnableWithProgress calculationOperation = new ReevaluateResultOperation( selectedResults, scenarioFolder, m_commandTarget, m_modell, m_modelProvider, log );

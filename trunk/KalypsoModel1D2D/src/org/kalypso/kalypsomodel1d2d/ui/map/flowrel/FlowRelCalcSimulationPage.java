@@ -463,7 +463,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
         op.applyResult();
 
           // Post an empty command to flowrelationship model in order to make it dirty
-      KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+      KalypsoAFGUIFrameworkPlugin.getDataProvider().postCommand( IFlowRelationshipModel.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
 
           return Status.OK_STATUS;
     }

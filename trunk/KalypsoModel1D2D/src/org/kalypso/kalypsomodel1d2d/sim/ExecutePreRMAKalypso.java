@@ -58,6 +58,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -123,7 +124,7 @@ public class ExecutePreRMAKalypso
   public ExecutePreRMAKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos, final String calcUnitID )
   {
 
-    m_caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+    m_caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     m_scenarioFolder = m_caseDataProvider.getScenarioFolder();
 
     m_serviceEndpoint = serviceEndpoint;
@@ -146,7 +147,7 @@ public class ExecutePreRMAKalypso
       // restartInfos = Collections.emptyList();
 
       // for getting WPS input list relative to scenario
-      final IScenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
       final SimulationDelegate delegate = new SimulationDelegate( PreRMAKalypso.ID, scenarioFolder, m_modelInput );
       delegate.init();

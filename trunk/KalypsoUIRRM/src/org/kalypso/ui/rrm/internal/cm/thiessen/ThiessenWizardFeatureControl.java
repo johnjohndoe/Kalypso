@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
@@ -134,7 +135,7 @@ public class ThiessenWizardFeatureControl extends AbstractFeatureControl
   {
     try
     {
-      final IScenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
       final GeometryFactory gf = new GeometryFactory();
 

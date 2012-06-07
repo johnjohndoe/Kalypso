@@ -43,12 +43,9 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModel;
@@ -62,7 +59,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author ig
@@ -82,10 +78,8 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel
   public WindDataWidgetDataModel( )
   {
     super( KEYS, null );
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    m_dataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+
+    m_dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
   }
 
   public void setMapModell( final IMapModell mapModell )

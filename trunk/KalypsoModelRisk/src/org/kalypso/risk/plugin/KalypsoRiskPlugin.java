@@ -1,14 +1,11 @@
 package org.kalypso.risk.plugin;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
@@ -17,7 +14,6 @@ import org.kalypso.risk.project.SzenarioController;
 import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -59,7 +55,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
       @Override
       protected IStatus run( final IProgressMonitor arg0 )
       {
-        final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+        final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
         setSzenarioController( new SzenarioController() );
         dataProvider.addScenarioDataListener( getSzenarioController() );
         getSzenarioController().scenarioChanged( dataProvider.getScenario() );
@@ -81,10 +77,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
 
     if( PlatformUI.isWorkbenchRunning() )
     {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      final IEvaluationContext currentState = service.getCurrentState();
-      final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       caseDataProvider.removeScenarioDataListener( getSzenarioController() );
     }
 

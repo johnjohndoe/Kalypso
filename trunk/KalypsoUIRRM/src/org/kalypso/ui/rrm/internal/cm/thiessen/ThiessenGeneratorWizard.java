@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -106,7 +107,7 @@ public class ThiessenGeneratorWizard extends Wizard
 
   private URL getContext( )
   {
-    final IContainer currentScenario = ScenarioHelper.getScenarioDataProvider().getScenarioFolder();
+    final IContainer currentScenario = KalypsoAFGUIFrameworkPlugin.getDataProvider().getScenarioFolder();
     return ResourceUtilities.createQuietURL( currentScenario );
   }
 

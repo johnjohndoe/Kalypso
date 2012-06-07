@@ -47,6 +47,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.control.NAControl;
@@ -103,7 +104,7 @@ public class DeleteMappingAction extends Action
       /* Delete the selected mappingss. */
       final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_mapping );
 
-      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace mappingWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
 
       mappingWorkspace.postCommand( deleteCommand );
@@ -119,7 +120,7 @@ public class DeleteMappingAction extends Action
   private boolean areUsed( ) throws CoreException
   {
     /* Get the data provider. */
-    final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
     /* Get the workspace of the catchment models and the simulations. */
     final CommandableWorkspace simulationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_SIMULATIONS );

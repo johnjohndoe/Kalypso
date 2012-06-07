@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
@@ -109,7 +110,7 @@ public class EditTimeseriesAction extends Action
         final ICommand command = m_timeseries.applyChanges();
         if( Objects.isNotNull( command ) )
         {
-          final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+          final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
           final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
 
           stationsWorkspace.postCommand( command );

@@ -68,6 +68,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.dialog.DatabindingTitleAreaDialog;
@@ -457,7 +458,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
     try
     {
-      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace generatorsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
 
       final ICatchmentModel rootFeature = (ICatchmentModel) generatorsWorkspace.getRootFeature();
@@ -486,7 +487,7 @@ public class EditMultiDialog extends TitleAreaDialog
   {
     try
     {
-      final IScenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace generatorsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
 
       /* Apply the changes. */
