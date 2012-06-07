@@ -114,7 +114,7 @@ public class Test_Intersection extends TestCase
     indexer.addInput( new LanduseHydrotopeInput( landuseRoot ) );
     indexer.addInput( new PedologyHydrotopeInput( pedology ) );
     indexer.addInput( new GeologyHydrotopeInput( geologyRoot ) );
-    indexer.addInput( new OverlayHydrotopeInput( overlay ) );
+    indexer.addInput( new OverlayHydrotopeInput( overlay, naModel ) );
 
     final IStatus indexStatus = indexer.execute( new NullProgressMonitor() );
     final IHydrotopeInput[] input = indexer.getIndices();

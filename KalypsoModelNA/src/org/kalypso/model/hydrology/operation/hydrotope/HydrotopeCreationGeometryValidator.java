@@ -80,15 +80,19 @@ public class HydrotopeCreationGeometryValidator
     for( final Polygon polygon : m_allElements )
     {
       final IsValidOp isValidOp = new IsValidOp( polygon );
-      if( !isValidOp.isValid() )
+
+      if( polygon == null )
+        addWarning( log, "Geometry is missing", polygon );
+      else if( polygon.getArea() < FeatureListGeometryIntersector.MIN_AREA )
+        addWarning( log, String.format( "Area is very small (%f m²)", polygon.getArea() ), polygon );
+      else if( !isValidOp.isValid() )
       {
         final TopologyValidationError error = isValidOp.getValidationError();
-        final String message = String.format( "Polygon '%%s': %s", error.getMessage() );
-        addWarning( log, message, polygon );
+        addWarning( log, error.getMessage(), polygon );
       }
     }
 
-    return log.asMultiStatus( "Topological Correctness" );
+    return log.asMultiStatus( "Geometries" );
   }
 
   public IStatus checkSelfIntersection( )
@@ -119,20 +123,22 @@ public class HydrotopeCreationGeometryValidator
 
           if( intersectionArea > FeatureListGeometryIntersector.MIN_AREA )
           {
-            final String format = String.format( "Polygon '%%s' overlaps another polygon (%.2f m²)", intersectionArea );
+            final double intersectionPercent = (intersectionArea / polygon.getArea()) * 100;
+
+            final String format = String.format( "overlaps another element (%.2f m² = %.2f %%)", intersectionArea, intersectionPercent );
             addWarning( log, format, polygon );
           }
         }
       }
     }
 
-    return log.asMultiStatus( "Self Intersection" );
+    return log.asMultiStatus( "Topological correctness" );
   }
 
-  private static void addWarning( final IStatusCollector log, final String format, final Polygon polygon )
+  private static void addWarning( final IStatusCollector log, final String message, final Polygon polygon )
   {
     final HydrotopeUserData data = (HydrotopeUserData) polygon.getUserData();
     final String label = data.toErrorString();
-    log.add( IStatus.WARNING, format, null, label );
+    log.add( IStatus.WARNING, "Element '%s': %s", null, label, message );
   }
 }
