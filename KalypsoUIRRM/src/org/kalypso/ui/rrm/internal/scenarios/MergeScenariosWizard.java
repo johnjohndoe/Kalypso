@@ -40,7 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -52,19 +56,31 @@ import de.renew.workflow.connector.cases.IScenario;
 public class MergeScenariosWizard extends Wizard
 {
   /**
-   * The scenario, where the others scenario should be merged into.
+   * The scenario, where the others scenarios should be merged into.
    */
   private final IScenario m_scenario;
+
+  /**
+   * The scenarios data object.
+   */
+  private final MergeScenariosData m_scenariosData;
+
+  /**
+   * The merge scenarios wizard page.
+   */
+  private MergeScenariosWizardPage m_mergeScenariosWizardPage;
 
   /**
    * The constructor.
    * 
    * @param scenario
-   *          The scenario, where the others scenario should be merged into.
+   *          The scenario, where the others scenarios should be merged into.
    */
   public MergeScenariosWizard( final IScenario scenario )
   {
     m_scenario = scenario;
+    m_scenariosData = new MergeScenariosData();
+    m_mergeScenariosWizardPage = null;
 
     setWindowTitle( "Szenarien zusammenführen" );
   }
@@ -75,8 +91,8 @@ public class MergeScenariosWizard extends Wizard
   @Override
   public void addPages( )
   {
-    final MergeScenariosWizardPage mergeScenariosWizardPage = new MergeScenariosWizardPage( "MergeScenariosWizardPage", m_scenario );
-    addPage( mergeScenariosWizardPage );
+    m_mergeScenariosWizardPage = new MergeScenariosWizardPage( "MergeScenariosWizardPage", m_scenario, m_scenariosData );
+    addPage( m_mergeScenariosWizardPage );
   }
 
   /**
@@ -85,7 +101,22 @@ public class MergeScenariosWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    // TODO
-    return false;
+    /* Create the operation. */
+    final MergeScenariosOperation operation = new MergeScenariosOperation( m_scenario, m_scenariosData );
+
+    /* Execute the operation. */
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, operation );
+    if( !status.isOK() )
+    {
+      /* Log the error message. */
+      KalypsoUIRRMPlugin.getDefault().getLog().log( status );
+
+      /* Show an error, if the operation has failed. */
+      ErrorDialog.openError( getShell(), getWindowTitle(), status.getMessage(), status );
+
+      return false;
+    }
+
+    return true;
   }
 }
