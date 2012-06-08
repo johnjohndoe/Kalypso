@@ -48,7 +48,6 @@ import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -70,6 +69,7 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.DataSetBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 
 import de.renew.workflow.connector.cases.IScenario;
@@ -256,8 +256,9 @@ public class MergeScenariosWizardPage extends WizardPage
       /* Log the error message. */
       KalypsoUIRRMPlugin.getDefault().getLog().log( status );
 
-      /* Show an error, if the operation has failed. */
-      ErrorDialog.openError( getShell(), getTitle(), status.getMessage(), status );
+      /* Show a status dialog. */
+      final StatusDialog statusDialog = new StatusDialog( getShell(), status, getTitle() );
+      statusDialog.open();
     }
   }
 
