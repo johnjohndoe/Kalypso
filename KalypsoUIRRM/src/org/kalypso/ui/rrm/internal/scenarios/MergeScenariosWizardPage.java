@@ -40,16 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
-import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 
 import de.renew.workflow.connector.cases.IScenario;
 
 /**
- * The merge scenario wizard.
+ * The merge scenarios wizard page.
  * 
  * @author Holger Albert
  */
-public class MergeScenariosWizard extends Wizard
+public class MergeScenariosWizardPage extends WizardPage
 {
   /**
    * The scenario, where the others scenario should be merged into.
@@ -59,33 +63,35 @@ public class MergeScenariosWizard extends Wizard
   /**
    * The constructor.
    * 
+   * @param pageName
+   *          The name of the page.
    * @param scenario
    *          The scenario, where the others scenario should be merged into.
    */
-  public MergeScenariosWizard( final IScenario scenario )
+  public MergeScenariosWizardPage( final String pageName, final IScenario scenario )
   {
+    super( pageName );
+
     m_scenario = scenario;
 
-    setWindowTitle( "Szenarien zusammenführen" );
+    setTitle( "Szenarien zusammenführen" );
+    setDescription( String.format( "Auswahl der Szenarien, die in das Szenario '%s' zusammengeführt werden sollen.", scenario.getName() ) );
   }
 
   /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void addPages( )
+  public void createControl( final Composite parent )
   {
-    final MergeScenariosWizardPage mergeScenariosWizardPage = new MergeScenariosWizardPage( "MergeScenariosWizardPage", m_scenario );
-    addPage( mergeScenariosWizardPage );
-  }
+    /* Create the main composite. */
+    final Composite main = new Composite( parent, SWT.NONE );
+    main.setLayout( new GridLayout( 1, false ) );
+    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
-  @Override
-  public boolean performFinish( )
-  {
     // TODO
-    return false;
+
+    /* Set the control. */
+    setControl( main );
   }
 }
