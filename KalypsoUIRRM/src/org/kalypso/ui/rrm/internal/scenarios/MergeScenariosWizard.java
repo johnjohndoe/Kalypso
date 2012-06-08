@@ -41,9 +41,9 @@
 package org.kalypso.ui.rrm.internal.scenarios;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 
 import de.renew.workflow.connector.cases.IScenario;
@@ -111,8 +111,9 @@ public class MergeScenariosWizard extends Wizard
       /* Log the error message. */
       KalypsoUIRRMPlugin.getDefault().getLog().log( status );
 
-      /* Show an error, if the operation has failed. */
-      ErrorDialog.openError( getShell(), getWindowTitle(), status.getMessage(), status );
+      /* Show a status dialog. */
+      final StatusDialog statusDialog = new StatusDialog( getShell(), status, getWindowTitle() );
+      statusDialog.open();
 
       return false;
     }
