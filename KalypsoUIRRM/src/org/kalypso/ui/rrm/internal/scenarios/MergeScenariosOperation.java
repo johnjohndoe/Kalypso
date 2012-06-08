@@ -40,13 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.resources.CollectFolderVisitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 
 import de.renew.workflow.connector.cases.IScenario;
@@ -103,33 +107,61 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
         throw new IllegalArgumentException( "No scenarios selected..." );
 
       /* Monitor. */
-      monitor.beginTask( String.format( "Merging the scenarios into the scenario '%s'...", m_scenario.getName() ), 1000 * selectedScenarios.length );
+      monitor.beginTask( String.format( "Merging the scenarios into the scenario '%s'...", m_scenario.getName() ), 1500 * selectedScenarios.length );
+
+      /* Get the simulations folder of the target scenario. */
+      final IFolder scenarioFolder = m_scenario.getFolder();
+      final RrmScenario rrmScenario = new RrmScenario( scenarioFolder );
+      final IFolder simulationsFolder = rrmScenario.getSimulationsFolder();
 
       /* Loop all selected scenarios. */
       for( final IScenario selectedScenario : selectedScenarios )
       {
         /* Monitor. */
-        monitor.subTask( "Copying simulation folder..." );
+        monitor.subTask( String.format( "Importing scenario '%s'...", selectedScenario.getName() ) );
 
-        // TODO
+        /* Get the simulations folder of the source scenario. */
+        final IFolder selectedScenarioFolder = selectedScenario.getFolder();
+        final RrmScenario selectedRrmScenario = new RrmScenario( selectedScenarioFolder );
+        final IFolder selectedSimulationsFolder = selectedRrmScenario.getSimulationsFolder();
+
+        /* Monitor. */
+        monitor.worked( 250 );
+        monitor.subTask( "Copying simulations..." );
+
+        /* Copy the simulations. */
+        copySimulations( simulationsFolder, selectedSimulationsFolder );
 
         /* Monitor. */
         monitor.worked( 250 );
         monitor.subTask( "Updating catchment models..." );
 
-        // TODO
+        /* Update the catchment models. */
+        updateCatchmentModels();
 
         /* Monitor. */
         monitor.worked( 250 );
-        monitor.subTask( "Updating timeseries mappings" );
+        monitor.subTask( "Updating timeseries mappings..." );
 
-        // TODO
+        /* Update the timeseries mappings. */
+        updateTimeseriesMappings();
 
         /* Monitor. */
         monitor.worked( 250 );
-        monitor.subTask( "Updating simulations" );
+        monitor.subTask( "Updating simulations..." );
 
-        // TODO
+        /* Update the simulations. */
+        updateSimulations();
+
+        /* Monitor. */
+        monitor.worked( 250 );
+        monitor.subTask( "Cleaning up..." );
+
+        /* Should the selected scenario be deleted? */
+        final boolean deleteScenarios = m_scenariosData.isDeleteScenarios();
+
+        /* Clean up the scenario. */
+        cleanUpScenario( selectedScenario, deleteScenarios );
 
         /* Monitor. */
         monitor.worked( 250 );
@@ -147,5 +179,52 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  /**
+   * This function copies the contained simulations in the selected simulations folder into the simulations folder.
+   * 
+   * @param simulationsFolder
+   *          The simulations folder of the target scenario.
+   * @param selectedSimulationsFolder
+   *          The simulations folder of the source scenario.
+   */
+  private void copySimulations( final IFolder simulationsFolder, final IFolder selectedSimulationsFolder ) throws CoreException
+  {
+    /* Get the simulations. */
+    final CollectFolderVisitor selectedFolderVisitor = new CollectFolderVisitor( new IFolder[] {} );
+    selectedSimulationsFolder.accept( selectedFolderVisitor );
+    final IFolder[] selectedFolders = selectedFolderVisitor.getFolders();
+    for( final IFolder selectedFolder : selectedFolders )
+    {
+      final IFolder targetFolder = simulationsFolder.getFolder( selectedFolder.getName() );
+      if( targetFolder.exists() )
+      {
+        // TODO
+      }
+
+      // TODO
+    }
+  }
+
+  private void updateCatchmentModels( )
+  {
+    // TODO
+  }
+
+  private void updateTimeseriesMappings( )
+  {
+    // TODO
+  }
+
+  private void updateSimulations( )
+  {
+    // TODO The new ids of the catchment models generators must be set into the new simulations...
+    // TODO
+  }
+
+  private void cleanUpScenario( final IScenario selectedScenario, final boolean deleteScenarios )
+  {
+    // TODO
   }
 }
