@@ -42,11 +42,11 @@ package org.kalypso.ui.rrm.internal.scenarios;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISources;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
 import de.renew.workflow.connector.cases.IScenario;
@@ -72,11 +72,9 @@ public class MergeScenariosHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    /* Get the context. */
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-
     /* Get the shell. */
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    final Shell shell = display.getActiveShell();
 
     /* Get the current scenario. */
     final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
