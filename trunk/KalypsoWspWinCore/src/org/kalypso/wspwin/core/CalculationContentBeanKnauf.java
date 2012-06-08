@@ -76,6 +76,8 @@ public class CalculationContentBeanKnauf extends AbstractCalculationContentBean
     PC_BEWUCHS_PASCHE
   }
 
+  public static final String CODE_LP = "lp"; //$NON-NLS-1$
+
   private final BigDecimal m_startStation;
 
   private final BigDecimal m_endStation;

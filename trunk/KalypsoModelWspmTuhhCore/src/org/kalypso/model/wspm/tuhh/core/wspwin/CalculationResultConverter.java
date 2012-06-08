@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
@@ -99,19 +99,16 @@ public class CalculationResultConverter
 
   public void convert( final CalculationBean bean, final File dathDir ) throws IOException, CoreException, GMLSchemaException, GmlSerializeException
   {
-    final String fileName = bean.getFileName();
-
     /* Replace filename with length-section code */
-    final char[] fileNameChars = fileName.toCharArray();
     final String code = getFilenameCode();
-    System.arraycopy( code.toCharArray(), 0, fileNameChars, 2, code.length() );
 
-    final String calcFilename = new String( fileNameChars );
+    final String calcFilename = bean.getResultFilename( code );
+
     final File calcFile = new File( dathDir, calcFilename );
 
     if( !calcFile.isFile() )
     {
-      m_log.add( IStatus.WARNING, Messages.getString("CalculationResultConverter_0"), null, bean.getName(), calcFilename ); //$NON-NLS-1$
+      m_log.add( IStatus.WARNING, Messages.getString( "CalculationResultConverter_0" ), null, bean.getName(), calcFilename ); //$NON-NLS-1$
       return;
     }
 
