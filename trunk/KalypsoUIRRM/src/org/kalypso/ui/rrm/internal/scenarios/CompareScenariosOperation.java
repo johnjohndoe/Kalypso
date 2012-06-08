@@ -97,11 +97,45 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
 
     try
     {
+      /* Get the selected scenarios. */
+      final IScenario[] selectedScenarios = m_scenariosData.getSelectedScenarios();
+      if( selectedScenarios == null || selectedScenarios.length == 0 )
+        throw new IllegalArgumentException( "No scenarios selected..." );
+
       /* Monitor. */
-      monitor.beginTask( String.format( "Comparing the scenarios against the scenario '%s'...", m_scenario.getName() ), 1000 );
-      monitor.subTask( "" );
+      monitor.beginTask( String.format( "Comparing the scenarios against the scenario '%s'...", m_scenario.getName() ), (750 * selectedScenarios.length) + 250 );
+
+      /* Loop all selected scenarios. */
+      for( final IScenario selectedScenario : selectedScenarios )
+      {
+        /* Monitor. */
+        monitor.subTask( "Comparing the model" );
+
+        // TODO
+
+        /* Monitor. */
+        monitor.worked( 250 );
+        monitor.subTask( "Comparing the parameter..." );
+
+        // TODO
+
+        /* Monitor. */
+        monitor.worked( 250 );
+        monitor.subTask( "Comparing the hydrotopes..." );
+
+        // TODO
+
+        /* Monitor. */
+        monitor.worked( 250 );
+      }
+
+      /* Monitor. */
+      monitor.subTask( "Updating the UI..." );
 
       // TODO
+
+      /* Monitor. */
+      monitor.worked( 250 );
 
       return collector.asMultiStatus( String.format( "Comparing the scenarios against the scenario '%s' succeeded.", m_scenario.getName() ) );
     }

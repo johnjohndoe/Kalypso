@@ -97,32 +97,43 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
 
     try
     {
-      /* Monitor. */
-      monitor.beginTask( String.format( "Merging the scenarios into the scenario '%s'...", m_scenario.getName() ), 1000 );
-      monitor.subTask( "" );
-
-      // TODO
-
-      /* Monitor. */
-      monitor.worked( 250 );
-      monitor.subTask( "" );
-
-      // TODO
+      /* Get the selected scenarios. */
+      final IScenario[] selectedScenarios = m_scenariosData.getSelectedScenarios();
+      if( selectedScenarios == null || selectedScenarios.length == 0 )
+        throw new IllegalArgumentException( "No scenarios selected..." );
 
       /* Monitor. */
-      monitor.worked( 250 );
-      monitor.subTask( "" );
+      monitor.beginTask( String.format( "Merging the scenarios into the scenario '%s'...", m_scenario.getName() ), 1000 * selectedScenarios.length );
 
-      // TODO
+      /* Loop all selected scenarios. */
+      for( final IScenario selectedScenario : selectedScenarios )
+      {
+        /* Monitor. */
+        monitor.subTask( "Copying simulation folder..." );
 
-      /* Monitor. */
-      monitor.worked( 250 );
-      monitor.subTask( "" );
+        // TODO
 
-      // TODO
+        /* Monitor. */
+        monitor.worked( 250 );
+        monitor.subTask( "Updating catchment models..." );
 
-      /* Monitor. */
-      monitor.worked( 250 );
+        // TODO
+
+        /* Monitor. */
+        monitor.worked( 250 );
+        monitor.subTask( "Updating timeseries mappings" );
+
+        // TODO
+
+        /* Monitor. */
+        monitor.worked( 250 );
+        monitor.subTask( "Updating simulations" );
+
+        // TODO
+
+        /* Monitor. */
+        monitor.worked( 250 );
+      }
 
       return collector.asMultiStatus( String.format( "Merging the scenarios into the scenario '%s' succeeded.", m_scenario.getName() ) );
     }
