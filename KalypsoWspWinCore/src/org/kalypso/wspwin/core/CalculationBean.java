@@ -187,4 +187,17 @@ public class CalculationBean
 
     throw new IllegalArgumentException();
   }
+
+  /**
+   * Creates a result filename from this filename by replacing character 3+4 with <code>code</code>.
+   * 
+   * @param code
+   *          2-character string.
+   */
+  public String getResultFilename( final String code )
+  {
+    final char[] fileNameChars = m_fileName.toCharArray();
+    System.arraycopy( code.toCharArray(), 0, fileNameChars, 2, code.length() );
+    return new String( fileNameChars );
+  }
 }
