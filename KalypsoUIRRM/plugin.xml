@@ -489,6 +489,11 @@
                id="parameter"
                modelPath=".models/parameter.gml">
          </scenarioDatum>
+         <scenarioDatum
+               classKey="org.kalypso.model.hydrology.binding.designRainfall.SynthN"
+               id="designRainfall"
+               modelPath=".models/synth.gml">
+         </scenarioDatum>
       </dataSet>
    </extension>
 
@@ -502,6 +507,7 @@
             <command id="org.kalypso.model.rrm.soilDefinition" name="%org.kalypso.model.rrm.soilDefinition.name" description="%org.kalypso.model.rrm.soilDefinition.description" />
             <command id="org.kalypso.model.rrm.landuseDefinition" name="%org.kalypso.model.rrm.landuseDefinition.name" description="%org.kalypso.model.rrm.landuseDefinition.description" />
             <command id="org.kalypso.model.rrm.drwbmDefinition" name="%org.kalypso.model.rrm.drwbmDefinition.name" description="%org.kalypso.model.rrm.drwbmDefinition.description" />
+            <command id="org.kalypso.model.rrm.designRainfallDefinition" name="%org.kalypso.model.rrm.designRainfallDefinition.name" description="%org.kalypso.model.rrm.designRainfallDefinition.description" />
 
 
             <command id="org.kalypso.model.rrm.modelConstruction" name="%org.kalypso.model.rrm.modelConstruction.name" description="%org.kalypso.model.rrm.modelConstruction.description" />
@@ -551,6 +557,7 @@
             <image commandId="org.kalypso.model.rrm.soilDefinition" icon="icons/parameters/soil.png"/>
             <image commandId="org.kalypso.model.rrm.landuseDefinition" icon="icons/parameters/landuse.png"/>
             <image commandId="org.kalypso.model.rrm.drwbmDefinition" icon="icons/parameters/drwbmDefinition.png"/>
+            <image commandId="org.kalypso.model.rrm.designRainfallDefinition" icon="icons/parameters/designRainfall.png"/>
 
             <image
                   commandId="org.kalypso.model.rrm.modelConstruction"
@@ -606,6 +613,7 @@
       <handler class="org.kalypso.ui.rrm.internal.parameters.SoilTaskHandler" commandId="org.kalypso.model.rrm.soilDefinition"/>
       <handler class="org.kalypso.ui.rrm.internal.parameters.LanduseTaskHandler" commandId="org.kalypso.model.rrm.landuseDefinition"/>
       <handler class="org.kalypso.ui.rrm.internal.parameters.DrwbmDefinitionTaskHandler" commandId="org.kalypso.model.rrm.drwbmDefinition"/>
+      <handler class="org.kalypso.ui.rrm.internal.parameters.DesignRainfallDefinitionTaskHandler" commandId="org.kalypso.model.rrm.designRainfallDefinition"/>
 
       <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetElementsTaskHandler" commandId="org.kalypso.model.rrm.editNetElements"/>
       <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetRelationsTaskHandler" commandId="org.kalypso.model.rrm.editNetRelations"/>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <layer id="id" featurePath="synthNMember" linktype="gml" xlink:type="simple" xlink:href="/.models/synthN.gml" xlink:actuate="onRequest">
+    <column width="100" name="name" editable="true" alignment="SWT.LEFT" />
+    <column width="300" name="description" editable="true" alignment="SWT.LEFT" />
+  </layer>
+</gistableview>

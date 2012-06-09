@@ -9,6 +9,7 @@
     <Task URI="org.kalypso.model.rrm.soilDefinition" context="ParameterDefinition_Soil" />
     <Task URI="org.kalypso.model.rrm.landuseDefinition" context="ParameterDefinition_Landuse" />
     <Task URI="org.kalypso.model.rrm.drwbmDefinition" context="ParameterDefinition_Drwbm" />
+    <Task URI="org.kalypso.model.rrm.designRainfallDefinition" context="ParameterDefinition_DesignRainfall" />
   </TaskGroup>
 
   <TaskGroup URI="org.kalypso.model.rrm.modelConstruction">
@@ -67,12 +68,15 @@
         <con:ViewContext id="ParameterDefinition_Landuse_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ParameterDefinition_Landuse" />
       </con:WorkbenchSiteContext>
 
-
       <con:WorkbenchSiteContext id="ParameterDefinition_Drwbm" parent="ContextHydrology">
         <con:ViewContext id="ParameterDefinition_Drwbm_GttView_Drwbm" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Drwbm" parent="ParameterDefinition_Drwbm" />
         <con:ViewContext id="ParameterDefinition_Drwbm_GttView_DrwbmDefinition" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:DrwbmDefinition" parent="ParameterDefinition_Drwbm" />
-
         <con:ViewContext id="ParameterDefinition_Drwbm_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ParameterDefinition_Soil" />
+      </con:WorkbenchSiteContext>
+
+      <con:WorkbenchSiteContext id="ParameterDefinition_DesignRainfall" parent="ContextHydrology">
+        <con:ViewContext id="ParameterDefinition_DesignRainfall_GttView_DesignRainfallDefinition" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:DesignRainfallDefinition" parent="ParameterDefinition_DesignRainfall" />
+        <con:ViewContext id="ParameterDefinition_DesignRainfall_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ParameterDefinition_DesignRainfall" />
       </con:WorkbenchSiteContext>
 
       <!-- Model construction -->
