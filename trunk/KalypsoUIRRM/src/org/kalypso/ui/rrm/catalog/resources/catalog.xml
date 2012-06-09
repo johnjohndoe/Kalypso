@@ -66,6 +66,8 @@
 
   <system systemId="urn:org.kalypso.model.rrm.drwbmDefinition:Definitions:gtt" uri="Parameters_DRWBMDefinitions.gtt" />
 
+  <system systemId="urn:org.kalypso.model.rrm.designRainfallDefinition:DesignRainfall:gtt" uri="Parameters_DesignRainfallDefinition.gtt" />
+
 
   <system systemId="urn:org.kalypso.model.rrm.landuseDefinition:Sealing:gtt" uri="Parameters_SealingClasses.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.landuseDefinition:SeasonalCycle:gtt" uri="Parameters_SeasonalCycle.gtt" />

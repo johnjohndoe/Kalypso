@@ -350,6 +350,13 @@
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
+              class="org.kalypso.model.hydrology.binding.designRainfall.SynthN"
+              qname="{http://www.tuhh.de/synthN}SynthN">
+        </feature>
+     </extension>
+     <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
               class="org.kalypso.model.hydrology.binding.parameter.Parameter"
               qname="{http://www.tuhh.de/parameter}Parameter">
         </feature>

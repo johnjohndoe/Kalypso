@@ -52,7 +52,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -60,7 +59,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * @author Gernot Belger
  */
-public class LanduseTaskHandler extends AbstractHandler
+public class DesignRainfallDefinitionTaskHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
@@ -75,9 +74,7 @@ public class LanduseTaskHandler extends AbstractHandler
     final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-    WorkflowHandlerUtils.setGttInput( activePage, "Sealing", "urn:org.kalypso.model.rrm.landuseDefinition:Sealing:gtt", Messages.getString( "LanduseTaskHandler_0" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    WorkflowHandlerUtils.setGttInput( activePage, "SeasonalCycle", "urn:org.kalypso.model.rrm.landuseDefinition:SeasonalCycle:gtt", Messages.getString( "LanduseTaskHandler_1" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    WorkflowHandlerUtils.setGttInput( activePage, "LanduseGroups", "urn:org.kalypso.model.rrm.landuseDefinition:LanduseGroups:gtt", Messages.getString( "LanduseTaskHandler_2" ), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "DesignRainfallDefinition", "urn:org.kalypso.model.rrm.designRainfallDefinition:DesignRainfall:gtt", "Design Rainfall Definitions", scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$
 
     return null;
   }
@@ -92,7 +89,6 @@ public class LanduseTaskHandler extends AbstractHandler
     final FeatureView featureView = (FeatureView) part;
     final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
 
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_LanduseGroup.gft" ) ); //$NON-NLS-1$
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_SealingClass.gft" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_DesignRainfallDefinition.gft" ) ); //$NON-NLS-1$
   }
 }
