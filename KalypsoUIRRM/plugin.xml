@@ -492,7 +492,7 @@
          <scenarioDatum
                classKey="org.kalypso.model.hydrology.binding.designRainfall.SynthN"
                id="designRainfall"
-               modelPath=".models/synth.gml">
+               modelPath=".models/synthN.gml">
          </scenarioDatum>
       </dataSet>
    </extension>

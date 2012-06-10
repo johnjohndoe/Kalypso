@@ -72,52 +72,6 @@
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
     <gridLayout numColumns="3"/>
     
- <!-- 
-  <label property="rrm:pegelZR" style="SWT.NONE" visible="true">
-    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-  </label>
-  <composite style="SWT.NONE">
-    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" />
-    <gridLayout marginWidth="0" numColumns="2" makeColumnsEqualWidth="false" />
-    <text property="rrm:pegelZR" style="SWT.BORDER">
-      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
-    </text>
-    <button property="rrm:pegelZR" style="SWT.PUSH">
-      <gridData horizontalAlignment="SWT.BEGINNING" />
-    </button>
-  </composite>
-  <validatorlabel property="rrm:pegelZR" style="SWT.NONE" visible="true">
-    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-  </validatorlabel>
-  
-  <label property="rrm:qberechnetZR" style="SWT.NONE" visible="true">
-    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-  </label>
-  <composite style="SWT.NONE">
-    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" />
-    <gridLayout marginWidth="0" numColumns="2" makeColumnsEqualWidth="false" />
-    <text property="rrm:qberechnetZR" style="SWT.BORDER">
-      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
-    </text>
-    <button property="rrm:qberechnetZR" style="SWT.PUSH">
-      <gridData horizontalAlignment="SWT.BEGINNING" />
-    </button>
-  </composite>
-  <validatorlabel property="rrm:qberechnetZR" style="SWT.NONE" visible="true">
-    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-  </validatorlabel>
-  
-  -->    
-    
-    
-    <label property="rrm:zuflussZR" style="SWT.NONE" visible="true">
-        <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-    </label>
-    <extensioncontrol style="SWT.SEARCH" property="rrm:zuflussZR" extension-id="ChooseZmlLinkControlFactory">
-      <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.CENTER" horizontalSpan="2" />
-      <param name="parameterType" value="Q" />
-    </extensioncontrol>
-
     <checkbox property="rrm:syntheticZuflussZR" style="SWT.NONE">
       <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="false" />
     </checkbox>

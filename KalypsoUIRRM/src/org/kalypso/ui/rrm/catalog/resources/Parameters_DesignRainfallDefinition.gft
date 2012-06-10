@@ -27,8 +27,8 @@
     <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" horizontalSpan="3" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
     <gistableview xmlns="gistableview.template.kalypso.org">
       <layer id="none" linktype="">
-        <column name="xjah" alignment="SWT.RIGHT" editable="true"></column>
         <column name="statNDiag" alignment="SWT.LEFT" width="200" editable="true"></column>
+        <column name="xjah" alignment="SWT.RIGHT" editable="true"></column>
       </layer>
     </gistableview>
   </table>
