@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * @author Holger Albert
  */
@@ -63,5 +66,30 @@ public class GeneratorKey
   public String getFeatureId( )
   {
     return m_featureId;
+  }
+
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( !(obj instanceof GeneratorKey) )
+      return false;
+
+    final GeneratorKey other = (GeneratorKey) obj;
+
+    final EqualsBuilder builder = new EqualsBuilder();
+    builder.append( m_scenarioPath, other.getScenarioPath() );
+    builder.append( m_featureId, other.getFeatureId() );
+
+    return builder.isEquals();
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( m_scenarioPath );
+    builder.append( m_featureId );
+
+    return builder.hashCode();
   }
 }

@@ -83,6 +83,7 @@ public class MergeScenariosWizard extends Wizard
     m_mergeScenariosWizardPage = null;
 
     setWindowTitle( "Szenarien zusammenführen" );
+    setNeedsProgressMonitor( true );
   }
 
   /**

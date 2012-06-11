@@ -83,9 +83,9 @@ public class RrmScenario
 
   private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
 
-  private static final String FILE_CATCHMENT_MODELS_GML = "catchmentModels.gml"; //$NON-NLS-1$
+  public static final String FILE_CATCHMENT_MODELS_GML = "catchmentModels.gml"; //$NON-NLS-1$
 
-  private static final String FILE_TIMESERIES_MAPPINGS_GML = "timeseriesMappings.gml"; //$NON-NLS-1$
+  public static final String FILE_TIMESERIES_MAPPINGS_GML = "timeseriesMappings.gml"; //$NON-NLS-1$
 
   private static final String FILE_SIMULATIONS_GML = "simulations.gml"; //$NON-NLS-1$
 
@@ -191,7 +191,7 @@ public class RrmScenario
 
   public IFile getSimulationsGml( )
   {
-    return getSimulationsFolder().getFile( FILE_SIMULATIONS_GML );
+    return getModelsFolder().getFile( FILE_SIMULATIONS_GML );
   }
 
   public IFile getLanduseFile( )
