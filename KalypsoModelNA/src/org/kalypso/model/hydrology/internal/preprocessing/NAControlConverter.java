@@ -57,7 +57,6 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 public class NAControlConverter
@@ -162,13 +161,13 @@ public class NAControlConverter
     return 0;
   }
 
-  public void writeStartFile( final NAModellControl naControl, final Node rootNode, final NaModell naModel, final GMLWorkspace sudsWorkspace, final IDManager idManager ) throws IOException
+  public void writeStartFile( final NAModellControl naControl, final Node rootNode, final NaModell naModel, final IDManager idManager ) throws IOException
   {
     PrintWriter writer = null;
     try
     {
       writer = new PrintWriter( m_startFile );
-      writeStartFile( writer, naControl, rootNode, naModel, sudsWorkspace, idManager );
+      writeStartFile( writer, naControl, rootNode, naModel, idManager );
       writer.close();
     }
     finally
@@ -177,9 +176,9 @@ public class NAControlConverter
     }
   }
 
-  private void writeStartFile( final PrintWriter writer, final NAModellControl naControl, final Node rootNode, final NaModell naModel, final GMLWorkspace sudsWorkspace, final IDManager idManager )
+  private void writeStartFile( final PrintWriter writer, final NAModellControl naControl, final Node rootNode, final NaModell naModel, final IDManager idManager )
   {
-    writeResultsToGenerate( naControl, sudsWorkspace, writer );
+    writeResultsToGenerate( naControl, writer );
     writeResultInformation( naModel, rootNode, idManager, writer );
     writeInitialDates( naControl, writer );
   }
@@ -198,7 +197,7 @@ public class NAControlConverter
     writer.append( "99999\n" ); //$NON-NLS-1$
   }
 
-  private void writeResultsToGenerate( final NAModellControl controlFE, final GMLWorkspace sudsWorkspace, final PrintWriter writer )
+  private void writeResultsToGenerate( final NAModellControl controlFE, final PrintWriter writer )
   {
     final int minutesOfTimeStep = m_metaControl.getMinutesOfTimestep();
     final double hoursOfTimeStep = minutesOfTimeStep / 60d;

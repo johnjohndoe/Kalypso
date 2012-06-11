@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology;
 
@@ -59,9 +59,9 @@ public final class NaSimulationDataFactory
   {
   }
 
-  public static INaSimulationData load( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final URL catchmentModelsUrl, final URL timeseriesMappingsUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessASCIIlocation ) throws Exception
+  public static INaSimulationData load( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL syntNUrl, final URL lzsimUrl, final URL catchmentModelsUrl, final URL timeseriesMappingsUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessASCIIlocation ) throws Exception
   {
-    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, catchmentModelsUrl, timeseriesMappingsUrl, optimizeLoader, preprocessASCIIlocation );
+    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, syntNUrl, lzsimUrl, catchmentModelsUrl, timeseriesMappingsUrl, optimizeLoader, preprocessASCIIlocation );
   }
 
   public static INaSimulationData load( final ISimulationDataProvider inputProvider ) throws SimulationException
@@ -75,12 +75,11 @@ public final class NaSimulationDataFactory
       final URL hydrotopUrl = (URL) SimulationDataUtils.getInputOrNull( inputProvider, NaModelConstants.IN_HYDROTOP_ID );
       final URL syntNUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID );
       final URL lzsimUrl = getStartConditionFile( inputProvider );
-      final URL sudsUrl = (URL) SimulationDataUtils.getInputOrNull( inputProvider, NaModelConstants.IN_SUDS_ID );
       final URL preprocessedASCIIlocation = (URL) SimulationDataUtils.getInputOrNull( inputProvider, NaModelConstants.IN_PREPROCESSED_ASCII );
 
       final NaOptimizeLoader optimizeLoader = new NaOptimizeLoader( inputProvider );
 
-      return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, null, null, optimizeLoader, preprocessedASCIIlocation );
+      return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, syntNUrl, lzsimUrl, null, null, optimizeLoader, preprocessedASCIIlocation );
     }
     catch( final SimulationException e )
     {

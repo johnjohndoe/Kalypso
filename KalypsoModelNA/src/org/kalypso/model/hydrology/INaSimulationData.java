@@ -73,8 +73,6 @@ public interface INaSimulationData
 
   GMLWorkspace getParameterWorkspace( );
 
-  GMLWorkspace getSudsWorkspace( );
-
   GMLWorkspace getSynthNWorkspace( );
 
   NAHydrotop getHydrotopCollection( );

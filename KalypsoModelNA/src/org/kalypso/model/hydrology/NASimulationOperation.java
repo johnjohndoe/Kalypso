@@ -172,11 +172,10 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
       final URL metaURL = ResourceUtilities.createURL( m_simulation.getCalculationGml() );
       final URL parameterURL = ResourceUtilities.createURL( m_simulation.getParameterGml() );
       final URL hydrotopURL = ResourceUtilities.createURL( m_simulation.getHydrotopGml() );
-      final URL sudsURL = ResourceUtilities.createURL( m_simulation.getSudsGml() );
       final URL syntNURL = ResourceUtilities.createURL( m_simulation.getSyntnGml() );
       final URL lzsimURL = ResourceUtilities.createURL( m_simulation.getLzsimGml() );
 
-      return NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, null, null, null, null );
+      return NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, syntNURL, lzsimURL, null, null, null, null );
     }
     catch( final MalformedURLException e )
     {

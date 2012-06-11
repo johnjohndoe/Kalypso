@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing;
 
@@ -129,7 +129,6 @@ public class NAModelPreprocessor
     final NAModellControl naControl = m_simulationData.getNaControl();
     final NAOptimize naOptimize = m_simulationData.getNaOptimize();
     final NAControl metaControl = m_simulationData.getMetaControl();
-    final GMLWorkspace sudsWorkspace = m_simulationData.getSudsWorkspace();
     final URL preprocesssedASCII = m_simulationData.getPreprocessedASCII();
     final NaModell naModel = m_simulationData.getNaModel();
 
@@ -156,7 +155,7 @@ public class NAModelPreprocessor
     monitor.setMessage( Messages.getString( "NAModelPreprocessor.2" ) ); //$NON-NLS-1$
     final NAControlConverter naControlConverter = new NAControlConverter( metaControl, m_asciiDirs.startDir );
     naControlConverter.writeFalstart();
-    naControlConverter.writeStartFile( naControl, rootNode, naModel, sudsWorkspace, m_idManager );
+    naControlConverter.writeStartFile( naControl, rootNode, naModel, m_idManager );
     checkCancel( monitor );
 
     // write net and so on....
