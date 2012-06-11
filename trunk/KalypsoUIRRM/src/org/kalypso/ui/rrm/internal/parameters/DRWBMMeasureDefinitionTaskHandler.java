@@ -59,7 +59,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * @author Dirk Kuch
  */
-public class DRWBMDefinitionTaskHandler extends AbstractHandler
+public class DRWBMMeasureDefinitionTaskHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
