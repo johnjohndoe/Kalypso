@@ -5,7 +5,6 @@
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="http://www.tuhh.de/parameter" />
   <import namespace="http://www.tuhh.de/hydrotop" />
-  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" />
 
   <element name="LanduseCollection" substitutionGroup="gml:_Feature">
     <complexType>
@@ -46,12 +45,6 @@
               </complexType>
             </element>
             <element ref="hydrotop:corrSealing" />
-
-            <!-- deprecated should be removed -->
-            <element ref="hydrotop:drainageType" minOccurs="0" />
-
-            <!-- deprecated should be removed -->
-            <element ref="suds:sudLinkMember" minOccurs="0" maxOccurs="unbounded" />
           </sequence>
         </extension>
       </complexContent>
