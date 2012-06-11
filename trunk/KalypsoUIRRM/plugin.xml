@@ -612,7 +612,7 @@
       <handler class="org.kalypso.ui.rrm.internal.parameters.SnowTaskHandler" commandId="org.kalypso.model.rrm.snowDefinition"/>
       <handler class="org.kalypso.ui.rrm.internal.parameters.SoilTaskHandler" commandId="org.kalypso.model.rrm.soilDefinition"/>
       <handler class="org.kalypso.ui.rrm.internal.parameters.LanduseTaskHandler" commandId="org.kalypso.model.rrm.landuseDefinition"/>
-      <handler class="org.kalypso.ui.rrm.internal.parameters.DRWBMDefinitionTaskHandler" commandId="org.kalypso.model.rrm.drwbmDefinition"/>
+      <handler class="org.kalypso.ui.rrm.internal.parameters.DRWBMMeasureDefinitionTaskHandler" commandId="org.kalypso.model.rrm.drwbmDefinition"/>
       <handler class="org.kalypso.ui.rrm.internal.parameters.DesignRainfallDefinitionTaskHandler" commandId="org.kalypso.model.rrm.designRainfallDefinition"/>
 
       <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetElementsTaskHandler" commandId="org.kalypso.model.rrm.editNetElements"/>
