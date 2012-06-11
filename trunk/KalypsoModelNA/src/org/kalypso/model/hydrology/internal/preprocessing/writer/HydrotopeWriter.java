@@ -117,7 +117,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     final Catchment catchment = info.getCatchment();
     final List<HydrotopeInfo> hydrotops = info.getHydrotops();
     final Sealing totalSealing = info.getTotalSealing();
-    final Sealing totalSudsSealing = info.getTotalSudsSealing();
+// final Sealing totalSudsSealing = info.getTotalSudsSealing();
 
     final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
 
@@ -127,10 +127,10 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     writer.append( ' ' );
     writer.format( Locale.US, "%.3f %.3f %.3f", totalSealing.getSealedArea(), totalSealing.getNaturalArea(), totalSealing.getArea() ); //$NON-NLS-1$
 
-    final double sudsSealedArea = totalSudsSealing.getSealedArea();
-    final double sudsNaturalArea = totalSudsSealing.getNaturalArea();
-    if( sudsSealedArea > 0.0 || sudsNaturalArea > 0.0 )
-      writer.format( Locale.US, " 1 %.3f %.3f %.3f", sudsSealedArea, sudsNaturalArea, totalSudsSealing.getArea() ); //$NON-NLS-1$
+// final double sudsSealedArea = totalSudsSealing.getSealedArea();
+// final double sudsNaturalArea = totalSudsSealing.getNaturalArea();
+// if( sudsSealedArea > 0.0 || sudsNaturalArea > 0.0 )
+//      writer.format( Locale.US, " 1 %.3f %.3f %.3f", sudsSealedArea, sudsNaturalArea, totalSudsSealing.getArea() ); //$NON-NLS-1$
 
     writer.append( '\n' );
 
@@ -147,9 +147,8 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     final double gwFactor = hydrotop.getGWFactor();
     final int hydrotopID = hydrotopInfo.getLocalID();
 
-    final Sealing hydrotopeSealing = hydrotopInfo.getHydrotopeSealingMinusSuds();
-    final Sealing hydrotopSealingAfterUnsealing = hydrotopInfo.getHydrotopSealingAfterUnsealing();
-    final double totalSealingRate = hydrotopSealingAfterUnsealing.getSealingRate();
+    final Sealing hydrotopeSealing = hydrotopInfo.getSealing();
+    final double totalSealingRate = hydrotopeSealing.getSealingRate();
 
     final Soiltype soiltype = findSoiltype( hydrotop );
     final String soiltypeName = soiltype.getName();
@@ -167,16 +166,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     }
 
     /* Write hydrotope line */
-    writer.format( Locale.US, "%-10.3f %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f", hydrotopeSealing.getNaturalArea(), landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopID, totalSealingRate ); //$NON-NLS-1$
-
-    writer.append( ' ' );
-    if( hydrotopInfo.hasSudsWithElementType() )
-      writer.append( '1' );
-    else
-      writer.append( '0' );
-    writer.append( ' ' );
-    writer.append( formatSudsSealing( hydrotopInfo ) );
-    writer.append( '\n' );
+    writer.format( Locale.US, "%-10.3f %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f%n", hydrotopeSealing.getNaturalArea(), landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopID, totalSealingRate ); //$NON-NLS-1$
   }
 
   private Soiltype findSoiltype( final IHydrotope hydrotop ) throws NAPreprocessorException
@@ -193,30 +183,6 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
 
     final String msg = String.format( Messages.getString( "HydrotopeWriter.0" ), soilTypeID, hydrotop.getId() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
-  }
-
-  private static String formatSudsSealing( final HydrotopeInfo info )
-  {
-    final String _10 = formatSudsSealing( info.getSudsSealingByType( "10" ) ); //$NON-NLS-1$
-    final String _11 = formatSudsSealing( info.getSudsSealingByType( "11" ) ); //$NON-NLS-1$
-    final String _12 = formatSudsSealing( info.getSudsSealingByType( "12" ) ); //$NON-NLS-1$
-    final String _13 = formatSudsSealing( info.getSudsSealingByType( "13" ) ); //$NON-NLS-1$
-    final String _20 = formatSudsSealing( info.getSudsSealingByType( "20" ) ); //$NON-NLS-1$
-    final String _21 = formatSudsSealing( info.getSudsSealingByType( "21" ) ); //$NON-NLS-1$
-    final String _30 = formatSudsSealing( info.getSudsSealingByType( "30" ) ); //$NON-NLS-1$
-    final String _31 = formatSudsSealing( info.getSudsSealingByType( "31" ) ); //$NON-NLS-1$
-    final String _40 = formatSudsSealing( info.getSudsSealingByType( "40" ) ); //$NON-NLS-1$
-    final String _41 = formatSudsSealing( info.getSudsSealingByType( "41" ) ); //$NON-NLS-1$
-
-    return String.format( Locale.US, "%s %s %s %s %s %s %s %s %s %s", _10, _11, _12, _13, _20, _21, _30, _31, _40, _41 ); //$NON-NLS-1$
-  }
-
-  private static String formatSudsSealing( final Sealing info )
-  {
-    if( Double.isNaN( info.getNaturalArea() ) )
-      return String.format( Locale.US, "%.3f", info.getSealedArea() ); //$NON-NLS-1$
-
-    return String.format( Locale.US, "%.3f %.3f", info.getNaturalArea(), info.getSealedArea() ); //$NON-NLS-1$
   }
 
   public void writeMapping( final File outputFile ) throws FileNotFoundException

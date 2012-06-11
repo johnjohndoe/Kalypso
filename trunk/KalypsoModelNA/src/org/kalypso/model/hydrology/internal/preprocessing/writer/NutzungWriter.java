@@ -48,20 +48,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
-import org.kalypso.model.hydrology.binding.suds.IGreenRoof;
-import org.kalypso.model.hydrology.binding.suds.ISwale;
-import org.kalypso.model.hydrology.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
@@ -98,7 +92,6 @@ public class NutzungWriter
         final Feature linkedIdealLanduseFE = nutzungFE.getMember( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK );
         writeFeature( nutzungFE, linkedIdealLanduseFE, landuseHash );
       }
-      writeConstantSudsIdealLanduse();
     }
     catch( final SensorException e )
     {
@@ -119,24 +112,6 @@ public class NutzungWriter
     writeIdealLanduse( (IObservation) idealLanduseProp, writer );
     writer.write( "993456789012345678901234567890" ); //$NON-NLS-1$
     IOUtils.closeQuietly( writer );
-  }
-
-  private void writeConstantSudsIdealLanduse( ) throws IOException
-  {
-    final List<String> resources = new ArrayList<String>();
-    // FIXME: constants do not belong in binding
-    // FIXME: the landuses should not come from resources but from the gml-model
-    resources.add( IGreenRoof.IDEAL_LANDUSE_EXTENSIVE );
-    resources.add( IGreenRoof.IDEAL_LANDUSE_INTENSIVE );
-    resources.add( ISwale.IDEAL_LANDUSE );
-    resources.add( ISwaleInfiltrationDitch.IDEAL_LANDUSE );
-
-    for( final String resource : resources )
-    {
-      final URL source = getClass().getResource( String.format( "resources/idealLanduseSuds/%s.nuz", resource ) ); //$NON-NLS-1$
-      final File destination = new File( m_nutzungDir, resource + ".nuz" ); //$NON-NLS-1$
-      FileUtils.copyURLToFile( source, destination );
-    }
   }
 
   private void writeIdealLanduse( final IObservation observation, final Writer zmlWriter ) throws SensorException, IOException

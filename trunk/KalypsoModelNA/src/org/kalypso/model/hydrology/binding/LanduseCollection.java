@@ -50,15 +50,13 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
-import org.kalypso.model.hydrology.binding.suds.AbstractSud;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * Binding class for rrmLanduse:LanduseCollection's
- *
+ * 
  * @author Gernot Belger
  */
 public class LanduseCollection extends UnversionedModel
@@ -81,10 +79,10 @@ public class LanduseCollection extends UnversionedModel
 
   /**
    * Create/Import a new landuse into this collection.
-   *
+   * 
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public Landuse importLanduse( final ImportType importType, final String name, final GM_MultiSurface geometry, final String description, final Double corrSealing, final String landuseRef, final AbstractSud[] suds )
+  public Landuse importLanduse( final ImportType importType, final String name, final GM_MultiSurface geometry, final String description, final Double corrSealing, final String landuseRef )
   {
     // Handle existing landuses that intersect the new one
     final List<Landuse> existingLanduses = m_landuses.query( geometry.getEnvelope() );
@@ -108,7 +106,7 @@ public class LanduseCollection extends UnversionedModel
         landuse.setDescription( description );
         landuse.setCorrSealing( corrSealing );
         addLanduseLink( landuseRef, landuse );
-        addSudsToLanduse( suds, landuse );
+// addSudsToLanduse( suds, landuse );
         return landuse;
       }
 
@@ -147,10 +145,10 @@ public class LanduseCollection extends UnversionedModel
             else
               landuse.setName( existingLanduse.getName() );
 
-            if( suds != null )
-              addSudsToLanduse( suds, landuse );
-            else
-              addSudsToLanduse( existingLanduse.getSuds(), landuse );
+// if( suds != null )
+// addSudsToLanduse( suds, landuse );
+// else
+// addSudsToLanduse( existingLanduse.getSuds(), landuse );
           }
         }
 
@@ -182,14 +180,14 @@ public class LanduseCollection extends UnversionedModel
     }
   }
 
-  private void addSudsToLanduse( final Feature[] suds, final Landuse landuse )
-  {
-    final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
-
-    for( final Feature sud : suds )
-    {
-      final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
-      sudCollection.addLink( href );
-    }
-  }
+// private void addSudsToLanduse( final Feature[] suds, final Landuse landuse )
+// {
+// final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
+//
+// for( final Feature sud : suds )
+// {
+//      final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
+// sudCollection.addLink( href );
+// }
+// }
 }

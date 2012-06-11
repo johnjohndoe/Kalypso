@@ -45,8 +45,10 @@
             <!-- DEPRECATED: not used any more -->
             <element name="hydType" type="hyd:hydTypeEnumerationType" minOccurs="0" />
 
-            <!-- deprecated, do not use any more -->
-            <element ref="suds:sudLinkMember" minOccurs="0" maxOccurs="unbounded" />
+
+            <!-- removed, because sud processing changed and old schema is now located in planer client base plug-in -->
+            <!-- <element ref="suds:sudLinkMember" minOccurs="0" maxOccurs="unbounded" />  -->
+
 
             <element ref="naModel:catchmentLinkMember" minOccurs="0" />
 

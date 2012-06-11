@@ -46,20 +46,14 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.model.hydrology.binding.suds.Greenroof;
-import org.kalypso.model.hydrology.binding.suds.Swale;
-import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -244,26 +238,6 @@ public class NAControlConverter
     writer.append( getBoolean( controlFE.doGenerateSPI() ) + "       Speicherinhalt             .spi\n" ); //$NON-NLS-1$
     writer.append( getBoolean( controlFE.doGenerateSUP() ) + "       Speicherueberlauf          .sup\n" ); //$NON-NLS-1$
 
-    // FIXME: bad abstraction, put into helper class
-    boolean hasGreenRoofs = false;
-    boolean hasSwaleInfiltrationDitches = false;
-    boolean hasSwales = false;
-    if( sudsWorkspace != null )
-    {
-      final List< ? > suds = (List< ? >) sudsWorkspace.getRootFeature().getProperty( NaModelConstants.SUDS_PROP_SUDS_MEMBER ); //$NON-NLS-1$ //$NON-NLS-2$
-      for( final Object sudsItem : suds )
-      {
-        hasGreenRoofs |= sudsItem instanceof Greenroof;
-        hasSwaleInfiltrationDitches |= sudsItem instanceof SwaleInfiltrationDitch;
-        hasSwales |= sudsItem instanceof Swale;
-      }
-    }
-
-    writer.append( String.format( Locale.US, "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Überlauf", ".qgu" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    writer.append( String.format( Locale.US, "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Drainrohr", ".qgr" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    writer.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Überlauf Mulden-Rigolen", ".que" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    writer.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Drainrohr Mulden-Rigolen", ".qmr" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    writer.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwales ? "j" : "n", "Überlauf Mulden", ".mul" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
   }
 
   private static void writeResultInformation( final NaModell naModel, final Node rootNode, final IDManager idManager, final PrintWriter writer )
