@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.test;
 
@@ -148,11 +148,10 @@ public class NaPreprocessingTest
     final URL metaUrl = new URL( base, ".calculation" ); //$NON-NLS-1$
     final URL parameterUrl = new URL( base, "calcParameter.gml" ); //$NON-NLS-1$
     final URL hydrotopUrl = new URL( base, "calcHydrotop.gml" ); //$NON-NLS-1$
-    final URL sudsUrl = checkUrlExists( new URL( base, "suds.gml" ) ); //$NON-NLS-1$
     final URL syntNUrl = null;
     final URL lzsimUrl = checkUrlExists( new URL( base, "Anfangswerte/lzsim.gml" ) ); //$NON-NLS-1$
 
-    return NaSimulationDataFactory.load( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, null, null, null, null );
+    return NaSimulationDataFactory.load( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, syntNUrl, lzsimUrl, null, null, null, null );
   }
 
   private URL checkUrlExists( final URL url )

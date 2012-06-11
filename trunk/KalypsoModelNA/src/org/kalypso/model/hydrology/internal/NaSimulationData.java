@@ -75,8 +75,6 @@ public class NaSimulationData implements INaSimulationData
 
   private final GMLWorkspace m_parameterWorkspace;
 
-  private final GMLWorkspace m_sudsWorkspace;
-
   private final GMLWorkspace m_synthNWorkspace;
 
   private final GMLWorkspace m_modelWorkspace;
@@ -99,7 +97,7 @@ public class NaSimulationData implements INaSimulationData
 
   private final URL m_preprocessedASCIIlocation;
 
-  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final URL catchmentModelsUrl, final URL timeseriesMappingsUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessedASCIIlocation ) throws Exception
+  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL syntNUrl, final URL lzsimUrl, final URL catchmentModelsUrl, final URL timeseriesMappingsUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessedASCIIlocation ) throws Exception
   {
     m_preprocessedASCIIlocation = preprocessedASCIIlocation;
     /* Loading model workspace first, it is used as context for all other models. */
@@ -116,7 +114,6 @@ public class NaSimulationData implements INaSimulationData
     m_naModel = m_modelWorkspace == null ? null : (NaModell) m_modelWorkspace.getRootFeature();
     m_parameterWorkspace = readWorkspaceOrNull( parameterUrl );
     m_hydrotopeCollection = readModel( hydrotopUrl, NAHydrotop.class );
-    m_sudsWorkspace = loadAndCheckForFile( sudsUrl );
     m_lzsimWorkspace = loadAndCheckForFile( lzsimUrl );
 
     final String syntNpath = syntNUrl == null ? null : syntNUrl.getFile();
@@ -174,9 +171,6 @@ public class NaSimulationData implements INaSimulationData
 
     if( m_parameterWorkspace != null )
       m_parameterWorkspace.dispose();
-
-    if( m_sudsWorkspace != null )
-      m_sudsWorkspace.dispose();
 
     if( m_synthNWorkspace != null )
       m_synthNWorkspace.dispose();
@@ -287,12 +281,6 @@ public class NaSimulationData implements INaSimulationData
   public GMLWorkspace getParameterWorkspace( )
   {
     return m_parameterWorkspace;
-  }
-
-  @Override
-  public GMLWorkspace getSudsWorkspace( )
-  {
-    return m_sudsWorkspace;
   }
 
   @Override

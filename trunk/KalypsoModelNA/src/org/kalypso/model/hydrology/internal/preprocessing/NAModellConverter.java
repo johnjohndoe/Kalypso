@@ -46,7 +46,6 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.kalypso.model.hydrology.INaSimulationData;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
@@ -100,8 +99,6 @@ public class NAModellConverter
   public void writeUncalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final HydroHash hydroHash ) throws IOException, NAPreprocessorException, SimulationException
   {
     final NaModell naModel = m_data.getNaModel();
-    final NAHydrotop hydrotopeCollection = m_data.getHydrotopCollection();
-    final GMLWorkspace sudsWorkspace = m_data.getSudsWorkspace();
     final NAControl metaControl = m_data.getMetaControl();
     final GMLWorkspace parameterWorkspace = m_data.getParameterWorkspace();
     final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
@@ -126,9 +123,6 @@ public class NAModellConverter
       zftWriter.write( m_asciiDirs.zftFile );
     }
 
-// final RhbWriter rhbWriter = new RhbWriter( m_idManager, channels, m_logger );
-// rhbWriter.write( m_asciiDirs.rhbFile );
-
     final BodenartWriter bodenartManager = new BodenartWriter( parameterWorkspace, m_logger );
     bodenartManager.write( m_asciiDirs.bodenartFile );
 
@@ -137,9 +131,6 @@ public class NAModellConverter
 
     final SnowtypWriter schneeManager = new SnowtypWriter( parameter, m_logger );
     schneeManager.write( m_asciiDirs.schneeFile );
-
-// final SudsFileWriter sudsFileWriter = new SudsFileWriter( naModel, hydrotopeCollection, sudsWorkspace, m_logger );
-// sudsFileWriter.write( m_asciiDirs.swaleAndTrenchFile );
 
     final HRBFileWriter hrbFileWriter = new HRBFileWriter( channels, m_idManager, m_asciiDirs.klimaDatDir, m_logger );
     hrbFileWriter.write( m_asciiDirs.hrbFile );

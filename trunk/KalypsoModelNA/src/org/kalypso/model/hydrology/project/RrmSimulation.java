@@ -97,9 +97,6 @@ public class RrmSimulation
 
   private static final String FILE_LZSIM_GML = "lzsim.gml"; //$NON-NLS-1$
 
-  // FIXME: check file name
-  private static final String FILE_SUDS_GML = "suds.gml"; //$NON-NLS-1$
-
   private final IFolder m_simulation;
 
   public RrmSimulation( final IFolder simulationFolder )
@@ -189,11 +186,6 @@ public class RrmSimulation
   public IFile getHydrotopGml( )
   {
     return getModelsFolder().getFile( FILE_HYDROTOP_GML );
-  }
-
-  public IFile getSudsGml( )
-  {
-    return getModelsFolder().getFile( FILE_SUDS_GML );
   }
 
   public IFile getSyntnGml( )
