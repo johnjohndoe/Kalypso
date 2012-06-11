@@ -47,9 +47,9 @@
             <element name="returnPeriod" type="na:PositiveIntType" default="1" minOccurs="0" /> <!-- default = "1" only for backward compatibility -->
 
             <!-- Catchment models -->
-            <element name="generatorN" type="na:generatorLinkProperty" />
-            <element name="generatorT" type="na:generatorLinkProperty" />
-            <element name="generatorE" type="na:generatorLinkProperty" />
+            <element name="generatorN" type="na:generatorLinkProperty" minOccurs="0"/>
+            <element name="generatorT" type="na:generatorLinkProperty" minOccurs="0"/>
+            <element name="generatorE" type="na:generatorLinkProperty" minOccurs="0"/>
 
             <element name="mappingGaugeMeasurement" type="na:mappingLinkProperty" minOccurs="0"/>
             <element name="mappingNodeInflow" type="na:mappingLinkProperty" minOccurs="0" />
