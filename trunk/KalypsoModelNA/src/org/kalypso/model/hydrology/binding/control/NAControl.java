@@ -46,11 +46,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.Path;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -58,12 +56,10 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Binding class for {org.kalypso.na.control_v2}NAControl.
@@ -383,20 +379,20 @@ public class NAControl extends Feature_Impl
     try
     {
       /* Get the .models folder of the current scenario. */
-      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-      final IContainer scenarioFolder = dataProvider.getScenarioFolder();
-      final IFolder modelsFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_MODELS ) );
+      final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+
+      final RrmScenario scenario = new RrmScenario( scenarioFolder );
 
       /* This is the last modified timestamp of the modell.gml. */
-      final IFile modellFile = modelsFolder.getFile( INaProjectConstants.GML_MODELL_FILE );
+      final IFile modellFile = scenario.getModelFile();
       final long modellLastModified = modellFile.getLocation().toFile().lastModified();
 
       /* This is the last modified timestamp of the parameter.gml. */
-      final IFile parameterFile = modelsFolder.getFile( INaProjectConstants.GML_PARAMETER_FILE );
+      final IFile parameterFile = scenario.getParameterGml();
       final long parameterLastModified = parameterFile.getLocation().toFile().lastModified();
 
       /* This is the last modified timestamp of the hydrotop.gml. */
-      final IFile hydrotopFile = modelsFolder.getFile( INaProjectConstants.GML_HYDROTOP_FILE );
+      final IFile hydrotopFile = scenario.getHydrotopGml();
       final long hydrotopLastModified = hydrotopFile.getLocation().toFile().lastModified();
 
       return NumberUtils.max( new long[] { modellLastModified, parameterLastModified, hydrotopLastModified } );
