@@ -7,18 +7,6 @@
               simulationClass="org.kalypso.model.hydrology.internal.simulation.NaModelCalcJob"
               catalogClass="org.kalypso.model.hydrology.internal.gml.UrlCatalogNA"
               typeID="KalypsoNA"/>
-      <simulation
-            simulationClass="org.kalypso.model.hydrology.internal.simulation.planerclient.global_preprocessing.NA_GlobalPreprocessingJob"
-            typeID="KalypsoNA_GlobalPreprocessing">
-      </simulation>
-      <simulation
-            simulationClass="org.kalypso.model.hydrology.internal.simulation.planerclient.preprocessing.NA_PreprocessingJob"
-            typeID="KalypsoNA_Preprocessing">
-      </simulation>
-      <simulation
-            simulationClass="org.kalypso.model.hydrology.internal.simulation.planerclient.postprocessing.NA_PostprocessingJob"
-            typeID="KalypsoNA_Postprocessing">
-      </simulation>
      </extension>
      <extension
            point="org.kalypso.contribs.java.urlCatalog">

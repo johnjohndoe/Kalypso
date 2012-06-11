@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
-<schema xmlns:hyd="http://www.tuhh.de/hydrotop" targetNamespace="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:naModel="http://www.tuhh.de/kalypsoNA" xmlns:par="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.9">
+<schema xmlns:hyd="http://www.tuhh.de/hydrotop" targetNamespace="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:naModel="http://www.tuhh.de/kalypsoNA" xmlns:par="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.9">
 
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="http://www.tuhh.de/kalypsoNA" />
-  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" />
   <import namespace="http://www.tuhh.de/parameter" />
 
   <element name="NAHydrotop" substitutionGroup="gml:_Feature">
