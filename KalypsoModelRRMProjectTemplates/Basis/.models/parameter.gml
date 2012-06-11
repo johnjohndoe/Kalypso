@@ -600,14 +600,102 @@
       <typbf0>0.75</typbf0>
     </SoilLayer>
   </soilLayerMember>
+  <soilLayerMember>
+    <SoilLayer gml:id="SoilLayer1339421138990354">
+      <gml:description>DRWBM-Maßnahme</gml:description>
+      <gml:name>mulde</gml:name>
+      <typwp>0.001</typwp>
+      <typfk>0.1</typfk>
+      <typbfm>99.0</typbfm>
+      <typkf>8640.0</typkf>
+      <typbf0>0.01</typbf0>
+    </SoilLayer>
+  </soilLayerMember>
+  <soilLayerMember>
+    <SoilLayer gml:id="SoilLayer1339421144524539">
+      <gml:description>DRWBM-Maßnahme</gml:description>
+      <gml:name>rein</gml:name>
+      <typwp>5.0</typwp>
+      <typfk>15.5</typfk>
+      <typbfm>41.0</typbfm>
+      <typkf>1720.0</typkf>
+      <typbf0>0.5</typbf0>
+    </SoilLayer>
+  </soilLayerMember>
+  <soilLayerMember>
+    <SoilLayer gml:id="SoilLayer1339421144924725">
+      <gml:description>DRWBM-Maßnahme</gml:description>
+      <gml:name>filter</gml:name>
+      <typwp>4.0</typwp>
+      <typfk>17.5</typfk>
+      <typbfm>43.0</typbfm>
+      <typkf>2720.0</typkf>
+      <typbf0>0.1</typbf0>
+    </SoilLayer>
+  </soilLayerMember>
+  <soilLayerMember>
+    <SoilLayer gml:id="SoilLayer1339421145612608">
+      <gml:description>DRWBM-Maßnahme</gml:description>
+      <gml:name>base</gml:name>
+      <typwp>4.0</typwp>
+      <typfk>28.0</typfk>
+      <typbfm>40.0</typbfm>
+      <typkf>2720.0</typkf>
+      <typbf0>0.5</typbf0>
+    </SoilLayer>
+  </soilLayerMember>
+  <soilLayerMember>
+    <SoilLayer gml:id="SoilLayer1339421146387183">
+      <gml:description>DRWBM-Maßnahme</gml:description>
+      <gml:name>GR-stau</gml:name>
+      <typwp>0.001</typwp>
+      <typfk>0.1</typfk>
+      <typbfm>99.0</typbfm>
+      <typkf>8640.0</typkf>
+      <typbf0>0.01</typbf0>
+    </SoilLayer>
+  </soilLayerMember>
+  <soilLayerMember>
+    <SoilLayer gml:id="SoilLayer1339421146987515">
+      <gml:description>DRWBM-Maßnahme</gml:description>
+      <gml:name>Substr</gml:name>
+      <typwp>5.0</typwp>
+      <typfk>20.0</typfk>
+      <typbfm>37.5</typbfm>
+      <typkf>350.0</typkf>
+      <typbf0>0.1</typbf0>
+    </SoilLayer>
+  </soilLayerMember>
+  <soilLayerMember>
+    <SoilLayer gml:id="SoilLayer1339421147644384">
+      <gml:description>DRWBM-Maßnahme</gml:description>
+      <gml:name>Drain</gml:name>
+      <typwp>4.0</typwp>
+      <typfk>30.5</typfk>
+      <typbfm>40.0</typbfm>
+      <typkf>1720.0</typkf>
+      <typbf0>0.1</typbf0>
+    </SoilLayer>
+  </soilLayerMember>
+  <soilLayerMember>
+    <SoilLayer gml:id="SoilLayer1339421148299215">
+      <gml:description>DRWBM-Maßnahme</gml:description>
+      <gml:name>basem</gml:name>
+      <typwp>6.5</typwp>
+      <typfk>24.0</typfk>
+      <typbfm>41.0</typbfm>
+      <typkf>1570.0</typkf>
+      <typbf0>0.5</typbf0>
+    </SoilLayer>
+  </soilLayerMember>
   <drwbmSoiltypeMember>
     <DRWBMSoiltype gml:id="DRWBMSoiltype1339407169031438">
       <gml:description>Gründach intensiver Nutzung</gml:description>
-      <gml:name>Gründach Intensiv</gml:name>
+      <gml:name>gdach_int</gml:name>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter133940718477649">
           <gml:name>GR-stau</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421146387183" />
           <xtief>1.7</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -620,7 +708,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407185144144">
           <gml:name>Substr</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421146987515" />
           <xtief>2.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -633,7 +721,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407185513326">
           <gml:name>Drain</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421147644384" />
           <xtief>1.2</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -648,11 +736,11 @@
   <drwbmSoiltypeMember>
     <DRWBMSoiltype gml:id="DRWBMSoiltype1339407062108216">
       <gml:description>Gründach extensiver Nutzung </gml:description>
-      <gml:name>Gründach Extensiv</gml:name>
+      <gml:name>gdach_ext</gml:name>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407067900218">
           <gml:name>GR-stau</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421146387183" />
           <xtief>1.4</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -665,7 +753,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407088109235">
           <gml:name>Substr</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421146987515" />
           <xtief>0.8</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -678,7 +766,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407088837369">
           <gml:name>Drain</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421147644384" />
           <xtief>0.5</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -696,8 +784,8 @@
       <gml:name>mulde_80</gml:name>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407501676122">
-          <gml:name>8</gml:name>
-          <soilLayerLink />
+          <gml:name>mulde</gml:name>
+          <soilLayerLink xlink:href="#SoilLayer1339421138990354" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -709,8 +797,8 @@
       </soilLayerParameterMember>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407502044458">
-          <gml:name>3</gml:name>
-          <soilLayerLink />
+          <gml:name>rein</gml:name>
+          <soilLayerLink xlink:href="#SoilLayer1339421144524539" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -722,8 +810,8 @@
       </soilLayerParameterMember>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407502244219">
-          <gml:name>3</gml:name>
-          <soilLayerLink />
+          <gml:name>basem</gml:name>
+          <soilLayerLink xlink:href="#SoilLayer1339421148299215" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -738,12 +826,12 @@
   <drwbmSoiltypeMember>
     <DRWBMSoiltype gml:id="DRWBMSoiltype1339407284372148">
       <gml:description>Mulde-Rigole 8.0</gml:description>
-      <gml:name>mrs_80</gml:name>
+      <gml:name>mul_rig_80</gml:name>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407384984510">
-          <gml:name>8</gml:name>
-          <soilLayerLink />
-          <xtief />
+          <gml:name>mulde</gml:name>
+          <soilLayerLink xlink:href="#SoilLayer1339421138990354" />
+          <xtief>8.0</xtief>
           <xret>false</xret>
           <diameterPipe />
           <roughnessPipe />
@@ -754,9 +842,9 @@
       </soilLayerParameterMember>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407385169506">
-          <gml:name>3</gml:name>
-          <soilLayerLink />
-          <xtief />
+          <gml:name>rein</gml:name>
+          <soilLayerLink xlink:href="#SoilLayer1339421144524539" />
+          <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
           <roughnessPipe />
@@ -767,9 +855,9 @@
       </soilLayerParameterMember>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407385328284">
-          <gml:name>6</gml:name>
-          <soilLayerLink />
-          <xtief />
+          <gml:name>filter</gml:name>
+          <soilLayerLink xlink:href="#SoilLayer1339421144924725" />
+          <xtief>6.0</xtief>
           <xret>false</xret>
           <diameterPipe />
           <roughnessPipe />
@@ -780,9 +868,9 @@
       </soilLayerParameterMember>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407385936224">
-          <gml:name>1</gml:name>
-          <soilLayerLink />
-          <xtief />
+          <gml:name>base</gml:name>
+          <soilLayerLink xlink:href="#SoilLayer1339421145612608" />
+          <xtief>1.0</xtief>
           <xret>false</xret>
           <diameterPipe />
           <roughnessPipe />
@@ -796,11 +884,11 @@
   <drwbmSoiltypeMember>
     <DRWBMSoiltype gml:id="DRWBMSoiltype1339407284997251">
       <gml:description>Mulde-Rigole 6.0</gml:description>
-      <gml:name>mrs_60</gml:name>
+      <gml:name>mul_rig_60</gml:name>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407348854706">
           <gml:name>mulde</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421138990354" />
           <xtief>6.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -813,7 +901,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407349054557">
           <gml:name>rein</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421144524539" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -826,7 +914,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407349238439">
           <gml:name>filter</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421144924725" />
           <xtief>6.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -839,7 +927,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407349734701">
           <gml:name>base</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421145612608" />
           <xtief>1.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -854,11 +942,11 @@
   <drwbmSoiltypeMember>
     <DRWBMSoiltype gml:id="DRWBMSoiltype133940728540426">
       <gml:description>Mulde-Rigole 3.0</gml:description>
-      <gml:name>mrs_30</gml:name>
+      <gml:name>mul_rig_30</gml:name>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407298796662">
           <gml:name>mulde</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421138990354" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -871,7 +959,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407299037289">
           <gml:name>rein</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421144524539" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -884,7 +972,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407299228146">
           <gml:name>filter</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421144924725" />
           <xtief>6.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -897,7 +985,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407299421597">
           <gml:name>base</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421145612608" />
           <xtief>1.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -912,11 +1000,11 @@
   <drwbmSoiltypeMember>
     <DRWBMSoiltype gml:id="DRWBMSoiltype1339407220571639">
       <gml:description>Mulde-Rigole 4.0</gml:description>
-      <gml:name>mrs</gml:name>
+      <gml:name>mul_rig_40</gml:name>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407249571483">
           <gml:name>mulde</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421138990354" />
           <xtief>4.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -929,7 +1017,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407250099565">
           <gml:name>rein</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421144524539" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -942,7 +1030,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407250483334">
           <gml:name>filter</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421144924725" />
           <xtief>6.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -954,9 +1042,9 @@
       </soilLayerParameterMember>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407250900132">
-          <gml:name>1</gml:name>
-          <soilLayerLink />
-          <xtief />
+          <gml:name>base</gml:name>
+          <soilLayerLink xlink:href="#SoilLayer1339421145612608" />
+          <xtief>1.0</xtief>
           <xret>false</xret>
           <diameterPipe />
           <roughnessPipe />
@@ -974,7 +1062,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407471683725">
           <gml:name>mulde</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421138990354" />
           <xtief>6.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -987,7 +1075,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407471859359">
           <gml:name>rein</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421144524539" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -1000,7 +1088,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407472435669">
           <gml:name>basem</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421148299215" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -1019,7 +1107,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407445034580">
           <gml:name>mulde</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421138990354" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -1032,7 +1120,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407445202654">
           <gml:name>rein</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421144524539" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -1045,7 +1133,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407445354255">
           <gml:name>basem</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421148299215" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -1060,11 +1148,11 @@
   <drwbmSoiltypeMember>
     <DRWBMSoiltype gml:id="DRWBMSoiltype1339407403481440">
       <gml:description>Mulde 4.0</gml:description>
-      <gml:name>mulde_b</gml:name>
+      <gml:name>mulde_40</gml:name>
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407420938543">
           <gml:name>mulde</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421138990354" />
           <xtief>4.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -1077,7 +1165,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407421258304">
           <gml:name>rein</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421144524539" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -1090,7 +1178,7 @@
       <soilLayerParameterMember>
         <DRWBMSoilLayerParameter gml:id="DRWBMSoilLayerParameter1339407421450722">
           <gml:name>basem</gml:name>
-          <soilLayerLink />
+          <soilLayerLink xlink:href="#SoilLayer1339421148299215" />
           <xtief>3.0</xtief>
           <xret>false</xret>
           <diameterPipe />
@@ -2544,32 +2632,32 @@
   </landuseMember>
   <landuseMember>
     <Landuse gml:id="Landuse1339408377777407">
-      <gml:description>DWRBM-Maßnahme Mulde</gml:description>
-      <gml:name>Mulde</gml:name>
+      <gml:description>DRWBM-Maßnahme Mulde</gml:description>
+      <gml:name>mulde</gml:name>
       <idealLandUsePeriodLink xlink:href="#IdealLandUse1339407606851184" />
       <sealingLink xlink:href="#Sealing1339408283951722" />
     </Landuse>
   </landuseMember>
   <landuseMember>
     <Landuse gml:id="Landuse1339408378256669">
-      <gml:description>DWRBM-Maßnahme Mulde-Rigole</gml:description>
-      <gml:name>Mulde-Rigole</gml:name>
+      <gml:description>DRWBM-Maßnahme Mulde-Rigole</gml:description>
+      <gml:name>mulde_rig</gml:name>
       <idealLandUsePeriodLink xlink:href="#IdealLandUse1339407609455136" />
       <sealingLink xlink:href="#Sealing1339408288895211" />
     </Landuse>
   </landuseMember>
   <landuseMember>
     <Landuse gml:id="Landuse1339408379080393">
-      <gml:description>DWRBM-Maßnahme Gründach Extensiv</gml:description>
-      <gml:name>Gründach Extensiv</gml:name>
+      <gml:description>DRWBM-Maßnahme Gründach Extensiv</gml:description>
+      <gml:name>gdach_ext</gml:name>
       <idealLandUsePeriodLink xlink:href="#IdealLandUse1339407613768477" />
       <sealingLink xlink:href="#Sealing1339408288415336" />
     </Landuse>
   </landuseMember>
   <landuseMember>
     <Landuse gml:id="Landuse1339408380585498">
-      <gml:description>DWRBM-Maßnahme Gründach Intensiv</gml:description>
-      <gml:name>Gründach Intensiv</gml:name>
+      <gml:description>DRWBM-Maßnahme Gründach Intensiv</gml:description>
+      <gml:name>gdach_int</gml:name>
       <idealLandUsePeriodLink xlink:href="#IdealLandUse1339407613248457" />
       <sealingLink xlink:href="#Sealing1339408287791610" />
     </Landuse>
@@ -2782,13 +2870,14 @@
     </IdealLandUse>
   </idealLandUseMember>
   <idealLandUseMember>
-    <IdealLandUse gml:id="IdealLandUse1339407606851184">
-      <gml:description>DWRBM Maßnahme Mulde</gml:description>
-      <gml:name>Mulde</gml:name>
-      <idealLandUseZML>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+  <IdealLandUse gml:id="IdealLandUse1339407606851184">
+   <gml:description>DRWBM Maßnahme Mulde</gml:description>
+   <gml:name>Mulde</gml:name>
+   <idealLandUseZML>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
 &lt;observation xmlns:filters="filters.zml.kalypso.org" xmlns:ns2="http://www.w3.org/1999/xlink" xmlns:ns3="gistableview.template.kalypso.org" xmlns:ns4="types.template.kalypso.org" xmlns:ns5="gismapview.template.kalypso.org" xmlns:ns6="obsdiagview.template.kalypso.org" xmlns:ns7="obstableview.template.kalypso.org" xmlns:ns8="wechmann.kalypso.org" xmlns="zml.kalypso.org" xmlns:ns10="valuecomp.filters.zml.kalypso.org"&gt;
   &lt;name&gt;&lt;/name&gt;
   &lt;metadataList&gt;
+    &lt;metadata name="Name" value=""/&gt;
     &lt;metadata name="Zeitzone" value="GMT"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
@@ -2803,17 +2892,19 @@
   &lt;axis name="Datum" type="date" unit="" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
     &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T12:00:00;2001-05-15T12:00:00;2001-06-15T12:00:00;2001-07-15T12:00:00;2001-08-15T12:00:00;2001-09-15T12:00:00;2001-10-15T12:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
-&lt;/observation&gt; </idealLandUseZML>
-    </IdealLandUse>
-  </idealLandUseMember>
-  <idealLandUseMember>
-    <IdealLandUse gml:id="IdealLandUse1339407609455136">
-      <gml:description>DWRBM Maßnahme Mulden-Rigole</gml:description>
-      <gml:name>Mulden-Rigole</gml:name>
-      <idealLandUseZML>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;/observation&gt;
+</idealLandUseZML>
+  </IdealLandUse>
+ </idealLandUseMember>
+ <idealLandUseMember>
+  <IdealLandUse gml:id="IdealLandUse1339407609455136">
+   <gml:description>DRWBM Maßnahme Mulden-Rigole</gml:description>
+   <gml:name>Mulden-Rigole</gml:name>
+   <idealLandUseZML>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
 &lt;observation xmlns:filters="filters.zml.kalypso.org" xmlns:ns2="http://www.w3.org/1999/xlink" xmlns:ns3="gistableview.template.kalypso.org" xmlns:ns4="types.template.kalypso.org" xmlns:ns5="gismapview.template.kalypso.org" xmlns:ns6="obsdiagview.template.kalypso.org" xmlns:ns7="obstableview.template.kalypso.org" xmlns:ns8="wechmann.kalypso.org" xmlns="zml.kalypso.org" xmlns:ns10="valuecomp.filters.zml.kalypso.org"&gt;
   &lt;name&gt;Idealisierter Jahres Vegetationszyklus&lt;/name&gt;
   &lt;metadataList&gt;
+    &lt;metadata name="Name" value="Idealisierter Jahres Vegetationszyklus"/&gt;
     &lt;metadata name="Zeitzone" value="GMT"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
@@ -2828,17 +2919,19 @@
   &lt;axis name="Datum" type="date" unit="" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
     &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T12:00:00;2001-05-15T12:00:00;2001-06-15T12:00:00;2001-07-15T12:00:00;2001-08-15T12:00:00;2001-09-15T12:00:00;2001-10-15T12:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
-&lt;/observation&gt; </idealLandUseZML>
-    </IdealLandUse>
-  </idealLandUseMember>
-  <idealLandUseMember>
-    <IdealLandUse gml:id="IdealLandUse1339407613248457">
-      <gml:description>DWRBM Maßnahme Gründach intensiver Nutzung</gml:description>
-      <gml:name>Gründach Intensiv</gml:name>
-      <idealLandUseZML>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;/observation&gt;
+</idealLandUseZML>
+  </IdealLandUse>
+ </idealLandUseMember>
+ <idealLandUseMember>
+  <IdealLandUse gml:id="IdealLandUse1339407613248457">
+   <gml:description>DRWBM Maßnahme Gründach intensiver Nutzung</gml:description>
+   <gml:name>Gründach Intensiv</gml:name>
+   <idealLandUseZML>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
 &lt;observation xmlns:filters="filters.zml.kalypso.org" xmlns:ns2="http://www.w3.org/1999/xlink" xmlns:ns3="gistableview.template.kalypso.org" xmlns:ns4="types.template.kalypso.org" xmlns:ns5="gismapview.template.kalypso.org" xmlns:ns6="obsdiagview.template.kalypso.org" xmlns:ns7="obstableview.template.kalypso.org" xmlns:ns8="wechmann.kalypso.org" xmlns="zml.kalypso.org" xmlns:ns10="valuecomp.filters.zml.kalypso.org"&gt;
   &lt;name&gt;Idealisierter Jahres Vegetationszyklus&lt;/name&gt;
   &lt;metadataList&gt;
+    &lt;metadata name="Name" value="Idealisierter Jahres Vegetationszyklus"/&gt;
     &lt;metadata name="Zeitzone" value="GMT"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
@@ -2853,17 +2946,19 @@
   &lt;axis name="Datum" type="date" unit="" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
     &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T12:00:00;2001-05-15T12:00:00;2001-06-15T12:00:00;2001-07-15T12:00:00;2001-08-15T12:00:00;2001-09-15T12:00:00;2001-10-15T12:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
-&lt;/observation&gt; </idealLandUseZML>
-    </IdealLandUse>
-  </idealLandUseMember>
-  <idealLandUseMember>
-    <IdealLandUse gml:id="IdealLandUse1339407613768477">
-      <gml:description>DWRBM Maßnahme Gründach extensiver Nutzung</gml:description>
-      <gml:name>Gründach Extensiv</gml:name>
-      <idealLandUseZML>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;/observation&gt;
+</idealLandUseZML>
+  </IdealLandUse>
+ </idealLandUseMember>
+ <idealLandUseMember>
+  <IdealLandUse gml:id="IdealLandUse1339407613768477">
+   <gml:description>DRWBM Maßnahme Gründach extensiver Nutzung</gml:description>
+   <gml:name>Gründach Extensiv</gml:name>
+   <idealLandUseZML>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
 &lt;observation xmlns:filters="filters.zml.kalypso.org" xmlns:ns2="http://www.w3.org/1999/xlink" xmlns:ns3="gistableview.template.kalypso.org" xmlns:ns4="types.template.kalypso.org" xmlns:ns5="gismapview.template.kalypso.org" xmlns:ns6="obsdiagview.template.kalypso.org" xmlns:ns7="obstableview.template.kalypso.org" xmlns:ns8="wechmann.kalypso.org" xmlns="zml.kalypso.org" xmlns:ns10="valuecomp.filters.zml.kalypso.org"&gt;
   &lt;name&gt;Idealisierter Jahres Vegetationszyklus&lt;/name&gt;
   &lt;metadataList&gt;
+    &lt;metadata name="Name" value="Idealisierter Jahres Vegetationszyklus"/&gt;
     &lt;metadata name="Zeitzone" value="GMT"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
@@ -2878,9 +2973,10 @@
   &lt;axis name="Datum" type="date" unit="" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
     &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T12:00:00;2001-05-15T12:00:00;2001-06-15T12:00:00;2001-07-15T12:00:00;2001-08-15T12:00:00;2001-09-15T12:00:00;2001-10-15T12:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
-&lt;/observation&gt; </idealLandUseZML>
-    </IdealLandUse>
-  </idealLandUseMember>
+&lt;/observation&gt;
+</idealLandUseZML>
+  </IdealLandUse>
+ </idealLandUseMember>
   <sealingMember>
     <Sealing gml:id="Sealing1">
       <gml:description>Einzelhaus</gml:description>
@@ -3057,103 +3153,103 @@
     </Sealing>
   </sealingMember>
   <sealingMember>
-    <Sealing gml:id="Sealing1339408287791610">
-      <gml:description>DWRBM-Maßnahme Gründach Intensiv</gml:description>
-      <gml:name>Gründach Intensiv</gml:name>
-      <m_vers>1.0</m_vers>
-    </Sealing>
-  </sealingMember>
-  <sealingMember>
-    <Sealing gml:id="Sealing1339408288415336">
-      <gml:description>DWRBM-Maßnahme Gründach Extensiv</gml:description>
-      <gml:name>Gründach Extensiv</gml:name>
-      <m_vers>1.0</m_vers>
-    </Sealing>
-  </sealingMember>
-  <sealingMember>
-    <Sealing gml:id="Sealing1339408288895211">
-      <gml:description>DWRBM-Maßnahme Mulde-Rigole</gml:description>
-      <gml:name>Mulde-Rigole</gml:name>
-      <m_vers>1.0</m_vers>
-    </Sealing>
-  </sealingMember>
-  <sealingMember>
-    <Sealing gml:id="Sealing1339408283951722">
-      <gml:description>DWRBM-Maßnahme Mulde</gml:description>
-      <gml:name>Mulde</gml:name>
-      <m_vers>1.0</m_vers>
-    </Sealing>
-  </sealingMember>
+  <Sealing gml:id="Sealing1339408287791610">
+   <gml:description>DRWBM-Maßnahme Gründach Intensiv</gml:description>
+   <gml:name>gdach_int</gml:name>
+   <m_vers>0.0</m_vers>
+  </Sealing>
+ </sealingMember>
+ <sealingMember>
+  <Sealing gml:id="Sealing1339408288415336">
+   <gml:description>DRWBM-Maßnahme Gründach Extensiv</gml:description>
+   <gml:name>gdach_ext</gml:name>
+   <m_vers>0.0</m_vers>
+  </Sealing>
+ </sealingMember>
+ <sealingMember>
+  <Sealing gml:id="Sealing1339408288895211">
+   <gml:description>DRWBM-Maßnahme Mulde-Rigole</gml:description>
+   <gml:name>mulde_rig</gml:name>
+   <m_vers>0.0</m_vers>
+  </Sealing>
+ </sealingMember>
+ <sealingMember>
+  <Sealing gml:id="Sealing1339408283951722">
+   <gml:description>DRWBM-Maßnahme Mulde</gml:description>
+   <gml:name>mulde</gml:name>
+   <m_vers>0.0</m_vers>
+  </Sealing>
+ </sealingMember>
   <drwbmDefinitionMember>
-    <DRWBMDefinition gml:id="DRWBMDefinition1339408501177224">
-      <gml:description>DWRBM-Maßnahme</gml:description>
-      <gml:name>Gründach Intensiv</gml:name>
-      <soilLayerLink xlink:href="#DRWBMSoiltype1339407169031438" />
-      <landuseclassLink xlink:href="#Landuse1339408380585498" />
-    </DRWBMDefinition>
-  </drwbmDefinitionMember>
-  <drwbmDefinitionMember>
-    <DRWBMDefinition gml:id="DRWBMDefinition1339408522424307">
-      <gml:description>DWRBM-Maßnahme</gml:description>
-      <gml:name>Gründach Extensiv</gml:name>
-      <soilLayerLink xlink:href="#DRWBMSoiltype1339407062108216" />
-      <landuseclassLink xlink:href="#Landuse1339408379080393" />
-    </DRWBMDefinition>
-  </drwbmDefinitionMember>
-  <drwbmDefinitionMember>
-    <DRWBMDefinition gml:id="DRWBMDefinition1339408522912183">
-      <gml:description>DWRBM-Maßnahme</gml:description>
-      <gml:name>Mude-Rigole 4.0</gml:name>
-      <soilLayerLink xlink:href="#DRWBMSoiltype1339407220571639" />
-      <landuseclassLink xlink:href="#Landuse1339408378256669" />
-    </DRWBMDefinition>
-  </drwbmDefinitionMember>
-  <drwbmDefinitionMember>
-    <DRWBMDefinition gml:id="DRWBMDefinition1339408523942201">
-      <gml:description>DWRBM-Maßnahme</gml:description>
-      <gml:name>Mulde 6.0</gml:name>
-      <soilLayerLink xlink:href="#DRWBMSoiltype1339407402569513" />
-      <landuseclassLink xlink:href="#Landuse1339408377777407" />
-    </DRWBMDefinition>
-  </drwbmDefinitionMember>
-  <drwbmDefinitionMember>
-    <DRWBMDefinition gml:id="DRWBMDefinition1339408524504444">
-      <gml:description>DWRBM-Maßnahme</gml:description>
-      <gml:name>Mulde 3.0</gml:name>
-      <soilLayerLink xlink:href="#DRWBMSoiltype1339407403056370" />
-      <landuseclassLink xlink:href="#Landuse1339408377777407" />
-    </DRWBMDefinition>
-  </drwbmDefinitionMember>
-  <drwbmDefinitionMember>
-    <DRWBMDefinition gml:id="DRWBMDefinition1339408525062577">
-      <gml:description>DWRBM-Maßnahme</gml:description>
-      <gml:name>Mulde 4.0</gml:name>
-      <soilLayerLink xlink:href="#DRWBMSoiltype1339407403481440" />
-      <landuseclassLink xlink:href="#Landuse1339408377777407" />
-    </DRWBMDefinition>
-  </drwbmDefinitionMember>
-  <drwbmDefinitionMember>
-    <DRWBMDefinition gml:id="DRWBMDefinition133940852564072">
-      <gml:description>DWRBM-Maßnahme</gml:description>
-      <gml:name>Mulde-Rigole 8.0</gml:name>
-      <soilLayerLink xlink:href="#DRWBMSoiltype1339407284372148" />
-      <landuseclassLink xlink:href="#Landuse1339408378256669" />
-    </DRWBMDefinition>
-  </drwbmDefinitionMember>
-  <drwbmDefinitionMember>
-    <DRWBMDefinition gml:id="DRWBMDefinition1339408526280225">
-      <gml:description>DWRBM-Maßnahme</gml:description>
-      <gml:name>Mulde-Rigole 6.0</gml:name>
-      <soilLayerLink xlink:href="#DRWBMSoiltype1339407284997251" />
-      <landuseclassLink xlink:href="#Landuse1339408378256669" />
-    </DRWBMDefinition>
-  </drwbmDefinitionMember>
-  <drwbmDefinitionMember>
-    <DRWBMDefinition gml:id="DRWBMDefinition1339408502217357">
-      <gml:description>DWRBM-Maßnahme</gml:description>
-      <gml:name>Mulde-Rigole 3.0</gml:name>
-      <soilLayerLink xlink:href="#DRWBMSoiltype133940728540426" />
-      <landuseclassLink xlink:href="#Landuse1339408378256669" />
-    </DRWBMDefinition>
-  </drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1339408501177224">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Gründach Intensiv</gml:name>
+   <soilLayerLink xlink:href="#DRWBMSoiltype1339407169031438"/>
+   <landuseclassLink xlink:href="#Landuse1339408380585498"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1339408522424307">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Gründach Extensiv</gml:name>
+   <soilLayerLink xlink:href="#DRWBMSoiltype1339407062108216"/>
+   <landuseclassLink xlink:href="#Landuse1339408379080393"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1339408522912183">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Mude-Rigole 4.0</gml:name>
+   <soilLayerLink xlink:href="#DRWBMSoiltype1339407220571639"/>
+   <landuseclassLink xlink:href="#Landuse1339408378256669"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1339408523942201">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Mulde 6.0</gml:name>
+   <soilLayerLink xlink:href="#DRWBMSoiltype1339407402569513"/>
+   <landuseclassLink xlink:href="#Landuse1339408377777407"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1339408524504444">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Mulde 3.0</gml:name>
+   <soilLayerLink xlink:href="#DRWBMSoiltype1339407403056370"/>
+   <landuseclassLink xlink:href="#Landuse1339408377777407"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1339408525062577">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Mulde 4.0</gml:name>
+   <soilLayerLink xlink:href="#DRWBMSoiltype1339407403481440"/>
+   <landuseclassLink xlink:href="#Landuse1339408377777407"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition133940852564072">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Mulde-Rigole 8.0</gml:name>
+   <soilLayerLink xlink:href="#DRWBMSoiltype1339407284372148"/>
+   <landuseclassLink xlink:href="#Landuse1339408378256669"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1339408526280225">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Mulde-Rigole 6.0</gml:name>
+   <soilLayerLink xlink:href="#DRWBMSoiltype1339407284997251"/>
+   <landuseclassLink xlink:href="#Landuse1339408378256669"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1339408502217357">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Mulde-Rigole 3.0</gml:name>
+   <soilLayerLink xlink:href="#DRWBMSoiltype133940728540426"/>
+   <landuseclassLink xlink:href="#Landuse1339408378256669"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
 </Parameter>
