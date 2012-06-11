@@ -41,13 +41,13 @@
 package org.kalypso.ui.rrm.internal.scenarios;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.contribs.eclipse.core.resources.CollectFolderVisitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
@@ -199,11 +199,16 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
   private void copySimulations( final IScenario selectedScenario, final IFolder selectedSimulationsFolder, final IFolder simulationsFolder ) throws CoreException
   {
     /* Get the simulations. */
-    final CollectFolderVisitor selectedFolderVisitor = new CollectFolderVisitor( new IFolder[] {} );
-    selectedSimulationsFolder.accept( selectedFolderVisitor );
-    final IFolder[] selectedFolders = selectedFolderVisitor.getFolders();
-    for( final IFolder selectedFolder : selectedFolders )
+    final IResource[] selectedResources = selectedSimulationsFolder.members();
+    for( final IResource selectedResource : selectedResources )
     {
+      /* Ignore resources, that are no folder. */
+      if( selectedResource.getType() != IResource.FOLDER )
+        continue;
+
+      /* Get the selected folder. */
+      final IFolder selectedFolder = (IFolder) selectedResource;
+
       /* Get the target folder. */
       final IFolder targetFolder = getTargetFolder( selectedScenario, selectedFolder, simulationsFolder );
 

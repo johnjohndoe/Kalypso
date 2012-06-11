@@ -44,6 +44,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 
 import de.renew.workflow.connector.cases.IScenario;
@@ -121,7 +122,7 @@ public class MergeMappingsHelper
     {
       /* Every generator value with the old generator contained, will be updated with the new generator. */
       final IRainfallGenerator generator = generatorValue.getGenerator();
-      if( oldGenerator.equals( generator ) )
+      if( oldGenerator == generator )
         generatorValue.update( newGenerator );
     }
   }
@@ -140,7 +141,7 @@ public class MergeMappingsHelper
     if( generatorValue == null )
       return null;
 
-    return generatorValue.getFeatureId();
+    return RrmScenario.FILE_CATCHMENT_MODELS_GML + "#" + generatorValue.getFeatureId();
   }
 
   private GeneratorValue isEqualGeneratorAvailable( final IRainfallGenerator generator )
@@ -196,7 +197,7 @@ public class MergeMappingsHelper
     {
       /* Every mapping value with the old mapping contained, will be updated with the new mapping. */
       final ITimeseriesMapping mapping = mappingValue.getMapping();
-      if( oldMapping.equals( mapping ) )
+      if( oldMapping == mapping )
         mappingValue.update( newMapping );
     }
   }
@@ -215,7 +216,7 @@ public class MergeMappingsHelper
     if( mappingValue == null )
       return null;
 
-    return mappingValue.getFeatureId();
+    return RrmScenario.FILE_TIMESERIES_MAPPINGS_GML + "#" + mappingValue.getFeatureId();
   }
 
   private MappingValue isEqualMappingAvailable( final ITimeseriesMapping mapping )
