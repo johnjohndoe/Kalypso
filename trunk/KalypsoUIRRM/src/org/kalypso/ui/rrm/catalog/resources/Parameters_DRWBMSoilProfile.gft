@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<featureview xmlns:rrmParam="http://www.tuhh.de/parameter" typename="rrmParam:Soiltype" style="SWT.NONE" xmlns="featureview.template.kalypso.org" >
+<featureview xmlns:rrmParam="http://www.tuhh.de/parameter" typename="rrmParam:DRWBMSoiltype" style="SWT.NONE" xmlns="featureview.template.kalypso.org">
   <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
   <gridLayout numColumns="3" />
 
@@ -28,10 +28,15 @@
 
     <gtt:gistableview xmlns:gtt="gistableview.template.kalypso.org">
       <gtt:layer id="xxx" linktype="">
-        <gtt:column name="soilLayerLink" alignment="SWT.LEFT" width="100" editable="true" sortEnabled="false"/>
-        <gtt:column name="xtief" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false"/>
-        <gtt:column name="xret" alignment="SWT.CENTER" width="100" editable="true" sortEnabled="false"/>
-        <gtt:column name="description" alignment="SWT.LEFT" width="150" editable="true" sortEnabled="false"/>
+        <gtt:column name="soilLayerLink" alignment="SWT.LEFT" width="100" editable="true" sortEnabled="false" />
+        <gtt:column name="xtief" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
+        <gtt:column name="xret" alignment="SWT.CENTER" width="100" editable="true" sortEnabled="false" />
+        <gtt:column name="diameterPipe" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
+        <gtt:column name="roughnessPipe" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
+        <gtt:column name="overflowHeight" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
+        <gtt:column name="areaPerOutlet" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
+        <gtt:column name="widthOfArea" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
+        <gtt:column name="description" alignment="SWT.LEFT" width="150" editable="true" sortEnabled="false" />
       </gtt:layer>
     </gtt:gistableview>
   </table>
