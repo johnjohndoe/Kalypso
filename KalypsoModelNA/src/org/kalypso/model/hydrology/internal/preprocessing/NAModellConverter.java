@@ -67,7 +67,6 @@ import org.kalypso.model.hydrology.internal.preprocessing.writer.LzsimWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NetFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NutzungWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.SnowtypWriter;
-import org.kalypso.model.hydrology.internal.preprocessing.writer.SudsFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TsFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.ZftWriter;
@@ -139,8 +138,8 @@ public class NAModellConverter
     final SnowtypWriter schneeManager = new SnowtypWriter( parameter, m_logger );
     schneeManager.write( m_asciiDirs.schneeFile );
 
-    final SudsFileWriter sudsFileWriter = new SudsFileWriter( naModel, hydrotopeCollection, sudsWorkspace, m_logger );
-    sudsFileWriter.write( m_asciiDirs.swaleAndTrenchFile );
+// final SudsFileWriter sudsFileWriter = new SudsFileWriter( naModel, hydrotopeCollection, sudsWorkspace, m_logger );
+// sudsFileWriter.write( m_asciiDirs.swaleAndTrenchFile );
 
     final HRBFileWriter hrbFileWriter = new HRBFileWriter( channels, m_idManager, m_asciiDirs.klimaDatDir, m_logger );
     hrbFileWriter.write( m_asciiDirs.hrbFile );

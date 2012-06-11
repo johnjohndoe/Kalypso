@@ -43,9 +43,7 @@ package org.kalypso.model.hydrology.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.suds.ISuds;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
@@ -70,15 +68,15 @@ public interface IHydrotope extends Feature
 
   QName PROPERTY_M_F1GWS = new QName( NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
 
-  QName LINK_SUD = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
+//  QName LINK_SUD = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
 
   QName LINK_CATCHMENT = new QName( NaModelConstants.NS_NAMODELL, "catchmentLinkMember" ); //$NON-NLS-1$
 
   QName LINK_DRWBM_DEFINITION = new QName( NaModelConstants.NS_NAHYDROTOP, "lnkDefinition" ); //$NON-NLS-1$
 
-  IFeatureBindingCollection<ISuds> getSudCollection( );
+// IFeatureBindingCollection<ISuds> getSudCollection( );
 
-  Feature[] getSuds( );
+// Feature[] getSuds( );
 
   GM_MultiSurface getGeometry( );
 

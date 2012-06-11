@@ -47,7 +47,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
-import org.kalypso.model.hydrology.binding.suds.AbstractSud;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -65,8 +64,6 @@ public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurf
     String getLanduseclass( int index ) throws CoreException;
 
     double getSealingCorrectionFactor( int index ) throws CoreException;
-
-    AbstractSud[] getSuds( int index ) throws CoreException;
   }
 
   private final LanduseCollection m_output;
@@ -114,13 +111,13 @@ public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurf
       // FIXME: is this a hack just for Planer-Client?? In that case -> do error handling in case of 'normal' landuse
       // import, else the user never gets an error message here...!
 
-      final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
+// final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
 
-      return m_output.importLanduse( ImportType.UPDATE, label, geometry, null, null, null, suds );
+      return m_output.importLanduse( ImportType.UPDATE, label, geometry, null, null, null );
     }
     else
     {
-      final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
+// final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
       final String desc = m_inputDescriptor.getDescription( i );
       final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
       final String landuseRef = m_landuseClasses.getReference( landuseclass );
@@ -130,7 +127,7 @@ public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurf
         throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
       }
 
-      return m_output.importLanduse( m_importType, label, geometry, desc, corrSealing, landuseRef, suds );
+      return m_output.importLanduse( m_importType, label, geometry, desc, corrSealing, landuseRef );
     }
   }
 }

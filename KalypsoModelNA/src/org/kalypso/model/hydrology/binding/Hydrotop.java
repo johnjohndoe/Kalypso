@@ -42,45 +42,41 @@ package org.kalypso.model.hydrology.binding;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.binding.suds.ISuds;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {http://www.tuhh.de/hydrotop}Hydrotop<br/>
- *
+ * 
  * @author Dejan Antanaskovic
  */
 public class Hydrotop extends Feature_Impl implements IHydrotope
 {
-  private IFeatureBindingCollection<ISuds> m_suds = null;
+// private IFeatureBindingCollection<ISuds> m_suds = null;
 
   public Hydrotop( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  @Override
-  public synchronized IFeatureBindingCollection<ISuds> getSudCollection( )
-  {
-    if( m_suds == null )
-      m_suds = new FeatureBindingCollection<ISuds>( this, ISuds.class, LINK_SUD, true );
+// @Override
+// public synchronized IFeatureBindingCollection<ISuds> getSudCollection( )
+// {
+// if( m_suds == null )
+// m_suds = new FeatureBindingCollection<ISuds>( this, ISuds.class, LINK_SUD, true );
+//
+// return m_suds;
+// }
 
-    return m_suds;
-  }
-
-  @Override
-  public Feature[] getSuds( )
-  {
-    if( m_suds == null )
-      return getSudCollection().toArray( new Feature[] {} );
-    // if not null, avoid synchronized method
-    return m_suds.toArray( new Feature[] {} );
-  }
+// @Override
+// public Feature[] getSuds( )
+// {
+// if( m_suds == null )
+// return getSudCollection().toArray( new Feature[] {} );
+// // if not null, avoid synchronized method
+// return m_suds.toArray( new Feature[] {} );
+// }
 
   @Override
   public GM_MultiSurface getGeometry( )

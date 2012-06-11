@@ -55,12 +55,7 @@ import java.util.logging.Logger;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.SoilLayerParameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
-import org.kalypso.model.hydrology.binding.suds.IAbstractSwale;
-import org.kalypso.model.hydrology.binding.suds.IGreenRoof.EUsageType;
-import org.kalypso.model.hydrology.binding.suds.ISwale;
-import org.kalypso.model.hydrology.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -163,98 +158,8 @@ public class BodentypWriter extends AbstractCoreFileWriter
       if( !soilTypes.containsKey( layerName ) )
         soilTypes.put( layerName, layers );
     }
-    addSudsSoilLayers( soilTypes );
 
     return soilTypes;
   }
 
-  /**
-   * Adds the suds soil types to the existing set. If the type with the same name was already defined, it will be
-   * overwritten.
-   */
-  private final void addSudsSoilLayers( final Map<String, List<Layer>> soilTypes )
-  {
-    // @Dirk: siehe BodenartWrite for Layer-Definitions
-
-    // add Greenroof type
-    final List<Layer> greenroofExternalLayers = new ArrayList<Layer>();
-    greenroofExternalLayers.add( new Layer( "GR-stau", 1.35, false ) ); //$NON-NLS-1$
-    greenroofExternalLayers.add( new Layer( "Substr", 0.8, false ) ); //$NON-NLS-1$
-    greenroofExternalLayers.add( new Layer( "Drain", 0.5, false ) ); //$NON-NLS-1$
-    soilTypes.put( EUsageType.EXTENSIVE.getSoilTypeID(), greenroofExternalLayers ); //$NON-NLS-1$
-
-    final List<Layer> greenroofInternalLayers = new ArrayList<Layer>();
-    greenroofInternalLayers.add( new Layer( "GR-stau", 1.7, false ) ); //$NON-NLS-1$
-    greenroofInternalLayers.add( new Layer( "Substr", 2.0, false ) ); //$NON-NLS-1$
-    greenroofInternalLayers.add( new Layer( "Drain", 1.2, false ) ); //$NON-NLS-1$
-    soilTypes.put( EUsageType.INTENSIVE.getSoilTypeID(), greenroofInternalLayers ); //$NON-NLS-1$
-
-    final Map<String, Double> mrsTypes = new LinkedHashMap<String, Double>();
-    // default is 4.0
-    mrsTypes.put( "mrs", 4.0 ); //$NON-NLS-1$
-    mrsTypes.put( "mrs_30", 3.0 ); //$NON-NLS-1$
-    mrsTypes.put( "mrs_60", 6.0 ); //$NON-NLS-1$
-    mrsTypes.put( "mrs_80", 8.0 ); //$NON-NLS-1$
-
-    // add Mulde-Rigole types
-    for( final String typeName : mrsTypes.keySet() )
-    {
-      final List<Layer> layers = new ArrayList<Layer>();
-      layers.add( new Layer( "mulde", mrsTypes.get( typeName ), false ) ); //$NON-NLS-1$
-      layers.add( new Layer( "rein", 3.0, false ) ); //$NON-NLS-1$
-      layers.add( new Layer( "filter", 6.0, false ) ); //$NON-NLS-1$
-      layers.add( new Layer( "base", 1.0, false ) ); //$NON-NLS-1$
-      soilTypes.put( typeName, layers );
-    }
-
-    final Map<String, Double> muldeTypes = new LinkedHashMap<String, Double>();
-    // default is 4.0
-    muldeTypes.put( "mulde_b", 4.0 ); //$NON-NLS-1$
-    muldeTypes.put( "mulde_30", 3.0 ); //$NON-NLS-1$
-    muldeTypes.put( "mulde_60", 6.0 ); //$NON-NLS-1$
-    muldeTypes.put( "mulde_80", 8.0 ); //$NON-NLS-1$
-
-    // add Mulde types
-    for( final String typeName : muldeTypes.keySet() )
-    {
-      final List<Layer> layers = new ArrayList<Layer>();
-      layers.add( new Layer( "mulde", muldeTypes.get( typeName ), false ) ); //$NON-NLS-1$
-      layers.add( new Layer( "rein", 3.0, false ) ); //$NON-NLS-1$
-      layers.add( new Layer( "basem", 3.0, false ) ); //$NON-NLS-1$
-      soilTypes.put( typeName, layers );
-    }
-  }
-
-  /**
-   * Returns the predefined soil type name for given swale
-   */
-  public static final String getSwaleSoiltypeName( final IAbstractSwale swale ) throws NAPreprocessorException
-  {
-    final Double profileThickness = swale.getProfileThickness();
-    if( swale instanceof ISwale )
-    {
-      if( profileThickness == null )
-        return "mulde_b"; //$NON-NLS-1$
-      if( profileThickness == 0.3 )
-        return "mulde_30"; //$NON-NLS-1$
-      if( profileThickness == 0.6 )
-        return "mulde_60"; //$NON-NLS-1$
-      if( profileThickness == 0.8 )
-        return "mulde_80"; //$NON-NLS-1$
-      return "mulde_b"; //$NON-NLS-1$
-    }
-    if( swale instanceof ISwaleInfiltrationDitch )
-    {
-      if( profileThickness == null )
-        return "mrs"; //$NON-NLS-1$
-      if( profileThickness == 0.3 )
-        return "mrs_30"; //$NON-NLS-1$
-      if( profileThickness == 0.6 )
-        return "mrs_60"; //$NON-NLS-1$
-      if( profileThickness == 0.8 )
-        return "mrs_80"; //$NON-NLS-1$
-      return "mrs"; //$NON-NLS-1$
-    }
-    throw new NAPreprocessorException( "Unknown swale type, class: " + swale.getClass().getCanonicalName() ); //$NON-NLS-1$
-  }
 }
