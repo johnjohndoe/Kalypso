@@ -68,15 +68,9 @@ public interface IHydrotope extends Feature
 
   QName PROPERTY_M_F1GWS = new QName( NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
 
-//  QName LINK_SUD = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
-
   QName LINK_CATCHMENT = new QName( NaModelConstants.NS_NAMODELL, "catchmentLinkMember" ); //$NON-NLS-1$
 
   QName LINK_DRWBM_DEFINITION = new QName( NaModelConstants.NS_NAHYDROTOP, "lnkDefinition" ); //$NON-NLS-1$
-
-// IFeatureBindingCollection<ISuds> getSudCollection( );
-
-// Feature[] getSuds( );
 
   GM_MultiSurface getGeometry( );
 

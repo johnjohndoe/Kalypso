@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
-<schema xmlns:hyd="http://www.tuhh.de/hydrotop" targetNamespace="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:naModel="http://www.tuhh.de/kalypsoNA" xmlns:par="http://www.tuhh.de/parameter" elementFormDefault="qualified"
-  version="0.9">
+<schema xmlns:hyd="http://www.tuhh.de/hydrotop" targetNamespace="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:naModel="http://www.tuhh.de/kalypsoNA" xmlns:par="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.9">
 
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="http://www.tuhh.de/kalypsoNA" />
@@ -38,17 +37,10 @@
             <!--TODO: Link zu Parameter.xsd Bodentyp -> text6 -->
             <element name="soiltype" type="string" />
             <element ref="hyd:corrSealing" />
-            <!-- DEPRECATED: not used any more -->
-            <element ref="hyd:drainageType" minOccurs="0" />
             <element ref="hyd:m_perkm" />
             <element ref="hyd:m_f1gws" />
             <!-- DEPRECATED: not used any more -->
             <element name="hydType" type="hyd:hydTypeEnumerationType" minOccurs="0" />
-
-
-            <!-- removed, because sud processing changed and old schema is now located in planer client base plug-in -->
-            <!-- <element ref="suds:sudLinkMember" minOccurs="0" maxOccurs="unbounded" />  -->
-
 
             <element ref="naModel:catchmentLinkMember" minOccurs="0" />
 
@@ -80,8 +72,6 @@
       </restriction>
     </simpleType>
   </element>
-
-  <element name="drainageType" type="string" />
 
   <element name="m_perkm" type="double" />
 
