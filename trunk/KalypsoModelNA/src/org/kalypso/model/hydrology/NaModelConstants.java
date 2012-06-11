@@ -93,9 +93,6 @@ public interface NaModelConstants
 
   String NS_NASIMPLESHAPECATCHMENT = "http://sourceforge.kalypso.org/schemata/hydrology/simpleShapeCatchment"; //$NON-NLS-1$
 
-  @Deprecated
-  String NS_NASUDS = "http://sourceforge.kalypso.org/schemata/hydrology/suds"; //$NON-NLS-1$
-
   String NS_NAOPTIMIZE = "http://kalypso.sorgeforge.net/schemata/hydrology/optimize"; //$NON-NLS-1$
 
   String NS_TIMESERIES_MANAGEMENT = "http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement"; //$NON-NLS-1$
@@ -255,9 +252,6 @@ public interface NaModelConstants
 
   /** synthN.xsd */
   QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" ); //$NON-NLS-1$
-
-  /** Suds */
-  QName SUDS_PROP_SUDS_MEMBER = new QName( NS_NASUDS, "sudMember" ); //$NON-NLS-1$
 
   String[] TA_AXES = new String[] { ITimeseriesConstants.TYPE_HOURS, ITimeseriesConstants.TYPE_NORM };
 
