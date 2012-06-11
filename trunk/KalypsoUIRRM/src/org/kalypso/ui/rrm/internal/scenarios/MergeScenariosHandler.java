@@ -48,9 +48,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.util.command.WaitForFeatureChanges;
 
+import de.renew.workflow.base.ITask;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
+import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
 
 /**
  * This handler starts the wizard for merging scenarios in the current one.
@@ -72,6 +78,17 @@ public class MergeScenariosHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
+    /* Must wait for eventually done changes to the feature. */
+    final ICoreRunnableWithProgress commandWaiter = new WaitForFeatureChanges();
+    ProgressUtilities.busyCursorWhile( commandWaiter );
+
+    /* Ask the user to save. */
+    final ITaskExecutionAuthority executionAuthority = KalypsoAFGUIFrameworkPlugin.getTaskExecutionAuthority();
+    final ITaskExecutor taskExecutor = KalypsoAFGUIFrameworkPlugin.getTaskExecutor();
+    final ITask task = taskExecutor.getActiveTask();
+    if( !executionAuthority.canStopTask( task ) )
+      return null;
+
     /* Get the shell. */
     final Display display = PlatformUI.getWorkbench().getDisplay();
     final Shell shell = display.getActiveShell();

@@ -46,7 +46,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.CollectFolderVisitor;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -107,65 +109,36 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
         throw new IllegalArgumentException( "No scenarios selected..." );
 
       /* Monitor. */
-      monitor.beginTask( String.format( "Merging the scenarios into the scenario '%s'...", m_scenario.getName() ), 1500 * selectedScenarios.length );
+      monitor.beginTask( String.format( "Merging the scenarios into the scenario '%s'...", m_scenario.getName() ), 1250 * selectedScenarios.length );
 
       /* Get the simulations folder of the target scenario. */
       final IFolder scenarioFolder = m_scenario.getFolder();
       final RrmScenario rrmScenario = new RrmScenario( scenarioFolder );
       final IFolder simulationsFolder = rrmScenario.getSimulationsFolder();
 
-      /* Loop all selected scenarios. */
-      for( final IScenario selectedScenario : selectedScenarios )
-      {
-        /* Monitor. */
-        monitor.subTask( String.format( "Importing scenario '%s'...", selectedScenario.getName() ) );
+      /* Handle the catchment models and the timeseries mappings. */
+      final MergeMappingsWorker mappingsWorker = new MergeMappingsWorker( selectedScenarios, m_scenario );
 
-        /* Get the simulations folder of the source scenario. */
-        final IFolder selectedScenarioFolder = selectedScenario.getFolder();
-        final RrmScenario selectedRrmScenario = new RrmScenario( selectedScenarioFolder );
-        final IFolder selectedSimulationsFolder = selectedRrmScenario.getSimulationsFolder();
+      /* Analyze. */
+      final IStatus analyzeStatus = mappingsWorker.analyze( new SubProgressMonitor( monitor, 250 * selectedScenarios.length ) );
+      collector.add( analyzeStatus );
 
-        /* Monitor. */
-        monitor.worked( 250 );
-        monitor.subTask( "Copying simulations..." );
+      /* Create mappings. */
+      final IStatus mappingsStatus = mappingsWorker.createMappings( new SubProgressMonitor( monitor, 250 * selectedScenarios.length ) );
+      collector.add( mappingsStatus );
 
-        /* Copy the simulations. */
-        copySimulations( simulationsFolder, selectedSimulationsFolder );
+      /* Create simulations. */
+      final IStatus simulationsStatus = mappingsWorker.createSimulations( new SubProgressMonitor( monitor, 250 * selectedScenarios.length ) );
+      collector.add( simulationsStatus );
 
-        /* Monitor. */
-        monitor.worked( 250 );
-        monitor.subTask( "Updating catchment models..." );
+      /* Import the simulations. */
+      importSimulations( selectedScenarios, simulationsFolder, monitor );
 
-        /* Update the catchment models. */
-        updateCatchmentModels();
+      /* Should the selected scenarios be deleted? */
+      final boolean deleteScenarios = m_scenariosData.isDeleteScenarios();
 
-        /* Monitor. */
-        monitor.worked( 250 );
-        monitor.subTask( "Updating timeseries mappings..." );
-
-        /* Update the timeseries mappings. */
-        updateTimeseriesMappings();
-
-        /* Monitor. */
-        monitor.worked( 250 );
-        monitor.subTask( "Updating simulations..." );
-
-        /* Update the simulations. */
-        updateSimulations();
-
-        /* Monitor. */
-        monitor.worked( 250 );
-        monitor.subTask( "Cleaning up..." );
-
-        /* Should the selected scenario be deleted? */
-        final boolean deleteScenarios = m_scenariosData.isDeleteScenarios();
-
-        /* Clean up the scenario. */
-        cleanUpScenario( selectedScenario, deleteScenarios );
-
-        /* Monitor. */
-        monitor.worked( 250 );
-      }
+      /* Clean up the scenarios. */
+      cleanUpScenarios( selectedScenarios, deleteScenarios, monitor );
 
       return collector.asMultiStatus( String.format( "Merging the scenarios into the scenario '%s' succeeded.", m_scenario.getName() ) );
     }
@@ -182,14 +155,48 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
   }
 
   /**
-   * This function copies the contained simulations in the selected simulations folder into the simulations folder.
+   * This function imports all simulations of the selected scenarios and copies them into the simulations folder of the
+   * target scenario.
    * 
+   * @param selectedScenarios
+   *          The source scenarios.
    * @param simulationsFolder
    *          The simulations folder of the target scenario.
+   * @param monitor
+   *          A progress monitor.
+   */
+  private void importSimulations( final IScenario[] selectedScenarios, final IFolder simulationsFolder, final IProgressMonitor monitor ) throws CoreException
+  {
+    /* Loop all selected scenarios. */
+    for( final IScenario selectedScenario : selectedScenarios )
+    {
+      /* Monitor. */
+      monitor.subTask( String.format( "Copying simulations of scenario '%s'...", selectedScenario.getName() ) );
+
+      /* Get the simulations folder of the source scenario. */
+      final IFolder selectedScenarioFolder = selectedScenario.getFolder();
+      final RrmScenario selectedRrmScenario = new RrmScenario( selectedScenarioFolder );
+      final IFolder selectedSimulationsFolder = selectedRrmScenario.getSimulationsFolder();
+
+      /* Copy the simulations. */
+      copySimulations( selectedScenario, selectedSimulationsFolder, simulationsFolder );
+
+      /* Monitor. */
+      monitor.worked( 250 );
+    }
+  }
+
+  /**
+   * This function copies the contained simulations in the selected simulations folder into the simulations folder.
+   * 
+   * @param selectedScenario
+   *          The source scenario.
    * @param selectedSimulationsFolder
    *          The simulations folder of the source scenario.
+   * @param simulationsFolder
+   *          The simulations folder of the target scenario.
    */
-  private void copySimulations( final IFolder simulationsFolder, final IFolder selectedSimulationsFolder ) throws CoreException
+  private void copySimulations( final IScenario selectedScenario, final IFolder selectedSimulationsFolder, final IFolder simulationsFolder ) throws CoreException
   {
     /* Get the simulations. */
     final CollectFolderVisitor selectedFolderVisitor = new CollectFolderVisitor( new IFolder[] {} );
@@ -197,34 +204,69 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
     final IFolder[] selectedFolders = selectedFolderVisitor.getFolders();
     for( final IFolder selectedFolder : selectedFolders )
     {
-      final IFolder targetFolder = simulationsFolder.getFolder( selectedFolder.getName() );
-      if( targetFolder.exists() )
-      {
-        // TODO
-      }
+      /* Get the target folder. */
+      final IFolder targetFolder = getTargetFolder( selectedScenario, selectedFolder, simulationsFolder );
 
-      // TODO
+      /* Copy the simulation. */
+      ResourceUtilities.copyFolderContents( selectedFolder, targetFolder );
     }
   }
 
-  private void updateCatchmentModels( )
+  /**
+   * This function returns the target folder. It makes sure that it does not exist.
+   * 
+   * @param selectedScenario
+   *          The source scenario.
+   * @param selectedFolder
+   *          The folder of one simulation in the source scenario.
+   * @param simulationsFolder
+   *          The simulations folder of the target scenario.
+   * @return The target folder.
+   */
+  private IFolder getTargetFolder( final IScenario selectedScenario, final IFolder selectedFolder, final IFolder simulationsFolder )
   {
-    // TODO
+    final IFolder targetFolder = simulationsFolder.getFolder( selectedFolder.getName() );
+    if( !targetFolder.exists() )
+      return targetFolder;
+
+    final IFolder targetFolder1 = simulationsFolder.getFolder( String.format( "%s (aus %s)", selectedFolder.getName(), selectedScenario.getName() ) );
+    if( !targetFolder1.exists() )
+      return targetFolder1;
+
+    int cnt = 1;
+    IFolder targetFolder2 = simulationsFolder.getFolder( String.format( "%s (aus %s) %d", selectedFolder.getName(), selectedScenario.getName(), cnt++ ) );
+    while( targetFolder2.exists() )
+      targetFolder2 = simulationsFolder.getFolder( String.format( "%s (aus %s) %d", selectedFolder.getName(), selectedScenario.getName(), cnt++ ) );
+
+    return targetFolder2;
   }
 
-  private void updateTimeseriesMappings( )
+  /**
+   * This function removes the selected scenarios.
+   * 
+   * @param selectedScenarios
+   *          The source scenarios.
+   * @param deleteScenarios
+   *          True, if the imported scenarios should be deleted.
+   * @param monitor
+   *          A progress monitor.
+   */
+  private void cleanUpScenarios( final IScenario[] selectedScenarios, final boolean deleteScenarios, final IProgressMonitor monitor )
   {
-    // TODO
-  }
+    /* If the selected scenarios should not be deleted, return. */
+    if( !deleteScenarios )
+      return;
 
-  private void updateSimulations( )
-  {
-    // TODO The new ids of the catchment models generators must be set into the new simulations...
-    // TODO
-  }
+    /* Loop all selected scenarios. */
+    for( final IScenario selectedScenario : selectedScenarios )
+    {
+      /* Monitor. */
+      monitor.subTask( String.format( "Cleaning up scenario '%s'...", selectedScenario.getName() ) );
 
-  private void cleanUpScenario( final IScenario selectedScenario, final boolean deleteScenarios )
-  {
-    // TODO
+      // TODO
+
+      /* Monitor. */
+      monitor.worked( 250 );
+    }
   }
 }
