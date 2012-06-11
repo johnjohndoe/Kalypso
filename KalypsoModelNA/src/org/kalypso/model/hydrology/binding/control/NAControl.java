@@ -45,6 +45,7 @@ import java.util.Date;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -115,6 +116,10 @@ public class NAControl extends Feature_Impl
   public NAControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+
+    /* Initialize with some default values */
+    setCreationTime( new Date() );
+    setEditor( SystemUtils.USER_NAME );
   }
 
   public Date getSimulationStart( )
