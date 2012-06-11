@@ -4,38 +4,150 @@
   <gridLayout numColumns="3" makeColumnsEqualWidth="true" marginHeight="0" marginWidth="0" horizontalSpacing="5" />
 
   <!-- Allgemeines: -->
-  <group text="%control.gft.general" style="0">
-    <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
-    <gridLayout numColumns="2" horizontalSpacing="10" />
+  <composite style="SWT.NONE">
+    <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+    <gridLayout numColumns="1" horizontalSpacing="0" verticalSpacing="0" marginHeight="0" marginWidth="0" />
 
-    <label property="gml:description" style="SWT.NONE">
-      <gridData horizontalAlignment="SWT.BEGINNING" />
-    </label>
-    <text property="gml:description" style="SWT.BORDER">
-      <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
-    </text>
+    <group text="%control.gft.general" style="0">
+      <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+      <gridLayout numColumns="2" horizontalSpacing="10" />
 
-    <label property="rrm:comment" style="SWT.NONE">
-      <gridData horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.BEGINNING" />
-    </label>
-    <text property="rrm:comment" style="SWT.BORDER">
-      <gridData heightHint="50" horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
-    </text>
+      <label property="gml:description" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="gml:description" style="SWT.BORDER">
+        <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+      </text>
 
-    <label property="rrm:editor" style="SWT.NONE">
-      <gridData horizontalAlignment="SWT.BEGINNING" />
-    </label>
-    <text property="rrm:editor" style="SWT.BORDER">
-      <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
-    </text>
+      <label property="rrm:comment" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:comment" style="SWT.BORDER">
+        <gridData heightHint="50" horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+      </text>
 
-    <label property="rrm:creationTime" style="SWT.NONE">
-      <gridData horizontalAlignment="SWT.BEGINNING" />
-    </label>
-    <text property="rrm:creationTime" style="SWT.BORDER">
-      <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
-    </text>
-  </group>
+      <label property="rrm:editor" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:editor" style="SWT.BORDER">
+        <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+      </text>
+
+      <label property="rrm:creationTime" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:creationTime" style="SWT.BORDER">
+        <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+      </text>
+
+      <label property="rrm:returnPeriod" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:returnPeriod" style="SWT.BORDER">
+        <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+      </text>
+    </group>
+
+    <group text="%control.gft.synthN" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+      <gridLayout numColumns="3" horizontalSpacing="10" />
+
+      <checkbox enabled="true" property="pns" style="SWT.NONE">
+        <gridData horizontalSpan="3" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </checkbox>
+      <label property="xjah" style="SWT.NONE">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="xjah" style="SWT.BORDER">
+        <enabledOperation>
+          <and>
+            <ogc:PropertyIsEqualTo>
+              <ogc:Literal>true</ogc:Literal>
+              <ogc:PropertyName>pns</ogc:PropertyName>
+            </ogc:PropertyIsEqualTo>
+            <ogc:PropertyIsNull>
+              <ogc:PropertyName>returnPeriod</ogc:PropertyName>
+            </ogc:PropertyIsNull>
+          </and>
+        </enabledOperation>
+        <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" />
+      </text>
+      <validatorlabel style="SWT.NONE" property="xjah">
+        <visibleOperation>
+          <and>
+            <ogc:PropertyIsEqualTo>
+              <ogc:Literal>true</ogc:Literal>
+              <ogc:PropertyName>pns</ogc:PropertyName>
+            </ogc:PropertyIsEqualTo>
+            <ogc:PropertyIsNull>
+              <ogc:PropertyName>returnPeriod</ogc:PropertyName>
+            </ogc:PropertyIsNull>
+          </and>
+        </visibleOperation>
+      </validatorlabel>
+
+      <label property="xwahl2" style="SWT.NONE">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="xwahl2" style="SWT.BORDER">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" />
+      </text>
+      <validatorlabel style="SWT.NONE" property="xwahl2">
+        <visibleOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </visibleOperation>
+      </validatorlabel>
+
+      <label property="ipver" style="SWT.NONE">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <combo property="ipver" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </combo>
+      <validatorlabel style="SWT.NONE" property="ipver">
+        <visibleOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </visibleOperation>
+      </validatorlabel>
+    </group>
+
+  </composite>
 
   <composite style="SWT.NONE">
     <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
