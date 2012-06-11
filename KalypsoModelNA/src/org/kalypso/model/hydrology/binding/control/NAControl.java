@@ -67,7 +67,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Binding class for {org.kalypso.na.control_v2}NAControl.
- *
+ * 
  * @author Gernot Belger
  */
 public class NAControl extends Feature_Impl
@@ -106,11 +106,11 @@ public class NAControl extends Feature_Impl
 
   public static final QName PROP_GENERATOR_E = new QName( NS_CONTROL, "generatorE" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_MAPPING_GAUGE = new QName( NS_CONTROL, "mappingGaugeMeasurement" ); //$NON-NLS-1$
+  public static final QName PROPERTY_MAPPING_GAUGE = new QName( NS_CONTROL, "mappingGaugeMeasurement" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_MAPPING_NODE_INFLOW = new QName( NS_CONTROL, "mappingNodeInflow" ); //$NON-NLS-1$
+  public static final QName PROPERTY_MAPPING_NODE_INFLOW = new QName( NS_CONTROL, "mappingNodeInflow" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_MAPPING_STORAGE_EVAPORATION = new QName( NS_CONTROL, "mappingStorageEvaporation" ); //$NON-NLS-1$
+  public static final QName PROPERTY_MAPPING_STORAGE_EVAPORATION = new QName( NS_CONTROL, "mappingStorageEvaporation" ); //$NON-NLS-1$
 
   private static final QName PROP_INITIAL_VALUE_SOURCE = new QName( NS_CONTROL, "initialValueSource" ); //$NON-NLS-1$
 
@@ -313,7 +313,7 @@ public class NAControl extends Feature_Impl
   /**
    * This function returns the last modified timestamp. If it was not set or is invalid (e.g. negative) this function
    * returns always -1.
-   *
+   * 
    * @return The last modified timestamp.
    */
   public long getLastModified( )
@@ -329,7 +329,7 @@ public class NAControl extends Feature_Impl
 
   /**
    * This function sets the last modified timestamp.
-   *
+   * 
    * @param lastModified
    *          The last modified timestamp.
    */
@@ -343,7 +343,7 @@ public class NAControl extends Feature_Impl
    * {@link #getLastModified()}<br/>
    * {@link #getLastModifiedGenerators()}<br/>
    * {@link #getLastModifiedInputData()}
-   *
+   * 
    * @return The last modified timestamp.
    */
   public long getLastModifiedInput( )

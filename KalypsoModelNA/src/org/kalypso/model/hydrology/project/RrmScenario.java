@@ -87,6 +87,7 @@ public class RrmScenario
 
   private static final String FILE_TIMESERIES_MAPPINGS_GML = "timeseriesMappings.gml"; //$NON-NLS-1$
 
+  private static final String FILE_SIMULATIONS_GML = "simulations.gml"; //$NON-NLS-1$
 
   private final IFolder m_scenarioFolder;
 
@@ -186,6 +187,11 @@ public class RrmScenario
   public IResource getTimeseriesMappingsGml( )
   {
     return getModelsFolder().getFile( FILE_TIMESERIES_MAPPINGS_GML );
+  }
+
+  public IFile getSimulationsGml( )
+  {
+    return getSimulationsFolder().getFile( FILE_SIMULATIONS_GML );
   }
 
   public IFile getLanduseFile( )
