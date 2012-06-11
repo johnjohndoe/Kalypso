@@ -59,7 +59,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
@@ -71,6 +70,7 @@ import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.simulations.SimulationAccessor;
@@ -198,6 +198,9 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     /* The workspace of the simulation. */
     GMLWorkspace simulationWorkspace = null;
 
+    /* Prepare message for early exit */
+    final String errorMessage = String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() );
+
     try
     {
       /* Monitor. */
@@ -227,7 +230,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         final IStatus cleanupStatus = cleanupWorker.execute( new SubProgressMonitor( monitor, 200 ) );
         collector.add( cleanupStatus );
         if( cleanupStatus.getSeverity() >= IStatus.ERROR )
-          return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+          return collector.asMultiStatus( errorMessage );
       }
       else
       {
@@ -240,7 +243,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         final IStatus createStatus = createWorker.execute( new SubProgressMonitor( monitor, 200 ) );
         collector.add( createStatus );
         if( createStatus.getSeverity() >= IStatus.ERROR )
-          return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+          return collector.asMultiStatus( errorMessage );
       }
 
       /* Monitor. */
@@ -251,13 +254,12 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       final URL controlURL = ResourceUtilities.createURL( rrmScenario.getExpertControlGml() );
       final URL parameterURL = ResourceUtilities.createURL( rrmScenario.getParameterGml() );
       final URL hydrotopURL = ResourceUtilities.createURL( rrmScenario.getHydrotopGml() );
-      final URL sudsURL = ResourceUtilities.createURL( rrmScenario.getSudsGml() );
       final URL syntNURL = ResourceUtilities.createURL( rrmScenario.getSyntnGml() );
       final URL catchmentModelsUrl = ResourceUtilities.createURL( rrmScenario.getCatchmentModelsGml() );
       final URL timeseriesMappingsUrl = ResourceUtilities.createURL( rrmScenario.getTimeseriesMappingsGml() );
 
       /* Load all simulation data. */
-      simulationData = NaSimulationDataFactory.load( modelURL, controlURL, null, parameterURL, hydrotopURL, sudsURL, syntNURL, null, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
+      simulationData = NaSimulationDataFactory.load( modelURL, controlURL, null, parameterURL, hydrotopURL, syntNURL, null, catchmentModelsUrl, timeseriesMappingsUrl, null, null );
 
       /* Clone the simulation. */
       simulationWorkspace = FeatureFactory.createGMLWorkspace( simulation.getFeatureType(), modelURL, simulationData.getFeatureProviderFactory() );
@@ -276,7 +278,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         final IStatus prepareLongtermStatus = prepareLongtermWorker.execute( new SubProgressMonitor( monitor, 200 ) );
         collector.add( prepareLongtermStatus );
         if( prepareLongtermStatus.getSeverity() >= IStatus.ERROR )
-          return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+          return collector.asMultiStatus( errorMessage );
       }
       else
       {
@@ -285,18 +287,26 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         final IStatus prepareShorttermStatus = prepareShorttermWorker.execute( new SubProgressMonitor( monitor, 200 ) );
         collector.add( prepareShorttermStatus );
         if( prepareShorttermStatus.getSeverity() >= IStatus.ERROR )
-          return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+          return collector.asMultiStatus( errorMessage );
       }
 
       /* Monitor. */
       monitor.subTask( "Calculating the catchment models..." );
+
+      final boolean isDesignRainfall = simulation.isUsePrecipitationForm();
+      final IStatus catchmentCheckStatus = checkCatchmentModels( simulationFeature, isDesignRainfall );
+      if( catchmentCheckStatus.matches( IStatus.ERROR ) )
+      {
+        collector.add( catchmentCheckStatus );
+        return collector.asMultiStatus( errorMessage );
+      }
 
       /* Calculate the catchment models. */
       final CalculateCatchmentModelsWorker catchmentModelsWorker = new CalculateCatchmentModelsWorker( rrmSimulation, calculateCatchmentModels, simulationData );
       final IStatus catchmentModelsStatus = catchmentModelsWorker.execute( new SubProgressMonitor( monitor, 200 ) );
       collector.add( catchmentModelsStatus );
       if( catchmentModelsStatus.getSeverity() >= IStatus.ERROR )
-        return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+        return collector.asMultiStatus( errorMessage );
 
       /* Monitor. */
       monitor.subTask( "Calculating the simulation..." );
@@ -306,7 +316,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       final IStatus calculateStatus = calculateWorker.execute( new SubProgressMonitor( monitor, 200 ) );
       collector.add( calculateStatus );
       if( calculateStatus.getSeverity() >= IStatus.ERROR )
-        return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+        return collector.asMultiStatus( errorMessage );
 
       /* Monitor. */
       monitor.subTask( "Finishing..." );
@@ -325,7 +335,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       /* Add the exception to the log. */
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
 
-      return collector.asMultiStatus( String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() ) );
+      return collector.asMultiStatus( errorMessage );
     }
     finally
     {
@@ -338,6 +348,25 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  private IStatus checkCatchmentModels( final NAControl simulation, final boolean isDesignRainfall )
+  {
+    final IRainfallGenerator generatorN = simulation.getGeneratorN();
+    final IRainfallGenerator generatorE = simulation.getGeneratorE();
+    final IRainfallGenerator generatorT = simulation.getGeneratorT();
+    if( isDesignRainfall )
+    {
+      if( generatorE != null || generatorN != null || generatorT != null )
+        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "All configured catchment models are ignored for simulations with design rainfall." );
+    }
+    else
+    {
+      if( generatorE == null || generatorN == null || generatorT == null )
+        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "All catchment models must be configured." );
+    }
+
+    return Status.OK_STATUS;
   }
 
   private void saveCopy( final RrmSimulation rrmSimulation, final INaSimulationData simulationData, final GMLWorkspace simulationWorkspace )
