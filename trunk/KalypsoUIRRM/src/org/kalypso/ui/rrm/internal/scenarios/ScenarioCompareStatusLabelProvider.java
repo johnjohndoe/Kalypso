@@ -40,22 +40,43 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.core.status.StatusComposite;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * This label provider provides labels for scenarios
  * 
  * @author Holger Albert
  */
-public class ModelColumnLabelProvider extends ColumnLabelProvider
+public class ScenarioCompareStatusLabelProvider extends ColumnLabelProvider
 {
   /**
-   * The constructor.
+   * The scenario compare status contains stati for several cases.
    */
-  public ModelColumnLabelProvider( )
+  private final ScenarioCompareStatus m_compareStatus;
+
+  /**
+   * The key for which the status will be retrieved.
+   */
+  private final String m_key;
+
+  /**
+   * The constructor.
+   * 
+   * @param compareStatus
+   *          The scenario compare status contains stati for several cases.
+   * @param key
+   *          The key for which the status will be retrieved.
+   */
+  public ScenarioCompareStatusLabelProvider( final ScenarioCompareStatus compareStatus, final String key )
   {
+    m_compareStatus = compareStatus;
+    m_key = key;
   }
 
   /**
@@ -64,7 +85,18 @@ public class ModelColumnLabelProvider extends ColumnLabelProvider
   @Override
   public Image getImage( final Object element )
   {
-    return null;
+    if( element instanceof IScenario )
+    {
+      final IScenario scenario = (IScenario) element;
+      final String uri = scenario.getURI();
+      final IStatus status = m_compareStatus.getStatus( uri, m_key );
+      if( status != null )
+        return StatusComposite.getStatusImage( status );
+
+      return super.getImage( element );
+    }
+
+    return super.getImage( element );
   }
 
   /**
@@ -73,6 +105,17 @@ public class ModelColumnLabelProvider extends ColumnLabelProvider
   @Override
   public String getText( final Object element )
   {
+    if( element instanceof IScenario )
+    {
+      final IScenario scenario = (IScenario) element;
+      final String uri = scenario.getURI();
+      final IStatus status = m_compareStatus.getStatus( uri, m_key );
+      if( status != null )
+        return status.getMessage();
+
+      return "";
+    }
+
     return "";
   }
 

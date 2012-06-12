@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -127,12 +130,12 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
       final IStatus mappingsStatus = mappingsWorker.createMappings( new SubProgressMonitor( monitor, 250 * selectedScenarios.length ) );
       collector.add( mappingsStatus );
 
-      /* Create simulations. */
-      final IStatus simulationsStatus = mappingsWorker.createSimulations( new SubProgressMonitor( monitor, 250 * selectedScenarios.length ) );
-      collector.add( simulationsStatus );
-
       /* Import the simulations. */
-      importSimulations( selectedScenarios, simulationsFolder, monitor );
+      final Map<String, IFolder> newSimulationFolders = importSimulations( selectedScenarios, simulationsFolder, monitor );
+
+      /* Create simulations. */
+      final IStatus simulationsStatus = mappingsWorker.createSimulations( newSimulationFolders, new SubProgressMonitor( monitor, 250 * selectedScenarios.length ) );
+      collector.add( simulationsStatus );
 
       /* Should the selected scenarios be deleted? */
       final boolean deleteScenarios = m_scenariosData.isDeleteScenarios();
@@ -164,9 +167,13 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
    *          The simulations folder of the target scenario.
    * @param monitor
    *          A progress monitor.
+   * @return A map <scenario-uri_simulation-name, new simulation folder>.
    */
-  private void importSimulations( final IScenario[] selectedScenarios, final IFolder simulationsFolder, final IProgressMonitor monitor ) throws CoreException
+  private Map<String, IFolder> importSimulations( final IScenario[] selectedScenarios, final IFolder simulationsFolder, final IProgressMonitor monitor ) throws CoreException
   {
+    /* Store the new simulation folders. Needed for updating the description of a simulation later. */
+    final Map<String, IFolder> newSimulationFolders = new HashMap<String, IFolder>();
+
     /* Loop all selected scenarios. */
     for( final IScenario selectedScenario : selectedScenarios )
     {
@@ -179,11 +186,13 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
       final IFolder selectedSimulationsFolder = selectedRrmScenario.getSimulationsFolder();
 
       /* Copy the simulations. */
-      copySimulations( selectedScenario, selectedSimulationsFolder, simulationsFolder );
+      copySimulations( selectedScenario, selectedSimulationsFolder, simulationsFolder, newSimulationFolders );
 
       /* Monitor. */
       monitor.worked( 250 );
     }
+
+    return newSimulationFolders;
   }
 
   /**
@@ -195,8 +204,10 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
    *          The simulations folder of the source scenario.
    * @param simulationsFolder
    *          The simulations folder of the target scenario.
+   * @param newSimulationFolders
+   *          A map <scenario-uri_simulation-name, new simulation folder>.
    */
-  private void copySimulations( final IScenario selectedScenario, final IFolder selectedSimulationsFolder, final IFolder simulationsFolder ) throws CoreException
+  private void copySimulations( final IScenario selectedScenario, final IFolder selectedSimulationsFolder, final IFolder simulationsFolder, final Map<String, IFolder> newSimulationFolders ) throws CoreException
   {
     /* Get the simulations. */
     final IResource[] selectedResources = selectedSimulationsFolder.members();
@@ -214,6 +225,10 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
 
       /* Copy the simulation. */
       ResourceUtilities.copyFolderContents( selectedFolder, targetFolder );
+
+      /* Update the map. */
+      final String key = String.format( "%s_%s", selectedScenario.getURI(), selectedFolder.getName() );
+      newSimulationFolders.put( key, targetFolder );
     }
   }
 

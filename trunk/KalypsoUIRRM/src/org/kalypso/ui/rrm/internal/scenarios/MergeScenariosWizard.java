@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.scenarios;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
@@ -102,11 +103,28 @@ public class MergeScenariosWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
+    /* Were all selected scenarios verified? */
+    final boolean scenariosVerified = wereSelectedScenariosVerified();
+
+    /* Determine the properties of the message dialog. */
+    int kind = MessageDialog.INFORMATION;
+    String message = "Möchten Sie die ausgewählten Szenarien importieren?";
+    if( !scenariosVerified )
+    {
+      kind = MessageDialog.WARNING;
+      message = "Möchten Sie die ausgewählten Szenarien importieren? Nicht jedes ausgewählte Szenario wurde gegen das aktive Szenario verglichen.";
+    }
+
+    /* Open the message dialog. */
+    final MessageDialog dialog = new MessageDialog( getShell(), getWindowTitle(), null, message, kind, new String[] { "Ja", "Abbrechen" }, 1 );
+    if( dialog.open() != 0 )
+      return false;
+
     /* Create the operation. */
     final MergeScenariosOperation operation = new MergeScenariosOperation( m_scenario, m_scenariosData );
 
     /* Execute the operation. */
-    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, operation );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
     {
       /* Log the error message. */
@@ -117,6 +135,20 @@ public class MergeScenariosWizard extends Wizard
       statusDialog.open();
 
       return false;
+    }
+
+    return true;
+  }
+
+  private boolean wereSelectedScenariosVerified( )
+  {
+    final ScenarioCompareStatus compareStatus = m_mergeScenariosWizardPage.getCompareStatus();
+
+    final IScenario[] selectedScenarios = m_scenariosData.getSelectedScenarios();
+    for( final IScenario selectedScenario : selectedScenarios )
+    {
+      if( !compareStatus.hasStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_MODEL ) )
+        return false;
     }
 
     return true;

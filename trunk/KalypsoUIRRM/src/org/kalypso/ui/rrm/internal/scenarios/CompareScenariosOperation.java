@@ -40,6 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileInfo;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -47,6 +53,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 
 import de.renew.workflow.connector.cases.IScenario;
@@ -69,17 +76,25 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
   private final MergeScenariosData m_scenariosData;
 
   /**
+   * The scenario compare status contains stati for several cases.
+   */
+  private final ScenarioCompareStatus m_compareStatus;
+
+  /**
    * The constructor.
    * 
    * @param scenario
    *          The scenario, against the others scenarios should be compared to.
    * @param scenariosData
    *          The scenarios data object.
+   * @param compareStatus
+   *          The scenario compare status contains stati for several cases.
    */
-  public CompareScenariosOperation( final IScenario scenario, final MergeScenariosData scenariosData )
+  public CompareScenariosOperation( final IScenario scenario, final MergeScenariosData scenariosData, final ScenarioCompareStatus compareStatus )
   {
     m_scenario = scenario;
     m_scenariosData = scenariosData;
+    m_compareStatus = compareStatus;
   }
 
   /**
@@ -103,39 +118,64 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         throw new IllegalArgumentException( "No scenarios selected..." );
 
       /* Monitor. */
-      monitor.beginTask( String.format( "Comparing the scenarios against the scenario '%s'...", m_scenario.getName() ), (750 * selectedScenarios.length) + 250 );
+      monitor.beginTask( String.format( "Comparing the scenarios against the scenario '%s'...", m_scenario.getName() ), 750 * selectedScenarios.length );
+
+      /* Get the reference rrm scenario. */
+      final IFolder referenceScenariofolder = m_scenario.getFolder();
+      final RrmScenario referenceRrmScenario = new RrmScenario( referenceScenariofolder );
+
+      /* Get the files of the reference rrm scenario. */
+      final IFile referenceModelFile = referenceRrmScenario.getModelFile();
+      final IFile referenceParameterGml = referenceRrmScenario.getParameterGml();
+      final IFile referenceHydrotopGml = referenceRrmScenario.getHydrotopGml();
 
       /* Loop all selected scenarios. */
       for( final IScenario selectedScenario : selectedScenarios )
       {
+        /* Get the selected rrm scenario. */
+        final IFolder selectedFolder = selectedScenario.getFolder();
+        final RrmScenario selectedRrmScenario = new RrmScenario( selectedFolder );
+
+        /* Get the files of the selected rrm scenario. */
+        final IFile selectedModelFile = selectedRrmScenario.getModelFile();
+        final IFile selectedParameterGml = selectedRrmScenario.getParameterGml();
+        final IFile selectedHydrotopGml = selectedRrmScenario.getHydrotopGml();
+
         /* Monitor. */
         monitor.subTask( "Comparing the model" );
 
-        // TODO
+        /* Compare. */
+        if( !m_compareStatus.hasStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_MODEL ) )
+        {
+          final IStatus modelStatus = compareFiles( referenceModelFile, selectedModelFile );
+          m_compareStatus.putStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_MODEL, modelStatus );
+        }
 
         /* Monitor. */
         monitor.worked( 250 );
         monitor.subTask( "Comparing the parameter..." );
 
-        // TODO
+        /* Compare. */
+        if( !m_compareStatus.hasStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_PARAMETER ) )
+        {
+          final IStatus parameterStatus = compareFiles( referenceParameterGml, selectedParameterGml );
+          m_compareStatus.putStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_PARAMETER, parameterStatus );
+        }
 
         /* Monitor. */
         monitor.worked( 250 );
         monitor.subTask( "Comparing the hydrotopes..." );
 
-        // TODO
+        /* Compare. */
+        if( !m_compareStatus.hasStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_HYDROTOPES ) )
+        {
+          final IStatus hydrotopeStatus = compareFiles( referenceHydrotopGml, selectedHydrotopGml );
+          m_compareStatus.putStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_HYDROTOPES, hydrotopeStatus );
+        }
 
         /* Monitor. */
         monitor.worked( 250 );
       }
-
-      /* Monitor. */
-      monitor.subTask( "Updating the UI..." );
-
-      // TODO
-
-      /* Monitor. */
-      monitor.worked( 250 );
 
       return collector.asMultiStatus( String.format( "Comparing the scenarios against the scenario '%s' succeeded.", m_scenario.getName() ) );
     }
@@ -149,5 +189,23 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  private IStatus compareFiles( final IFile referenceModelFile, final IFile selectedModelFile ) throws CoreException
+  {
+    final IFileStore referenceStore = EFS.getStore( referenceModelFile.getLocationURI() );
+    final IFileInfo referenceFileInfo = referenceStore.fetchInfo();
+    final long referenceLength = referenceFileInfo.getLength();
+
+    final IFileStore selectedStore = EFS.getStore( selectedModelFile.getLocationURI() );
+    final IFileInfo selectedFileInfo = selectedStore.fetchInfo();
+    final long selectedLength = selectedFileInfo.getLength();
+
+    if( referenceLength != selectedLength )
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Changed" );
+
+    // TODO Eventually other checks...
+
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Not changed" );
   }
 }

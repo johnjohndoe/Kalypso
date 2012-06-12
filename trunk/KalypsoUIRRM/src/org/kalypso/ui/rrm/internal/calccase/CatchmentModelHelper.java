@@ -665,7 +665,7 @@ public class CatchmentModelHelper
         collector.add( status );
       }
 
-      /* Compare other timeseries (created by timeseries mappings), */
+      /* Compare other timeseries (created by timeseries mappings). */
       for( final TimeseriesMappingType mappingType : TimeseriesMappingType.values() )
       {
         final IStatus status = compareMapping( model, tmpModel, context, tmpContext, mappingType );
@@ -725,37 +725,37 @@ public class CatchmentModelHelper
   {
     /* Get the timeseries links of the catchment. */
     final TimeseriesLinkType link = (TimeseriesLinkType) catchment.getProperty( linkProperty );
-  
+
     /* Get the timeseries links of the temporary catchment. */
     final TimeseriesLinkType tmpLink = (TimeseriesLinkType) tmpCatchment.getProperty( linkProperty );
-  
+
     /* Compare the temperature timeseries. */
     return compareTimeseries( context, link, tmpContext, tmpLink, catchment.getName() );
-  
+
   }
 
   private static IStatus compareMapping( final NaModell model, final NaModell tmpModel, final URL context, final URL tmpContext, final TimeseriesMappingType mappingType ) throws MalformedURLException, SensorException
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
-  
+
     /* Both lists must be in the same order, because the temporary one is a copy. */
     final Feature[] modelElements = mappingType.getModelElements( model );
     final Feature[] tmpModelElements = mappingType.getModelElements( tmpModel );
-  
+
     final QName modelLinkProperty = mappingType.getModelLinkProperty();
     for( int i = 0; i < modelElements.length; i++ )
     {
       final Feature modelElement = modelElements[i];
       final Feature tmpModelElement = tmpModelElements[i];
-  
+
       final TimeseriesLinkType modelLink = (TimeseriesLinkType) modelElement.getProperty( modelLinkProperty );
       final TimeseriesLinkType tmpModelLink = (TimeseriesLinkType) tmpModelElement.getProperty( modelLinkProperty );
-  
+
       final IStatus status = compareTimeseries( context, modelLink, tmpContext, tmpModelLink, modelElement.getName() );
       collector.add( status );
     }
-  
+
     return collector.asMultiStatus( String.format( "Verifying the timeseries mapping of type '%s'", mappingType.getLabel() ) );
   }
 
@@ -763,30 +763,30 @@ public class CatchmentModelHelper
   {
     if( link == null && tmpLink == null )
       return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), statusLabel );
-  
+
     /* The status collector. */
     final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
-  
+
     /* Load the timeseries. */
     /* The time zone may be different to that of the newly generated timeseries. */
     final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
     final IObservation observation = ZmlFactory.parseXML( location );
-  
+
     /* Load the temporary timeseries. */
     /* The time zone may be different to that of the original timeseries. */
     final URL tmpLocation = UrlResolverSingleton.resolveUrl( tmpContext, tmpLink.getHref() );
     final IObservation tmpObservation = ZmlFactory.parseXML( tmpLocation );
-  
+
     /* Get the values of both timeseries. */
     final ITupleModel values = observation.getValues( null );
     final ITupleModel tmpValues = tmpObservation.getValues( null );
-  
+
     /* Build a hash date->value for the old timeseries. */
     final Map<Long, Double> hash = buildHash( values );
-  
+
     /* Build a hash date->value for the new timeseries. */
     final Map<Long, Double> tmpHash = buildHash( tmpValues );
-  
+
     /* Loop through the new hash. */
     int differences = 0;
     for( final Entry<Long, Double> tmpEntry : tmpHash.entrySet() )
@@ -794,23 +794,23 @@ public class CatchmentModelHelper
       /* Get the key and the value of the new timeseries. */
       final Long tmpKey = tmpEntry.getKey();
       final Double tmpValue = tmpEntry.getValue();
-  
+
       /* Get the value of the old timeseries. */
       final Double value = hash.get( tmpKey );
-  
+
       /* Compare the values of the new timeseries with the ones in the old timeseries. */
       // TODO 0.01 different with other datatypes?
       if( value == null || Math.abs( tmpValue.doubleValue() - value.doubleValue() ) > 0.01 )
         differences++;
     }
-  
+
     /* Calculate the procentual difference. */
     if( differences > 0 )
     {
       final int percent = (differences * 100) / tmpHash.size();
       collector.add( IStatus.WARNING, "The new timeseries' values differ by %d%% (%d differences).", null, percent, differences );
     }
-  
+
     return collector.asMultiStatus( statusLabel );
   }
 
