@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,44 +38,53 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.timeseriesMappings;
+package org.kalypso.ui.rrm.internal.timeseries.operations;
 
-import java.util.Date;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.core.resources.IFile;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
 
 /**
- * Binding class for tmrrm:TimeseriesMapping
+ * updates updated timeseries_mappings.gml times series links.
  * 
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public interface ITimeseriesMapping extends Feature
+public class UpdateTimeseriesMappingsVisitor implements IFeatureBindingCollectionVisitor<ITimeseriesMapping>
 {
-  QName FEATURE_TIMESERIES_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "TimeseriesMapping" ); //$NON-NLS-1$
 
-  QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "comment" ); //$NON-NLS-1$
+  private final IFile m_oldFile;
 
-  QName PROPERTY_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "type" ); //$NON-NLS-1$
+  private final String m_href;
 
-  QName PROPERTY_LAST_MODIFIED = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "lastModified" ); //$NON-NLS-1$
+  public UpdateTimeseriesMappingsVisitor( final IFile oldFile, final String href )
+  {
+    m_oldFile = oldFile;
+    m_href = href;
+  }
 
-  QName MEMBER_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "mappingMember" ); //$NON-NLS-1$
+  @Override
+  public void visit( final ITimeseriesMapping timeseriesMapping )
+  {
+    final IFeatureBindingCollection<IMappingElement> mappings = timeseriesMapping.getMappings();
+    for( final IMappingElement mapping : mappings )
+    {
+      final ZmlLink timeseries = mapping.getLinkedTimeseries();
+      final IFile lnk = timeseries.getFile();
 
-  IFeatureBindingCollection<IMappingElement> getMappings( );
+      if( Objects.equal( m_oldFile, lnk ) )
+      {
+        final TimeseriesLinkType linkType = timeseries.getTimeseriesLink();
+        linkType.setHref( m_href );
+        mapping.setLinkedTimeseries( m_href );
+      }
 
-  String getComment( );
+    }
 
-  void setComment( String comment );
+  }
 
-  TimeseriesMappingType getType( );
-
-  void setType( TimeseriesMappingType type );
-
-  Date getLastModified( );
-
-  void setLastModified( Date date );
 }

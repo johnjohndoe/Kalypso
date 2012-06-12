@@ -49,16 +49,16 @@ import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * Binding class for tmrrm:MappingElement
- *
+ * 
  * @author Gernot Belger
  */
 public interface IMappingElement extends Feature
 {
-  public static final QName FEATURE_MAPPING_ELEMENT = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "MappingElement" ); //$NON-NLS-1$
+  QName FEATURE_MAPPING_ELEMENT = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "MappingElement" ); //$NON-NLS-1$
 
-  public static final QName MEMBER_MODEL_ELEMENT_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "modelElementLink" ); //$NON-NLS-1$
+  QName MEMBER_MODEL_ELEMENT_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "modelElementLink" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_TIMESERIES_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "timeseriesLink" ); //$NON-NLS-1$
+  QName PROPERTY_TIMESERIES_LINK = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "timeseriesLink" ); //$NON-NLS-1$
 
   IXLinkedFeature getLinkedModelElement( );
 

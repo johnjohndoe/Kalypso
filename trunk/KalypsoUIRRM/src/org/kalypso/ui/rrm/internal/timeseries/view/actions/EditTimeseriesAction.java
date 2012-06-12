@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.apache.commons.io.IOCase;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
@@ -50,20 +51,23 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.operations.UpdateTimeseriesMappingsVisitor;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialog;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -107,20 +111,23 @@ public class EditTimeseriesAction extends Action
       {
         source.save();
 
+        final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+
         final ICommand command = m_timeseries.applyChanges();
         if( Objects.isNotNull( command ) )
         {
-          final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
           final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
-
           stationsWorkspace.postCommand( command );
         }
 
         // quality changed? so rename zml file!
         if( isQualityChanged( oldQuality ) )
         {
-          final IFile target = link.getFile();
-          oldFile.move( target.getFullPath(), true, new NullProgressMonitor() );
+
+          final CommandableWorkspace timeseriesMappingsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
+          final ITimeseriesMappingCollection mappings = (ITimeseriesMappingCollection) timeseriesMappingsWorkspace.getRootFeature();
+
+          doUpdateFileTarget( link, oldFile, mappings );
         }
       }
 
@@ -130,6 +137,29 @@ public class EditTimeseriesAction extends Action
     catch( final Throwable t )
     {
       t.printStackTrace();
+    }
+
+  }
+
+  private void doUpdateFileTarget( final ZmlLink link, final IFile oldFile, final ITimeseriesMappingCollection mappings ) throws CoreException
+  {
+    final IFile target = link.getFile();
+
+    try
+    {
+      if( mappings != null )
+      {
+        final IFeatureBindingCollection<ITimeseriesMapping> collection = mappings.getTimeseriesMappings();
+        collection.accept( new UpdateTimeseriesMappingsVisitor( oldFile, link.getHref() ) );
+      }
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+    finally
+    {
+      oldFile.move( target.getFullPath(), true, new NullProgressMonitor() );
     }
 
   }
