@@ -50,6 +50,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -70,6 +71,8 @@ public class SnowTaskHandler extends AbstractHandler
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window.getActivePage();
+
+    KalypsoCorePlugin.getDefault().getSelectionManager().clear();
 
     configureFeatureView( activePage );
 

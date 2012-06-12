@@ -49,6 +49,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
@@ -84,6 +85,8 @@ public class SimulationManagementTaskHandler extends AbstractHandler
     final IViewPart part = page.findView( FeatureView.ID );
     if( !(part instanceof FeatureView) )
       return;
+
+    KalypsoCorePlugin.getDefault().getSelectionManager().clear();
 
     final FeatureView featureView = (FeatureView) part;
     final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();

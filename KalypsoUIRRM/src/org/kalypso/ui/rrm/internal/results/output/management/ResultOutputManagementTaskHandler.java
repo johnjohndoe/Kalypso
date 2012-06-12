@@ -49,6 +49,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -70,6 +71,8 @@ public class ResultOutputManagementTaskHandler extends AbstractHandler
     /* set input to gtt tables */
     final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
+
+    KalypsoCorePlugin.getDefault().getSelectionManager().clear();
 
     WorkflowHandlerUtils.setGttInput( activePage, "NaNodes", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:NaNodes:gtt", "Knoten", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
     WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.resultOutputManagement:workflow:Catchments:gtt", "Einzugsgebiete", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
