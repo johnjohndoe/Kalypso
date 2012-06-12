@@ -311,9 +311,12 @@
             <!-- TODO: Wertebereich einschränken > 0 -->
             <element name="diameterPipe" type="double" />
             <element name="roughnessPipe" type="double" />
+            <element name="drainagePipeKFvalue" type="double" />
+            <element name="drainagePipeSlope" type="double" />
             <element name="overflowHeight" type="double" />
             <element name="areaPerOutlet" type="double" />
             <element name="widthOfArea" type="double" />
+            <element name="isSealed" type="boolean" />
           </sequence>
         </extension>
       </complexContent>
