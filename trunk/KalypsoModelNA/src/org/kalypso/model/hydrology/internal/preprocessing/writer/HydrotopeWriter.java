@@ -166,7 +166,8 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     }
 
     /* Write hydrotope line */
-    writer.format( Locale.US, "%-10.3f %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f%n", hydrotopeSealing.getNaturalArea(), landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopID, totalSealingRate ); //$NON-NLS-1$
+    /* TODO last 0 is for the old calculation core - otherwise hydrotope file can't be read */
+    writer.format( Locale.US, "%-10.3f %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f 0%n", hydrotopeSealing.getNaturalArea(), landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopID, totalSealingRate ); //$NON-NLS-1$
   }
 
   private Soiltype findSoiltype( final IHydrotope hydrotop ) throws NAPreprocessorException
