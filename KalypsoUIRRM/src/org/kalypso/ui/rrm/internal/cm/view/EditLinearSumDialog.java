@@ -68,7 +68,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.dialog.DatabindingTitleAreaDialog;
 import org.kalypso.commons.databinding.validation.ValidationStatusUtilities;

@@ -53,7 +53,6 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;

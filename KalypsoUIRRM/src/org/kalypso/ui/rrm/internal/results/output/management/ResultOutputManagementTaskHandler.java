@@ -49,7 +49,6 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;

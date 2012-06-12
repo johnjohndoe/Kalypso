@@ -40,28 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.gml.feature.view;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
+import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypso.ui.rrm.internal.gml.feature.view.dialogs.ChooseTimeseriesDialog;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -94,40 +88,8 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
     m_text = new Text( body, SWT.BORDER | SWT.READ_ONLY );
     m_text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final Button button = new Button( body, SWT.PUSH );
-    button.setText( "..." ); //$NON-NLS-1$
-
-    button.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
-      {
-        final CommandableWorkspace workspace = FindTimeseriesLinkRunnable.getStationsWorkspace();
-        final IStationCollection collection = FindTimeseriesLinkRunnable.getStationCollection();
-
-        if( Objects.isNull( workspace, collection ) )
-        {
-          MessageDialog.openError( button.getShell(), Messages.getString( "ChooseZmlLinkFeatureViewControl_0" ), Messages.getString( "ChooseZmlLinkFeatureViewControl_1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-          return;
-        }
-
-        final ChooseTimeseriesDialog dialog = new ChooseTimeseriesDialog( button.getShell(), workspace, collection, m_parameterType );
-        dialog.setSelection( getTimeseries() );
-        if( dialog.open() == Window.OK )
-        {
-          final ITimeseries selection = dialog.getSelection();
-          final ZmlLink link = selection == null ? null : selection.getDataLink();
-          final TimeseriesLinkType linkType = link == null ? null : link.getTimeseriesLink();
-
-          final Feature feature = getFeature();
-
-          final FeatureChange change = new FeatureChange( feature, getFeatureTypeProperty(), linkType );
-          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( feature.getWorkspace(), new FeatureChange[] { change } );
-
-          fireFeatureChange( command );
-        }
-      }
-    } );
+    final Action action = new ChooseZmlLinkAction( this, "..." ); //$NON-NLS-1$
+    ActionButton.createButton( null, body, action );
 
     updateControl();
 
@@ -148,7 +110,7 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
     m_text.setText( Timeserieses.toLinkLabel( timeseries ) );
   }
 
-  protected ITimeseries getTimeseries( )
+  ITimeseries getTimeseries( )
   {
     final Object objLink = getFeature().getProperty( getFeatureTypeProperty() );
     if( !(objLink instanceof TimeseriesLinkType) )
@@ -164,5 +126,15 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
   public boolean isValid( )
   {
     return true;
+  }
+
+  void changeLink( final TimeseriesLinkType newValue )
+  {
+    final Feature feature = getFeature();
+
+    final FeatureChange change = new FeatureChange( feature, getFeatureTypeProperty(), newValue );
+    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( feature.getWorkspace(), new FeatureChange[] { change } );
+
+    fireFeatureChange( command );
   }
 }
