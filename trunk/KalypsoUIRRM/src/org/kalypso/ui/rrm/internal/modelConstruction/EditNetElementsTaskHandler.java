@@ -53,6 +53,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -90,6 +91,8 @@ public class EditNetElementsTaskHandler extends AbstractHandler
     // FIXME: before I18N, check all other calls to waitForAndErrorDialog and remove duplicate strings
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, windowTitle, Messages.getString("EditNetElementsTaskHandler_0") ) ) //$NON-NLS-1$
       return null;
+
+    KalypsoCorePlugin.getDefault().getSelectionManager().clear();
 
     configureFeatureView( activePage );
 
