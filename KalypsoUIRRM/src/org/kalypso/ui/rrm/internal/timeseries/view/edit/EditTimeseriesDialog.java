@@ -94,10 +94,6 @@ public class EditTimeseriesDialog extends ShowTimeseriesDialog
     final ITimeseries timeseries = m_timeseries.getFeature();
     final IStation station = (IStation) timeseries.getOwner();
 
-// final EditTimeseriesQualityComposite editQuantity = new EditTimeseriesQualityComposite( controlSection, station,
-// m_timeseries, m_binding, true );
-// editQuantity.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-
     final TimeseriesPropertiesComposite properties = new TimeseriesPropertiesComposite( station, controlSection, m_timeseries, m_binding, false );
     properties.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 

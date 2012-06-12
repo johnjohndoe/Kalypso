@@ -49,14 +49,14 @@ import de.renew.workflow.connector.cases.IModel;
 
 /**
  * Binding class for tmrrm:TimeseriesMappingCollection
- *
+ * 
  * @author Gernot Belger
  */
 public interface ITimeseriesMappingCollection extends IModel
 {
-  public static final QName FEATURE_TIMESERIES_MAPPING_COLLECTION = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "TimeseriesMappingCollection" ); //$NON-NLS-1$
+  QName FEATURE_TIMESERIES_MAPPING_COLLECTION = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "TimeseriesMappingCollection" ); //$NON-NLS-1$
 
-  public static final QName MEMBER_TIMESERIES_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "timeseriesMappingMember" ); //$NON-NLS-1$
+  QName MEMBER_TIMESERIES_MAPPING = new QName( NaModelConstants.NS_TIMESERIES_MAPPING, "timeseriesMappingMember" ); //$NON-NLS-1$
 
   IFeatureBindingCollection<ITimeseriesMapping> getTimeseriesMappings( );
 }
