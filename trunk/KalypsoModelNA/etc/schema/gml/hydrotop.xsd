@@ -38,9 +38,6 @@
             <element ref="hyd:corrSealing" />
             <element ref="hyd:m_perkm" />
             <element ref="hyd:m_f1gws" />
-            <!-- DEPRECATED: not used any more -->
-            <element name="hydType" type="hyd:hydTypeEnumerationType" minOccurs="0" />
-
             <element ref="naModel:catchmentLinkMember" minOccurs="0" />
 
             <element name="lnkDefinition" minOccurs="0">
@@ -82,14 +79,5 @@
       </restriction>
     </simpleType>
   </element>
-
-  <!-- Deprecated: probably this is not used any more. -->
-  <simpleType name="hydTypeEnumerationType">
-    <restriction base="string">
-      <enumeration value="Bodenspeicher" />
-      <enumeration value="MuldenRigole" />
-      <enumeration value="Dachbegruenung" />
-    </restriction>
-  </simpleType>
 
 </schema>
