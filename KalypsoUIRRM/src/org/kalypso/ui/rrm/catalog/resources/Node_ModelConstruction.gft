@@ -99,7 +99,7 @@
       <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" horizontalSpan="3" />
       <gridLayout numColumns="3"/>
   
-      <label property="rrm:qqRelatedNode" style="SWT.NONE" visible="true">
+      <label property="rrm:qqRelatedNode" style="SWT.NONE" visible="true" text="%node.modelConstruction.gft.label.qqRelatedNode">
         <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
       </label>
       <combo property="rrm:qqRelatedNode" style="SWT.DROP_DOWN | SWT.READ_ONLY">
