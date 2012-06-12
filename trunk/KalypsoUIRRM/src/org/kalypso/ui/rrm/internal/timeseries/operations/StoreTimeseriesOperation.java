@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.Status;
 import org.joda.time.Period;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -121,8 +122,11 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
   {
     final IStatusCollector stati = new StatusCollector( KalypsoCorePlugin.getID() );
 
-    final Period timestep = m_operation.getTimestep();
     final IObservation observation = m_operation.getObservation();
+    final Period timestep = m_operation.getTimestep();
+    if( Objects.isNull( observation, timestep ) )
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Storing timeseries failed - necessary parameter are missing." );
+
     final DateRange daterange = m_operation.getDateRange();
 
     final IFile targetFile = createDataFile( m_bean, timestep, stati );
