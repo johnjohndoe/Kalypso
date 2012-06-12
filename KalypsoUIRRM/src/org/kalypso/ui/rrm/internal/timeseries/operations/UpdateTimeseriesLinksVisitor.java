@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * updated outdated time series links to the new one
- *
+ * 
  * @author Dirk Kuch
  */
 public class UpdateTimeseriesLinksVisitor implements FeatureVisitor
@@ -108,6 +108,9 @@ public class UpdateTimeseriesLinksVisitor implements FeatureVisitor
         {
           final TimeseriesLinkType link = (TimeseriesLinkType) obj;
           final String href = link.getHref();
+          if( href == null )
+            continue;
+
           final URL url = UrlResolverSingleton.resolveUrl( feature.getWorkspace().getContext(), href );
 
           if( m_old.equals( url ) )

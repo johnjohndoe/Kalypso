@@ -40,22 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.operations;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * moves a timeseries from one station to the given target station
- *
+ * 
  * @author Dirk Kuch
  */
 public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
@@ -78,6 +88,8 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     final ZmlLink link = m_timeseries.getDataLink();
+    final IFile oldFile = link.getFile();
+
     final IObservation observation = link.getObservationFromPool();
 
     final ObservationImportOperation importOperation = new ObservationImportOperation( observation, m_timeseries.getParameterType() );
@@ -87,6 +99,9 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     stati.add( storeOperation.execute( monitor ) );
 
     m_moved = storeOperation.getTimeseries();
+    if( m_moved == null )
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Moving time series failed - couldn't create target time series" );
+
     stati.add( UpdateTimeseriesLinks.doUpdateTimeseriesLinks( m_timeseries, m_moved ) );
 
     UpdateTimeseriesLinks.doUpdateTimeseriesLinks( m_timeseries, m_moved );
@@ -99,7 +114,22 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_moved, status );
     stati.add( storeStatusOperation.execute( monitor ) );
 
+    doUpdateMappings( oldFile, m_moved );
+
     return status; //$NON-NLS-1$
+  }
+
+  private void doUpdateMappings( final IFile oldFile, final ITimeseries target ) throws IllegalArgumentException, CoreException
+  {
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+    final CommandableWorkspace timeseriesMappingsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
+    final ITimeseriesMappingCollection mappings = (ITimeseriesMappingCollection) timeseriesMappingsWorkspace.getRootFeature();
+
+    if( mappings != null )
+    {
+      final IFeatureBindingCollection<ITimeseriesMapping> collection = mappings.getTimeseriesMappings();
+      collection.accept( new UpdateTimeseriesMappingsVisitor( oldFile, target.getDataLink().getHref() ) );
+    }
   }
 
   public ITimeseries getMovedTimeseries( )

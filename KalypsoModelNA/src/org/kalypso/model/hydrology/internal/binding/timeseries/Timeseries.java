@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.binding.timeseries;
 
+import java.io.File;
 import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -178,7 +179,16 @@ public class Timeseries extends Feature_Impl implements ITimeseries
     final ZmlLink dataLink = getDataLink();
     final IFile file = dataLink.getFile();
     if( file != null && file.exists() )
+    {
       file.delete( false, true, null );
+
+      /* zml import status file? so delete it, too */
+      final String href = file.getLocation().toOSString();
+      final File statusFile = new File( href + ".status" );
+      if( statusFile.exists() )
+        statusFile.delete();
+    }
+
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })

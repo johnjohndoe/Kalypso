@@ -102,7 +102,11 @@ public class ObservationImportOperation implements IImportTimeseriesOperation
   @Override
   public Period getTimestep( )
   {
-    final FindTimeStepOperation timeStepOperation = new FindTimeStepOperation( getObservation() );
+    final IObservation observation = getObservation();
+    if( observation == null )
+      return null;
+
+    final FindTimeStepOperation timeStepOperation = new FindTimeStepOperation( observation );
     timeStepOperation.execute( new NullProgressMonitor() );
 
     return timeStepOperation.getTimestep();
