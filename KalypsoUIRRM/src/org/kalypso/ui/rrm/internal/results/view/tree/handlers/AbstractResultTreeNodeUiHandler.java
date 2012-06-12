@@ -99,7 +99,7 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     final List<Action> actions = new ArrayList<Action>();
     actions.add( new OpenTextLogAction( "Open calculation log", "Displays the calculation log.", m_simulation.getCalculationLog() ) );
     actions.add( new OpenOutputZipAction( "Open error log (calculation core)", "Displays the error log.", m_simulation, true ) );
-    actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.", m_simulation, false ) );
+    // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.", m_simulation, false ) );
     actions.add( new OpenTextLogAction( "Open Mass Balance", "Displays the mass balance.", m_simulation.getBilanzTxt() ) );
     actions.add( new OpenTextLogAction( "Open Statistics", "Displays the statistics.", m_simulation.getStatisticsCsv() ) );
 

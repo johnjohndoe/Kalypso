@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -294,7 +297,11 @@ public class MergeMappingsWorker
     }
   }
 
-  public IStatus createSimulations( IProgressMonitor monitor )
+  /**
+   * @param newSimulationFolders
+   *          A map <scenarioUri_simulationName, newSimulationFolder>.
+   */
+  public IStatus createSimulations( final Map<String, IFolder> newSimulationFolders, IProgressMonitor monitor )
   {
     /* Monitor. */
     if( monitor == null )
@@ -340,14 +347,20 @@ public class MergeMappingsWorker
 
           /* Update the hrefs. */
           updateHrefs( sourceScenario, sourceSimulation, targetSimulation );
-        }
 
-        /* Save the target simulations. */
-        GmlSerializer.saveWorkspace( targetSimulationsWorkspace, targetSimulationsGml );
+          /* Update the description. */
+          final String key = String.format( "%s_%s", sourceScenario.getURI(), sourceSimulation.getDescription() );
+          final IFolder simulationFolder = newSimulationFolders.get( key );
+          if( simulationFolder != null )
+            targetSimulation.setDescription( simulationFolder.getName() );
+        }
 
         /* Monitor. */
         monitor.worked( 250 );
       }
+
+      /* Save the target simulations. */
+      GmlSerializer.saveWorkspace( targetSimulationsWorkspace, targetSimulationsGml );
 
       return collector.asMultiStatus( "Creating the simulations succeeded." );
     }

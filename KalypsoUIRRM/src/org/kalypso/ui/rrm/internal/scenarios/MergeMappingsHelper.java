@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -146,7 +149,17 @@ public class MergeMappingsHelper
 
   private GeneratorValue isEqualGeneratorAvailable( final IRainfallGenerator generator )
   {
-    // TODO Implement. Like this all generators (except the ones added with addExistingGenerator()) will be copied.
+    final Collection<GeneratorValue> values = m_generators.values();
+    for( final GeneratorValue value : values )
+    {
+      // FIXME What about multi generators?
+      // FIXME Only compare hrefs...
+      // FIXME Links in multi generators must be repaired...
+      final IRainfallGenerator existingGenerator = value.getGenerator();
+      if( CatchmentModelHelper.compareGeneratorCatchments( (ILinearSumGenerator) existingGenerator, (ILinearSumGenerator) generator, true ) )
+        return value;
+    }
+
     return null;
   }
 

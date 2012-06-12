@@ -92,6 +92,11 @@ public class MergeScenariosWizardPage extends WizardPage
   protected final MergeScenariosData m_scenariosData;
 
   /**
+   * The scenario compare status contains stati for several cases.
+   */
+  protected final ScenarioCompareStatus m_compareStatus;
+
+  /**
    * The data binding context.
    */
   private DatabindingWizardPage m_dataBinding;
@@ -117,6 +122,7 @@ public class MergeScenariosWizardPage extends WizardPage
 
     m_scenario = scenario;
     m_scenariosData = scenariosData;
+    m_compareStatus = new ScenarioCompareStatus();
     m_dataBinding = null;
     m_treeViewer = null;
 
@@ -139,7 +145,7 @@ public class MergeScenariosWizardPage extends WizardPage
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the checkbox tree viewer. */
-    m_treeViewer = new CheckboxTreeViewer( main, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL );
+    m_treeViewer = new CheckboxTreeViewer( main, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL );
     configureTreeViewer( m_treeViewer );
     m_treeViewer.setAutoExpandLevel( 2 );
     m_treeViewer.setContentProvider( new WorkflowBreadcrumbContentProvider() );
@@ -160,7 +166,7 @@ public class MergeScenariosWizardPage extends WizardPage
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        handleCompareSelected( m_scenario, m_scenariosData );
+        handleCompareSelected( m_scenario, m_scenariosData, m_compareStatus );
       }
     } );
 
@@ -197,26 +203,26 @@ public class MergeScenariosWizardPage extends WizardPage
 
     /* Create the model column. */
     final TreeViewerColumn modelViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
-    modelViewerColumn.setLabelProvider( new ModelColumnLabelProvider() );
+    modelViewerColumn.setLabelProvider( new ScenarioCompareStatusLabelProvider( m_compareStatus, ScenarioCompareStatus.KEY_MODEL ) );
     final TreeColumn modelColumn = modelViewerColumn.getColumn();
     modelColumn.setText( "Modell" );
-    modelColumn.setWidth( 75 );
+    modelColumn.setWidth( 125 );
     modelColumn.setAlignment( SWT.LEAD );
 
     /* Create the parameter column. */
     final TreeViewerColumn parameterViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
-    parameterViewerColumn.setLabelProvider( new ParameterColumnLabelProvider() );
+    parameterViewerColumn.setLabelProvider( new ScenarioCompareStatusLabelProvider( m_compareStatus, ScenarioCompareStatus.KEY_PARAMETER ) );
     final TreeColumn parameterColumn = parameterViewerColumn.getColumn();
     parameterColumn.setText( "Parameter" );
-    parameterColumn.setWidth( 75 );
+    parameterColumn.setWidth( 125 );
     parameterColumn.setAlignment( SWT.LEAD );
 
     /* Create the hydrotopes column. */
     final TreeViewerColumn hydrotopesViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
-    hydrotopesViewerColumn.setLabelProvider( new HydrotopesColumnLabelProvider() );
+    hydrotopesViewerColumn.setLabelProvider( new ScenarioCompareStatusLabelProvider( m_compareStatus, ScenarioCompareStatus.KEY_HYDROTOPES ) );
     final TreeColumn hydrotopesColumn = hydrotopesViewerColumn.getColumn();
     hydrotopesColumn.setText( "Hydrotope" );
-    hydrotopesColumn.setWidth( 75 );
+    hydrotopesColumn.setWidth( 125 );
     hydrotopesColumn.setAlignment( SWT.LEAD );
   }
 
@@ -243,11 +249,13 @@ public class MergeScenariosWizardPage extends WizardPage
    *          The scenario, where the others scenarios should be merged into.
    * @param scenariosData
    *          The scenarios data object.
+   * @param compareStatus
+   *          The scenario compare status contains stati for several cases.
    */
-  protected void handleCompareSelected( final IScenario scenario, final MergeScenariosData scenariosData )
+  protected void handleCompareSelected( final IScenario scenario, final MergeScenariosData scenariosData, final ScenarioCompareStatus compareStatus )
   {
     /* Create the operation. */
-    final CompareScenariosOperation operation = new CompareScenariosOperation( scenario, scenariosData );
+    final CompareScenariosOperation operation = new CompareScenariosOperation( scenario, scenariosData, compareStatus );
 
     /* Execute the operation. */
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, operation );
@@ -260,6 +268,9 @@ public class MergeScenariosWizardPage extends WizardPage
       final StatusDialog statusDialog = new StatusDialog( getShell(), status, getTitle() );
       statusDialog.open();
     }
+
+    /* Refresh. */
+    m_treeViewer.refresh();
   }
 
   /**
@@ -270,5 +281,15 @@ public class MergeScenariosWizardPage extends WizardPage
   public MergeScenariosData getScenariosData( )
   {
     return m_scenariosData;
+  }
+
+  /**
+   * This function returns the scenario compare status.
+   * 
+   * @return The scenario compare status.
+   */
+  public ScenarioCompareStatus getCompareStatus( )
+  {
+    return m_compareStatus;
   }
 }

@@ -207,7 +207,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       m_actions = new ArrayList<Action>();
       m_actions.add( new OpenTextLogAction( "Calculation log", "Displays the calculation log.", simulation.getCalculationLog() ) );
       m_actions.add( new OpenOutputZipAction( "Error log (calculation core)", "Displays the error log.", simulation, true ) );
-      m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
+      // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
       m_actions.add( new OpenTextLogAction( "Mass Balance", "Displays the mass balance.", simulation.getBilanzTxt() ) );
       m_actions.add( new OpenTextLogAction( "Statistics", "Displays the statistics.", simulation.getStatisticsCsv() ) );
 
