@@ -344,7 +344,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    * This function converts the old meta control to the new meta control. It saves the new meta control to the file of
    * the old meta control.
    */
-  private NAControl convertMetaControl( ) throws Exception
+  private void convertMetaControl( ) throws Exception
   {
     /* Load the old meta control. */
     final org.kalypso.model.hydrology.binding._11_6.NAControl oldControl = m_data.loadModel( m_simulationPath + "/" + INaCalcCaseConstants.CALCULATION_GML_PATH ); //$NON-NLS-1$
@@ -352,13 +352,10 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     /* Convert the old meta control to the new meta control. */
     final NAControl newControl = convertMetaControl( oldControl );
 
-    /* Adjust the exe version. */
-    tweakExeVersion( newControl );
-
     /* Save the new meta control, overwriting the file with the old meta control. */
     m_data.saveModel( m_simulationPath + "/" + INaCalcCaseConstants.CALCULATION_GML_PATH, newControl ); //$NON-NLS-1$
 
-    return newControl;
+    newControl.getWorkspace().dispose();
   }
 
   /**
@@ -394,26 +391,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     getLog().add( IStatus.OK, Messages.getString( "CalcCaseConverter.8" ) ); //$NON-NLS-1$
 
     return newControl;
-  }
-
-  private void tweakExeVersion( final NAControl newMetaControl )
-  {
-    final String exeVersion = newMetaControl.getExeVersion();
-    final String chosenExe = m_globalData.getChosenExe();
-    if( chosenExe != null )
-    {
-      newMetaControl.setExeVersion( chosenExe );
-
-      final String statusMsg = Messages.getString( "CalcCaseConverter_2", chosenExe, exeVersion ); //$NON-NLS-1$
-      getLog().add( IStatus.OK, statusMsg );
-    }
-    else
-    {
-      final String statusMsg = String.format( Messages.getString( "CalcCaseConverter_3" ), exeVersion ); //$NON-NLS-1$
-      getLog().add( IStatus.OK, statusMsg );
-    }
-
-    newMetaControl.getWorkspace().dispose();
   }
 
   /**

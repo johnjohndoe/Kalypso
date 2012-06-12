@@ -85,11 +85,6 @@ public class GlobalConversionData
   private final File m_targetDir;
 
   /**
-   * The choosen exe.
-   */
-  private final String m_chosenExe;
-
-  /**
    * The timeseries index.
    */
   private final TimeseriesIndex m_timeseriesIndex;
@@ -116,11 +111,10 @@ public class GlobalConversionData
    * @param timeseriesIndex
    *          The timeseries index.
    */
-  public GlobalConversionData( final File sourceDir, final File targetDir, final String chosenExe, final TimeseriesIndex timeseriesIndex )
+  public GlobalConversionData( final File sourceDir, final File targetDir, final TimeseriesIndex timeseriesIndex )
   {
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
-    m_chosenExe = chosenExe;
     m_timeseriesIndex = timeseriesIndex;
     m_baseScenarioDir = new File( targetDir, INaProjectConstants.FOLDER_BASIS );
     m_caseList = null;
@@ -144,16 +138,6 @@ public class GlobalConversionData
   public File getTargetDir( )
   {
     return m_targetDir;
-  }
-
-  /**
-   * This function returns the choosen exe.
-   * 
-   * @return The choosen exe.
-   */
-  public String getChosenExe( )
-  {
-    return m_chosenExe;
   }
 
   /**

@@ -44,10 +44,10 @@ import java.io.File;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.module.conversion.AbstractProjectConverter;
-import org.kalypso.ui.rrm.internal.conversion.ChooseExeConverter;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.utils.log.GeoStatusLog;
 import org.osgi.framework.Version;
@@ -61,8 +61,6 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
 
   private final File m_targetDir;
 
-  private String m_chosenExe;
-
   public RrmProjectConverter11_06to12_02( final File sourceDir, final File targetDir, final Version targetVersion )
   {
     super( String.format( Messages.getString( "RrmProjectConverter103to230_0" ), sourceDir.getName(), targetVersion ) ); //$NON-NLS-1$
@@ -74,11 +72,7 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
   @Override
   public IStatus preConversion( final Shell shell )
   {
-    final ChooseExeConverter exeChooser = new ChooseExeConverter();
-    final IStatus status = exeChooser.execute( shell );
-    m_chosenExe = exeChooser.getChosenExe();
-
-    return status;
+    return Status.OK_STATUS;
   }
 
   @Override
@@ -97,7 +91,7 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
 
       /* Build global data. */
       final TimeseriesIndex timeseriesIndex = basicModelConverter.getTimeseriesIndex();
-      final GlobalConversionData globalData = new GlobalConversionData( m_sourceDir, m_targetDir, m_chosenExe, timeseriesIndex );
+      final GlobalConversionData globalData = new GlobalConversionData( m_sourceDir, m_targetDir, timeseriesIndex );
 
       /* Convert calc cases. */
       monitor.subTask( Messages.getString( "RrmProjectConverter103to230_3" ) ); //$NON-NLS-1$
