@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -134,12 +135,16 @@ public class BasicModelConverter extends AbstractLoggingOperation
     final IPath basisPath = new Path( INaProjectConstants.FOLDER_BASIS );
 
     copyFile( new Path( INaProjectConstants.GML_MODELL_FILE ), basisPath.append( INaProjectConstants.GML_MODELL_PATH ) );
-    copyFile( new Path( INaProjectConstants.GML_HYDROTOP_FILE ), basisPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) );
+    final File hydrotope = copyFile( new Path( INaProjectConstants.GML_HYDROTOP_FILE ), basisPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) );
     copyFile( new Path( INaProjectConstants.GML_PARAMETER_FILE ), basisPath.append( INaProjectConstants.GML_PARAMETER_PATH ) );
     copyFile( new Path( "calcSynthN.gml" ), basisPath.append( INaProjectConstants.GML_SYNTH_N_PATH ) ); //$NON-NLS-1$
-    copyFile( new Path( INaProjectConstants.GML_LANDUSE_FILE ), basisPath.append( INaProjectConstants.GML_LANDUSE_PATH ) );
+    final File landuse = copyFile( new Path( INaProjectConstants.GML_LANDUSE_FILE ), basisPath.append( INaProjectConstants.GML_LANDUSE_PATH ) );
     copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
     copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_PEDOLOGIE_PATH ) );
+
+    new RemoveObsoleteHydrotopesMembers( hydrotope ).execute( new NullProgressMonitor() );
+    new RemoveObsoleteLanduseMembers( landuse ).execute( new NullProgressMonitor() );
+
   }
 
   private TimeseriesIndex copyBasicTimeseries( final IParameterTypeIndex parameterIndex, final IProgressMonitor monitor ) throws CoreException
@@ -167,12 +172,17 @@ public class BasicModelConverter extends AbstractLoggingOperation
     importer.copyTimeseries( new SubProgressMonitor( monitor, 90 / 7 ) ); //$NON-NLS-1$
   }
 
-  private void copyFile( final IPath sourcePath, final IPath targetPath ) throws IOException
+  /**
+   * @return model target file
+   */
+  private File copyFile( final IPath sourcePath, final IPath targetPath ) throws IOException
   {
     final File modelSourceFile = new File( m_sourceDir, sourcePath.toOSString() );
     final File modelTargetFile = new File( m_targetDir, targetPath.toOSString() );
 
     FileUtils.copyFile( modelSourceFile, modelTargetFile, true );
+
+    return modelTargetFile;
   }
 
   private IParameterTypeIndex fixTimeseries( ) throws Exception

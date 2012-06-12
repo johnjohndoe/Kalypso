@@ -123,7 +123,6 @@ public class EditTimeseriesAction extends Action
         // quality changed? so rename zml file!
         if( isQualityChanged( oldQuality ) )
         {
-
           final CommandableWorkspace timeseriesMappingsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
           final ITimeseriesMappingCollection mappings = (ITimeseriesMappingCollection) timeseriesMappingsWorkspace.getRootFeature();
 

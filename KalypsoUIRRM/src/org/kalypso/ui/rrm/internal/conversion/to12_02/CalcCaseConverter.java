@@ -276,9 +276,11 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     /* Copy gml files into the .models folder of the scenario. */
     copyFile( DOT_CALCULATION, m_simulationPath + "/" + INaCalcCaseConstants.CALCULATION_GML_PATH ); //$NON-NLS-1$
     copyFile( CALC_CASE, INaProjectConstants.GML_MODELL_PATH );
-    copyFile( CALC_HYDROTOP, INaProjectConstants.GML_HYDROTOP_PATH );
+    final File hydrotope = copyFile( CALC_HYDROTOP, INaProjectConstants.GML_HYDROTOP_PATH );
     copyFile( CALC_PARAMETER, INaProjectConstants.GML_PARAMETER_PATH );
     copyFile( INaCalcCaseConstants.EXPERT_CONTROL_FILE, INaCalcCaseConstants.EXPERT_CONTROL_PATH );
+
+    new RemoveObsoleteHydrotopesMembers( hydrotope ).execute( new NullProgressMonitor() );
 
     /* Copy special directories into the calccases/calccase folder of the scenario. */
     copyDir( INaCalcCaseConstants.ANFANGSWERTE_DIR, m_simulationPath + "/" + INaCalcCaseConstants.ANFANGSWERTE_DIR, false ); //$NON-NLS-1$
@@ -309,12 +311,14 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     }
   }
 
-  private void copyFile( final String sourcePath, final String targetPath ) throws IOException
+  private File copyFile( final String sourcePath, final String targetPath ) throws IOException
   {
     final File modelSourceFile = new File( m_sourceCalcCaseDir, sourcePath );
     final File modelTargetFile = new File( m_targetScenarioDir, targetPath );
 
     FileUtils.copyFile( modelSourceFile, modelTargetFile, true );
+
+    return modelTargetFile;
   }
 
   private void copyDir( final String sourcePath, final String targetPath, final boolean createEmpty ) throws IOException
