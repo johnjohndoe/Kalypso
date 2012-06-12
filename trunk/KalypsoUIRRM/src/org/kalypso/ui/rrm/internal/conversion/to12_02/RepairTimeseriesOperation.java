@@ -204,6 +204,6 @@ public class RepairTimeseriesOperation implements ICoreRunnableWithProgress
 
   private boolean isTageszeitreihe( )
   {
-    return m_timestep.equals( Period.days( 1 ) );
+    return Objects.equal( m_timestep, Period.days( 1 ) );
   }
 }
