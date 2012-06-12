@@ -48,7 +48,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;

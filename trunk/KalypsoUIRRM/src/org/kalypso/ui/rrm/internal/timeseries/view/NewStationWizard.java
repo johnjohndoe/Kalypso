@@ -51,7 +51,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.property.relation.IRelationType;

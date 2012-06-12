@@ -48,7 +48,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;

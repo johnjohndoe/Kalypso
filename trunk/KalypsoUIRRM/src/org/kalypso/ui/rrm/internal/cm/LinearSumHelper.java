@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;

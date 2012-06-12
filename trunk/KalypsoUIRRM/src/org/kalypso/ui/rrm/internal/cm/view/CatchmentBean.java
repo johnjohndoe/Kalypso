@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.cm.ICatchment;
 import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
