@@ -30,12 +30,12 @@
           <sequence>
             <element name="location" type="gml:MultiPolygonPropertyType" />
             <element name="soilTypeLink">
-              <annotation>
-                <appinfo xmlns:kapp="org.kalypso.appinfo">
-                  <kapp:documentReference>parameter.gml</kapp:documentReference>
-                </appinfo>
-              </annotation>
               <complexType>
+                <annotation>
+                  <appinfo xmlns:kapp="org.kalypso.appinfo">
+                    <kapp:documentReference>parameter.gml</kapp:documentReference>
+                  </appinfo>
+                </annotation>
                 <sequence minOccurs="0" maxOccurs="0">
                   <element ref="par:Soiltype" />
                 </sequence>
