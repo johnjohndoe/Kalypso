@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.httpclient.URIException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -72,7 +73,7 @@ public class WspTinProvider implements IGmlSourceProvider
 
             return false;
           }
-          catch( final MalformedURLException e )
+          catch( final MalformedURLException | URIException e )
           {
             throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
           }

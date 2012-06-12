@@ -44,7 +44,6 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.model.hydrology.INaSimulationData;
@@ -92,8 +91,8 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
       if( status.getSeverity() == IStatus.CANCEL )
         throw new OperationCanceledException();
 
-      if( status.getSeverity() == IStatus.ERROR )
-        throw new CoreException( status );
+// if( status.getSeverity() == IStatus.ERROR )
+// throw new CoreException( status );
 
       return true;
     }

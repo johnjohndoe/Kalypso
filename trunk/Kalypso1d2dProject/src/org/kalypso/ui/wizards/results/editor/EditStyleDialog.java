@@ -53,6 +53,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
@@ -110,7 +111,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class EditStyleDialog extends TitleAreaDialog
 {
@@ -340,7 +341,7 @@ public class EditStyleDialog extends TitleAreaDialog
             final CssParameter cssValueAmountClasses = m_fill.getParameter( "amountClasses" ); //$NON-NLS-1$
             Color fromColor = resolveColor( m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MIN_PREFIX + nodeStyleType ) );
             Color toColor = resolveColor( m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MAX_PREFIX + nodeStyleType ) );
-            Double amountOfClasses = ((Double) m_mapSldSettingsIntern.get( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType ));
+            Double amountOfClasses = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType );
             try
             {
               /*
@@ -351,7 +352,7 @@ public class EditStyleDialog extends TitleAreaDialog
               toColor = (Color) extractCssValue( cssFillMax );
               final Double extValueMin = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MIN_PREFIX + nodeStyleType );
               final Double extValueMax = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MAX_PREFIX + nodeStyleType );
-              amountOfClasses = ((Double) extractCssValue( cssValueAmountClasses ));
+              amountOfClasses = (Double) extractCssValue( cssValueAmountClasses );
               m_mapSldSettingsIntern.put( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType, amountOfClasses );
               m_maxValue = new BigDecimal( extValueMax );
               m_minValue = new BigDecimal( extValueMin );
@@ -513,13 +514,13 @@ public class EditStyleDialog extends TitleAreaDialog
   protected void okPressed( )
   {
     // write the style back to file
-    //    if( m_fill == null || m_fill.getGraphicFill() == null )
-    //    {
-    //      for( int i = 0; i < m_rules.length; i++ )
-    //      {
-    //        System.out.println( m_rules[i] );
-    //      }
-    //    }
+    // if( m_fill == null || m_fill.getGraphicFill() == null )
+    // {
+    // for( int i = 0; i < m_rules.length; i++ )
+    // {
+    // System.out.println( m_rules[i] );
+    // }
+    // }
     final String sldXML = m_sld.exportAsXML();
     final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML; //$NON-NLS-1$
 
@@ -557,8 +558,16 @@ public class EditStyleDialog extends TitleAreaDialog
         @SuppressWarnings("synthetic-access")
         public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
         {
-          final URL sldURL = ResourceUtilities.createURL( m_sldFile );
-          return new URL( sldURL, relativeOrAbsolute );
+          try
+          {
+            final URL sldURL = ResourceUtilities.createURL( m_sldFile );
+            return new URL( sldURL, relativeOrAbsolute );
+          }
+          catch( final URIException e )
+          {
+            e.printStackTrace();
+            throw new MalformedURLException( e.getLocalizedMessage() );
+          }
         }
 
       };
@@ -644,7 +653,7 @@ public class EditStyleDialog extends TitleAreaDialog
 
   /**
    * checks the user typed string for the step width value
-   *
+   * 
    * @param comp
    *          composite of the text field
    * @param text
