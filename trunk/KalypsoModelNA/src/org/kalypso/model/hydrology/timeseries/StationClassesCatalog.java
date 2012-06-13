@@ -68,6 +68,10 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class StationClassesCatalog
 {
+  private StationClassesCatalog( )
+  {
+  }
+
   private static WeakReference<Map<Class< ? extends IStation>, Set<String>>> HASH = new WeakReference<Map<Class< ? extends IStation>, Set<String>>>( null );
 
   public static String[] findAllowedParameterTypes( final IStation station )
@@ -76,11 +80,16 @@ public class StationClassesCatalog
 
     final Map<Class< ? extends IStation>, Set<String>> classCatalog = getClassCatalog();
 
-    final Set<String> allowedTypes = classCatalog.get( station.getClass() );
-    if( allowedTypes == null )
-      throw new IllegalArgumentException( String.format( "Unknown station class: %s", station.getClass() ) );
+    final Class< ? >[] interfaces = station.getClass().getInterfaces();
+    for( final Class< ? > iface : interfaces )
+    {
+      final Set<String> allowedTypes = classCatalog.get( iface );
+      if( allowedTypes != null && !allowedTypes.isEmpty() )
+        return allowedTypes.toArray( new String[allowedTypes.size()] );
+    }
 
-    return allowedTypes.toArray( new String[allowedTypes.size()] );
+    throw new IllegalArgumentException( String.format( "Unknown station class: %s", station.getClass() ) );
+
   }
 
   public static String[] findAllowedParameterTypes( final Class< ? > clazz )
