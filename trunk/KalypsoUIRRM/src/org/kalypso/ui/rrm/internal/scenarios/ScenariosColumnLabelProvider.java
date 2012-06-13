@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.afgui.internal.ui.workflow.WorkflowBreadCrumbLabelProvider;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * This label provider provides labels for scenarios
@@ -53,15 +56,24 @@ import org.kalypso.afgui.internal.ui.workflow.WorkflowBreadCrumbLabelProvider;
 public class ScenariosColumnLabelProvider extends ColumnLabelProvider
 {
   /**
+   * The target scenario.
+   */
+  private final IScenario m_targetScenario;
+
+  /**
    * The delegate label provider.
    */
   private final WorkflowBreadCrumbLabelProvider m_delegateLabelProvider;
 
   /**
    * The constructor.
+   * 
+   * @param targetScenario
+   *          The target scenario-
    */
-  public ScenariosColumnLabelProvider( )
+  public ScenariosColumnLabelProvider( final IScenario targetScenario )
   {
+    m_targetScenario = targetScenario;
     m_delegateLabelProvider = new WorkflowBreadCrumbLabelProvider();
   }
 
@@ -80,7 +92,11 @@ public class ScenariosColumnLabelProvider extends ColumnLabelProvider
   @Override
   public String getText( final Object element )
   {
-    return m_delegateLabelProvider.getText( element );
+    final String text = m_delegateLabelProvider.getText( element );
+    if( element.equals( m_targetScenario ) )
+      return String.format( "%s (Ziel)", text );
+
+    return text;
   }
 
   /**
@@ -89,6 +105,9 @@ public class ScenariosColumnLabelProvider extends ColumnLabelProvider
   @Override
   public Font getFont( final Object element )
   {
-    return m_delegateLabelProvider.getFont( element );
+    if( element.equals( m_targetScenario ) )
+      return JFaceResources.getFontRegistry().getBold( JFaceResources.DEFAULT_FONT );
+
+    return null;
   }
 }

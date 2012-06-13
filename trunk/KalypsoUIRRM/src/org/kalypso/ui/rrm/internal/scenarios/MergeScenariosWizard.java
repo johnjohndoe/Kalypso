@@ -57,11 +57,6 @@ import de.renew.workflow.connector.cases.IScenario;
 public class MergeScenariosWizard extends Wizard
 {
   /**
-   * The scenario, where the others scenarios should be merged into.
-   */
-  private final IScenario m_scenario;
-
-  /**
    * The scenarios data object.
    */
   private final MergeScenariosData m_scenariosData;
@@ -79,8 +74,7 @@ public class MergeScenariosWizard extends Wizard
    */
   public MergeScenariosWizard( final IScenario scenario )
   {
-    m_scenario = scenario;
-    m_scenariosData = new MergeScenariosData();
+    m_scenariosData = new MergeScenariosData( scenario );
     m_mergeScenariosWizardPage = null;
 
     setWindowTitle( "Szenarien zusammenführen" );
@@ -93,7 +87,7 @@ public class MergeScenariosWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_mergeScenariosWizardPage = new MergeScenariosWizardPage( "MergeScenariosWizardPage", m_scenario, m_scenariosData );
+    m_mergeScenariosWizardPage = new MergeScenariosWizardPage( "MergeScenariosWizardPage", m_scenariosData );
     addPage( m_mergeScenariosWizardPage );
   }
 
@@ -121,7 +115,7 @@ public class MergeScenariosWizard extends Wizard
       return false;
 
     /* Create the operation. */
-    final MergeScenariosOperation operation = new MergeScenariosOperation( m_scenario, m_scenariosData );
+    final MergeScenariosOperation operation = new MergeScenariosOperation( m_scenariosData );
 
     /* Execute the operation. */
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );

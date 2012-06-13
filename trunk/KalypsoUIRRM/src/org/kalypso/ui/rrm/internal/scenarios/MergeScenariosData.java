@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.databinding.observable.set.ISetChangeListener;
 import org.eclipse.core.databinding.observable.set.SetChangeEvent;
 import org.eclipse.core.databinding.observable.set.WritableSet;
@@ -54,6 +57,11 @@ import de.renew.workflow.connector.cases.IScenario;
  */
 public class MergeScenariosData extends AbstractModelObject
 {
+  /**
+   * The target scenario.
+   */
+  private final IScenario m_targetScenario;
+
   /**
    * The selected scenarios as writable set.
    */
@@ -71,9 +79,13 @@ public class MergeScenariosData extends AbstractModelObject
 
   /**
    * The constructor.
+   * 
+   * @param targetScenario
+   *          The target scenario.
    */
-  public MergeScenariosData( )
+  public MergeScenariosData( final IScenario targetScenario )
   {
+    m_targetScenario = targetScenario;
     m_selectedScenariosSet = new WritableSet();
     m_selectedScenarios = new IScenario[] {};
     m_deleteScenarios = false;
@@ -97,6 +109,16 @@ public class MergeScenariosData extends AbstractModelObject
   }
 
   /**
+   * This function returns the target scenario.
+   * 
+   * @return The target scenario.
+   */
+  public IScenario getTargetScenario( )
+  {
+    return m_targetScenario;
+  }
+
+  /**
    * This function returns the selected scenarios as writable set.
    * 
    * @return The selected scenarios as writable set.
@@ -107,13 +129,23 @@ public class MergeScenariosData extends AbstractModelObject
   }
 
   /**
-   * This function returns the selected scenarios.
+   * This function returns the selected scenarios. The target scenario will not be contained in this array.
    * 
-   * @return The selected scenarios.
+   * @return The selected scenarios. The target scenario will not be contained in this array.
    */
   public IScenario[] getSelectedScenarios( )
   {
-    return m_selectedScenarios;
+    final List<IScenario> results = new ArrayList<IScenario>();
+
+    for( final IScenario selectedScenario : m_selectedScenarios )
+    {
+      if( selectedScenario.equals( m_targetScenario ) )
+        continue;
+
+      results.add( selectedScenario );
+    }
+
+    return results.toArray( new IScenario[] {} );
   }
 
   /**
