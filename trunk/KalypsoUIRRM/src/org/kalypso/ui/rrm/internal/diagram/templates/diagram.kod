@@ -21,6 +21,8 @@
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_WATER" />
 
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rrm:evaporation:old#HYDROLOGY_INPUT_EVAPORATION" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rrm:evaporation:input#INPUT_E_LAND" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rrm:evaporation:input#INPUT_E_WATER" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rrm:temperature#HYDROLOGY_INPUT_T" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rrm:rainfall#HYDROLOGY_INPUT_RAINFALL" />
 
