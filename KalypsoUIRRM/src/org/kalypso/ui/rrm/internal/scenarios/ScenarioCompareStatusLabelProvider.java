@@ -66,17 +66,25 @@ public class ScenarioCompareStatusLabelProvider extends ColumnLabelProvider
   private final String m_key;
 
   /**
+   * The target scenario.
+   */
+  private final IScenario m_targetSenario;
+
+  /**
    * The constructor.
    * 
    * @param compareStatus
    *          The scenario compare status contains stati for several cases.
    * @param key
    *          The key for which the status will be retrieved.
+   * @param targetSenario
+   *          The target scenario.
    */
-  public ScenarioCompareStatusLabelProvider( final ScenarioCompareStatus compareStatus, final String key )
+  public ScenarioCompareStatusLabelProvider( final ScenarioCompareStatus compareStatus, final String key, final IScenario targetSenario )
   {
     m_compareStatus = compareStatus;
     m_key = key;
+    m_targetSenario = targetSenario;
   }
 
   /**
@@ -85,6 +93,9 @@ public class ScenarioCompareStatusLabelProvider extends ColumnLabelProvider
   @Override
   public Image getImage( final Object element )
   {
+    if( element.equals( m_targetSenario ) )
+      return null;
+
     if( element instanceof IScenario )
     {
       final IScenario scenario = (IScenario) element;
@@ -105,6 +116,9 @@ public class ScenarioCompareStatusLabelProvider extends ColumnLabelProvider
   @Override
   public String getText( final Object element )
   {
+    if( element.equals( m_targetSenario ) )
+      return "";
+
     if( element instanceof IScenario )
     {
       final IScenario scenario = (IScenario) element;

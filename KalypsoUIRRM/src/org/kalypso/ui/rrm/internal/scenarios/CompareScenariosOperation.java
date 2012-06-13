@@ -66,11 +66,6 @@ import de.renew.workflow.connector.cases.IScenario;
 public class CompareScenariosOperation implements ICoreRunnableWithProgress
 {
   /**
-   * The scenario, against the others scenarios should be compared to.
-   */
-  private final IScenario m_scenario;
-
-  /**
    * The scenarios data object.
    */
   private final MergeScenariosData m_scenariosData;
@@ -83,16 +78,13 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
   /**
    * The constructor.
    * 
-   * @param scenario
-   *          The scenario, against the others scenarios should be compared to.
    * @param scenariosData
    *          The scenarios data object.
    * @param compareStatus
    *          The scenario compare status contains stati for several cases.
    */
-  public CompareScenariosOperation( final IScenario scenario, final MergeScenariosData scenariosData, final ScenarioCompareStatus compareStatus )
+  public CompareScenariosOperation( final MergeScenariosData scenariosData, final ScenarioCompareStatus compareStatus )
   {
-    m_scenario = scenario;
     m_scenariosData = scenariosData;
     m_compareStatus = compareStatus;
   }
@@ -110,6 +102,9 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
 
+    /* Get the target scenario. */
+    final IScenario targetScenario = m_scenariosData.getTargetScenario();
+
     try
     {
       /* Get the selected scenarios. */
@@ -118,10 +113,10 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         throw new IllegalArgumentException( "No scenarios selected..." );
 
       /* Monitor. */
-      monitor.beginTask( String.format( "Comparing the scenarios against the scenario '%s'...", m_scenario.getName() ), 750 * selectedScenarios.length );
+      monitor.beginTask( String.format( "Comparing the scenarios against the scenario '%s'...", targetScenario.getName() ), 750 * selectedScenarios.length );
 
       /* Get the reference rrm scenario. */
-      final IFolder referenceScenariofolder = m_scenario.getFolder();
+      final IFolder referenceScenariofolder = targetScenario.getFolder();
       final RrmScenario referenceRrmScenario = new RrmScenario( referenceScenariofolder );
 
       /* Get the files of the reference rrm scenario. */
@@ -177,12 +172,12 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         monitor.worked( 250 );
       }
 
-      return collector.asMultiStatus( String.format( "Comparing the scenarios against the scenario '%s' succeeded.", m_scenario.getName() ) );
+      return collector.asMultiStatus( String.format( "Comparing the scenarios against the scenario '%s' succeeded.", targetScenario.getName() ) );
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( String.format( "Comparing the scenarios against the scenario '%s' failed.", m_scenario.getName() ) );
+      return collector.asMultiStatus( String.format( "Comparing the scenarios against the scenario '%s' failed.", targetScenario.getName() ) );
     }
     finally
     {

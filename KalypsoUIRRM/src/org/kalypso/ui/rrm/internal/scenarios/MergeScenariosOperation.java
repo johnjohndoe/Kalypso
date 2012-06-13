@@ -68,11 +68,6 @@ import de.renew.workflow.connector.cases.IScenario;
 public class MergeScenariosOperation implements ICoreRunnableWithProgress
 {
   /**
-   * The scenario, where the others scenarios should be merged into.
-   */
-  private final IScenario m_scenario;
-
-  /**
    * The scenarios data object.
    */
   private final MergeScenariosData m_scenariosData;
@@ -80,14 +75,11 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
   /**
    * The constructor.
    * 
-   * @param scenario
-   *          The scenario, where the others scenarios should be merged into.
    * @param scenariosData
    *          The scenarios data object.
    */
-  public MergeScenariosOperation( final IScenario scenario, final MergeScenariosData scenariosData )
+  public MergeScenariosOperation( final MergeScenariosData scenariosData )
   {
-    m_scenario = scenario;
     m_scenariosData = scenariosData;
   }
 
@@ -104,6 +96,9 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
 
+    /* Get the target scenario. */
+    final IScenario targetScenario = m_scenariosData.getTargetScenario();
+
     try
     {
       /* Get the selected scenarios. */
@@ -112,15 +107,15 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
         throw new IllegalArgumentException( "No scenarios selected..." );
 
       /* Monitor. */
-      monitor.beginTask( String.format( "Merging the scenarios into the scenario '%s'...", m_scenario.getName() ), 1250 * selectedScenarios.length );
+      monitor.beginTask( String.format( "Merging the scenarios into the scenario '%s'...", targetScenario.getName() ), 1250 * selectedScenarios.length );
 
       /* Get the simulations folder of the target scenario. */
-      final IFolder scenarioFolder = m_scenario.getFolder();
+      final IFolder scenarioFolder = targetScenario.getFolder();
       final RrmScenario rrmScenario = new RrmScenario( scenarioFolder );
       final IFolder simulationsFolder = rrmScenario.getSimulationsFolder();
 
       /* Handle the catchment models and the timeseries mappings. */
-      final MergeMappingsWorker mappingsWorker = new MergeMappingsWorker( selectedScenarios, m_scenario );
+      final MergeMappingsWorker mappingsWorker = new MergeMappingsWorker( selectedScenarios, targetScenario );
 
       /* Analyze. */
       final IStatus analyzeStatus = mappingsWorker.analyze( new SubProgressMonitor( monitor, 250 * selectedScenarios.length ) );
@@ -143,12 +138,12 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
       /* Clean up the scenarios. */
       cleanUpScenarios( selectedScenarios, deleteScenarios, monitor );
 
-      return collector.asMultiStatus( String.format( "Merging the scenarios into the scenario '%s' succeeded.", m_scenario.getName() ) );
+      return collector.asMultiStatus( String.format( "Merging the scenarios into the scenario '%s' succeeded.", targetScenario.getName() ) );
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( String.format( "Merging the scenarios into the scenario '%s' failed.", m_scenario.getName() ) );
+      return collector.asMultiStatus( String.format( "Merging the scenarios into the scenario '%s' failed.", targetScenario.getName() ) );
     }
     finally
     {
