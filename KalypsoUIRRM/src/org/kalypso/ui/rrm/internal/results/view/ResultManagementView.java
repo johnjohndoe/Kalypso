@@ -199,4 +199,15 @@ public class ResultManagementView extends ViewPart
   {
     return m_searchPanel;
   }
+
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == TreeViewer.class )
+      return m_treeViewer;
+    else if( adapter == TreeViewerSelectionStack.class )
+      return m_stack;
+
+    return super.getAdapter( adapter );
+  }
 }

@@ -320,6 +320,10 @@
               allPopups="false"
               locationURI="toolbar:org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView">
            <command
+                 commandId="org.kalypso.ui.rrm.internal.view.clear.selection.stack"
+                 style="push">
+           </command>
+           <command
                  commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items"
                  style="push">
            </command>
@@ -334,7 +338,7 @@
         </menuContribution>
         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.ui.rrm.internal.results.view.ResultManagementView">
            <command
-                 commandId="org.kalypso.ui.rrm.internal.result.view.clear.selection.stack"
+                 commandId="org.kalypso.ui.rrm.internal.view.clear.selection.stack"
                  style="push">
            </command>
            <command commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items" style="push"/>
@@ -552,7 +556,7 @@
                   name="Schließe Baumelemente">
             </command>
             <command
-                  id="org.kalypso.ui.rrm.internal.result.view.clear.selection.stack"
+                  id="org.kalypso.ui.rrm.internal.view.clear.selection.stack"
                   name="Leere Diagramm-Selektion">
             </command>
    </extension>
@@ -613,7 +617,7 @@
                   icon="icons/timeseries/collapseall.gif">
             </image>
             <image
-                  commandId="org.kalypso.ui.rrm.internal.result.view.clear.selection.stack"
+                  commandId="org.kalypso.ui.rrm.internal.view.clear.selection.stack"
                   icon="icons/resultview/resetSelectionStack.png">
             </image>
    </extension>
@@ -673,8 +677,8 @@
             commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items">
       </handler>
       <handler
-            class="org.kalypso.ui.rrm.internal.results.view.actions.ResetSelectionStackHandler"
-            commandId="org.kalypso.ui.rrm.internal.result.view.clear.selection.stack">
+            class="org.kalypso.ui.rrm.internal.timeseries.view.actions.ResetSelectionStackHandler"
+            commandId="org.kalypso.ui.rrm.internal.view.clear.selection.stack">
       </handler>
    </extension>
 

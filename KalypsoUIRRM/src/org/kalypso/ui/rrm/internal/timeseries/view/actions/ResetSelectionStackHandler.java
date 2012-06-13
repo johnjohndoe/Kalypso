@@ -38,18 +38,14 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.actions;
+package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.ui.rrm.internal.results.view.TreeViewerSelectionStack;
 
 /**
@@ -62,23 +58,21 @@ public class ResetSelectionStackHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IWorkbenchPart part = HandlerUtil.getActivePart( event );
+    if( part == null )
+      return null;
 
-    /* Get the map */
-    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IWorkbenchPage activePage = window.getActivePage();
+    final TreeViewerSelectionStack stack = (TreeViewerSelectionStack) part.getAdapter( TreeViewerSelectionStack.class );
+    if( stack == null )
+      return null;
 
-    final IViewPart part = activePage.findView( ResultManagementView.ID );
-    if( !(part instanceof ResultManagementView) )
-      return Status.CANCEL_STATUS;
-
-    final ResultManagementView view = (ResultManagementView) part;
-
-    final TreeViewerSelectionStack stack = view.getSelectionStack();
     stack.reset();
 
+    final TreeViewer viewer = (TreeViewer) part.getAdapter( TreeViewer.class );
+    if( viewer == null )
+      return null;
+
     /* small hack - resets selection */
-    final TreeViewer viewer = view.getTreeViewer();
     viewer.setSelection( viewer.getSelection() );
 
     return Status.OK_STATUS;
