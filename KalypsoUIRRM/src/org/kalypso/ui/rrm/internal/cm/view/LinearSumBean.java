@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.cm.view;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,7 +148,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
       newFeature.adjustValidities();
 
       /* Set the last modified timestamp. */
-      newFeature.setLastModified( System.currentTimeMillis() );
+      newFeature.setLastModified( new Date() );
 
       return newFeature;
     }
@@ -177,7 +178,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     feature.adjustValidities();
 
     /* Set the last modified timestamp. */
-    feature.setLastModified( System.currentTimeMillis() );
+    feature.setLastModified( new Date() );
 
     return feature;
   }

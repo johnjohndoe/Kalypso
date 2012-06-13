@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The base implementation of the rainfall generator.
- *
+ * 
  * @author Gernot Belger
  */
 public abstract class AbstractRainfallGenerator extends Feature_Impl implements IRainfallGenerator
@@ -72,7 +72,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
 
   /**
    * The constructor.
-   *
+   * 
    * @param parent
    *          The parent.
    * @param parentRelation
@@ -173,21 +173,17 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   }
 
   @Override
-  // FIXME: use date!
-  public long getLastModified( )
+  public Date getLastModified( )
   {
-    final Long property = getProperty( PROPERTY_LAST_MODIFIED, Long.class );
-    if( property == null || property.longValue() < 0 )
-      return -1;
+    final XMLGregorianCalendar lastModified = getProperty( PROPERTY_LAST_MODIFIED, XMLGregorianCalendar.class );
 
-    return property.longValue();
+    return DateUtilities.toDate( lastModified );
   }
 
   @Override
-  public void setLastModified( final long lastModified )
+  public void setLastModified( final Date lastModified )
   {
-    // FIXME: why using millis here? Use Date!
-    setProperty( PROPERTY_LAST_MODIFIED, lastModified );
+    setProperty( PROPERTY_LAST_MODIFIED, DateUtilities.toXMLGregorianCalendar( lastModified ) );
   }
 
   @Override

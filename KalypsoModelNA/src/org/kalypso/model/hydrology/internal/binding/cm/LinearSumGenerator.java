@@ -67,7 +67,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalTime;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -94,7 +93,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * The linear sum generator.
- *
+ * 
  * @author Holger Albert
  */
 public class LinearSumGenerator extends AbstractRainfallGenerator implements ILinearSumGenerator
@@ -106,7 +105,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
   /**
    * The constructor.
-   *
+   * 
    * @param parent
    *          The parent.
    * @param parentRelation
@@ -127,7 +126,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
   /**
    * This function calculates the catchment model.
-   *
+   * 
    * @param catchmentFeatures
    *          The catchment features will be taken from the generator itself, so they are not needed here. Leave them
    *          <code>null</code>.
@@ -463,7 +462,10 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   public long getLastModifiedInput( )
   {
     /* This is the last modified timestamp of the this generator itself. */
-    final long lastModified = getLastModified();
+    long lastModifiedGenerator = -1;
+    final Date lastModified = getLastModified();
+    if( lastModified != null )
+      lastModifiedGenerator = lastModified.getTime();
 
     /* This is the last modified timestamp of the timeseries. */
     final long lastModifiedTimeseries = getLastModifiedTimeseries();
@@ -471,7 +473,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     /* This is the last modified timestamp of the catchments. */
     final long lastModifiedCatchments = getLastModifiedCatchments();
 
-    return NumberUtils.max( new long[] { lastModified, lastModifiedTimeseries, lastModifiedCatchments } );
+    return NumberUtils.max( new long[] { lastModifiedGenerator, lastModifiedTimeseries, lastModifiedCatchments } );
   }
 
   @Override

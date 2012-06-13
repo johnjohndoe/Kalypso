@@ -180,12 +180,11 @@ public interface IRainfallGenerator extends Feature
   void setParameterType( String parameterType );
 
   /**
-   * This function returns the last modified timestamp. If it was not set or is invalid (e.g. negative) this function
-   * returns always -1.
+   * This function returns the last modified timestamp.
    * 
    * @return The last modified timestamp.
    */
-  long getLastModified( );
+  Date getLastModified( );
 
   /**
    * This function sets the last modified timestamp.
@@ -193,7 +192,7 @@ public interface IRainfallGenerator extends Feature
    * @param lastModified
    *          The last modified timestamp.
    */
-  void setLastModified( long lastModified );
+  void setLastModified( Date lastModified );
 
   /**
    * This function returns the filters.

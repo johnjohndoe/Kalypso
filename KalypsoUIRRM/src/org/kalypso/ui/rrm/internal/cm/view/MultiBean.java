@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.cm.view;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,7 +172,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
       applySubGenerators( workspace, newFeature );
 
       /* Set the last modified timestamp. */
-      newFeature.setLastModified( System.currentTimeMillis() );
+      newFeature.setLastModified( new Date() );
 
       return newFeature;
     }
@@ -189,7 +190,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
     applySubGenerators( workspace, feature );
 
     /* Set the last modified timestamp. */
-    feature.setLastModified( System.currentTimeMillis() );
+    feature.setLastModified( new Date() );
 
     return feature;
   }
