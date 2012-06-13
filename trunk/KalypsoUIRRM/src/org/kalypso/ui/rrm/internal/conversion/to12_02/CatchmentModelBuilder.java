@@ -42,6 +42,8 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -124,8 +126,15 @@ public class CatchmentModelBuilder
     final IFeatureBindingCollection<Catchment> catchments = m_naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      final IStatus status = buildCatchment( generator, catchment, modelTimeseriesLink, parameterType, smallestPeriod, timestamps );
-      log.add( status );
+      try
+      {
+        final IStatus status = buildCatchment( generator, catchment, modelTimeseriesLink, parameterType, smallestPeriod, timestamps );
+        log.add( status );
+      }
+      catch( final MalformedURLException e )
+      {
+        log.add( IStatus.WARNING, "Bad timeseries link", e );
+      }
     }
 
     /* Use the smallest period of all involved timeseries as timestep for the generator. */
@@ -143,9 +152,13 @@ public class CatchmentModelBuilder
     return log.asMultiStatusOrOK( message, message );
   }
 
-  private IStatus buildCatchment( final ILinearSumGenerator generator, final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType, final MutablePeriod smallestTimestep, final Map<LocalTime, Integer> timestamps )
+  private IStatus buildCatchment( final ILinearSumGenerator generator, final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType, final MutablePeriod smallestTimestep, final Map<LocalTime, Integer> timestamps ) throws MalformedURLException
   {
-    final ZmlLink modelTargetLink = new ZmlLink( modelCatchment, modelTimeseriesLink );
+    // IMPORTANT: we use the simulation folder as context, because this is the right relative location
+    // for the existing timeseries links. Like this, the links do not need to be fixed before this operation.
+    // The links will be removed in any way after this operation.
+    final URL timeseriesContext = m_simulationDir.toURI().toURL();
+    final ZmlLink modelTargetLink = new ZmlLink( modelCatchment, modelTimeseriesLink, timeseriesContext );
 
     /* Create new catchment. */
     final IFeatureBindingCollection<ICatchment> catchments = generator.getCatchments();

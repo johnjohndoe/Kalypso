@@ -41,6 +41,8 @@
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -133,9 +135,11 @@ public class TimeseriesMappingBuilder
     final QName linkProperty = mappingType.getModelLinkProperty();
     final IFeatureBindingCollection<IMappingElement> mappingElements = newMapping.getMappings();
 
+    final URL timeseriesContext = getTimeseriesContext( m_naModel );
+
     for( final Feature modelElement : modelElements )
     {
-      final ZmlLink link = new ZmlLink( modelElement, linkProperty );
+      final ZmlLink link = new ZmlLink( modelElement, linkProperty, timeseriesContext );
       if( link.isLinkSet() )
       {
         final String modelElementRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelElement.getId() );
@@ -167,6 +171,22 @@ public class TimeseriesMappingBuilder
     final String typeLabel = mappingType.getLabel();
     final String message = String.format( "Convert timeseries mapping of type '%s' from existing timeseries references", typeLabel );
     return log.asMultiStatus( message );
+  }
+
+  private URL getTimeseriesContext( final NaModell naModel )
+  {
+    try
+    {
+      // IMPORTANT: we use the simulation folder as context, because this is the right relative location
+      // for the existing timeseries links. Like this, the links do not need to be fixed before this operation.
+      // The links will be removed in any way after this operation.
+      return m_simulationDir.toURI().toURL();
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      return naModel.getWorkspace().getContext();
+    }
   }
 
   private IStatus readOldMapping( final TimeseriesMappingType mappingType )
