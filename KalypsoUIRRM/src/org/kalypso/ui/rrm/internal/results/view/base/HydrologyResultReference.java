@@ -55,9 +55,6 @@ import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.model.hydrology.binding.cm.ICatchment;
-import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -88,6 +85,8 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
 
   private final RrmSimulation m_simulation;
 
+  private String m_calcCase;
+
   public HydrologyResultReference( final RrmSimulation simulation, final IFolder calcCaseFolder, final Feature feature, final RRM_RESULT result )
   {
     m_simulation = simulation;
@@ -114,6 +113,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     }
 
     m_type = result;
+    m_calcCase = calcCaseFolder.getName();
   }
 
   public HydrologyResultReference( final RrmSimulation simulation, final URL context, final Feature parent, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
@@ -130,6 +130,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
       m_file = null;
 
     m_type = type;
+
   }
 
   @Override
@@ -247,20 +248,22 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     final String parent = m_parent.getName();
     final String label = getType().getLabel();
 
-    return String.format( "%s, %s: %s\r\n%s", simulation, getFeatureTypeName(), parent, label );
+    if( m_calcCase != null )
+      return String.format( "%s (%s): %s\r\n%s", simulation, m_calcCase, parent, label );
+
+    return String.format( "%s: %s\r\n%s", simulation, parent, label );
   }
 
-  private String getFeatureTypeName( )
-  {
-    if( m_parent instanceof Node )
-      return "Knoten";
-    else if( m_parent instanceof IStorageChannel )
-      return "Speicherstrang";
-    else if( m_parent instanceof ICatchment )
-      return "Einzugsgebiet";
-
-    return "";
-  }
+// private String getFeatureTypeName( )
+// {
+// if( m_parent instanceof Node )
+// return "Knoten";
+// else if( m_parent instanceof IStorageChannel )
+// return "Speicherstrang";
+// else if( m_parent instanceof ICatchment )
+// return "Einzugsgebiet";
+// return "";
+// }
 
   @Override
   public String getIdentifier( )
