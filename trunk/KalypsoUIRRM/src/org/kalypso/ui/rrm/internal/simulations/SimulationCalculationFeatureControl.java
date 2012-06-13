@@ -79,6 +79,7 @@ import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
@@ -207,7 +208,8 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       m_actions = new ArrayList<Action>();
       m_actions.add( new OpenTextLogAction( "Calculation log", "Displays the calculation log.", simulation.getCalculationLog() ) );
       m_actions.add( new OpenOutputZipAction( "Error log (calculation core)", "Displays the error log.", simulation, true ) );
-      // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
+      // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.",
+// simulation, false ) );
       m_actions.add( new OpenTextLogAction( "Mass Balance", "Displays the mass balance.", simulation.getBilanzTxt() ) );
       m_actions.add( new OpenTextLogAction( "Statistics", "Displays the statistics.", simulation.getStatisticsCsv() ) );
 
@@ -230,6 +232,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       final Button calculationButton = new Button( resultsGroup, SWT.PUSH );
       calculationButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
       calculationButton.setText( "Calculate" );
+      calculationButton.setImage( KalypsoUIRRMPlugin.getDefault().getImageProvider().getImage( UIRrmImages.DESCRIPTORS.SIMULATION ) );
       calculationButton.addSelectionListener( new SelectionAdapter()
       {
         @Override
