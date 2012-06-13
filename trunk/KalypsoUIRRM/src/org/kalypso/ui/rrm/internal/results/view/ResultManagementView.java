@@ -45,6 +45,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -82,6 +86,8 @@ public class ResultManagementView extends ViewPart
 
   protected TreeViewer m_treeViewer;
 
+  protected final TreeViewerSelectionStack m_stack = new TreeViewerSelectionStack();
+
   private HydrolgyManagementSearchControl m_searchPanel;
 
   @Override
@@ -94,6 +100,11 @@ public class ResultManagementView extends ViewPart
 
     createResultTreeView( body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createSearchControls( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+  }
+
+  public TreeViewerSelectionStack getSelectionStack( )
+  {
+    return m_stack;
   }
 
   private Composite createResultTreeView( final Composite parent )
@@ -125,10 +136,27 @@ public class ResultManagementView extends ViewPart
 
   private Composite createTree( final Composite panel )
   {
-    m_treeViewer = new TreeViewer( panel, SWT.FLAT | SWT.MULTI );
+
+    m_treeViewer = new TreeViewer( panel, SWT.FLAT | SWT.MULTI )
+    {
+      @Override
+      public ISelection getSelection( )
+      {
+        return m_stack.getSelection( (IStructuredSelection) super.getSelection() );
+      }
+    };
+
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
     m_treeViewer.setComparator( new TreeNodeLabelComparator() );
+    m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
+    {
+      @Override
+      public void doubleClick( final DoubleClickEvent event )
+      {
+        m_stack.add( (IStructuredSelection) event.getSelection() );
+      }
+    } );
 
     return m_treeViewer.getTree();
   }
