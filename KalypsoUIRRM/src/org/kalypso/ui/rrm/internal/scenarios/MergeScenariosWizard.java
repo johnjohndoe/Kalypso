@@ -81,9 +81,6 @@ public class MergeScenariosWizard extends Wizard
     setNeedsProgressMonitor( true );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
@@ -91,9 +88,6 @@ public class MergeScenariosWizard extends Wizard
     addPage( m_mergeScenariosWizardPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {

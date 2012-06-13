@@ -1003,46 +1003,26 @@
  </extension>
  <extension
        point="org.eclipse.ui.commandImages">
-    <image
-          commandId="org.kalypso.model.rrm.MergeScenariosCommand"
-          icon="icons/commands/mergeScenarios.png">
-    </image>
+    <image commandId="org.kalypso.model.rrm.MergeScenariosCommand" icon="icons/commands/mergeScenarios.png"/>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
-    <handler
-          class="org.kalypso.ui.rrm.internal.scenarios.MergeScenariosHandler"
-          commandId="org.kalypso.model.rrm.MergeScenariosCommand">
+    <handler class="org.kalypso.ui.rrm.internal.scenarios.MergeScenariosHandler" commandId="org.kalypso.model.rrm.MergeScenariosCommand">
        <activeWhen>
-          <with
-                variable="workflowViewerMenuItemSelection">
-             <instanceof
-                   value="de.renew.workflow.connector.cases.IScenario">
-             </instanceof>
-          </with>
+             <reference definitionId="oneScenario"/>
        </activeWhen>
     </handler>
  </extension>
- <extension
-       point="org.eclipse.ui.menus">
-    <menuContribution
-          locationURI="popup:org.kalypso.kalypso1d2d.pjt.views.ScenarioView?after=additions">
-       <command
-             commandId="org.kalypso.model.rrm.MergeScenariosCommand">
-          <visibleWhen>
-             <reference
-                   definitionId="oneScenario">
-             </reference>
-          </visibleWhen>
+
+ <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:org.kalypso.kalypso1d2d.pjt.views.ScenarioView?after=additions">
+       <command commandId="org.kalypso.model.rrm.MergeScenariosCommand">
+          <visibleWhen checkEnabled="true"/>
        </command>
     </menuContribution>
-    <menuContribution
-          locationURI="popup:org.kalypso.afgui.breadcrumbs?after=additions">
-       <command
-             commandId="org.kalypso.model.rrm.MergeScenariosCommand">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
+    <menuContribution locationURI="popup:org.kalypso.afgui.breadcrumbs?after=additions">
+       <command commandId="org.kalypso.model.rrm.MergeScenariosCommand">
+          <visibleWhen checkEnabled="true"/> 
        </command>
     </menuContribution>
  </extension>

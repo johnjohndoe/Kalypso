@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,25 +36,27 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.internal.handlers.AddScenarioHandler;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.util.command.WaitForFeatureChanges;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 
@@ -65,16 +67,6 @@ import de.renew.workflow.connector.worklist.ITaskExecutor;
  */
 public class MergeScenariosHandler extends AbstractHandler
 {
-  /**
-   * The constructor.
-   */
-  public MergeScenariosHandler( )
-  {
-  }
-
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -82,20 +74,27 @@ public class MergeScenariosHandler extends AbstractHandler
     final ICoreRunnableWithProgress commandWaiter = new WaitForFeatureChanges();
     ProgressUtilities.busyCursorWhile( commandWaiter );
 
+    /* REMARK: !! Get the global shell, because breadcrumbs view disposes shell directly after handler is invoked . */
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    final Shell shell = display.getActiveShell();
+
+    final String commandName = HandlerUtils.getCommandName( event );
+
+    /* Find scenario */
+    final IScenario scenario = AddScenarioHandler.findScenario( event );
+    if( scenario == null )
+    {
+      final String message = "Please select a scenario where other scenarios should be merged into.";
+      MessageDialog.openInformation( shell, commandName, message );
+      return null;
+    }
+
     /* Ask the user to save. */
     final ITaskExecutionAuthority executionAuthority = KalypsoAFGUIFrameworkPlugin.getTaskExecutionAuthority();
     final ITaskExecutor taskExecutor = KalypsoAFGUIFrameworkPlugin.getTaskExecutor();
     final ITask task = taskExecutor.getActiveTask();
     if( !executionAuthority.canStopTask( task ) )
       return null;
-
-    /* Get the shell. */
-    final Display display = PlatformUI.getWorkbench().getDisplay();
-    final Shell shell = display.getActiveShell();
-
-    /* Get the current scenario. */
-    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-    final IScenario scenario = dataProvider.getScenario();
 
     /* Create the wizard. */
     final MergeScenariosWizard wizard = new MergeScenariosWizard( scenario );
@@ -106,8 +105,6 @@ public class MergeScenariosHandler extends AbstractHandler
     /* Open the dialog. */
     if( dialog.open() != Window.OK )
       return null;
-
-    // TODO
 
     return null;
   }
