@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
@@ -73,6 +74,8 @@ public class TimeseriesBrowserParameterTypeFilter extends ViewerFilter
     if( element instanceof TreeNode )
     {
       final TreeNode node = (TreeNode) element;
+      if( isEmptyNode( node ) )
+        return true;
 
       if( hasChildWithType( node, type ) )
         return true;
@@ -81,6 +84,12 @@ public class TimeseriesBrowserParameterTypeFilter extends ViewerFilter
     }
 
     return false;
+  }
+
+  private boolean isEmptyNode( final TreeNode node )
+  {
+    final ITreeNodeUiHandler handler = node.getUiHandler();
+    return StringUtils.containsIgnoreCase( handler.getClass().getName(), "EmptyNodeUiHandler" ); //$NON-NLS-1$
   }
 
   private boolean hasChildWithType( final TreeNode node, final String type )
