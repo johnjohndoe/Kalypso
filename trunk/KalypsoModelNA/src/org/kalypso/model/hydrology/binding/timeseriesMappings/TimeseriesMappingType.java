@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 public enum TimeseriesMappingType
 {
-  gaugeMeasurement("Gauge measurement", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_WATERLEVEL, Node.PROPERTY_PEGEL_ZR),
+  gaugeMeasurement("Gauge measurement", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_PEGEL_ZR),
   nodeInflow("Node inflow", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_ZUFLUSS_ZR),
   storageEvaporation("Storage evaporation", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED, StorageChannel.PROPERTY_SEA_EVAPORATION_ZMLLINK);
 

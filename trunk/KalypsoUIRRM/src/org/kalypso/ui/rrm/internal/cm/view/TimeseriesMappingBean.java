@@ -141,6 +141,9 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
           final ZmlLink linkedTimeseries = existingMappingElement.getLinkedTimeseries();
           final String linkedHref = linkedTimeseries.getHref();
 
+          if( linkedFeature == null )
+            continue;
+
           final Feature linkedModelFeature = linkedFeature.getFeature();
 
           final MappingElementBean mappingBean = mappingElements.get( linkedModelFeature );
@@ -227,7 +230,7 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
 
     for( final MappingElementBean mapping : m_mappingElements )
     {
-      /* create new link type*/
+      /* create new link type */
       final ITimeseries timeseries = mapping.getTimeseries();
       final ZmlLink dataLink = timeseries == null ? null : timeseries.getDataLink();
       final String href = dataLink == null ? null : dataLink.getHref();
