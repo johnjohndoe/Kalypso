@@ -59,7 +59,7 @@
             <element name="initialValueSource" type="string" minOccurs="0" />
 
             <!-- Last modified timestamp -->
-            <element name="lastModified" type="long" minOccurs="0" maxOccurs="1" />
+            <element name="lastModified" type="dateTime" minOccurs="0" maxOccurs="1" />
           </sequence>
         </extension>
       </complexContent>

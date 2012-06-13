@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.binding.cm;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -140,12 +142,15 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
   public long getLastModifiedInput( )
   {
     /* This is the last modified timestamp of the this generator itself. */
-    final long lastModified = getLastModified();
+    long lastModifiedGenerator = -1;
+    final Date lastModified = getLastModified();
+    if( lastModified != null )
+      lastModifiedGenerator = lastModified.getTime();
 
     /* This is the last modified timestamp of the catchment models. */
     final long lastModifiedSubGenerators = getLastModifiedSubGenerators();
 
-    return NumberUtils.max( new long[] { lastModified, lastModifiedSubGenerators } );
+    return NumberUtils.max( new long[] { lastModifiedGenerator, lastModifiedSubGenerators } );
   }
 
   /**
@@ -158,7 +163,11 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
 
     final IFeatureBindingCollection<IRainfallGenerator> subGenerators = getSubGenerators();
     for( final IRainfallGenerator subGenerator : subGenerators )
-      result = Math.max( result, subGenerator.getLastModified() );
+    {
+      final Date lastModified = subGenerator.getLastModified();
+      if( lastModified != null )
+        result = Math.max( result, lastModified.getTime() );
+    }
 
     return result;
   }

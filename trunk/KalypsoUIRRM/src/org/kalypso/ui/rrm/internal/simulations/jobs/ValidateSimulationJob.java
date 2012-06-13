@@ -213,8 +213,8 @@ public class ValidateSimulationJob extends Job
   {
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final long lastModified = generator.getLastModified();
-    if( lastModified > lastModifiedResults )
+    final Date lastModified = generator.getLastModified();
+    if( lastModified != null && lastModified.getTime() > lastModifiedResults )
       collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Some values of the generator has changed." ) );
     else
       collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The values are unchanged." ) );
@@ -254,8 +254,8 @@ public class ValidateSimulationJob extends Job
   {
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final long lastModified = control.getLastModified();
-    if( lastModified > lastModifiedResults )
+    final Date lastModified = control.getLastModified();
+    if( lastModified != null && lastModified.getTime() > lastModifiedResults )
       collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Some values of the simulation has changed." ) );
     else
       collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The values are unchanged." ) );

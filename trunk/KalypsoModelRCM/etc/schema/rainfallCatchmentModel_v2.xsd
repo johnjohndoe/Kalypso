@@ -121,7 +121,7 @@
               <documentation xml:lang="en"><![CDATA[The type of timeseries (i.e. rainfall, temperature, ...) this generator is producing.]]></documentation>
             </annotation>
           </element>
-          <element name="lastModified" type="long" minOccurs="0" maxOccurs="1" />
+          <element name="lastModified" type="dateTime" minOccurs="0" maxOccurs="1" />
           <!-- TODO: would be nice to use TimePeriodPropertyType here -->
           <element name="period" type="rcm:DateRangePropertyType">
             <annotation>

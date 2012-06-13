@@ -312,20 +312,15 @@ public class NAControl extends Feature_Impl
   }
 
   /**
-   * This function returns the last modified timestamp. If it was not set or is invalid (e.g. negative) this function
-   * returns always -1.
+   * This function returns the last modified timestamp.
    * 
    * @return The last modified timestamp.
    */
-  public long getLastModified( )
+  public Date getLastModified( )
   {
-    // TODO This is not set at the moment...
-    // TODO This must be done on every change of the user...
-    final Long property = getProperty( PROPERTY_LAST_MODIFIED, Long.class );
-    if( property == null || property.longValue() < 0 )
-      return -1;
+    final XMLGregorianCalendar lastModified = getProperty( PROPERTY_LAST_MODIFIED, XMLGregorianCalendar.class );
 
-    return property.longValue();
+    return DateUtilities.toDate( lastModified );
   }
 
   /**
@@ -334,9 +329,9 @@ public class NAControl extends Feature_Impl
    * @param lastModified
    *          The last modified timestamp.
    */
-  public void setLastModified( final long lastModified )
+  public void setLastModified( final Date lastModified )
   {
-    setProperty( PROPERTY_LAST_MODIFIED, lastModified );
+    setProperty( PROPERTY_LAST_MODIFIED, DateUtilities.toXMLGregorianCalendar( lastModified ) );
   }
 
   /**
@@ -350,7 +345,10 @@ public class NAControl extends Feature_Impl
   public long getLastModifiedInput( )
   {
     /* This is the last modified timestamp of the this simulation itself. */
-    final long lastModified = getLastModified();
+    long lastModifiedSimulation = -1;
+    final Date lastModified = getLastModified();
+    if( lastModified != null )
+      lastModifiedSimulation = lastModified.getTime();
 
     /* This is the last modified timestamp of the catchment models. */
     final long lastModifiedGenerators = getLastModifiedGenerators();
@@ -358,7 +356,7 @@ public class NAControl extends Feature_Impl
     /* This is the last modified timestamp of the input data. */
     final long lastModifiedInputData = getLastModifiedInputData();
 
-    return NumberUtils.max( new long[] { lastModified, lastModifiedGenerators, lastModifiedInputData } );
+    return NumberUtils.max( new long[] { lastModifiedSimulation, lastModifiedGenerators, lastModifiedInputData } );
   }
 
   public long getLastModifiedGenerators( )
@@ -373,7 +371,11 @@ public class NAControl extends Feature_Impl
       else if( generator instanceof IMultiGenerator )
         result = Math.max( result, ((IMultiGenerator) generator).getLastModifiedInput() );
       else
-        result = Math.max( result, generator.getLastModified() );
+      {
+        final Date lastModified = generator.getLastModified();
+        if( lastModified != null )
+          result = Math.max( result, lastModified.getTime() );
+      }
     }
 
     return result;
