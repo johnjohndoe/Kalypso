@@ -84,7 +84,11 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
   @Override
   public final String getTypeLabel( )
   {
-    return String.format( "Simulation: %s", getSimulation().getName() );
+    final RrmSimulation simulation = getSimulation();
+    if( simulation == null )
+      return getTreeLabel();
+
+    return String.format( "Simulation: %s", simulation.getName() );
   }
 
   @Override
@@ -96,10 +100,14 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
+    if( m_simulation == null )
+      return;
+
     final List<Action> actions = new ArrayList<Action>();
     actions.add( new OpenTextLogAction( "Open calculation log", "Displays the calculation log.", m_simulation.getCalculationLog() ) );
     actions.add( new OpenOutputZipAction( "Open error log (calculation core)", "Displays the error log.", m_simulation, true ) );
-    // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.", m_simulation, false ) );
+    // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.",
+// m_simulation, false ) );
     actions.add( new OpenTextLogAction( "Open Mass Balance", "Displays the mass balance.", m_simulation.getBilanzTxt() ) );
     actions.add( new OpenTextLogAction( "Open Statistics", "Displays the statistics.", m_simulation.getStatisticsCsv() ) );
 

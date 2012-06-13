@@ -46,6 +46,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.resources.IFile;
@@ -64,6 +65,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 import org.kalypso.ui.rrm.internal.results.view.tree.HydrologyCalculationFoldersCollector;
+import org.kalypso.ui.rrm.internal.results.view.tree.handlers.EmptyTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCalculationCaseGroupUiHandler;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyGroupUiHandler;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.ResultCategoryUiHandler;
@@ -143,7 +145,17 @@ public class NaModelStrategy implements ITreeNodeStrategy
       ex.printStackTrace();
     }
 
+    /* tree is empty? so add empty node */
+    if( ArrayUtils.isEmpty( virtualRootNode.getChildren() ) )
+      doAddEmptyNode( virtualRootNode );
+
     return virtualRootNode;
+  }
+
+  private void doAddEmptyNode( final TreeNode root )
+  {
+    root.addChild( new TreeNode( root, new EmptyTreeNodeUiHandler( "Keine Ergebnisse vorhanden" ), "" ) );
+
   }
 
   protected TreeNode buildCalculationCaseNodes( final TreeNode parent, final RrmSimulation simulation )
