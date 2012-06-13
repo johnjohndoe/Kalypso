@@ -45,6 +45,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -65,6 +69,7 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.results.view.TreeViewerSelectionStack;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CleanSearchPanelAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.dnd.MoveStationTransfer;
@@ -87,6 +92,8 @@ public class TimeseriesManagementView extends ViewPart
   protected TreeViewer m_treeViewer;
 
   private TimeseriesBrowserSearchViewer m_searchPanel;
+
+  protected final TreeViewerSelectionStack m_stack = new TreeViewerSelectionStack();
 
   @Override
   public void createPartControl( final Composite parent )
@@ -129,10 +136,27 @@ public class TimeseriesManagementView extends ViewPart
 
   private Composite createTree( final Composite panel )
   {
-    m_treeViewer = new TreeViewer( panel, SWT.FLAT | SWT.MULTI );
+    m_treeViewer = new TreeViewer( panel, SWT.FLAT | SWT.MULTI )
+    {
+      @Override
+      public ISelection getSelection( )
+      {
+        return m_stack.getSelection( (IStructuredSelection) super.getSelection() );
+      }
+    };
+
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
     m_treeViewer.setComparator( new TreeNodeLabelComparator() );
+
+    m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
+    {
+      @Override
+      public void doubleClick( final DoubleClickEvent event )
+      {
+        m_stack.add( (IStructuredSelection) event.getSelection() );
+      }
+    } );
 
     final int ops = DND.DROP_MOVE;
     final Transfer[] transfers = new Transfer[] { MoveStationTransfer.getInstance() };
@@ -181,6 +205,8 @@ public class TimeseriesManagementView extends ViewPart
   {
     if( adapter == TreeViewer.class )
       return m_treeViewer;
+    else if( adapter == TreeViewerSelectionStack.class )
+      return m_stack;
 
     return super.getAdapter( adapter );
   }
