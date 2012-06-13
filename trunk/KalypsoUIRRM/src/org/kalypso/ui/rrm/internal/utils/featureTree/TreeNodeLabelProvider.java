@@ -46,7 +46,11 @@ import java.util.Map.Entry;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.kalypso.ui.rrm.internal.results.view.TreeViewerSelectionStack;
 
 /**
  * @author Gernot Belger
@@ -54,6 +58,18 @@ import org.eclipse.swt.graphics.Image;
 public class TreeNodeLabelProvider extends ColumnLabelProvider
 {
   private final Map<ImageDescriptor, Image> m_images = new HashMap<>();
+
+  private TreeViewerSelectionStack m_stack;
+
+  public TreeNodeLabelProvider( )
+  {
+
+  }
+
+  public void setSelectionStack( final TreeViewerSelectionStack stack )
+  {
+    m_stack = stack;
+  }
 
   @Override
   public void dispose( )
@@ -68,6 +84,27 @@ public class TreeNodeLabelProvider extends ColumnLabelProvider
   public String getText( final Object element )
   {
     return ((TreeNode) element).getLabel();
+  }
+
+  public static final Font BOLD = new Font( Display.getDefault(), "Segoe UI", 9, SWT.BOLD ); //$NON-NLS-1$
+
+  @Override
+  public Font getFont( final Object element )
+  {
+    if( isSelected( element ) )
+    {
+      return BOLD;
+    }
+
+    return super.getFont( element );
+  }
+
+  private boolean isSelected( final Object element )
+  {
+    if( m_stack == null )
+      return false;
+
+    return m_stack.isSelected( element );
   }
 
   @Override

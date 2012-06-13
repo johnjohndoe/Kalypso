@@ -85,4 +85,12 @@ public class TreeViewerSelectionStack
     m_stack.clear();
   }
 
+  public boolean isSelected( final Object element )
+  {
+    if( m_stack.isEmpty() )
+      return false;
+
+    return m_stack.contains( element );
+  }
+
 }
