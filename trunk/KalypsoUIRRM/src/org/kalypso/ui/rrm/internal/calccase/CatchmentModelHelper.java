@@ -41,7 +41,6 @@
 package org.kalypso.ui.rrm.internal.calccase;
 
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
@@ -700,7 +699,7 @@ public class CatchmentModelHelper
     return (NaModell) workspace.getRootFeature();
   }
 
-  private static IStatus compareCatchments( final NaModell model, final NaModell tmpModel, final URL context, final URL tmpContext, final QName linkProperty, final String linkLabel ) throws MalformedURLException, SensorException
+  private static IStatus compareCatchments( final NaModell model, final NaModell tmpModel, final URL context, final URL tmpContext, final QName linkProperty, final String linkLabel )
   {
     /* The status collector. */
     final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
@@ -721,7 +720,7 @@ public class CatchmentModelHelper
     return collector.asMultiStatus( String.format( "Verifying the catchment model '%s'", linkLabel ) );
   }
 
-  private static IStatus compareCatchment( final Catchment catchment, final Catchment tmpCatchment, final URL context, final URL tmpContext, final QName linkProperty ) throws MalformedURLException, SensorException
+  private static IStatus compareCatchment( final Catchment catchment, final Catchment tmpCatchment, final URL context, final URL tmpContext, final QName linkProperty )
   {
     /* Get the timeseries links of the catchment. */
     final TimeseriesLinkType link = (TimeseriesLinkType) catchment.getProperty( linkProperty );
@@ -734,7 +733,7 @@ public class CatchmentModelHelper
 
   }
 
-  private static IStatus compareMapping( final NaModell model, final NaModell tmpModel, final URL context, final URL tmpContext, final TimeseriesMappingType mappingType ) throws MalformedURLException, SensorException
+  private static IStatus compareMapping( final NaModell model, final NaModell tmpModel, final URL context, final URL tmpContext, final TimeseriesMappingType mappingType )
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
@@ -759,59 +758,68 @@ public class CatchmentModelHelper
     return collector.asMultiStatus( String.format( "Verifying the timeseries mapping of type '%s'", mappingType.getLabel() ) );
   }
 
-  private static IStatus compareTimeseries( final URL context, final TimeseriesLinkType link, final URL tmpContext, final TimeseriesLinkType tmpLink, final String statusLabel ) throws MalformedURLException, SensorException
+  private static IStatus compareTimeseries( final URL context, final TimeseriesLinkType link, final URL tmpContext, final TimeseriesLinkType tmpLink, final String statusLabel )
   {
+    /* No links? */
     if( link == null && tmpLink == null )
       return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), statusLabel );
 
     /* The status collector. */
     final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    /* Load the timeseries. */
-    /* The time zone may be different to that of the newly generated timeseries. */
-    final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
-    final IObservation observation = ZmlFactory.parseXML( location );
-
-    /* Load the temporary timeseries. */
-    /* The time zone may be different to that of the original timeseries. */
-    final URL tmpLocation = UrlResolverSingleton.resolveUrl( tmpContext, tmpLink.getHref() );
-    final IObservation tmpObservation = ZmlFactory.parseXML( tmpLocation );
-
-    /* Get the values of both timeseries. */
-    final ITupleModel values = observation.getValues( null );
-    final ITupleModel tmpValues = tmpObservation.getValues( null );
-
-    /* Build a hash date->value for the old timeseries. */
-    final Map<Long, Double> hash = buildHash( values );
-
-    /* Build a hash date->value for the new timeseries. */
-    final Map<Long, Double> tmpHash = buildHash( tmpValues );
-
-    /* Loop through the new hash. */
-    int differences = 0;
-    for( final Entry<Long, Double> tmpEntry : tmpHash.entrySet() )
+    try
     {
-      /* Get the key and the value of the new timeseries. */
-      final Long tmpKey = tmpEntry.getKey();
-      final Double tmpValue = tmpEntry.getValue();
+      /* Load the timeseries. */
+      /* The time zone may be different to that of the newly generated timeseries. */
+      final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
+      final IObservation observation = ZmlFactory.parseXML( location );
 
-      /* Get the value of the old timeseries. */
-      final Double value = hash.get( tmpKey );
+      /* Load the temporary timeseries. */
+      /* The time zone may be different to that of the original timeseries. */
+      final URL tmpLocation = UrlResolverSingleton.resolveUrl( tmpContext, tmpLink.getHref() );
+      final IObservation tmpObservation = ZmlFactory.parseXML( tmpLocation );
 
-      /* Compare the values of the new timeseries with the ones in the old timeseries. */
-      // TODO 0.01 different with other datatypes?
-      if( value == null || Math.abs( tmpValue.doubleValue() - value.doubleValue() ) > 0.01 )
-        differences++;
+      /* Get the values of both timeseries. */
+      final ITupleModel values = observation.getValues( null );
+      final ITupleModel tmpValues = tmpObservation.getValues( null );
+
+      /* Build a hash date->value for the old timeseries. */
+      final Map<Long, Double> hash = buildHash( values );
+
+      /* Build a hash date->value for the new timeseries. */
+      final Map<Long, Double> tmpHash = buildHash( tmpValues );
+
+      /* Loop through the new hash. */
+      int differences = 0;
+      for( final Entry<Long, Double> tmpEntry : tmpHash.entrySet() )
+      {
+        /* Get the key and the value of the new timeseries. */
+        final Long tmpKey = tmpEntry.getKey();
+        final Double tmpValue = tmpEntry.getValue();
+
+        /* Get the value of the old timeseries. */
+        final Double value = hash.get( tmpKey );
+
+        /* Compare the values of the new timeseries with the ones in the old timeseries. */
+        // TODO 0.01 different with other datatypes?
+        if( value == null || Math.abs( tmpValue.doubleValue() - value.doubleValue() ) > 0.01 )
+          differences++;
+      }
+
+      /* Calculate the procentual difference. */
+      if( differences > 0 )
+      {
+        final int percent = (differences * 100) / tmpHash.size();
+        collector.add( IStatus.WARNING, "The new timeseries' values differ by %d%% (%d differences).", null, percent, differences );
+      }
+
+      return collector.asMultiStatus( statusLabel );
     }
-
-    /* Calculate the procentual difference. */
-    if( differences > 0 )
+    catch( final Exception ex )
     {
-      final int percent = (differences * 100) / tmpHash.size();
-      collector.add( IStatus.WARNING, "The new timeseries' values differ by %d%% (%d differences).", null, percent, differences );
+      collector.add( IStatus.WARNING, "The new timeseries could not be compared. Cause: %s", null, ex.getLocalizedMessage() );
+      return collector.asMultiStatus( statusLabel );
     }
-
-    return collector.asMultiStatus( statusLabel );
   }
 
   private static Map<Long, Double> buildHash( final ITupleModel values ) throws SensorException
