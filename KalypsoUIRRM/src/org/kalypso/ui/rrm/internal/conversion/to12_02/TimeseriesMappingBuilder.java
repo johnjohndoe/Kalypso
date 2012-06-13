@@ -142,22 +142,28 @@ public class TimeseriesMappingBuilder
       final ZmlLink link = new ZmlLink( modelElement, linkProperty, timeseriesContext );
       if( link.isLinkSet() )
       {
-        final String modelElementRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelElement.getId() );
+        try
+        {
+          /* Guess timeseries link */
+          final TimeseriesMappingGuesser timeseriesGuesser = new TimeseriesMappingGuesser( link, mappingType, m_timeseriesIndex, m_oldMappings );
+          final IStatus guessStatus = timeseriesGuesser.execute();
+          final String timeseriesPath = timeseriesGuesser.getResult();
+          final String modelElementRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelElement.getId() );
 
-        /* always add a mapping if link exists */
-        final IMappingElement newElement = mappingElements.addNew( IMappingElement.FEATURE_MAPPING_ELEMENT );
-        newElement.setName( modelElement.getName() );
-        newElement.setDescription( modelElement.getDescription() );
-        newElement.setLinkedModelElement( modelElementRef );
+          /* always add a mapping if link exists */
+          final IMappingElement newElement = mappingElements.addNew( IMappingElement.FEATURE_MAPPING_ELEMENT );
+          newElement.setName( modelElement.getName() );
+          newElement.setDescription( modelElement.getDescription() );
+          newElement.setLinkedModelElement( modelElementRef );
+          newElement.setLinkedTimeseries( timeseriesPath );
 
-        /* Guess timeseries link */
-        final TimeseriesMappingGuesser timeseriesGuesser = new TimeseriesMappingGuesser( link, mappingType, m_timeseriesIndex, m_oldMappings );
-        final IStatus guessStatus = timeseriesGuesser.execute();
-        final String timeseriesPath = timeseriesGuesser.getResult();
-
-        newElement.setLinkedTimeseries( timeseriesPath );
-
-        log.add( guessStatus );
+          log.add( guessStatus );
+        }
+        catch( final Exception e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     }
 
