@@ -166,7 +166,8 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       {
         /* Get the catchment. */
         final ICatchment catchment = catchments.get( i );
-        final String description = catchment.getDescription();
+        final Feature areaLink = catchment.getAreaLink();
+        final String description = areaLink.getDescription();
 
         /* Generate the message 1. */
         final String message1 = String.format( "Sammle gewichtete Zeitreihen zur Erzeugung von Zeitreihe %d zu Gebiet '%s'...", i + 1, description );
