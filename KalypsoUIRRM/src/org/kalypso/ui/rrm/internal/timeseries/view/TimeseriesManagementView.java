@@ -145,8 +145,11 @@ public class TimeseriesManagementView extends ViewPart
       }
     };
 
+    final TreeNodeLabelProvider labelProvider = new TreeNodeLabelProvider();
+    labelProvider.setSelectionStack( m_stack );
+
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
-    m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
+    m_treeViewer.setLabelProvider( labelProvider );
     m_treeViewer.setComparator( new TreeNodeLabelComparator() );
 
     m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
@@ -155,6 +158,7 @@ public class TimeseriesManagementView extends ViewPart
       public void doubleClick( final DoubleClickEvent event )
       {
         m_stack.add( (IStructuredSelection) event.getSelection() );
+        m_treeViewer.refresh( true ); // trigger refresh event to get bold labels for selected items
       }
     } );
 
