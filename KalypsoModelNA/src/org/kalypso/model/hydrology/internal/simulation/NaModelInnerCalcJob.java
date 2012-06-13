@@ -91,8 +91,8 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
       if( status.getSeverity() == IStatus.CANCEL )
         throw new OperationCanceledException();
 
-// if( status.getSeverity() == IStatus.ERROR )
-// throw new CoreException( status );
+      // if( status.getSeverity() == IStatus.ERROR )
+      // throw new CoreException( status );
 
       return true;
     }

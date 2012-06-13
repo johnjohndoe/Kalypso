@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.worker;
 
+import java.util.Arrays;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -104,7 +106,12 @@ public class CalculateSimulationWorker implements ICoreRunnableWithProgress
       /* Calculate. */
       final NASimulationOperation operation = new NASimulationOperation( m_rrmSimulation.getSimulationFolder(), m_simulationData );
       final IStatus calculateStatus = operation.execute( new SubProgressMonitor( monitor, 200 ) );
-      collector.add( calculateStatus );
+
+      if( calculateStatus.isMultiStatus() )
+        collector.addAll( Arrays.asList( calculateStatus.getChildren() ) );
+      else
+        collector.add( calculateStatus );
+
       if( calculateStatus.getSeverity() >= IStatus.ERROR )
         return collector.asMultiStatus( "Error during calculation of the simulation." );
 
