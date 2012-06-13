@@ -156,8 +156,15 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       Arrays.sort( m_simulations, new SimulationComparator() );
 
       /* Calculate the simulations. */
-      for( final NAControl simulation : m_simulations )
+      for( int i = 0; i < m_simulations.length; i++ )
       {
+        /* Get the simulation. */
+        final NAControl simulation = m_simulations[i];
+
+        /* Monitor. */
+        monitor.setTaskName( String.format( "Calculating simulation %d of %d...", i + 1, m_simulations.length ) );
+
+        /* Calculate the simulation. */
         final IStatus status = calculateSimulation( simulation, new SubProgressMonitor( monitor, 1000 ) );
         collector.add( status );
       }
