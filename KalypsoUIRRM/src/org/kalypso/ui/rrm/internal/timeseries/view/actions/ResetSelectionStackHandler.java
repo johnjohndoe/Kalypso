@@ -74,6 +74,7 @@ public class ResetSelectionStackHandler extends AbstractHandler
 
     /* small hack - resets selection */
     viewer.setSelection( viewer.getSelection() );
+    viewer.refresh( true );
 
     return Status.OK_STATUS;
   }
