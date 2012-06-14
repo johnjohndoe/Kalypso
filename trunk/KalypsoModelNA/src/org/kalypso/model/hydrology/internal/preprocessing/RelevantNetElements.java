@@ -54,7 +54,7 @@ import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 /**
  * Collects the relevant net elements, that needs to be written to ascii files.
- *
+ * 
  * @author Gernot Belger
  */
 public class RelevantNetElements
@@ -81,6 +81,10 @@ public class RelevantNetElements
 
   public boolean containsChannel( final Channel channel )
   {
+    /*
+     * FIXME - m_channels contains list of net elements (.equals(), .hashId() not overwritten) - so a channel will never
+     * exists in the list
+     */
     return m_channels.contains( channel );
   }
 
