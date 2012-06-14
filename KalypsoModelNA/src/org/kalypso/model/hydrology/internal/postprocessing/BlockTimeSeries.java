@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.postprocessing;
 
@@ -183,7 +183,7 @@ public class BlockTimeSeries
         // synthetisches Ereignis hat kein Anfangsdatum, daher wird 01.01.2000 angenommen!
         final Calendar startCal = m_dateFormat.getCalendar();
         startCal.set( 2000, 1, 1, 0, 0 );
-        
+
         final String sStep = synthM.group( 3 );
         final Duration timestep = parseDuration( sStep );
         return new BlockTimeStep( startCal, timestep );
@@ -258,7 +258,7 @@ public class BlockTimeSeries
     final float days = hours / 24.0f;
     final int daysRounded = Math.round( days );
 
-    if( days == daysRounded )
+    if( days == Integer.valueOf( daysRounded ).floatValue() )
       return DATATYPE_FACTORY.newDuration( true, 0, 0, daysRounded, 0, 0, 0 );
 
     return null;

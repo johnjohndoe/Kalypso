@@ -64,6 +64,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
+import com.google.common.base.Objects;
+
 /**
  * @author Gernot Belger
  */
@@ -125,7 +127,7 @@ public class StationClasses extends Feature_Impl implements IStationClasses
 
         final Class< ? > loadedClass = StationClasses.class.getClassLoader().loadClass( className );
         if( loadedClass == null || !Station.class.isAssignableFrom( loadedClass ) )
-          throw new IllegalArgumentException( String.format( "Class must inherit from Station: %s", loadedClass.getName() ) ); //$NON-NLS-1$
+          throw new IllegalArgumentException( String.format( "Class must inherit from Station: %s", Objects.firstNonNull( loadedClass, stationClass.getClass() ).getName() ) ); //$NON-NLS-1$
 
         @SuppressWarnings("unchecked")
         final Class< ? extends Station> verifiedClass = (Class< ? extends Station>) loadedClass;

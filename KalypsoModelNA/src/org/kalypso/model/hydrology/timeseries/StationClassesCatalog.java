@@ -63,6 +63,8 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
+import com.google.common.base.Objects;
+
 /**
  * @author Gernot Belger
  */
@@ -151,7 +153,7 @@ public class StationClassesCatalog
 
         final Class< ? > loadedClass = StationClassesCatalog.class.getClassLoader().loadClass( className );
         if( loadedClass == null || !IStation.class.isAssignableFrom( loadedClass ) )
-          throw new IllegalArgumentException( String.format( "Class must inherit from Station: %s", loadedClass.getName() ) ); //$NON-NLS-1$
+          throw new IllegalArgumentException( String.format( "Class must inherit from Station: %s", Objects.firstNonNull( loadedClass, stationClass.getClass() ).getName() ) ); //$NON-NLS-1$
 
         @SuppressWarnings("unchecked")
         final Class< ? extends IStation> verifiedClass = (Class< ? extends IStation>) loadedClass;
