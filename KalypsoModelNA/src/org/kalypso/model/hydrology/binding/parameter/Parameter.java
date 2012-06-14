@@ -63,9 +63,13 @@ public class Parameter extends UnversionedModel
 
   private static final QName MEMBER_SOILTYPE = new QName( NS_NAPARAMETER, "soiltypeMember" ); //$NON-NLS-1$
 
+  private static final QName MEMBER_DRWBM_SOILTYPE = new QName( NS_NAPARAMETER, "drwbmSoiltypeMember" ); //$NON-NLS-1$
+
   private static final QName MEMBER_SNOW = new QName( NS_NAPARAMETER, "snowMember" ); //$NON-NLS-1$
 
   private IFeatureBindingCollection<Soiltype> m_soiltypes;
+
+  private IFeatureBindingCollection<DRWBMSoiltype> m_drwbmSoilTypes;
 
   private IFeatureBindingCollection<Snow> m_snow;
 
@@ -80,6 +84,14 @@ public class Parameter extends UnversionedModel
       m_soiltypes = new FeatureBindingCollection<Soiltype>( this, Soiltype.class, MEMBER_SOILTYPE );
 
     return m_soiltypes;
+  }
+
+  public synchronized IFeatureBindingCollection<DRWBMSoiltype> getDRWBMSoiltypes( )
+  {
+    if( m_drwbmSoilTypes == null )
+      m_drwbmSoilTypes = new FeatureBindingCollection<DRWBMSoiltype>( this, DRWBMSoiltype.class, MEMBER_DRWBM_SOILTYPE );
+
+    return m_drwbmSoilTypes;
   }
 
   public synchronized IFeatureBindingCollection<Snow> getSnow( )
