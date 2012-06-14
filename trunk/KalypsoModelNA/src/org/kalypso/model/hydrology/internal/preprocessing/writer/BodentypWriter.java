@@ -42,21 +42,17 @@
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.model.hydrology.binding.parameter.DRWBMSoilLayerParameter;
+import org.kalypso.model.hydrology.binding.parameter.DRWBMSoiltype;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.SoilLayerParameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -108,58 +104,70 @@ public class BodentypWriter extends AbstractCoreFileWriter
   @Override
   protected void writeContent( final PrintWriter buffer )
   {
-    final Map<String, List<Layer>> soilTypes = collectSoilTypes();
+// final Map<String, List<Layer>> soilTypes = collectSoilTypes();
 
     buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
 
-    final Set<Entry<String, List<Layer>>> entrySet = soilTypes.entrySet();
-    for( final Entry<String, List<Layer>> entry : entrySet )
-    {
-      final String soilType = entry.getKey();
-      final List<Layer> layers = entry.getValue();
+    final Parameter parameter = (Parameter) m_parameterWorkspace.getRootFeature();
 
-      buffer.append( String.format( Locale.US, "%-10s%4d\n", soilType, layers.size() ) ); //$NON-NLS-1$
+    // write normal soil types
+    doWrite( parameter.getSoiltypes(), buffer );
 
-      for( final Layer layer : layers )
-        buffer.append( String.format( Locale.US, "%-8s%.1f %.1f\n", layer.getName(), layer.getThickness(), layer.interflow() ? 1.0 : 0.0 ) ); //$NON-NLS-1$
-    }
+    // write DRWBM soil types
+    doWriteDRWBM( parameter.getDRWBMSoiltypes(), buffer );
   }
 
-  private Map<String, List<Layer>> collectSoilTypes( )
+  private void doWrite( final IFeatureBindingCollection<Soiltype> soiltypes, final PrintWriter buffer )
   {
-    final Parameter parameter = (Parameter) m_parameterWorkspace.getRootFeature();
-    final IFeatureBindingCollection<Soiltype> soiltypes = parameter.getSoiltypes();
-
-    final Map<String, List<Layer>> soilTypes = new LinkedHashMap<>( soiltypes.size() );
-
     for( final Soiltype soiltype : soiltypes )
     {
-      final List<Layer> layers = new ArrayList<Layer>();
+      final IFeatureBindingCollection<SoilLayerParameter> base = soiltype.getParameters();
+      final ValidSoilParametersVisitor visitor = new ValidSoilParametersVisitor();
+      base.accept( visitor );
 
-      final List<SoilLayerParameter> bodartList = soiltype.getParameters();
-      for( final SoilLayerParameter layerParameter : bodartList )
+      final SoilLayerParameter[] invalidParameters = visitor.getInvalidParameters();
+      for( final SoilLayerParameter parameter : invalidParameters )
       {
-        final Feature bodArtLink = layerParameter.getMember( SoilLayerParameter.LINK_SOIL_LAYER );
-        if( bodArtLink != null )
-        {
-          final boolean xret = layerParameter.getXRet();
-          final double xtief = layerParameter.getXTief();
-          final Layer layer = new Layer( bodArtLink.getName(), xtief, xret );
-          layers.add( layer );
-        }
-        else
-        {
-          final Object linkRef = layerParameter.getProperty( SoilLayerParameter.LINK_SOIL_LAYER );
-          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), linkRef ) ); //$NON-NLS-1$
-        }
+        Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), parameter.getId() ) );
       }
 
-      final String layerName = soiltype.getName();
-      if( !soilTypes.containsKey( layerName ) )
-        soilTypes.put( layerName, layers );
-    }
+      final SoilLayerParameter[] validParameters = visitor.getValidParameters();
+      buffer.append( String.format( Locale.US, "%-10s%4d\n", soiltype.getName(), ArrayUtils.getLength( validParameters ) ) ); //$NON-NLS-1$
 
-    return soilTypes;
+      for( final SoilLayerParameter parameter : validParameters )
+      {
+        buffer.append( String.format( Locale.US, "%-8s%.1f %.1f\n", parameter.getName(), parameter.getThickness(), parameter.isInterflowFloat() ) ); //$NON-NLS-1$
+      }
+    }
   }
 
+  private void doWriteDRWBM( final IFeatureBindingCollection<DRWBMSoiltype> soiltypes, final PrintWriter buffer )
+  {
+    for( final DRWBMSoiltype soiltype : soiltypes )
+    {
+      final IFeatureBindingCollection<DRWBMSoilLayerParameter> base = soiltype.getParameters();
+      final ValidDRWBMSoilParametersVisitor visitor = new ValidDRWBMSoilParametersVisitor();
+      base.accept( visitor );
+
+      final DRWBMSoilLayerParameter[] invalidParameters = visitor.getInvalidParameters();
+      for( final DRWBMSoilLayerParameter parameter : invalidParameters )
+      {
+        Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), parameter.getId() ) );
+      }
+
+      final DRWBMSoilLayerParameter[] validParameters = visitor.getValidParameters();
+      buffer.append( String.format( Locale.US, "%-10s%4d\n", soiltype.getName(), ArrayUtils.getLength( validParameters ) ) ); //$NON-NLS-1$
+
+      for( final DRWBMSoilLayerParameter parameter : validParameters )
+      {
+
+        // basic soil type parameters
+        buffer.append( String.format( Locale.US, "%-8s%.1f %.1f", parameter.getName(), parameter.getThickness(), parameter.isInterflowFloat() ) ); //$NON-NLS-1$
+
+        // additional drwbm soil type parameters
+        buffer.append( String.format( Locale.US, " %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f", parameter.getPipeDiameter(), parameter.getPipeRoughness(), parameter.getDrainagePipeKfValue(), parameter.getDrainagePipeSlope(), parameter.getOverflowHeight(), parameter.getAreaPerOutlet(), parameter.getWidthOfArea(), parameter.isSealedFloat() ) ); //$NON-NLS-1$
+        buffer.append( "\n" ); //$NON-NLS-1$
+      }
+    }
+  }
 }

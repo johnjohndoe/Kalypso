@@ -51,7 +51,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {http://www.tuhh.de/parameter}Soiltype
- *
+ * 
  * @author Gernot Belger
  */
 public class Soiltype extends Feature_Impl

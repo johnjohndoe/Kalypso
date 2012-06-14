@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -45,61 +45,33 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for {http://www.tuhh.de/parameter}SoilLayerParameter
- * 
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class SoilLayerParameter extends Feature_Impl
+public class DRWBMSoiltype extends Feature_Impl
 {
   private static final String NS_NAPARAMETER = NaModelConstants.NS_NAPARAMETER;
 
-  public static final QName FEATURE_SOILLAYERPARAMETER = new QName( NS_NAPARAMETER, "SoilLayerParameter" ); //$NON-NLS-1$
+  public static final QName FEATURE_SOILTYPE = new QName( NS_NAPARAMETER, "DRWBMSoiltype" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_XTIEF = new QName( NS_NAPARAMETER, "xtief" ); //$NON-NLS-1$
+  public static final QName MEMBER_SOIL_LAYER_PARAMETER = new QName( NS_NAPARAMETER, "soilLayerParameterMember" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_XRET = new QName( NS_NAPARAMETER, "xret" ); //$NON-NLS-1$
+  private IFeatureBindingCollection<DRWBMSoilLayerParameter> m_parameters = null;
 
-  public static final QName PROPERTY_LINKED_SOIL_LAYER = new QName( NS_NAPARAMETER, "soilLayerLink" ); //$NON-NLS-1$
-
-  public SoilLayerParameter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public DRWBMSoiltype( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public boolean getXRet( )
+  public synchronized IFeatureBindingCollection<DRWBMSoilLayerParameter> getParameters( )
   {
-    return getBooleanProperty( PROPERTY_XRET, false );
-  }
+    if( m_parameters == null )
+      m_parameters = new FeatureBindingCollection<>( this, DRWBMSoilLayerParameter.class, MEMBER_SOIL_LAYER_PARAMETER );
 
-  public double getXTief( )
-  {
-    return getDoubleProperty( PROPERTY_XTIEF, Double.NaN );
-  }
-
-  public Double getThickness( )
-  {
-    return getXTief();
-  }
-
-  public Boolean isInterflow( )
-  {
-    return getXRet();
-  }
-
-  public float isInterflowFloat( )
-  {
-    if( getXRet() )
-      return 1.0f;
-
-    return 0.0f;
-  }
-
-  public Feature getLinkedSoilLayer( )
-  {
-    return getMember( PROPERTY_LINKED_SOIL_LAYER );
+    return m_parameters;
   }
 }
