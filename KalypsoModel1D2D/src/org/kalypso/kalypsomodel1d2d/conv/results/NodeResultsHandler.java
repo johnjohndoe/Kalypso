@@ -520,17 +520,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     /* calculated data */
     // wsp
-    BigDecimal waterlevel = null;
-    try
-    {
-      waterlevel = new BigDecimal( nodeResult.getWaterlevel() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      System.out.println( nodeResult.getWaterlevel() );
-      // TODO: handle exception
-    }
+    final BigDecimal waterlevel = new BigDecimal( nodeResult.getWaterlevel() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
     // velocity
     final BigDecimal velocity = new BigDecimal( nodeResult.getAbsoluteVelocity() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
