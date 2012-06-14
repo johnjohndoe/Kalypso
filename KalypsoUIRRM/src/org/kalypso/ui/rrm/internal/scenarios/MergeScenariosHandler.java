@@ -75,16 +75,15 @@ public class MergeScenariosHandler extends AbstractHandler
     final ICoreRunnableWithProgress commandWaiter = new WaitForFeatureChanges();
     ProgressUtilities.busyCursorWhile( commandWaiter );
 
-    /* REMARK: !! Get the global shell, because breadcrumbs view disposes shell directly after handler is invoked . */
+    /* REMARK: Get the global shell, because breadcrumbs view disposes shell directly after handler is invoked. */
     final Display display = PlatformUI.getWorkbench().getDisplay();
     final Shell shell = display.getActiveShell();
-
-    final String commandName = HandlerUtils.getCommandName( event );
 
     /* Find scenario */
     final IScenario scenario = AddScenarioHandler.findScenario( event );
     if( scenario == null )
     {
+      final String commandName = HandlerUtils.getCommandName( event );
       final String message = Messages.getString("MergeScenariosHandler_0"); //$NON-NLS-1$
       MessageDialog.openInformation( shell, commandName, message );
       return null;
