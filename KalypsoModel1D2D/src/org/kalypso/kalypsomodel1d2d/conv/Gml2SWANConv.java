@@ -384,7 +384,8 @@ public class Gml2SWANConv implements INativeIDProvider
 
         try
         {
-          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, "-YY" ); //$NON-NLS-1$
+          //          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, "-YY" ); //$NON-NLS-1$
+          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, false, "-YY" ); //$NON-NLS-1$
           lListResults.addAll( Arrays.asList( triangles ) );
         }
         catch( Throwable e )

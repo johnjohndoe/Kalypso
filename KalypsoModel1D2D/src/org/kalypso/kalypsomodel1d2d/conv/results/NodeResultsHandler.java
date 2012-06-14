@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -91,6 +91,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -171,7 +172,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   public void end( )
   {
     /* extrapolate the water level into dry areas */
-    //should not be done for calculated by RMA results 
+    // should not be done for calculated by RMA results
     // extrapolateWaterLevel( 0 );
     // create the triangles for each element
     for( final ElementResult element : m_elemIndex.values() )
@@ -234,7 +235,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     /* store the information of the connection between arcs and elements at the element object */
     /* left element */
     writeArcInfoAtElement( elementLeftID, arcResult );
-    if (elementLeftID != elementRightID) 
+    if( elementLeftID != elementRightID )
       /* right element */
       writeArcInfoAtElement( elementRightID, arcResult );
 
@@ -472,8 +473,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         /* check the element (number of arcs, nodes, mid-side nodes) */
 
         /* check water levels for dry nodes */
-        //should not be done for calculated by RMA results 
-        //        elementResult.checkWaterlevels();
+        // should not be done for calculated by RMA results
+        // elementResult.checkWaterlevels();
       }
     }
     else
@@ -519,7 +520,17 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     /* calculated data */
     // wsp
-    final BigDecimal waterlevel = new BigDecimal( nodeResult.getWaterlevel() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    BigDecimal waterlevel = null;
+    try
+    {
+      waterlevel = new BigDecimal( nodeResult.getWaterlevel() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      System.out.println( nodeResult.getWaterlevel() );
+      // TODO: handle exception
+    }
 
     // velocity
     final BigDecimal velocity = new BigDecimal( nodeResult.getAbsoluteVelocity() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
@@ -603,7 +614,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.20" ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg );
     }
-    
+
     final double curveDistance = curves[0].distance( curves[1] );
     create1dTriangles( nodes, curves, curveDistance );
 
@@ -672,19 +683,21 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     final String crs = curveList.get( 0 ).getCoordinateSystem();
 
-    final Set< GM_Position > lSetPositions = new HashSet<GM_Position>();
-    for( final GM_Curve lCurve: curveList ){
+    final Set<GM_Position> lSetPositions = new HashSet<GM_Position>();
+    for( final GM_Curve lCurve : curveList )
+    {
 
       final GM_Position[] lPositions = lCurve.getAsLineString().getPositions();
       for( int i = 0; i < lPositions.length; ++i )
-        lSetPositions.add( lPositions[ i ] );
+        lSetPositions.add( lPositions[i] );
     }
-    final List< GM_Position > lListPos = new ArrayList<GM_Position>();
+    final List<GM_Position> lListPos = new ArrayList<GM_Position>();
     lListPos.addAll( lSetPositions );
-    if( !lListPos.get( 0 ).equals( lListPos.get( lListPos.size() - 1 ) ) ){
+    if( !lListPos.get( 0 ).equals( lListPos.get( lListPos.size() - 1 ) ) )
+    {
       lListPos.add( lListPos.get( 0 ) );
     }
-    final GM_Triangle[] elements2 = ConstraintDelaunayHelper.convertToTriangles( lListPos.toArray( new GM_Position[ lListPos.size() ] ), crs );
+    final GM_Triangle[] elements2 = ConstraintDelaunayHelper.convertToTriangles( lListPos.toArray( new GM_Position[lListPos.size()] ), crs, false );
 
     for( final GM_Triangle element : elements2 )
     {
@@ -692,6 +705,117 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       feedTriangleEaterWith1dResults( nodeResults, curves, 1.0, crs, Arrays.copyOf( ring, 3 ) );
     }
   }
+
+  private void create1dJunctionTriangles3( final List<INodeResult> nodeList, final List<IProfileFeature> profilesList, final List<GM_CurveSegment> additionalSegments, final String crs ) throws Exception
+  {
+    final INodeResult[] nodeResults = nodeList.toArray( new INodeResult[nodeList.size()] );
+    List<GM_Curve> junctionProfilesCurves = new ArrayList<GM_Curve>();
+
+    final Set<GM_Position> setPositions = new HashSet<GM_Position>();
+    for( final IProfileFeature profileFeature : profilesList )
+    {
+      final GM_Curve actCurve = NodeResultHelper.getProfileCurveFor1dNode( profileFeature );
+
+      junctionProfilesCurves.add( actCurve );
+
+      final GM_Position[] actPositions = actCurve.getAsLineString().getPositions();
+      for( int i = 0; i < actPositions.length; ++i )
+        setPositions.add( actPositions[i] );
+    }
+    final boolean hasIntersections = checkProfileCurvesIntersections( junctionProfilesCurves );
+    final GM_Curve[] curvesForTri = junctionProfilesCurves.toArray( new GM_Curve[junctionProfilesCurves.size()] );
+    final List<GM_Position> listPoses = new ArrayList<GM_Position>();
+    listPoses.addAll( setPositions );
+    if( !listPoses.get( 0 ).equals( listPoses.get( listPoses.size() - 1 ) ) )
+    {
+      listPoses.add( listPoses.get( 0 ) );
+    }
+
+    final GM_Triangle[] newTriangles = ConstraintDelaunayHelper.convertToTriangles( listPoses.toArray( new GM_Position[listPoses.size()] ), crs, false );
+    List<GM_Triangle> listTriElements = null;
+    if( !hasIntersections )
+      listTriElements = checkNewTrianglesForOverlapping( newTriangles, additionalSegments, junctionProfilesCurves, crs );
+    else
+    {
+      listTriElements = Arrays.asList( newTriangles );
+    }
+
+    for( final GM_Triangle element : listTriElements )
+    {
+      final GM_Position[] ring = element.getExteriorRing();
+      feedTriangleEaterWith1dResults( nodeResults, curvesForTri, 1.0, crs, Arrays.copyOf( ring, 3 ) );
+    }
+  }
+
+  private boolean checkProfileCurvesIntersections( List<GM_Curve> junctionProfilesCurves )
+  {
+    for( int i = 0; i < junctionProfilesCurves.size(); ++i )
+    {
+      GM_Curve actCurve = junctionProfilesCurves.get( i );
+      for( int j = i + 1; j < junctionProfilesCurves.size(); ++j )
+      {
+        if( actCurve.intersects( junctionProfilesCurves.get( j ) ) )
+        {
+          return true;
+        }
+      }
+
+    }
+    return false;
+  }
+
+  private List<GM_Triangle> checkNewTrianglesForOverlapping( final GM_Triangle[] newTriangles, final List<GM_CurveSegment> additionalSegments, final List<GM_Curve> junctionProfilesCurves, final String crs )
+  {
+    List<GM_Triangle> listChecked = new ArrayList<GM_Triangle>( Arrays.asList( newTriangles ) );
+    List<GM_Triangle> listToRemove = new ArrayList<GM_Triangle>();
+    try
+    {
+      for( int i = 0; i < newTriangles.length; i++ )
+      {
+        GM_Triangle actTri = newTriangles[i];
+        for( Iterator<GM_CurveSegment> iterator = additionalSegments.iterator(); iterator.hasNext(); )
+        {
+          GM_CurveSegment actCurveSegment = iterator.next();
+          GM_Position lPos0 = actTri.getExteriorRing()[0];
+          GM_Position lPos1 = null;
+          for( int j = 1; j < actTri.getExteriorRing().length; ++j )
+          {
+            lPos1 = actTri.getExteriorRing()[j];
+            GM_Position[] points = new GM_Position[] { lPos0, lPos1 };
+            final GM_CurveSegment curveSegmentFromTri = GeometryFactory.createGM_CurveSegment( points, crs );
+
+            if( !onProfileCurve( Arrays.asList( points ), junctionProfilesCurves ) && NodeResultHelper.intersects2d( actCurveSegment, curveSegmentFromTri ) )
+            {
+              listToRemove.add( actTri );
+              break;
+            }
+            lPos0 = lPos1;
+          }
+        }
+      }
+      listChecked.removeAll( listToRemove );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    return listChecked;
+  }
+
+  /**
+   * checks if given points are placed on one of all given profile's curves
+   */
+  private boolean onProfileCurve( final List<GM_Position> listPoses, final List<GM_Curve> listProfilesCurves )
+  {
+    for( Iterator<GM_Curve> iterator = listProfilesCurves.iterator(); iterator.hasNext(); )
+    {
+      GM_Curve actCurve = iterator.next();
+      if( NodeResultHelper.checkPointsOnCurve( listPoses, actCurve, false ) )
+        return true;
+    }
+    return false;
+  }
+
   private void feedTriangleEaterWith1dResults( final INodeResult[] nodeResults, final GM_Curve[] curves, final double curveDistance, final String crs, final GM_Position[] ring )
   {
     final INodeResult[] nodes = new INodeResult[3];
@@ -866,12 +990,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     switch( splitArcs.size() )
     {
-      /* case1: one arc is split */
+    /* case1: one arc is split */
       case 1:
         splitIntoTwoTriangles( nodesInserted.toArray( new INodeResult[nodesInserted.size()] ), splitArcs.get( 0 ) );
         break;
 
-        /* case2: two arcs were split */
+      /* case2: two arcs were split */
       case 2:
         splitIntoThreeTriangles( nodesInserted.toArray( new INodeResult[nodesInserted.size()] ), splitArcs.get( 0 ), splitArcs.get( 1 ) );
         break;
@@ -1309,14 +1433,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // TODO: description: beschreibt, welche Rechenvariante und so weiter... oder noch besser an der collection
       // result.setDescription( "" + id );
 
-      result.setCalcId( id ); 
+      result.setCalcId( id );
       result.setLocation( easting, northing, elevation, m_crs );
       // if swan results found.
       if( m_mapSWANResults != null )
-      { 
+      {
         final GM_Position lPositionKey = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( easting, SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( northing, SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
         try
-        { 
+        {
           result.setWaveDirection( m_mapWAVEDir.get( lPositionKey ) );
           result.setWaveHsig( m_mapWAVEHsig.get( lPositionKey ) );
           result.setWavePeriod( m_mapWAVEPeriod.get( lPositionKey ) );
@@ -1340,7 +1464,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double, double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
+   *      double, double)
    */
   @Override
   public void handleNode( final String line, final int id, final double easting, final double northing, final double elevation, final double stationName )
@@ -1447,9 +1572,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         System.out.println( "normally the handleResult function can be called without water stage information! The 2D-file may be 'broken'" ); //$NON-NLS-1$
         break;
 
-        // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
-        // stage information!
-        // Normally this shouldn't happen, because otherwise the 2D-file is 'broken'
+    // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
+    // stage information!
+    // Normally this shouldn't happen, because otherwise the 2D-file is 'broken'
 
     }
   }
@@ -1523,8 +1648,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     try
     {
       // get all junction profile curves
-      final List<GM_Curve> profileCurveList = new ArrayList<GM_Curve>();
+      List<IProfileFeature> profilesList = new ArrayList<IProfileFeature>();
       final List<INodeResult> nodeList = new ArrayList<INodeResult>();
+      String crs = ""; //$NON-NLS-1$ 
 
       for( final Integer nodeID : junctionNodeIDList )
       {
@@ -1544,27 +1670,35 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         // get the profile Curves of the two nodes defining the current element
         final GM_Curve curve = NodeResultHelper.getProfileCurveFor1dNode( profile );
-        // TODO: maybe cut all curves at possible intersection points(?)
+        profilesList.add( profile );
+        if( "".equals( crs ) ) //$NON-NLS-1$ 
+        {
+          crs = curve.getCoordinateSystem();
+        }
 
-        profileCurveList.add( curve );
+        // TODO: maybe cut all curves at possible intersection points(?)
         nodeList.add( nodeResult );
       }
 
       /* now we have all curves and use Triangle in order to get the triangles */
 
       if( nodeList.size() > 1 )
-        create1dJunctionTriangles2( nodeList, profileCurveList );
+      {
+        final List<GM_CurveSegment> additionalSegments = NodeResultHelper.createOuterNormalSegmentsToJunctionsProfiles( profilesList, crs );
+        create1dJunctionTriangles3( nodeList, profilesList, additionalSegments, crs );
+      }
+
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomialRangesInformation(java.lang.String, java.lang.String, int, int, java.util.List)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomialRangesInformation(java.lang.String,
+   *      java.lang.String, int, int, java.util.List)
    */
   @Override
   public void handle1dPolynomialRangesInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges )
@@ -1574,7 +1708,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomeMinMax(java.lang.String, int, double, double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomeMinMax(java.lang.String, int,
+   *      double, double)
    */
   @Override
   public void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max )
@@ -1584,7 +1719,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dSplittedPolynomialsInformation(java.lang.String, java.lang.String, int, int, java.util.List, java.lang.Double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dSplittedPolynomialsInformation(java.lang.String,
+   *      java.lang.String, int, int, java.util.List, java.lang.Double)
    */
   @Override
   public void handle1dSplittedPolynomialsInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges, final Double lIntSlope )
