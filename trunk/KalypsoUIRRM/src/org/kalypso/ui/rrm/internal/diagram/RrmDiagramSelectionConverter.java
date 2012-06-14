@@ -244,7 +244,6 @@ public class RrmDiagramSelectionConverter
       return null;
 
     final IHydrologyResultReference reference = (IHydrologyResultReference) objReference;
-
     if( !reference.isValid() )
       return null;
 
