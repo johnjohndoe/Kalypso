@@ -194,6 +194,6 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         foundCalcCasesSegment = true;
     }
 
-    return StringUtils.join( segmentsAfter, "_" );
+    return StringUtils.join( segmentsAfter, "_" ); //$NON-NLS-1$
   }
 }

@@ -49,6 +49,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.ShowTimeseriesDialog;
 
 /**
@@ -62,8 +63,8 @@ public class OpenResultTimeseriesTableAction extends Action
   public OpenResultTimeseriesTableAction( final URL url )
   {
     m_url = url;
-    setText( "Öffne Tabellenansicht" );
-    setToolTipText( "Öffne Zeitreihen-Tabellenansicht" );
+    setText( Messages.getString("OpenResultTimeseriesTableAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("OpenResultTimeseriesTableAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
   }

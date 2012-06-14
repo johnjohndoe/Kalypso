@@ -133,7 +133,7 @@ public class CatchmentModelBuilder
       }
       catch( final MalformedURLException e )
       {
-        log.add( IStatus.WARNING, "Bad timeseries link", e );
+        log.add( IStatus.WARNING, Messages.getString("CatchmentModelBuilder.0"), e ); //$NON-NLS-1$
       }
     }
 

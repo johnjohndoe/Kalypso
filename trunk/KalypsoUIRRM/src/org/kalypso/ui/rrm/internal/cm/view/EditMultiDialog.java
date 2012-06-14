@@ -93,6 +93,7 @@ import org.kalypso.ui.rrm.internal.cm.view.provider.CommentColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.cm.view.provider.DescriptionColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.cm.view.provider.ValidFromColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.cm.view.provider.ValidToColumnLabelProvider;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -198,8 +199,8 @@ public class EditMultiDialog extends TitleAreaDialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( "Edit Multi Catchment Model" );
-    setTitle( "Edit Multi Catchment Model" );
+    getShell().setText( Messages.getString("EditMultiDialog_0") ); //$NON-NLS-1$
+    setTitle( Messages.getString("EditMultiDialog_1") ); //$NON-NLS-1$
 
     /* Create the control. */
     final Composite control = (Composite) super.createDialogArea( parent );
@@ -218,7 +219,7 @@ public class EditMultiDialog extends TitleAreaDialog
     final GridData mainGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainGroupData.widthHint = 250;
     m_mainGroup.setLayoutData( mainGroupData );
-    m_mainGroup.setText( "Multigenerator" );
+    m_mainGroup.setText( Messages.getString("EditMultiDialog_2") ); //$NON-NLS-1$
 
     /* Create the content of the main group. */
     createMainContent( m_mainGroup );
@@ -227,7 +228,7 @@ public class EditMultiDialog extends TitleAreaDialog
     m_detailsGroup = new Group( main, SWT.NONE );
     m_detailsGroup.setLayout( new GridLayout( 1, false ) );
     m_detailsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_detailsGroup.setText( "Generators" );
+    m_detailsGroup.setText( Messages.getString("EditMultiDialog_3") ); //$NON-NLS-1$
 
     /* Create the content of the details group. */
     createDetailsContent( m_detailsGroup );
@@ -275,7 +276,7 @@ public class EditMultiDialog extends TitleAreaDialog
     final IStatus bindingStatus = ValidationStatusUtilities.getFirstNonOkStatus( m_dataBinding );
     if( !bindingStatus.isOK() )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "Dialog has validation errors. %s", bindingStatus.getMessage() ), bindingStatus.getException() );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("EditMultiDialog_4"), bindingStatus.getMessage() ), bindingStatus.getException() ); //$NON-NLS-1$
       StatusDialog.open( getShell(), status, getShell().getText() );
       return;
     }
@@ -412,7 +413,7 @@ public class EditMultiDialog extends TitleAreaDialog
   {
     /* Create the description column. */
     final TableViewerColumn descriptionColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    descriptionColumn.getColumn().setText( "Description" );
+    descriptionColumn.getColumn().setText( Messages.getString("EditMultiDialog_5") ); //$NON-NLS-1$
     descriptionColumn.getColumn().setWidth( 150 );
     descriptionColumn.setLabelProvider( new DescriptionColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( descriptionColumn.getColumn() );
@@ -420,7 +421,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
     /* Create the comment column. */
     final TableViewerColumn commentColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    commentColumn.getColumn().setText( "Comment" );
+    commentColumn.getColumn().setText( Messages.getString("EditMultiDialog_6") ); //$NON-NLS-1$
     commentColumn.getColumn().setWidth( 150 );
     commentColumn.setLabelProvider( new CommentColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( commentColumn.getColumn() );
@@ -428,7 +429,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
     /* Create the valid from column. */
     final TableViewerColumn validFromColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    validFromColumn.getColumn().setText( "Valid From" );
+    validFromColumn.getColumn().setText( Messages.getString("EditMultiDialog_7") ); //$NON-NLS-1$
     validFromColumn.getColumn().setWidth( 75 );
     validFromColumn.setLabelProvider( new ValidFromColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( validFromColumn.getColumn() );
@@ -436,7 +437,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
     /* Create the valid to column. */
     final TableViewerColumn validToColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    validToColumn.getColumn().setText( "Valid To" );
+    validToColumn.getColumn().setText( Messages.getString("EditMultiDialog_8") ); //$NON-NLS-1$
     validToColumn.getColumn().setWidth( 75 );
     validToColumn.setLabelProvider( new ValidToColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( validToColumn.getColumn() );
@@ -549,7 +550,7 @@ public class EditMultiDialog extends TitleAreaDialog
     final Shell shell = getShell();
 
     /* Show the confirm dialog. */
-    if( !MessageDialog.openConfirm( shell, shell.getText(), "Changing the parameter type needs to update the list of generators. Unsaved changes will be lost. Continue?" ) )
+    if( !MessageDialog.openConfirm( shell, shell.getText(), Messages.getString("EditMultiDialog_9") ) ) //$NON-NLS-1$
     {
       m_ignoreNextChange = true;
       final MultiBean generator = m_bean;

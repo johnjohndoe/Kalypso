@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.utils.log.GeoStatusLog;
 
 /**
@@ -78,7 +79,7 @@ public class StoreTimeseriesStatusOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final IFolder folder = (IFolder) m_zmlFile.getParent();
-    final IFile status = folder.getFile( m_zmlFile.getName() + ".status" ); //$NON-NLS-N$
+    final IFile status = folder.getFile( m_zmlFile.getName() + ".status" ); //$NON-NLS-N$ //$NON-NLS-1$
 
     final GeoStatusLog log = new GeoStatusLog( status );
     log.log( m_status );
@@ -86,7 +87,7 @@ public class StoreTimeseriesStatusOperation implements ICoreRunnableWithProgress
 
     status.refreshLocal( IResource.DEPTH_ONE, monitor );
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Import Timeseries Log-File" );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("StoreTimeseriesStatusOperation_1") ); //$NON-NLS-1$
   }
 
 }

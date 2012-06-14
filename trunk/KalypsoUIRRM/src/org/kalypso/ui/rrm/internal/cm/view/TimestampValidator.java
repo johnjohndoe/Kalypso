@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 /**
@@ -84,9 +85,9 @@ public class TimestampValidator implements IValidator
       /* The case that the timestamp format is wrong is covered in the above if. */
       final String timestamp = (String) value;
       if( timestamp == null || timestamp.length() == 0 )
-        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "For day values, a timestamp is needed..." );
+        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("TimestampValidator_0") ); //$NON-NLS-1$
     }
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "OK" );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("TimestampValidator_1") ); //$NON-NLS-1$
   }
 }

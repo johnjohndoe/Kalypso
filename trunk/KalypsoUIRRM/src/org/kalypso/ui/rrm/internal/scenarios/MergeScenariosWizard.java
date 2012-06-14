@@ -46,6 +46,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -77,14 +78,14 @@ public class MergeScenariosWizard extends Wizard
     m_scenariosData = new MergeScenariosData( scenario );
     m_mergeScenariosWizardPage = null;
 
-    setWindowTitle( "Szenarien zusammenführen" );
+    setWindowTitle( Messages.getString("MergeScenariosWizard_0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
   @Override
   public void addPages( )
   {
-    m_mergeScenariosWizardPage = new MergeScenariosWizardPage( "MergeScenariosWizardPage", m_scenariosData );
+    m_mergeScenariosWizardPage = new MergeScenariosWizardPage( Messages.getString("MergeScenariosWizard_1"), m_scenariosData ); //$NON-NLS-1$
     addPage( m_mergeScenariosWizardPage );
   }
 
@@ -96,15 +97,15 @@ public class MergeScenariosWizard extends Wizard
 
     /* Determine the properties of the message dialog. */
     int kind = MessageDialog.INFORMATION;
-    String message = "Möchten Sie die ausgewählten Szenarien importieren?";
+    String message = Messages.getString("MergeScenariosWizard_2"); //$NON-NLS-1$
     if( !scenariosVerified )
     {
       kind = MessageDialog.WARNING;
-      message = "Möchten Sie die ausgewählten Szenarien importieren? Nicht jedes ausgewählte Szenario wurde gegen das aktive Szenario verglichen.";
+      message = Messages.getString("MergeScenariosWizard_3"); //$NON-NLS-1$
     }
 
     /* Open the message dialog. */
-    final MessageDialog dialog = new MessageDialog( getShell(), getWindowTitle(), null, message, kind, new String[] { "Ja", "Abbrechen" }, 1 );
+    final MessageDialog dialog = new MessageDialog( getShell(), getWindowTitle(), null, message, kind, new String[] { Messages.getString("MergeScenariosWizard_4"), Messages.getString("MergeScenariosWizard_5") }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$
     if( dialog.open() != 0 )
       return false;
 

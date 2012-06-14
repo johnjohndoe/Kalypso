@@ -55,6 +55,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceProxyObservation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.operations.RepairMissingTimestepsOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.RepairRueckspruengeOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.RepairTimestampsOperation;
@@ -98,7 +99,7 @@ public class RepairTimeseriesOperation implements ICoreRunnableWithProgress
     observation = doRepairRueckspruenge( observation, stati, monitor );
     m_repaired = doRepairMissingTimesteps( observation, stati, monitor );
 
-    return stati.asMultiStatus( String.format( "Automatische Zeitreihenreperatur und -anpassung für %s", m_zmlFile ) );
+    return stati.asMultiStatus( String.format( Messages.getString("RepairTimeseriesOperation_0"), m_zmlFile ) ); //$NON-NLS-1$
   }
 
   private boolean hasDatasourceAxis( final IObservation observation )

@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -99,7 +100,7 @@ public abstract class AbstractRemoveOsoleteXmlMembersWorker implements ICoreRunn
       ex.printStackTrace();
     }
 
-    return collector.asMultiStatus( String.format( "Removed obsolete members of gml file: %s.", m_gmlFile.getName() ) );
+    return collector.asMultiStatus( String.format( Messages.getString("AbstractRemoveOsoleteXmlMembersWorker_0"), m_gmlFile.getName() ) ); //$NON-NLS-1$
   }
 
   private void doSave( final Document document )

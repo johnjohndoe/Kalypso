@@ -72,6 +72,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -117,8 +118,8 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Apply multi catchment model", subGenerators.size() * 100 + 300 );
-      monitor.subTask( "Validating multi generator..." );
+      monitor.beginTask( Messages.getString("MultiCatchmentModelRunner_0"), subGenerators.size() * 100 + 300 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("MultiCatchmentModelRunner_1") ); //$NON-NLS-1$
 
       /* Validate the multi generator. */
       final IStatus validateStatus = CatchmentModelHelper.validateMultiGenerator( multiGenerator, control );
@@ -127,7 +128,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( String.format( "Generate timeseries with %d catchment models...", subGenerators.size() ) );
+      monitor.subTask( String.format( Messages.getString("MultiCatchmentModelRunner_2"), subGenerators.size() ) ); //$NON-NLS-1$
 
       /* Hash for catchment to timeseries links. */
       /* HINT: One catchment can contain more than one timeseries link. */
@@ -137,10 +138,10 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* Run all contained generators. */
       for( int i = 0; i < subGenerators.size(); i++ )
-        runGenerator( String.format( Locale.PRC, "%d", i ), simulation, control, model, (ILinearSumGenerator) subGenerators.get( i ), targetLink, parameterType, hash, new SubProgressMonitor( monitor, 100 ) );
+        runGenerator( String.format( Locale.PRC, "%d", i ), simulation, control, model, (ILinearSumGenerator) subGenerators.get( i ), targetLink, parameterType, hash, new SubProgressMonitor( monitor, 100 ) ); //$NON-NLS-1$
 
       /* Monitor. */
-      monitor.subTask( "Merge observations for each catchment... " );
+      monitor.subTask( Messages.getString("MultiCatchmentModelRunner_4") ); //$NON-NLS-1$
 
       /* The timeseries must be merged. */
       final IFolder modelsFolder = simulation.getModelsFolder();
@@ -149,7 +150,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Modify model.gml and save the results..." );
+      monitor.subTask( Messages.getString("MultiCatchmentModelRunner_5") ); //$NON-NLS-1$
 
       /* The model.gml links needs to be adjusted. */
       adjustSimulationModelGml( simulation, model, targetLink, parameterType, mergedObservations );
@@ -159,7 +160,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
     }
     catch( final Exception ex )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to execute multi catchment model", ex ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("MultiCatchmentModelRunner_6"), ex ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -198,8 +199,8 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
     try
     {
       /* Monitor. */
-      monitor.beginTask( String.format( "Executing catchment model '%s'...", generator.getDescription() ), 1000 );
-      monitor.subTask( "Executing generator..." );
+      monitor.beginTask( String.format( Messages.getString("MultiCatchmentModelRunner_7"), generator.getDescription() ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("MultiCatchmentModelRunner_8") ); //$NON-NLS-1$
 
       /* This object can calculate some values. */
       final LinearSumCatchmentModelInfo linearInfo = new LinearSumCatchmentModelInfo( simulation, control, model, generator, targetLink, parameterType );
@@ -242,7 +243,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
         else if( parameterType.equals( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
           link = catchment.getTemperatureLink();
         else
-          throw new IllegalArgumentException( "Wrong parameter type." );
+          throw new IllegalArgumentException( Messages.getString("MultiCatchmentModelRunner_9") ); //$NON-NLS-1$
 
         /* Store the timeseries link. */
         hash.put( id, link );

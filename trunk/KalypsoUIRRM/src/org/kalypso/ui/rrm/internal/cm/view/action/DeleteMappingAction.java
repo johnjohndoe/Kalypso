@@ -58,6 +58,7 @@ import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -73,8 +74,8 @@ public class DeleteMappingAction extends Action
   {
     m_mapping = mapping;
 
-    setText( "Delete Timeseries Mapping" );
-    setToolTipText( "Delete selected timeseries mapping" );
+    setText( Messages.getString("DeleteMappingAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("DeleteMappingAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
   }
@@ -162,7 +163,7 @@ public class DeleteMappingAction extends Action
 // return
 // "Some of the selected catchment models are used either in a multi catchment model or a simulation. These cannot be deleted.";
 
-    return String.format( "The timeseries mapping '%s' is used in a simulation. It cannot be deleted.", m_mapping.getDescription() );
+    return String.format( Messages.getString("DeleteMappingAction_2"), m_mapping.getDescription() ); //$NON-NLS-1$
   }
 
   private String getDeleteMessage( )

@@ -54,6 +54,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * This actions opens the error.gml.
@@ -99,7 +100,7 @@ public class OpenErrorGmlAction extends Action implements IUpdateable
 
       /* Check if the file exists. */
       if( !errorGml.exists() )
-        throw new IOException( String.format( "The file '%s' does not exist...", errorGml.getName() ) );
+        throw new IOException( String.format( Messages.getString("OpenErrorGmlAction_0"), errorGml.getName() ) ); //$NON-NLS-1$
 
       // TODO
     }
@@ -108,7 +109,7 @@ public class OpenErrorGmlAction extends Action implements IUpdateable
       /* Display the error. */
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final String dialogTitle = getText();
-      final String message = "The file could not be opened...";
+      final String message = Messages.getString("OpenErrorGmlAction_1"); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex );
       ErrorDialog.openError( shell, dialogTitle, message, status );
     }

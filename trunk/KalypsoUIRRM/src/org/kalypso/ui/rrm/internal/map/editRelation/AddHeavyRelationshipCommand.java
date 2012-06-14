@@ -102,7 +102,7 @@ public class AddHeavyRelationshipCommand implements ICommand
 
     // create link from body to second feature
     // REAMRK: does only work for inline links for now
-    m_bodyFeature.setLink( m_linkFT2.getQName(), "#" + m_targetFE.getId() );
+    m_bodyFeature.setLink( m_linkFT2.getQName(), "#" + m_targetFE.getId() ); //$NON-NLS-1$
 
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_bodyFeature, m_targetFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 

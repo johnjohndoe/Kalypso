@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -110,10 +111,10 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
       /* Get the selected scenarios. */
       final IScenario[] selectedScenarios = m_scenariosData.getSelectedScenarios();
       if( selectedScenarios == null || selectedScenarios.length == 0 )
-        throw new IllegalArgumentException( "No scenarios selected..." );
+        throw new IllegalArgumentException( Messages.getString("CompareScenariosOperation_0") ); //$NON-NLS-1$
 
       /* Monitor. */
-      monitor.beginTask( String.format( "Comparing the scenarios against the scenario '%s'...", targetScenario.getName() ), 750 * selectedScenarios.length );
+      monitor.beginTask( String.format( Messages.getString("CompareScenariosOperation_1"), targetScenario.getName() ), 750 * selectedScenarios.length ); //$NON-NLS-1$
 
       /* Get the reference rrm scenario. */
       final IFolder referenceScenariofolder = targetScenario.getFolder();
@@ -137,7 +138,7 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         final IFile selectedHydrotopGml = selectedRrmScenario.getHydrotopGml();
 
         /* Monitor. */
-        monitor.subTask( "Comparing the model" );
+        monitor.subTask( Messages.getString("CompareScenariosOperation_2") ); //$NON-NLS-1$
 
         /* Compare. */
         if( !m_compareStatus.hasStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_MODEL ) )
@@ -148,7 +149,7 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
 
         /* Monitor. */
         monitor.worked( 250 );
-        monitor.subTask( "Comparing the parameter..." );
+        monitor.subTask( Messages.getString("CompareScenariosOperation_3") ); //$NON-NLS-1$
 
         /* Compare. */
         if( !m_compareStatus.hasStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_PARAMETER ) )
@@ -159,7 +160,7 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
 
         /* Monitor. */
         monitor.worked( 250 );
-        monitor.subTask( "Comparing the hydrotopes..." );
+        monitor.subTask( Messages.getString("CompareScenariosOperation_4") ); //$NON-NLS-1$
 
         /* Compare. */
         if( !m_compareStatus.hasStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_HYDROTOPES ) )
@@ -172,12 +173,12 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         monitor.worked( 250 );
       }
 
-      return collector.asMultiStatus( String.format( "Comparing the scenarios against the scenario '%s' succeeded.", targetScenario.getName() ) );
+      return collector.asMultiStatus( String.format( Messages.getString("CompareScenariosOperation_5"), targetScenario.getName() ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( String.format( "Comparing the scenarios against the scenario '%s' failed.", targetScenario.getName() ) );
+      return collector.asMultiStatus( String.format( Messages.getString("CompareScenariosOperation_6"), targetScenario.getName() ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -197,10 +198,10 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     final long selectedLength = selectedFileInfo.getLength();
 
     if( referenceLength != selectedLength )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Changed" );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("CompareScenariosOperation_7") ); //$NON-NLS-1$
 
     // TODO Eventually other checks...
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Not changed" );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CompareScenariosOperation_8") ); //$NON-NLS-1$
   }
 }

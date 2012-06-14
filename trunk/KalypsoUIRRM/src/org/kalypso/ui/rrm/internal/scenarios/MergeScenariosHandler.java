@@ -53,6 +53,7 @@ import org.kalypso.afgui.internal.handlers.AddScenarioHandler;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.util.command.WaitForFeatureChanges;
 
 import de.renew.workflow.base.ITask;
@@ -84,7 +85,7 @@ public class MergeScenariosHandler extends AbstractHandler
     final IScenario scenario = AddScenarioHandler.findScenario( event );
     if( scenario == null )
     {
-      final String message = "Please select a scenario where other scenarios should be merged into.";
+      final String message = Messages.getString("MergeScenariosHandler_0"); //$NON-NLS-1$
       MessageDialog.openInformation( shell, commandName, message );
       return null;
     }

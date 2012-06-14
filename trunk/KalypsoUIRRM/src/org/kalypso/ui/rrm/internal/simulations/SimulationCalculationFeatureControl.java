@@ -175,12 +175,12 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       /* Create a label. */
       final Label desciptionLabel = new Label( main, SWT.WRAP );
       desciptionLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      desciptionLabel.setText( "Here you can review some result files and the logs of the calculation." );
+      desciptionLabel.setText( Messages.getString("SimulationCalculationFeatureControl.0") ); //$NON-NLS-1$
 
       /* Create a status composite. */
       m_calculationStatusComposite = new StatusComposite( main, SWT.NONE );
       m_calculationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      m_calculationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
+      m_calculationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("SimulationCalculationFeatureControl.1") ) ); //$NON-NLS-1$
 
       /* Create a empty label. */
       final Label emptyLabel1 = new Label( main, SWT.NONE );
@@ -190,12 +190,12 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       final Group resultsGroup = new Group( main, SWT.NONE );
       resultsGroup.setLayout( new GridLayout( 1, false ) );
       resultsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      resultsGroup.setText( "Rechenergebnisse" );
+      resultsGroup.setText( Messages.getString("SimulationCalculationFeatureControl.2") ); //$NON-NLS-1$
 
       /* Create a status composite. */
       m_validationStatusComposite = new StatusComposite( resultsGroup, SWT.NONE );
       m_validationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      m_validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
+      m_validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("SimulationCalculationFeatureControl.3") ) ); //$NON-NLS-1$
 
       /* Create a empty label. */
       final Label emptyLabel2 = new Label( resultsGroup, SWT.NONE );
@@ -206,12 +206,12 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
       /* Create the actions. */
       m_actions = new ArrayList<Action>();
-      m_actions.add( new OpenTextLogAction( "Calculation log", "Displays the calculation log.", simulation.getCalculationLog() ) );
-      m_actions.add( new OpenOutputZipAction( "Error log (calculation core)", "Displays the error log.", simulation, true ) );
+      m_actions.add( new OpenTextLogAction( Messages.getString("SimulationCalculationFeatureControl.4"), Messages.getString("SimulationCalculationFeatureControl.5"), simulation.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_actions.add( new OpenOutputZipAction( Messages.getString("SimulationCalculationFeatureControl.6"), Messages.getString("SimulationCalculationFeatureControl.7"), simulation, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.",
 // simulation, false ) );
-      m_actions.add( new OpenTextLogAction( "Mass Balance", "Displays the mass balance.", simulation.getBilanzTxt() ) );
-      m_actions.add( new OpenTextLogAction( "Statistics", "Displays the statistics.", simulation.getStatisticsCsv() ) );
+      m_actions.add( new OpenTextLogAction( Messages.getString("SimulationCalculationFeatureControl.8"), Messages.getString("SimulationCalculationFeatureControl.9"), simulation.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_actions.add( new OpenTextLogAction( Messages.getString("SimulationCalculationFeatureControl.10"), Messages.getString("SimulationCalculationFeatureControl.11"), simulation.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Create the image hyperlinks. */
       for( final Action action : m_actions )
@@ -231,7 +231,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       /* Create a button. */
       final Button calculationButton = new Button( resultsGroup, SWT.PUSH );
       calculationButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
-      calculationButton.setText( "Calculate" );
+      calculationButton.setText( Messages.getString("SimulationCalculationFeatureControl.12") ); //$NON-NLS-1$
       calculationButton.setImage( KalypsoUIRRMPlugin.getDefault().getImageProvider().getImage( UIRrmImages.DESCRIPTORS.SIMULATION ) );
       calculationButton.addSelectionListener( new SelectionAdapter()
       {
@@ -378,7 +378,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
     /* Get the shell and the title. */
     final Shell shell = m_calculationStatusComposite.getShell();
-    final String title = "Calculate Simulations";
+    final String title = Messages.getString("SimulationCalculationFeatureControl.13"); //$NON-NLS-1$
 
     /* Get the na control. */
     final NAControl naControl = (NAControl) getFeature();

@@ -231,9 +231,9 @@ public class DeleteGeneratorAction extends Action
   private String getErrorMessage( )
   {
     if( m_generators.length > 1 )
-      return "Some of the selected catchment models are used either in a multi catchment model or a simulation. These cannot be deleted.";
+      return Messages.getString("DeleteGeneratorAction.0"); //$NON-NLS-1$
 
-    return String.format( "The catchment model '%s' is used either in a multi catchment model or a simulation. It cannot be deleted.", m_generators[0].getDescription() );
+    return String.format( Messages.getString("DeleteGeneratorAction.1"), m_generators[0].getDescription() ); //$NON-NLS-1$
   }
 
   private String getDeleteMessage( )

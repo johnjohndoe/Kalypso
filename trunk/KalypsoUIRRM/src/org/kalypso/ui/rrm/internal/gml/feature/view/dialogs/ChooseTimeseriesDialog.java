@@ -131,9 +131,9 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
   @Override
   protected void createButtonsForButtonBar( final Composite parent )
   {
-    createButton( parent, BUTTON_RESET_ID, "Verknüpfung löschen", false );
+    createButton( parent, BUTTON_RESET_ID, Messages.getString("ChooseTimeseriesDialog.0"), false ); //$NON-NLS-1$
 
-    createButton( parent, 5010, "", false ).setVisible( false );
+    createButton( parent, 5010, "", false ).setVisible( false ); //$NON-NLS-1$
 
     createButton( parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true );
     createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false );

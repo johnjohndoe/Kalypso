@@ -95,7 +95,7 @@ public class UpdateResultCategoriesVisitor implements IFeatureBindingCollectionV
     //
     // return String.format( "Pegel/${%s}", name ); //$NON-NLS-1$
 
-    return "Pegel";
+    return "Pegel"; //$NON-NLS-1$
   }
 
   private String getHref( final Node node )

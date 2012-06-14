@@ -68,7 +68,7 @@ public class CurrentResultFilter extends AbstractResultViewerFilter
       final IFolder folder = (IFolder) data;
 
       // FIXME english project template
-      if( StringUtils.equalsIgnoreCase( folder.getName(), "berechnet" ) ) /*
+      if( StringUtils.equalsIgnoreCase( folder.getName(), "berechnet" ) ) /* //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
                                                                            * current result folder name set by project
                                                                            * import
                                                                            */

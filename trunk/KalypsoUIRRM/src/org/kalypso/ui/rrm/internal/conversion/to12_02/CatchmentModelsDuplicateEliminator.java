@@ -123,13 +123,13 @@ public class CatchmentModelsDuplicateEliminator
       /* Save the catchments models. */
       m_data.saveModel( INaProjectConstants.GML_CATCHMENT_MODEL_PATH, catchmentModel );
 
-      return collector.asMultiStatusOrOK( "Check catchment models for duplicates" );
+      return collector.asMultiStatusOrOK( Messages.getString("CatchmentModelsDuplicateEliminator.0") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       ex.printStackTrace();
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatusOrOK( "Check catchment models for duplicates" );
+      return collector.asMultiStatusOrOK( Messages.getString("CatchmentModelsDuplicateEliminator.1") ); //$NON-NLS-1$
     }
   }
 
@@ -149,41 +149,41 @@ public class CatchmentModelsDuplicateEliminator
       final String usedDescription = usedGenerator.getDescription();
 
       /* Adjust the logs. */
-      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The generator '%s (%s)' equals the generator '%s (%s)' and was removed.", description, generator.getParameterType(), usedDescription, TimeseriesUtils.getName( usedGenerator.getParameterType() ) ) ) );
+      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelsDuplicateEliminator.2"), description, generator.getParameterType(), usedDescription, TimeseriesUtils.getName( usedGenerator.getParameterType() ) ) ) ); //$NON-NLS-1$
 
       /* Each generator, for which an equal one exists in the list of used generators */
       /* will be removed from the original list of generators. */
       allGenerators.remove( generator );
 
       /* Adjust the logs. */
-      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The data files referencing it were adjusted." ) ) );
+      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelsDuplicateEliminator.3") ) ) ); //$NON-NLS-1$
 
       /* The Basis/.models/simulations.gml and the Basis/[CalcCase]/.models/calculation.gml must be adjusted. */
       adjustDataFiles( usedGenerator, description );
 
       /* Adjust the logs. */
-      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The comment of the generator '%s (%s)' was adjusted.", usedDescription, TimeseriesUtils.getName( usedGenerator.getParameterType() ) ) ) );
+      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelsDuplicateEliminator.4"), usedDescription, TimeseriesUtils.getName( usedGenerator.getParameterType() ) ) ) ); //$NON-NLS-1$
 
       /* The comment of the one, which is used must be altered to reflect all CCs which use it now. */
       final String usedComment = usedGenerator.getComment();
       String newComment = null;
-      if( usedComment == null || usedComment.length() == 0 || usedComment.equals( Messages.getString( "CatchmentModelBuilder_0" ) ) )
-        newComment = String.format( "Used by simulations: %s, %s", usedDescription, description );
+      if( usedComment == null || usedComment.length() == 0 || usedComment.equals( Messages.getString( Messages.getString("CatchmentModelsDuplicateEliminator.5") ) ) ) //$NON-NLS-1$
+        newComment = String.format( Messages.getString("CatchmentModelsDuplicateEliminator.6"), usedDescription, description ); //$NON-NLS-1$
       else
-        newComment = String.format( "%s, %s", usedComment, description );
+        newComment = String.format( "%s, %s", usedComment, description ); //$NON-NLS-1$
       usedGenerator.setComment( newComment );
 
-      return collector.asMultiStatus( String.format( "Generator '%s (%s)'", description, TimeseriesUtils.getName( generator.getParameterType() ) ) );
+      return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelsDuplicateEliminator.8"), description, TimeseriesUtils.getName( generator.getParameterType() ) ) ); //$NON-NLS-1$
     }
 
     /* Adjust the logs. */
-    collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The generator '%s (%s)' was kept.", description, TimeseriesUtils.getName( generator.getParameterType() ) ) ) );
+    collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelsDuplicateEliminator.9"), description, TimeseriesUtils.getName( generator.getParameterType() ) ) ) ); //$NON-NLS-1$
 
     /* Each generator for which no equal one exists will be added to the list of used generators. */
     /* Nothing else must be done. */
     usedGenerators.add( (ILinearSumGenerator) generator );
 
-    return collector.asMultiStatus( String.format( "Generator '%s (%s)'", description, TimeseriesUtils.getName( generator.getParameterType() ) ) );
+    return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelsDuplicateEliminator.10"), description, TimeseriesUtils.getName( generator.getParameterType() ) ) ); //$NON-NLS-1$
   }
 
   private ILinearSumGenerator isGeneratorUsed( final List<ILinearSumGenerator> usedGenerators, final ILinearSumGenerator generator )
@@ -254,7 +254,7 @@ public class CatchmentModelsDuplicateEliminator
   private void adjustNaControl( final ILinearSumGenerator usedGenerator, final NAControl control )
   {
     /* Build the href. */
-    final String usedHref = String.format( "%s#%s", INaProjectConstants.GML_CATCHMENT_MODEL_FILE, usedGenerator.getId() );
+    final String usedHref = String.format( "%s#%s", INaProjectConstants.GML_CATCHMENT_MODEL_FILE, usedGenerator.getId() ); //$NON-NLS-1$
 
     /* Adjust the generator reference for parameter type N, if needed. */
     if( usedGenerator.getParameterType().equals( ITimeseriesConstants.TYPE_RAINFALL ) )

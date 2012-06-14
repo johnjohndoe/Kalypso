@@ -289,7 +289,7 @@ public class TimeseriesImporter
     final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep, timestamp );
     m_timeseriesIndex.addEntry( newEntry );
 
-    final MultiStatus status = stati.asMultiStatus( String.format( "Zeitreihen-Import: %s", baseName ) );
+    final MultiStatus status = stati.asMultiStatus( String.format( Messages.getString("TimeseriesImporter.0"), baseName ) ); //$NON-NLS-1$
     final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( newTimeseries, status );
     stati.add( storeStatusOperation.execute( new NullProgressMonitor() ) );
 

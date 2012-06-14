@@ -148,7 +148,7 @@ public class TimeseriesMappingBuilder
           final TimeseriesMappingGuesser timeseriesGuesser = new TimeseriesMappingGuesser( link, mappingType, m_timeseriesIndex, m_oldMappings );
           final IStatus guessStatus = timeseriesGuesser.execute();
           final String timeseriesPath = timeseriesGuesser.getResult();
-          final String modelElementRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelElement.getId() );
+          final String modelElementRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelElement.getId() ); //$NON-NLS-1$
 
           /* always add a mapping if link exists */
           final IMappingElement newElement = mappingElements.addNew( IMappingElement.FEATURE_MAPPING_ELEMENT );
@@ -171,11 +171,11 @@ public class TimeseriesMappingBuilder
     if( newMapping.getMappings().size() == 0 )
     {
       mappings.remove( newMapping );
-      log.add( IStatus.OK, "Keine Zeitreihenverweise von diesem Typ vorhanden. Es wird keine Zuordnung definiert." );
+      log.add( IStatus.OK, Messages.getString("TimeseriesMappingBuilder.1") ); //$NON-NLS-1$
     }
 
     final String typeLabel = mappingType.getLabel();
-    final String message = String.format( "Convert timeseries mapping of type '%s' from existing timeseries references", typeLabel );
+    final String message = String.format( Messages.getString("TimeseriesMappingBuilder.2"), typeLabel ); //$NON-NLS-1$
     return log.asMultiStatus( message );
   }
 

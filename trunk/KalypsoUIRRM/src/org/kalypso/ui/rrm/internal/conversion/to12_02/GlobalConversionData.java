@@ -170,7 +170,7 @@ public class GlobalConversionData
     final List<Case> allCases = m_caseList.getCases();
     for( final Case oneCase : allCases )
     {
-      if( oneCase.getName().equals( "Basis" ) )
+      if( oneCase.getName().equals( "Basis" ) ) //$NON-NLS-1$
       {
         updateCase( (Scenario) oneCase, scenarioDir );
         break;
@@ -183,12 +183,12 @@ public class GlobalConversionData
 
   private CaseList loadCaseList( ) throws MalformedURLException, JAXBException
   {
-    final File casesXml = new File( m_targetDir, ".metadata/cases.xml" );
+    final File casesXml = new File( m_targetDir, ".metadata/cases.xml" ); //$NON-NLS-1$
     if( !casesXml.exists() )
     {
       final Scenario baseScenario = OBJECT_FACTORY.createScenario();
-      baseScenario.setName( "Basis" );
-      baseScenario.setURI( IScenario.NEW_CASE_BASE_URI + "Basis" );
+      baseScenario.setName( "Basis" ); //$NON-NLS-1$
+      baseScenario.setURI( IScenario.NEW_CASE_BASE_URI + "Basis" ); //$NON-NLS-1$
 
       final CaseList cases = new de.renew.workflow.cases.ObjectFactory().createCaseList();
       cases.getCases().add( baseScenario );
@@ -205,7 +205,7 @@ public class GlobalConversionData
     final Scenario scenario = OBJECT_FACTORY.createScenario();
     scenario.setName( scenarioDir.getName() );
     scenario.setParentScenario( oneCase );
-    scenario.setURI( String.format( "%s/%s/%s", oneCase.getURI(), ScenariosExclusionFileFilter.SCENARIOS_FOLDER, scenarioDir.getName() ) );
+    scenario.setURI( String.format( "%s/%s/%s", oneCase.getURI(), ScenariosExclusionFileFilter.SCENARIOS_FOLDER, scenarioDir.getName() ) ); //$NON-NLS-1$
 
     ScenarioList derivedScenarios = oneCase.getDerivedScenarios();
     if( derivedScenarios == null )
@@ -223,11 +223,11 @@ public class GlobalConversionData
 
     try
     {
-      final File metaDir = new File( m_targetDir, ".metadata" );
+      final File metaDir = new File( m_targetDir, ".metadata" ); //$NON-NLS-1$
       if( !metaDir.exists() )
         metaDir.mkdirs();
 
-      final File casesXml = new File( metaDir, "cases.xml" );
+      final File casesXml = new File( metaDir, "cases.xml" ); //$NON-NLS-1$
       stream = new BufferedOutputStream( new FileOutputStream( casesXml ) );
       JAXB_CONTEXT.createMarshaller().marshal( m_caseList, stream );
       stream.close();

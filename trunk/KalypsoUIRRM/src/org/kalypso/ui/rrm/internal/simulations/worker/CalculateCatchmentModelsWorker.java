@@ -67,6 +67,7 @@ import org.kalypso.ui.rrm.internal.calccase.LinearSumCatchmentModelInfo;
 import org.kalypso.ui.rrm.internal.calccase.LinearSumCatchmentModelRunner;
 import org.kalypso.ui.rrm.internal.calccase.MultiCatchmentModelInfo;
 import org.kalypso.ui.rrm.internal.calccase.MultiCatchmentModelRunner;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -121,8 +122,8 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Calculating timeseries mappings...", 600 );
-      monitor.subTask( "Calculating timeseries mappings..." );
+      monitor.beginTask( Messages.getString("CalculateCatchmentModelsWorker_0"), 600 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("CalculateCatchmentModelsWorker_1") ); //$NON-NLS-1$
 
       /* Get the some data of the simulation data. */
       final NaModell naModel = m_simulationData.getNaModel();
@@ -158,14 +159,14 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
       final TimeseriesMappingRunner mappingStorageEvaporationRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.storageEvaporation );
       mappingStorageEvaporationRunner.execute( new SubProgressMonitor( monitor, 100 ) );
 
-      return collector.asMultiStatus( "Calculation of the timeseries mappings was successfull." );
+      return collector.asMultiStatus( Messages.getString("CalculateCatchmentModelsWorker_2") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       /* Add the exception to the log. */
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
 
-      return collector.asMultiStatus( "Error during calculation of the timeseries mappings." );
+      return collector.asMultiStatus( Messages.getString("CalculateCatchmentModelsWorker_3") ); //$NON-NLS-1$
     }
     finally
     {
@@ -182,7 +183,7 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
     if( generator instanceof IMultiGenerator )
       return new MultiCatchmentModelInfo( simulation, control, model, (IMultiGenerator) generator, targetLink, parameterType );
 
-    throw new IllegalArgumentException( "The type of the generator must be that of ILinearSumGenerator or IMultiGenerator..." ); // $NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString("CalculateCatchmentModelsWorker_4") ); // $NON-NLS-1$ //$NON-NLS-1$
   }
 
   private AbstractCatchmentModelRunner getCatchmentModelRunner( final ICatchmentModelInfo info )
@@ -193,6 +194,6 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
     if( info instanceof MultiCatchmentModelInfo )
       return new MultiCatchmentModelRunner();
 
-    throw new IllegalArgumentException( "The info of the catchment model must be that of LinearSumCatchmentModelInfo or MultiCatchmentModelInfo..." ); // $NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString("CalculateCatchmentModelsWorker_5") ); // $NON-NLS-1$ //$NON-NLS-1$
   }
 }

@@ -51,6 +51,7 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.cm.view.action.DeleteMappingAction;
 import org.kalypso.ui.rrm.internal.cm.view.action.EditMappingAction;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -73,7 +74,7 @@ public class TimeseriesMappingUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return "Timeseries Mapping";
+    return Messages.getString("TimeseriesMappingUiHandler_0"); //$NON-NLS-1$
   }
 
   @Override

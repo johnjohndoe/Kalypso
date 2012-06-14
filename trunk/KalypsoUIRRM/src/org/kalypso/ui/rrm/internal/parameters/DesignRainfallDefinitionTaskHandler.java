@@ -53,6 +53,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -77,7 +78,7 @@ public class DesignRainfallDefinitionTaskHandler extends AbstractHandler
     final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-    WorkflowHandlerUtils.setGttInput( activePage, "DesignRainfallDefinition", "urn:org.kalypso.model.rrm.designRainfallDefinition:DesignRainfall:gtt", "Design Rainfall Definitions", scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$
+    WorkflowHandlerUtils.setGttInput( activePage, "DesignRainfallDefinition", "urn:org.kalypso.model.rrm.designRainfallDefinition:DesignRainfall:gtt", Messages.getString("DesignRainfallDefinitionTaskHandler_0"), scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$
 
     return null;
   }

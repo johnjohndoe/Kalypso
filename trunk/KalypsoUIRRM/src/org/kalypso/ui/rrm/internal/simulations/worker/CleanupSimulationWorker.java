@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -95,8 +96,8 @@ public class CleanupSimulationWorker implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Cleanup simulation...", 300 );
-      monitor.subTask( "Cleanup simulation..." );
+      monitor.beginTask( Messages.getString("CleanupSimulationWorker_0"), 300 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("CleanupSimulationWorker_1") ); //$NON-NLS-1$
 
       /* Delete the calculation gml. */
       final IFile calculationGml = m_rrmSimulation.getCalculationGml();
@@ -121,11 +122,11 @@ public class CleanupSimulationWorker implements ICoreRunnableWithProgress
         monitor.worked( 100 / folders.length );
       }
 
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Cleanup of the simulation was successfull." );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CleanupSimulationWorker_2") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Error during cleanup of the simulation.", ex );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("CleanupSimulationWorker_3"), ex ); //$NON-NLS-1$
     }
     finally
     {

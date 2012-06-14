@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * Search control - for displaying only last calculation result
@@ -74,7 +75,7 @@ public class ResultTreeFilterControl extends Composite
 
   private void doRenderControl( final FormToolkit toolkit )
   {
-    final Button buttonCurrent = toolkit.createButton( this, "Nur aktuelle Berechnungsergebnisse", SWT.CHECK );
+    final Button buttonCurrent = toolkit.createButton( this, Messages.getString("ResultTreeFilterControl_0"), SWT.CHECK ); //$NON-NLS-1$
     buttonCurrent.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     buttonCurrent.addSelectionListener( new SelectionAdapter()
@@ -88,7 +89,7 @@ public class ResultTreeFilterControl extends Composite
       }
     } );
 
-    final Button buttonEmpty = toolkit.createButton( this, "Leere Elemente ausblenden", SWT.CHECK );
+    final Button buttonEmpty = toolkit.createButton( this, Messages.getString("ResultTreeFilterControl_1"), SWT.CHECK ); //$NON-NLS-1$
     buttonEmpty.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     buttonEmpty.addSelectionListener( new SelectionAdapter()

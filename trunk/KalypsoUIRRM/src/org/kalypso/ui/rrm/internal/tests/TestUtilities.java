@@ -128,7 +128,7 @@ public class TestUtilities
     try
     {
       /* Save the log as text file. */
-      final GeoStatusLog log = new GeoStatusLog( new File( targetDir, "log.gml" ) );
+      final GeoStatusLog log = new GeoStatusLog( new File( targetDir, "log.gml" ) ); //$NON-NLS-1$
       log.log( status );
       log.serialize();
     }

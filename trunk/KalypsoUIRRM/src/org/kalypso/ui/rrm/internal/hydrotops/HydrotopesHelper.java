@@ -103,7 +103,7 @@ public final class HydrotopesHelper
   {
     final URL contextLocation = contextWorkspace.getContext();
 
-    final IPoolableObjectType poolKey = new PoolableObjectType( "gml", RrmScenario.FILE_PARAMETER_GML, contextLocation );
+    final IPoolableObjectType poolKey = new PoolableObjectType( "gml", RrmScenario.FILE_PARAMETER_GML, contextLocation ); //$NON-NLS-1$
 
     try
     {

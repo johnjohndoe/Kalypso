@@ -62,6 +62,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 import org.kalypsodeegree.model.feature.Feature;
@@ -89,7 +90,7 @@ public class TimeseriesMappingComposite extends FeatureBeanComposite<ITimeseries
       final TimeseriesMappingBean bean = (TimeseriesMappingBean) getBean();
       final TimeseriesMappingType mappingType = bean.getMappingType();
 
-      label.setText( String.format( "Timeseries Mapping - %s", mappingType.getLabel() ) );
+      label.setText( String.format( Messages.getString("TimeseriesMappingComposite_0"), mappingType.getLabel() ) ); //$NON-NLS-1$
 
       createMappingTable();
     }

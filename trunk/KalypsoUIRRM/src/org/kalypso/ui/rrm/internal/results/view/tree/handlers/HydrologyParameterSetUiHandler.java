@@ -97,7 +97,7 @@ public class HydrologyParameterSetUiHandler extends AbstractResultTreeNodeUiHand
     final String description = m_feature.getDescription();
 
     if( StringUtils.isNotBlank( description ) )
-      return String.format( "%s - %s", name, description );
+      return String.format( "%s - %s", name, description ); //$NON-NLS-1$
 
     return name;
   }

@@ -70,6 +70,7 @@ import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -99,11 +100,11 @@ public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
   {
     final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final String monitorTitle = String.format( "Apply timeseries mapping '%s'", m_mappingType.getLabel() );
+    final String monitorTitle = String.format( Messages.getString("TimeseriesMappingRunner_0"), m_mappingType.getLabel() ); //$NON-NLS-1$
 
     final ITimeseriesMapping mapping = getMapping();
     if( mapping == null )
-      log.add( IStatus.OK, "No mapping defined, aborting." );
+      log.add( IStatus.OK, Messages.getString("TimeseriesMappingRunner_1") ); //$NON-NLS-1$
     else
     {
       monitor.beginTask( monitorTitle, mapping.getMappings().size() );
@@ -156,7 +157,7 @@ public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
     /* Check if link is valid */
     if( !linkedTimeseries.isLinkExisting() )
     {
-      final String message = String.format( "Missing timeseries for catchment '%s': %s", modelElement.getName(), linkedTimeseries.getHref() );
+      final String message = String.format( Messages.getString("TimeseriesMappingRunner_2"), modelElement.getName(), linkedTimeseries.getHref() ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
     }
 
@@ -192,7 +193,7 @@ public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
     }
     catch( final SensorException | UnsupportedEncodingException | CoreException e )
     {
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Failed to copy and filter timeseries for simulation", e );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesMappingRunner_3"), e ); //$NON-NLS-1$
     }
   }
 
@@ -205,7 +206,7 @@ public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
     {
       case gaugeMeasurement:
       case nodeInflow:
-        return new InterpolationFilter( Calendar.MINUTE, minutesOfTimestep, true, "0.0", KalypsoStati.BIT_CHECK );
+        return new InterpolationFilter( Calendar.MINUTE, minutesOfTimestep, true, "0.0", KalypsoStati.BIT_CHECK ); //$NON-NLS-1$
 
       case storageEvaporation:
         final IntervalDefinition definition = new IntervalDefinition( Calendar.MINUTE, minutesOfTimestep, 0.0, KalypsoStati.BIT_CHECK );

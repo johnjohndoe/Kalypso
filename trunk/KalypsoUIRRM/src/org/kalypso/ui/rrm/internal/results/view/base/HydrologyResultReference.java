@@ -208,7 +208,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     if( Objects.isNotNull( m_key ) )
       return m_key;
 
-    m_key = new PoolableObjectType( "zml", m_file.getName(), getContext(), false );
+    m_key = new PoolableObjectType( "zml", m_file.getName(), getContext(), false ); //$NON-NLS-1$
 
     return m_key;
 
@@ -249,9 +249,9 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     final String label = getType().getLabel();
 
     if( m_calcCase != null )
-      return String.format( "%s (%s): %s\r\n%s", simulation, m_calcCase, parent, label );
+      return String.format( "%s (%s): %s\r\n%s", simulation, m_calcCase, parent, label ); //$NON-NLS-1$
 
-    return String.format( "%s: %s\r\n%s", simulation, parent, label );
+    return String.format( "%s: %s\r\n%s", simulation, parent, label ); //$NON-NLS-1$
   }
 
 // private String getFeatureTypeName( )
@@ -297,15 +297,15 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
       case catchmentTemperature:
         return ITimeseriesConstants.TYPE_TEMPERATURE;
       case inputEvaporation:
-        return "INPUT_E_LAND";
+        return "INPUT_E_LAND"; //$NON-NLS-1$
       case inputInflow:
         return ITimeseriesConstants.TYPE_DISCHARGE;
       case inputTemperature:
-        return "HYDROLOGY_INPUT_T";
+        return "HYDROLOGY_INPUT_T"; //$NON-NLS-1$
       case inputRainfall:
-        return "HYDROLOGY_INPUT_RAINFALL";
+        return "HYDROLOGY_INPUT_RAINFALL"; //$NON-NLS-1$
       case inputSeaEvaporation:
-        return "HYDROLOGY_INPUT_EVAPORATION";
+        return "HYDROLOGY_INPUT_EVAPORATION"; //$NON-NLS-1$
       case nodeGesamtknotenAbfluss:
         return ITimeseriesConstants.TYPE_DISCHARGE;
       case storageFuellvolumen:

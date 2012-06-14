@@ -53,7 +53,7 @@ public class ScenariosExclusionFileFilter implements FileFilter
   /**
    * The name of the "Szenarien" folder.
    */
-  public static final String SCENARIOS_FOLDER = "Szenarien";
+  public static final String SCENARIOS_FOLDER = "Szenarien"; //$NON-NLS-1$
 
   /**
    * The constructor.

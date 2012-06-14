@@ -54,6 +54,7 @@ import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.gml.feature.view.FindTimeseriesLinkRunnable;
 import org.kalypso.ui.rrm.internal.gml.feature.view.dialogs.ChooseTimeseriesDialog;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -120,7 +121,7 @@ public class MappingElementBeanLinkEditingSupport extends EditingSupport
 
     final ITimeseries timeseries = bean.getTimeseries();
     if( timeseries == null )
-      return "<timeseries not set>";
+      return Messages.getString("MappingElementBeanLinkEditingSupport_0"); //$NON-NLS-1$
 
     return Timeserieses.toLinkLabel( timeseries );
   }

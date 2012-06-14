@@ -124,7 +124,7 @@ public class RemoveHeavyRelationCommand implements ICommand
     else
       m_srcFE.setProperty( m_linkName1, m_bodyFE );
 
-    m_bodyFE.setLink( m_linkName2, "#" + m_destFE.getId() );
+    m_bodyFE.setLink( m_linkName2, "#" + m_destFE.getId() ); //$NON-NLS-1$
 
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_bodyFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 

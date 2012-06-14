@@ -212,7 +212,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     final TimeseriesWalker walker = new TimeseriesWalker( new ParameterTypeIndexVisitor( sourceModelDir ), localLog );
     naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
 
-    final IStatus status = localLog.asMultiStatus( "Sammeln der Zeitreihentypen" );
+    final IStatus status = localLog.asMultiStatus( Messages.getString("BasicModelConverter.2") ); //$NON-NLS-1$
     log.add( status );
 
     return new ParameterTypeIndexVisitor( sourceModelDir );
@@ -225,7 +225,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     final TimeseriesWalker walker = new TimeseriesWalker( new EmptyTimeseriesVisitor(), localLog );
     naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
 
-    final IStatus status = localLog.asMultiStatus( "Anpassen der Zeitreihenreferenzen" );
+    final IStatus status = localLog.asMultiStatus( Messages.getString("BasicModelConverter.9") ); //$NON-NLS-1$
     log.add( status );
   }
 

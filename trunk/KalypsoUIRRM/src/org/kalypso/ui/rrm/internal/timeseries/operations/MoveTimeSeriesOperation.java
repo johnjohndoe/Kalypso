@@ -100,7 +100,7 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
 
     m_moved = storeOperation.getTimeseries();
     if( m_moved == null )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Moving time series failed - couldn't create target time series" );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("MoveTimeSeriesOperation.0") ); //$NON-NLS-1$
 
     stati.add( UpdateTimeseriesLinks.doUpdateTimeseriesLinks( m_timeseries, m_moved ) );
 
@@ -109,7 +109,7 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( m_timeseries );
     stati.add( deleteOperation.execute( monitor ) );
 
-    final IStatus status = stati.asMultiStatusOrOK( String.format( Messages.getString( "MoveTimeSeriesOperation_0" ), m_timeseries.getName() ) );
+    final IStatus status = stati.asMultiStatusOrOK( String.format( Messages.getString( "MoveTimeSeriesOperation_0" ), m_timeseries.getName() ) ); //$NON-NLS-1$
 
     final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_moved, status );
     stati.add( storeStatusOperation.execute( monitor ) );

@@ -79,7 +79,7 @@ public class ValidToColumnLabelProvider extends ColumnLabelProvider
       if( validTo == null )
         return null;
 
-      return String.format( "%s", m_df.format( validTo ) );
+      return String.format( "%s", m_df.format( validTo ) ); //$NON-NLS-1$
     }
 
     return super.getText( element );

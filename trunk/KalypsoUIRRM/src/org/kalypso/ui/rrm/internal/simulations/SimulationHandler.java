@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.dialogs.CalculateSimulationDialog;
 import org.kalypso.ui.rrm.internal.simulations.dialogs.SimulationProgressMonitorDialog;
 import org.kalypso.ui.rrm.internal.simulations.runnables.CalculateSimulationRunnable;
@@ -104,12 +105,12 @@ public class SimulationHandler
   {
     /* Check names (= calc case folder names) for empty names. */
     if( hasEmptyNames( simulations ) )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Simulations with empty name detected. Please rename the simulations." );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("SimulationHandler_0") ); //$NON-NLS-1$
 
     /* Check sanity of selected simulations -> status of simulation. */
     // TODO
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "OK" );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("SimulationHandler_1") ); //$NON-NLS-1$
   }
 
   private boolean hasEmptyNames( final NAControl[] simulations )
@@ -138,7 +139,7 @@ public class SimulationHandler
     /* Ask the user if he wants to start the calculation. */
     final CalculateSimulationDialog dialog = new CalculateSimulationDialog( shell, simulations );
     if( dialog.open() != Window.OK )
-      return new Status( IStatus.CANCEL, KalypsoUIRRMPlugin.getID(), "The calculation was cancled." );
+      return new Status( IStatus.CANCEL, KalypsoUIRRMPlugin.getID(), Messages.getString("SimulationHandler_2") ); //$NON-NLS-1$
 
     /* Create the operation. */
     final CalculateSimulationRunnable operation = new CalculateSimulationRunnable( simulations, dialog.isCalculateCatchmentModels(), dialog.isCalculateStartConditions() );
@@ -148,7 +149,7 @@ public class SimulationHandler
     final IStatus status = RunnableContextHelper.execute( progressDialog, true, true, operation );
 
     /* Always show dialog. */
-    final StatusDialog statusDialog = new StatusDialog( shell, status, "Calculate Simulations" );
+    final StatusDialog statusDialog = new StatusDialog( shell, status, Messages.getString("SimulationHandler_3") ); //$NON-NLS-1$
     statusDialog.open();
 
     return status;

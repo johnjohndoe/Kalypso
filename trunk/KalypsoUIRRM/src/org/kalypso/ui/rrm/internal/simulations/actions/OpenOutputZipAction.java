@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * This actions opens one file of the output.zip.
@@ -117,10 +118,10 @@ public class OpenOutputZipAction extends Action implements IUpdateable
 
       /* Check if the file exists. */
       if( !outputZip.exists() )
-        throw new IOException( String.format( "The file '%s' does not exist...", outputZip.getName() ) );
+        throw new IOException( String.format( Messages.getString("OpenOutputZipAction_0"), outputZip.getName() ) ); //$NON-NLS-1$
 
       /* Create the temporary directory. */
-      tmpDir = new File( FileUtilities.TMP_DIR, "rrm_OutputZip" );
+      tmpDir = new File( FileUtilities.TMP_DIR, "rrm_OutputZip" ); //$NON-NLS-1$
       tmpDir.mkdirs();
 
       /* Unzip the output.zip. */
@@ -129,16 +130,16 @@ public class OpenOutputZipAction extends Action implements IUpdateable
       /* Get the file. */
       File textFile = null;
       if( m_errorTxt )
-        textFile = new File( tmpDir, "error.txt" );
+        textFile = new File( tmpDir, "error.txt" ); //$NON-NLS-1$
       else
-        textFile = new File( tmpDir, "output.txt" );
+        textFile = new File( tmpDir, "output.txt" ); //$NON-NLS-1$
 
       /* Check if the text file exists. */
       if( !textFile.exists() )
-        throw new IOException( String.format( "The text file '%s' does not exist...", textFile.getName() ) );
+        throw new IOException( String.format( Messages.getString("OpenOutputZipAction_4"), textFile.getName() ) ); //$NON-NLS-1$
 
       /* Find the text editor registered for txt files. */
-      final Program program = Program.findProgram( "txt" );
+      final Program program = Program.findProgram( "txt" ); //$NON-NLS-1$
       if( program == null )
       {
         Program.launch( textFile.getAbsolutePath() );
@@ -153,7 +154,7 @@ public class OpenOutputZipAction extends Action implements IUpdateable
       /* Display the error. */
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final String dialogTitle = getText();
-      final String message = "The file could not be opened...";
+      final String message = Messages.getString("OpenOutputZipAction_6"); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex );
       ErrorDialog.openError( shell, dialogTitle, message, status );
     }

@@ -63,6 +63,7 @@ import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.cm.view.EditTimeseriesMappingWizard;
 import org.kalypso.ui.rrm.internal.cm.view.MappingElementBean;
 import org.kalypso.ui.rrm.internal.cm.view.TimeseriesMappingBean;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -82,8 +83,8 @@ public class EditMappingAction extends Action
     m_treeModel = model;
     m_mapping = mapping;
 
-    setText( "Edit" );
-    setToolTipText( "Edit the properties of the mapping" );
+    setText( Messages.getString("EditMappingAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("EditMappingAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT ) );
   }
@@ -137,7 +138,7 @@ public class EditMappingAction extends Action
     for( final MappingElementBean mappingElementBean : lostMappings )
       log.add( IStatus.WARNING, mappingElementBean.getMappingElement().getDescription() );
 
-    final MultiStatus status = log.asMultiStatus( "Timeseries mapping contains invalid elements (will be lost after edit):" );
+    final MultiStatus status = log.asMultiStatus( Messages.getString("EditMappingAction_2") ); //$NON-NLS-1$
 
     StatusDialog.open( shell, status, getText() );
 

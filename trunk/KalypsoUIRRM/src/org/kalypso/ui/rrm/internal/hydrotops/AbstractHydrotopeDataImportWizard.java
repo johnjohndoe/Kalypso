@@ -58,6 +58,7 @@ import org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -86,7 +87,7 @@ public abstract class AbstractHydrotopeDataImportWizard extends Wizard implement
     final String[] properties = getProperties();
     final String description = getDescription();
 
-    m_wizardPage = new ImportShapeWizardPage( "shapePage", properties );
+    m_wizardPage = new ImportShapeWizardPage( "shapePage", properties ); //$NON-NLS-1$
     m_wizardPage.setDescription( description ); //$NON-NLS-1$
 
     addPage( m_wizardPage );
@@ -117,7 +118,7 @@ public abstract class AbstractHydrotopeDataImportWizard extends Wizard implement
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save data", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("AbstractHydrotopeDataImportWizard_1"), e ); //$NON-NLS-1$
       StatusDialog.open( shell, status, windowTitle );
       return false;
     }

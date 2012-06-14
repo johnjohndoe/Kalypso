@@ -47,6 +47,7 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.cm.view.EditMultiDialog;
 import org.kalypso.ui.rrm.internal.cm.view.MultiBean;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -60,7 +61,7 @@ public class NewMultiGeneratorAction extends Action
   {
     m_model = model;
 
-    setText( "New Multi Catchment Model" );
+    setText( Messages.getString("NewMultiGeneratorAction_0") ); //$NON-NLS-1$
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_NEW_MULTI ) );
   }
 
