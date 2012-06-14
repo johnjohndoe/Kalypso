@@ -73,6 +73,7 @@ import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.SimulationAccessor;
 import org.kalypso.ui.rrm.internal.simulations.SimulationUtilities;
 import org.kalypso.ui.rrm.internal.simulations.worker.CalculateCatchmentModelsWorker;
@@ -98,7 +99,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
   /**
    * The date formatter.
    */
-  private static final DateFormat DF = new SimpleDateFormat( "dd.MM.yy HH:mm" );
+  private static final DateFormat DF = new SimpleDateFormat( Messages.getString("CalculateSimulationRunnable_0") ); //$NON-NLS-1$
 
   /**
    * The simulations to calculate.
@@ -148,8 +149,8 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Calculating simulations...", 1000 * m_simulations.length );
-      monitor.subTask( "Calculating simulations..." );
+      monitor.beginTask( Messages.getString("CalculateSimulationRunnable_1"), 1000 * m_simulations.length ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("CalculateSimulationRunnable_2") ); //$NON-NLS-1$
 
       /* Sort the simulations. */
       /* Longterm simulations should be calculated first. */
@@ -162,14 +163,14 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         final NAControl simulation = m_simulations[i];
 
         /* Monitor. */
-        monitor.setTaskName( String.format( "Calculating simulation %d of %d...", i + 1, m_simulations.length ) );
+        monitor.setTaskName( String.format( Messages.getString("CalculateSimulationRunnable_3"), i + 1, m_simulations.length ) ); //$NON-NLS-1$
 
         /* Calculate the simulation. */
         final IStatus status = calculateSimulation( simulation, new SubProgressMonitor( monitor, 1000 ) );
         collector.add( status );
       }
 
-      return collector.asMultiStatus( "The calculation was finished." );
+      return collector.asMultiStatus( Messages.getString("CalculateSimulationRunnable_4") ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -206,17 +207,17 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     GMLWorkspace simulationWorkspace = null;
 
     /* Prepare message for early exit */
-    final String errorMessage = String.format( "Calculation of '%s' finished with errors.", simulation.getDescription() );
+    final String errorMessage = String.format( Messages.getString("CalculateSimulationRunnable_5"), simulation.getDescription() ); //$NON-NLS-1$
 
     try
     {
       /* Monitor. */
-      monitor.beginTask( String.format( "Calculating simulation '%s'...", simulation.getDescription() ), 1000 );
-      monitor.subTask( "Checking preconditions..." );
+      monitor.beginTask( String.format( Messages.getString("CalculateSimulationRunnable_6"), simulation.getDescription() ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("CalculateSimulationRunnable_7") ); //$NON-NLS-1$
 
       /* Mark a status with the current time. */
       final Date startTime = new Date();
-      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Calculation started at %s.", DF.format( startTime ) ) ) );
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CalculateSimulationRunnable_8"), DF.format( startTime ) ) ) ); //$NON-NLS-1$
 
       /* Get the rrm simulation and rrm scenario. */
       rrmSimulation = getRrmSimulation( simulation );
@@ -254,7 +255,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       }
 
       /* Monitor. */
-      monitor.subTask( "Preparing..." );
+      monitor.subTask( Messages.getString("CalculateSimulationRunnable_9") ); //$NON-NLS-1$
 
       /* Create the URLs. */
       final URL modelURL = ResourceUtilities.createURL( rrmScenario.getModelFile() );
@@ -298,7 +299,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       }
 
       /* Monitor. */
-      monitor.subTask( "Calculating the catchment models..." );
+      monitor.subTask( Messages.getString("CalculateSimulationRunnable_10") ); //$NON-NLS-1$
 
       final boolean isDesignRainfall = simulation.isUsePrecipitationForm();
       final IStatus catchmentCheckStatus = checkCatchmentModels( simulationFeature, isDesignRainfall );
@@ -316,7 +317,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         return collector.asMultiStatus( errorMessage );
 
       /* Monitor. */
-      monitor.subTask( "Calculating the simulation..." );
+      monitor.subTask( Messages.getString("CalculateSimulationRunnable_11") ); //$NON-NLS-1$
 
       /* Calculate the simulation. */
       final CalculateSimulationWorker calculateWorker = new CalculateSimulationWorker( rrmSimulation, simulationData );
@@ -326,16 +327,16 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         return collector.asMultiStatus( errorMessage );
 
       /* Monitor. */
-      monitor.subTask( "Finishing..." );
+      monitor.subTask( Messages.getString("CalculateSimulationRunnable_12") ); //$NON-NLS-1$
 
       /* Mark a status with the current time. */
       final Date endTime = new Date();
-      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Calculation finished at %s.", DF.format( endTime ) ) ) );
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CalculateSimulationRunnable_13"), DF.format( endTime ) ) ) ); //$NON-NLS-1$
 
       /* Monitor. */
       monitor.worked( 200 );
 
-      return collector.asMultiStatus( String.format( "Calculation of '%s' finished without errors.", simulation.getDescription() ) );
+      return collector.asMultiStatus( String.format( Messages.getString("CalculateSimulationRunnable_14"), simulation.getDescription() ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
@@ -365,12 +366,12 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     if( isDesignRainfall )
     {
       if( generatorE != null || generatorN != null || generatorT != null )
-        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "All configured catchment models are ignored for simulations with design rainfall." );
+        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("CalculateSimulationRunnable_15") ); //$NON-NLS-1$
     }
     else
     {
       if( generatorE == null || generatorN == null || generatorT == null )
-        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "All catchment models must be configured." );
+        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("CalculateSimulationRunnable_16") ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -414,7 +415,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
       /* Save the status in the simulation folder. */
       final GeoStatusLog geoStatusLog = new GeoStatusLog( calculationStatusGml );
-      geoStatusLog.log( collector.asMultiStatus( String.format( "Calculation of '%s'", simulation.getDescription() ) ) );
+      geoStatusLog.log( collector.asMultiStatus( String.format( Messages.getString("CalculateSimulationRunnable_17"), simulation.getDescription() ) ) ); //$NON-NLS-1$
       geoStatusLog.serialize();
 
       /* Refresh. */

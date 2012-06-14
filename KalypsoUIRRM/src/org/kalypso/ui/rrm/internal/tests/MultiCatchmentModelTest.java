@@ -88,13 +88,13 @@ public class MultiCatchmentModelTest
   {
     /* Update timezone. */
     final IPreferenceStore preferenceStore = KalypsoCorePlugin.getDefault().getPreferenceStore();
-    preferenceStore.setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
+    preferenceStore.setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
 
     /* Create the temporary project. */
-    m_project = TestUtilities.createProject( "MultiSample" );
+    m_project = TestUtilities.createProject( "MultiSample" ); //$NON-NLS-1$
 
     /* Unzip the resources. */
-    TestUtilities.unzipResources( "resources/multisample.zip", m_project );
+    TestUtilities.unzipResources( "resources/multisample.zip", m_project ); //$NON-NLS-1$
   }
 
   /**
@@ -116,8 +116,8 @@ public class MultiCatchmentModelTest
     final IFolder baseFolder = m_project.getFolder( INaProjectConstants.FOLDER_BASIS );
     final RrmScenario rrmScenario = new RrmScenario( baseFolder );
     final IFolder simulationsFolder = rrmScenario.getSimulationsFolder();
-    final IFolder actualSimulationFolder = simulationsFolder.getFolder( "Actual" );
-    final IFolder expectedSimulationFolder = simulationsFolder.getFolder( "Expected" );
+    final IFolder actualSimulationFolder = simulationsFolder.getFolder( "Actual" ); //$NON-NLS-1$
+    final IFolder expectedSimulationFolder = simulationsFolder.getFolder( "Expected" ); //$NON-NLS-1$
 
     /* Create the simulation. */
     final RrmSimulation simulation = new RrmSimulation( actualSimulationFolder );
@@ -141,7 +141,7 @@ public class MultiCatchmentModelTest
 
     /* Fail, if it is not ok. */
     if( !status.isOK() )
-      fail( "The actual timeseries do not match the expected timeseries. See the log for details." );
+      fail( "The actual timeseries do not match the expected timeseries. See the log for details." ); //$NON-NLS-1$
   }
 
   /**

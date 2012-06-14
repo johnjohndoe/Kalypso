@@ -56,6 +56,7 @@ import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.SimulationAccessor;
 import org.kalypso.ui.rrm.internal.simulations.SimulationUtilities;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -113,8 +114,8 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Preparing simulation...", 200 );
-      monitor.subTask( "Preparing simulation..." );
+      monitor.beginTask( Messages.getString("PrepareLongtermSimulationWorker_0"), 200 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("PrepareLongtermSimulationWorker_1") ); //$NON-NLS-1$
 
       /* Get the some data of the simulation data. */
       final NaModell naModel = m_simulationData.getNaModel();
@@ -125,13 +126,13 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
       if( isLongterm )
       {
         /* Update status. */
-        collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "This is a longterm simulation." ) );
+        collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("PrepareLongtermSimulationWorker_2") ) ); //$NON-NLS-1$
 
         /* If the start conditions should be calculated. */
         if( m_calculateStartConditions )
         {
           /* Update status. */
-          collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Start conditions should be calculated." ) );
+          collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("PrepareLongtermSimulationWorker_3") ) ); //$NON-NLS-1$
 
           /* We need to manipulate the model.gml, activating all result flags. */
           final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
@@ -155,7 +156,7 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
         else
         {
           /* Update status. */
-          collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Start conditions should not be calculated." ) );
+          collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("PrepareLongtermSimulationWorker_4") ) ); //$NON-NLS-1$
 
           /* HINT: Longterm simulations without calculation of the start conditions */
           /* HINT: will use an unchanged expertControl.gml later. */
@@ -165,14 +166,14 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
       /* Monitor. */
       monitor.worked( 200 );
 
-      return collector.asMultiStatus( "Peparation of the simulation was successfull." );
+      return collector.asMultiStatus( Messages.getString("PrepareLongtermSimulationWorker_5") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       /* Add the exception to the log. */
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
 
-      return collector.asMultiStatus( "Error during preparation of the simulation." );
+      return collector.asMultiStatus( Messages.getString("PrepareLongtermSimulationWorker_6") ); //$NON-NLS-1$
     }
     finally
     {

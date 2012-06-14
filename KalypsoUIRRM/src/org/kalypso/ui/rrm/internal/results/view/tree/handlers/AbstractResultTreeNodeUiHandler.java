@@ -58,6 +58,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
@@ -88,7 +89,7 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     if( simulation == null )
       return getTreeLabel();
 
-    return String.format( "Simulation: %s", simulation.getName() );
+    return String.format( Messages.getString("AbstractResultTreeNodeUiHandler_0"), simulation.getName() ); //$NON-NLS-1$
   }
 
   @Override
@@ -104,12 +105,12 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
       return;
 
     final List<Action> actions = new ArrayList<Action>();
-    actions.add( new OpenTextLogAction( "Open calculation log", "Displays the calculation log.", m_simulation.getCalculationLog() ) );
-    actions.add( new OpenOutputZipAction( "Open error log (calculation core)", "Displays the error log.", m_simulation, true ) );
+    actions.add( new OpenTextLogAction( Messages.getString("AbstractResultTreeNodeUiHandler_1"), Messages.getString("AbstractResultTreeNodeUiHandler_2"), m_simulation.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    actions.add( new OpenOutputZipAction( Messages.getString("AbstractResultTreeNodeUiHandler_3"), Messages.getString("AbstractResultTreeNodeUiHandler_4"), m_simulation, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
     // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.",
 // m_simulation, false ) );
-    actions.add( new OpenTextLogAction( "Open Mass Balance", "Displays the mass balance.", m_simulation.getBilanzTxt() ) );
-    actions.add( new OpenTextLogAction( "Open Statistics", "Displays the statistics.", m_simulation.getStatisticsCsv() ) );
+    actions.add( new OpenTextLogAction( Messages.getString("AbstractResultTreeNodeUiHandler_5"), Messages.getString("AbstractResultTreeNodeUiHandler_6"), m_simulation.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    actions.add( new OpenTextLogAction( Messages.getString("AbstractResultTreeNodeUiHandler_7"), Messages.getString("AbstractResultTreeNodeUiHandler_8"), m_simulation.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Create the image hyperlinks. */
     for( final Action action : actions )
@@ -127,12 +128,12 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     if( this instanceof HydrologyCalculationCaseGroupUiHandler )
     {
       final String label = getTreeLabel();
-      if( StringUtils.equalsIgnoreCase( label, "aktuell" ) )
-        return String.format( "AAA_%s", label );
-      else if( StringUtils.equalsIgnoreCase( label, "berechnet" ) )
-        return String.format( "AAA_%s", label );
+      if( StringUtils.equalsIgnoreCase( label, "aktuell" ) ) //$NON-NLS-1$
+        return String.format( "AAA_%s", label ); //$NON-NLS-1$
+      else if( StringUtils.equalsIgnoreCase( label, "berechnet" ) ) //$NON-NLS-1$
+        return String.format( "AAA_%s", label ); //$NON-NLS-1$
 
-      return String.format( "ZZZ_%s", label );
+      return String.format( "ZZZ_%s", label ); //$NON-NLS-1$
     }
     else if( this instanceof HydrologyParameterSetUiHandler )
     {
@@ -141,20 +142,20 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
 
       if( feature instanceof Catchment )
       {
-        return String.format( "AAA_%s", getTreeLabel() );
+        return String.format( "AAA_%s", getTreeLabel() ); //$NON-NLS-1$
       }
       else if( feature instanceof Node )
       {
-        return String.format( "BBB_%s", getTreeLabel() );
+        return String.format( "BBB_%s", getTreeLabel() ); //$NON-NLS-1$
       }
       else if( feature instanceof StorageChannel )
       {
-        return String.format( "CCC_%s", getTreeLabel() );
+        return String.format( "CCC_%s", getTreeLabel() ); //$NON-NLS-1$
       }
     }
     else if( this instanceof ResultCategoryUiHandler )
     {
-      return String.format( "ZZZ_%s", getTreeLabel() );
+      return String.format( "ZZZ_%s", getTreeLabel() ); //$NON-NLS-1$
     }
 
     return super.getTreeCompareLabel();

@@ -117,7 +117,7 @@ public class ScenarioCompareStatusLabelProvider extends ColumnLabelProvider
   public String getText( final Object element )
   {
     if( element.equals( m_targetSenario ) )
-      return "";
+      return ""; //$NON-NLS-1$
 
     if( element instanceof IScenario )
     {
@@ -127,10 +127,10 @@ public class ScenarioCompareStatusLabelProvider extends ColumnLabelProvider
       if( status != null )
         return status.getMessage();
 
-      return "";
+      return ""; //$NON-NLS-1$
     }
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

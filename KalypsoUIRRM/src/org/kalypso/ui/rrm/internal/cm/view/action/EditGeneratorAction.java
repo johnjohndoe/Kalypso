@@ -120,7 +120,7 @@ public class EditGeneratorAction extends Action
       else
       {
         /* Show a warning and ask the user, if the catchments should be rearranged. */
-        final String message = String.format( "%s. This could have happend because the model has changed. The catchments will be newly initialized...", status.getMessage() );
+        final String message = String.format( Messages.getString("EditGeneratorAction.0"), status.getMessage() ); //$NON-NLS-1$
         MessageDialog.openWarning( shell, getText(), message );
 
         /* Create the linear sum bean. */
@@ -136,7 +136,7 @@ public class EditGeneratorAction extends Action
     catch( final CoreException ex )
     {
       ex.printStackTrace();
-      ErrorDialog.openError( shell, getText(), "Failed to edit the catchment model...", ex.getStatus() );
+      ErrorDialog.openError( shell, getText(), Messages.getString("EditGeneratorAction.1"), ex.getStatus() ); //$NON-NLS-1$
     }
   }
 

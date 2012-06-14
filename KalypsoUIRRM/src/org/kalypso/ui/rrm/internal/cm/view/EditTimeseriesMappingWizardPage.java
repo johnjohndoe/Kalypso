@@ -45,6 +45,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -61,8 +62,8 @@ public class EditTimeseriesMappingWizardPage extends WizardPage
 
     m_mapping = mapping;
 
-    setTitle( "Properties" );
-    setDescription( "Edit the properties of the mapping on this page." );
+    setTitle( Messages.getString("EditTimeseriesMappingWizardPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("EditTimeseriesMappingWizardPage_1") ); //$NON-NLS-1$
   }
 
   @Override

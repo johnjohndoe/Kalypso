@@ -62,6 +62,7 @@ import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -120,8 +121,8 @@ public class MergeMappingsWorker
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Analyzing the scenarios...", 250 + 250 * m_sourceScenarios.length );
-      monitor.subTask( String.format( "Analyzing '%s'...", m_targetScenario.getName() ) );
+      monitor.beginTask( Messages.getString("MergeMappingsWorker_0"), 250 + 250 * m_sourceScenarios.length ); //$NON-NLS-1$
+      monitor.subTask( String.format( Messages.getString("MergeMappingsWorker_1"), m_targetScenario.getName() ) ); //$NON-NLS-1$
 
       /* Analyze the target scenario. */
       analyzeGenerators( m_targetScenario, true );
@@ -134,7 +135,7 @@ public class MergeMappingsWorker
       for( final IScenario sourceScenario : m_sourceScenarios )
       {
         /* Monitor. */
-        monitor.subTask( String.format( "Analyzing '%s'...", sourceScenario.getName() ) );
+        monitor.subTask( String.format( Messages.getString("MergeMappingsWorker_2"), sourceScenario.getName() ) ); //$NON-NLS-1$
 
         /* Analyze the source scenario. */
         analyzeGenerators( sourceScenario, false );
@@ -144,12 +145,12 @@ public class MergeMappingsWorker
         monitor.worked( 250 );
       }
 
-      return collector.asMultiStatus( "Analyzing the scenarios succeeded." );
+      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_3") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( "Analyzing the scenarios failed." );
+      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_4") ); //$NON-NLS-1$
     }
     finally
     {
@@ -212,8 +213,8 @@ public class MergeMappingsWorker
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Creating the catchment models and timeseries mappings...", 500 );
-      monitor.subTask( "Loading the gml files..." );
+      monitor.beginTask( Messages.getString("MergeMappingsWorker_5"), 500 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("MergeMappingsWorker_6") ); //$NON-NLS-1$
 
       /* The target rrm scenario. */
       final RrmScenario targetRrmScenario = new RrmScenario( m_targetScenario.getFolder() );
@@ -232,7 +233,7 @@ public class MergeMappingsWorker
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( "Adding the catchment models and timeseries mappings..." );
+      monitor.subTask( Messages.getString("MergeMappingsWorker_7") ); //$NON-NLS-1$
 
       /* Add the catchment models and the timeseries mappings. */
       addGenerators( targetGenerators );
@@ -247,12 +248,12 @@ public class MergeMappingsWorker
       /* Save the target timeseries mappings. */
       GmlSerializer.saveWorkspace( targetTimeseriesMappingsWorkspace, (IFile) targetTimeseriesMappingsGml );
 
-      return collector.asMultiStatus( "Creating the catchment models and timeseries mappings succeeded." );
+      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_8") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( "Creating the catchment models and timeseries mappings failed." );
+      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_9") ); //$NON-NLS-1$
     }
     finally
     {
@@ -313,7 +314,7 @@ public class MergeMappingsWorker
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Creating the simulations...", 250 * m_sourceScenarios.length );
+      monitor.beginTask( Messages.getString("MergeMappingsWorker_10"), 250 * m_sourceScenarios.length ); //$NON-NLS-1$
 
       /* The target rrm scenario. */
       final RrmScenario targetRrmScenario = new RrmScenario( m_targetScenario.getFolder() );
@@ -327,7 +328,7 @@ public class MergeMappingsWorker
       for( final IScenario sourceScenario : m_sourceScenarios )
       {
         /* Monitor. */
-        monitor.subTask( String.format( "Creating the simulations of '%s'...", sourceScenario.getName() ) );
+        monitor.subTask( String.format( Messages.getString("MergeMappingsWorker_11"), sourceScenario.getName() ) ); //$NON-NLS-1$
 
         /* The source rrm scenario. */
         final RrmScenario sourceRrmScenario = new RrmScenario( sourceScenario.getFolder() );
@@ -349,7 +350,7 @@ public class MergeMappingsWorker
           updateHrefs( sourceScenario, sourceSimulation, targetSimulation );
 
           /* Update the description. */
-          final String key = String.format( "%s_%s", sourceScenario.getURI(), sourceSimulation.getDescription() );
+          final String key = String.format( "%s_%s", sourceScenario.getURI(), sourceSimulation.getDescription() ); //$NON-NLS-1$
           final IFolder simulationFolder = newSimulationFolders.get( key );
           if( simulationFolder != null )
             targetSimulation.setDescription( simulationFolder.getName() );
@@ -362,12 +363,12 @@ public class MergeMappingsWorker
       /* Save the target simulations. */
       GmlSerializer.saveWorkspace( targetSimulationsWorkspace, targetSimulationsGml );
 
-      return collector.asMultiStatus( "Creating the simulations succeeded." );
+      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_13") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( "Creating the simulations failed." );
+      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_14") ); //$NON-NLS-1$
     }
     finally
     {

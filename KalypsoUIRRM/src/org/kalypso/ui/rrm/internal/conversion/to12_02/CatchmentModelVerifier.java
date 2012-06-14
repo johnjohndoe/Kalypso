@@ -73,6 +73,7 @@ import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.worker.CalculateCatchmentModelsWorker;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -141,7 +142,7 @@ public class CatchmentModelVerifier
       final File simulationDir = new File( m_simulationsFolder, m_simulation.getDescription() );
 
       /* Create the file handle to the directory of the temporary simulation. */
-      simulationTmpDir = new File( m_simulationsFolder, String.format( "tmp_%s", m_simulation.getDescription() ) );
+      simulationTmpDir = new File( m_simulationsFolder, String.format( "tmp_%s", m_simulation.getDescription() ) ); //$NON-NLS-1$
 
       /* Create the temporary simulation. */
       createTemporarySimulation( simulationDir, simulationTmpDir );
@@ -167,14 +168,14 @@ public class CatchmentModelVerifier
       final IStatus compareStatus = CatchmentModelHelper.compareTimeseries( simulationFolder, simulationTmpFolder );
       collector.add( compareStatus );
 
-      return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'", m_simulation.getDescription() ) );
+      return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelVerifier_1"), m_simulation.getDescription() ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       /* Handle the error as warning. */
       ex.printStackTrace();
       collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'", m_simulation.getDescription() ) );
+      return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelVerifier_2"), m_simulation.getDescription() ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -215,21 +216,21 @@ public class CatchmentModelVerifier
     final String generatorIdT = ((IXLinkedFeature) m_simulation.getProperty( NAControl.PROP_GENERATOR_T )).getFeatureId();
 
     if( !checkGenerator( generators, generatorIdN ) )
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The N generator was null or had no factors." ) );
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelVerifier_3") ) ); //$NON-NLS-1$
     else
-      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The N generator was okay." ) );
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelVerifier_4") ) ); //$NON-NLS-1$
 
     if( !checkGenerator( generators, generatorIdE ) )
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The E generator was null or had no factors." ) );
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelVerifier_5") ) ); //$NON-NLS-1$
     else
-      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The E generator was okay." ) );
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelVerifier_6") ) ); //$NON-NLS-1$
 
     if( !checkGenerator( generators, generatorIdT ) )
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The T generator was null or had no factors." ) );
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelVerifier_7") ) ); //$NON-NLS-1$
     else
-      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The T generator was okay." ) );
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelVerifier_8") ) ); //$NON-NLS-1$
 
-    return collector.asMultiStatus( "Checking the N/E/T generators" );
+    return collector.asMultiStatus( Messages.getString("CatchmentModelVerifier_9") ); //$NON-NLS-1$
   }
 
   /**
@@ -327,7 +328,7 @@ public class CatchmentModelVerifier
     if( !status.isOK() )
       return convertStatus( status );
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Catchment model generation successfully tested." );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelVerifier_10") ); //$NON-NLS-1$
   }
 
   private IStatus convertStatus( final IStatus status )

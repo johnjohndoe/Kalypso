@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 
 /**
@@ -81,7 +82,7 @@ public class HydrolgyManagementSearchControl extends Composite implements IRrmDi
     final Group groupParameter = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupParameter );
     groupParameter.setLayout( new FillLayout() );
-    groupParameter.setText( "Ergebnisart" );
+    groupParameter.setText( Messages.getString("HydrolgyManagementSearchControl_0") ); //$NON-NLS-1$
     groupParameter.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_parameterTypeFilterControl = new ResultParameterTypeFilterControl( groupParameter, toolkit );

@@ -54,6 +54,7 @@ import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NASimulationOperation;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -100,8 +101,8 @@ public class CalculateSimulationWorker implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Calculating simulation...", 200 );
-      monitor.subTask( "Calculating simulation..." );
+      monitor.beginTask( Messages.getString("CalculateSimulationWorker_0"), 200 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("CalculateSimulationWorker_1") ); //$NON-NLS-1$
 
       /* Calculate. */
       final NASimulationOperation operation = new NASimulationOperation( m_rrmSimulation.getSimulationFolder(), m_simulationData );
@@ -113,16 +114,16 @@ public class CalculateSimulationWorker implements ICoreRunnableWithProgress
         collector.add( calculateStatus );
 
       if( calculateStatus.getSeverity() >= IStatus.ERROR )
-        return collector.asMultiStatus( "Error during calculation of the simulation." );
+        return collector.asMultiStatus( Messages.getString("CalculateSimulationWorker_2") ); //$NON-NLS-1$
 
-      return collector.asMultiStatus( "Calculation of the simulation was successfull." );
+      return collector.asMultiStatus( Messages.getString("CalculateSimulationWorker_3") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       /* Add the exception to the log. */
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
 
-      return collector.asMultiStatus( "Error during calculation of the simulation." );
+      return collector.asMultiStatus( Messages.getString("CalculateSimulationWorker_4") ); //$NON-NLS-1$
     }
     finally
     {

@@ -46,6 +46,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * The scenario compare status contains stati for several cases.
@@ -54,11 +55,11 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
  */
 public class ScenarioCompareStatus
 {
-  public static final String KEY_HYDROTOPES = "hydrotopes";
+  public static final String KEY_HYDROTOPES = "hydrotopes"; //$NON-NLS-1$
 
-  public static final String KEY_MODEL = "model";
+  public static final String KEY_MODEL = "model"; //$NON-NLS-1$
 
-  public static final String KEY_PARAMETER = "parameter";
+  public static final String KEY_PARAMETER = "parameter"; //$NON-NLS-1$
 
   /**
    * The stati.
@@ -85,7 +86,7 @@ public class ScenarioCompareStatus
    */
   public void putStatus( final String uri, final String key, final IStatus status )
   {
-    final String internalKey = String.format( "%s_%s", uri, key );
+    final String internalKey = String.format( "%s_%s", uri, key ); //$NON-NLS-1$
     m_stati.put( internalKey, status );
   }
 
@@ -100,7 +101,7 @@ public class ScenarioCompareStatus
    */
   public boolean hasStatus( final String uri, final String key )
   {
-    final String internalKey = String.format( "%s_%s", uri, key );
+    final String internalKey = String.format( "%s_%s", uri, key ); //$NON-NLS-1$
     return m_stati.containsKey( internalKey );
   }
 
@@ -115,9 +116,9 @@ public class ScenarioCompareStatus
    */
   public IStatus getStatus( final String uri, final String key )
   {
-    final String internalKey = String.format( "%s_%s", uri, key );
+    final String internalKey = String.format( "%s_%s", uri, key ); //$NON-NLS-1$
     if( !m_stati.containsKey( internalKey ) )
-      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Not evaluated" );
+      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("ScenarioCompareStatus_6") ); //$NON-NLS-1$
 
     return m_stati.get( internalKey );
   }

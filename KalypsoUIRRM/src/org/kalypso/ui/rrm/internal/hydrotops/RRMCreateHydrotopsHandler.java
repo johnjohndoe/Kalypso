@@ -167,7 +167,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
       e.printStackTrace();
     }
 
-    throw new ExecutionException( String.format( "Failed to find input data: %s", type.getName() ) );
+    throw new ExecutionException( String.format( Messages.getString("RRMCreateHydrotopsHandler.0"), type.getName() ) ); //$NON-NLS-1$
   }
 
   private CommandableWorkspace findHydrotopes( final IStructuredSelection selection ) throws ExecutionException

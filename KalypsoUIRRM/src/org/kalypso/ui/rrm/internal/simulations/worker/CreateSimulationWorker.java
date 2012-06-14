@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -87,8 +88,8 @@ public class CreateSimulationWorker implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Creating simulation...", 200 );
-      monitor.subTask( "Creating simulation..." );
+      monitor.beginTask( Messages.getString("CreateSimulationWorker_0"), 200 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("CreateSimulationWorker_1") ); //$NON-NLS-1$
 
       /* Create the simulation folder. */
       final IFolder simulationFolder = m_rrmSimulation.getSimulationFolder();
@@ -102,11 +103,11 @@ public class CreateSimulationWorker implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.worked( 200 );
 
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Creation of the simulation was successfull." );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CreateSimulationWorker_2") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Error during creation of the simulation.", ex );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("CreateSimulationWorker_3"), ex ); //$NON-NLS-1$
     }
     finally
     {

@@ -94,6 +94,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.MultiBean;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -277,8 +278,8 @@ public class CatchmentModelHelper
     /* No generators available. */
     if( generators.length == 0 )
     {
-      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The multi generator '%s' does not have any generators.", description ) ) );
-      return collector.asMultiStatus( String.format( "Validation of the multi generator '%s'", description ) );
+      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_0"), description ) ) ); //$NON-NLS-1$
+      return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelHelper_1"), description ) ); //$NON-NLS-1$
     }
 
     /* The values of the first generator will be the reference for the others. */
@@ -294,7 +295,7 @@ public class CatchmentModelHelper
       /* (1) All generators must be of the type ILinearSumGenerator. */
       if( !(generator instanceof ILinearSumGenerator) )
       {
-        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The generator '%s' is not of the type ILinearSumGenerator.", generator.getDescription() ) ) );
+        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_2"), generator.getDescription() ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -313,7 +314,7 @@ public class CatchmentModelHelper
       /* (4) The areas must be the same and must have the same order in all generators. */
       if( !compareGeneratorCatchments( firstGenerator, linearSumGenerator, false ) )
       {
-        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The catchments of the generator '%s' does not match the catchments of the first generator '%s'.", generator.getDescription(), firstGenerator.getDescription() ) ) );
+        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_3"), generator.getDescription(), firstGenerator.getDescription() ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -323,16 +324,16 @@ public class CatchmentModelHelper
       /* (5) Generators may not overlap. Touch is ok. */
       if( !compareGeneratorValidityOverlap( linearSumGenerator, generators ) )
       {
-        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The validity range of generator '%s' overlaps the validity range of one other generator.", generator.getDescription() ) ) );
+        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_4"), generator.getDescription() ) ) ); //$NON-NLS-1$
         continue;
       }
     }
 
     /* (6) There are no gaps allowed between the validity ranges of adjacent generators. */
     if( !compareGeneratorValidityGaps( generators, simulationStart, simulationEnd, firstGenerator.getTimestep(), firstGenerator.getTimestamp() ) )
-      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "There are gaps in the validity ranges of the generators of the multi generator '%s'", description ) ) );
+      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_5"), description ) ) ); //$NON-NLS-1$
 
-    return collector.asMultiStatus( String.format( "Validation of the multi generator '%s'", description ) );
+    return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelHelper_6"), description ) ); //$NON-NLS-1$
   }
 
   /**
@@ -355,14 +356,14 @@ public class CatchmentModelHelper
     final Integer timestep1 = generator1.getTimestep();
     final Integer timestep2 = generator2.getTimestep();
     if( !ObjectUtils.equals( timestep1, timestep2 ) )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The timestep of the generator '%s' does not match the timestep of the first generator '%s'.", generator2.getDescription(), generator1.getDescription() ) );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_7"), generator2.getDescription(), generator1.getDescription() ) ); //$NON-NLS-1$
 
     final LocalTime timestamp1 = generator1.getTimestamp();
     final LocalTime timestamp2 = generator2.getTimestamp();
     if( !ObjectUtils.equals( timestamp1, timestamp2 ) )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The timestamp of the generator '%s' does not match the timestamp of the first generator '%s'.", generator2.getDescription(), generator1.getDescription() ) );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_8"), generator2.getDescription(), generator1.getDescription() ) ); //$NON-NLS-1$
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "The general properties of the generator '%s' do match the general properties of the first generator '%s'.", generator2.getDescription(), generator1.getDescription() ) );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_9"), generator2.getDescription(), generator1.getDescription() ) ); //$NON-NLS-1$
   }
 
   /**
@@ -545,7 +546,7 @@ public class CatchmentModelHelper
 
     /* Convert to a date with the kalypso timezone. */
     /* The date fields are ignored. */
-    final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) );
+    final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) ); //$NON-NLS-1$
     final DateTime timestampDate = new DateTime( timestampUTC.toDate(), DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() ) );
 
     /* Further adjust range by predefined time. */
@@ -587,7 +588,7 @@ public class CatchmentModelHelper
 
     /* Convert to a date with the kalypso timezone. */
     /* The date fields are ignored. */
-    final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) );
+    final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) ); //$NON-NLS-1$
     final DateTime timestampDate = new DateTime( timestampUTC.toDate(), DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() ) );
 
     /* Further adjust range by predefined time. */
@@ -657,7 +658,7 @@ public class CatchmentModelHelper
 
       /* Compare the catchments. */
       final QName[] linkProperties = new QName[] { Catchment.PROP_PRECIPITATION_LINK, Catchment.PROP_TEMPERATURE_LINK, Catchment.PROP_EVAPORATION_LINK };
-      final String[] linkLabels = new String[] { "Precipitation", "Temperature", "Evaporation" };
+      final String[] linkLabels = new String[] { Messages.getString("CatchmentModelHelper_12"), Messages.getString("CatchmentModelHelper_13"), Messages.getString("CatchmentModelHelper_14") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       for( int i = 0; i < linkLabels.length; i++ )
       {
         final IStatus status = compareCatchments( model, tmpModel, context, tmpContext, linkProperties[i], linkLabels[i] );
@@ -671,7 +672,7 @@ public class CatchmentModelHelper
         collector.add( status );
       }
 
-      return collector.asMultiStatus( "Verification of the timeseries finished." );
+      return collector.asMultiStatus( Messages.getString("CatchmentModelHelper_15") ); //$NON-NLS-1$
     }
     finally
     {
@@ -717,7 +718,7 @@ public class CatchmentModelHelper
       collector.add( status );
     }
 
-    return collector.asMultiStatus( String.format( "Verifying the catchment model '%s'", linkLabel ) );
+    return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelHelper_16"), linkLabel ) ); //$NON-NLS-1$
   }
 
   private static IStatus compareCatchment( final Catchment catchment, final Catchment tmpCatchment, final URL context, final URL tmpContext, final QName linkProperty )
@@ -755,7 +756,7 @@ public class CatchmentModelHelper
       collector.add( status );
     }
 
-    return collector.asMultiStatus( String.format( "Verifying the timeseries mapping of type '%s'", mappingType.getLabel() ) );
+    return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelHelper_17"), mappingType.getLabel() ) ); //$NON-NLS-1$
   }
 
   private static IStatus compareTimeseries( final URL context, final TimeseriesLinkType link, final URL tmpContext, final TimeseriesLinkType tmpLink, final String statusLabel )
@@ -810,14 +811,14 @@ public class CatchmentModelHelper
       if( differences > 0 )
       {
         final int percent = (differences * 100) / tmpHash.size();
-        collector.add( IStatus.WARNING, "The new timeseries' values differ by %d%% (%d differences).", null, percent, differences );
+        collector.add( IStatus.WARNING, Messages.getString("CatchmentModelHelper_18"), null, percent, differences ); //$NON-NLS-1$
       }
 
       return collector.asMultiStatus( statusLabel );
     }
     catch( final Exception ex )
     {
-      collector.add( IStatus.WARNING, "The new timeseries could not be compared. Cause: %s", null, ex.getLocalizedMessage() );
+      collector.add( IStatus.WARNING, Messages.getString("CatchmentModelHelper_19"), null, ex.getLocalizedMessage() ); //$NON-NLS-1$
       return collector.asMultiStatus( statusLabel );
     }
   }
@@ -864,7 +865,7 @@ public class CatchmentModelHelper
 
     /* Does the size match? */
     if( modelCatchments.size() != generatorCatchments.size() )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "The catchment model contains a different number of catchments than the model." );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelHelper_20") ); //$NON-NLS-1$
 
     /* Does the order match? */
     for( int i = 0; i < modelCatchments.size(); i++ )
@@ -877,9 +878,9 @@ public class CatchmentModelHelper
       final String generatorId = generatorLink.getFeatureId();
 
       if( !modelId.equals( generatorId ) )
-        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "The catchment model contains catchments in a different order than the model." );
+        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelHelper_21") ); //$NON-NLS-1$
     }
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The catchments do match." );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelHelper_22") ); //$NON-NLS-1$
   }
 }

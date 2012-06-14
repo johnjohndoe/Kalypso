@@ -114,8 +114,8 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
     try
     {
       /* Save the log as text file. */
-      final GeoStatusLog log = new GeoStatusLog( new File( m_targetDir, "conversionLog.gml" ) );
-      log.log( getLog().asMultiStatus( String.format( Messages.getString( "RrmProjectConverter103to230_1" ), projectName ) ) );
+      final GeoStatusLog log = new GeoStatusLog( new File( m_targetDir, "conversionLog.gml" ) ); //$NON-NLS-1$
+      log.log( getLog().asMultiStatus( String.format( Messages.getString( "RrmProjectConverter103to230_1" ), projectName ) ) ); //$NON-NLS-1$
       log.serialize();
     }
     catch( final Exception ex )

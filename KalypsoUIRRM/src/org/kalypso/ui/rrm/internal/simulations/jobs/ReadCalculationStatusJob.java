@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
@@ -80,10 +81,10 @@ public class ReadCalculationStatusJob extends Job
    */
   public ReadCalculationStatusJob( final RrmSimulation simulation )
   {
-    super( "ReadCalculationStatusJob" );
+    super( Messages.getString("ReadCalculationStatusJob_0") ); //$NON-NLS-1$
 
     m_simulation = simulation;
-    m_calculationStatus = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Not available." );
+    m_calculationStatus = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("ReadCalculationStatusJob_1") ); //$NON-NLS-1$
   }
 
   /**
@@ -99,8 +100,8 @@ public class ReadCalculationStatusJob extends Job
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Reading the calculation status...", 1000 );
-      monitor.subTask( "Reading the calculation status..." );
+      monitor.beginTask( Messages.getString("ReadCalculationStatusJob_2"), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("ReadCalculationStatusJob_3") ); //$NON-NLS-1$
 
       /* Read the calculation status. */
       m_calculationStatus = readCalculationStatus();
@@ -142,7 +143,7 @@ public class ReadCalculationStatusJob extends Job
       /* Get the file of the calculation status gml. */
       final IFile calculationStatusGml = m_simulation.getCalculationStatusGml();
       if( !calculationStatusGml.exists() )
-        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "The simulation was not calculated." );
+        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("ReadCalculationStatusJob_4") ); //$NON-NLS-1$
 
       /* Load the workspace. */
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( calculationStatusGml );
@@ -157,11 +158,11 @@ public class ReadCalculationStatusJob extends Job
       for( final IGeoStatus geoStatus : statusCollection.getStati() )
         results.add( geoStatus );
 
-      return results.asMultiStatus( "The simulation was calculated." );
+      return results.asMultiStatus( Messages.getString("ReadCalculationStatusJob_5") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Reading the calculation status has failed.", ex );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ReadCalculationStatusJob_6"), ex ); //$NON-NLS-1$
     }
   }
 }

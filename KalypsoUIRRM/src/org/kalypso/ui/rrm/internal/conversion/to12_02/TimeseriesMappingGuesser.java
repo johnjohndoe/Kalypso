@@ -94,7 +94,7 @@ public class TimeseriesMappingGuesser
     if( m_result != null )
       m_log.add( IStatus.OK, Messages.getString( "CatchmentTimeseriesGuesser_0" ), null, m_result ); //$NON-NLS-1$
 
-    final String message = String.format( "Guess timeseries for element '%s'", m_modelTimeseriesLink.getFeature().getName() );
+    final String message = String.format( Messages.getString("TimeseriesMappingGuesser.0"), m_modelTimeseriesLink.getFeature().getName() ); //$NON-NLS-1$
     return m_log.asMultiStatusOrOK( message, message );
   }
 
@@ -132,7 +132,7 @@ public class TimeseriesMappingGuesser
     if( targetFile == null )
       return null;
 
-    m_log.add( IStatus.INFO, "Try to find timeseries via old timeseries mapping" );
+    m_log.add( IStatus.INFO, Messages.getString("TimeseriesMappingGuesser.1") ); //$NON-NLS-1$
 
     final String name = targetFile.getName();
     final String timeseriesName = FilenameUtils.removeExtension( name );
@@ -141,11 +141,11 @@ public class TimeseriesMappingGuesser
 
     if( entry != null )
     {
-      final String message = String.format( "Found old mapping entry, using timeseries: %s", entry.getOldProjectRelativePath() );
+      final String message = String.format( Messages.getString("TimeseriesMappingGuesser.2"), entry.getOldProjectRelativePath() ); //$NON-NLS-1$
       m_log.add( IStatus.OK, message );
     }
     else
-      m_log.add( IStatus.INFO, "No old mapping entry found" );
+      m_log.add( IStatus.INFO, Messages.getString("TimeseriesMappingGuesser.3") ); //$NON-NLS-1$
 
     return entry;
   }

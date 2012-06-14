@@ -71,6 +71,7 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -118,8 +119,8 @@ public class MergeScenariosWizardPage extends WizardPage
     m_dataBinding = null;
     m_treeViewer = null;
 
-    setTitle( "Szenarien zusammenführen" );
-    setDescription( String.format( "Auswahl der Szenarien, die in das Szenario '%s' zusammengeführt werden sollen.", scenariosData.getTargetScenario().getName() ) );
+    setTitle( Messages.getString("MergeScenariosWizardPage_0") ); //$NON-NLS-1$
+    setDescription( String.format( Messages.getString("MergeScenariosWizardPage_1"), scenariosData.getTargetScenario().getName() ) ); //$NON-NLS-1$
   }
 
   /**
@@ -147,12 +148,12 @@ public class MergeScenariosWizardPage extends WizardPage
     /* Create a button. */
     final Button deleteButton = new Button( main, SWT.CHECK );
     deleteButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    deleteButton.setText( "Importierte Szenarien löschen" );
+    deleteButton.setText( Messages.getString("MergeScenariosWizardPage_2") ); //$NON-NLS-1$
 
     /* Create a button. */
     final Button compareButton = new Button( main, SWT.PUSH );
     compareButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
-    compareButton.setText( String.format( "Mit '%s' vergleichen", m_scenariosData.getTargetScenario().getName() ) );
+    compareButton.setText( String.format( Messages.getString("MergeScenariosWizardPage_3"), m_scenariosData.getTargetScenario().getName() ) ); //$NON-NLS-1$
     compareButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -189,7 +190,7 @@ public class MergeScenariosWizardPage extends WizardPage
     final TreeViewerColumn scenariosViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
     scenariosViewerColumn.setLabelProvider( new ScenariosColumnLabelProvider( m_scenariosData.getTargetScenario() ) );
     final TreeColumn scenariosColumn = scenariosViewerColumn.getColumn();
-    scenariosColumn.setText( "Szenario" );
+    scenariosColumn.setText( Messages.getString("MergeScenariosWizardPage_4") ); //$NON-NLS-1$
     scenariosColumn.setWidth( 200 );
     scenariosColumn.setAlignment( SWT.LEAD );
 
@@ -197,7 +198,7 @@ public class MergeScenariosWizardPage extends WizardPage
     final TreeViewerColumn modelViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
     modelViewerColumn.setLabelProvider( new ScenarioCompareStatusLabelProvider( m_compareStatus, ScenarioCompareStatus.KEY_MODEL, m_scenariosData.getTargetScenario() ) );
     final TreeColumn modelColumn = modelViewerColumn.getColumn();
-    modelColumn.setText( "Modell" );
+    modelColumn.setText( Messages.getString("MergeScenariosWizardPage_5") ); //$NON-NLS-1$
     modelColumn.setWidth( 125 );
     modelColumn.setAlignment( SWT.LEAD );
 
@@ -205,7 +206,7 @@ public class MergeScenariosWizardPage extends WizardPage
     final TreeViewerColumn parameterViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
     parameterViewerColumn.setLabelProvider( new ScenarioCompareStatusLabelProvider( m_compareStatus, ScenarioCompareStatus.KEY_PARAMETER, m_scenariosData.getTargetScenario() ) );
     final TreeColumn parameterColumn = parameterViewerColumn.getColumn();
-    parameterColumn.setText( "Parameter" );
+    parameterColumn.setText( Messages.getString("MergeScenariosWizardPage_6") ); //$NON-NLS-1$
     parameterColumn.setWidth( 125 );
     parameterColumn.setAlignment( SWT.LEAD );
 
@@ -213,7 +214,7 @@ public class MergeScenariosWizardPage extends WizardPage
     final TreeViewerColumn hydrotopesViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
     hydrotopesViewerColumn.setLabelProvider( new ScenarioCompareStatusLabelProvider( m_compareStatus, ScenarioCompareStatus.KEY_HYDROTOPES, m_scenariosData.getTargetScenario() ) );
     final TreeColumn hydrotopesColumn = hydrotopesViewerColumn.getColumn();
-    hydrotopesColumn.setText( "Hydrotope" );
+    hydrotopesColumn.setText( Messages.getString("MergeScenariosWizardPage_7") ); //$NON-NLS-1$
     hydrotopesColumn.setWidth( 125 );
     hydrotopesColumn.setAlignment( SWT.LEAD );
   }
@@ -229,7 +230,7 @@ public class MergeScenariosWizardPage extends WizardPage
   private void bindDeleteButton( final Button deleteButton )
   {
     final ISWTObservableValue target = SWTObservables.observeSelection( deleteButton );
-    final IObservableValue model = BeansObservables.observeValue( m_scenariosData, "deleteScenarios" );
+    final IObservableValue model = BeansObservables.observeValue( m_scenariosData, "deleteScenarios" ); //$NON-NLS-1$
     final DataBinder dataBinder = new DataBinder( target, model );
     m_dataBinding.bindValue( dataBinder );
   }

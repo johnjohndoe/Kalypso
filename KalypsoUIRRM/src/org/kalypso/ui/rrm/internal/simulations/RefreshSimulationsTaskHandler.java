@@ -74,7 +74,7 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
   {
     /* Get the shell and the title. */
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
-    final String title = "Calculate Simulations";
+    final String title = Messages.getString("RefreshSimulationsTaskHandler.0"); //$NON-NLS-1$
 
     /* Get the input. */
     final LayerTableViewer tableViewer = GmlTableHandlerUtils.getTableViewerChecked( event );

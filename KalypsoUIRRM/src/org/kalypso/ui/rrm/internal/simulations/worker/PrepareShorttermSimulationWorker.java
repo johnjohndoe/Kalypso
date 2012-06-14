@@ -60,6 +60,7 @@ import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.SimulationUtilities;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -108,8 +109,8 @@ public class PrepareShorttermSimulationWorker implements ICoreRunnableWithProgre
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Preparing simulation...", 200 );
-      monitor.subTask( "Preparing simulation..." );
+      monitor.beginTask( Messages.getString("PrepareShorttermSimulationWorker_0"), 200 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("PrepareShorttermSimulationWorker_1") ); //$NON-NLS-1$
 
       /* Get the some data of the simulation data. */
       final NAControl simulation = m_simulationData.getMetaControl();
@@ -119,14 +120,14 @@ public class PrepareShorttermSimulationWorker implements ICoreRunnableWithProgre
       if( !isLongterm )
       {
         /* Update status. */
-        collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "This is a shortterm simulation." ) );
+        collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("PrepareShorttermSimulationWorker_2") ) ); //$NON-NLS-1$
 
         /* If a longterm simulation is referenced. */
         final String initialValueSource = simulation.getInitialValueSource();
         if( initialValueSource != null && initialValueSource.length() > 0 )
         {
           /* Update status. */
-          collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "It does reference a longterm simulation." ) );
+          collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("PrepareShorttermSimulationWorker_3") ) ); //$NON-NLS-1$
 
           /* Update the simulation data. */
           final IStatus status = updateSimulationData( m_rrmSimulation, m_simulationData, simulation );
@@ -135,7 +136,7 @@ public class PrepareShorttermSimulationWorker implements ICoreRunnableWithProgre
         else
         {
           /* Update status. */
-          collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "It does not reference a longterm simulation." ) );
+          collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("PrepareShorttermSimulationWorker_4") ) ); //$NON-NLS-1$
 
           /* HINT: In this case the lzsim data is not copied. */
         }
@@ -146,14 +147,14 @@ public class PrepareShorttermSimulationWorker implements ICoreRunnableWithProgre
       /* Monitor. */
       monitor.worked( 200 );
 
-      return collector.asMultiStatus( "Peparation of the simulation was successfull." );
+      return collector.asMultiStatus( Messages.getString("PrepareShorttermSimulationWorker_5") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       /* Add the exception to the log. */
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
 
-      return collector.asMultiStatus( "Error during preparation of the simulation." );
+      return collector.asMultiStatus( Messages.getString("PrepareShorttermSimulationWorker_6") ); //$NON-NLS-1$
     }
     finally
     {
@@ -166,35 +167,35 @@ public class PrepareShorttermSimulationWorker implements ICoreRunnableWithProgre
   {
     final String sourceSimulationName = control.getInitialValueSource();
     if( StringUtils.isBlank( sourceSimulationName ) )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "No longterm simulation is set." );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("PrepareShorttermSimulationWorker_7") ); //$NON-NLS-1$
 
     final RrmScenario scenario = rrmSimulation.getScenario();
     final IFolder folderSimulations = scenario.getSimulationsFolder();
     final RrmSimulation sourceSimulation = new RrmSimulation( folderSimulations.getFolder( new Path( sourceSimulationName ) ) );
     if( !sourceSimulation.exists() )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "Failed to copy initial values from simulation '%s': Simulation does not exist.", sourceSimulation.getName() ) );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("PrepareShorttermSimulationWorker_8"), sourceSimulation.getName() ) ); //$NON-NLS-1$
 
     final IFolder currentSourceFolder = sourceSimulation.getCurrentResultsFolder();
     if( !currentSourceFolder.exists() )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "Failed to copy initial values from simulation '%s': No results available.", sourceSimulation.getName() ) );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("PrepareShorttermSimulationWorker_9"), sourceSimulation.getName() ) ); //$NON-NLS-1$
 
     final IFolder initialValuesSourceFolder = sourceSimulation.getCurrentLzimResultFolder();
     final Date startDate = control.getSimulationStart();
-    final String initialValuesSourceFilename = new SimpleDateFormat( "yyyyMMdd'.gml'" ).format( startDate );
+    final String initialValuesSourceFilename = new SimpleDateFormat( "yyyyMMdd'.gml'" ).format( startDate ); //$NON-NLS-1$
     final IFile initialValuesSourceFile = initialValuesSourceFolder.getFile( initialValuesSourceFilename );
     if( !initialValuesSourceFile.exists() )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "Failed to copy initial values from simulation '%s': Initial values missing (%s).", sourceSimulation.getName(), initialValuesSourceFilename ) );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("PrepareShorttermSimulationWorker_11"), sourceSimulation.getName(), initialValuesSourceFilename ) ); //$NON-NLS-1$
 
     try
     {
       final GMLWorkspace lzsimWorkspace = GmlSerializer.createGMLWorkspace( initialValuesSourceFile, simulationData.getModelWorkspace().getContext(), simulationData.getFeatureProviderFactory(), null );
       simulationData.setLzsimWorkspace( lzsimWorkspace );
 
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Initial values were loaded from simulation '%s'.", sourceSimulation.getName() ) );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("PrepareShorttermSimulationWorker_12"), sourceSimulation.getName() ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "Failed to load initial values from simulation '%s'.", sourceSimulation.getName() ), e );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("PrepareShorttermSimulationWorker_13"), sourceSimulation.getName() ), e ); //$NON-NLS-1$
     }
   }
 }

@@ -291,7 +291,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     final IStatus bindingStatus = ValidationStatusUtilities.getFirstNonOkStatus( m_dataBinding );
     if( !bindingStatus.isOK() )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "Dialog has validation errors. %s", bindingStatus.getMessage() ), bindingStatus.getException() );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("EditLinearSumDialog.0"), bindingStatus.getMessage() ), bindingStatus.getException() ); //$NON-NLS-1$
       StatusDialog.open( getShell(), status, getShell().getText() );
       return;
     }
@@ -634,7 +634,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     final Shell shell = getShell();
 
     /* Show the confirm dialog. */
-    if( !MessageDialog.openConfirm( shell, shell.getText(), "Changing the parameter type needs to update the list of timeseries. Unsaved changes will be lost. Continue?" ) )
+    if( !MessageDialog.openConfirm( shell, shell.getText(), Messages.getString("EditLinearSumDialog.1") ) ) //$NON-NLS-1$
     {
       m_ignoreNextChange = true;
       final LinearSumBean generator = m_bean;

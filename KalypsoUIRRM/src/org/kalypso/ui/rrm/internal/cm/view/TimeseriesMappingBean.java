@@ -257,7 +257,7 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
 
         final IFeatureProvider newElementProvider = addCommand;
 
-        final String modelRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelFeature.getId() );
+        final String modelRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelFeature.getId() ); //$NON-NLS-1$
 
         final AddLinkCommand linkCommand = new AddLinkCommand( newElementProvider, mappingElementLinkRelation, -1, modelRef );
         commands.addCommand( linkCommand );

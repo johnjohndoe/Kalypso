@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.afgui.internal.ui.workflow.WorkflowBreadCrumbLabelProvider;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -94,7 +95,7 @@ public class ScenariosColumnLabelProvider extends ColumnLabelProvider
   {
     final String text = m_delegateLabelProvider.getText( element );
     if( element.equals( m_targetScenario ) )
-      return String.format( "%s (Ziel)", text );
+      return String.format( Messages.getString("ScenariosColumnLabelProvider_0"), text ); //$NON-NLS-1$
 
     return text;
   }

@@ -53,6 +53,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -77,8 +78,8 @@ public class DRWBMMeasureDefinitionTaskHandler extends AbstractHandler
     final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-    WorkflowHandlerUtils.setGttInput( activePage, "Drwbm", "urn:org.kalypso.model.rrm.drwbmSoilDefinition:Profiles:gtt", "DRWBM Profile", scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$
-    WorkflowHandlerUtils.setGttInput( activePage, "DrwbmDefinition", "urn:org.kalypso.model.rrm.drwbmDefinition:Definitions:gtt", "DRWBM Definitionen", scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$
+    WorkflowHandlerUtils.setGttInput( activePage, "Drwbm", "urn:org.kalypso.model.rrm.drwbmSoilDefinition:Profiles:gtt", Messages.getString("DRWBMMeasureDefinitionTaskHandler_0"), scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$
+    WorkflowHandlerUtils.setGttInput( activePage, "DrwbmDefinition", "urn:org.kalypso.model.rrm.drwbmDefinition:Definitions:gtt", Messages.getString("DRWBMMeasureDefinitionTaskHandler_1"), scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$
 
     return null;
   }

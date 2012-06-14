@@ -59,6 +59,7 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.cm.view.EditTimeseriesMappingWizard;
 import org.kalypso.ui.rrm.internal.cm.view.TimeseriesMappingBean;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -78,7 +79,7 @@ public class NewTimeseriesMappingAction extends Action
     m_mappingType = mappingType;
     m_treeModel = treeModel;
 
-    final String text = String.format( "New mapping (%s)", mappingType.getLabel() );
+    final String text = String.format( Messages.getString("NewTimeseriesMappingAction_0"), mappingType.getLabel() ); //$NON-NLS-1$
     setText( text );
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_NEW_LINEAR_SUM ) );

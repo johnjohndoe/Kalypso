@@ -144,7 +144,7 @@ public class MergeMappingsHelper
     if( generatorValue == null )
       return null;
 
-    return RrmScenario.FILE_CATCHMENT_MODELS_GML + "#" + generatorValue.getFeatureId();
+    return RrmScenario.FILE_CATCHMENT_MODELS_GML + "#" + generatorValue.getFeatureId(); //$NON-NLS-1$
   }
 
   private GeneratorValue isEqualGeneratorAvailable( final IRainfallGenerator generator )
@@ -229,7 +229,7 @@ public class MergeMappingsHelper
     if( mappingValue == null )
       return null;
 
-    return RrmScenario.FILE_TIMESERIES_MAPPINGS_GML + "#" + mappingValue.getFeatureId();
+    return RrmScenario.FILE_TIMESERIES_MAPPINGS_GML + "#" + mappingValue.getFeatureId(); //$NON-NLS-1$
   }
 
   private MappingValue isEqualMappingAvailable( final ITimeseriesMapping mapping )

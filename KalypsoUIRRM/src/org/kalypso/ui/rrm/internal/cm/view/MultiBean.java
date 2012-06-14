@@ -59,6 +59,7 @@ import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -214,7 +215,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
     subGenerators.clear();
 
     /* Post the command. */
-    workspace.postCommand( new EmptyCommand( "Refresh", true ) );
+    workspace.postCommand( new EmptyCommand( Messages.getString("MultiBean_0"), true ) ); //$NON-NLS-1$
   }
 
   private void applySubGenerators( final CommandableWorkspace workspace, final IMultiGenerator multiGenerator ) throws Exception
@@ -231,6 +232,6 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
       subGenerators.addLink( subGenerator );
 
     /* Post the command. */
-    workspace.postCommand( new EmptyCommand( "Refresh", true ) );
+    workspace.postCommand( new EmptyCommand( Messages.getString("MultiBean_1"), true ) ); //$NON-NLS-1$
   }
 }

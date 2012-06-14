@@ -125,7 +125,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final IObservation observation = m_operation.getObservation();
     final Period timestep = m_operation.getTimestep();
     if( Objects.isNull( observation, timestep ) )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Storing timeseries failed - necessary parameter are missing." );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("StoreTimeseriesOperation.2") ); //$NON-NLS-1$
 
     final DateRange daterange = m_operation.getDateRange();
 

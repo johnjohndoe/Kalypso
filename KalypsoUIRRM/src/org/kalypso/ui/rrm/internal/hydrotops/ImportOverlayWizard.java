@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
 {
 
-  private final static String PROPERTY_DRWBM_DEFINITION = "DRWBM";
+  private final static String PROPERTY_DRWBM_DEFINITION = "DRWBM"; //$NON-NLS-1$
 
   public ImportOverlayWizard( )
   {

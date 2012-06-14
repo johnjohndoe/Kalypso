@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.SimulationUtilities;
 
 /**
@@ -110,8 +111,8 @@ public class CalculateSimulationDialog extends TitleAreaDialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( "Calculate Simulations" );
-    setTitle( "Calculate Simulations" );
+    getShell().setText( Messages.getString("CalculateSimulationDialog_0") ); //$NON-NLS-1$
+    setTitle( Messages.getString("CalculateSimulationDialog_1") ); //$NON-NLS-1$
 
     /* Create the main composite. */
     final Composite main = (Composite) super.createDialogArea( parent );
@@ -121,7 +122,7 @@ public class CalculateSimulationDialog extends TitleAreaDialog
     /* Create a label. */
     final Label questionLabel = new Label( main, SWT.WRAP );
     questionLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    questionLabel.setText( "Do you want to start the calculation? 'Ok' will start the calculation. 'Cancel' will abort." );
+    questionLabel.setText( Messages.getString("CalculateSimulationDialog_2") ); //$NON-NLS-1$
 
     /* Create a empty label. */
     final Label emptyLabel = new Label( main, SWT.NONE );
@@ -131,12 +132,12 @@ public class CalculateSimulationDialog extends TitleAreaDialog
     final Group refreshGroup = new Group( main, SWT.NONE );
     refreshGroup.setLayout( new GridLayout( 1, false ) );
     refreshGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    refreshGroup.setText( "Refresh Simulation(s)" );
+    refreshGroup.setText( Messages.getString("CalculateSimulationDialog_3") ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label refreshLabel = new Label( refreshGroup, SWT.WRAP );
     refreshLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    refreshLabel.setText( "If checked, all timeseries data will be refreshed. For simulations that needs to be created, the refresh will always be done, regardless the selection here." );
+    refreshLabel.setText( Messages.getString("CalculateSimulationDialog_4") ); //$NON-NLS-1$
 
     /* Create a empty label. */
     final Label emptyLabel1 = new Label( refreshGroup, SWT.NONE );
@@ -145,7 +146,7 @@ public class CalculateSimulationDialog extends TitleAreaDialog
     /* Create a button. */
     final Button catchmentModelButton = new Button( refreshGroup, SWT.CHECK );
     catchmentModelButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    catchmentModelButton.setText( "Refresh" );
+    catchmentModelButton.setText( Messages.getString("CalculateSimulationDialog_5") ); //$NON-NLS-1$
     catchmentModelButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -164,12 +165,12 @@ public class CalculateSimulationDialog extends TitleAreaDialog
     final Group startConditionsGroup = new Group( main, SWT.NONE );
     startConditionsGroup.setLayout( new GridLayout( 1, false ) );
     startConditionsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    startConditionsGroup.setText( "Calculate Start Conditions" );
+    startConditionsGroup.setText( Messages.getString("CalculateSimulationDialog_6") ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label startConditionsLabel = new Label( startConditionsGroup, SWT.WRAP );
     startConditionsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    startConditionsLabel.setText( "If checked, the start conditions will be calculated. This affects only longterm simulations." );
+    startConditionsLabel.setText( Messages.getString("CalculateSimulationDialog_7") ); //$NON-NLS-1$
 
     /* Create a empty label. */
     final Label emptyLabel2 = new Label( startConditionsGroup, SWT.NONE );
@@ -178,7 +179,7 @@ public class CalculateSimulationDialog extends TitleAreaDialog
     /* Create a button. */
     final Button startConditionsButton = new Button( startConditionsGroup, SWT.CHECK );
     startConditionsButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    startConditionsButton.setText( "Calculate" );
+    startConditionsButton.setText( Messages.getString("CalculateSimulationDialog_8") ); //$NON-NLS-1$
     startConditionsButton.addSelectionListener( new SelectionAdapter()
     {
       @Override

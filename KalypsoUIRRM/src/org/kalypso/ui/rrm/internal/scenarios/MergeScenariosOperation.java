@@ -57,6 +57,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -104,10 +105,10 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
       /* Get the selected scenarios. */
       final IScenario[] selectedScenarios = m_scenariosData.getSelectedScenarios();
       if( selectedScenarios == null || selectedScenarios.length == 0 )
-        throw new IllegalArgumentException( "No scenarios selected..." );
+        throw new IllegalArgumentException( Messages.getString("MergeScenariosOperation_0") ); //$NON-NLS-1$
 
       /* Monitor. */
-      monitor.beginTask( String.format( "Merging the scenarios into the scenario '%s'...", targetScenario.getName() ), 1250 * selectedScenarios.length );
+      monitor.beginTask( String.format( Messages.getString("MergeScenariosOperation_1"), targetScenario.getName() ), 1250 * selectedScenarios.length ); //$NON-NLS-1$
 
       /* Get the simulations folder of the target scenario. */
       final IFolder scenarioFolder = targetScenario.getFolder();
@@ -138,12 +139,12 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
       /* Clean up the scenarios. */
       cleanUpScenarios( selectedScenarios, deleteScenarios, monitor );
 
-      return collector.asMultiStatus( String.format( "Merging the scenarios into the scenario '%s' succeeded.", targetScenario.getName() ) );
+      return collector.asMultiStatus( String.format( Messages.getString("MergeScenariosOperation_2"), targetScenario.getName() ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( String.format( "Merging the scenarios into the scenario '%s' failed.", targetScenario.getName() ) );
+      return collector.asMultiStatus( String.format( Messages.getString("MergeScenariosOperation_3"), targetScenario.getName() ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -173,7 +174,7 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
     for( final IScenario selectedScenario : selectedScenarios )
     {
       /* Monitor. */
-      monitor.subTask( String.format( "Copying simulations of scenario '%s'...", selectedScenario.getName() ) );
+      monitor.subTask( String.format( Messages.getString("MergeScenariosOperation_4"), selectedScenario.getName() ) ); //$NON-NLS-1$
 
       /* Get the simulations folder of the source scenario. */
       final IFolder selectedScenarioFolder = selectedScenario.getFolder();
@@ -222,7 +223,7 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
       ResourceUtilities.copyFolderContents( selectedFolder, targetFolder );
 
       /* Update the map. */
-      final String key = String.format( "%s_%s", selectedScenario.getURI(), selectedFolder.getName() );
+      final String key = String.format( "%s_%s", selectedScenario.getURI(), selectedFolder.getName() ); //$NON-NLS-1$
       newSimulationFolders.put( key, targetFolder );
     }
   }
@@ -244,14 +245,14 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
     if( !targetFolder.exists() )
       return targetFolder;
 
-    final IFolder targetFolder1 = simulationsFolder.getFolder( String.format( "%s (aus %s)", selectedFolder.getName(), selectedScenario.getName() ) );
+    final IFolder targetFolder1 = simulationsFolder.getFolder( String.format( "%s (aus %s)", selectedFolder.getName(), selectedScenario.getName() ) ); //$NON-NLS-1$
     if( !targetFolder1.exists() )
       return targetFolder1;
 
     int cnt = 1;
-    IFolder targetFolder2 = simulationsFolder.getFolder( String.format( "%s (aus %s) %d", selectedFolder.getName(), selectedScenario.getName(), cnt++ ) );
+    IFolder targetFolder2 = simulationsFolder.getFolder( String.format( "%s (aus %s) %d", selectedFolder.getName(), selectedScenario.getName(), cnt++ ) ); //$NON-NLS-1$
     while( targetFolder2.exists() )
-      targetFolder2 = simulationsFolder.getFolder( String.format( "%s (aus %s) %d", selectedFolder.getName(), selectedScenario.getName(), cnt++ ) );
+      targetFolder2 = simulationsFolder.getFolder( String.format( "%s (aus %s) %d", selectedFolder.getName(), selectedScenario.getName(), cnt++ ) ); //$NON-NLS-1$
 
     return targetFolder2;
   }
@@ -276,7 +277,7 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
     for( final IScenario selectedScenario : selectedScenarios )
     {
       /* Monitor. */
-      monitor.subTask( String.format( "Cleaning up scenario '%s'...", selectedScenario.getName() ) );
+      monitor.subTask( String.format( Messages.getString("MergeScenariosOperation_9"), selectedScenario.getName() ) ); //$NON-NLS-1$
 
       // TODO
 

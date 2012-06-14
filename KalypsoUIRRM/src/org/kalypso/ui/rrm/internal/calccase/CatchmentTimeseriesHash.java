@@ -66,7 +66,7 @@ public class CatchmentTimeseriesHash
   /**
    * The metadata key of the hash code.
    */
-  public static final String MD_HASH_CODE = "HASH_CODE";
+  public static final String MD_HASH_CODE = "HASH_CODE"; //$NON-NLS-1$
 
   /**
    * Hash catchment->timeseries links. One catchment may have more than one timeseries link.
@@ -179,7 +179,7 @@ public class CatchmentTimeseriesHash
     for( final TimeseriesLinkType link : links )
     {
       hashCode.append( link.getHref() );
-      hashCode.append( ";" );
+      hashCode.append( ";" ); //$NON-NLS-1$
     }
 
     return hashCode.toString();

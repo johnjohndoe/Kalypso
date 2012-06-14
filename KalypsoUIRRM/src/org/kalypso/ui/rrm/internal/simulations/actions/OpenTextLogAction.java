@@ -55,6 +55,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * This action opens a text file in a text editor.
@@ -100,10 +101,10 @@ public class OpenTextLogAction extends Action implements IUpdateable
 
       /* Check if the text file exists. */
       if( !textFile.exists() )
-        throw new IOException( String.format( "The text file '%s' does not exist...", textFile.getName() ) );
+        throw new IOException( String.format( Messages.getString("OpenTextLogAction_0"), textFile.getName() ) ); //$NON-NLS-1$
 
       /* Find the text editor registered for txt files. */
-      final Program program = Program.findProgram( "txt" );
+      final Program program = Program.findProgram( "txt" ); //$NON-NLS-1$
       if( program == null )
       {
         Program.launch( textFile.getAbsolutePath() );
@@ -118,7 +119,7 @@ public class OpenTextLogAction extends Action implements IUpdateable
       /* Display the error. */
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final String dialogTitle = getText();
-      final String message = "The file could not be opened...";
+      final String message = Messages.getString("OpenTextLogAction_2"); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex );
       ErrorDialog.openError( shell, dialogTitle, message, status );
     }

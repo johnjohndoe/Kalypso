@@ -52,6 +52,7 @@ import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingT
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.cm.view.action.NewTimeseriesMappingAction;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
@@ -73,13 +74,13 @@ public class TimeseriesMappingTypeUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return "Mapping definitions";
+    return Messages.getString("TimeseriesMappingTypeUiHandler_0"); //$NON-NLS-1$
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return "Timeseries mappings - " + m_mappingType.getLabel();
+    return Messages.getString("TimeseriesMappingTypeUiHandler_1") + m_mappingType.getLabel(); //$NON-NLS-1$
   }
 
   @Override
