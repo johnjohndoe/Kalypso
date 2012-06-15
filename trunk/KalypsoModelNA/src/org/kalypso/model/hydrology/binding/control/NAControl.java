@@ -372,9 +372,12 @@ public class NAControl extends Feature_Impl
         result = Math.max( result, ((IMultiGenerator) generator).getLastModifiedInput() );
       else
       {
-        final Date lastModified = generator.getLastModified();
-        if( lastModified != null )
-          result = Math.max( result, lastModified.getTime() );
+        if( generator != null )
+        {
+          final Date lastModified = generator.getLastModified();
+          if( lastModified != null )
+            result = Math.max( result, lastModified.getTime() );
+        }
       }
     }
 
