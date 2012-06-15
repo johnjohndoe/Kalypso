@@ -146,18 +146,23 @@ public class TimeseriesMappingBuilder
         {
           /* Guess timeseries link */
           final TimeseriesMappingGuesser timeseriesGuesser = new TimeseriesMappingGuesser( link, mappingType, m_timeseriesIndex, m_oldMappings );
+
           final IStatus guessStatus = timeseriesGuesser.execute();
+          log.add( guessStatus );
+
           final String timeseriesPath = timeseriesGuesser.getResult();
           final String modelElementRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelElement.getId() ); //$NON-NLS-1$
 
           /* always add a mapping if link exists */
-          final IMappingElement newElement = mappingElements.addNew( IMappingElement.FEATURE_MAPPING_ELEMENT );
-          newElement.setName( modelElement.getName() );
-          newElement.setDescription( modelElement.getDescription() );
-          newElement.setLinkedModelElement( modelElementRef );
-          newElement.setLinkedTimeseries( timeseriesPath );
+          if( !StringUtils.isBlank( timeseriesPath ) )
+          {
+            final IMappingElement newElement = mappingElements.addNew( IMappingElement.FEATURE_MAPPING_ELEMENT );
+            newElement.setName( modelElement.getName() );
+            newElement.setDescription( modelElement.getDescription() );
+            newElement.setLinkedModelElement( modelElementRef );
+            newElement.setLinkedTimeseries( timeseriesPath );
+          }
 
-          log.add( guessStatus );
         }
         catch( final Exception e )
         {
@@ -171,11 +176,11 @@ public class TimeseriesMappingBuilder
     if( newMapping.getMappings().size() == 0 )
     {
       mappings.remove( newMapping );
-      log.add( IStatus.OK, Messages.getString("TimeseriesMappingBuilder.1") ); //$NON-NLS-1$
+      log.add( IStatus.OK, Messages.getString( "TimeseriesMappingBuilder.1" ) ); //$NON-NLS-1$
     }
 
     final String typeLabel = mappingType.getLabel();
-    final String message = String.format( Messages.getString("TimeseriesMappingBuilder.2"), typeLabel ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "TimeseriesMappingBuilder.2" ), typeLabel ); //$NON-NLS-1$
     return log.asMultiStatus( message );
   }
 

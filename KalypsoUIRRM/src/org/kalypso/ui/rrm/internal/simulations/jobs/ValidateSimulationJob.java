@@ -101,7 +101,7 @@ public class ValidateSimulationJob extends Job
 
     m_simulation = simulation;
     m_control = control;
-    m_validationStatus = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_1") ); //$NON-NLS-1$
+    m_validationStatus = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -117,8 +117,8 @@ public class ValidateSimulationJob extends Job
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("ValidateSimulationJob_2"), 1000 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("ValidateSimulationJob_3") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "ValidateSimulationJob_2" ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "ValidateSimulationJob_3" ) ); //$NON-NLS-1$
 
       /* Get the calculation status gml. */
       final IFile calculationStatusGml = m_simulation.getCalculationStatusGml();
@@ -131,13 +131,13 @@ public class ValidateSimulationJob extends Job
         m_validationStatus = validateSimulation( lastModifiedResults, monitor );
       }
       else
-        m_validationStatus = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_4") ); //$NON-NLS-1$
+        m_validationStatus = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_4" ) ); //$NON-NLS-1$
 
       return Status.OK_STATUS;
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_5"), ex ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_5" ), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -202,23 +202,26 @@ public class ValidateSimulationJob extends Job
       collector.add( validateSimulation( m_control, lastModifiedResults ) );
       monitor.worked( 250 );
 
-      return collector.asMultiStatusOrOK( Messages.getString("ValidateSimulationJob_6"), Messages.getString("ValidateSimulationJob_7") ); //$NON-NLS-1$ //$NON-NLS-2$
+      return collector.asMultiStatusOrOK( Messages.getString( "ValidateSimulationJob_6" ), Messages.getString( "ValidateSimulationJob_7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_8"), ex ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_8" ), ex ); //$NON-NLS-1$
     }
   }
 
   private IStatus validateGenerator( final IRainfallGenerator generator, final long lastModifiedResults )
   {
+    if( generator == null )
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "No generator available..." );
+
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     final Date lastModified = generator.getLastModified();
     if( lastModified != null && lastModified.getTime() > lastModifiedResults )
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_9") ) ); //$NON-NLS-1$
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_9" ) ) ); //$NON-NLS-1$
     else
-      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_10") ) ); //$NON-NLS-1$
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_10" ) ) ); //$NON-NLS-1$
 
     if( generator instanceof ILinearSumGenerator )
     {
@@ -226,15 +229,15 @@ public class ValidateSimulationJob extends Job
 
       final long lastModifiedTimeseries = linearGenerator.getLastModifiedTimeseries();
       if( lastModifiedTimeseries > lastModifiedResults )
-        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_11") ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_11" ) ) ); //$NON-NLS-1$
       else
-        collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_12") ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_12" ) ) ); //$NON-NLS-1$
 
       final long lastModifiedCatchments = linearGenerator.getLastModifiedCatchments();
       if( lastModifiedCatchments > lastModifiedResults )
-        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_13") ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_13" ) ) ); //$NON-NLS-1$
       else
-        collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_14") ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_14" ) ) ); //$NON-NLS-1$
     }
 
     if( generator instanceof IMultiGenerator )
@@ -243,36 +246,39 @@ public class ValidateSimulationJob extends Job
 
       final long lastModifiedSubGenerators = multiGenerator.getLastModifiedSubGenerators();
       if( lastModifiedSubGenerators > lastModifiedResults )
-        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_15") ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_15" ) ) ); //$NON-NLS-1$
       else
-        collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_16") ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_16" ) ) ); //$NON-NLS-1$
     }
 
-    return collector.asMultiStatus( String.format( Messages.getString("ValidateSimulationJob_17"), generator.getDescription(), ParameterTypeUtils.formatParameterType( generator.getParameterType() ) ) ); //$NON-NLS-1$
+    return collector.asMultiStatus( String.format( Messages.getString( "ValidateSimulationJob_17" ), generator.getDescription(), ParameterTypeUtils.formatParameterType( generator.getParameterType() ) ) ); //$NON-NLS-1$
   }
 
   private IStatus validateSimulation( final NAControl control, final long lastModifiedResults )
   {
+    if( control == null )
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "No simulation available..." );
+
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     final Date lastModified = control.getLastModified();
     if( lastModified != null && lastModified.getTime() > lastModifiedResults )
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_18") ) ); //$NON-NLS-1$
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_18" ) ) ); //$NON-NLS-1$
     else
-      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_19") ) ); //$NON-NLS-1$
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_19" ) ) ); //$NON-NLS-1$
 
     final long lastModifiedGenerators = control.getLastModifiedGenerators();
     if( lastModifiedGenerators > lastModifiedResults )
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_20") ) ); //$NON-NLS-1$
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_20" ) ) ); //$NON-NLS-1$
     else
-      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_21") ) ); //$NON-NLS-1$
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_21" ) ) ); //$NON-NLS-1$
 
     final long lastModifiedInputData = control.getLastModifiedInputData();
     if( lastModifiedInputData > lastModifiedResults )
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_22") ) ); //$NON-NLS-1$
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_22" ) ) ); //$NON-NLS-1$
     else
-      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob_23") ) ); //$NON-NLS-1$
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "ValidateSimulationJob_23" ) ) ); //$NON-NLS-1$
 
-    return collector.asMultiStatus( String.format( Messages.getString("ValidateSimulationJob_24"), control.getDescription() ) ); //$NON-NLS-1$
+    return collector.asMultiStatus( String.format( Messages.getString( "ValidateSimulationJob_24" ), control.getDescription() ) ); //$NON-NLS-1$
   }
 }
