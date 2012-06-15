@@ -92,7 +92,7 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
 
     final IObservation observation = link.getObservationFromPool();
 
-    final ObservationImportOperation importOperation = new ObservationImportOperation( observation, m_timeseries.getParameterType() );
+    final ObservationImportOperation importOperation = new ObservationImportOperation( observation, m_timeseries.getParameterType(), m_timeseries.getQuality() );
 
     final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_target, importOperation );
     storeOperation.updateDataAfterFinish();
@@ -100,7 +100,7 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
 
     m_moved = storeOperation.getTimeseries();
     if( m_moved == null )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("MoveTimeSeriesOperation.0") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "MoveTimeSeriesOperation.0" ) ); //$NON-NLS-1$
 
     stati.add( UpdateTimeseriesLinks.doUpdateTimeseriesLinks( m_timeseries, m_moved ) );
 

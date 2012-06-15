@@ -79,8 +79,8 @@ public class CalculateEvaporationAction extends Action
     m_station = station;
     m_model = model;
 
-    setText( "Verdunstung berechnen" ); //$NON-NLS-1$
-    setToolTipText( "Berechene Gras-/Seeverdunstungs-Zeitreihe für die gewählte Station." ); //$NON-NLS-1$
+    setText( "Verdunstung berechnen" );
+    setToolTipText( "Berechene Gras-/Seeverdunstungs-Zeitreihe für die gewählte Station." );
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.PARAMETER_TYPE_EVAPORATION ) );
   }
@@ -93,7 +93,7 @@ public class CalculateEvaporationAction extends Action
     final IStatus status = canCalculateEvaporation();
     if( !status.isOK() )
     {
-      final StatusDialog dialog = new StatusDialog( shell, status, Messages.getString("CalculateEvaporationAction_0") ); //$NON-NLS-1$
+      final StatusDialog dialog = new StatusDialog( shell, status, Messages.getString( "CalculateEvaporationAction_0" ) ); //$NON-NLS-1$
       dialog.open();
 
       return;
@@ -134,15 +134,15 @@ public class CalculateEvaporationAction extends Action
     final IFeatureBindingCollection<ITimeseries> timeseries = m_station.getTimeseries();
 
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) )
-      stati.add( IStatus.WARNING, Messages.getString("CalculateEvaporationAction_1") ); //$NON-NLS-1$
+      stati.add( IStatus.WARNING, Messages.getString( "CalculateEvaporationAction_1" ) ); //$NON-NLS-1$
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
-      stati.add( IStatus.WARNING, Messages.getString("CalculateEvaporationAction_2") ); //$NON-NLS-1$
+      stati.add( IStatus.WARNING, Messages.getString( "CalculateEvaporationAction_2" ) ); //$NON-NLS-1$
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY ) )
-      stati.add( IStatus.WARNING, Messages.getString("CalculateEvaporationAction_3") ); //$NON-NLS-1$
+      stati.add( IStatus.WARNING, Messages.getString( "CalculateEvaporationAction_3" ) ); //$NON-NLS-1$
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_SUNSHINE_HOURS ) )
-      stati.add( IStatus.WARNING, Messages.getString("CalculateEvaporationAction_4") ); //$NON-NLS-1$
+      stati.add( IStatus.WARNING, Messages.getString( "CalculateEvaporationAction_4" ) ); //$NON-NLS-1$
 
-    return stati.asMultiStatusOrOK( Messages.getString("CalculateEvaporationAction_5") ); //$NON-NLS-1$
+    return stati.asMultiStatusOrOK( Messages.getString( "CalculateEvaporationAction_5" ) ); //$NON-NLS-1$
   }
 
 }

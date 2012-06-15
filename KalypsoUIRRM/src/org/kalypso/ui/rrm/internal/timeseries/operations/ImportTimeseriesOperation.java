@@ -202,4 +202,10 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
   {
     return m_daterange;
   }
+
+  @Override
+  public String getQuality( )
+  {
+    return null;
+  }
 }
