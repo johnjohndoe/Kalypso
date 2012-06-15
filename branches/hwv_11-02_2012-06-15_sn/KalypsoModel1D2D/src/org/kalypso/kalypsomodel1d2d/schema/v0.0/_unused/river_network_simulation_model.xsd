@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  Provide schema to model simulation region 
+	@author Patrice Congo
+-->
+
+
+<xs:schema 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/rma10s/2d" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wb="http://www.tu-harburg.de/wb/kalypso/rma10s/2d" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified">
+	
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+	<!-- remote from ogc -->
+	<!-- xs:import 	
+		namespace="http://www.opengis.net/gml" 
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/ -->
+
+	<!-- local modified for successful binding -->
+	<xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="file:///D:/congo/eclipse_base/kalypso_workspace/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/>
+	
+	<xs:include schemaLocation="rougthness_model.xsd"/>
+	<xs:include schemaLocation="river_area_model.xsd"/>
+	<xs:include schemaLocation="simulation_control_model.xsd"/>
+	
+	
+	<!-- xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/rma10s/2d"
+		schemaLocation="./rougthness_model.xsd"
+		/-->
+	<!-- ==============================================================
+						global element declarations
+		============================================================== -->
+	<!-- Root element.
+		RiverNetworkSimulationModel --> 
+	<!-- wieso substitute to _gml -->
+	
+	<xs:element 
+			name="RiverNetworkSimulationModel"
+			type="wb:RiverNetworkSimulationModelType"
+			substitutionGroup="gml:_Feature">
+	</xs:element>
+	
+	<xs:complexType  
+			name="RiverNetworkSimulationModelType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Represents the model for a river network to be simulated. 
+				The simulation model is specfied by setting its  area 
+				surface, rougthness, operational data and simulation data 
+				properties.
+				Addtional properties may be added to the using an element
+				which as additionalModelPropertyClass as substition group.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element  
+						ref="wb:areaSurfaceModel"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+						ref="wb:rougthnessModel"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+						ref="wb:operationalData"
+						minOccurs="1"
+						maxOccurs="1"/>
+					<xs:element 
+						ref="wb:simulationControlModel"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+						ref="wb:additionalModelProperties"
+						minOccurs="0" maxOccurs="unbounded"/>					
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- Modell property class 
+		a class groups modell properties related to the same modelling issue.
+	-->
+	<xs:element 
+			name="additionalModelProperties"
+			type="wb:AdditionalModelPropertiesType"/>
+	<xs:complexType name="AdditionalModelPropertiesType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="wb:AdditionalModelPropertyClass"/>
+			<xs:element ref="wb:AdditionalModelProperty"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	<xs:element 
+		name="AdditionalModelPropertyClass"
+		type="wb:AdditionalModelPropertyClassType"
+		abstract="true"
+		substitutionGroup="gml:_GML">
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head for new model property class,
+				which are intended to extend the simulation model
+				with new property
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType 
+		name="AdditionalModelPropertyClassType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Defines the base type for element, which represents
+				a new model property class
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element 
+		name="AdditionalModelProperty"
+		type="wb:AdditionalModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Represents the substitution head for Additional 
+				model properties
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType 
+		name="AdditionalModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Provides the base substitution group type for extension
+				when creating an element which may be use as 
+				AdditionalModelProperty.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractFeatureType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>	
+	
+	
+	
+	<!-- Operational data modelling -->
+	<xs:element 
+		name="operationalData"
+		type="wb:OperationalDataPropertyType"/>
+	<xs:complexType name="OperationalDataPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="wb:OperationalData"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	<xs:element 
+		name="OperationalData"
+		type="wb:OperationalDataType"
+		/>
+	<xs:complexType 
+		name="OperationalDataType">
+	</xs:complexType>
+	
+	
+	<!--  Simulation parameter modelling 
+	<xs:element 
+		name="simulationParameterCollection"
+		type="wb:SimulationParameterCollectionPropertyType"/>
+	<xs:complexType name="SimulationParameterCollectionPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="wb:SimulationParameterCollection"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	<xs:element 
+		name="SimulationParameterCollection"
+		type="wb:SimulationParameterCollectionType"/>
+	<xs:complexType 
+		name="SimulationParameterCollectionType">
+	</xs:complexType>		
+	-->
+</xs:schema>
+
+
+
+
+
+
+
+
+
