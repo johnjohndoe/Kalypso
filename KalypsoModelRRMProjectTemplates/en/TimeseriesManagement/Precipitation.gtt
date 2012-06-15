@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+    <layer featurePath="ombrometerMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/.model/observationConf/ombrometer.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column alignment="16384" editable="true" format="" name="name" width="128"/>
+        <column alignment="16384" editable="true" format="" name="NRepository" width="361"/>
+        <column alignment="16384" editable="true" format="" name="DWDID" width="100"/>
+    </layer>
+</gistableview>
+
