@@ -42,7 +42,7 @@ package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.apache.commons.io.IOCase;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
@@ -54,20 +54,18 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.timeseries.operations.UpdateTimeseriesMappingsVisitor;
+import org.kalypso.ui.rrm.internal.timeseries.operations.TimeseriesReferencesUpdater;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialog;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -123,10 +121,17 @@ public class EditTimeseriesAction extends Action
         // quality changed? so rename zml file!
         if( isQualityChanged( oldQuality ) )
         {
-          final CommandableWorkspace timeseriesMappingsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
-          final ITimeseriesMappingCollection mappings = (ITimeseriesMappingCollection) timeseriesMappingsWorkspace.getRootFeature();
+          dataProvider.saveModel( new NullProgressMonitor() );
 
-          doUpdateFileTarget( link, oldFile, mappings );
+          final TimeseriesReferencesUpdater updater = new TimeseriesReferencesUpdater( dataProvider.getScenario(), oldFile, link.getHref() );
+          final IStatus status = updater.execute( new NullProgressMonitor() );
+          if( !status.isOK() )
+          {
+            final StatusDialog2 dialog2 = new StatusDialog2( shell, status, "Aktualisierung Zeitreihen-Verweise", "Bei der Aktualisierung von Zeitreihen-Verweise traten Fehler auf." );
+            dialog2.open();
+          }
+
+          oldFile.move( link.getFile().getFullPath(), true, new NullProgressMonitor() );
         }
       }
 
@@ -136,29 +141,6 @@ public class EditTimeseriesAction extends Action
     catch( final Throwable t )
     {
       t.printStackTrace();
-    }
-
-  }
-
-  private void doUpdateFileTarget( final ZmlLink link, final IFile oldFile, final ITimeseriesMappingCollection mappings ) throws CoreException
-  {
-    final IFile target = link.getFile();
-
-    try
-    {
-      if( mappings != null )
-      {
-        final IFeatureBindingCollection<ITimeseriesMapping> collection = mappings.getTimeseriesMappings();
-        collection.accept( new UpdateTimeseriesMappingsVisitor( oldFile, link.getHref() ) );
-      }
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
-    finally
-    {
-      oldFile.move( target.getFullPath(), true, new NullProgressMonitor() );
     }
 
   }
