@@ -1,0 +1,62 @@
+<xs:schema 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wb="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:om="http://www.opengis.net/om"
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified">
+	<!-- remote from ogc -->
+	<!-- xs:import 	
+		namespace="http://www.opengis.net/gml" 
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/ -->
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+	
+	<!-- local modified for successful binding -->
+	<xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/>
+	
+    <xs:import namespace="http://www.opengis.net/om"
+        schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+    <xs:import namespace="http://www.opengis.net/swe"
+        schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
+		
+		
+		<xs:element name="RunOffEvent" type="wb:RunOffEventType" substitutionGroup="om:Observation">
+        
+    </xs:element>
+    <xs:complexType name="RunOffEventType">
+        <xs:annotation>
+            <xs:documentation>Wir definieren einen eigenen Observation Typ für Abflussereignisse. Ein
+                Abflussereignis leitet von CommonObservation ab und beinhaltet also die Tupel. Sie
+                werden anhand von resultDefinition angegeben. TODO: es sollte eine feste
+                resultDefinition für Abflüsse vorgegeben sein..</xs:documentation>
+            <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+                <kapp:functionProperty
+                    kapp:functionId="org.kalypso.model.wspm.functionProperty.fixedResultDefinition"
+                    kapp:property="om:resultDefinition">
+                    <kapp:parameter>
+                        <kapp:name>component1</kapp:name>
+                        <kapp:value>urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation</kapp:value>
+                    </kapp:parameter>
+                    <kapp:parameter>
+                        <kapp:name>component2</kapp:name>
+                        <kapp:value>urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff</kapp:value>
+                    </kapp:parameter>
+                </kapp:functionProperty>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="om:ObservationType"/>
+        </xs:complexContent>
+    </xs:complexType>
+		
+		
+</xs:schema>
