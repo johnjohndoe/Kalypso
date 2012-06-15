@@ -41,20 +41,23 @@
 package org.kalypso.ui.rrm.internal.timeseries.operations;
 
 import org.eclipse.core.resources.IFile;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.model.hydrology.binding.cm.ICatchment;
+import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
+import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
 
+import com.google.common.base.Objects;
+
 /**
- * updates updated timeseries_mappings.gml times series links.
+ * updates time series links of catchment model generators
  * 
  * @author Dirk Kuch
  */
-public class UpdateTimeseriesMappingsVisitor implements IFeatureBindingCollectionVisitor<ITimeseriesMapping>
+public class UpdateCatchmentTimeseriesReferencesVisitor implements IFeatureBindingCollectionVisitor<IRainfallGenerator>
 {
 
   private final IFile m_oldFile;
@@ -63,36 +66,43 @@ public class UpdateTimeseriesMappingsVisitor implements IFeatureBindingCollectio
 
   private boolean m_changed = false;
 
-  public UpdateTimeseriesMappingsVisitor( final IFile oldFile, final String href )
+  public UpdateCatchmentTimeseriesReferencesVisitor( final IFile oldFile, final String href )
   {
     m_oldFile = oldFile;
     m_href = href;
   }
 
   @Override
-  public void visit( final ITimeseriesMapping timeseriesMapping )
+  public void visit( final IRainfallGenerator generator )
   {
-    final IFeatureBindingCollection<IMappingElement> mappings = timeseriesMapping.getMappings();
-    for( final IMappingElement mapping : mappings )
+    if( !(generator instanceof ILinearSumGenerator) )
+      return;
+
+    final ILinearSumGenerator linear = (ILinearSumGenerator) generator;
+    final IFeatureBindingCollection<ICatchment> catchments = linear.getCatchments();
+    for( final ICatchment catchment : catchments )
     {
-      final ZmlLink timeseries = mapping.getLinkedTimeseries();
-      final IFile lnk = timeseries.getFile();
-
-      if( Objects.equal( m_oldFile, lnk ) )
+      final IFeatureBindingCollection<IFactorizedTimeseries> collection = catchment.getFactorizedTimeseries();
+      for( final IFactorizedTimeseries factorized : collection )
       {
-        final TimeseriesLinkType linkType = timeseries.getTimeseriesLink();
-        linkType.setHref( m_href );
-        mapping.setLinkedTimeseries( m_href );
+        final ZmlLink timeseriesLink = factorized.getTimeseriesLink();
+        final IFile lnk = timeseriesLink.getFile();
+        if( Objects.equal( m_oldFile, lnk ) )
+        {
+          final TimeseriesLinkType linkType = timeseriesLink.getTimeseriesLink();
+          linkType.setHref( m_href );
+          factorized.setTimeseriesLink( m_href );
 
-        m_changed = true;
+          m_changed = true;
+        }
       }
 
     }
-
   }
 
   public boolean wasChanged( )
   {
     return m_changed;
   }
+
 }
