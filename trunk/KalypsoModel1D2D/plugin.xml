@@ -21,12 +21,8 @@
       name="NodeResultVelocityFunction" />
     <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
       name="NodeResultExtFunction" />
-      <!--
-      --> 
     <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction"
       name="NodeResultDepthFunction" />
-    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc" id="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc"
-      name="StaticModelBBoxFunc" />
   </extension>
 
 
@@ -668,8 +664,6 @@
     <dataSet id="org.kalypso.kalypso1d2d">
       <scenarioDatum classKey="org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta"
         modelPath="models/scenarioResultMeta.gml" />
-      <scenarioDatum classKey="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"
-        modelPath="models/static_model.gml" />
       <scenarioDatum classKey="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup"
         modelPath="models/control.gml" />
       <scenarioDatum classKey="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d"
