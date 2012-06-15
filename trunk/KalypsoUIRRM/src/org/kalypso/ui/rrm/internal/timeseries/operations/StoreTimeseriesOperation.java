@@ -115,6 +115,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
   public void updateDataAfterFinish( )
   {
     m_bean.setProperty( ITimeseries.PROPERTY_PARAMETER_TYPE, m_operation.getData().getParameterType() );
+    m_bean.setProperty( ITimeseries.PROPERTY_QUALITY, m_operation.getQuality() );
   }
 
   @Override
@@ -125,19 +126,20 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final IObservation observation = m_operation.getObservation();
     final Period timestep = m_operation.getTimestep();
     if( Objects.isNull( observation, timestep ) )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("StoreTimeseriesOperation.2") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "StoreTimeseriesOperation.2" ) ); //$NON-NLS-1$
 
     final DateRange daterange = m_operation.getDateRange();
+    final String quality = Objects.firstNonNull( m_operation.getQuality(), "" );
 
     final IFile targetFile = createDataFile( m_bean, timestep, stati );
-    m_timeseries = createTimeseries( timestep, targetFile, daterange );
+    m_timeseries = createTimeseries( timestep, targetFile, daterange, quality );
 
     writeResult( targetFile, observation, daterange );
 
     return stati.asMultiStatus( Messages.getString( "StoreTimeseriesOperation.0" ) ); //$NON-NLS-1$
   }
 
-  private ITimeseries createTimeseries( final Period timestep, final IFile targetFile, final DateRange daterange ) throws CoreException
+  private ITimeseries createTimeseries( final Period timestep, final IFile targetFile, final DateRange daterange, final String quality ) throws CoreException
   {
     try
     {
@@ -164,6 +166,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
       properties.put( ITimeseries.PROPERTY_DATA, dataLink );
       properties.put( ITimeseries.PROPERTY_MEASUREMENT_START, DateUtilities.toXMLGregorianCalendar( daterange.getFrom() ) );
       properties.put( ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( daterange.getTo() ) );
+      properties.put( ITimeseries.PROPERTY_QUALITY, quality );
 
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );

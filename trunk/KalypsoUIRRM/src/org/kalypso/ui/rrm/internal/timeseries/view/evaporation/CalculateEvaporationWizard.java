@@ -78,7 +78,7 @@ public class CalculateEvaporationWizard extends Wizard
     m_data = data;
 
     addPage( new ChooseEvaporationInputFilesPage( station, data ) );
-    addPage( new EvaporationParameterPage( data ) );
+    addPage( new EvaporationParameterPage( station, data ) );
 
   }
 
@@ -99,7 +99,7 @@ public class CalculateEvaporationWizard extends Wizard
 
       final IObservation observation = calculator.getObservation();
 
-      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_station, new ObservationImportOperation( observation ) );
+      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_station, new ObservationImportOperation( observation, null, m_data.getQuality() ) );
       storeOperation.updateDataAfterFinish();
 
       final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );

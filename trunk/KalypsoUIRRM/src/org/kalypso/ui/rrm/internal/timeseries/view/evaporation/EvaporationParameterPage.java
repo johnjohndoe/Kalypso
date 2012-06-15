@@ -55,10 +55,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.commons.databinding.validation.MultiValidator;
 import org.kalypso.commons.databinding.validation.StringAsDoubleValidator;
+import org.kalypso.commons.databinding.validation.StringFilenameValidator;
 import org.kalypso.commons.databinding.validation.StringIsAsciiPrintableValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
 
@@ -76,13 +79,17 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
 
   private Composite m_page;
 
-  protected EvaporationParameterPage( final CalculateEvaporationData data )
+  private final IStation m_station;
+
+  protected EvaporationParameterPage( final IStation station, final CalculateEvaporationData data )
   {
-    super( Messages.getString("EvaporationParameterPage_0") ); //$NON-NLS-1$
+    super( Messages.getString( "EvaporationParameterPage_0" ) ); //$NON-NLS-1$
+
+    m_station = station;
     m_data = data;
 
-    setTitle( Messages.getString("EvaporationParameterPage_1") ); //$NON-NLS-1$
-    setDescription( Messages.getString("EvaporationParameterPage_2") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "EvaporationParameterPage_1" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "EvaporationParameterPage_2" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -129,9 +136,9 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
     final Group group = new Group( page, SWT.NULL );
     group.setLayout( new GridLayout( 3, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( Messages.getString("EvaporationParameterPage_3") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "EvaporationParameterPage_3" ) ); //$NON-NLS-1$
 
-    addTextControl( group, Messages.getString("EvaporationParameterPage_4"), CalculateEvaporationData.PROPERTY_LATITUDE, new StringAsDoubleValidator( IStatus.ERROR, Messages.getString("EvaporationParameterPage_5") ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    addTextControl( group, Messages.getString( "EvaporationParameterPage_4" ), CalculateEvaporationData.PROPERTY_LATITUDE, new StringAsDoubleValidator( IStatus.ERROR, Messages.getString( "EvaporationParameterPage_5" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
 // addTextControl( group, "Faktor Umrechnung j/cm² in W/m²", CalculateEvaporationData.PROPERTY_FACTOR_CONVERSION_JW, new
 // StringAsDoubleValidator( IStatus.ERROR, "Umrechnungsfaktor ist kein gültiger Zahlenwert." ) );
 // addTextControl( group, "Emissionskoeffizient", CalculateEvaporationData.PROPERTY_COEFFICIENT_EMISSION, new
@@ -149,9 +156,9 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
     final Group group = new Group( page, SWT.NULL );
     group.setLayout( new GridLayout( 3, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( Messages.getString("EvaporationParameterPage_6") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "EvaporationParameterPage_6" ) ); //$NON-NLS-1$
 
-    addTextControl( group, Messages.getString("EvaporationParameterPage_7"), CalculateEvaporationData.PROPERTY_LATITUDE, new StringAsDoubleValidator( IStatus.ERROR, Messages.getString("EvaporationParameterPage_8") ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    addTextControl( group, Messages.getString( "EvaporationParameterPage_7" ), CalculateEvaporationData.PROPERTY_LATITUDE, new StringAsDoubleValidator( IStatus.ERROR, Messages.getString( "EvaporationParameterPage_8" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void addTextControl( final Composite parent, final String label, final String property, final IValidator validator )
@@ -179,7 +186,7 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
     final Group groupDateRange = new Group( page, SWT.NULL );
     groupDateRange.setLayout( new GridLayout() );
     groupDateRange.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    groupDateRange.setText( Messages.getString("EvaporationParameterPage_10") ); //$NON-NLS-1$
+    groupDateRange.setText( Messages.getString( "EvaporationParameterPage_10" ) ); //$NON-NLS-1$
 
     final Text text = new Text( groupDateRange, SWT.BORDER );
     text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -187,7 +194,11 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
     final ISWTObservableValue target = SWTObservables.observeText( text, new int[] { SWT.Modify } );
     final IObservableValue model = BeansObservables.observeValue( m_data, CalculateEvaporationData.PROPERTY_QUALITY );
 
-    m_binding.bindValue( target, model, new StringIsAsciiPrintableValidator( IStatus.ERROR, Messages.getString("EvaporationParameterPage_11") ) ); //$NON-NLS-1$
+    final StringIsAsciiPrintableValidator ascii = new StringIsAsciiPrintableValidator( IStatus.ERROR, Messages.getString( "EvaporationParameterPage_11" ) );
+    final StringFilenameValidator filename = new StringFilenameValidator( IStatus.ERROR, Messages.getString( "EvaporationParameterPage_11" ) );
+    final TimeSeriesAlreadyExistsValidator exists = new TimeSeriesAlreadyExistsValidator( m_station, m_data );
+
+    m_binding.bindValue( target, model, new MultiValidator( ascii, filename, exists ) ); //$NON-NLS-1$
   }
 
 }

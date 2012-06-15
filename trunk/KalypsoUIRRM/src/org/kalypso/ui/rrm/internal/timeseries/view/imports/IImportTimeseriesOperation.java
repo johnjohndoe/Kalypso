@@ -59,4 +59,5 @@ public interface IImportTimeseriesOperation
 
   DateRange getDateRange( );
 
+  String getQuality( );
 }

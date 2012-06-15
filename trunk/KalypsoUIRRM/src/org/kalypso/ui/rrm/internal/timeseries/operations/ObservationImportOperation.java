@@ -62,15 +62,18 @@ public class ObservationImportOperation implements IImportTimeseriesOperation
 
   protected final String m_parameterType;
 
+  private final String m_quality;
+
   public ObservationImportOperation( final IObservation observation )
   {
-    this( observation, null );
+    this( observation, null, null );
   }
 
-  public ObservationImportOperation( final IObservation observation, final String parameterType )
+  public ObservationImportOperation( final IObservation observation, final String parameterType, final String quality )
   {
     m_observation = observation;
     m_parameterType = parameterType;
+    m_quality = quality;
   }
 
   @Override
@@ -122,6 +125,12 @@ public class ObservationImportOperation implements IImportTimeseriesOperation
   public DateRange getDateRange( )
   {
     return Observations.findDateRange( m_observation );
+  }
+
+  @Override
+  public String getQuality( )
+  {
+    return m_quality;
   }
 
 }
