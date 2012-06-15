@@ -1,56 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
-<schema xmlns:hyd="http://www.tuhh.de/hydrotop" targetNamespace="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:naModel="http://www.tuhh.de/kalypsoNA" xmlns:par="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.9">
+<schema xmlns:hyd="http://sourceforge.kalypso.org/schemata/hydrology/hydrotope" targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotope" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:naModel="http://www.tuhh.de/kalypsoNA" xmlns:par="http://www.tuhh.de/parameter" elementFormDefault="qualified"
+  version="2.0" xmlns:ht="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes">
 
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="http://www.tuhh.de/kalypsoNA" />
   <import namespace="http://www.tuhh.de/parameter" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" />
 
-  <element name="NAHydrotop" substitutionGroup="gml:_Feature">
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/landuse" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/geologie" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/pedologie" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" />
+
+  <element name="HydrotopeCollection" substitutionGroup="gml:_Feature">
     <complexType>
       <complexContent>
         <extension base="gml:AbstractFeatureType">
           <sequence>
-            <element name="hydrotopMember" type="hyd:HydrotopAssociationType" minOccurs="0" maxOccurs="unbounded" />
+            <element name="hydrotopeMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element ref="hyd:Hydrotope" />
+                </sequence>
+              </complexType>
+            </element>
           </sequence>
         </extension>
       </complexContent>
     </complexType>
   </element>
 
-  <complexType name="HydrotopAssociationType">
-    <sequence>
-      <element ref="hyd:Hydrotop" />
-    </sequence>
-  </complexType>
-
-  <element name="Hydrotop" substitutionGroup="gml:_Feature">
+  <element name="Hydrotope" substitutionGroup="gml:_Feature">
     <complexType>
       <complexContent>
         <extension base="gml:AbstractFeatureType">
           <sequence>
             <element name="position" type="gml:MultiPolygonPropertyType" />
-            <!-- DEPRECATED: not used any more -->
-            <element name="area" type="double" />
-            <element name="landuse" type="string" />
-            <!--TODO: Link zu Parameter.xsd Bodentyp -> text6 -->
-            <element name="soiltype" type="string" />
-            <element ref="hyd:corrSealing" />
-            <element ref="hyd:m_perkm" />
-            <element ref="hyd:m_f1gws" />
+            
+            <element name="area" type="double" minOccurs="0" />
+            
+            <element name="corrSealing" type="ht:corrSealingType" />
+
+            <element name="landuse" type="string" minOccurs="0"/>
+            <element name="landuseLink" minOccurs="0" maxOccurs="0">
+              <complexType>
+                <sequence>
+                  <element ref="landuse:Landuse" xmlns:landuse="http://sourceforge.kalypso.org/schemata/hydrology/landuse" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup"/>
+              </complexType>
+            </element>
+            
+            <element name="soiltype" type="string" minOccurs="0"/>
+            <element name="pedologyLink" minOccurs="0" maxOccurs="0">
+              <complexType>
+                <sequence>
+                  <element ref="pedology:Soiltype" xmlns:pedology="http://sourceforge.kalypso.org/schemata/hydrology/pedologie" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup"/>
+              </complexType>
+            </element>
+
             <element ref="naModel:catchmentLinkMember" minOccurs="0" />
 
-            <element name="lnkDefinition" minOccurs="0">
+            <element name="maxPerc" type="ht:maxPercType" />
+            <element name="gwInflowRate" type="ht:gwInflowRateType" />
+            <element name="geologyLink" minOccurs="0" maxOccurs="0">
               <complexType>
-                <annotation>
-                  <appinfo xmlns:kapp="org.kalypso.appinfo">
-                    <kapp:documentReference>parameter.gml</kapp:documentReference>
-                  </appinfo>
-                </annotation>
-                <sequence minOccurs="0" maxOccurs="0">
-                  <element ref="par:DRWBMDefinition" />
+                <sequence>
+                  <element ref="geology:Geologie" xmlns:geology="http://sourceforge.kalypso.org/schemata/hydrology/geologie" />
                 </sequence>
-                <attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+                <attributeGroup ref="gml:AssociationAttributeGroup"/>
+              </complexType>
+            </element>
+            
+            <element name="overlayLink" minOccurs="0" maxOccurs="0">
+              <complexType>
+                <sequence>
+                  <element ref="overlay:OverlayElement" xmlns:overlay="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup"/>
               </complexType>
             </element>
 
@@ -59,25 +89,4 @@
       </complexContent>
     </complexType>
   </element>
-
-  <element name="corrSealing" default="1.0">
-    <simpleType>
-      <restriction base="double">
-        <minInclusive value="0.0" />
-        <maxInclusive value="1.0" />
-      </restriction>
-    </simpleType>
-  </element>
-
-  <element name="m_perkm" type="double" />
-
-  <element name="m_f1gws" default="1.0">
-    <simpleType>
-      <restriction base="double">
-        <minInclusive value="0.0" />
-        <maxInclusive value="1.0" />
-      </restriction>
-    </simpleType>
-  </element>
-
 </schema>

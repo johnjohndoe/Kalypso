@@ -165,16 +165,12 @@
               name="Timeseries Data Link">
         </function>
      </extension>
-     <extension
-           point="org.kalypso.deegree.featureBinding">
-        <feature
-              class="org.kalypso.model.hydrology.binding.LanduseCollection"
-              qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}LanduseCollection">
-        </feature>
-        <feature
-              class="org.kalypso.model.hydrology.binding.Landuse"
-              qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse">
-        </feature>
+     <extension point="org.kalypso.deegree.featureBinding">
+        <feature class="org.kalypso.model.hydrology.binding._11_6.LanduseCollection" qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}LanduseCollection"/>
+        <feature class="org.kalypso.model.hydrology.binding._11_6.Landuse" qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>
+
+        <feature class="org.kalypso.model.hydrology.binding.LanduseCollection" qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2}LanduseCollection"/>
+        <feature class="org.kalypso.model.hydrology.binding.Landuse" qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2}Landuse"/>
      </extension>
      <extension
            point="org.kalypso.deegree.featureBinding">
@@ -197,30 +193,22 @@
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay}OverlayElement">
         </feature>
      </extension>
-     <extension
-           point="org.kalypso.deegree.featureBinding">
-        <feature
-              class="org.kalypso.model.hydrology.binding.GeologyCollection"
-              qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}GeologieCollection">
-        </feature>
-        <feature
-              class="org.kalypso.model.hydrology.binding.Geology"
-              qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie">
-        </feature>
+     <extension point="org.kalypso.deegree.featureBinding">
+        <feature class="org.kalypso.model.hydrology.binding._11_6.GeologyCollection" qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}GeologieCollection"/>
+        <feature class="org.kalypso.model.hydrology.binding._11_6.Geology" qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
+
+        <feature class="org.kalypso.model.hydrology.binding.GeologyCollection" qname="{http://sourceforge.kalypso.org/schemata/hydrology/geology}GeologyCollection"/>
+        <feature class="org.kalypso.model.hydrology.binding.Geology" qname="{http://sourceforge.kalypso.org/schemata/hydrology/geology}Geology"/>
      </extension>
 
+     <extension point="org.kalypso.deegree.featureBinding">
+        <feature class="org.kalypso.model.hydrology.binding._11_6.NAHydrotop" qname="{http://www.tuhh.de/hydrotop}NAHydrotop"/>
+        <feature class="org.kalypso.model.hydrology.binding._11_6.Hydrotop" qname="{http://www.tuhh.de/hydrotop}Hydrotop"/>
 
-     <extension
-           point="org.kalypso.deegree.featureBinding">
-        <feature
-              class="org.kalypso.model.hydrology.binding.NAHydrotop"
-              qname="{http://www.tuhh.de/hydrotop}NAHydrotop">
-        </feature>
-        <feature
-              class="org.kalypso.model.hydrology.binding.Hydrotop"
-              qname="{http://www.tuhh.de/hydrotop}Hydrotop">
-        </feature>
+        <feature class="org.kalypso.model.hydrology.binding.HydrotopeCollection" qname="{http://sourceforge.kalypso.org/schemata/hydrology/hydrotope}HydrotopeCollection"/>
+        <feature class="org.kalypso.model.hydrology.binding.Hydrotope" qname="{http://sourceforge.kalypso.org/schemata/hydrology/hydrotope}Hydrotope"/>
      </extension>
+     
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature

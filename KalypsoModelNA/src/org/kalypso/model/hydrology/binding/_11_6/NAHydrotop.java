@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,52 +38,42 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.conversion.to12_02;
+package org.kalypso.model.hydrology.binding._11_6;
 
-import java.io.File;
+import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.afgui.model.UnversionedModel;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
- * removes obsolete elements from hydrotope.gml
- * 
- * <pre>
- * invalid members:
- *  - drainageType
- *  - sudLinkMember
- *  - hydType
- * 
- * invalid name spaces:
- *   - http://sourceforge.kalypso.org/schemata/hydrology/suds
- * 
- * </pre>
- * 
- * @author Dirk Kuch
+ * Binding class for {http://www.tuhh.de/hydrotop}NAHydrotop
+ *
+ * @author Gernot Belger
  */
-public class RemoveObsoleteHydrotopesMembers extends AbstractRemoveOsoleteXmlMembersWorker implements ICoreRunnableWithProgress
+public class NAHydrotop extends UnversionedModel
 {
+  private static final String NS_NAHYDROTOP = NaModelConstants.NS_NAHYDROTOP_11_6;
 
-  public RemoveObsoleteHydrotopesMembers( final File gmlFile )
+  public static final QName FEATURE_NAHYDROTOP = new QName( NS_NAHYDROTOP, "NAHydrotop" ); //$NON-NLS-1$
+
+  private static final QName MEMBER_HYDROTOP = new QName( NS_NAHYDROTOP, "hydrotopMember" ); //$NON-NLS-1$
+
+  private IFeatureBindingCollection<IHydrotope> m_hydrotops;
+
+  public NAHydrotop( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( gmlFile );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
-  @Override
-  protected String[] getInvalidNamespaces( )
+  public synchronized IFeatureBindingCollection<IHydrotope> getHydrotopes( )
   {
-    return new String[] { "http://sourceforge.kalypso.org/schemata/hydrology/suds" }; //$NON-NLS-1$
-  }
+    if( m_hydrotops == null )
+      m_hydrotops = new FeatureBindingCollection<IHydrotope>( this, IHydrotope.class, MEMBER_HYDROTOP );
 
-  @Override
-  protected String getRootElementLocalName( )
-  {
-    return "NAHydrotop"; //$NON-NLS-1$
+    return m_hydrotops;
   }
-
-  @Override
-  protected String[] getInvalidProperties( )
-  {
-    return new String[] { "drainageType", "sudLinkMember", "hydType" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-  }
-
 }

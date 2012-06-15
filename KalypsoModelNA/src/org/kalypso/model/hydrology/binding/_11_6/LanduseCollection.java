@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,51 +38,37 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.conversion.to12_02;
+package org.kalypso.model.hydrology.binding._11_6;
 
-import java.io.File;
+import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.afgui.model.UnversionedModel;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
- * removes obsolete elements from landuse.gml
+ * Binding class for rrmLanduse:LanduseCollection's
  * 
- * <pre>
- * invalid members:
- *  - drainageType
- *  - sudLinkMember
- * 
- * invalid name spaces:
- *   - http://sourceforge.kalypso.org/schemata/hydrology/suds
- * 
- * </pre>
- * 
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class RemoveObsoleteLanduseMembers extends AbstractRemoveOsoleteXmlMembersWorker implements ICoreRunnableWithProgress
+public class LanduseCollection extends UnversionedModel
 {
+  public static final QName MEMBER_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE_11_6, "landuseMember" ); //$NON-NLS-1$
 
-  public RemoveObsoleteLanduseMembers( final File gmlFile )
+  private final IFeatureBindingCollection<Landuse> m_landuses;
+
+  public LanduseCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( gmlFile );
+    super( parent, parentRelation, ft, id, propValues );
+
+    m_landuses = new FeatureBindingCollection<Landuse>( this, Landuse.class, MEMBER_LANDUSE );
   }
 
-  @Override
-  protected String[] getInvalidNamespaces( )
+  public IFeatureBindingCollection<Landuse> getLanduses( )
   {
-    return new String[] { "http://sourceforge.kalypso.org/schemata/hydrology/suds" }; //$NON-NLS-1$
+    return m_landuses;
   }
-
-  @Override
-  protected String getRootElementLocalName( )
-  {
-    return "LanduseCollection"; //$NON-NLS-1$
-  }
-
-  @Override
-  protected String[] getInvalidProperties( )
-  {
-    return new String[] { "drainageType", "sudLinkMember" }; //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
 }

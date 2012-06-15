@@ -71,7 +71,15 @@ public interface NaModelConstants
 
   String NS_NACONTROL = "org.kalypso.namodell.control_v2"; //$NON-NLS-1$
 
-  String NS_NAHYDROTOP = "http://www.tuhh.de/hydrotop"; //$NON-NLS-1$
+  /**
+   * @deprecated Do not use, only for conversion of existing projects.
+   */
+  @Deprecated
+  String NS_NAHYDROTOP_11_6 = "http://www.tuhh.de/hydrotop"; //$NON-NLS-1$
+
+  String NS_NAHYDROTOPETYPES = "http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes"; //$NON-NLS-1$
+
+  String NS_NAHYDROTOP = "http://sourceforge.kalypso.org/schemata/hydrology/hydrotope"; //$NON-NLS-1$
 
   String NS_NAPARAMETER = "http://www.tuhh.de/parameter"; //$NON-NLS-1$
 
@@ -83,11 +91,25 @@ public interface NaModelConstants
 
   String NS_NAFORTRANLOG = "http://www.tuhh.de/NAFortranLog"; //$NON-NLS-1$
 
-  String NS_NALANDUSE = "http://sourceforge.kalypso.org/schemata/hydrology/landuse"; //$NON-NLS-1$
+  String NS_NALANDUSE = "http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2"; //$NON-NLS-1$
+
+  String NS_NASUDS = "http://sourceforge.kalypso.org/schemata/hydrology/suds"; //$NON-NLS-1$
+
+  /**
+   * @deprecated Do not use, only for conversion of existing projects.
+   */
+  @Deprecated
+  String NS_NALANDUSE_11_6 = "http://sourceforge.kalypso.org/schemata/hydrology/landuse"; //$NON-NLS-1$
 
   String NS_NAPEDOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/pedologie"; //$NON-NLS-1$
 
-  String NS_NAGEOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/geologie"; //$NON-NLS-1$
+  /**
+   * @deprecated Do not use, only for conversion of existing projects.
+   */
+  @Deprecated
+  String NS_NAGEOLOGIE_11_6 = "http://sourceforge.kalypso.org/schemata/hydrology/geologie"; //$NON-NLS-1$
+
+  String NS_NAGEOLOGY = "http://sourceforge.kalypso.org/schemata/hydrology/geology"; //$NON-NLS-1$
 
   String NS_NAOVERLAY = "http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay"; //$NON-NLS-1$
 

@@ -59,7 +59,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -135,7 +135,7 @@ public class NAPostprocessingTest
 
     final URL hydrotopResource = new URL( baseURL, "calcHydrotop.gml" ); //$NON-NLS-1$
     final GMLWorkspace hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopResource, null );
-    final NAHydrotop naHydrotop = (NAHydrotop) hydrotopWorkspace.getRootFeature();
+    final HydrotopeCollection naHydrotop = (HydrotopeCollection) hydrotopWorkspace.getRootFeature();
 
     final NaModell model = (NaModell) modelWorkspace.getRootFeature();
     final IFeatureBindingCollection<Catchment> catchmentList = model.getCatchments();

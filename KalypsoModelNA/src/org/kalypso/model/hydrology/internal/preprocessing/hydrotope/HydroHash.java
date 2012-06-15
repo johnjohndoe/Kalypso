@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.kalypso.model.hydrology.binding.IHydrotope;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -59,7 +59,7 @@ public class HydroHash
     m_landuseHash = landuseHash;
   }
 
-  public void initHydrotopes( final NAHydrotop naHydrotop, final Catchment[] catchments ) throws GM_Exception, SimulationException
+  public void initHydrotopes( final HydrotopeCollection naHydrotop, final Catchment[] catchments ) throws GM_Exception, SimulationException
   {
     final IFeatureBindingCollection<IHydrotope> hydrotopes = naHydrotop.getHydrotopes();
 

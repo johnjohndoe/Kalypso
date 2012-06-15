@@ -33,7 +33,7 @@
       <templ:showChildren>true</templ:showChildren>
       <templ:property name="deleteable">false</templ:property>
     </mapv:layer>
-    <mapv:layer visible="false" name="%hydrotop.gmt.geology" featurePath="geologieMember" id="ID_7" linktype="gml" xlink:actuate="onRequest" xlink:href="../.models/geologie.gml" xlink:type="simple">
+    <mapv:layer visible="false" name="%hydrotop.gmt.geology" featurePath="geologyMember" id="ID_7" linktype="gml" xlink:actuate="onRequest" xlink:href="../.models/geologie.gml" xlink:type="simple">
       <templ:showChildren>true</templ:showChildren>
       <templ:property name="deleteable">false</templ:property>
     </mapv:layer>
@@ -41,7 +41,7 @@
       <templ:showChildren>true</templ:showChildren>
       <templ:property name="deleteable">false</templ:property>
     </mapv:layer>
-    <mapv:layer visible="true" name="%hydrotop.gmt.hydrotopes" featurePath="hydrotopMember" id="ID_8" linktype="gml" xlink:actuate="onRequest" xlink:href="../.models/hydrotop.gml" xlink:type="simple">
+    <mapv:layer visible="true" name="%hydrotop.gmt.hydrotopes" featurePath="hydrotopeMember" id="ID_8" linktype="gml" xlink:actuate="onRequest" xlink:href="../.models/hydrotop.gml" xlink:type="simple">
       <templ:showChildren>true</templ:showChildren>
       <templ:property name="deleteable">false</templ:property>
     </mapv:layer>

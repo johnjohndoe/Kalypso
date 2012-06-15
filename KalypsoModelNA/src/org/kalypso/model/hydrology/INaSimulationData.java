@@ -42,7 +42,7 @@ package org.kalypso.model.hydrology;
 
 import java.net.URL;
 
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
@@ -75,7 +75,7 @@ public interface INaSimulationData
 
   GMLWorkspace getSynthNWorkspace( );
 
-  NAHydrotop getHydrotopCollection( );
+  HydrotopeCollection getHydrotopCollection( );
 
   InitialValues getInitialValues( );
 
