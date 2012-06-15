@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="flood:RunoffEvent" style="SWT.NONE" xmlns:flood="org.kalypso.model.flood"
+	xmlns:gft="featureview.template.kalypso.org" xmlns:ns1="gistableview.template.kalypso.org"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
+
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
+		grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="2" />
+
+	<gft:label property="gml:name" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:name"  style="SWT.BORDER"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:text>
+
+	<gft:label property="gml:description" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL"
+			heightHint="30" grabExcessHorizontalSpace="true" />
+	</gft:text>
+
+	<gft:label property="flood:returnPeriod" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="flood:returnPeriod" style="SWT.BORDER"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL"
+			grabExcessHorizontalSpace="true" />
+	</gft:text>
+
+</gft:featureview>
+
