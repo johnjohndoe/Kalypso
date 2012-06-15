@@ -1,0 +1,123 @@
+
+          *****************************************************
+          *****************************************************
+          ****                                             ****
+          ****      HAMBURG UNIVERSITY OF TECHNOLOGY       ****
+          ****                                             ****
+          **** Department of River and Coastal Engineering ****
+          ****                                             ****
+          ****                                             ****
+          ****            K A L Y P S O - N A              ****
+          ****                                             ****
+          ****                                             ****
+          ****           Rainfall-Runoff-Model             ****
+          ****                                             ****
+          ****                                             ****
+          ****                                             ****
+          ****     VERS.  2.1.5    STATUS: 15.12.2009      ****
+          ****                                             ****
+          ****                                             ****
+          ****     Contact:      Dipl.-Geoök. C. Brüning   ****
+          ****                   c.bruening@tuhh.de        ****
+          *****************************************************
+          *****************************************************
+
+ Bearbeitung Fall / Berechnungseinstellungen aus Steuerungsdatei:
+ ----------------------------------------------------------------
+ 2 .. we nat  1996 08 24 00 1996 08 31 00 start\we_nat_start.txt                                                         
+
+ ************************************************************************************
+ *  Neuer Jahreszyklus                                                              *
+ *      Jahr:    1996                                                              *
+ *      Zyklus:     1                                                              *
+ ************************************************************************************
+ Auswertung des Stranges:         1000
+
+ Auswertung von Gebiet:                   4503
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000010
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ Auswertung des Stranges:         1001
+
+ Auswertung von Gebiet:                   4500
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000010
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ Auswertung des Stranges:         1002
+
+ Auswertung von Gebiet:                   4501
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000010
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ Auswertung des Stranges:         1003
+
+ Auswertung von Gebiet:                   4502
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000010
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ Auswertung des Stranges:         1004
+
+ Auswertung von Gebiet:                   4506
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000010
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ Auswertung des Stranges:         1005
+
+ Auswertung von Gebiet:                   4504
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000010
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ Auswertung des Stranges:         4500
+ Auswertung des Stranges:         4503
+ Auswertung des Stranges:         4504
+ Summe der UH-Ordinaten =  0.999998
+ Summe der UH-Ordinaten =  1.000000
+ Summe der UH-Ordinaten =  0.999999
+ Summe der UH-Ordinaten =  1.000001
+ Summe der UH-Ordinaten =  0.999999
+ Auswertung des Stranges:         4505
+ Auswertung des Stranges:         4603
+ Auswertung des Stranges:         4501
+
+ Warnung in der Subroutine gerinne : 
+ Der Gerinneabfluss uebersteigt den maximal angegebenen Abfluss
+ der Kalinin-Miljukov Wertepaare. Berechnen Sie ggf. die Parameter fuer
+ hoehere Abflussereignisse.
+ Es wird mit den Parametern des groessten angegebenen Wertes gerechnet.
+ Summe der UH-Ordinaten =  0.872270
+ Summe der UH-Ordinaten =  0.817901
+ Normierungsfaktor =   1.2226 Summe normierter UH =   1.0000
+ Summe der UH-Ordinaten =  0.782621
+ Normierungsfaktor =   1.2778 Summe normierter UH =   1.0000
+ Summe der UH-Ordinaten =  0.766471
+ Normierungsfaktor =   1.3047 Summe normierter UH =   1.0000
+ Summe der UH-Ordinaten =  0.757320
+ Normierungsfaktor =   1.3204 Summe normierter UH =   1.0000
+ Summe der UH-Ordinaten =  0.575890
+ Normierungsfaktor =   1.7364 Summe normierter UH =   1.0000
+ Summe der UH-Ordinaten =  1.000082
+ Auswertung des Stranges:         4502
+ Auswertung des Stranges:         4506
+
+ Warnung in der Subroutine gerinne : 
+ Der Gerinneabfluss uebersteigt den maximal angegebenen Abfluss
+ der Kalinin-Miljukov Wertepaare. Berechnen Sie ggf. die Parameter fuer
+ hoehere Abflussereignisse.
+ Es wird mit den Parametern des groessten angegebenen Wertes gerechnet.
+ Summe der UH-Ordinaten =  0.872270
+ Summe der UH-Ordinaten =  0.817901
+ Normierungsfaktor =   1.2226 Summe normierter UH =   1.0000
+ Summe der UH-Ordinaten =  0.782621
+ Normierungsfaktor =   1.2778 Summe normierter UH =   1.0000
+ Summe der UH-Ordinaten =  0.766471
+ Normierungsfaktor =   1.3047 Summe normierter UH =   1.0000
+ Summe der UH-Ordinaten =  0.757320
+ Normierungsfaktor =   1.3204 Summe normierter UH =   1.0000
+ Summe der UH-Ordinaten =  0.575890
+ Normierungsfaktor =   1.7364 Summe normierter UH =   1.0000
+ Summe der UH-Ordinaten =  1.000082
+ Auswertung des Stranges:        10002
+
+ ------------------------------------------------------------------
+           Berechnung wurde ohne Fehler beendet!                   
+ ------------------------------------------------------------------
