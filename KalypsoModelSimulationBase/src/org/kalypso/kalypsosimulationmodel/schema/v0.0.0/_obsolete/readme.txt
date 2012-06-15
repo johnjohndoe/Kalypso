@@ -1,1 +1,0 @@
-Files in this folder should be removed after some time.
