@@ -43,13 +43,13 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Dejan Antanaskovic
  *
  */
-public interface IRoughnessLayer extends Feature
+public interface IRoughnessLayer extends IFeatureWrapper2
 {
   public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayer" ); //$NON-NLS-1$
   

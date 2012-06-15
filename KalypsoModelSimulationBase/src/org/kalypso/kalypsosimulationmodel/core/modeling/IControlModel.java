@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.modeling;
 
-import de.renew.workflow.connector.cases.IModel;
+import org.kalypso.afgui.model.IModel;
 
 
 /**

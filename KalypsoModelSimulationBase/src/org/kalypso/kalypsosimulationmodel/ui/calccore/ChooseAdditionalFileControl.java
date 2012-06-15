@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -65,7 +66,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author ig
  * 
  */
-public class ChooseAdditionalFileControl extends AbstractFeatureControl
+public class ChooseAdditionalFileControl extends AbstractFeatureControl implements IFeatureControl
 {
   private File m_file;
 
@@ -92,6 +93,9 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl
     button.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.0" ) ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {

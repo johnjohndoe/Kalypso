@@ -44,10 +44,9 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-
-import de.renew.workflow.connector.cases.IModel;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
@@ -55,33 +54,32 @@ import de.renew.workflow.connector.cases.IModel;
  */
 public interface IResultMeta extends IModel
 {
-  static final QName QNAME_PROP_PATH = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "path" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_PATH = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "path" ); //$NON-NLS-1$
 
-  static final QName QNAME_PROP_STATUS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_STATUS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" ); //$NON-NLS-1$
 
-  static final QName QNAME_PROP_CHILDREN = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "childMember" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_CHILDREN = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "childMember" ); //$NON-NLS-1$
 
-  static final QName QNAME_PROP_PARENT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "parentMember" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_PARENT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "parentMember" ); //$NON-NLS-1$
 
-  static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "ResultMeta" ); //$NON-NLS-1$
+  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "ResultMeta" ); //$NON-NLS-1$
 
-  IPath getPath( );
+  public IPath getPath( );
 
-  void setPath( IPath path );
+  public void setPath( IPath path );
 
-  IStatus getStatus( );
+  public IStatus getStatus( );
 
-  void setStatus( IStatus status );
+  public void setStatus( IStatus status );
 
-  @Override
-  IResultMeta getOwner( );
+  public IResultMeta getParent( );
 
-  IFeatureBindingCollection<IResultMeta> getChildren( );
+  public IFeatureWrapperCollection<IResultMeta> getChildren( );
 
-  void removeChild( final IResultMeta result );
+  public void removeChild( final IResultMeta result );
 
   /**
    * Returns the complete path resolved against all the parent-pathes
    */
-  IPath getFullPath( );
+  public IPath getFullPath( );
 }

@@ -40,30 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Gernot Belger
  */
-public abstract class FlowRelationship extends Feature_Impl implements IFlowRelationship
+public abstract class FlowRelationship extends AbstractFeatureBinder implements IFlowRelationship
 {
-  public FlowRelationship( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public static final QName OP1D2D_F_FLOWRELATIONSHIPS_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowRelationshipModel" ); //$NON-NLS-1$
+
+  public FlowRelationship( final Feature featureToBind, final QName qname )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, qname );
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship#getPosition()
+   */
   @Override
   public GM_Point getPosition( )
   {
-    return (GM_Point) getProperty( QNAME_PROP_POSITION );
+    return (GM_Point) getFeature().getProperty( QNAME_PROP_POSITION );
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship#setPosition(org.kalypsodeegree.model.geometry.GM_Point)
+   */
   @Override
   public void setPosition( final GM_Point point )
   {
-    setProperty( QNAME_PROP_POSITION, point );
+    getFeature().setProperty( QNAME_PROP_POSITION, point );
   }
 }
