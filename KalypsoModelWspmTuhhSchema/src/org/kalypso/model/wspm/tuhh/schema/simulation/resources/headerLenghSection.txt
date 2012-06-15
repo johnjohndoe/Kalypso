@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<om:Observation gml:id="LengthSectionResult" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    http://www.opengis.net/om http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd
+    http://www.opengis.net/gml http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd
+    http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd
+    http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd
+    http://www.seegrid.csiro.au/xml/st http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/simpleTypeDerivation.xsd
+    "
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:gml="http://www.opengis.net/gml"
+    xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe">
+    <gml:name/>
+    <om:time/>
+    <om:procedure>
+        <om:ObservationProcedure gml:id="proc_wspm_ls">
+            <gml:description>WSPM TUHH Längsschnitt Ergebnis</gml:description>
+            <gml:name>WSPM-TUHH-LS</gml:name>
+            <om:method/>
+        </om:ObservationProcedure>
+    </om:procedure>
+    <om:observedProperty>
+        <swe:Phenomenon gml:id="phen_wspm_ls">
+            <gml:name>WSPM-TUHH-LS</gml:name>
+        </swe:Phenomenon>
+    </om:observedProperty>
+    <om:featureOfInterest/>
+    <om:resultDefinition>
+        <swe:RecordDefinition recordLength="25" gml:id="rd">
+            <gml:name/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionProfileType"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_hen"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_tau_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Q_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Q_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Q_re"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_lamb_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_lamb_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_lamb_re"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_f_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_f_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_f_re"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_br_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_br_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_br_re"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_WeirOK"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeUK"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeWidth"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_RohrDN"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_AlphaIW"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_AlphaEW"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_I_Reib"/>
+        </swe:RecordDefinition>
+    </om:resultDefinition>
+    <om:result><![CDATA[
