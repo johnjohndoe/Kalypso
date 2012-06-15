@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+		<documentation>Suds definitions available for a hydrology-modell.</documentation>
+	</annotation>
+
+	<import namespace="http://www.tuhh.de/kalypsoNA" schemaLocation="namodell.xsd" />
+	<import namespace="http://www.opengis.net/gml" />
+
+	<element name="SudsCollection" substitutionGroup="gml:_Feature">
+		<complexType>
+			<complexContent>
+				<extension base="gml:AbstractFeatureType">
+					<sequence>
+						<element name="sudMember" minOccurs="0" maxOccurs="unbounded">
+							<complexType>
+								<sequence>
+									<element ref="suds:_Sud" />
+								</sequence>
+							</complexType>
+						</element>
+						<element name="planingAreaMember" minOccurs="0" maxOccurs="1">
+							<complexType>
+								<sequence>
+									<element ref="suds:PlaningArea" />
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+	</element>
+
+	<element name="PlaningArea" type="suds:PlaningAreaType" substitutionGroup="gml:_Feature" />
+
+	<element name="_Sud" abstract="true" type="suds:AbstractSudType" substitutionGroup="gml:_Feature" />
+
+	<element name="Sealing" type="suds:SealingType" substitutionGroup="suds:_Sud"/>
+
+	<element name="Swale" type="suds:SwaleType" substitutionGroup="suds:_Sud"/>
+
+	<element name="SwaleInfiltrationDitch" type="suds:SwaleInfiltrationDitchType" substitutionGroup="suds:_Sud"/>
+
+	<element name="GreenRoof" type="suds:GreenRoofType" substitutionGroup="suds:_Sud"/>
+
+	<!-- Reference to a suds. Used by landuse etc. to reference suds stored in the SudColection -->
+	<complexType name="SudPropertyType">
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="suds:_Sud" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+	</complexType>
+	<!-- Sud-Property: Can be used to reference suds -->
+	<element name="sudLinkMember" type="suds:SudPropertyType" />
+
+	<!-- Type definitions -->
+	
+	<complexType name="PlaningAreaType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="boundary" type="gml:GeometryPropertyType" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="AbstractSudType" abstract="true">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="AbstractSwaleType" abstract="true">
+		<complexContent>
+			<extension base="suds:AbstractSudType">
+				<sequence>
+					<element name="naturalAreaPercentage" type="double"/>
+					<element name="drainedSealedAreaPercentage" type="double"/>
+					<element name="drainageNode">
+						<!-- Only downstream nodes are acceptable; node offered by default should be the drainage node of this subcatchment -->
+						<complexType>
+							<sequence minOccurs="0" maxOccurs="0">
+								<element ref="na:Node" />
+							</sequence>
+							<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+						</complexType>
+					</element>
+					<element name="drainagePipeDiameter" type="suds:EnumPipeDiameter" default="200"/>
+					<element name="drainagePipeKFvalue" type="integer" default="8000"/>
+					<element name="drainagePipeSlope" type="integer" default="3"/>
+					<element name="drainagePipeRoughness" type="double" default="2.0"/>
+					<element name="layerProfileThickness" type="suds:EnumLayerProfileThicknessType"/>
+					<element name="maxCapacityOfEmergencySpill" type="double" default="0.0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SwaleType">
+		<complexContent>
+			<extension base="suds:AbstractSwaleType">
+				<sequence>
+					<element name="elementType" type="suds:EnumSwaleType" default="20"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SealingType">
+		<complexContent>
+			<extension base="suds:AbstractSudType">
+				<sequence>
+					<element name="sealingFactor" type="double" default="1.0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SwaleInfiltrationDitchType">
+		<complexContent>
+			<extension base="suds:AbstractSwaleType">
+				<sequence>
+					<element name="elementType" type="suds:EnumSwaleInfiltrationDitchType" default="30"/>
+					<element name="maxPercRate" type="double" default="2.8E-15"/>
+					<element name="percentToGroundwater" type="double" default="1.0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="GreenRoofType">
+		<complexContent>
+			<extension base="suds:AbstractSudType">
+				<sequence>
+					<element name="elementType" type="suds:EnumGreenRoofType" default="10"/>
+					<element name="areaPercentage" type="double"/>
+					<element name="slope" default="5">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0" />
+								<maxInclusive value="40.0" />
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="usageType" type="suds:EnumGreenRoofUsageType" default="EXTENSIVE"/>
+					<element name="rainwaterPipeDiameter" type="suds:EnumPipeDiameter" default="200"/>
+					<element name="rainwaterPipeRoughness" type="double" default="2.0" />
+					<element name="drainageLayerPorosity" default="0.2" >
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0" />
+								<maxInclusive value="1.0" />
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="emergencySpillPipeDiameter" type="suds:EnumPipeDiameter" default="200"/>
+					<element name="emergencySpillPipeRoughness" type="double" default="2.0" />
+					<element name="emergencySpillHeight" default="100">
+						<simpleType>
+							<restriction base="integer">
+								<minInclusive value="0" />
+								<maxInclusive value="200" />
+							</restriction>
+						</simpleType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Enumeration types -->
+    <!--  NO MORE USED
+	<simpleType name="EnumSudType">
+		<restriction base="string">
+			<enumeration value="GREEN_ROOF"/>
+			<enumeration value="SWALE"/>
+			<enumeration value="SWALE_INFILTRATION_DITCH"/>
+			<enumeration value="CISTERN"/>
+			<enumeration value="UNSEALING"/>
+			<enumeration value="DETENTION_POND"/>
+		</restriction>
+	</simpleType>
+	-->
+
+	<simpleType name="EnumSwaleType">
+		<restriction base="string">
+			<enumeration value="20"/>
+			<!-- different types not implemented yet, see trac ticket #419 
+			<enumeration value="21"/>
+			 -->
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumSwaleInfiltrationDitchType">
+		<restriction base="string">
+			<enumeration value="30"/>
+			<!-- different types not implemented yet, see trac ticket #419
+				<enumeration value="31"/>
+			 -->
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumGreenRoofType">
+		<restriction base="string">
+			<enumeration value="10"/>
+			<!-- different types not implemented yet, see trac ticket #419
+				<enumeration value="11"/>
+				<enumeration value="12"/>
+				<enumeration value="13"/>
+			 -->
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumGreenRoofUsageType">
+		<restriction base="string">
+			<enumeration value="EXTENSIVE"/>
+			<enumeration value="INTENSIVE"/>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumLayerProfileThicknessType">
+		<restriction base="double">
+			<enumeration value="0.3"/>
+			<enumeration value="0.6"/>
+			<enumeration value="0.8"/>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="EnumPipeDiameter">
+		<restriction base="integer">
+			<enumeration value="100"/>
+			<enumeration value="200"/>
+			<enumeration value="300"/>
+		</restriction>
+	</simpleType>
+
+</schema>
