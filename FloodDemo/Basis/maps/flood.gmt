@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapv:gismapview name="%flood.title" xmlns:mapv="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <mapv:translator id="commons.msgGetString">
+        <class>org.kalypso.model.flood:org.kalypso.model.flood.i18n.MapMessages</class>
+    </mapv:translator>
+    <mapv:extent top="778095.6750000002" srs="EPSG:31467" right="3931896.302908257" left="3928310.323091743" bottom="773524.0749999998"/>
+    <mapv:layers>
+        <mapv:layer visible="true" name="%wsp.title" id="ID_0" linktype="gmt" xlink:type="simple" xlink:href="wsp.gmt" xlink:actuate="onRequest">
+            <templ:property name="deleteable">false</templ:property>
+            <templ:property name="themeId">waterlevelThemes</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="false" name="%flood.layer.terrain_model" id="ID_2" featurePath="#fid#CoverageCollection11933046861910/coverageMember" linktype="gml" xlink:type="simple" xlink:href="project:/Basis/models/flood.gml" xlink:actuate="onRequest">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="dtmGridUserStyle" linktype="sld" xlink:type="simple" xlink:href="grids.sld" xlink:actuate="onRequest"/>
+            <templ:property name="deleteable">false</templ:property>
+            <templ:property name="themeId">terrainThemes</templ:property>
+            <templ:property name="themeInfoId">>%flood.layer.terrain.themeInfoId</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="false" name="%base.title" id="ID_1" linktype="gmt" xlink:type="simple" xlink:href="base.gmt" xlink:actuate="onRequest">
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+    </mapv:layers>
+</mapv:gismapview>
+
