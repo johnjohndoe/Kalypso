@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
+<schema xmlns:par="http://www.tuhh.de/parameter" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.7">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
+	<import namespace="inline.zml.kalypso.org" schemaLocation="zmlinline.xsd"/>
+	<element name="Parameter" type="par:ParameterType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Modell-Parameter</label>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>model parameter</label>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="ParameterType">
+		<complexContent>
+			<extension base="par:NonGeometricAbstractFeatureType">
+				<sequence>
+					<element name="snowMember" type="par:SnowAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Schneeparameterliste</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>snow list</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="soilLayerMember" type="par:SoilLayerAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Bodenhorizontliste</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>soil layer list</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="soiltypeMember" type="par:SoiltypeAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Bodentypenliste</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>soil type list</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="landuseMember" type="par:LanduseAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Landnutzungsgruppen</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>landuse classes</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="idealLandUseMember" type="par:IdealLandUseAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Liste idealisierter Jahresgänge</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>list of ideal landuse</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="sealingMember" type="par:SealingAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Versiegelungsklassen</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>sealing classes</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NonGeometricAbstractFeatureType" abstract="true">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+			<!--				<sequence>
+					<element ref="gml:description" minOccurs="0"/>
+					<element ref="gml:name" minOccurs="0"/>
+				</sequence>-->
+		</complexContent>
+	</complexType>
+	<!--___Snow_________________________________________________-->
+	<complexType name="SnowAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Snow"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Snow" type="par:SnowType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Schneetyp - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Schneetyp</tooltip>
+				<description>Schneetyp, welcher im Teilgebiet referenziert wird (Key ist der Name!)</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>snowtype - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>snow type</tooltip>
+				<description>snow type, which is referenced in the sub catchment (key is the name!)</description>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="SnowType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--
+(texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
+   -->
+					<element name="xwwo" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Neuschneedichte</label>
+								<tooltip>Wasseranteil im Schnee [-] (= 0-1)</tooltip>
+								<description>Wasseranteil im Schnee (Neuschneedichte) [-] (= 0-1)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>New snow density</label>
+								<tooltip>Water quantity in Snow [-] (= 0-1)</tooltip>
+								<description>Water quantity in snow (new snow density) [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xwwmax" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>max. Wasseranteil</label>
+								<tooltip>maximaler Wasseranteil [-] (= 0-1)</tooltip>
+								<description>maximaler Wasseranteil (maximale Lagerungsdichte - Beginn der Schneeschmelze) [-] (= 0-1)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>max. water quantity</label>
+								<tooltip>maximal water quantity [-] (= 0-1)</tooltip>
+								<description>maximal water quantity (maximal storage thickness - beginning of the snow melting) [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xsnotem" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>temp. Schneeschmelzrate</label>
+								<tooltip>temperaturabhängige Schneeschmelzrate [mm/h]</tooltip>
+								<description>temperaturabhängige Schneeschmelzrate [mm/h]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>temp. snowmelting rate</label>
+								<tooltip>Temperature-depending snow melating rate [mm/h]</tooltip>
+								<description>Temperature-depending snow melating rate [mm/h]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xsnorad" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>strahl. Schneeschmelzrate</label>
+								<tooltip>strahlungsabhängige Schneeschmelzrate [mm/h]</tooltip>
+								<description>strahlungsabhängige Schneeschmelzrate [mm/h]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>radiat. snow melating rate</label>
+								<tooltip>Radiation-depending snow melting rate [mm/h]</tooltip>
+								<description>Radiation-depending snow melting rate [mm/h]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xh0" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Anfangsschneehöhe</label>
+								<tooltip>Anfangsschneehöhe [mm]</tooltip>
+								<description>Anfangsschneehöhe [mm]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Initial snow height</label>
+								<tooltip>Initial snow height [mm]</tooltip>
+								<description>Initial snow height [mm]</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--___Nutzung_________________________________________________-->
+	<complexType name="LanduseAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Landuse"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Landuse" type="par:LanduseType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Landnutzung - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Landnutzung</tooltip>
+				<description>Landnutzung, welche in den Hydrotopen referenziert wird (Key ist der Name!)</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>land use - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>land use</tooltip>
+				<description>land use, which is referenced in the hydrotops (key is the name!)</description>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="LanduseType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--
+(texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
+   -->
+					<element name="idealLandUsePeriodLink" type="par:IdealLandUseAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Nutzungsparameter (Link)</label>
+								<tooltip>Verknüpfung zum idealisierten Jahresgang</tooltip>
+								<description>Verknüpfung zum idealisierten Jahresgang</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>LanduseLink</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="sealingLink" type="par:SealingAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Versiegelungsklasse (Link)</label>
+								<tooltip>Verknüpfung zur Versiegelungsklasse</tooltip>
+								<description>Verknüpfung zur Versiegelungsklasse</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Sealing class link</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--___Bodenart_________________________________________________-->
+	<complexType name="SoilLayerAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:SoilLayer"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="SoilLayer" type="par:SoilLayerType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Bodenhorizont - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Bodenhorizont</tooltip>
+				<description>Ein Bodenhorizont ist Teil eines Bodenprofiles und wird von dort aus referenziert (verlinkt).</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>soil layer - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>soil layer</tooltip>
+				<description>A soil layer is part of the whole soil profile.</description>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="SoilLayerType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--
+(typchar,*)(1)_(typkap,*)(1)_(typwp,*)(1)_(typfk,*)(1)_(typbfm,*)(1)_(typkf,*)(1)_(typbf0,*)(1)
+-->
+					<!-- JH: wird in na-modell nicht verwendet
+					<element name="typkap" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Kurzzeichen kap. Aufstieg</label>
+								<tooltip>Kurzzeichen kap. Aufstieg (zur Zeit nicht verwendet)</tooltip>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>cap. uprise</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+-->
+					<element name="typwp" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Welkepunkt</label>
+								<tooltip>Welkepunkt [mm/dm]</tooltip>
+								<description>Welkepunkt [mm/dm]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Wilting point</label>
+								<tooltip>Wilting point [mm/dm]</tooltip>
+								<description>Wilting point [mm/dm]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="typfk" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Feldkapazität</label>
+								<tooltip>Feldkapazität [mm/dm]</tooltip>
+								<description>Feldkapazität [mm/dm]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Field capacity</label>
+								<tooltip>Field capacity [mm/dm]</tooltip>
+								<description>Field capacity [mm/dm]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="typbfm" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>maximales Porenvolumen</label>
+								<tooltip>maximales Porenvolumen [mm/dm]</tooltip>
+								<description>maximales Porenvolumen [mm/dm]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>maximal pores volume</label>
+								<tooltip>maximal pores volume [mm/dm]</tooltip>
+								<description>maximal pores volume [mm/dm]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="typkf" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>kf-Wert</label>
+								<tooltip>kf-Wert [mm/d]</tooltip>
+								<description>kf-Wert [mm/d]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Hydraulic conductivity</label>
+								<tooltip>Hydraulic conductivity [mm/d]</tooltip>
+								<description>Hydraulic conductivity [mm/d]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="typbf0" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Anfangsbodenfeuchte</label>
+								<tooltip>Anfangsbodenfeuchte [-] (= 0-1)</tooltip>
+								<description>Anfangsbodenfeuchte [-] (= 0-1)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Initial soil moisture</label>
+								<tooltip>Initial soil moisture [-] (= 0-1)</tooltip>
+								<description>Initial soil moisture [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--___VegetationCollection_________________________________________________-->
+	<complexType name="IdealLandUseAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:IdealLandUse"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="IdealLandUse" type="par:idealLandUseType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Idealisierter Jahresgang - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Idealisierter Jahresgang</tooltip>
+				<description>Der idealisierte Jahresgang dient der pflanzenspezifischen Berechnung der Verdunstung auf natürlichen (d.h.  nicht versiegelter Anteil des Hydrotopes) Flächen.</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Ideal land use - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Ideal land use</tooltip>
+				<description>Based on the ideal land use curve the calculation of evapotranspiration will be done.</description>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="idealLandUseType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="idealLandUseZML" type="zmlinline:ZmlInlineIdealKcWtLaiType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Nutzungsparameter</label>
+								<tooltip>Idealisierte Jahresvegetationsperiode der Nutzungsparameter</tooltip>
+								<description>Idealisierte Jahresvegetationsperiode mit kc=Verdunstungskorrekturfaktor gegenueber der Referenzverdunstung [-], wt=Wurzeltiefe [m] und lai=Interzeptionsspeicherinhalt fuer ein Hydrologisches Jahr [mm]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Landuse parameter</label>
+								<tooltip>idealiszed annual vegetation cycle for the landuse parameter set</tooltip>
+								<description>idealiszed annual vegetation cycle for the landuse parameter set with kc=correction factor for evaporation vs. reference evaporation [-], wt=root depth of vegetation [m] and lai=volume of interzeption storage (leaf area index) for a hydrological year [mm]</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--___SealingClassCollection_________________________________________________-->
+	<complexType name="SealingAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Sealing"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Sealing" type="par:sealingType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Versiegelungsklasse - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Versiegelungsklasse</tooltip>
+				<description>Die Versiegelungsklasse beinhaltet den Versiegelungsgrad, welcher die Aufteilung der Hydrotopfläche in den natürlichen und den versiegelten (der Regenwasserkanalisation zufließenden) Anteil bestimmt.</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>sealing class - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>sealing class</tooltip>
+				<description>sealing class includes the sealing rate of a hydrotop</description>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="sealingType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="m_vers" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Versiegelungsgrad</label>
+								<tooltip>Versiegelungsgrad der Nutzung [-] (= 0-1)</tooltip>
+								<description>Versiegelungsgrad der Nutzung [-] (= 0-1)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Sealing rate</label>
+								<tooltip>Sealing rate of the landuse [-] (= 0-1)</tooltip>
+								<description>Sealing rate of the landuse [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--___Bodentyp_________________________________________________-->
+	<complexType name="SoiltypeAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Soiltype"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Soiltype" type="par:SoiltypeType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Bodentyp - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Bodentyp</tooltip>
+				<description>Der Bodentyp gibt Aufschluss über die Schichtung des Bodens in verschiedene Bodenhorizonte.</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>soil type - ${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>soil type</tooltip>
+				<description>soil type</description>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="SoiltypeType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--
+(text,a)
+(text6,a10)(ianz,i4)
+(char3,a8)(xtief,*)_(xret,*)
+(char3,a8)(xtief,*)_(xret,*)
+(char3,a8)(xtief,*)_(xret,*)
+			   -->
+					<!--ist in name schon drin!!!-->
+					<element name="soilLayerParameterMember" type="par:SoilLayerParameterAssociationType" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bodenhorizonte</label>
+								<tooltip>Bodenhorizonte</tooltip>
+								<description>Bodenhorizonte des Bodenprofils</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Soil horizons</label>
+								<tooltip>Soil horizons</tooltip>
+								<description>Soil horizons of the soil profile</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--BodArt Parameter-->
+	<complexType name="SoilLayerParameterAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:SoilLayerParameter"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="SoilLayerParameter" type="par:SoilLayerParameterType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SoilLayerParameterType">
+		<complexContent>
+			<extension base="par:NonGeometricAbstractFeatureType">
+				<sequence>
+					<element name="soilLayerLink" type="par:SoilLayerAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bodenart (Link)</label>
+								<tooltip>Link zur Bodenart</tooltip>
+								<description>Jedem Horizont ist eine Bodenart durch eine Link zur Bodenarten zugewiesen</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Soiltype key</label>
+								<tooltip>Soiltype key/ Description of the soil horizon</tooltip>
+								<description>A soiltype is assigned to each horizon through a soiltype key</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--TODO: Link prüfen-->
+					<element name="xtief" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Mächtigkeit</label>
+								<tooltip>Mächtigkeit des Bodenhorizontes [dm]</tooltip>
+								<description>Mächtigkeit des Bodenhorizontes [dm]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Thickness</label>
+								<tooltip>Thickness of the soil horizon [dm]</tooltip>
+								<description>Thickness of the soil horizon [dm]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xret" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Interflow</label>
+								<tooltip>Auswahl Interflow</tooltip>
+								<description>Auswahl, ob Interflow in diesem Horizont zugelassen wird</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Interflow</label>
+								<tooltip>Selection Interflow</tooltip>
+								<description>Selection whether Interflow is allowed in this horizont</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
