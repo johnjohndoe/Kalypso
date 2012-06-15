@@ -42,60 +42,38 @@ package org.kalypso.model.hydrology.binding;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
- * Binding class for rrmLanduse:Landuse
- * 
+ * Binding class for {http://www.tuhh.de/hydrotop}NAHydrotop
+ *
  * @author Gernot Belger
  */
-public class Landuse extends Feature_Impl
+public class HydrotopeCollection extends UnversionedModel
 {
-  public static final QName FEATURE_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "Landuse" ); //$NON-NLS-1$
+  private static final String NS_NAHYDROTOP = NaModelConstants.NS_NAHYDROTOP;
 
-  public static final QName PROPERTY_GEOMETRY = new QName( NaModelConstants.NS_NALANDUSE, "location" ); //$NON-NLS-1$
+  public static final QName FEATURE_HYDROTOPE_COLLECTION = new QName( NS_NAHYDROTOP, "HydrotopeCollection" ); //$NON-NLS-1$
 
-  public static final QName LINK_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "landuseclassLink" ); //$NON-NLS-1$
+  private static final QName MEMBER_HYDROTOPE = new QName( NS_NAHYDROTOP, "hydrotopeMember" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_CORRSEALING = new QName( NaModelConstants.NS_NALANDUSE, "corrSealing" ); //$NON-NLS-1$
+  private IFeatureBindingCollection<IHydrotope> m_hydrotopes;
 
-  public Landuse( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public HydrotopeCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public GM_MultiSurface getGeometry( )
+  public synchronized IFeatureBindingCollection<IHydrotope> getHydrotopes( )
   {
-    return getProperty( PROPERTY_GEOMETRY, GM_MultiSurface.class );
-  }
+    if( m_hydrotopes == null )
+      m_hydrotopes = new FeatureBindingCollection<IHydrotope>( this, IHydrotope.class, MEMBER_HYDROTOPE );
 
-  public void setGeometry( final GM_MultiSurface geometry )
-  {
-    setProperty( PROPERTY_GEOMETRY, geometry );
-  }
-
-  public void setLanduse( final String landuseRef )
-  {
-    setLink( LINK_LANDUSE, landuseRef );
-  }
-
-  public IXLinkedFeature getLanduse( )
-  {
-    return (IXLinkedFeature) getMember( LINK_LANDUSE );
-  }
-
-  public Double getCorrSealing( )
-  {
-    return getDoubleProperty( PROPERTY_CORRSEALING, 1.0 );
-  }
-
-  public void setCorrSealing( final Double corrSealing )
-  {
-    setProperty( PROPERTY_CORRSEALING, corrSealing );
+    return m_hydrotopes;
   }
 }

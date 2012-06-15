@@ -280,7 +280,9 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyFile( CALC_PARAMETER, INaProjectConstants.GML_PARAMETER_PATH );
     copyFile( INaCalcCaseConstants.EXPERT_CONTROL_FILE, INaCalcCaseConstants.EXPERT_CONTROL_PATH );
 
-    new RemoveObsoleteHydrotopesMembers( hydrotope ).execute( new NullProgressMonitor() );
+    // FIXME: landuse and others?
+
+    new ConvertHydrotopesOperation( hydrotope ).execute( new NullProgressMonitor() );
 
     /* Copy special directories into the calccases/calccase folder of the scenario. */
     copyDir( INaCalcCaseConstants.ANFANGSWERTE_DIR, m_simulationPath + "/" + INaCalcCaseConstants.ANFANGSWERTE_DIR, false ); //$NON-NLS-1$

@@ -40,62 +40,117 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for rrmLanduse:Landuse
+ * Binding class for {http://www.tuhh.de/hydrotop}Hydrotop<br/>
  * 
- * @author Gernot Belger
+ * @author Dejan Antanaskovic
  */
-public class Landuse extends Feature_Impl
+public class Hydrotope extends Feature_Impl implements IHydrotope
 {
-  public static final QName FEATURE_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "Landuse" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_GEOMETRY = new QName( NaModelConstants.NS_NALANDUSE, "location" ); //$NON-NLS-1$
-
-  public static final QName LINK_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "landuseclassLink" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_CORRSEALING = new QName( NaModelConstants.NS_NALANDUSE, "corrSealing" ); //$NON-NLS-1$
-
-  public Landuse( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public Hydrotope( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Override
   public GM_MultiSurface getGeometry( )
   {
     return getProperty( PROPERTY_GEOMETRY, GM_MultiSurface.class );
   }
 
+  @Override
   public void setGeometry( final GM_MultiSurface geometry )
   {
     setProperty( PROPERTY_GEOMETRY, geometry );
   }
 
-  public void setLanduse( final String landuseRef )
+  @Override
+  public String getLanduse( )
   {
-    setLink( LINK_LANDUSE, landuseRef );
+    return getProperty( PROPERTY_LANDUSE, String.class );
   }
 
-  public IXLinkedFeature getLanduse( )
+  @Override
+  public void setLanduse( final String href )
   {
-    return (IXLinkedFeature) getMember( LINK_LANDUSE );
+    setProperty( PROPERTY_LANDUSE, href );
   }
 
-  public Double getCorrSealing( )
+  @Override
+  public String getSoilType( )
   {
-    return getDoubleProperty( PROPERTY_CORRSEALING, 1.0 );
+    return getProperty( PROPERTY_SOILTYPE, String.class );
   }
 
-  public void setCorrSealing( final Double corrSealing )
+  @Override
+  public void setSoilType( final String value )
   {
-    setProperty( PROPERTY_CORRSEALING, corrSealing );
+    setProperty( PROPERTY_SOILTYPE, value );
+  }
+
+  @Override
+  public double getCorrSealing( )
+  {
+    return getProperty( PROPERTY_CORR_SEALING, Double.class );
+  }
+
+  @Override
+  public void setCorrSealing( final double value )
+  {
+    setProperty( PROPERTY_CORR_SEALING, value );
+  }
+
+  @Override
+  public double getMaxPerkolationRate( )
+  {
+    return getProperty( PROPERTY_MAX_PERCOLATION, Double.class );
+  }
+
+  @Override
+  public void setMaxPerkolationRate( final double value )
+  {
+    setProperty( PROPERTY_MAX_PERCOLATION, value );
+  }
+
+  @Override
+  public double getGWFactor( )
+  {
+    return getProperty( PROPERTY_GW_INFLOW_RATE, Double.class );
+  }
+
+  @Override
+  public void setGWFactor( final double value )
+  {
+    setProperty( PROPERTY_GW_INFLOW_RATE, value );
+  }
+
+  @Override
+  public IXLinkedFeature getCatchmentMember( )
+  {
+    return getProperty( LINK_CATCHMENT, IXLinkedFeature.class );
+  }
+
+  @Override
+  public void setCatchmentMember( final String href )
+  {
+    setLink( LINK_CATCHMENT, href );
+  }
+
+  @Override
+  public void setDRWBMDefinition( final String href )
+  {
+    setLink( LINK_DRWBM_DEFINITION, href );
+  }
+
+  @Override
+  public IXLinkedFeature getDRWBMDefinition( )
+  {
+    return (IXLinkedFeature) getMember( LINK_DRWBM_DEFINITION );
   }
 }

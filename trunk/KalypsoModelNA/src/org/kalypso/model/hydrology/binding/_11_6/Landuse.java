@@ -38,119 +38,70 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding;
+package org.kalypso.model.hydrology.binding._11_6;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for {http://www.tuhh.de/hydrotop}Hydrotop<br/>
+ * Binding class for rrmLanduse:Landuse
  * 
- * @author Dejan Antanaskovic
+ * @author Gernot Belger
  */
-public class Hydrotop extends Feature_Impl implements IHydrotope
+public class Landuse extends Feature_Impl
 {
-  public Hydrotop( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public static final QName FEATURE_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE_11_6, "Landuse" ); //$NON-NLS-1$
+
+  public static final QName PROPERTY_GEOMETRY = new QName( NaModelConstants.NS_NALANDUSE_11_6, "location" ); //$NON-NLS-1$
+
+  public static final QName LINK_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE_11_6, "landuseclassLink" ); //$NON-NLS-1$
+
+  public static final QName PROPERTY_CORRSEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
+
+  public Landuse( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  @Override
   public GM_MultiSurface getGeometry( )
   {
     return getProperty( PROPERTY_GEOMETRY, GM_MultiSurface.class );
   }
 
-  @Override
   public void setGeometry( final GM_MultiSurface geometry )
   {
     setProperty( PROPERTY_GEOMETRY, geometry );
   }
 
-  @Override
-  public String getLanduse( )
+  /**
+   * @param landuseClass
+   *          Must be either a {@link org.kalypsodeegree.model.feature.Feature} (maybe xlinked) or a {@link String}-ref
+   *          to a feature.
+   */
+  // FIXME: bad; better give href
+  public void setLanduse( final Object landuseClass )
   {
-    return getProperty( PROPERTY_LANDUSE, String.class );
+    setProperty( LINK_LANDUSE, landuseClass );
   }
 
-  @Override
-  public void setLanduse( final String href )
+  public IXLinkedFeature getLanduse( )
   {
-    setProperty( PROPERTY_LANDUSE, href );
+    return (IXLinkedFeature) getMember( LINK_LANDUSE );
   }
 
-  @Override
-  public String getSoilType( )
+  public Double getCorrSealing( )
   {
-    return getProperty( PROPERTY_SOILTYPE, String.class );
+    return getDoubleProperty( PROPERTY_CORRSEALING, 1.0 );
   }
 
-  @Override
-  public void setSoilType( final String value )
+  public void setCorrSealing( final Double corrSealing )
   {
-    setProperty( PROPERTY_SOILTYPE, value );
-  }
-
-  @Override
-  public double getCorrSealing( )
-  {
-    return getProperty( PROPERTY_CORR_SEALING, Double.class );
-  }
-
-  @Override
-  public void setCorrSealing( final double value )
-  {
-    setProperty( PROPERTY_CORR_SEALING, value );
-  }
-
-  @Override
-  public double getMaxPerkolationRate( )
-  {
-    return getProperty( PROPERTY_M_PERKM, Double.class );
-  }
-
-  @Override
-  public void setMaxPerkolationRate( final double value )
-  {
-    setProperty( PROPERTY_M_PERKM, value );
-  }
-
-  @Override
-  public double getGWFactor( )
-  {
-    return getProperty( PROPERTY_M_F1GWS, Double.class );
-  }
-
-  @Override
-  public void setGWFactor( final double value )
-  {
-    setProperty( PROPERTY_M_F1GWS, value );
-  }
-
-  @Override
-  public IXLinkedFeature getCatchmentMember( )
-  {
-    return getProperty( LINK_CATCHMENT, IXLinkedFeature.class );
-  }
-
-  @Override
-  public void setCatchmentMember( final String href )
-  {
-    setLink( LINK_CATCHMENT, href );
-  }
-
-  @Override
-  public void setDRWBMDefinition( final String href )
-  {
-    setLink( LINK_DRWBM_DEFINITION, href );
-  }
-
-  @Override
-  public IXLinkedFeature getDRWBMDefinition( )
-  {
-    return (IXLinkedFeature) getMember( LINK_DRWBM_DEFINITION );
+    setProperty( PROPERTY_CORRSEALING, corrSealing );
   }
 }

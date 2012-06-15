@@ -56,7 +56,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.binding.IHydrotope;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -84,9 +84,9 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
 
   private final Collection<HydrotopeUserData> m_hydrotopeBeans;
 
-  private final NAHydrotop m_hydrotopes;
+  private final HydrotopeCollection m_hydrotopes;
 
-  public HydrotopeBuilder( final Collection<HydrotopeUserData> hydrotopeBeans, final NAHydrotop hydrotopes, final String logMessage )
+  public HydrotopeBuilder( final Collection<HydrotopeUserData> hydrotopeBeans, final HydrotopeCollection hydrotopes, final String logMessage )
   {
     m_hydrotopeBeans = hydrotopeBeans;
     m_hydrotopes = hydrotopes;
@@ -118,7 +118,7 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
 
       try
       {
-        final IHydrotope hydrotop = hydrotopes.addNew( IHydrotope.QNAME );
+        final IHydrotope hydrotop = hydrotopes.addNew( IHydrotope.FEATURE_HYDROTOPE );
         bean.configureHydrotope( hydrotop, count );
       }
       catch( final CoreException e )

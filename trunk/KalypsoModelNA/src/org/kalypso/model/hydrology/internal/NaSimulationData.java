@@ -46,7 +46,7 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.IHydrotope;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
@@ -85,7 +85,7 @@ public class NaSimulationData implements INaSimulationData
 
   private NAControl m_metaControl;
 
-  private final NAHydrotop m_hydrotopeCollection;
+  private final HydrotopeCollection m_hydrotopeCollection;
 
   private final NaModell m_naModel;
 
@@ -113,7 +113,7 @@ public class NaSimulationData implements INaSimulationData
 
     m_naModel = m_modelWorkspace == null ? null : (NaModell) m_modelWorkspace.getRootFeature();
     m_parameterWorkspace = readWorkspaceOrNull( parameterUrl );
-    m_hydrotopeCollection = readModel( hydrotopUrl, NAHydrotop.class );
+    m_hydrotopeCollection = readModel( hydrotopUrl, HydrotopeCollection.class );
     m_lzsimWorkspace = loadAndCheckForFile( lzsimUrl );
 
     final String syntNpath = syntNUrl == null ? null : syntNUrl.getFile();
@@ -290,7 +290,7 @@ public class NaSimulationData implements INaSimulationData
   }
 
   @Override
-  public NAHydrotop getHydrotopCollection( )
+  public HydrotopeCollection getHydrotopCollection( )
   {
     return m_hydrotopeCollection;
   }

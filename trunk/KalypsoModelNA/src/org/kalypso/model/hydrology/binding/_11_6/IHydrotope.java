@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding;
+package org.kalypso.model.hydrology.binding._11_6;
 
 import javax.xml.namespace.QName;
 
@@ -50,11 +50,12 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 /**
  * @author Gernot Belger
  */
+@Deprecated
 public interface IHydrotope extends Feature
 {
-  String NS_NAHYDROTOP = NaModelConstants.NS_NAHYDROTOP;
+  String NS_NAHYDROTOP = NaModelConstants.NS_NAHYDROTOP_11_6;
 
-  QName FEATURE_HYDROTOPE = new QName( NS_NAHYDROTOP, "Hydrotope" ); //$NON-NLS-1$
+  QName QNAME = new QName( NS_NAHYDROTOP, "Hydrotop" ); //$NON-NLS-1$
 
   QName PROPERTY_GEOMETRY = new QName( NS_NAHYDROTOP, "position" ); //$NON-NLS-1$
 
@@ -64,9 +65,9 @@ public interface IHydrotope extends Feature
 
   QName PROPERTY_CORR_SEALING = new QName( NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
 
-  QName PROPERTY_MAX_PERCOLATION = new QName( NS_NAHYDROTOP, "maxPerc" ); //$NON-NLS-1$
+  QName PROPERTY_M_PERKM = new QName( NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
 
-  QName PROPERTY_GW_INFLOW_RATE = new QName( NS_NAHYDROTOP, "gwInflowRate" ); //$NON-NLS-1$
+  QName PROPERTY_M_F1GWS = new QName( NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
 
   QName PROPERTY_AREA = new QName( NS_NAHYDROTOP, "area" ); //$NON-NLS-1$
 
@@ -105,4 +106,6 @@ public interface IHydrotope extends Feature
   void setDRWBMDefinition( final String href );
 
   IXLinkedFeature getDRWBMDefinition( );
+
+  Double getArea( );
 }

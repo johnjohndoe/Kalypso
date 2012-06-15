@@ -38,43 +38,63 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding;
+package org.kalypso.model.hydrology.binding._11_6;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for {http://www.tuhh.de/hydrotop}NAHydrotop
- *
+ * Binding class for rrmLanduse:Landuse
+ * 
  * @author Gernot Belger
  */
-public class NAHydrotop extends UnversionedModel
+public class Geology extends Feature_Impl
 {
-  private static final String NS_NAHYDROTOP = NaModelConstants.NS_NAHYDROTOP;
+  public static final QName QNAME = new QName( NaModelConstants.NS_NAGEOLOGIE_11_6, "Geologie" ); //$NON-NLS-1$
 
-  public static final QName FEATURE_NAHYDROTOP = new QName( NS_NAHYDROTOP, "NAHydrotop" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAGEOLOGIE_11_6, "location" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_HYDROTOP = new QName( NS_NAHYDROTOP, "hydrotopMember" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_MAXPERKULATIONSRATE = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
 
-  private IFeatureBindingCollection<IHydrotope> m_hydrotops;
+  public static final QName QNAME_PROP_GWFACTOR = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
 
-  public NAHydrotop( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public Geology( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public synchronized IFeatureBindingCollection<IHydrotope> getHydrotopes( )
+  public GM_MultiSurface getGeometry( )
   {
-    if( m_hydrotops == null )
-      m_hydrotops = new FeatureBindingCollection<IHydrotope>( this, IHydrotope.class, MEMBER_HYDROTOP );
-
-    return m_hydrotops;
+    return getProperty( QNAME_PROP_GEOMETRY, GM_MultiSurface.class );
   }
 
+  public void setGeometry( final GM_MultiSurface geometry )
+  {
+    setProperty( QNAME_PROP_GEOMETRY, geometry );
+  }
+
+  public void setMaxPerkulationsRate( final double value )
+  {
+    setProperty( QNAME_PROP_MAXPERKULATIONSRATE, value );
+  }
+
+  public Double getMaxPerkulationsRate( )
+  {
+    return getProperty( QNAME_PROP_MAXPERKULATIONSRATE, Double.class );
+  }
+
+  public void setGWFactor( final double value )
+  {
+    setProperty( QNAME_PROP_GWFACTOR, value );
+  }
+
+  public Double getGWFactor( )
+  {
+    return getProperty( QNAME_PROP_GWFACTOR, Double.class );
+  }
 }

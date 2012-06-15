@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.hydrology.INaSimulationData;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
@@ -201,7 +201,7 @@ public class NAModelPreprocessor
   private void initNetData( final Node rootNode ) throws Exception
   {
     final NaModell naModel = m_simulationData.getNaModel();
-    final NAHydrotop hydrotopeCollection = m_simulationData.getHydrotopCollection();
+    final HydrotopeCollection hydrotopeCollection = m_simulationData.getHydrotopCollection();
     final GMLWorkspace parameterWorkspace = m_simulationData.getParameterWorkspace();
     final NAControl metaControl = m_simulationData.getMetaControl();
     final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
@@ -219,7 +219,7 @@ public class NAModelPreprocessor
     m_tsFileManager = new TimeseriesFileManager( m_idManager, usePrecipitationForm );
   }
 
-  private HydroHash initHydroHash( final Parameter parameter, final NAHydrotop hydrotopeCollection, final Catchment[] catchments ) throws GM_Exception, SimulationException
+  private HydroHash initHydroHash( final Parameter parameter, final HydrotopeCollection hydrotopeCollection, final Catchment[] catchments ) throws GM_Exception, SimulationException
   {
     if( m_hydroHash == null )
     {

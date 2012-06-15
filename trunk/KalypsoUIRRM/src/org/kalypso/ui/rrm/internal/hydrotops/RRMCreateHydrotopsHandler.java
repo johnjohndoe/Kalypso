@@ -63,7 +63,7 @@ import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -91,7 +91,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked( event );
 
     final CommandableWorkspace workspace = findHydrotopes( selection );
-    final NAHydrotop hydrotopes = (NAHydrotop) workspace.getRootFeature();
+    final HydrotopeCollection hydrotopes = (HydrotopeCollection) workspace.getRootFeature();
 
     final RrmScenario scenario = RrmScenario.forAnyModelGml( workspace );
     if( scenario == null )
@@ -148,7 +148,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     }
   }
 
-  private <T extends Feature> T findData( final NAHydrotop context, final String gmlFileName, final Class<T> type ) throws ExecutionException
+  private <T extends Feature> T findData( final HydrotopeCollection context, final String gmlFileName, final Class<T> type ) throws ExecutionException
   {
     try
     {
@@ -182,7 +182,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
         if( featureList != null )
         {
           final Feature owner = featureList.getOwner();
-          if( owner instanceof NAHydrotop )
+          if( owner instanceof HydrotopeCollection )
             return featureTheme.getWorkspace();
         }
       }

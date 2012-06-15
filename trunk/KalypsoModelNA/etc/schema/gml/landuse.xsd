@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/landuse" xmlns:landuse="http://sourceforge.kalypso.org/schemata/hydrology/landuse" xmlns:hydrotop="http://www.tuhh.de/hydrotop" xmlns:par="http://www.tuhh.de/parameter" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml"
-  elementFormDefault="qualified" attributeFormDefault="unqualified">
+<schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2" xmlns:landuse="http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2" xmlns:par="http://www.tuhh.de/parameter" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml"
+ xmlns:ht="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="http://www.tuhh.de/parameter" />
-  <import namespace="http://www.tuhh.de/hydrotop" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" />
 
   <element name="LanduseCollection" substitutionGroup="gml:_Feature">
     <complexType>
@@ -44,7 +44,7 @@
                 <attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
               </complexType>
             </element>
-            <element ref="hydrotop:corrSealing" />
+            <element name="corrSealing" type="ht:corrSealingType"/>
           </sequence>
         </extension>
       </complexContent>

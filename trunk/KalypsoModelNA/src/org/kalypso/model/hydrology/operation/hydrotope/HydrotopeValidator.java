@@ -50,7 +50,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.IHydrotope;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -66,11 +66,11 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
 {
   private final String m_logLabel;
 
-  private final NAHydrotop m_hydrotopes;
+  private final HydrotopeCollection m_hydrotopes;
 
   private final NaModell m_naModel;
 
-  public HydrotopeValidator( final NAHydrotop hydrotopes, final NaModell naModel, final String logLabel )
+  public HydrotopeValidator( final HydrotopeCollection hydrotopes, final NaModell naModel, final String logLabel )
   {
     m_hydrotopes = hydrotopes;
     m_naModel = naModel;

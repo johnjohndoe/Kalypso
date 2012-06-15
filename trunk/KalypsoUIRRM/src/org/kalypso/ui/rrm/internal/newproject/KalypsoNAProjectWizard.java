@@ -225,15 +225,15 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   private KalypsoNAMappingData getHydrotopeTargetProperties( )
   {
-    final IFeatureType hydrotopeFT = GMLSchemaUtilities.getFeatureTypeQuiet( IHydrotope.QNAME );
+    final IFeatureType hydrotopeFT = GMLSchemaUtilities.getFeatureTypeQuiet( IHydrotope.FEATURE_HYDROTOPE );
 
     final IValuePropertyType propName = (IValuePropertyType) hydrotopeFT.getProperty( Feature.QN_NAME );
 
     final IValuePropertyType propLanduse = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_LANDUSE );
     final IValuePropertyType propSoiltype = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_SOILTYPE );
     final IValuePropertyType propCorrSealing = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_CORR_SEALING );
-    final IValuePropertyType propMaxPerk = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_M_PERKM );
-    final IValuePropertyType propMF1GWS = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_M_F1GWS );
+    final IValuePropertyType propMaxPerk = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_MAX_PERCOLATION );
+    final IValuePropertyType propMF1GWS = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_GW_INFLOW_RATE );
 
     final IValuePropertyType[] ftps = new IValuePropertyType[] { propName, propLanduse, propSoiltype, propCorrSealing, propMaxPerk, propMF1GWS };
 

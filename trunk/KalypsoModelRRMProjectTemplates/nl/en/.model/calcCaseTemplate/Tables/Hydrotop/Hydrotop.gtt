@@ -7,9 +7,8 @@
         <column alignment="16384" editable="true" name="soiltype" width="100"/>
         <column alignment="16384" editable="true" name="landuse" width="100"/>
         <column alignment="16384" editable="true" name="corrSealing" width="100"/>
-        <column alignment="16384" editable="true" format="" name="m_perkm" width="119"/>
-        <column alignment="16384" editable="true" format="" name="m_f1gws" width="100"/>
+        <column alignment="16384" editable="true" format="" name="maxPerc" width="119"/>
+        <column alignment="16384" editable="true" format="" name="gwInflowRate" width="100"/>
         <sort inverse="false" propertyName="landuse"/>
     </layer>
 </gistableview>
-

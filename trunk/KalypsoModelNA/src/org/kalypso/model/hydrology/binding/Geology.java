@@ -55,13 +55,13 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class Geology extends Feature_Impl
 {
-  public static final QName QNAME = new QName( NaModelConstants.NS_NAGEOLOGIE, "Geologie" ); //$NON-NLS-1$
+  public static final QName FEATURE_GEOLOGY = new QName( NaModelConstants.NS_NAGEOLOGY, "Geology" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAGEOLOGIE, "location" ); //$NON-NLS-1$
+  public static final QName PROPERTY_GEOMETRY = new QName( NaModelConstants.NS_NAGEOLOGY, "location" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_MAXPERKULATIONSRATE = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
+  public static final QName PROPERTY_MAXPERKULATIONSRATE = new QName( NaModelConstants.NS_NAGEOLOGY, "maxPerc" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GWFACTOR = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
+  public static final QName PROPERTY_GWFACTOR = new QName( NaModelConstants.NS_NAGEOLOGY, "gwInflowRate" ); //$NON-NLS-1$
 
   public Geology( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -70,31 +70,31 @@ public class Geology extends Feature_Impl
 
   public GM_MultiSurface getGeometry( )
   {
-    return getProperty( QNAME_PROP_GEOMETRY, GM_MultiSurface.class );
+    return getProperty( PROPERTY_GEOMETRY, GM_MultiSurface.class );
   }
 
   public void setGeometry( final GM_MultiSurface geometry )
   {
-    setProperty( QNAME_PROP_GEOMETRY, geometry );
+    setProperty( PROPERTY_GEOMETRY, geometry );
   }
 
   public void setMaxPerkulationsRate( final double value )
   {
-    setProperty( QNAME_PROP_MAXPERKULATIONSRATE, value );
+    setProperty( PROPERTY_MAXPERKULATIONSRATE, value );
   }
 
   public Double getMaxPerkulationsRate( )
   {
-    return getProperty( QNAME_PROP_MAXPERKULATIONSRATE, Double.class );
+    return getProperty( PROPERTY_MAXPERKULATIONSRATE, Double.class );
   }
 
   public void setGWFactor( final double value )
   {
-    setProperty( QNAME_PROP_GWFACTOR, value );
+    setProperty( PROPERTY_GWFACTOR, value );
   }
 
   public Double getGWFactor( )
   {
-    return getProperty( QNAME_PROP_GWFACTOR, Double.class );
+    return getProperty( PROPERTY_GWFACTOR, Double.class );
   }
 }

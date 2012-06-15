@@ -52,7 +52,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -81,11 +81,11 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
 
   private final NaModell m_naModel;
 
-  private final NAHydrotop m_hydrotopes;
+  private final HydrotopeCollection m_hydrotopes;
 
   private GM_MultiSurface m_workingArea = null;
 
-  public HydrotopeCreationOperation( final NaModell namodel, final LanduseCollection landuse, final SoilTypeCollection pedology, final GeologyCollection geology, final OverlayCollection overlay, final NAHydrotop hydrotopes, final GM_MultiSurface workingArea )
+  public HydrotopeCreationOperation( final NaModell namodel, final LanduseCollection landuse, final SoilTypeCollection pedology, final GeologyCollection geology, final OverlayCollection overlay, final HydrotopeCollection hydrotopes, final GM_MultiSurface workingArea )
   {
     m_naModel = namodel;
     m_landuse = landuse;

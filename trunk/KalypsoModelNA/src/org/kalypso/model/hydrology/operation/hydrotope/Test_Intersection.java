@@ -54,7 +54,7 @@ import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
@@ -107,7 +107,7 @@ public class Test_Intersection extends TestCase
     final GeologyCollection geologyRoot = (GeologyCollection) geologyWS.getRootFeature();
     final OverlayCollection overlay = (OverlayCollection) overlayWS.getRootFeature();
 
-    final NAHydrotop naHydrotopes = (NAHydrotop) outputWS.getRootFeature();
+    final HydrotopeCollection naHydrotopes = (HydrotopeCollection) outputWS.getRootFeature();
 
     final HydrotopeInputIndexer indexer = new HydrotopeInputIndexer( "indexer" ); //$NON-NLS-1$
     indexer.addInput( new CatchmentHydrotopeInput( naModel ) );
@@ -129,7 +129,7 @@ public class Test_Intersection extends TestCase
     final List<Polygon> intersectionList = geometryIntersector.getResult();
     for( final Geometry geometry : intersectionList )
     {
-      final IHydrotope hydrotop = hydrotopes.addNew( IHydrotope.QNAME );
+      final IHydrotope hydrotop = hydrotopes.addNew( IHydrotope.FEATURE_HYDROTOPE );
       final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
 

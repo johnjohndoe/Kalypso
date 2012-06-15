@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" xmlns:ht="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <simpleType name="corrSealingType">
+    <restriction base="double">
+      <minInclusive value="0.0" />
+      <maxInclusive value="1.0" />
+    </restriction>
+  </simpleType>
+
+  <!--TODO > 0? -->
+  <simpleType name="maxPercType">
+    <restriction base="double">
+    </restriction>
+  </simpleType>
+
+  <simpleType name="gwInflowRateType">
+    <restriction base="double">
+      <minInclusive value="0.0" />
+      <maxInclusive value="1.0" />
+    </restriction>
+  </simpleType>
+
+</schema>

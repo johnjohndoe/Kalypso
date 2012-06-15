@@ -65,7 +65,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.IHydrotope;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
@@ -216,14 +216,14 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
 
   private void mapHyd( final List< ? > sourceFeatureList, final Map<IValuePropertyType, IValuePropertyType> mapping )
   {
-    final NAHydrotop naHydrotop = (NAHydrotop) m_hydWS.getRootFeature();
+    final HydrotopeCollection naHydrotop = (HydrotopeCollection) m_hydWS.getRootFeature();
 
     final IFeatureBindingCollection<IHydrotope> hydList = naHydrotop.getHydrotopes();
 
     for( final Object sourceElement : sourceFeatureList )
     {
       final Feature sourceFeature = (Feature) sourceElement;
-      final IHydrotope targetFeature = hydList.addNew( IHydrotope.QNAME, sourceFeature.getId() );
+      final IHydrotope targetFeature = hydList.addNew( IHydrotope.FEATURE_HYDROTOPE, sourceFeature.getId() );
 
       copyValues( sourceFeature, targetFeature, mapping, GEO_MAPPING_SURFACE_2_MULTISURFACE );
     }

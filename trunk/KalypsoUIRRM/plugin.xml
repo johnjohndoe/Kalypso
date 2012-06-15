@@ -489,7 +489,7 @@
                id="overlay"
                modelPath=".models/overlay.gml">
          </scenarioDatum>
-         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.NAHydrotop" id="hydrotopes" modelPath=".models/hydrotop.gml"/>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.HydrotopeCollection" id="hydrotopes" modelPath=".models/hydrotop.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection" id="timeseriesMapppings" modelPath=".models/timeseriesMappings.gml">
          </scenarioDatum>
          <scenarioDatum

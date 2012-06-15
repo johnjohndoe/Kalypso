@@ -139,12 +139,17 @@ public class BasicModelConverter extends AbstractLoggingOperation
     copyFile( new Path( INaProjectConstants.GML_PARAMETER_FILE ), basisPath.append( INaProjectConstants.GML_PARAMETER_PATH ) );
     copyFile( new Path( "calcSynthN.gml" ), basisPath.append( INaProjectConstants.GML_SYNTH_N_PATH ) ); //$NON-NLS-1$
     final File landuse = copyFile( new Path( INaProjectConstants.GML_LANDUSE_FILE ), basisPath.append( INaProjectConstants.GML_LANDUSE_PATH ) );
-    copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
+    final File geology = copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
     copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_PEDOLOGIE_PATH ) );
 
-    new RemoveObsoleteHydrotopesMembers( hydrotope ).execute( new NullProgressMonitor() );
-    new RemoveObsoleteLanduseMembers( landuse ).execute( new NullProgressMonitor() );
+    final IStatus convertHydrotopesStatus = new ConvertHydrotopesOperation( hydrotope ).execute( new NullProgressMonitor() );
+    getLog().add( convertHydrotopesStatus );
 
+    final IStatus convertLanduseStatus = new ConvertLanduseOperation( landuse ).execute( new NullProgressMonitor() );
+    getLog().add( convertLanduseStatus );
+
+    final IStatus convertGeologyStatus = new ConvertGeologyOperation( geology ).execute( new NullProgressMonitor() );
+    getLog().add( convertGeologyStatus );
   }
 
   private TimeseriesIndex copyBasicTimeseries( final IParameterTypeIndex parameterIndex, final IProgressMonitor monitor ) throws CoreException
