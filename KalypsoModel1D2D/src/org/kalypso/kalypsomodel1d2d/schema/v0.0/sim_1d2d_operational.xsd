@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		Provide schema for the operational model @author Patrice Congo @author
+		Antanaskovic Dejan
+	-->
+
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import namespace="http://www.opengis.net/om" />
+	<xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
+	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation" />
+
+	<!--
+		======================================================== Operational
+		Model ==========================================================
+	-->
+	<xs:element name="OperationalModel" type="op1d2d:OperationalModelType"
+		substitutionGroup="simBase:OperationalModel">
+	</xs:element>
+	<xs:complexType name="OperationalModelType">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractOperationalModelType">
+				<xs:sequence>
+					<xs:element name="boundaryZone1" type="gml:PointPropertyType"
+						minOccurs="0" maxOccurs="1" />
+
+					<xs:element name="boundaryZone2" type="gml:PointPropertyType"
+						minOccurs="0" maxOccurs="1" />
+
+					<xs:element ref="op1d2d:boundaryCondition" minOccurs="0"
+						maxOccurs="unbounded" />
+
+					<xs:element ref="op1d2d:initialCondition" minOccurs="0"
+						maxOccurs="unbounded" />
+
+					<xs:element ref="op1d2d:operationalModel" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!--
+		=================================================================
+
+		==================================================================
+	-->
+	<xs:element name="operationalModel" type="op1d2d:OperationalModelPropertyType" />
+	<xs:complexType name="OperationalModelPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Property to hold an InitialCondition element, or a
+				substitute
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="op1d2d:OperationalModel" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!--
+		======================================================= Initial
+		condition ========================================================
+	-->
+	<xs:element name="initialCondition" type="op1d2d:InitialConditionPropertyType" />
+	<xs:complexType name="InitialConditionPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Property to hold an InitialCondition element, or a
+				substitute
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="op1d2d:InitialCondition" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!--  Is it still used? There is no content,no docuemntation, ... -->
+	<xs:element name="InitialCondition" type="op1d2d:InitialConditionType"
+		substitutionGroup="gml:_Feature">
+	</xs:element>
+	<xs:complexType name="InitialConditionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!--
+		================================================ Boundary conditions
+		==================================================
+	-->
+	<xs:element name="boundaryCondition" type="op1d2d:BoundaryConditionPropertyType" />
+	<xs:complexType name="BoundaryConditionPropertyType">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="op1d2d:BoundaryCondition" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:element name="AbstractBoundaryCondition" type="op1d2d:AbstractBoundaryConditionType"
+		abstract="true" substitutionGroup="simBase:_FlowRelationship" />
+
+	<xs:complexType name="AbstractBoundaryConditionType">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractFlowRelationshipType">
+				<xs:sequence>
+					<xs:element name="absolute" type="xs:boolean" nillable="true">
+						<xs:annotation>
+							<xs:documentation>
+								Absolute value
+								
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="hasDirection" type="xs:boolean"
+						nillable="true">
+						<xs:annotation>
+							<xs:documentation>
+
+								direction restricted
+
+								boundary condition is direction restricted (e.g. sideflow)
+
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="direction" type="gml:DegreeValueType"
+						nillable="true">
+						<xs:annotation>
+								
+							<xs:documentation>
+
+								Direction of this boundary condition
+								
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="inflowVelocity" type="xs:double"
+						nillable="true">
+						<xs:annotation>
+							<xs:documentation>
+
+								inflow velocity
+								
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="observation"
+						type="obs1d2d:ObservationWithSourcePropertyType">
+						<xs:annotation>
+							<xs:documentation>
+
+								Observation
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<!--
+						bcType: type of boundary condition, ie. is it nodal, element-based
+						or line-based acceptable types are defined in IBoundaryCondition
+						interface
+					-->
+					<xs:element name="bcType" type="xs:string" minOccurs="0"
+						maxOccurs="1" />
+					<xs:element name="parentModelElement" type="xs:string"
+						minOccurs="0" maxOccurs="1" />
+					<xs:element name="parentCalculationUnit" type="xs:string"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="stationaryCondition" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>
+
+								Stationäre Randbedingung
+								
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="BoundaryCondition" type="op1d2d:BoundaryConditionType"
+		substitutionGroup="op1d2d:AbstractBoundaryCondition">
+		<xs:annotation>
+			<xs:documentation>
+
+				BoundaryCondition for FE-Net
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="BoundaryConditionType">
+		<xs:complexContent>
+			<xs:extension base="op1d2d:AbstractBoundaryConditionType" />
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>
