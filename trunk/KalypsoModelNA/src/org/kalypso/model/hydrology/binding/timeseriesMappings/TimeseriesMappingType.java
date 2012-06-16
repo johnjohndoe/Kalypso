@@ -51,6 +51,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypsodeegree.model.feature.Feature;
@@ -58,9 +59,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 public enum TimeseriesMappingType
 {
-  gaugeMeasurement("Gauge measurement", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_PEGEL_ZR),
-  nodeInflow("Node inflow", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_ZUFLUSS_ZR),
-  storageEvaporation("Storage evaporation", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED, StorageChannel.PROPERTY_SEA_EVAPORATION_ZMLLINK);
+  gaugeMeasurement(Messages.getString("TimeseriesMappingType_0"), Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_PEGEL_ZR), //$NON-NLS-1$
+  nodeInflow(Messages.getString("TimeseriesMappingType_1"), Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_ZUFLUSS_ZR), //$NON-NLS-1$
+  storageEvaporation(Messages.getString("TimeseriesMappingType_2"), StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED, StorageChannel.PROPERTY_SEA_EVAPORATION_ZMLLINK); //$NON-NLS-1$
 
   private String m_label;
 
