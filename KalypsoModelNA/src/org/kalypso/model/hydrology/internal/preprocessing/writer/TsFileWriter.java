@@ -262,6 +262,7 @@ public class TsFileWriter
       return null;
 
     final String href = link.getHref();
+
     final String hrefWithFilter = filter == null ? href : ZmlURL.insertFilter( href, filter );
 
     final URL location = UrlResolverSingleton.getDefault().resolveURL( zmlContext, hrefWithFilter );
