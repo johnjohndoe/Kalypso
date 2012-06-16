@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
@@ -144,7 +144,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
   }
 
   /**
-   * Returns the ASCII timeserie file name (without path), or null if no link is provided or writing error occurs
+   * Returns the ASCII timeserie file name (without path), or the empty if no link is provided or writing error occurs
    */
   private String processTimeserieFile( final StorageChannel channel ) throws NAPreprocessorException
   {
@@ -155,6 +155,9 @@ public class HRBFileWriter extends AbstractCoreFileWriter
         return StringUtils.EMPTY;
 
       final String zmlHref = seaEvaporationTimeseriesLink.getHref();
+      if( StringUtils.isBlank( zmlHref ) )
+        return StringUtils.EMPTY;
+
       if( !m_timseriesMap.containsKey( zmlHref ) )
       {
         final int asciiID = m_idManager.getAsciiID( channel );
