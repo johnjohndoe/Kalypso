@@ -80,7 +80,7 @@ public class TimeseriesMappingTypeUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTreeLabel( )
   {
-    return Messages.getString("TimeseriesMappingTypeUiHandler_1") + m_mappingType.getLabel(); //$NON-NLS-1$
+    return Messages.getString( "TimeseriesMappingTypeUiHandler_1", m_mappingType.getLabel() ); //$NON-NLS-1$
   }
 
   @Override
