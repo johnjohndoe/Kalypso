@@ -62,7 +62,7 @@ public class Landuse extends Feature_Impl
 
   public static final QName LINK_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE_11_6, "landuseclassLink" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_CORRSEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
+  public static final QName PROPERTY_CORRSEALING = new QName( NaModelConstants.NS_NAHYDROTOP_11_6, "corrSealing" ); //$NON-NLS-1$
 
   public Landuse( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
