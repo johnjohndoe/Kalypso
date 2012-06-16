@@ -50,8 +50,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
- * Binding class for {http://www.tuhh.de/hydrotop}NAHydrotop
- *
+ * Binding class for {http://sourceforge.kalypso.org/schemata/hydrology/hydrotope}HydrotopeCollection
+ * 
  * @author Gernot Belger
  */
 public class HydrotopeCollection extends UnversionedModel

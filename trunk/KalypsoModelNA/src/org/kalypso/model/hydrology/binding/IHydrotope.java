@@ -72,7 +72,13 @@ public interface IHydrotope extends Feature
 
   QName LINK_CATCHMENT = new QName( NaModelConstants.NS_NAMODELL, "catchmentLinkMember" ); //$NON-NLS-1$
 
-  QName LINK_DRWBM_DEFINITION = new QName( NaModelConstants.NS_NAHYDROTOP, "lnkDefinition" ); //$NON-NLS-1$
+  QName LINK_LANDUSE = new QName( NaModelConstants.NS_NAHYDROTOP, "landuseLink" ); //$NON-NLS-1$
+
+  QName LINK_PEDOLOGY = new QName( NaModelConstants.NS_NAHYDROTOP, "pedologyLink" ); //$NON-NLS-1$
+
+  QName LINK_GEOLOGY = new QName( NaModelConstants.NS_NAHYDROTOP, "geologyLink" ); //$NON-NLS-1$
+
+  QName LINK_OVERLAY = new QName( NaModelConstants.NS_NAHYDROTOP, "overlayLink" ); //$NON-NLS-1$
 
   GM_MultiSurface getGeometry( );
 
@@ -98,11 +104,23 @@ public interface IHydrotope extends Feature
 
   void setGWFactor( final double value );
 
-  IXLinkedFeature getCatchmentMember( );
+  IXLinkedFeature getCatchmentLink( );
 
-  void setCatchmentMember( final String href );
+  void setCatchmentLink( final String href );
 
-  void setDRWBMDefinition( final String href );
+  IXLinkedFeature getLanduseLink( );
 
-  IXLinkedFeature getDRWBMDefinition( );
+  void setLanduseLink( final String href );
+
+  IXLinkedFeature getPedologyLink( );
+
+  void setPedologyLink( final String href );
+
+  IXLinkedFeature getGeologyLink( );
+
+  void setGeologyLink( final String href );
+
+  IXLinkedFeature getOverlayLink( );
+
+  void setOverlayLink( final String href );
 }
