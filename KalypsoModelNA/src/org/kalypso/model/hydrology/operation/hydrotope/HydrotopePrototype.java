@@ -50,6 +50,7 @@ import org.kalypso.model.hydrology.binding.OverlayElement;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -116,10 +117,25 @@ public class HydrotopePrototype
     final String name = String.format( "Hydrotope %d", count );
     hydrotope.setName( name );
 
-    final String catchmentId = getCatchmentId();
-    final String catchmentRef = String.format( "modell.gml#%s", catchmentId ); //$NON-NLS-1$
-    hydrotope.setCatchmentMember( catchmentRef );
+    final String catchmentRef = String.format( "%s#%s", RrmScenario.FILE_MODELL_GML, m_catchment.getId() ); //$NON-NLS-1$
+    hydrotope.setCatchmentLink( catchmentRef );
 
+    final String landuseRef = String.format( "%s#%s", RrmScenario.FILE_LANDUSE, m_landuse.getId() ); //$NON-NLS-1$
+    hydrotope.setLanduseLink( landuseRef );
+
+    final String pedologyRef = String.format( "%s#%s", RrmScenario.FILE_PEDOLOGIE, m_pedology.getId() ); //$NON-NLS-1$
+    hydrotope.setPedologyLink( pedologyRef );
+
+    final String geologyRef = String.format( "%s#%s", RrmScenario.FILE_GEOLOGIE, m_geology.getId() ); //$NON-NLS-1$
+    hydrotope.setGeologyLink( geologyRef );
+
+    if( m_overlay != null )
+    {
+      final String overlayRef = String.format( "%s#%s", RrmScenario.FILE_OVERLAY, m_overlay.getId() ); //$NON-NLS-1$
+      hydrotope.setOverlayLink( overlayRef );
+    }
+
+    /* Values: FIXME: remove */
     final String landuseClassName = getLanduseClass();
     if( landuseClassName != null )
       hydrotope.setLanduse( landuseClassName );
@@ -133,18 +149,16 @@ public class HydrotopePrototype
     hydrotope.setMaxPerkolationRate( getMaxPerkulationRate() );
 
     hydrotope.setGWFactor( getGroundwaterFactor() );
-
-    final String drwbDefinitionRef = getDRWBMDefinition();
-    hydrotope.setDRWBMDefinition( drwbDefinitionRef );
   }
 
   public String buildAttributeHashKey( )
   {
     final StringBuilder buffer = new StringBuilder();
 
+    // FIXME: in future we can only hash by features instead
+
     /* catchment */
-    final String catchmentId = getCatchmentId();
-    buffer.append( catchmentId );
+    buffer.append( m_catchment.getId() );
 
     buffer.append( '#' );
 
@@ -158,11 +172,6 @@ public class HydrotopePrototype
     buffer.append( soilTypeClassName );
     buffer.append( '#' );
 
-    /* overlay */
-    final String drwbDefinitionRef = getDRWBMDefinition();
-    buffer.append( drwbDefinitionRef );
-    buffer.append( '#' );
-
     /* numeric values */
     // FIXME: REMARK: using 3 decimal points for all values to build hash.
     buffer.append( String.format( "%.3f", getSealingfactor() ) );
@@ -174,18 +183,6 @@ public class HydrotopePrototype
     return buffer.toString();
   }
 
-  private String getDRWBMDefinition( )
-  {
-    if( m_overlay == null )
-      return null;
-
-    final IXLinkedFeature drwbmDefinition = m_overlay.getDRWBMDefinition();
-    if( drwbmDefinition == null )
-      return null;
-
-    return drwbmDefinition.getHref();
-  }
-
   private String getSoilTypeClass( )
   {
     final IXLinkedFeature soiltypeClass = m_pedology.getSoilType();
@@ -193,11 +190,6 @@ public class HydrotopePrototype
       return null;
 
     return soiltypeClass.getName();
-  }
-
-  private String getCatchmentId( )
-  {
-    return m_catchment.getId();
   }
 
   /**

@@ -83,6 +83,8 @@ class HydrotopeCreationInputValidation implements ICoreRunnableWithProgress
 
       final IStatus status = validateIndex( input, subTask );
       log.add( status );
+
+      progress.worked( 1 );
     }
 
     return log.asMultiStatus( m_logLabel );

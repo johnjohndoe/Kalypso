@@ -51,8 +51,8 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
-import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
+import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -108,7 +108,7 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     final String stepIndex = formatStep( 1, 6, "Initialisation" );
     progress.setTaskName( stepIndex );
     final HydrotopeInputIndexer geometryIndexer = configureIndexer( stepIndex );
-    final IStatus initStatus = geometryIndexer.execute( progress.newChild( 10 ) );
+    final IStatus initStatus = geometryIndexer.execute( progress.newChild( 5 ) );
     log.add( initStatus );
 
     /* Input validation */
@@ -116,7 +116,7 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     progress.setTaskName( stepValidate );
     final IHydrotopeInput[] indices = geometryIndexer.getIndices();
     final HydrotopeCreationInputValidation geometryValidator = new HydrotopeCreationInputValidation( indices, stepValidate );
-    final IStatus validationStatus = geometryValidator.execute( progress.newChild( 10 ) );
+    final IStatus validationStatus = geometryValidator.execute( progress.newChild( 15 ) );
     log.add( validationStatus );
     if( validationStatus.matches( IStatus.ERROR ) )
     {
@@ -128,7 +128,7 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     final String stepIntersect = formatStep( 3, 6, Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.1" ) ); //$NON-NLS-1$
     progress.setTaskName( stepIntersect );
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector( indices, stepIntersect );
-    final IStatus intersectorStatus = geometryIntersector.execute( progress.newChild( 40 ) );
+    final IStatus intersectorStatus = geometryIntersector.execute( progress.newChild( 50 ) );
     log.add( intersectorStatus );
 
     /* Dissolve */
@@ -136,7 +136,7 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     progress.setTaskName( stepDissolve );
     final List<Polygon> intersectionList = geometryIntersector.getResult();
     final HydrotopeDissolver dissolver = new HydrotopeDissolver( intersectionList, stepDissolve );
-    final IStatus dissolveStatus = dissolver.execute( progress.newChild( 50 ) );
+    final IStatus dissolveStatus = dissolver.execute( progress.newChild( 20 ) );
     log.add( dissolveStatus );
 
     /* Build hydrotopes */
@@ -144,14 +144,14 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     progress.setTaskName( stepBuildHydrotopes );
     final Collection<HydrotopeUserData> hydrotopeBeans = dissolver.getResult();
     final HydrotopeBuilder hydrotopeBuilder = new HydrotopeBuilder( hydrotopeBeans, m_hydrotopes, stepBuildHydrotopes );
-    final IStatus buildStatus = hydrotopeBuilder.execute( progress.newChild( 10 ) );
+    final IStatus buildStatus = hydrotopeBuilder.execute( progress.newChild( 5 ) );
     log.add( buildStatus );
 
     /* Validate hydrotopes */
     final String stepValidateHydrotopes = formatStep( 6, 6, "Validate Hydrotopes" );
     progress.setTaskName( stepValidateHydrotopes );
     final HydrotopeValidator hydrotopeValidator = new HydrotopeValidator( m_hydrotopes, m_naModel, stepValidateHydrotopes );
-    final IStatus validationHydrotopesStatus = hydrotopeValidator.execute( progress.newChild( 10 ) );
+    final IStatus validationHydrotopesStatus = hydrotopeValidator.execute( progress.newChild( 5 ) );
     log.add( validationHydrotopesStatus );
 
     return log.asMultiStatus( taskName );

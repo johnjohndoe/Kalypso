@@ -49,8 +49,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
+import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -125,7 +125,7 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
     {
       final GM_MultiSurface geometry = hydrotope.getGeometry();
       final double area = geometry.getArea();
-      final IXLinkedFeature catchmentLink = hydrotope.getCatchmentMember();
+      final IXLinkedFeature catchmentLink = hydrotope.getCatchmentLink();
       final Catchment catchment = (Catchment) catchmentLink.getFeature();
 
       final Double oldSum = areaSums.get( catchment );

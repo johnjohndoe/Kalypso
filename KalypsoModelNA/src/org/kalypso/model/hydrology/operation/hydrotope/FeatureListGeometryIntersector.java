@@ -168,7 +168,7 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
       }
       else if( relate.isIntersects() && !relate.isTouches( dim1, dim2 ) )
       {
-        Geometry intersection = buildIntersection( sourcePolygon, targetPolygon, log );
+        Geometry intersection = forceIntersection( sourcePolygon, targetPolygon, log );
 
         try
         {
@@ -209,7 +209,7 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
     result.add( polygon );
   }
 
-  private Geometry buildIntersection( final Polygon sourcePolygon, final Polygon targetPolygon, final IStatusCollector log )
+  static Geometry forceIntersection( final Polygon sourcePolygon, final Polygon targetPolygon, final IStatusCollector log )
   {
     // try intersection
     try
@@ -241,7 +241,8 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
           final String targetLabel = ((HydrotopeUserData) targetPolygon.getUserData()).toErrorString();
 
           final String message = Messages.getString( "FeatureListGeometryIntersector.5", sourceLabel, targetLabel );
-          log.add( IStatus.ERROR, message, e2 );
+          if( log != null )
+            log.add( IStatus.ERROR, message, e2 );
           return null;
         }
       }
