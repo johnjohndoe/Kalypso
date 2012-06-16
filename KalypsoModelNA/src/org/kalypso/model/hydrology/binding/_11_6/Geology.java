@@ -59,9 +59,9 @@ public class Geology extends Feature_Impl
 
   public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAGEOLOGIE_11_6, "location" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_MAXPERKULATIONSRATE = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_MAXPERKULATIONSRATE = new QName( NaModelConstants.NS_NAHYDROTOP_11_6, "m_perkm" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GWFACTOR = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_GWFACTOR = new QName( NaModelConstants.NS_NAHYDROTOP_11_6, "m_f1gws" ); //$NON-NLS-1$
 
   public Geology( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
