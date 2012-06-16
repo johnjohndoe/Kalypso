@@ -89,9 +89,9 @@
     <gridLayout numColumns="3" />
 
     <label style="SWT.WRAP" visible="true" text="%hydrotopes.gft.label.deprecatedValues" tooltip="%hydrotopes.gft.label.deprecatedValues">
-      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" horizontalSpan="3" verticalSpan="2"/>
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" horizontalSpan="3" verticalSpan="2" />
     </label>
-    
+
     <label property="rrmHydrotop:landuse" style="SWT.NONE" visible="true">
       <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </label>

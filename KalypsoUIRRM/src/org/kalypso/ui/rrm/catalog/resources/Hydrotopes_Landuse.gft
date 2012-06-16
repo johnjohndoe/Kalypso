@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<featureview xmlns:rrmLanduse="http://sourceforge.kalypso.org/schemata/hydrology/landuse" typename="rrmLanduse:Landuse" style="SWT.NONE" xmlns="featureview.template.kalypso.org">
+<featureview xmlns:rrmLanduse="http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2" typename="rrmLanduse:Landuse" style="SWT.NONE" xmlns="featureview.template.kalypso.org">
   <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
   <gridLayout numColumns="3" />
 
@@ -23,14 +23,14 @@
     <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 
-  <label xmlns:rrmHydrotop="http://www.tuhh.de/hydrotop" property="rrmHydrotop:corrSealing" style="SWT.NONE" visible="true">
+  <label property="rrmLanduse:corrSealing" style="SWT.NONE" visible="true">
     <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
-  <text xmlns:rrmHydrotop="http://www.tuhh.de/hydrotop" editable="true" property="rrmHydrotop:corrSealing" style="SWT.BORDER | SWT.RIGHT">
+  <text editable="true" property="rrmLanduse:corrSealing" style="SWT.BORDER | SWT.RIGHT">
     <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
     <format>%.2f</format>
   </text>
-  <validatorlabel xmlns:rrmHydrotop="http://www.tuhh.de/hydrotop" property="rrmHydrotop:corrSealing" style="SWT.NONE" visible="true">
+  <validatorlabel property="rrmLanduse:corrSealing" style="SWT.NONE" visible="true">
     <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
   

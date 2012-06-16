@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for {http://www.tuhh.de/hydrotop}Hydrotop<br/>
+ * Binding class for {http://sourceforge.kalypso.org/schemata/hydrology/hydrotope}Hydrotope
  * 
  * @author Dejan Antanaskovic
  */
@@ -131,26 +131,62 @@ public class Hydrotope extends Feature_Impl implements IHydrotope
   }
 
   @Override
-  public IXLinkedFeature getCatchmentMember( )
+  public IXLinkedFeature getCatchmentLink( )
   {
     return getProperty( LINK_CATCHMENT, IXLinkedFeature.class );
   }
 
   @Override
-  public void setCatchmentMember( final String href )
+  public void setCatchmentLink( final String href )
   {
     setLink( LINK_CATCHMENT, href );
   }
 
   @Override
-  public void setDRWBMDefinition( final String href )
+  public IXLinkedFeature getLanduseLink( )
   {
-    setLink( LINK_DRWBM_DEFINITION, href );
+    return getProperty( LINK_LANDUSE, IXLinkedFeature.class );
   }
 
   @Override
-  public IXLinkedFeature getDRWBMDefinition( )
+  public void setLanduseLink( final String href )
   {
-    return (IXLinkedFeature) getMember( LINK_DRWBM_DEFINITION );
+    setLink( LINK_LANDUSE, href );
+  }
+
+  @Override
+  public IXLinkedFeature getPedologyLink( )
+  {
+    return getProperty( LINK_PEDOLOGY, IXLinkedFeature.class );
+  }
+
+  @Override
+  public void setPedologyLink( final String href )
+  {
+    setLink( LINK_PEDOLOGY, href );
+  }
+
+  @Override
+  public IXLinkedFeature getGeologyLink( )
+  {
+    return getProperty( LINK_GEOLOGY, IXLinkedFeature.class );
+  }
+
+  @Override
+  public void setGeologyLink( final String href )
+  {
+    setLink( LINK_GEOLOGY, href );
+  }
+
+  @Override
+  public IXLinkedFeature getOverlayLink( )
+  {
+    return getProperty( LINK_OVERLAY, IXLinkedFeature.class );
+  }
+
+  @Override
+  public void setOverlayLink( final String href )
+  {
+    setLink( LINK_OVERLAY, href );
   }
 }

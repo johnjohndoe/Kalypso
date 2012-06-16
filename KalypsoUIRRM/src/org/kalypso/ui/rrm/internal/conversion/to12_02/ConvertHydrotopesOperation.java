@@ -138,7 +138,7 @@ public class ConvertHydrotopesOperation implements ICoreRunnableWithProgress
 
       final IXLinkedFeature catchmentReference = oldHydrotope.getCatchmentMember();
       if( catchmentReference != null )
-        newHydrotope.setCatchmentMember( catchmentReference.getHref() );
+        newHydrotope.setCatchmentLink( catchmentReference.getHref() );
     }
   }
 }

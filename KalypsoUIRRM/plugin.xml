@@ -40,9 +40,6 @@
 
 	    <!-- Map Outline -->
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" name="%command.name.3"/>
-		<!--
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.model.rrm.ui.map.outline.command.FixHydrotopes" name="Fix Hydrotopes" description="Fixes old hydrotope files (i.e. sets links to catchments)"/>
-		-->
 	</extension>
 
 	 <extension  point="org.eclipse.ui.commandImages">
@@ -72,13 +69,6 @@
 				<reference definitionId="org.kalypso.ui.rrm.definition.oneHydrotopeThemeSelected"/>
 			</activeWhen>
 		</handler>
-		<!--
-		<handler commandId="org.kalypso.model.rrm.ui.map.outline.command.FixHydrotopes" class="org.kalypso.ui.rrm.action.FixHydrotopesHandler">
-			<activeWhen>
-				<reference definitionId="org.kalypso.ui.rrm.definition.oneHydrotopeThemeSelected"/>
-			</activeWhen>
-		</handler>
-		-->
 	</extension>
 
 	<extension point="org.eclipse.ui.menus">
@@ -88,11 +78,6 @@
                    <reference definitionId="org.kalypso.ui.rrm.definition.oneHydrotopeThemeSelected"/>
 				</visibleWhen>
 			</command>
-			<!--
-			<command commandId="org.kalypso.model.rrm.ui.map.outline.command.FixHydrotopes" style="push">
-				<visibleWhen checkEnabled="true"/>
-			</command>
-			-->
 		</menuContribution>
 
    		<menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline?after=additions">
@@ -165,7 +150,7 @@
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
                         <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
-						  <test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/hydrotop}Hydrotop"/>
+						  <test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/hydrotope}Hydrotope"/>
                         </adapt>
 					</iterate>
 				</and>

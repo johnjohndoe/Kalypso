@@ -7,7 +7,7 @@
   <uri name="org.kalypso.namodell.control" uri="schema/gml/11.6/nacontrol.xsd" />
   <uri name="http://org.kalypso.ombrometer" uri="schema/gml/11.6/ombrometer.xsd" />
   <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/landuse" uri="schema/gml/11.6/landuse.xsd" />
-  <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/pedologie" uri="schema/gml/11.6/pedologie.xsd" />
+  <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/pedology" uri="schema/gml/11.6/pedologie.xsd" />
   <uri name="http://sourceforge.kalypso.org/schemata/hydrology/geologie" uri="schema/gml/11.6/geologie.xsd" />
   <uri name="http://www.tuhh.de/hydrotop" uri="schema/gml/11.6/hydrotop.xsd" />
 

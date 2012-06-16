@@ -8,8 +8,8 @@
   <import namespace="http://www.tuhh.de/parameter" />
   <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" />
 
-  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/landuse" />
-  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/geologie" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/geology" />
   <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/pedologie" />
   <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" />
 
@@ -46,7 +46,7 @@
             <element name="landuseLink" minOccurs="0">
               <complexType>
                 <sequence>
-                  <element ref="landuse:Landuse" minOccurs="0" maxOccurs="0" xmlns:landuse="http://sourceforge.kalypso.org/schemata/hydrology/landuse" />
+                  <element ref="landuse:Landuse" minOccurs="0" maxOccurs="0" xmlns:landuse="http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2" />
                 </sequence>
                 <attributeGroup ref="gml:AssociationAttributeGroup" />
               </complexType>
@@ -69,7 +69,7 @@
             <element name="geologyLink" minOccurs="0">
               <complexType>
                 <sequence>
-                  <element ref="geology:Geologie" minOccurs="0" maxOccurs="0" xmlns:geology="http://sourceforge.kalypso.org/schemata/hydrology/geologie" />
+                  <element ref="geology:Geology" minOccurs="0" maxOccurs="0" xmlns:geology="http://sourceforge.kalypso.org/schemata/hydrology/geology" />
                 </sequence>
                 <attributeGroup ref="gml:AssociationAttributeGroup" />
               </complexType>
