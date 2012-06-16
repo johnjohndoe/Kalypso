@@ -94,7 +94,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     final RRM_RESULT_TYPE type = result.getType();
     switch( type )
     {
-    // FIXME i18n - english project template
+      // FIXME i18n - english project template
 
       case eCatchment:
         m_file = calcCaseFolder.getFile( String.format( "/Teilgebiet/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
@@ -120,9 +120,13 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
   {
     m_simulation = simulation;
     m_parent = parent;
-    if( link != null )
+
+    final String href = link == null ? null : link.getHref();
+
+    if( !StringUtils.isBlank( href ) )
     {
-      final URL url = UrlResolverSingleton.resolveUrl( context, link.getHref() );
+      // FIXME: use ZmlLink instead of TimeseriesLinkType
+      final URL url = UrlResolverSingleton.resolveUrl( context, href );
 
       m_file = ResourceUtilities.findFileFromURL( url );
     }
