@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.gml;
 
@@ -94,27 +94,27 @@ public class StorageChannelValidator
   private void validateWaterlevel( )
   {
     final IAxis axisNN = ObservationUtilities.findAxisByTypeNoEx( m_axes, ITimeseriesConstants.TYPE_NORMNULL );
-    validateRequiredAxis( axisNN );
+    validateRequiredAxis( axisNN, ITimeseriesConstants.TYPE_NORMNULL );
   }
 
   private void validateVolume( )
   {
     final IAxis axisV = ObservationUtilities.findAxisByTypeNoEx( m_axes, ITimeseriesConstants.TYPE_VOLUME );
-    validateRequiredAxis( axisV );
+    validateRequiredAxis( axisV, ITimeseriesConstants.TYPE_VOLUME );
   }
 
   private void validateDischarge( )
   {
     final IAxis axisQ = ObservationUtilities.findAxisByNameNoEx( m_axes, ZmlWQVInlineTypeHandler.AXIS_NAME_ABFLUSS );
-    validateRequiredAxis( axisQ );
+    validateRequiredAxis( axisQ, ZmlWQVInlineTypeHandler.AXIS_NAME_ABFLUSS );
   }
 
-  private void validateRequiredAxis( final IAxis axis )
+  private void validateRequiredAxis( final IAxis axis, final String axisName )
   {
     final boolean hasWaterlevelValues = findValues( m_wvqObservation, axis );
-    if( !hasWaterlevelValues )
+    if( !hasWaterlevelValues || axis == null )
     {
-      final String msg = String.format( Messages.getString( "StorageChannelValidator_3" ), axis.getName() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "StorageChannelValidator_3" ), axisName ); //$NON-NLS-1$
       m_log.add( IStatus.ERROR, msg );
     }
   }
