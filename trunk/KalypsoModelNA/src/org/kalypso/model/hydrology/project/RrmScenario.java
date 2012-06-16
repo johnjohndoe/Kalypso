@@ -62,7 +62,7 @@ public class RrmScenario
 
   private static final String FOLDER_ANFANGSWERTE = "Anfangswerte"; //$NON-NLS-1$
 
-  private static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
+  public static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
 
   private static final String FILE_EXPERT_CONTROL_GML = "expertControl.gml"; //$NON-NLS-1$
 
@@ -70,16 +70,16 @@ public class RrmScenario
 
   private static final String FILE_HYDROTOP_GML = "hydrotop.gml"; //$NON-NLS-1$
 
-  private static final String FILE_GEOLOGIE = "geologie.gml";//$NON-NLS-1$
+  public static final String FILE_GEOLOGIE = "geologie.gml";//$NON-NLS-1$
 
-  private static final String FILE_LANDUSE = "landuse.gml";//$NON-NLS-1$
+  public static final String FILE_LANDUSE = "landuse.gml";//$NON-NLS-1$
 
-  private static final String FILE_PEDOLOGIE = "pedologie.gml";//$NON-NLS-1$
+  public static final String FILE_PEDOLOGIE = "pedologie.gml";//$NON-NLS-1$
 
   @Deprecated
   private static final String FILE_SUDS_GML = "suds.gml"; //$NON-NLS-1$
 
-  private static final String FILE_OVERLAY = "overlay.gml"; //$NON-NLS-1$
+  public static final String FILE_OVERLAY = "overlay.gml"; //$NON-NLS-1$
 
   private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
 

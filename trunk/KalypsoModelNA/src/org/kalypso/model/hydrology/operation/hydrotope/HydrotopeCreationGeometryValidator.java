@@ -110,16 +110,14 @@ public class HydrotopeCreationGeometryValidator
 
         if( polygon.overlaps( other ) )
         {
-          final Geometry intersection = polygon.intersection( other );
+          final Geometry intersection = FeatureListGeometryIntersector.forceIntersection( polygon, other, log );
 
-// final double polygonArea = polygon.getArea();
-// final double otherArea = other.getArea();
+          // final double polygonArea = polygon.getArea();
+          // final double otherArea = other.getArea();
           final double intersectionArea = intersection.getArea();
 
-// if( intersectionArea > polygonArea || intersectionArea > otherArea )
-// {
-// System.out.println( "oups" );
-// }
+          // if( intersectionArea > polygonArea || intersectionArea > otherArea )
+          // System.out.println( "oups" );
 
           if( intersectionArea > FeatureListGeometryIntersector.MIN_AREA )
           {
