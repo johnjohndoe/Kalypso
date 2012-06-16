@@ -282,7 +282,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     // FIXME: landuse and others?
 
-    new ConvertHydrotopesOperation( hydrotope ).execute( new NullProgressMonitor() );
+    getLog().add( new ConvertHydrotopesOperation( hydrotope ).execute( new NullProgressMonitor() ) );
 
     /* Copy special directories into the calccases/calccase folder of the scenario. */
     copyDir( INaCalcCaseConstants.ANFANGSWERTE_DIR, m_simulationPath + "/" + INaCalcCaseConstants.ANFANGSWERTE_DIR, false ); //$NON-NLS-1$
