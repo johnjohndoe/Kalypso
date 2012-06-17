@@ -84,9 +84,11 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
 
     final String taskName = "Validating hydrotopes";
 
-    final SubMonitor progress = SubMonitor.convert( monitor, taskName, 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, taskName, 110 );
 
+    progress.subTask( "Building index" );
     final SpatialIndexExt hydrotopeIndex = buildOutputIndex();
+    progress.worked( 10 );
 
     final HydrotopeCreationGeometryValidator validator = new HydrotopeCreationGeometryValidator( "Hydrotopes", hydrotopeIndex );
 
@@ -94,6 +96,7 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
 
     log.add( validator.checkSelfIntersection( progress.newChild( 33 ) ) );
 
+    progress.subTask( "Checking coverage of catchments" );
     log.add( checkAgainstCatchments() );
     progress.done();
 

@@ -88,15 +88,17 @@ abstract class AbstractHydrotopeInput<T extends Feature> implements IHydrotopeIn
   {
     m_index = buildIndex( m_features, log );
 
+    int count = m_index.size();
+
     /*
-     * Sepcial case (mainly used for overlay): allow index to insert an 'inverse' element that covers the rest of the
-     * area
+     * Special case (mainly used for overlay): allow index to insert an 'inverse' element that covers the rest of the
+     * area.
      */
     final Polygon[] inverseMask = buildInverseMask();
     for( final Polygon mask : inverseMask )
     {
       // using 'null' feature here; inverse elements never have any attributes
-      mask.setUserData( new HydrotopeUserData( mask, null ) );
+      mask.setUserData( new HydrotopeUserData( count++, mask, null ) );
       m_index.insert( mask.getEnvelopeInternal(), mask );
     }
   }
@@ -106,6 +108,8 @@ abstract class AbstractHydrotopeInput<T extends Feature> implements IHydrotopeIn
     final Envelope boundingBox = JTSAdapter.export( features.getBoundingBox() );
 
     final SpatialIndexExt index = new SplitSortSpatialIndex( boundingBox );
+
+    int count = 0;
 
     for( final Feature feature : features )
     {
@@ -120,13 +124,15 @@ abstract class AbstractHydrotopeInput<T extends Feature> implements IHydrotopeIn
         for( final Polygon polygon : polygons )
         {
           polygon.setSRID( export.getSRID() );
-          polygon.setUserData( new HydrotopeUserData( polygon, feature ) );
+          polygon.setUserData( new HydrotopeUserData( count, polygon, feature ) );
 
           // FIXME: only add valid polygons:
           // - do not overlap with existing ones
           // - are topological correct
 
           index.insert( polygon.getEnvelopeInternal(), polygon );
+
+          count++;
         }
       }
       catch( final Exception e )

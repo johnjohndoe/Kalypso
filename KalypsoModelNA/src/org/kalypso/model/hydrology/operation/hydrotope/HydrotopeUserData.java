@@ -67,15 +67,18 @@ public class HydrotopeUserData
 
   private HydrotopePrototype m_prototype = null;
 
-  public HydrotopeUserData( final Polygon polygon, final Feature feature )
+  private final int m_count;
+
+  public HydrotopeUserData( final int count, final Polygon polygon, final Feature feature )
   {
-    this( new Polygon[] { polygon }, new Feature[] { feature } );
+    this( count, new Polygon[] { polygon }, new Feature[] { feature } );
   }
 
-  private HydrotopeUserData( final Polygon[] polygons, final Feature[] features )
+  private HydrotopeUserData( final int count, final Polygon[] polygons, final Feature[] features )
   {
     m_polygons = polygons;
     m_features = features;
+    m_count = count;
   }
 
   public HydrotopeUserData mergeGeometries( final HydrotopeUserData other )
@@ -83,14 +86,23 @@ public class HydrotopeUserData
     Arrays.equals( m_features, other.m_features );
 
     final Polygon[] newPolyogns = ArrayUtils.addAll( m_polygons, other.m_polygons );
-    return new HydrotopeUserData( newPolyogns, m_features );
+    return new HydrotopeUserData( -1, newPolyogns, m_features );
   }
 
   public HydrotopeUserData merge( final HydrotopeUserData other, final Polygon newGeometry )
   {
     final Feature[] newFeatures = ArrayUtils.addAll( m_features, other.m_features );
 
-    return new HydrotopeUserData( new Polygon[] { newGeometry }, newFeatures );
+    return new HydrotopeUserData( -1, new Polygon[] { newGeometry }, newFeatures );
+  }
+
+  /**
+   * Count of this element when was first created. -1 if it is a merged element. Used for performance optimization
+   * during geometry checks.
+   */
+  public int getCount( )
+  {
+    return m_count;
   }
 
   public String getHydrotopeHash( ) throws CoreException
