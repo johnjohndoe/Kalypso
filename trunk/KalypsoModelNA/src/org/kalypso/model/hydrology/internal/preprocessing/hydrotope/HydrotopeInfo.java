@@ -41,11 +41,12 @@
 package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
 import org.kalypso.model.hydrology.binding.IHydrotope;
+import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
 /**
- * Wrapper that holds {@link IHydrotope} with additional info about it's suds.
+ * Wrapper that holds {@link IHydrotope}.
  * 
  * @author Gernot Belger
  */
@@ -53,27 +54,37 @@ public class HydrotopeInfo
 {
   private final IHydrotope m_hydrotop;
 
-  private final LanduseHash m_landuseHash;
+  private final ParameterHash m_landuseHash;
 
   private final int m_localID;
 
   private Sealing m_sealing;
 
-  public HydrotopeInfo( final IHydrotope hydrotop, final LanduseHash landuseHash, final int localID )
+  public HydrotopeInfo( final IHydrotope hydrotop, final ParameterHash landuseHash, final int localID )
   {
     m_hydrotop = hydrotop;
     m_landuseHash = landuseHash;
     m_localID = localID;
   }
 
+  public Sealing getSealing( )
+  {
+    return m_sealing;
+  }
+
+  public String getFeatureId( )
+  {
+    return m_hydrotop.getId();
+  }
+
+  public String getName( )
+  {
+    return m_hydrotop.getName();
+  }
+
   public int getLocalID( )
   {
     return m_localID;
-  }
-
-  public IHydrotope getHydrotop( )
-  {
-    return m_hydrotop;
   }
 
   private double getSealingRate( ) throws SimulationException
@@ -107,8 +118,31 @@ public class HydrotopeInfo
       throw new SimulationException( String.format( "Hydrotop natural area is less than 0.0 m2: %.4f", naturalArea ) ); //$NON-NLS-1$
   }
 
-  public Sealing getSealing( )
+  public String getLanduseShortName( )
   {
-    return m_sealing;
+    return m_landuseHash.getLanduseFeatureShortedName( m_hydrotop.getLanduse() );
+  }
+
+  public double getMaxPerkolationRate( )
+  {
+    return m_hydrotop.getMaxPerkolationRate();
+  }
+
+  public double getGWFactor( )
+  {
+    return m_hydrotop.getGWFactor();
+  }
+
+  public Soiltype findSoiltype( )
+  {
+    final String soilTypeID = m_hydrotop.getSoilType();
+
+    return m_landuseHash.getSoilType( soilTypeID );
+  }
+
+  public String getSoilTypeName( )
+  {
+    final String soilTypeID = m_hydrotop.getSoilType();
+    return soilTypeID;
   }
 }

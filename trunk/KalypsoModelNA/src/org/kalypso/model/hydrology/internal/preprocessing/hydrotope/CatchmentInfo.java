@@ -61,11 +61,11 @@ public class CatchmentInfo
 
   private final Catchment m_catchment;
 
-  private final LanduseHash m_landuseHash;
+  private final ParameterHash m_landuseHash;
 
   private Sealing m_totalSealing;
 
-  public CatchmentInfo( final Catchment catchment, final LanduseHash landuseHash )
+  public CatchmentInfo( final Catchment catchment, final ParameterHash landuseHash )
   {
     m_catchment = catchment;
     m_landuseHash = landuseHash;
@@ -100,7 +100,7 @@ public class CatchmentInfo
 
   public String getHydroFeatureId( final int pos )
   {
-    return m_hydrotops.get( pos ).getHydrotop().getId();
+    return m_hydrotops.get( pos ).getFeatureId();
   }
 
   public Sealing getTotalSealing( )
@@ -117,5 +117,4 @@ public class CatchmentInfo
   {
     return m_catchment;
   }
-
 }

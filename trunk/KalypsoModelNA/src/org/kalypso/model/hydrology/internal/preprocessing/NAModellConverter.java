@@ -140,7 +140,7 @@ public class NAModellConverter
       final NutzungWriter nutzungManager = new NutzungWriter( m_asciiDirs.hydroTopDir );
       nutzungManager.writeFile( parameter, hydroHash );
 
-      final HydrotopeWriter hydrotopManager = new HydrotopeWriter( parameter, m_idManager, hydroHash, m_logger );
+      final HydrotopeWriter hydrotopManager = new HydrotopeWriter( m_idManager, hydroHash, m_logger );
       hydrotopManager.write( m_asciiDirs.hydrotopFile );
       // CHECK: do we still need this mapping file, what is it good for?
       // hydrotopManager.writeMapping( m_asciiDirs.hydrotopMappingFile );

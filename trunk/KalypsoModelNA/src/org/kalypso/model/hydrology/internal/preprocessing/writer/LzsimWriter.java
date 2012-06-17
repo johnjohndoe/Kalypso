@@ -55,7 +55,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.initialValues.Catchment;
 import org.kalypso.model.hydrology.binding.initialValues.Channel;
@@ -166,7 +165,7 @@ public class LzsimWriter
   {
     try
     {
-      final String lzgContent = String.format( Locale.US, LZG_FORMAT_STRING, iniDate, "qgs", iniChannel.getQgs() ); //$NON-NLS-1$ 
+      final String lzgContent = String.format( Locale.US, LZG_FORMAT_STRING, iniDate, "qgs", iniChannel.getQgs() ); //$NON-NLS-1$
       FileUtils.writeStringToFile( lzgFile, lzgContent );
     }
     catch( final IOException e )
@@ -240,7 +239,7 @@ public class LzsimWriter
       // snow
       final Double h = iniCatchment.getH();
       final Double ws = iniCatchment.getWS();
-      writer.format( Locale.US, LZS_FORMAT_STRING, iniDate, "snow", h, ws ); //$NON-NLS-1$ 
+      writer.format( Locale.US, LZS_FORMAT_STRING, iniDate, "snow", h, ws ); //$NON-NLS-1$
 
       // groundwater
       final Double hgws = iniCatchment.getHwgs();
@@ -248,7 +247,7 @@ public class LzsimWriter
       writer.format( Locale.US, LZS_FORMAT_STRING, iniDate, "gwsp", hgws, qb ); //$NON-NLS-1$
 
       // hydrotops (interception storage content& soil moisture)
-      writer.format( Locale.US, "%s h  %4d bodf\n", iniDate, iniHyds.length ); //$NON-NLS-1$ 
+      writer.format( Locale.US, "%s h  %4d bodf\n", iniDate, iniHyds.length ); //$NON-NLS-1$
 
       for( int i = 0; i < iniHyds.length; i++ )
       {
@@ -301,9 +300,8 @@ public class LzsimWriter
     final Map<Integer, IniHyd> iniHydMap = new TreeMap<Integer, IniHyd>();
     for( final HydrotopeInfo hydrotopeInfo : hydrotops )
     {
-      final IHydrotope hydrotop = hydrotopeInfo.getHydrotop();
       final Integer localID = hydrotopeInfo.getLocalID();
-      final String naHydrotopID = hydrotop.getId();
+      final String naHydrotopID = hydrotopeInfo.getFeatureId();
 
       final IniHyd iniHyd = iniHydHash.get( naHydrotopID );
       if( iniHyd == null )
