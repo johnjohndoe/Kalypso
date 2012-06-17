@@ -52,7 +52,6 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -114,7 +113,7 @@ public class HydrotopePrototype
     hydrotope.setGeometry( lGeometry );
 
     /* name */
-    final String name = String.format( "Hydrotope %d", count );
+    final String name = Integer.toString( count );
     hydrotope.setName( name );
 
     final String catchmentRef = String.format( "%s#%s", RrmScenario.FILE_MODELL_GML, m_catchment.getId() ); //$NON-NLS-1$
@@ -134,90 +133,30 @@ public class HydrotopePrototype
       final String overlayRef = String.format( "%s#%s", RrmScenario.FILE_OVERLAY, m_overlay.getId() ); //$NON-NLS-1$
       hydrotope.setOverlayLink( overlayRef );
     }
-
-    /* Values: FIXME: remove */
-    final String landuseClassName = getLanduseClass();
-    if( landuseClassName != null )
-      hydrotope.setLanduse( landuseClassName );
-
-    final String soilTypeClassName = getSoilTypeClass();
-    if( soilTypeClassName != null )
-      hydrotope.setSoilType( soilTypeClassName );
-
-    hydrotope.setCorrSealing( getSealingfactor() );
-
-    hydrotope.setMaxPerkolationRate( getMaxPerkulationRate() );
-
-    hydrotope.setGWFactor( getGroundwaterFactor() );
   }
 
   public String buildAttributeHashKey( )
   {
     final StringBuilder buffer = new StringBuilder();
 
-    // FIXME: in future we can only hash by features instead
-
-    /* catchment */
     buffer.append( m_catchment.getId() );
 
     buffer.append( '#' );
+    buffer.append( m_landuse.getId() );
 
-    /* landuse */
-    final String landuseClassName = getLanduseClass();
-    buffer.append( landuseClassName );
     buffer.append( '#' );
+    buffer.append( m_pedology.getId() );
 
-    /* pedology */
-    final String soilTypeClassName = getSoilTypeClass();
-    buffer.append( soilTypeClassName );
     buffer.append( '#' );
+    buffer.append( m_geology.getId() );
 
-    /* numeric values */
-    // FIXME: REMARK: using 3 decimal points for all values to build hash.
-    buffer.append( String.format( "%.3f", getSealingfactor() ) );
-    buffer.append( '#' );
-    buffer.append( String.format( "%.3f", getMaxPerkulationRate() ) );
-    buffer.append( '#' );
-    buffer.append( String.format( "%.3f", getGroundwaterFactor() ) );
+    if( m_overlay != null )
+    {
+      buffer.append( '#' );
+      buffer.append( m_overlay.getId() );
+    }
 
     return buffer.toString();
-  }
-
-  private String getSoilTypeClass( )
-  {
-    final IXLinkedFeature soiltypeClass = m_pedology.getSoilType();
-    if( soiltypeClass == null )
-      return null;
-
-    return soiltypeClass.getName();
-  }
-
-  /**
-   * sealing correction factor is now the product of factors from catchment and landuse
-   */
-  private double getSealingfactor( )
-  {
-    return m_catchment.getCorrSealing() * m_landuse.getCorrSealing();
-  }
-
-  private double getGroundwaterFactor( )
-  {
-    return m_geology.getGWFactor();
-  }
-
-  private double getMaxPerkulationRate( )
-  {
-    final double maxPerkulationsRate = m_geology.getMaxPerkulationsRate();
-    return maxPerkulationsRate;
-  }
-
-  private String getLanduseClass( )
-  {
-    final IXLinkedFeature landuseClass = m_landuse.getLanduse();
-    if( landuseClass == null )
-      return null;
-
-    return landuseClass.getName();
   }
 
   private GM_MultiSurface toMultiSurface( )

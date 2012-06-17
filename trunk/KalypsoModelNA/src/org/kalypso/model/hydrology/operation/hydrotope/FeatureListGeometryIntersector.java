@@ -106,12 +106,7 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
 
     for( int i = 0; i < countSourcePolygons; i++ )
     {
-      if( i % 10 == 0 )
-      {
-        final String msg = Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", i + 1, countSourcePolygons ); //$NON-NLS-1$
-        progress.subTask( msg ); //$NON-NLS-1$
-        ProgressUtilities.worked( progress, 10 );
-      }
+      ProgressUtilities.workedModulo( monitor, i, countSourcePolygons, 13, Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2" ) );
 
       final Polygon sourcePolygon = (Polygon) sourcePolygons.get( i );
 

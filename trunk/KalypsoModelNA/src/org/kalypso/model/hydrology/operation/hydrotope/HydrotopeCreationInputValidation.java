@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
@@ -81,29 +82,32 @@ class HydrotopeCreationInputValidation implements ICoreRunnableWithProgress
       final String subTask = String.format( "Validating layer %d of %d - %s", i + 1, m_input.length, input.getLabel() );
       progress.subTask( subTask );
 
-      final IStatus status = validateIndex( input, subTask );
+      final IStatus status = validateIndex( input, subTask, progress.newChild( 1 ) );
       log.add( status );
-
-      progress.worked( 1 );
     }
 
     return log.asMultiStatus( m_logLabel );
   }
 
-  private static IStatus validateIndex( final IHydrotopeInput input, final String logLabel )
+  private static IStatus validateIndex( final IHydrotopeInput input, final String logLabel, final IProgressMonitor monitor )
   {
+    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
     /* run checks */
     final SpatialIndexExt index = input.getIndex();
-    final HydrotopeCreationGeometryValidator validator = new HydrotopeCreationGeometryValidator( index );
+    final String label = input.getLabel();
+    final HydrotopeCreationGeometryValidator validator = new HydrotopeCreationGeometryValidator( label, index );
 
     /* General geometric validation */
-    log.add( validator.checkGeometryCorrectness() );
-    log.add( validator.checkSelfIntersection() );
+    log.add( validator.checkGeometryCorrectness( progress.newChild( 33 ) ) );
 
-    /* special type dependend validation */
-    input.validateInput( log );
+    log.add( validator.checkSelfIntersection( progress.newChild( 33 ) ) );
+
+    /* special type dependent validation */
+    log.add( input.validateInput() );
+    ProgressUtilities.worked( monitor, 34 );
 
     return log.asMultiStatus( logLabel );
   }

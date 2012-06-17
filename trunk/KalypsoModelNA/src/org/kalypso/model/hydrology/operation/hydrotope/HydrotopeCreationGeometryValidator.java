@@ -42,9 +42,11 @@ package org.kalypso.model.hydrology.operation.hydrotope;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
@@ -63,9 +65,12 @@ public class HydrotopeCreationGeometryValidator
 
   private final List<Polygon> m_allElements;
 
+  private final String m_label;
+
   @SuppressWarnings("unchecked")
-  public HydrotopeCreationGeometryValidator( final SpatialIndexExt index )
+  public HydrotopeCreationGeometryValidator( final String label, final SpatialIndexExt index )
   {
+    m_label = label;
     m_index = index;
 
     /* Fetch all elements */
@@ -73,12 +78,18 @@ public class HydrotopeCreationGeometryValidator
     m_allElements = index.query( boundingBox );
   }
 
-  public IStatus checkGeometryCorrectness( )
+  public IStatus checkGeometryCorrectness( final IProgressMonitor monitor )
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    for( final Polygon polygon : m_allElements )
+    final String subTaskFormat = String.format( "%s: checking geometry %%d of %%d", m_label );
+
+    for( int i = 0; i < m_allElements.size(); i++ )
     {
+      ProgressUtilities.workedModulo( monitor, i, m_allElements.size(), 11, subTaskFormat );
+
+      final Polygon polygon = m_allElements.get( i );
+
       final IsValidOp isValidOp = new IsValidOp( polygon );
 
       if( polygon == null )
@@ -95,12 +106,18 @@ public class HydrotopeCreationGeometryValidator
     return log.asMultiStatus( "Geometries" );
   }
 
-  public IStatus checkSelfIntersection( )
+  public IStatus checkSelfIntersection( final IProgressMonitor monitor )
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    for( final Polygon polygon : m_allElements )
+    final String subTaskFormat = String.format( "%s: checking intersection %%d of %%d", m_label );
+
+    for( int i = 0; i < m_allElements.size(); i++ )
     {
+      ProgressUtilities.workedModulo( monitor, i, m_allElements.size(), 11, subTaskFormat );
+
+      final Polygon polygon = m_allElements.get( i );
+
       @SuppressWarnings("unchecked")
       final List<Polygon> othersPolygons = m_index.query( polygon.getEnvelopeInternal() );
       for( final Polygon other : othersPolygons )
