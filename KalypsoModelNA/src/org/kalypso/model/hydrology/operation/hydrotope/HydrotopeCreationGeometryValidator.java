@@ -82,7 +82,7 @@ public class HydrotopeCreationGeometryValidator
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final String subTaskFormat = String.format( "%s: checking geometry %%d of %%d", m_label );
+    final String subTaskFormat = String.format( "%s - checking geometry %%d of %%d", m_label );
 
     for( int i = 0; i < m_allElements.size(); i++ )
     {
@@ -110,7 +110,7 @@ public class HydrotopeCreationGeometryValidator
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final String subTaskFormat = String.format( "%s: checking intersection %%d of %%d", m_label );
+    final String subTaskFormat = String.format( "%s - checking intersection %%d of %%d", m_label );
 
     double totalArea = 0.0;
     double totalIntersectionArea = 0.0;
