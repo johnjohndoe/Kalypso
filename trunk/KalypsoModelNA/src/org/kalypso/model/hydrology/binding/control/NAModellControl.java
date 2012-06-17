@@ -47,20 +47,20 @@ import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.InitialValue;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {org.kalypso.namodell.control_v2}NAModellControl.
  * 
  * @author Gernot Belger
  */
-public class NAModellControl extends Feature_Impl
+public class NAModellControl extends UnversionedModel
 {
   public static final String NS_NACONTROL = NaModelConstants.NS_NACONTROL;
 
