@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.kalypso.model.hydrology.binding.IHydrotope;
@@ -58,7 +60,9 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  */
 public class CatchmentInfo
 {
-  private final Map<String, HydrotopeInfo> m_hydrotops = new LinkedHashMap<String, HydrotopeInfo>();
+  private final List<HydrotopeInfo> m_hydrotopes = new ArrayList<HydrotopeInfo>();
+
+  private final Map<String, HydrotopeInfo> m_hydrotopeHash = new LinkedHashMap<String, HydrotopeInfo>();
 
   private final Catchment m_catchment;
 
@@ -74,18 +78,19 @@ public class CatchmentInfo
 
   public void add( final IHydrotope hydrotop ) throws NAPreprocessorException
   {
-    final HydrotopeInfo hydrotopeInfo = new HydrotopeInfo( hydrotop, m_landuseHash, m_hydrotops.size() + 1 );
+    final HydrotopeInfo hydrotopeInfo = new HydrotopeInfo( hydrotop, m_landuseHash, m_hydrotopeHash.size() + 1 );
 
     final String attributeHashKey = hydrotopeInfo.getAttributeHash();
 
-    if( m_hydrotops.containsKey( attributeHashKey ) )
+    if( m_hydrotopeHash.containsKey( attributeHashKey ) )
     {
-      final HydrotopeInfo existingInfo = m_hydrotops.get( attributeHashKey );
+      final HydrotopeInfo existingInfo = m_hydrotopeHash.get( attributeHashKey );
       existingInfo.addArea( hydrotopeInfo );
     }
     else
     {
-      m_hydrotops.put( attributeHashKey, hydrotopeInfo );
+      m_hydrotopeHash.put( attributeHashKey, hydrotopeInfo );
+      m_hydrotopes.add( hydrotopeInfo );
     }
   }
 
@@ -94,7 +99,7 @@ public class CatchmentInfo
     final GM_Surface< ? > geometry = m_catchment.getGeometry();
     final double catchmentAre = geometry.getArea();
 
-    final double hydrotopArea = m_totalSealing.getArea();
+    final double hydrotopArea = getTotalSealing().getArea();
 
     final double fehler = Math.abs( catchmentAre - hydrotopArea );
     final double fehlerinProzent = 100.0 * fehler / hydrotopArea;
@@ -106,7 +111,7 @@ public class CatchmentInfo
 
   public String getHydroFeatureId( final int pos )
   {
-    return m_hydrotops.get( pos ).getFeatureId();
+    return m_hydrotopes.get( pos ).getFeatureId();
   }
 
   public Sealing getTotalSealing( )
@@ -115,8 +120,7 @@ public class CatchmentInfo
     {
       m_totalSealing = new Sealing();
 
-      final Collection<HydrotopeInfo> values = m_hydrotops.values();
-      for( final HydrotopeInfo hydrotopeInfo : values )
+      for( final HydrotopeInfo hydrotopeInfo : m_hydrotopes )
       {
         final Sealing hydrotopeSealing = hydrotopeInfo.createSealing();
 
@@ -129,7 +133,7 @@ public class CatchmentInfo
 
   public Collection<HydrotopeInfo> getHydrotops( )
   {
-    return Collections.unmodifiableCollection( m_hydrotops.values() );
+    return Collections.unmodifiableCollection( m_hydrotopes );
   }
 
   public Catchment getCatchment( )
