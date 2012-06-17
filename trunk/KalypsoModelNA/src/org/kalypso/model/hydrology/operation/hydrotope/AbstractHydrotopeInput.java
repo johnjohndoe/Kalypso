@@ -49,10 +49,9 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.model.sort.JSISpatialIndex;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
-import org.kalypsodeegree_impl.model.sort.SplitSortSpatialIndex;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.util.PolygonExtracter;
@@ -105,9 +104,10 @@ abstract class AbstractHydrotopeInput<T extends Feature> implements IHydrotopeIn
 
   static <F extends Feature> SpatialIndexExt buildIndex( final IFeatureBindingCollection<F> features, final IStatusCollector log )
   {
-    final Envelope boundingBox = JTSAdapter.export( features.getBoundingBox() );
+// final Envelope boundingBox = JTSAdapter.export( features.getBoundingBox() );
 
-    final SpatialIndexExt index = new SplitSortSpatialIndex( boundingBox );
+    final SpatialIndexExt index = new JSISpatialIndex();
+// new SplitSortSpatialIndex( boundingBox );
 
     int count = 0;
 
