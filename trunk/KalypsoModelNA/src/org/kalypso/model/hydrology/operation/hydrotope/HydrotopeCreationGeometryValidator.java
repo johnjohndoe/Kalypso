@@ -112,6 +112,9 @@ public class HydrotopeCreationGeometryValidator
 
     final String subTaskFormat = String.format( "%s: checking intersection %%d of %%d", m_label );
 
+    double totalArea = 0.0;
+    double totalIntersectionArea = 0.0;
+
     for( int i = 0; i < m_allElements.size(); i++ )
     {
       ProgressUtilities.workedModulo( monitor, i, m_allElements.size(), 11, subTaskFormat );
@@ -119,6 +122,8 @@ public class HydrotopeCreationGeometryValidator
       final Polygon polygon = m_allElements.get( i );
       final HydrotopeUserData polygonData = (HydrotopeUserData) polygon.getUserData();
       final int polygonNumber = polygonData.getCount();
+
+      totalArea += polygon.getArea();
 
       @SuppressWarnings("unchecked")
       final List<Polygon> otherPolygons = m_index.query( polygon.getEnvelopeInternal() );
@@ -143,12 +148,8 @@ public class HydrotopeCreationGeometryValidator
         {
           final Geometry intersection = FeatureListGeometryIntersector.forceIntersection( polygon, other, log );
 
-          // final double polygonArea = polygon.getArea();
-          // final double otherArea = other.getArea();
           final double intersectionArea = intersection.getArea();
-
-          // if( intersectionArea > polygonArea || intersectionArea > otherArea )
-          // System.out.println( "oups" );
+          totalIntersectionArea += intersectionArea;
 
           final double intersectionPercent = intersectionArea / polygon.getArea() * 100;
           if( intersectionPercent >= 0.01 )
@@ -159,6 +160,16 @@ public class HydrotopeCreationGeometryValidator
           }
         }
       }
+    }
+
+    /* Show info if there is a small intersection, warning if intersection is > 1.0 % */
+    final double totalIntersectionPercent = (totalIntersectionArea / totalArea) * 100;
+    if( totalIntersectionArea >= 0.01 || totalIntersectionPercent >= 0.01 )
+    {
+      final int severity = totalIntersectionPercent >= 1.0 ? IStatus.WARNING : IStatus.INFO;
+
+      final String format = String.format( "Total overlap area is %.2f m² (%.2f %%%%)", totalIntersectionArea, totalIntersectionPercent );
+      log.add( severity, format );
     }
 
     return log.asMultiStatus( "Topological correctness" );
