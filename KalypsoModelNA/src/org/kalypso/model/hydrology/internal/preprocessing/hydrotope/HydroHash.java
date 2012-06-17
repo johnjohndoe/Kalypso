@@ -131,21 +131,7 @@ public class HydroHash
 
   private SpatialIndexExt indexCatchments( final Catchment[] catchments )
   {
-// /* Calculate bounding box */
-// Envelope maxEnvelope = null;
-// for( final Catchment catchment : catchments )
-// {
-// final GM_Envelope envelope = catchment.getEnvelope();
-// final Envelope boundingBox = JTSAdapter.export( envelope );
-//
-// if( maxEnvelope == null )
-// maxEnvelope = boundingBox;
-// else
-// maxEnvelope.expandToInclude( boundingBox );
-// }
-
     final SpatialIndexExt index = new JSISpatialIndex();
-// new SplitSortSpatialIndex( maxEnvelope );
     for( final Catchment catchment : catchments )
     {
       final GM_Envelope envelope = catchment.getEnvelope();

@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -58,31 +58,35 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  */
 public class CatchmentInfo
 {
-  private final List<HydrotopeInfo> m_hydrotops = new ArrayList<HydrotopeInfo>();
+  private final Map<String, HydrotopeInfo> m_hydrotops = new LinkedHashMap<String, HydrotopeInfo>();
 
   private final Catchment m_catchment;
 
   private final ParameterHash m_landuseHash;
 
-  private Sealing m_totalSealing;
+  private Sealing m_totalSealing = null;
 
   public CatchmentInfo( final Catchment catchment, final ParameterHash landuseHash )
   {
     m_catchment = catchment;
     m_landuseHash = landuseHash;
-    m_totalSealing = new Sealing();
   }
 
   public void add( final IHydrotope hydrotop ) throws NAPreprocessorException
   {
-    // FIXME: hash hydrotopes by attributes
+    final HydrotopeInfo hydrotopeInfo = new HydrotopeInfo( hydrotop, m_landuseHash, m_hydrotops.size() + 1 );
 
-    final HydrotopeInfo hydrotopInfo = new HydrotopeInfo( hydrotop, m_landuseHash, m_hydrotops.size() + 1 );
-    m_hydrotops.add( hydrotopInfo );
+    final String attributeHashKey = hydrotopeInfo.getAttributeHash();
 
-    final Sealing hydrotopeSealing = hydrotopInfo.getSealing();
-
-    m_totalSealing = m_totalSealing.add( hydrotopeSealing );
+    if( m_hydrotops.containsKey( attributeHashKey ) )
+    {
+      final HydrotopeInfo existingInfo = m_hydrotops.get( attributeHashKey );
+      existingInfo.addArea( hydrotopeInfo );
+    }
+    else
+    {
+      m_hydrotops.put( attributeHashKey, hydrotopeInfo );
+    }
   }
 
   public String checkArea( )
@@ -107,12 +111,25 @@ public class CatchmentInfo
 
   public Sealing getTotalSealing( )
   {
+    if( m_totalSealing == null )
+    {
+      m_totalSealing = new Sealing();
+
+      final Collection<HydrotopeInfo> values = m_hydrotops.values();
+      for( final HydrotopeInfo hydrotopeInfo : values )
+      {
+        final Sealing hydrotopeSealing = hydrotopeInfo.createSealing();
+
+        m_totalSealing = m_totalSealing.add( hydrotopeSealing );
+      }
+    }
+
     return m_totalSealing;
   }
 
   public Collection<HydrotopeInfo> getHydrotops( )
   {
-    return Collections.unmodifiableCollection( m_hydrotops );
+    return Collections.unmodifiableCollection( m_hydrotops.values() );
   }
 
   public Catchment getCatchment( )
