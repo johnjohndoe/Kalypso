@@ -42,8 +42,6 @@ package org.kalypso.model.hydrology.operation.hydrotope;
 
 import java.util.Arrays;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +52,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * Temporary representation of a hydrotope during the intersection.
+ * Temporary representation of a hydrotope during the intersection. <br/>
+ * Allows to combine several hydrotopes of same combination into a single one with combined geometries.
  * 
  * @author Gernot Belger
  */
@@ -104,16 +103,14 @@ public class HydrotopeUserData
 
   private String buildHash( ) throws CoreException
   {
-    final int hashType = 2;
+    final int hashType = 1;
 
     switch( hashType )
     {
       case 0:
         return buildHashNoHash();
       case 1:
-        return buildHashOverFeatures();
-      case 2:
-        return buildHashOverAttributes();
+        return buildHashOverPrototype();
     }
 
     throw new IllegalStateException();
@@ -124,25 +121,7 @@ public class HydrotopeUserData
     return ObjectUtils.identityToString( this );
   }
 
-  private String buildHashOverFeatures( )
-  {
-    final StringBuilder buffer = new StringBuilder();
-
-    for( final Feature feature : m_features )
-    {
-      final QName featureType = feature == null ? null : feature.getQualifiedName();
-      final String id = feature == null ? null : feature.getId();
-
-      buffer.append( featureType );
-      buffer.append( '#' );
-      buffer.append( id );
-      buffer.append( '#' );
-    }
-
-    return buffer.toString();
-  }
-
-  private String buildHashOverAttributes( ) throws CoreException
+  private String buildHashOverPrototype( ) throws CoreException
   {
     final HydrotopePrototype prototype = getPrototype();
     return prototype.buildAttributeHashKey();
@@ -158,7 +137,9 @@ public class HydrotopeUserData
     final String[] labels = new String[m_features.length];
 
     for( int i = 0; i < labels.length; i++ )
-      labels[i] = m_features[i].getName();
+    {
+      labels[i] = m_features[i] == null ? ObjectUtils.toString( null ) : m_features[i].getName();
+    }
 
     return StringUtils.join( labels, '/' );
   }

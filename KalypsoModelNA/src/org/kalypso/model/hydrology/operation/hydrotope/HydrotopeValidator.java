@@ -88,12 +88,13 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
 
     final SpatialIndexExt hydrotopeIndex = buildOutputIndex();
 
-    final HydrotopeCreationGeometryValidator validator = new HydrotopeCreationGeometryValidator( hydrotopeIndex );
+    final HydrotopeCreationGeometryValidator validator = new HydrotopeCreationGeometryValidator( "Hydrotopes", hydrotopeIndex );
 
-    log.add(validator.checkGeometryCorrectness() );
-    log.add( validator.checkSelfIntersection() );
+    log.add( validator.checkGeometryCorrectness( progress.newChild( 33 ) ) );
+
+    log.add( validator.checkSelfIntersection( progress.newChild( 33 ) ) );
+
     log.add( checkAgainstCatchments() );
-
     progress.done();
 
     return log.asMultiStatus( m_logLabel );

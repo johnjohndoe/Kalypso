@@ -67,12 +67,7 @@ class CatchmentHydrotopeInput extends AbstractHydrotopeInput<Catchment>
   }
 
   @Override
-  public void validateInput( final IStatusCollector log )
-  {
-    log.add( validateAttributes() );
-  }
-
-  private IStatus validateAttributes( )
+  public IStatus validateInput( )
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 

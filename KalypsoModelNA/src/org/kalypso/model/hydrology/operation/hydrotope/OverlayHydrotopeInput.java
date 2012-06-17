@@ -150,20 +150,15 @@ class OverlayHydrotopeInput extends AbstractHydrotopeInput<OverlayElement>
   }
 
   @Override
-  public void validateInput( final IStatusCollector log )
-  {
-    log.add( validateAttributes() );
-  }
-
-  private IStatus validateAttributes( )
+  public IStatus validateInput( )
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final IFeatureBindingCollection<OverlayElement> features = getFeatures();
-    for( final OverlayElement overlay : features )
-    {
-      // FIXME: what to check?
-      overlay.getDRWBMDefinition();
+// final IFeatureBindingCollection<OverlayElement> features = getFeatures();
+// for( final OverlayElement overlay : features )
+// {
+    // FIXME: what to check?
+// overlay.getDRWBMDefinition();
 
 // final Double gwFactor = overlay.getGWFactor();
 // if( gwFactor == null )
@@ -175,7 +170,7 @@ class OverlayHydrotopeInput extends AbstractHydrotopeInput<OverlayElement>
 // if( maxPerkRate == null )
 // log.add( IStatus.ERROR, formatMessage( "maximal perkolation rate is not set", overlay ) );
 // // TODO: range check?
-    }
+// }
 
     return log.asMultiStatus( STR_ATTRIBUTES );
   }
