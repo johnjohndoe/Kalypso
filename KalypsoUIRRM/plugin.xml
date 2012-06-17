@@ -469,24 +469,12 @@
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.LanduseCollection" id="landuse" modelPath=".models/landuse.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.GeologyCollection" id="geologie" modelPath=".models/geologie.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.SoilTypeCollection" id="pedologie" modelPath=".models/pedologie.gml"/>
-         <scenarioDatum
-               classKey="org.kalypso.model.hydrology.binding.OverlayCollection"
-               id="overlay"
-               modelPath=".models/overlay.gml">
-         </scenarioDatum>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.OverlayCollection" id="overlay" modelPath=".models/overlay.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.HydrotopeCollection" id="hydrotopes" modelPath=".models/hydrotop.gml"/>
-         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection" id="timeseriesMapppings" modelPath=".models/timeseriesMappings.gml">
-         </scenarioDatum>
-         <scenarioDatum
-               classKey="org.kalypso.model.hydrology.binding.parameter.Parameter"
-               id="parameter"
-               modelPath=".models/parameter.gml">
-         </scenarioDatum>
-         <scenarioDatum
-               classKey="org.kalypso.model.hydrology.binding.designRainfall.SynthN"
-               id="designRainfall"
-               modelPath=".models/synthN.gml">
-         </scenarioDatum>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection" id="timeseriesMapppings" modelPath=".models/timeseriesMappings.gml"/>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.parameter.Parameter" id="parameter" modelPath=".models/parameter.gml"/>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.designRainfall.SynthN" id="designRainfall" modelPath=".models/synthN.gml"/>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.control.NAModellControl" id="expertControl" modelPath=".models/expertControl.gml"/>
       </dataSet>
    </extension>
 
