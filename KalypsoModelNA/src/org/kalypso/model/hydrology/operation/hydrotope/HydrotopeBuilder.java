@@ -55,8 +55,8 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
+import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -129,7 +129,7 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
       count++;
     }
 
-    log.add( IStatus.INFO, "Built %d hydrotopes", null, count );
+    log.add( IStatus.OK, "Built %d hydrotopes", null, count );
 
     return log.asMultiStatus( m_logMessage );
   }
