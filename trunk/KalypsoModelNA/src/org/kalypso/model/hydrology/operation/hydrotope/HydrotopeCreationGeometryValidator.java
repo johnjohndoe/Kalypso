@@ -117,12 +117,26 @@ public class HydrotopeCreationGeometryValidator
       ProgressUtilities.workedModulo( monitor, i, m_allElements.size(), 11, subTaskFormat );
 
       final Polygon polygon = m_allElements.get( i );
+      final HydrotopeUserData polygonData = (HydrotopeUserData) polygon.getUserData();
+      final int polygonNumber = polygonData.getCount();
 
       @SuppressWarnings("unchecked")
-      final List<Polygon> othersPolygons = m_index.query( polygon.getEnvelopeInternal() );
-      for( final Polygon other : othersPolygons )
+      final List<Polygon> otherPolygons = m_index.query( polygon.getEnvelopeInternal() );
+      for( final Polygon other : otherPolygons )
       {
         if( other == polygon )
+          continue;
+
+        final HydrotopeUserData otherData = (HydrotopeUserData) other.getUserData();
+        final int otherNumber = otherData.getCount();
+
+        if( polygonNumber == -1 || otherNumber == -1 )
+        {
+          System.out.println( "Should never happen" ); //$NON-NLS-1$
+        }
+
+        // REMARK: this prevents checking intersection twice
+        if( polygonNumber >= otherNumber )
           continue;
 
         if( polygon.overlaps( other ) )
@@ -136,9 +150,9 @@ public class HydrotopeCreationGeometryValidator
           // if( intersectionArea > polygonArea || intersectionArea > otherArea )
           // System.out.println( "oups" );
 
-          if( intersectionArea > FeatureListGeometryIntersector.MIN_AREA )
+          final double intersectionPercent = intersectionArea / polygon.getArea() * 100;
+          if( intersectionPercent >= 0.01 )
           {
-            final double intersectionPercent = intersectionArea / polygon.getArea() * 100;
 
             final String format = String.format( "overlaps another element (%.2f m² = %.2f %%)", intersectionArea, intersectionPercent );
             addWarning( log, format, polygon );
