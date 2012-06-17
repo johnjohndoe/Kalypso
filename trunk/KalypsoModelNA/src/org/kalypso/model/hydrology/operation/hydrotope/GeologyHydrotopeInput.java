@@ -78,7 +78,7 @@ class GeologyHydrotopeInput extends AbstractHydrotopeInput<Geology>
       else if( gwFactor < 0.0 || gwFactor > 1.0 )
         log.add( IStatus.ERROR, formatMessage( "groundwater factor is outside it's valid range [0.0 - 1.0]", geology ) );
 
-      final Double maxPerkRate = geology.getMaxPerkulationsRate();
+      final Double maxPerkRate = geology.getMaxPercolationRate();
       if( maxPerkRate == null )
         log.add( IStatus.ERROR, formatMessage( "maximal perkolation rate is not set", geology ) );
       // TODO: range check?

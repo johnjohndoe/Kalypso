@@ -218,7 +218,7 @@ public class Test_Intersection extends TestCase
           }
         if( geology == null )
           continue;
-        hydrotop.setMaxPerkolationRate( geology.getMaxPerkulationsRate() );
+        hydrotop.setMaxPerkolationRate( geology.getMaxPercolationRate() );
         hydrotop.setGWFactor( geology.getGWFactor() );
       }
       else

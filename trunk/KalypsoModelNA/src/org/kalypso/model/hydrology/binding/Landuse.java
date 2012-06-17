@@ -89,7 +89,7 @@ public class Landuse extends Feature_Impl
     return (IXLinkedFeature) getMember( LINK_LANDUSE );
   }
 
-  public Double getCorrSealing( )
+  public double getCorrSealing( )
   {
     return getDoubleProperty( PROPERTY_CORRSEALING, 1.0 );
   }
@@ -97,5 +97,14 @@ public class Landuse extends Feature_Impl
   public void setCorrSealing( final Double corrSealing )
   {
     setProperty( PROPERTY_CORRSEALING, corrSealing );
+  }
+
+  public String getLanduseClassName( )
+  {
+    final IXLinkedFeature landuseClass = getLanduse();
+    if( landuseClass == null )
+      return null;
+
+    return landuseClass.getName();
   }
 }

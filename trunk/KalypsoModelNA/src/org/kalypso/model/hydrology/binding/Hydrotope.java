@@ -95,7 +95,7 @@ public class Hydrotope extends Feature_Impl implements IHydrotope
   }
 
   @Override
-  public double getCorrSealing( )
+  public Double getCorrSealing( )
   {
     return getProperty( PROPERTY_CORR_SEALING, Double.class );
   }
@@ -107,7 +107,7 @@ public class Hydrotope extends Feature_Impl implements IHydrotope
   }
 
   @Override
-  public double getMaxPerkolationRate( )
+  public Double getMaxPerkolationRate( )
   {
     return getProperty( PROPERTY_MAX_PERCOLATION, Double.class );
   }
@@ -119,7 +119,7 @@ public class Hydrotope extends Feature_Impl implements IHydrotope
   }
 
   @Override
-  public double getGWFactor( )
+  public Double getGWFactor( )
   {
     return getProperty( PROPERTY_GW_INFLOW_RATE, Double.class );
   }
@@ -190,41 +190,9 @@ public class Hydrotope extends Feature_Impl implements IHydrotope
     setLink( LINK_OVERLAY, href );
   }
 
-// private String getSoilTypeClass( )
-// {
-// final IXLinkedFeature soiltypeClass = m_pedology.getSoilType();
-// if( soiltypeClass == null )
-// return null;
-//
-// return soiltypeClass.getName();
-// }
-//
-// /**
-// * sealing correction factor is now the product of factors from catchment and landuse
-// */
-// private double getSealingfactor( )
-// {
-// return m_catchment.getCorrSealing() * m_landuse.getCorrSealing();
-// }
-//
-// private double getGroundwaterFactor( )
-// {
-// return m_geology.getGWFactor();
-// }
-//
-// private double getMaxPerkulationRate( )
-// {
-// final double maxPerkulationsRate = m_geology.getMaxPerkulationsRate();
-// return maxPerkulationsRate;
-// }
-//
-// private String getLanduseClass( )
-// {
-// final IXLinkedFeature landuseClass = m_landuse.getLanduse();
-// if( landuseClass == null )
-// return null;
-//
-// return landuseClass.getName();
-// }
-
+  @Override
+  public Double getArea( )
+  {
+    return getProperty( PROPERTY_AREA, Double.class );
+  }
 }

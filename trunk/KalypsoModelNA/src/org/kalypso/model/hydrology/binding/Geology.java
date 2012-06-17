@@ -83,7 +83,7 @@ public class Geology extends Feature_Impl
     setProperty( PROPERTY_MAXPERKULATIONSRATE, value );
   }
 
-  public Double getMaxPerkulationsRate( )
+  public Double getMaxPercolationRate( )
   {
     return getProperty( PROPERTY_MAXPERKULATIONSRATE, Double.class );
   }
