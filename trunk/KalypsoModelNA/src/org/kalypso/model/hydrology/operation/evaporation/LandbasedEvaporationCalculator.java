@@ -99,6 +99,7 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
     return 0.0;
   }
 
+  @SuppressWarnings("unused")
   private Double doCalculateFAO( final double humidity, final double sunshine, final double temperature, final double windVelocity, final Calendar date )
   {
     final double es = 6.11 * Math.pow( 10.0, 7.48 * temperature / (237.0 + temperature) );

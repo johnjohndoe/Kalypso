@@ -63,37 +63,6 @@ public class BodentypWriter extends AbstractCoreFileWriter
 {
   private final GMLWorkspace m_parameterWorkspace;
 
-  private final class Layer
-  {
-    private final String m_name;
-
-    private final double m_thickness;
-
-    private final boolean m_interflow;
-
-    public Layer( final String name, final double thickness, final boolean interflow )
-    {
-      m_name = name;
-      m_thickness = thickness;
-      m_interflow = interflow;
-    }
-
-    public String getName( )
-    {
-      return m_name;
-    }
-
-    public double getThickness( )
-    {
-      return m_thickness;
-    }
-
-    public boolean interflow( )
-    {
-      return m_interflow;
-    }
-  }
-
   public BodentypWriter( final GMLWorkspace parameterWorkspace, final Logger logger )
   {
     super( logger );
@@ -104,8 +73,6 @@ public class BodentypWriter extends AbstractCoreFileWriter
   @Override
   protected void writeContent( final PrintWriter buffer )
   {
-// final Map<String, List<Layer>> soilTypes = collectSoilTypes();
-
     buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
 
     final Parameter parameter = (Parameter) m_parameterWorkspace.getRootFeature();

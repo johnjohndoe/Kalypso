@@ -46,15 +46,14 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Ignore;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
-import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
@@ -116,12 +115,12 @@ public class Test_Intersection extends TestCase
     indexer.addInput( new GeologyHydrotopeInput( geologyRoot ) );
     indexer.addInput( new OverlayHydrotopeInput( overlay, naModel ) );
 
-    final IStatus indexStatus = indexer.execute( new NullProgressMonitor() );
+    indexer.execute( new NullProgressMonitor() );
     final IHydrotopeInput[] input = indexer.getIndices();
 
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector( input, "test" ); //$NON-NLS-1$
 
-    final IStatus intersectStatus = geometryIntersector.execute( new NullProgressMonitor() );
+    geometryIntersector.execute( new NullProgressMonitor() );
 
     final IFeatureBindingCollection<IHydrotope> hydrotopes = naHydrotopes.getHydrotopes();
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();

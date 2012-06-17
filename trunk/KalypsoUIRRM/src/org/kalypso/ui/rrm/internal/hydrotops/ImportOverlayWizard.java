@@ -49,7 +49,6 @@ import org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage;
 import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
-import org.kalypso.model.hydrology.operation.hydrotope.DefaultLanduseClassDelegate;
 import org.kalypso.model.hydrology.operation.hydrotope.OverlayImportOperation;
 import org.kalypso.model.hydrology.operation.hydrotope.OverlayImportOperation.InputDescriptor;
 import org.kalypso.model.hydrology.operation.hydrotope.OverlayShapeInputDescriptor;
@@ -93,8 +92,7 @@ public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
     final InputDescriptor inputDescriptor = new OverlayShapeInputDescriptor( shapeFile, drwbpmProperty, crs, charset );
 
     final OverlayCollection output = (OverlayCollection) overlayWorkspace.getRootFeature();
-    final DefaultLanduseClassDelegate landuseClassDelegate = new DefaultLanduseClassDelegate( parameter.getWorkspace() );
 
-    return new OverlayImportOperation( inputDescriptor, output, landuseClassDelegate, ImportType.CLEAR_OUTPUT );
+    return new OverlayImportOperation( inputDescriptor, output, ImportType.CLEAR_OUTPUT );
   }
 }

@@ -68,19 +68,16 @@ public class OverlayImportOperation extends AbstractImportOperation<GM_MultiSurf
 
   private final InputDescriptor m_inputDescriptor;
 
-  private final ILanduseClassDelegate m_landuseClasses;
-
   /**
    * @param output
    *          An (empty) list containing rrmHydo:OverlayElement features
    */
-  public OverlayImportOperation( final InputDescriptor inputDescriptor, final OverlayCollection output, final ILanduseClassDelegate landuseClasses, final ImportType importType )
+  public OverlayImportOperation( final InputDescriptor inputDescriptor, final OverlayCollection output, final ImportType importType )
   {
     super( inputDescriptor );
 
     m_inputDescriptor = inputDescriptor;
     m_output = output;
-    m_landuseClasses = landuseClasses;
     m_importType = importType;
   }
 

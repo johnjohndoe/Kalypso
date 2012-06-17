@@ -143,10 +143,12 @@ public class NAPostprocessingTest
 
     final ParameterHash landuseHash = new ParameterHash( parameter, logger );
 
-    final HydroHash hydroHash = new HydroHash( landuseHash );
-    hydroHash.initHydrotopes( naHydrotop, catchments );
+    final IDManager idManager = new IDManager();
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( new IDManager(), logger, modelWorkspace, naControl, hydroHash );
+    final HydroHash hydroHash = new HydroHash( landuseHash, catchments, idManager );
+    hydroHash.initHydrotopes( naHydrotop );
+
+    final NaPostProcessor postProcessor = new NaPostProcessor( idManager, logger, modelWorkspace, naControl, hydroHash );
     postProcessor.process( naAsciiDirs, naSimulationDirs );
 
     return resultsDir;

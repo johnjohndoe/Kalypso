@@ -41,6 +41,7 @@
 package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -74,6 +75,8 @@ public class CatchmentInfo
 
   public void add( final IHydrotope hydrotop ) throws NAPreprocessorException
   {
+    // FIXME: hash hydrotopes by attributes
+
     final HydrotopeInfo hydrotopInfo = new HydrotopeInfo( hydrotop, m_landuseHash, m_hydrotops.size() + 1 );
     m_hydrotops.add( hydrotopInfo );
 
@@ -107,9 +110,9 @@ public class CatchmentInfo
     return m_totalSealing;
   }
 
-  public List<HydrotopeInfo> getHydrotops( )
+  public Collection<HydrotopeInfo> getHydrotops( )
   {
-    return Collections.unmodifiableList( m_hydrotops );
+    return Collections.unmodifiableCollection( m_hydrotops );
   }
 
   public Catchment getCatchment( )

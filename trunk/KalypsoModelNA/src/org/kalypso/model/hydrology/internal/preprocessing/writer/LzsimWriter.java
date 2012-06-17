@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -283,7 +284,7 @@ public class LzsimWriter
      * for catchments that are targets of groundwater flow, but which are not part of the currently written sub-net. We
      * ignore this case silently for now.
      */
-    final List<HydrotopeInfo> hydrotops = m_hydroHash.getHydrotops( naCatchment );
+    final Collection<HydrotopeInfo> hydrotops = m_hydroHash.getHydrotops( naCatchment );
     if( hydrotops.size() == 0 )
       return null;
 

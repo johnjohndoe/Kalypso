@@ -224,8 +224,8 @@ public class NAModelPreprocessor
     if( m_hydroHash == null )
     {
       final ParameterHash landuseHash = new ParameterHash( parameter, m_logger );
-      m_hydroHash = new HydroHash( landuseHash );
-      m_hydroHash.initHydrotopes( hydrotopeCollection, catchments );
+      m_hydroHash = new HydroHash( landuseHash, catchments, m_idManager );
+      m_hydroHash.initHydrotopes( hydrotopeCollection );
     }
 
     return m_hydroHash;
