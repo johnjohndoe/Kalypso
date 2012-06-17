@@ -52,7 +52,7 @@
               </complexType>
             </element>
 
-            <element name="soiltype" type="string" />
+            <element name="soiltype" type="string" minOccurs="0"/>
             <element name="pedologyLink" minOccurs="0">
               <complexType>
                 <sequence>
@@ -64,8 +64,8 @@
 
             <element ref="naModel:catchmentLinkMember" minOccurs="0" />
 
-            <element name="maxPerc" type="ht:maxPercType" />
-            <element name="gwInflowRate" type="ht:gwInflowRateType" />
+            <element name="maxPerc" type="ht:maxPercType" minOccurs="0"/>
+            <element name="gwInflowRate" type="ht:gwInflowRateType" minOccurs="0"/>
             <element name="geologyLink" minOccurs="0">
               <complexType>
                 <sequence>
