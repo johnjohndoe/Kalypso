@@ -45,7 +45,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,10 +98,11 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
   private void writeCatchment( final PrintWriter writer, final CatchmentInfo info ) throws NAPreprocessorException
   {
     final Catchment catchment = info.getCatchment();
-    final List<HydrotopeInfo> hydrotops = info.getHydrotops();
+    final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
+
     final Sealing totalSealing = info.getTotalSealing();
 
-    final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
+    final Collection<HydrotopeInfo> hydrotops = info.getHydrotops();
 
     writer.print( catchmentAsciiID );
     writer.append( ' ' );
@@ -166,7 +166,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
         final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
 
         final CatchmentInfo catchmentInfo = m_hydroHash.getHydrotopInfo( catchment );
-        final List<HydrotopeInfo> hydrotops = catchmentInfo.getHydrotops();
+        final Collection<HydrotopeInfo> hydrotops = catchmentInfo.getHydrotops();
         for( final HydrotopeInfo hydrotopInfo : hydrotops )
         {
           final int hydrotopID = hydrotopInfo.getLocalID();

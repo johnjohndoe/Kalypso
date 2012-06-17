@@ -31,18 +31,25 @@ package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.model.sort.JSISpatialIndex;
+import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
@@ -50,31 +57,104 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class HydroHash
 {
-  private final Map<Catchment, CatchmentInfo> m_hydroInfos = new LinkedHashMap<Catchment, CatchmentInfo>();
+  private final Comparator< ? super Catchment> m_catchmentSorter;
+
+  private final Map<Catchment, CatchmentInfo> m_catchmentInfos;
 
   private final ParameterHash m_parameterHash;
 
-  public HydroHash( final ParameterHash landuseHash )
+  private final Catchment[] m_catchments;
+
+  private SpatialIndexExt m_catchmentIndex;
+
+  public HydroHash( final ParameterHash landuseHash, final Catchment[] catchments, final IDManager idManager )
   {
     m_parameterHash = landuseHash;
+    m_catchments = catchments;
+
+    m_catchmentSorter = new CatchmentByAsciiIdSorter( idManager );
+    m_catchmentInfos = new TreeMap<Catchment, CatchmentInfo>( m_catchmentSorter );
   }
 
-  public void initHydrotopes( final HydrotopeCollection naHydrotop, final Catchment[] catchments ) throws GM_Exception, NAPreprocessorException
+  public void initHydrotopes( final HydrotopeCollection hydrotopeCollection ) throws GM_Exception, NAPreprocessorException
   {
-    final IFeatureBindingCollection<IHydrotope> hydrotopes = naHydrotop.getHydrotopes();
+    final IFeatureBindingCollection<IHydrotope> hydrotopes = hydrotopeCollection.getHydrotopes();
 
-    for( final Catchment catchment : catchments )
+    for( final IHydrotope hydrotope : hydrotopes )
+    {
+      final Catchment catchment = findCatchment( hydrotope );
+
+      if( catchment == null )
+      {
+        final String message = String.format( "Failed to find catchment for hydrotope '%s'", hydrotope.getName() );
+        throw new NAPreprocessorException( message );
+      }
+
+      addHydrotope( catchment, hydrotope );
+    }
+  }
+
+  private Catchment findCatchment( final IHydrotope hydrotope ) throws GM_Exception
+  {
+    final IXLinkedFeature catchmentLink = hydrotope.getCatchmentLink();
+    if( catchmentLink != null )
+      return (Catchment) catchmentLink.getFeature();
+
+    final SpatialIndexExt catchmentIndex = getCatchmentIndex();
+
+    final Geometry hydrotopGeometry = JTSAdapter.export( hydrotope.getGeometry() );
+    if( hydrotopGeometry == null )
+      return null;
+
+    final Envelope boundingBox = hydrotopGeometry.getEnvelopeInternal();
+
+    @SuppressWarnings({ "unchecked" })
+    final List<Catchment> query = catchmentIndex.query( boundingBox );
+    for( final Catchment catchment : query )
     {
       final Geometry catchmentGeometry = JTSAdapter.export( catchment.getGeometry() );
-
-      final List<IHydrotope> hydInEnvList = hydrotopes.query( catchment.getBoundedBy() );
-      for( final IHydrotope hydrotope : hydInEnvList )
-      {
-        final Geometry hydrotopGeometry = JTSAdapter.export( hydrotope.getGeometry() );
-        if( catchmentGeometry.contains( hydrotopGeometry.getInteriorPoint() ) )
-          addHydrotope( catchment, hydrotope );
-      }
+      if( catchmentGeometry.contains( hydrotopGeometry.getInteriorPoint() ) )
+        return catchment;
     }
+
+    return null;
+  }
+
+  /* Lazy, because often this is never needed */
+  private SpatialIndexExt getCatchmentIndex( )
+  {
+    if( m_catchmentIndex == null )
+      m_catchmentIndex = indexCatchments( m_catchments );
+
+    return m_catchmentIndex;
+  }
+
+  private SpatialIndexExt indexCatchments( final Catchment[] catchments )
+  {
+// /* Calculate bounding box */
+// Envelope maxEnvelope = null;
+// for( final Catchment catchment : catchments )
+// {
+// final GM_Envelope envelope = catchment.getEnvelope();
+// final Envelope boundingBox = JTSAdapter.export( envelope );
+//
+// if( maxEnvelope == null )
+// maxEnvelope = boundingBox;
+// else
+// maxEnvelope.expandToInclude( boundingBox );
+// }
+
+    final SpatialIndexExt index = new JSISpatialIndex();
+// new SplitSortSpatialIndex( maxEnvelope );
+    for( final Catchment catchment : catchments )
+    {
+      final GM_Envelope envelope = catchment.getEnvelope();
+      final Envelope boundingBox = JTSAdapter.export( envelope );
+
+      index.insert( boundingBox, catchment );
+    }
+
+    return index;
   }
 
   private void addHydrotope( final Catchment catchment, final IHydrotope hydrotop ) throws NAPreprocessorException
@@ -85,12 +165,12 @@ public class HydroHash
 
   public CatchmentInfo getHydrotopInfo( final Catchment catchment )
   {
-    final CatchmentInfo info = m_hydroInfos.get( catchment );
+    final CatchmentInfo info = m_catchmentInfos.get( catchment );
     if( info != null )
       return info;
 
     final CatchmentInfo newInfo = new CatchmentInfo( catchment, m_parameterHash );
-    m_hydroInfos.put( catchment, newInfo );
+    m_catchmentInfos.put( catchment, newInfo );
     return newInfo;
   }
 
@@ -103,10 +183,10 @@ public class HydroHash
 
   public Collection<Catchment> getCatchments( )
   {
-    return Collections.unmodifiableCollection( m_hydroInfos.keySet() );
+    return Collections.unmodifiableCollection( m_catchmentInfos.keySet() );
   }
 
-  public List<HydrotopeInfo> getHydrotops( final Catchment catchment )
+  public Collection<HydrotopeInfo> getHydrotops( final Catchment catchment )
   {
     final CatchmentInfo hydrotopInfo = getHydrotopInfo( catchment );
     return hydrotopInfo.getHydrotops();
