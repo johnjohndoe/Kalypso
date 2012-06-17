@@ -61,7 +61,7 @@ import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.LanduseHash;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
@@ -223,7 +223,7 @@ public class NAModelPreprocessor
   {
     if( m_hydroHash == null )
     {
-      final LanduseHash landuseHash = new LanduseHash( parameter, m_logger );
+      final ParameterHash landuseHash = new ParameterHash( parameter, m_logger );
       m_hydroHash = new HydroHash( landuseHash );
       m_hydroHash.initHydrotopes( hydrotopeCollection, catchments );
     }

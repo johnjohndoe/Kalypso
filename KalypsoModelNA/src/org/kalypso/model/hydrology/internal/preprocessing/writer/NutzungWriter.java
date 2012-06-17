@@ -60,7 +60,7 @@ import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.LanduseHash;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -85,7 +85,7 @@ public class NutzungWriter
 
     try
     {
-      final LanduseHash landuseHash = hydroHash.getLanduseHash();
+      final ParameterHash landuseHash = hydroHash.getParameterHash();
       final List<Feature> list = (List<Feature>) parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
       for( final Feature nutzungFE : list )
       {
@@ -100,7 +100,7 @@ public class NutzungWriter
     }
   }
 
-  private void writeFeature( final Feature feature, final Feature linkedIdealLanduseFE, final LanduseHash landuseHash ) throws IOException, SensorException
+  private void writeFeature( final Feature feature, final Feature linkedIdealLanduseFE, final ParameterHash landuseHash ) throws IOException, SensorException
   {
     final String nutzName = landuseHash.getLanduseFeatureShortedName( feature.getName() );
     final File outputFile = new File( m_nutzungDir, nutzName + ".nuz" ); //$NON-NLS-1$

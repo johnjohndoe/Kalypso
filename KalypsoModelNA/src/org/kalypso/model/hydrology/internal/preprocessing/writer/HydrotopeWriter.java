@@ -45,17 +45,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -64,7 +60,6 @@ import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInf
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.Sealing;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Dejan Antanaskovic
@@ -75,23 +70,12 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
 
   private final IDManager m_idManager;
 
-  private final Parameter m_parameter;
-
-  private final Map<String, Soiltype> m_soilTypeNameHash;
-
-  public HydrotopeWriter( final Parameter parameter, final IDManager idManager, final HydroHash hydroHash, final Logger logger )
+  public HydrotopeWriter( final IDManager idManager, final HydroHash hydroHash, final Logger logger )
   {
     super( logger );
 
     m_hydroHash = hydroHash;
     m_idManager = idManager;
-    m_parameter = parameter;
-
-    /* Build soiltype hash for faster lookup later */
-    m_soilTypeNameHash = new HashMap<String, Soiltype>();
-    final IFeatureBindingCollection<Soiltype> soiltypes = m_parameter.getSoiltypes();
-    for( final Soiltype soiltype : soiltypes )
-      m_soilTypeNameHash.put( soiltype.getName(), soiltype );
   }
 
   @Override
@@ -117,7 +101,6 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     final Catchment catchment = info.getCatchment();
     final List<HydrotopeInfo> hydrotops = info.getHydrotops();
     final Sealing totalSealing = info.getTotalSealing();
-// final Sealing totalSudsSealing = info.getTotalSudsSealing();
 
     final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
 
@@ -127,11 +110,6 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     writer.append( ' ' );
     writer.format( Locale.US, "%.3f %.3f %.3f", totalSealing.getSealedArea(), totalSealing.getNaturalArea(), totalSealing.getArea() ); //$NON-NLS-1$
 
-// final double sudsSealedArea = totalSudsSealing.getSealedArea();
-// final double sudsNaturalArea = totalSudsSealing.getNaturalArea();
-// if( sudsSealedArea > 0.0 || sudsNaturalArea > 0.0 )
-//      writer.format( Locale.US, " 1 %.3f %.3f %.3f", sudsSealedArea, sudsNaturalArea, totalSudsSealing.getArea() ); //$NON-NLS-1$
-
     writer.append( '\n' );
 
     for( final HydrotopeInfo hydrotopInfo : hydrotops )
@@ -140,17 +118,31 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
 
   private void writeHydrotope( final PrintWriter writer, final Catchment catchment, final HydrotopeInfo hydrotopInfo ) throws NAPreprocessorException
   {
-    final IHydrotope hydrotop = hydrotopInfo.getHydrotop();
-
-    final String landuseShortName = m_hydroHash.getLanduseHash().getLanduseFeatureShortedName( hydrotop.getLanduse() );
-    final double maxPerkolationRate = hydrotop.getMaxPerkolationRate();
-    final double gwFactor = hydrotop.getGWFactor();
+    final String landuseShortName = hydrotopInfo.getLanduseShortName();
+    final double maxPerkolationRate = hydrotopInfo.getMaxPerkolationRate();
+    final double gwFactor = hydrotopInfo.getGWFactor();
     final int hydrotopID = hydrotopInfo.getLocalID();
 
     final Sealing hydrotopeSealing = hydrotopInfo.getSealing();
     final double totalSealingRate = hydrotopeSealing.getSealingRate();
 
-    final Soiltype soiltype = findSoiltype( hydrotop );
+    final String soiltypeName = getSoilTypeName( catchment, hydrotopInfo );
+
+    /* Write hydrotope line */
+    /* REMARK: last 0 is for the old calculation core - otherwise hydrotope file can't be read */
+    writer.format( Locale.US, "%-10.3f %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f 0%n", hydrotopeSealing.getNaturalArea(), landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopID, totalSealingRate ); //$NON-NLS-1$
+  }
+
+  private String getSoilTypeName( final Catchment catchment, final HydrotopeInfo hydrotopInfo ) throws NAPreprocessorException
+  {
+    final Soiltype soiltype = hydrotopInfo.findSoiltype();
+    if( soiltype == null )
+    {
+      final String soilTypeID = hydrotopInfo.getSoilTypeName();
+      final String msg = String.format( Messages.getString( "HydrotopeWriter.0" ), soilTypeID, hydrotopInfo.getName() ); //$NON-NLS-1$
+      throw new NAPreprocessorException( msg );
+    }
+
     final String soiltypeName = soiltype.getName();
 
     /* Check if number of soil correction factors equals number of soil layers in each hydrotope */
@@ -159,31 +151,12 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
 
     if( countSoilFactors != countSoilLayers )
     {
-      final String hydrotopeName = hydrotop.getName();
+      final String hydrotopeName = hydrotopInfo.getName();
       final String catchmentName = catchment.getName();
       final String message = String.format( "WARNING: Number of soil layers (=%d) in hydrotope (%s) is not equal to number of factors (=%d) in sub-catchments (%s)", countSoilLayers, hydrotopeName, countSoilFactors, catchmentName );
       getLogger().log( Level.WARNING, message );
     }
-
-    /* Write hydrotope line */
-    /* TODO last 0 is for the old calculation core - otherwise hydrotope file can't be read */
-    writer.format( Locale.US, "%-10.3f %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f 0%n", hydrotopeSealing.getNaturalArea(), landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopID, totalSealingRate ); //$NON-NLS-1$
-  }
-
-  private Soiltype findSoiltype( final IHydrotope hydrotop ) throws NAPreprocessorException
-  {
-    final String soilTypeID = hydrotop.getSoilType();
-    final Soiltype soiltype = m_parameter.findSoiltypeByID( soilTypeID );
-    if( soiltype != null )
-      return soiltype;
-
-    // Feature could not be found by id. For backwards compatibility: search by name as well:
-    final Soiltype soiltypeByName = m_soilTypeNameHash.get( soilTypeID );
-    if( soiltypeByName != null )
-      return soiltypeByName;
-
-    final String msg = String.format( Messages.getString( "HydrotopeWriter.0" ), soilTypeID, hydrotop.getId() ); //$NON-NLS-1$
-    throw new NAPreprocessorException( msg );
+    return soiltypeName;
   }
 
   public void writeMapping( final File outputFile ) throws FileNotFoundException
@@ -198,13 +171,15 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
       {
         final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
 
-        final CatchmentInfo hydrotopInfo = m_hydroHash.getHydrotopInfo( catchment );
-        final List<HydrotopeInfo> hydrotops = hydrotopInfo.getHydrotops();
-        for( final HydrotopeInfo hydrotopWithSudInfo : hydrotops )
+        final CatchmentInfo catchmentInfo = m_hydroHash.getHydrotopInfo( catchment );
+        final List<HydrotopeInfo> hydrotops = catchmentInfo.getHydrotops();
+        for( final HydrotopeInfo hydrotopInfo : hydrotops )
         {
-          final IHydrotope hydrotop = hydrotopWithSudInfo.getHydrotop();
-          final int hydrotopID = hydrotopWithSudInfo.getLocalID();
-          writer.format( Locale.US, "%6d %6d   --->   [%s] \t%s\n", catchmentAsciiID, hydrotopID, hydrotop.getId(), hydrotop.getName() ); //$NON-NLS-1$
+          final int hydrotopID = hydrotopInfo.getLocalID();
+          final String featureId = hydrotopInfo.getFeatureId();
+          final String hydrotopName = hydrotopInfo.getName();
+
+          writer.format( Locale.US, "%6d %6d   --->   [%s] \t%s\n", catchmentAsciiID, hydrotopID, featureId, hydrotopName ); //$NON-NLS-1$
         }
       }
 
@@ -214,6 +189,5 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     {
       IOUtils.closeQuietly( writer );
     }
-
   }
 }

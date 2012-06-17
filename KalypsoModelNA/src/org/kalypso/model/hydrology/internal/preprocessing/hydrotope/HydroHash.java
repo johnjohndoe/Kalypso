@@ -35,8 +35,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
+import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -52,11 +52,11 @@ public class HydroHash
 {
   private final Map<Catchment, CatchmentInfo> m_hydroInfos = new LinkedHashMap<Catchment, CatchmentInfo>();
 
-  private final LanduseHash m_landuseHash;
+  private final ParameterHash m_parameterHash;
 
-  public HydroHash( final LanduseHash landuseHash )
+  public HydroHash( final ParameterHash landuseHash )
   {
-    m_landuseHash = landuseHash;
+    m_parameterHash = landuseHash;
   }
 
   public void initHydrotopes( final HydrotopeCollection naHydrotop, final Catchment[] catchments ) throws GM_Exception, SimulationException
@@ -89,7 +89,7 @@ public class HydroHash
     if( info != null )
       return info;
 
-    final CatchmentInfo newInfo = new CatchmentInfo( catchment, m_landuseHash );
+    final CatchmentInfo newInfo = new CatchmentInfo( catchment, m_parameterHash );
     m_hydroInfos.put( catchment, newInfo );
     return newInfo;
   }
@@ -112,8 +112,8 @@ public class HydroHash
     return hydrotopInfo.getHydrotops();
   }
 
-  public LanduseHash getLanduseHash( )
+  public ParameterHash getParameterHash( )
   {
-    return m_landuseHash;
+    return m_parameterHash;
   }
 }

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
@@ -49,14 +49,16 @@ import java.util.logging.Logger;
 
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
+import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
  */
-public class LanduseHash
+public class ParameterHash
 {
   private static final String PLC_LANDUSE_NAME_FORMAT = "PLC_%05d"; //$NON-NLS-1$
 
@@ -66,17 +68,33 @@ public class LanduseHash
 
   private final Map<String, Double> m_landuseSealingRateMap = new HashMap<String, Double>();
 
+  private final Map<String, Soiltype> m_soilTypeNameHash = new HashMap<String, Soiltype>();
+
   private final Logger m_logger;
 
-  public LanduseHash( final Parameter parameter, final Logger logger )
+  private final Parameter m_parameter;
+
+  public ParameterHash( final Parameter parameter, final Logger logger )
   {
+    m_parameter = parameter;
     m_logger = logger;
 
     if( parameter != null )
-      initHash( parameter );
+    {
+      initLanduseHash( parameter );
+      initSoilTypeHash( parameter );
+    }
   }
 
-  private void initHash( final Parameter parameter )
+  /** Build soiltype hash for faster lookup later */
+  private void initSoilTypeHash( final Parameter parameter )
+  {
+    final IFeatureBindingCollection<Soiltype> soiltypes = parameter.getSoiltypes();
+    for( final Soiltype soiltype : soiltypes )
+      m_soilTypeNameHash.put( soiltype.getName(), soiltype );
+  }
+
+  private void initLanduseHash( final Parameter parameter )
   {
     final List< ? > landuseList = (List< ? >) parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
     for( final Object landuseElement : landuseList )
@@ -86,17 +104,12 @@ public class LanduseHash
       final Feature linkedSealingFE = FeatureHelper.resolveLink( landuseFE, NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK );
 
       final Double sealingRate = (Double) linkedSealingFE.getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING );
-      final String landuseName = getLanduseShortName( landuseFE );
+      final String landuseName = getLanduseFeatureShortedName( landuseFE.getName() );
       if( m_landuseSealingRateMap.containsKey( landuseName ) )
         m_logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.0", landuseName ) ); //$NON-NLS-1$
       else
         m_landuseSealingRateMap.put( landuseName, sealingRate );
     }
-  }
-
-  public String getLanduseShortName( final Feature landuseFE )
-  {
-    return getLanduseFeatureShortedName( landuseFE.getName() );
   }
 
   public Double getSealingRate( final String landuseName )
@@ -109,7 +122,6 @@ public class LanduseHash
    * Returns landuse name that is compatible with the calculation core; mappings are stored so once given ID is used
    * again if requested; for null gml names, the new ID is given without storing it
    */
-  // TODO: move this to LanduseHash or to NutzungsManager
   public final String getLanduseFeatureShortedName( final String landuseName )
   {
     if( landuseName != null && landuseName.length() < 10 )
@@ -131,4 +143,14 @@ public class LanduseHash
     return string;
   }
 
+  public Soiltype getSoilType( final String soilTypeID )
+  {
+    // FIXME: we should only support one of those now...
+    final Soiltype soiltype = m_parameter.findSoiltypeByID( soilTypeID );
+    if( soiltype != null )
+      return soiltype;
+
+    // Feature could not be found by id. For backwards compatibility: search by name as well:
+    return m_soilTypeNameHash.get( soilTypeID );
+  }
 }

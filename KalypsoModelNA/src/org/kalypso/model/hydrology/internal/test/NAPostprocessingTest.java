@@ -69,7 +69,7 @@ import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.LanduseHash;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -141,7 +141,7 @@ public class NAPostprocessingTest
     final IFeatureBindingCollection<Catchment> catchmentList = model.getCatchments();
     final Catchment[] catchments = catchmentList.toArray( new Catchment[catchmentList.size()] );
 
-    final LanduseHash landuseHash = new LanduseHash( parameter, logger );
+    final ParameterHash landuseHash = new ParameterHash( parameter, logger );
 
     final HydroHash hydroHash = new HydroHash( landuseHash );
     hydroHash.initHydrotopes( naHydrotop, catchments );
