@@ -198,7 +198,7 @@ public class NAModelPreprocessor
     naModellConverter.writeCalibratedFiles( m_relevantElements, m_tsFileManager );
   }
 
-  private void initNetData( final Node rootNode ) throws Exception
+  private void initNetData( final Node rootNode ) throws SimulationException, GM_Exception, NAPreprocessorException
   {
     final NaModell naModel = m_simulationData.getNaModel();
     final HydrotopeCollection hydrotopeCollection = m_simulationData.getHydrotopCollection();
@@ -219,7 +219,7 @@ public class NAModelPreprocessor
     m_tsFileManager = new TimeseriesFileManager( m_idManager, usePrecipitationForm );
   }
 
-  private HydroHash initHydroHash( final Parameter parameter, final HydrotopeCollection hydrotopeCollection, final Catchment[] catchments ) throws GM_Exception, SimulationException
+  private HydroHash initHydroHash( final Parameter parameter, final HydrotopeCollection hydrotopeCollection, final Catchment[] catchments ) throws GM_Exception, NAPreprocessorException
   {
     if( m_hydroHash == null )
     {

@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
+import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.IHydrotope;
+import org.kalypso.model.hydrology.binding.Landuse;
+import org.kalypso.model.hydrology.binding.SoilType;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
-import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
 /**
@@ -52,7 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
  */
 public class HydrotopeInfo
 {
-  private final IHydrotope m_hydrotop;
+  private final IHydrotope m_hydrotope;
 
   private final ParameterHash m_landuseHash;
 
@@ -62,24 +68,27 @@ public class HydrotopeInfo
 
   public HydrotopeInfo( final IHydrotope hydrotop, final ParameterHash landuseHash, final int localID )
   {
-    m_hydrotop = hydrotop;
+    m_hydrotope = hydrotop;
     m_landuseHash = landuseHash;
     m_localID = localID;
   }
 
-  public Sealing getSealing( )
+  public Sealing getSealing( ) throws NAPreprocessorException
   {
+    if( m_sealing == null )
+      m_sealing = calculateSealing();
+
     return m_sealing;
   }
 
   public String getFeatureId( )
   {
-    return m_hydrotop.getId();
+    return m_hydrotope.getId();
   }
 
   public String getName( )
   {
-    return m_hydrotop.getName();
+    return m_hydrotope.getName();
   }
 
   public int getLocalID( )
@@ -87,62 +96,161 @@ public class HydrotopeInfo
     return m_localID;
   }
 
-  private double getSealingRate( ) throws SimulationException
+  private String getLanduseClassName( )
   {
-    final String landuseName = m_hydrotop.getLanduse();
+    final IXLinkedFeature landuseLink = m_hydrotope.getLanduseLink();
+    if( landuseLink != null )
+    {
+      final Landuse landuse = (Landuse) landuseLink.getFeature();
+      return landuse.getLanduseClassName();
+    }
+
+    return m_hydrotope.getLanduse();
+  }
+
+  private double getLanduseSealingRate( ) throws NAPreprocessorException
+  {
+    final String landuseName = getLanduseClassName();
     final Double landuseSealing = m_landuseHash.getSealingRate( landuseName );
     if( landuseSealing == null )
     {
-      final String msg = String.format( "Unknown landuse: '%s'. Please recreate hydrotopes!", landuseName ); //$NON-NLS-1$
-      throw new SimulationException( msg );
+      final String msg = String.format( "Unknown landuse: '%s' for hydrotope '%s'.", landuseName, getName() ); //$NON-NLS-1$
+      throw new NAPreprocessorException( msg );
     }
 
     return landuseSealing.doubleValue();
   }
 
-  public void calculateSealing( ) throws SimulationException
+  public double getMaxPerkolationRate( ) throws NAPreprocessorException
   {
-    final GM_MultiSurface geometry = m_hydrotop.getGeometry();
-    final double hydrotopArea = geometry.getArea();
-    final double landuseSealing = getSealingRate();
+    final IXLinkedFeature geologyLink = m_hydrotope.getGeologyLink();
+    if( geologyLink != null )
+    {
+      final Geology geology = (Geology) geologyLink.getFeature();
+      final Double maxPercolationRate = geology.getMaxPercolationRate();
 
-    final double corrSealing = m_hydrotop.getCorrSealing();
-    // FIXME:
-    // HOTFIX: should actually lead to an exception instead: planer client produces corrSeling > 1.0
-    // final double corrSealingFixed = Math.abs( Math.min( corrSealing, 1.0 ) );
+      if( maxPercolationRate == null )
+      {
+        final String msg = String.format( "Max. percolation rate not set in geology for hydrotope: '%s'.", getName() ); //$NON-NLS-1$
+        throw new NAPreprocessorException( msg );
+      }
+
+      return maxPercolationRate;
+    }
+
+    final Double maxPercolationRate = m_hydrotope.getMaxPerkolationRate();
+    if( maxPercolationRate != null )
+      return maxPercolationRate;
+
+    final String msg = String.format( "Max. percolation rate not set for hydrotope: '%s'.", getName() ); //$NON-NLS-1$
+    throw new NAPreprocessorException( msg );
+  }
+
+  public double getGWFactor( ) throws NAPreprocessorException
+  {
+    final IXLinkedFeature geologyLink = m_hydrotope.getGeologyLink();
+    if( geologyLink != null )
+    {
+      final Geology geology = (Geology) geologyLink.getFeature();
+      final Double gwFactor = geology.getGWFactor();
+
+      if( gwFactor == null )
+      {
+        final String msg = String.format( "Groundwater inflwo rate not set in geology for hydrotope: '%s'.", getName() ); //$NON-NLS-1$
+        throw new NAPreprocessorException( msg );
+      }
+
+      return gwFactor;
+    }
+
+    final Double gwFactor = m_hydrotope.getGWFactor();
+    if( gwFactor != null )
+      return gwFactor;
+
+    final String msg = String.format( "Groundwater inflwo rate not set for hydrotope: '%s'.", getName() ); //$NON-NLS-1$
+    throw new NAPreprocessorException( msg );
+  }
+
+  public Soiltype findSoiltype( ) throws NAPreprocessorException
+  {
+    final IXLinkedFeature pedologyLink = m_hydrotope.getPedologyLink();
+    if( pedologyLink != null )
+    {
+      final SoilType pedology = (SoilType) pedologyLink.getFeature();
+      final IXLinkedFeature soilTypeLink = pedology.getSoilType();
+      if( soilTypeLink != null )
+        return (Soiltype) soilTypeLink.getFeature();
+
+      final String msg = String.format( "Soil type not set in pedology for hydrotope: '%s'.", getName() ); //$NON-NLS-1$
+      throw new NAPreprocessorException( msg );
+    }
+
+    final String soilTypeID = m_hydrotope.getSoilType();
+    final Soiltype soiltype = m_landuseHash.getSoilType( soilTypeID );
+    if( soiltype != null )
+      return soiltype;
+
+    final String msg = String.format( Messages.getString( "HydrotopeWriter.0" ), soilTypeID, getName() ); //$NON-NLS-1$
+    throw new NAPreprocessorException( msg );
+  }
+
+  private double getHydrotopeArea( ) throws NAPreprocessorException
+  {
+    final GM_MultiSurface geometry = m_hydrotope.getGeometry();
+    if( geometry != null )
+      return geometry.getArea();
+
+    final Double area = m_hydrotope.getArea();
+    if( area != null )
+      return area;
+
+    final String msg = String.format( "Failed to determine area for hydrotope '%s'", getName() );
+    throw new NAPreprocessorException( msg );
+  }
+
+  private double getSealingCorrection( ) throws NAPreprocessorException
+  {
+    final IXLinkedFeature catchmentLink = m_hydrotope.getCatchmentLink();
+    final IXLinkedFeature landuseLink = m_hydrotope.getLanduseLink();
+    if( catchmentLink != null && landuseLink != null )
+    {
+      final Catchment catchment = (Catchment) catchmentLink.getFeature();
+      final Landuse landuse = (Landuse) landuseLink.getFeature();
+
+      final double catchmentCorrSealing = catchment.getCorrSealing();
+      final double landuseCorrSealing = landuse.getCorrSealing();
+
+      return catchmentCorrSealing * landuseCorrSealing;
+    }
+
+    final Double corrSealing = m_hydrotope.getCorrSealing();
+    if( corrSealing != null )
+      return corrSealing;
+
+    final String msg = String.format( "Failed to determine sealing correction factor for hydrotope %s", getName() );
+    throw new NAPreprocessorException( msg );
+  }
+
+  private Sealing calculateSealing( ) throws NAPreprocessorException
+  {
+    final double hydrotopArea = getHydrotopeArea();
+
+    final double landuseSealing = getLanduseSealingRate();
+
+    final double corrSealing = getSealingCorrection();
+
     final double totalSealingFaktor = landuseSealing * corrSealing;
-    m_sealing = Sealing.createFromSealing( hydrotopArea, totalSealingFaktor );
 
-    final double naturalArea = m_sealing.getNaturalArea();
-    if( naturalArea < 0.0 )
-      throw new SimulationException( String.format( "Hydrotop natural area is less than 0.0 m2: %.4f", naturalArea ) ); //$NON-NLS-1$
+    if( totalSealingFaktor < 0.0 || totalSealingFaktor > 1.0 )
+      throw new NAPreprocessorException( String.format( "Total sealing %.2f outside valid range (0.0 - 1.0) for hydrotope %s.", totalSealingFaktor, getName() ) );
+
+    return Sealing.createFromSealing( hydrotopArea, totalSealingFaktor );
   }
 
   public String getLanduseShortName( )
   {
-    return m_landuseHash.getLanduseFeatureShortedName( m_hydrotop.getLanduse() );
-  }
+    final String landuseClassName = getLanduseClassName();
 
-  public double getMaxPerkolationRate( )
-  {
-    return m_hydrotop.getMaxPerkolationRate();
-  }
-
-  public double getGWFactor( )
-  {
-    return m_hydrotop.getGWFactor();
-  }
-
-  public Soiltype findSoiltype( )
-  {
-    final String soilTypeID = m_hydrotop.getSoilType();
-
-    return m_landuseHash.getSoilType( soilTypeID );
-  }
-
-  public String getSoilTypeName( )
-  {
-    final String soilTypeID = m_hydrotop.getSoilType();
-    return soilTypeID;
+    return m_landuseHash.getLanduseFeatureShortedName( landuseClassName );
   }
 }

@@ -330,7 +330,7 @@ public class NetFileAnalyser
     return name;
   }
 
-  public RelevantNetElements analyseNet( ) throws Exception
+  public RelevantNetElements analyseNet( ) throws SimulationException
   {
     final RelevantNetElements relevantElements = new RelevantNetElements();
 

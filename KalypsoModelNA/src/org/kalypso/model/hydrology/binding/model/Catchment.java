@@ -430,7 +430,7 @@ public class Catchment extends AbstractNaModelElement
     return sumGwwi;
   }
 
-  public Double getCorrSealing( )
+  public double getCorrSealing( )
   {
     return getDoubleProperty( QNAME_PROP_CORRSEALING, 1.0 );
   }

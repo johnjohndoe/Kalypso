@@ -47,7 +47,7 @@ import java.util.List;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
@@ -72,10 +72,9 @@ public class CatchmentInfo
     m_totalSealing = new Sealing();
   }
 
-  public void add( final IHydrotope hydrotop ) throws SimulationException
+  public void add( final IHydrotope hydrotop ) throws NAPreprocessorException
   {
     final HydrotopeInfo hydrotopInfo = new HydrotopeInfo( hydrotop, m_landuseHash, m_hydrotops.size() + 1 );
-    hydrotopInfo.calculateSealing();
     m_hydrotops.add( hydrotopInfo );
 
     final Sealing hydrotopeSealing = hydrotopInfo.getSealing();

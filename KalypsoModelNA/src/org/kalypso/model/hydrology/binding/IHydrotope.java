@@ -92,15 +92,15 @@ public interface IHydrotope extends Feature
 
   void setSoilType( final String value );
 
-  double getCorrSealing( );
+  Double getCorrSealing( );
 
   void setCorrSealing( final double value );
 
-  double getMaxPerkolationRate( );
+  Double getMaxPerkolationRate( );
 
   void setMaxPerkolationRate( final double value );
 
-  double getGWFactor( );
+  Double getGWFactor( );
 
   void setGWFactor( final double value );
 
@@ -123,4 +123,6 @@ public interface IHydrotope extends Feature
   IXLinkedFeature getOverlayLink( );
 
   void setOverlayLink( final String href );
+
+  Double getArea( );
 }

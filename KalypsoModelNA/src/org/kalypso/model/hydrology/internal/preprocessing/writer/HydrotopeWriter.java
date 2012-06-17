@@ -136,12 +136,6 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
   private String getSoilTypeName( final Catchment catchment, final HydrotopeInfo hydrotopInfo ) throws NAPreprocessorException
   {
     final Soiltype soiltype = hydrotopInfo.findSoiltype();
-    if( soiltype == null )
-    {
-      final String soilTypeID = hydrotopInfo.getSoilTypeName();
-      final String msg = String.format( Messages.getString( "HydrotopeWriter.0" ), soilTypeID, hydrotopInfo.getName() ); //$NON-NLS-1$
-      throw new NAPreprocessorException( msg );
-    }
 
     final String soiltypeName = soiltype.getName();
 

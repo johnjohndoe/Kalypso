@@ -91,7 +91,13 @@ public class ParameterHash
   {
     final IFeatureBindingCollection<Soiltype> soiltypes = parameter.getSoiltypes();
     for( final Soiltype soiltype : soiltypes )
-      m_soilTypeNameHash.put( soiltype.getName(), soiltype );
+    {
+      final String name = soiltype.getName();
+      if( m_soilTypeNameHash.containsKey( name ) )
+        m_logger.log( Level.WARNING, String.format( "Duplicate soil type name: %s. Second soil type will be ignored.", name ) ); //$NON-NLS-1$
+      else
+        m_soilTypeNameHash.put( name, soiltype );
+    }
   }
 
   private void initLanduseHash( final Parameter parameter )
