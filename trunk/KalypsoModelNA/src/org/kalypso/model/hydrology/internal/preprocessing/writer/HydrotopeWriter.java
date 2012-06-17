@@ -129,7 +129,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
 
     /* Write hydrotope line */
     /* REMARK: last 0 is for the old calculation core - otherwise hydrotope file can't be read */
-    writer.format( Locale.US, "%-10g %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f 0%n", naturalArea, landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopID, totalSealingRate ); //$NON-NLS-1$
+    writer.format( Locale.US, "%-10.10g %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f 0%n", naturalArea, landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopID, totalSealingRate ); //$NON-NLS-1$
   }
 
   private String getSoilTypeName( final Catchment catchment, final HydrotopeInfo hydrotopInfo )
