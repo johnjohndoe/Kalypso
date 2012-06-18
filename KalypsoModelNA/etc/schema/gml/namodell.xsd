@@ -14,7 +14,8 @@
             <element name="CatchmentCollectionMember" type="na:CatchmentCollectionAssociationType" />
             <element name="ChannelCollectionMember" type="na:ChannelCollectionAssociationType" />
             <element name="NodeCollectionMember" type="na:NodeCollectionAssociationType" />
-            <!-- TODO: if still used -->
+            
+            <!-- deprecated, do do not use -->
             <element name="SwaleAndTrenchCollectionMember" type="na:SwaleAndTrenchCollectionAssociationType" />
           </sequence>
         </extension>
@@ -377,20 +378,27 @@
           <element name="faktorRetbas" type="double" minOccurs="0" />
           <element name="faktorRetgw" type="double" minOccurs="0" />
           <element name="faktorRetklu" type="double" minOccurs="0" />
-          <element ref="na:corrSealing" minOccurs="0" />
+          <element name="corrSealing" minOccurs="0">
+            <!--  FIXME: factor always < 1 ? we would like to increase sealing as well! -->
+            <simpleType>
+              <restriction base="double">
+                <minInclusive value="0.0" />
+                <maxInclusive value="1.0" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="corrMaxPerc" type="na:correctionFactorType" minOccurs="0"/>
+          <element name="corrGWInflowRate" type="na:correctionFactorType" minOccurs="0" />
         </sequence>
       </extension>
     </complexContent>
   </complexType>
 
-  <element name="corrSealing" default="1.0">
-    <simpleType>
-      <restriction base="double">
-        <minInclusive value="0.0" />
-        <maxInclusive value="1.0" />
-      </restriction>
-    </simpleType>
-  </element>
+  <simpleType name="correctionFactorType">
+    <restriction base="double">
+      <minExclusive value="0.0" />
+    </restriction>
+  </simpleType>
 
   <!-- ______________Channels_____________________ -->
   <complexType name="ChannelCollectionAssociationType">

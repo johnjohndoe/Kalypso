@@ -37,13 +37,33 @@
   </validatorlabel>
 
   <label property="rrm:corrSealing" style="SWT.NONE" visible="true">
-    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
   <text editable="true" property="rrm:corrSealing" style="SWT.BORDER | SWT.RIGHT">
-    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
   </text>
   <validatorlabel property="rrm:corrSealing" style="SWT.NONE" visible="true">
-    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+
+  <label property="rrm:corrMaxPerc" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="rrm:corrMaxPerc" style="SWT.BORDER | SWT.RIGHT">
+    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  </text>
+  <validatorlabel property="rrm:corrMaxPerc" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+
+  <label property="rrm:corrGWInflowRate" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="rrm:corrGWInflowRate" style="SWT.BORDER | SWT.RIGHT">
+    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  </text>
+  <validatorlabel property="rrm:corrGWInflowRate" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 
   <translator id="commons.msgGetString">
