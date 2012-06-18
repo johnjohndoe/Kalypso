@@ -75,6 +75,7 @@ import org.kalypso.model.hydrology.binding.cm.ICatchment;
 import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.util.cm.CatchmentHelper;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
@@ -153,8 +154,8 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       final IObservation[] results = new IObservation[catchments.size()];
 
       /* Monitor. */
-      monitor.beginTask( String.format( "Generiere Zeitreihen für %d Gebiete...", catchments.size() ), catchments.size() * 200 );
-      monitor.subTask( "Generiere Zeitreihen..." );
+      monitor.beginTask( String.format( Messages.getString("LinearSumGenerator_0"), catchments.size() ), catchments.size() * 200 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("LinearSumGenerator_1") ); //$NON-NLS-1$
 
       /* A catchment with the already used hash needs not to be calculated anymore. */
       /* Because the result timeseries would be the same. */
@@ -170,7 +171,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
         final String description = areaLink.getDescription();
 
         /* Generate the message 1. */
-        final String message1 = String.format( "Sammle gewichtete Zeitreihen zur Erzeugung von Zeitreihe %d zu Gebiet '%s'...", i + 1, description );
+        final String message1 = String.format( Messages.getString("LinearSumGenerator_2"), i + 1, description ); //$NON-NLS-1$
 
         /* Monitor. */
         monitor.subTask( message1 );
@@ -218,7 +219,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
         }
 
         /* Generate the message 2. */
-        final String message2 = String.format( "Erzeuge Zeitreihe %d zu Gebiet '%s' mit %d gewichteten Zeitreihen...", i + 1, description, factors.size() );
+        final String message2 = String.format( Messages.getString("LinearSumGenerator_3"), i + 1, description, factors.size() ); //$NON-NLS-1$
 
         /* Monitor. */
         monitor.worked( 100 );
@@ -230,7 +231,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
         /* Set the resulting observation for this catchment. */
         final double[] factorDoubles = ArrayUtils.toPrimitive( factors.toArray( new Double[] {} ) );
-        results[i] = RainfallGeneratorUtilities.combineObses( observations.toArray( new IObservation[] {} ), factorDoubles, "catchmentGenerator://linearSum" );
+        results[i] = RainfallGeneratorUtilities.combineObses( observations.toArray( new IObservation[] {} ), factorDoubles, "catchmentGenerator://linearSum" ); //$NON-NLS-1$
 
         /* Monitor. */
         monitor.worked( 100 );
@@ -430,7 +431,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     {
       /* Convert to a date with the kalypso timezone. */
       /* The date fields are ignored. */
-      final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) );
+      final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) ); //$NON-NLS-1$
       final DateTime timestampDate = new DateTime( timestampUTC.toDate(), DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() ) );
 
       /* With a timestamp adjust the hours and the minutes accordingly. */

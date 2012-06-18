@@ -61,7 +61,7 @@ public interface IMultiGenerator extends IRainfallGenerator
   /**
    * The qname of the sub generator member.
    */
-  QName MEMBER_SUB_GENERATOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "subGeneratorMember" ); // $NON-NLS-1$
+  QName MEMBER_SUB_GENERATOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "subGeneratorMember" ); // $NON-NLS-1$ //$NON-NLS-1$
 
   /**
    * This function returns all sub generators.

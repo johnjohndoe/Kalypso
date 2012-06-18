@@ -46,6 +46,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -53,7 +54,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 class CatchmentHydrotopeInput extends AbstractHydrotopeInput<Catchment>
 {
-  static final String STR_SEALING_FACTOR_OUTSIDE_VALID_RANGE_0_0_1_0 = "sealing factor outside it's valid range [0.0 - 1.0]";
+  static final String STR_SEALING_FACTOR_OUTSIDE_VALID_RANGE_0_0_1_0 = Messages.getString("CatchmentHydrotopeInput_0"); //$NON-NLS-1$
 
   public CatchmentHydrotopeInput( final NaModell naModel )
   {
@@ -63,7 +64,7 @@ class CatchmentHydrotopeInput extends AbstractHydrotopeInput<Catchment>
   @Override
   public String getLabel( )
   {
-    return "Catchments";
+    return Messages.getString("CatchmentHydrotopeInput_1"); //$NON-NLS-1$
   }
 
   @Override

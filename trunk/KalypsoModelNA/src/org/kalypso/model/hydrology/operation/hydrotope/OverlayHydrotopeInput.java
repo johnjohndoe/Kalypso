@@ -50,6 +50,7 @@ import org.kalypso.model.hydrology.binding.OverlayElement;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -78,7 +79,7 @@ class OverlayHydrotopeInput extends AbstractHydrotopeInput<OverlayElement>
   @Override
   public String getLabel( )
   {
-    return "Overlay";
+    return Messages.getString("OverlayHydrotopeInput_0"); //$NON-NLS-1$
   }
 
   @Override

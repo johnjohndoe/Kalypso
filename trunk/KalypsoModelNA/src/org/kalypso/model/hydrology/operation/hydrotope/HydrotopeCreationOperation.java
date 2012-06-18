@@ -105,14 +105,14 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
     /* Build the indices */
-    final String stepIndex = formatStep( 1, 6, "Initialisation" );
+    final String stepIndex = formatStep( 1, 6, Messages.getString("HydrotopeCreationOperation.0") ); //$NON-NLS-1$
     progress.setTaskName( stepIndex );
     final HydrotopeInputIndexer geometryIndexer = configureIndexer( stepIndex );
     final IStatus initStatus = geometryIndexer.execute( progress.newChild( 5 ) );
     log.add( initStatus );
 
     /* Input validation */
-    final String stepValidate = formatStep( 2, 6, "Input validation" );
+    final String stepValidate = formatStep( 2, 6, Messages.getString("HydrotopeCreationOperation.1") ); //$NON-NLS-1$
     progress.setTaskName( stepValidate );
     final IHydrotopeInput[] indices = geometryIndexer.getIndices();
     final HydrotopeCreationInputValidation geometryValidator = new HydrotopeCreationInputValidation( indices, stepValidate );
@@ -120,7 +120,7 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     log.add( validationStatus );
     if( validationStatus.matches( IStatus.ERROR ) )
     {
-      log.add( IStatus.ERROR, "Critical during inut validation. Unable to proceed." );
+      log.add( IStatus.ERROR, Messages.getString("HydrotopeCreationOperation.2") ); //$NON-NLS-1$
       return log.asMultiStatusOrOK( taskName );
     }
 
@@ -132,7 +132,7 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     log.add( intersectorStatus );
 
     /* Dissolve */
-    final String stepDissolve = formatStep( 4, 6, "Combine hydrotopes with identical attributes" );
+    final String stepDissolve = formatStep( 4, 6, Messages.getString("HydrotopeCreationOperation.3") ); //$NON-NLS-1$
     progress.setTaskName( stepDissolve );
     final List<Polygon> intersectionList = geometryIntersector.getResult();
     final HydrotopeDissolver dissolver = new HydrotopeDissolver( intersectionList, stepDissolve );
@@ -148,7 +148,7 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
     log.add( buildStatus );
 
     /* Validate hydrotopes */
-    final String stepValidateHydrotopes = formatStep( 6, 6, "Validate Hydrotopes" );
+    final String stepValidateHydrotopes = formatStep( 6, 6, Messages.getString("HydrotopeCreationOperation.4") ); //$NON-NLS-1$
     progress.setTaskName( stepValidateHydrotopes );
     final HydrotopeValidator hydrotopeValidator = new HydrotopeValidator( m_hydrotopes, m_naModel, stepValidateHydrotopes );
     final IStatus validationHydrotopesStatus = hydrotopeValidator.execute( progress.newChild( 5 ) );
@@ -159,7 +159,7 @@ public class HydrotopeCreationOperation implements ICoreRunnableWithProgress
 
   private String formatStep( final int step, final int stepCount, final String message )
   {
-    return Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.5", step, stepCount, message );
+    return Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.5", step, stepCount, message ); //$NON-NLS-1$
   }
 
   private HydrotopeInputIndexer configureIndexer( final String logLabel )

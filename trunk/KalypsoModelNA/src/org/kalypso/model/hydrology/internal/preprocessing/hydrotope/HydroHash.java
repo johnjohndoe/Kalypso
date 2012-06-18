@@ -40,6 +40,7 @@ import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -86,7 +87,7 @@ public class HydroHash
 
       if( catchment == null )
       {
-        final String message = String.format( "Failed to find catchment for hydrotope '%s'", hydrotope.getName() );
+        final String message = String.format( Messages.getString("HydroHash_0"), hydrotope.getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( message );
       }
 

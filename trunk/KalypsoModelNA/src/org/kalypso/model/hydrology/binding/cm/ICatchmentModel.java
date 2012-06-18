@@ -58,7 +58,7 @@ public interface ICatchmentModel extends IModel
   /**
    * The qname of the generator member.
    */
-  QName MEMBER_CATCHMENT_GENERATOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "generatorMember" );
+  QName MEMBER_CATCHMENT_GENERATOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "generatorMember" ); //$NON-NLS-1$
 
   /**
    * This function returns all catchment generators.

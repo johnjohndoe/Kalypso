@@ -221,21 +221,21 @@ public class RrmSimulation
 
   public IFolder getClimateFolder( )
   {
-    return m_simulation.getFolder( Messages.getString( "RrmSimulation.0" ) ); // $NON-NLS-1$
+    return m_simulation.getFolder( Messages.getString( "RrmSimulation.0" ) ); // $NON-NLS-1$ //$NON-NLS-1$
   }
 
   public IFolder getPrecipitationFolder( )
   {
-    return m_simulation.getFolder( Messages.getString( "RrmSimulation.1" ) ); // $NON-NLS-1$
+    return m_simulation.getFolder( Messages.getString( "RrmSimulation.1" ) ); // $NON-NLS-1$ //$NON-NLS-1$
   }
 
   public IFolder getGaugeFolder( )
   {
-    return m_simulation.getFolder( Messages.getString( "RrmSimulation.2" ) ); // $NON-NLS-1$
+    return m_simulation.getFolder( Messages.getString( "RrmSimulation.2" ) ); // $NON-NLS-1$ //$NON-NLS-1$
   }
 
   public IFolder getNodeInflowFolder( )
   {
-    return m_simulation.getFolder( Messages.getString( "RrmSimulation.3" ) ); // $NON-NLS-1$
+    return m_simulation.getFolder( Messages.getString( "RrmSimulation.3" ) ); // $NON-NLS-1$ //$NON-NLS-1$
   }
 }

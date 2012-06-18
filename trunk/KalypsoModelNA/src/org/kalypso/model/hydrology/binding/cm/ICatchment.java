@@ -57,17 +57,17 @@ public interface ICatchment extends Feature
   /**
    * The qname of the catchment.
    */
-  QName FEATURE_CATCHMENT = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "Catchment" );
+  QName FEATURE_CATCHMENT = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "Catchment" ); //$NON-NLS-1$
 
   /**
    * The qname of the area link.
    */
-  QName PROPERTY_AREA_LINK = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaLink" );
+  QName PROPERTY_AREA_LINK = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaLink" ); //$NON-NLS-1$
 
   /**
    * The qname of the factorized timeseries member.
    */
-  QName MEMBER_FACTORIZED_TIMESERIES = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "factorizedTimeseriesMember" );
+  QName MEMBER_FACTORIZED_TIMESERIES = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "factorizedTimeseriesMember" ); //$NON-NLS-1$
 
   /**
    * This function returns the area link.

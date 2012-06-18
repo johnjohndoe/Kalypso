@@ -106,8 +106,8 @@ public class NAModelSimulation
       collector.add( preProcessStatus );
       if( monitor.isCanceled() )
       {
-        collector.add( new Status( IStatus.CANCEL, ModelNA.PLUGIN_ID, "Simulation canceled..." ) );
-        return collector.asMultiStatus( "Simulation canceled" );
+        collector.add( new Status( IStatus.CANCEL, ModelNA.PLUGIN_ID, Messages.getString("NAModelSimulation.4") ) ); //$NON-NLS-1$
+        return collector.asMultiStatus( Messages.getString("NAModelSimulation.5") ); //$NON-NLS-1$
       }
 
       /* Processing. */
@@ -115,20 +115,20 @@ public class NAModelSimulation
       collector.add( processStatus );
       if( monitor.isCanceled() )
       {
-        collector.add( new Status( IStatus.CANCEL, ModelNA.PLUGIN_ID, "Simulation canceled..." ) );
-        return collector.asMultiStatus( "Simulation canceled" );
+        collector.add( new Status( IStatus.CANCEL, ModelNA.PLUGIN_ID, Messages.getString("NAModelSimulation.6") ) ); //$NON-NLS-1$
+        return collector.asMultiStatus( Messages.getString("NAModelSimulation.7") ); //$NON-NLS-1$
       }
 
       /* Post processing. */
       final IStatus postProcessStatus = postProcess( m_data, processStatus, monitor );
       collector.add( postProcessStatus );
 
-      return collector.asMultiStatus( "Simulation finished" );
+      return collector.asMultiStatus( Messages.getString("NAModelSimulation.8") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( "Simulation failed" );
+      return collector.asMultiStatus( Messages.getString("NAModelSimulation.9") ); //$NON-NLS-1$
     }
   }
 
@@ -160,7 +160,7 @@ public class NAModelSimulation
       final File idMapFile = new File( m_simDirs.simulationDir, "IdMap.txt" ); //$NON-NLS-1$
       m_preprocessor.getIdManager().dump( idMapFile );
 
-      return collector.asMultiStatus( "Pre processing" );
+      return collector.asMultiStatus( Messages.getString("NAModelSimulation.10") ); //$NON-NLS-1$
     }
     catch( final NAPreprocessorException e )
     {
@@ -189,7 +189,7 @@ public class NAModelSimulation
       collector.add( IStatus.ERROR, e.getLocalizedMessage(), e );
     }
 
-    return collector.asMultiStatus( "Processing" );
+    return collector.asMultiStatus( Messages.getString("NAModelSimulation.11") ); //$NON-NLS-1$
   }
 
   private IStatus postProcess( final INaSimulationData simulationData, final MultiStatus processStatus, final ISimulationMonitor monitor ) throws Exception
@@ -223,7 +223,7 @@ public class NAModelSimulation
       }
     }
 
-    return collector.asMultiStatus( "Post processing" );
+    return collector.asMultiStatus( Messages.getString("NAModelSimulation.12") ); //$NON-NLS-1$
   }
 
   public NaSimulationDirs getSimulationDirs( )

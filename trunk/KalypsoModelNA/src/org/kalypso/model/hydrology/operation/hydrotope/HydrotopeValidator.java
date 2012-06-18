@@ -54,6 +54,7 @@ import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -82,21 +83,21 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final String taskName = "Validating hydrotopes";
+    final String taskName = Messages.getString("HydrotopeValidator_0"); //$NON-NLS-1$
 
     final SubMonitor progress = SubMonitor.convert( monitor, taskName, 110 );
 
-    progress.subTask( "Building index" );
+    progress.subTask( Messages.getString("HydrotopeValidator_1") ); //$NON-NLS-1$
     final SpatialIndexExt hydrotopeIndex = buildOutputIndex();
     progress.worked( 10 );
 
-    final HydrotopeCreationGeometryValidator validator = new HydrotopeCreationGeometryValidator( "Hydrotopes", hydrotopeIndex );
+    final HydrotopeCreationGeometryValidator validator = new HydrotopeCreationGeometryValidator( Messages.getString("HydrotopeValidator_2"), hydrotopeIndex ); //$NON-NLS-1$
 
     log.add( validator.checkGeometryCorrectness( progress.newChild( 33 ) ) );
 
     log.add( validator.checkSelfIntersection( progress.newChild( 33 ) ) );
 
-    progress.subTask( "Checking coverage of catchments" );
+    progress.subTask( Messages.getString("HydrotopeValidator_3") ); //$NON-NLS-1$
     log.add( checkAgainstCatchments() );
     progress.done();
 
@@ -110,7 +111,7 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
     final IFeatureBindingCollection<IHydrotope> hydrotopes = m_hydrotopes.getHydrotopes();
     final SpatialIndexExt index = AbstractHydrotopeInput.buildIndex( hydrotopes, log );
 
-    final IStatus status = log.asMultiStatus( "Index hydrotopes" );
+    final IStatus status = log.asMultiStatus( Messages.getString("HydrotopeValidator_4") ); //$NON-NLS-1$
     ModelNA.getDefault().getLog().log( status );
 
     return index;
@@ -145,7 +146,7 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
     {
       final Double sum = areaSums.get( catchment );
       if( sum == null )
-        log.add( IStatus.WARNING, "Catchment '%s' is not covered by any hydrotope", null, catchment.getName() );
+        log.add( IStatus.WARNING, Messages.getString("HydrotopeValidator_5"), null, catchment.getName() ); //$NON-NLS-1$
       else
       {
         final double catchmentArea = catchment.getGeometry().getArea();
@@ -156,16 +157,16 @@ public class HydrotopeValidator implements ICoreRunnableWithProgress
         if( difference > FeatureListGeometryIntersector.MIN_AREA && differencePercent > 0.1 )
         {
           /* Catchment bigger than hydrotopes */
-          log.add( IStatus.WARNING, "Catchment '%s' is not completely covered by hydrotopes (difference is %.1f %%)", null, catchment.getName(), differencePercent );
+          log.add( IStatus.WARNING, Messages.getString("HydrotopeValidator_6"), null, catchment.getName(), differencePercent ); //$NON-NLS-1$
         }
         else if( difference < -FeatureListGeometryIntersector.MIN_AREA && differencePercent > 0.1 )
         {
           /* Catchment smaller than hydrotopes */
-          log.add( IStatus.WARNING, "Area of Catchment '%s' is smaller than the sum of it's hydrotope areas (difference is %.1f %%)", null, catchment.getName(), differencePercent );
+          log.add( IStatus.WARNING, Messages.getString("HydrotopeValidator_7"), null, catchment.getName(), differencePercent ); //$NON-NLS-1$
         }
       }
     }
 
-    return log.asMultiStatus( "Catchment coverage" );
+    return log.asMultiStatus( Messages.getString("HydrotopeValidator_8") ); //$NON-NLS-1$
   }
 }

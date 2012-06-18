@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.DateRange;
@@ -112,8 +113,8 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
     try
     {
       /* Monitor. */
-      monitor.beginTask( String.format( "Generiere Zeitreihen mit %d Gebietsmodellen...", m_subGenerators.size() ), m_subGenerators.size() * 200 );
-      monitor.subTask( "Generiere Zeitreihen..." );
+      monitor.beginTask( String.format( Messages.getString("MultiGenerator_0"), m_subGenerators.size() ), m_subGenerators.size() * 200 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("MultiGenerator_1") ); //$NON-NLS-1$
 
       // TODO Is calculated by the child generators and the results are managed outside.
 

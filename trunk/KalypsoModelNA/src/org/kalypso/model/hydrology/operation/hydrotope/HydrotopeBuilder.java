@@ -58,6 +58,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -100,7 +101,7 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
 
     final int size = m_hydrotopeBeans.size();
 
-    final SubMonitor progress = SubMonitor.convert( monitor, "Building hydrotopes", size );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("HydrotopeBuilder_0"), size ); //$NON-NLS-1$
 
     removeOverlappingGeometriesFromExisting();
 
@@ -111,7 +112,7 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
     {
       if( count % 100 == 0 )
       {
-        final String msg = String.format( "Adding hydrotope %d of %d", count + 1, size );
+        final String msg = String.format( Messages.getString("HydrotopeBuilder_1"), count + 1, size ); //$NON-NLS-1$
         progress.subTask( msg );
         ProgressUtilities.worked( monitor, 100 );
       }
@@ -129,7 +130,7 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
       count++;
     }
 
-    log.add( IStatus.OK, "Built %d hydrotopes", null, count );
+    log.add( IStatus.OK, Messages.getString("HydrotopeBuilder_2"), null, count ); //$NON-NLS-1$
 
     return log.asMultiStatus( m_logMessage );
   }

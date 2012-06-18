@@ -171,7 +171,7 @@ public class NaFortranLogTranslater
     final String param = (String) feature.getProperty( QNAME_ERRLOG_PARAM );
 
     final int severity = findSeverity( level );
-    final String text = String.format( "%s: %s", element, message );
+    final String text = String.format( "%s: %s", element, message ); //$NON-NLS-1$
 
     final MultiStatus status = new MultiStatusWithTime( ModelNA.PLUGIN_ID, severity, text, new Date(), null );
     status.add( new Status( severity, ModelNA.PLUGIN_ID, param ) );
@@ -183,16 +183,16 @@ public class NaFortranLogTranslater
   {
     switch( level.trim() )
     {
-      case "FINEST":
+      case "FINEST": //$NON-NLS-1$
         return IStatus.OK;
 
-      case "INFO":
+      case "INFO": //$NON-NLS-1$
         return IStatus.INFO;
 
-      case "WARNING":
+      case "WARNING": //$NON-NLS-1$
         return IStatus.WARNING;
 
-      case "SEVERE":
+      case "SEVERE": //$NON-NLS-1$
         return IStatus.ERROR;
 
       default:

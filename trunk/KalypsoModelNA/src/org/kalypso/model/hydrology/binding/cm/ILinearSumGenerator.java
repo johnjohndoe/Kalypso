@@ -63,37 +63,37 @@ public interface ILinearSumGenerator extends IRainfallGenerator
   /**
    * The qname of the comment.
    */
-  QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "comment" ); // $NON-NLS-1$
+  QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "comment" ); // $NON-NLS-1$ //$NON-NLS-1$
 
   /**
    * The qname of the timestep.
    */
-  QName PROPERTY_TIMESTEP = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "timestep" ); // $NON-NLS-1$
+  QName PROPERTY_TIMESTEP = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "timestep" ); // $NON-NLS-1$ //$NON-NLS-1$
 
   /**
    * The qname of the timestamp.
    */
-  QName PROPERTY_TIMESTAMP = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "timestamp" ); // $NON-NLS-1$
+  QName PROPERTY_TIMESTAMP = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "timestamp" ); // $NON-NLS-1$ //$NON-NLS-1$
 
   /**
    * The qname of the area name property.
    */
-  QName PROPERTY_AREA_NAME = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaNameProperty" ); // $NON-NLS-1$
+  QName PROPERTY_AREA_NAME = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaNameProperty" ); // $NON-NLS-1$ //$NON-NLS-1$
 
   /**
    * The qname of the area description property.
    */
-  QName PROPERTY_AREA_DESCRIPTION = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaDescriptionProperty" ); // $NON-NLS-1$
+  QName PROPERTY_AREA_DESCRIPTION = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaDescriptionProperty" ); // $NON-NLS-1$ //$NON-NLS-1$
 
   /**
    * The qname of the area property.
    */
-  QName PROPERTY_AREA = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaProperty" ); // $NON-NLS-1$
+  QName PROPERTY_AREA = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "areaProperty" ); // $NON-NLS-1$ //$NON-NLS-1$
 
   /**
    * The qname of the catchment member.
    */
-  QName MEMBER_CATCHMENT = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "catchmentMember" ); // $NON-NLS-1$
+  QName MEMBER_CATCHMENT = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "catchmentMember" ); // $NON-NLS-1$ //$NON-NLS-1$
 
   /**
    * This function returns the comment.

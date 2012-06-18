@@ -180,7 +180,7 @@ public class LzsToGml
     }
     catch( final NumberFormatException e )
     {
-      m_logger.severe( String.format( "Failed to read lzsim file: %s", e.getLocalizedMessage() ) );
+      m_logger.severe( String.format( Messages.getString("LzsToGml.0"), e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
