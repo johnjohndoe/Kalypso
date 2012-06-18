@@ -197,6 +197,7 @@ public class TimeseriesMappingGuesser
       }
     }
 
+    // TODO guess water based evaporation. remember time series and at the end change parameter type of time series
     m_log.add( IStatus.WARNING, Messages.getString( "CatchmentTimeseriesGuesser_8" ), null, neededParameterType ); //$NON-NLS-1$
 
     return null;

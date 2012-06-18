@@ -56,63 +56,42 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     m_ts = ts;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getName()
-   */
   @Override
   public String getName( )
   {
     return m_ts.getName();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
     return getName();
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
     return m_parent.getIdentifier() + "." + String.valueOf( m_ts.getID() ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getParent()
-   */
   @Override
   public IRepositoryItem getParent( )
   {
     return m_parent;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#hasChildren()
-   */
   @Override
   public boolean hasChildren( )
   {
     return false;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getChildren()
-   */
   @Override
   public IRepositoryItem[] getChildren( )
   {
     return new IRepositoryItem[] {};
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getRepository()
-   */
   @Override
   public IRepository getRepository( )
   {
@@ -120,7 +99,8 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
+  public Object getAdapter( @SuppressWarnings("rawtypes")
+  final Class anotherClass )
   {
     if( anotherClass == IObservation.class )
       return this;
@@ -128,9 +108,6 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
-   */
   @Override
   public MetadataList getMetadataList( )
   {
@@ -155,9 +132,6 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     return m_metadataList;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
-   */
   @Override
   public IAxis[] getAxes( )
   {
@@ -195,9 +169,6 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     return m_axes;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
-   */
   @Override
   public ITupleModel getValues( final IRequest request ) throws SensorException
   {
@@ -229,27 +200,18 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationListener.STRUCTURE_CHANGE ) );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getHref()
-   */
   @Override
   public String getHref( )
   {
     return ""; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
-   */
   @Override
   public void addListener( final IObservationListener listener )
   {
     m_evtPrv.addListener( listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
-   */
   @Override
   public void removeListener( final IObservationListener listener )
   {
@@ -262,18 +224,12 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     m_evtPrv.fireChangedEvent( source, type );
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
-   */
   @Override
   public boolean hasAdapter( final Class< ? > adapter )
   {
     return false;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#isMultipleSourceItem()
-   */
   @Override
   public boolean isMultipleSourceItem( )
   {
@@ -290,5 +246,11 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   public void accept( final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
   {
     Observations.accept( this, visitor, request, direction );
+  }
+
+  @Override
+  public boolean isEmpty( )
+  {
+    return false;
   }
 }

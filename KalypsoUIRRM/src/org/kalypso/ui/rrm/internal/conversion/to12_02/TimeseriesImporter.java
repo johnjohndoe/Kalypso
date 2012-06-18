@@ -213,6 +213,14 @@ public class TimeseriesImporter
 
     /* Read and check observation. */
     IObservation observation = readObservation( zmlFile, relativePath );
+
+    if( observation == null )
+    {
+      stati.add( IStatus.WARNING, "Import abgebrochen - Zeitreihe enthält keine Werte." );
+
+      return stati.asMultiStatus( String.format( Messages.getString( "TimeseriesImporter.0" ), baseName ) );
+    }
+
     final IAxis[] axes = observation.getAxes();
 
     final IAxis dateAxis = AxisUtils.findDateAxis( axes );
@@ -289,7 +297,7 @@ public class TimeseriesImporter
     final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep, timestamp );
     m_timeseriesIndex.addEntry( newEntry );
 
-    final MultiStatus status = stati.asMultiStatus( String.format( Messages.getString("TimeseriesImporter.0"), baseName ) ); //$NON-NLS-1$
+    final MultiStatus status = stati.asMultiStatus( String.format( Messages.getString( "TimeseriesImporter.0" ), baseName ) ); //$NON-NLS-1$
     final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( newTimeseries, status );
     stati.add( storeStatusOperation.execute( new NullProgressMonitor() ) );
 
@@ -299,6 +307,8 @@ public class TimeseriesImporter
   private IObservation readObservation( final File zmlFile, final String relativePath ) throws SensorException, MalformedURLException
   {
     final IObservation observation = ZmlFactory.parseXML( zmlFile.toURI().toURL() );
+    if( observation.isEmpty() )
+      return null;
 
     final String forcedParmaterType = getForcedParameterType( observation, relativePath );
     if( forcedParmaterType == null )
@@ -449,7 +459,7 @@ public class TimeseriesImporter
     final ITimeseries newTimeseries = station.getTimeseries().addNew( ITimeseries.FEATURE_TIMESERIES );
     newTimeseries.setDescription( timeseriesDescription );
 
-    final String quality = Messages.getString( "TimeseriesImporter_11" ); //$NON-NLS-1$
+    final String quality = findUniqueQuality( station, parameterType, timestep );
 
     newTimeseries.setParameterType( parameterType );
     newTimeseries.setQuality( quality );
@@ -458,6 +468,29 @@ public class TimeseriesImporter
     newTimeseries.setMeasurementEnd( daterange.getTo() );
 
     return newTimeseries;
+  }
+
+  /**
+   * @return unique quality string - sometimes a time series with the same parameter type, time step, ... exists multi
+   *         times in a project
+   */
+  private String findUniqueQuality( final IStation station, final String parameterType, final Period timestep )
+  {
+    final FindUniqueQualityVisitor visitor = new FindUniqueQualityVisitor( parameterType, timestep );
+
+    final IFeatureBindingCollection<ITimeseries> timeseries = station.getTimeseries();
+    timeseries.accept( visitor );
+
+    final String base = Messages.getString( "TimeseriesImporter_11" ); //$NON-NLS-1$
+    int count = 1;
+    String quality = base;
+    while( visitor.hasQuality( quality ) )
+    {
+      quality = String.format( "%s (%d)", base, count ); //$NON-NLS-1$
+      count++;
+    }
+
+    return quality;
   }
 
   public TimeseriesIndex getIndex( )
