@@ -45,7 +45,6 @@ import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -55,6 +54,7 @@ import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.model.hydrology.project.RrmCalculation;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -85,27 +85,29 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
 
   private final RrmSimulation m_simulation;
 
-  private String m_calcCase;
+  private final RrmCalculation m_calculation;
 
-  public HydrologyResultReference( final RrmSimulation simulation, final IFolder calcCaseFolder, final Feature feature, final RRM_RESULT result )
+  public HydrologyResultReference( final RrmSimulation simulation, final RrmCalculation calculation, final Feature feature, final RRM_RESULT result )
   {
     m_simulation = simulation;
+    m_calculation = calculation;
+
     m_parent = feature;
     final RRM_RESULT_TYPE type = result.getType();
     switch( type )
     {
-      // FIXME i18n - english project template
+    // FIXME i18n - english project template
 
       case eCatchment:
-        m_file = calcCaseFolder.getFile( String.format( "/Teilgebiet/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
+        m_file = m_calculation.getFolder().getFile( String.format( "/Teilgebiet/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
         break;
 
       case eNode:
-        m_file = calcCaseFolder.getFile( String.format( "/Knoten/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
+        m_file = m_calculation.getFolder().getFile( String.format( "/Knoten/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
         break;
 
       case eStorage:
-        m_file = calcCaseFolder.getFile( String.format( "/SpeicherStrang/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
+        m_file = m_calculation.getFolder().getFile( String.format( "/SpeicherStrang/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
         break;
 
       default:
@@ -113,12 +115,12 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     }
 
     m_type = result;
-    m_calcCase = calcCaseFolder.getName();
   }
 
-  public HydrologyResultReference( final RrmSimulation simulation, final URL context, final Feature parent, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
+  public HydrologyResultReference( final RrmSimulation simulation, final RrmCalculation calculation, final URL context, final Feature parent, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
   {
     m_simulation = simulation;
+    m_calculation = calculation;
     m_parent = parent;
 
     final String href = link == null ? null : link.getHref();
@@ -252,8 +254,8 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     final String parent = m_parent.getName();
     final String label = getType().getLabel();
 
-    if( m_calcCase != null )
-      return String.format( "%s (%s): %s\r\n%s", simulation, m_calcCase, parent, label ); //$NON-NLS-1$
+    if( m_calculation != null )
+      return String.format( "%s (%s): %s\r\n%s", simulation, m_calculation.getName(), parent, label ); //$NON-NLS-1$
 
     return String.format( "%s: %s\r\n%s", simulation, parent, label ); //$NON-NLS-1$
   }

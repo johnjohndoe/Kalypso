@@ -46,6 +46,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
+import org.kalypso.model.hydrology.project.RrmCalculation;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 
 /**
@@ -55,7 +56,7 @@ import org.kalypso.model.hydrology.project.RrmSimulation;
  */
 public class HydrologyCalculationFoldersCollector implements IResourceVisitor
 {
-  Set<IFolder> m_folders = new LinkedHashSet<>();
+  Set<RrmCalculation> m_folders = new LinkedHashSet<>();
 
   private final RrmSimulation m_simulation;
 
@@ -75,7 +76,7 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
       return true;
 
     if( isResultFolder( folder ) )
-      m_folders.add( folder );
+      m_folders.add( new RrmCalculation( folder ) );
 
     return true;
   }
@@ -98,9 +99,9 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
     return folder.equals( m_simulation.getResultsFolder() );
   }
 
-  public IFolder[] getFolders( )
+  public RrmCalculation[] getFolders( )
   {
-    return m_folders.toArray( new IFolder[] {} );
+    return m_folders.toArray( new RrmCalculation[] {} );
   }
 
 }

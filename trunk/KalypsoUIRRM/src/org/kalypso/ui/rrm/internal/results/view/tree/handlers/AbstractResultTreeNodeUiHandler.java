@@ -57,6 +57,7 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.project.RrmCalculation;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
@@ -72,14 +73,22 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
 
   private final RrmSimulation m_simulation;
 
-  public AbstractResultTreeNodeUiHandler( final RrmSimulation simulation )
+  private final RrmCalculation m_calculation;
+
+  public AbstractResultTreeNodeUiHandler( final RrmSimulation simulation, final RrmCalculation calculation )
   {
     m_simulation = simulation;
+    m_calculation = calculation;
   }
 
   protected RrmSimulation getSimulation( )
   {
     return m_simulation;
+  }
+
+  protected RrmCalculation getCalculation( )
+  {
+    return m_calculation;
   }
 
   @Override
@@ -89,7 +98,7 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     if( simulation == null )
       return getTreeLabel();
 
-    return String.format( Messages.getString("AbstractResultTreeNodeUiHandler_0"), simulation.getName() ); //$NON-NLS-1$
+    return String.format( Messages.getString( "AbstractResultTreeNodeUiHandler_0" ), simulation.getName() ); //$NON-NLS-1$
   }
 
   @Override
@@ -105,12 +114,15 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
       return;
 
     final List<Action> actions = new ArrayList<Action>();
-    actions.add( new OpenTextLogAction( Messages.getString("AbstractResultTreeNodeUiHandler_1"), Messages.getString("AbstractResultTreeNodeUiHandler_2"), m_simulation.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    actions.add( new OpenOutputZipAction( Messages.getString("AbstractResultTreeNodeUiHandler_3"), Messages.getString("AbstractResultTreeNodeUiHandler_4"), m_simulation, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.",
+    if( m_calculation != null )
+    {
+      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_1" ), Messages.getString( "AbstractResultTreeNodeUiHandler_2" ), m_calculation.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      actions.add( new OpenOutputZipAction( Messages.getString( "AbstractResultTreeNodeUiHandler_3" ), Messages.getString( "AbstractResultTreeNodeUiHandler_4" ), m_calculation.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.",
 // m_simulation, false ) );
-    actions.add( new OpenTextLogAction( Messages.getString("AbstractResultTreeNodeUiHandler_5"), Messages.getString("AbstractResultTreeNodeUiHandler_6"), m_simulation.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    actions.add( new OpenTextLogAction( Messages.getString("AbstractResultTreeNodeUiHandler_7"), Messages.getString("AbstractResultTreeNodeUiHandler_8"), m_simulation.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_5" ), Messages.getString( "AbstractResultTreeNodeUiHandler_6" ), m_calculation.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), m_calculation.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
     /* Create the image hyperlinks. */
     for( final Action action : actions )

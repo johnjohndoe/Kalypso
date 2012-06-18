@@ -65,7 +65,7 @@ public class RrmSimulation
 
   public static final String FOLDER_AKTUELL = "Aktuell"; //$NON-NLS-1$
 
-  private static final String FOLDER_BILANZ = "Bilanz"; //$NON-NLS-1$
+  public static final String FOLDER_BILANZ = "Bilanz"; //$NON-NLS-1$
 
   private static final String FOLDER_LOG = "Log"; //$NON-NLS-1$
 
@@ -91,13 +91,17 @@ public class RrmSimulation
 
   private static final String FILE_ERROR_GML = "error.gml"; //$NON-NLS-1$
 
-  private static final String FILE_OUTPUT_ZIP = "output.zip"; //$NON-NLS-1$
+  static final String FILE_OUTPUT_ZIP = "output.zip"; //$NON-NLS-1$
 
   public static final String FILE_STATISTICS_CSV = "statistics.csv"; //$NON-NLS-1$
 
   private static final String FILE_LZSIM_GML = "lzsim.gml"; //$NON-NLS-1$
 
   private final IFolder m_simulation;
+
+  /**
+   * TODO method RrmCalculation[] getCalculations()
+   */
 
   public RrmSimulation( final IFolder simulationFolder )
   {

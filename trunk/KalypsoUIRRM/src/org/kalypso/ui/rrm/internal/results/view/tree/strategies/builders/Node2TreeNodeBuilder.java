@@ -43,8 +43,8 @@ package org.kalypso.ui.rrm.internal.results.view.tree.strategies.builders;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.resources.IFolder;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.project.RrmCalculation;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
@@ -54,38 +54,38 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class Node2TreeNodeBuilder implements IFeatureBindingCollectionVisitor<Node>
 {
 
   private final RrmSimulation m_simulation;
 
-  private final IFolder m_calculationFolder;
+  private final RrmCalculation m_calculation;
 
   private final TreeNode m_parent;
 
-  public Node2TreeNodeBuilder( final RrmSimulation simulation, final IFolder calculationFolder, final TreeNode parent )
+  public Node2TreeNodeBuilder( final RrmSimulation simulation, final RrmCalculation calculationFolder, final TreeNode parent )
   {
     m_simulation = simulation;
-    m_calculationFolder = calculationFolder;
+    m_calculation = calculationFolder;
     m_parent = parent;
   }
 
   @Override
   public void visit( final Node node )
   {
-    if( node.isGenerateResults() )
+// if( node.isGenerateResults() )
     {
-      final ParameterSetBuilder builder = new ParameterSetBuilder( m_simulation, node );
+      final ParameterSetBuilder builder = new ParameterSetBuilder( m_simulation, m_calculation, node );
       builder.init( m_parent, UIRrmImages.DESCRIPTORS.NA_NODE, UIRrmImages.DESCRIPTORS.EMPTY_NA_NODE );
 
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculationFolder, node, RRM_RESULT.nodeGesamtknotenAbfluss ) );
+      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, node, RRM_RESULT.nodeGesamtknotenAbfluss ) );
 
       try
       {
         final URL context = node.getWorkspace().getContext();
-        builder.doAddNode( new HydrologyResultReference( m_simulation, context, node, node.getZuflussLink(), RRM_RESULT.inputInflow ) );
+        builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, node, node.getZuflussLink(), RRM_RESULT.inputInflow ) );
       }
       catch( final MalformedURLException e )
       {

@@ -51,6 +51,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.model.hydrology.project.RrmCalculation;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -71,9 +72,9 @@ public class HydrologyParameterSetUiHandler extends AbstractResultTreeNodeUiHand
 
   private final DESCRIPTORS m_missing;
 
-  public HydrologyParameterSetUiHandler( final RrmSimulation simulation, final Feature feature, final UIRrmImages.DESCRIPTORS existing, final UIRrmImages.DESCRIPTORS missing )
+  public HydrologyParameterSetUiHandler( final RrmSimulation simulation, final RrmCalculation calculation, final Feature feature, final UIRrmImages.DESCRIPTORS existing, final UIRrmImages.DESCRIPTORS missing )
   {
-    super( simulation );
+    super( simulation, calculation );
 
     m_feature = feature;
     m_existing = existing;
