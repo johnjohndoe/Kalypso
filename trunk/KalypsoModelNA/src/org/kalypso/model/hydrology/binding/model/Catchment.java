@@ -145,7 +145,7 @@ public class Catchment extends AbstractNaModelElement
 
   private static final QName PROP_FVER = new QName( NS_NAMODELL, "fver" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CORRSEALING = new QName( NS_NAMODELL, "corrSealing" ); //$NON-NLS-1$
+  public static final QName PROPERTY_CORRSEALING = new QName( NS_NAMODELL, "corrSealing" ); //$NON-NLS-1$
 
   private IFeatureBindingCollection<Bodenschichtkorrektur> m_bodenKorrekturCollection = null;
 
@@ -432,12 +432,12 @@ public class Catchment extends AbstractNaModelElement
 
   public double getCorrSealing( )
   {
-    return getDoubleProperty( QNAME_PROP_CORRSEALING, 1.0 );
+    return getDoubleProperty( PROPERTY_CORRSEALING, 1.0 );
   }
 
   public void setCorrSealing( final Double corrSealing )
   {
-    setProperty( QNAME_PROP_CORRSEALING, corrSealing );
+    setProperty( PROPERTY_CORRSEALING, corrSealing );
   }
 
   public String getResultCategory( )
