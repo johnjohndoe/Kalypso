@@ -50,47 +50,62 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 
 /**
  * @author Dirk Kuch
  */
-public class DeleteRrmCalcualtionAction extends Action implements IUpdateable
+public class DeleteRrmCalcualtionsAction extends Action implements IUpdateable
 {
-
-  private final RrmCalculationResult m_calculation;
 
   private final ResultManagementView m_view;
 
-  public DeleteRrmCalcualtionAction( final RrmCalculationResult calculation, final ResultManagementView view )
+  private final RrmSimulation m_simulation;
+
+  public DeleteRrmCalcualtionsAction( final RrmSimulation simulation, final ResultManagementView view )
   {
-    super( "Lösche Berechnungsergebnisse" );
+    super( "Lösche alle Berechnungsergebnisse" );
+    setToolTipText( "Lösche alle Berechnungsergebnisse." );
 
+    m_simulation = simulation;
     m_view = view;
-
-    setToolTipText( "Lösche Berechnungsergebnisse." );
-    m_calculation = calculation;
   }
 
   @Override
   public void update( )
   {
-    // TODO current?!?
+    final RrmCalculationResult[] results = m_simulation.getCalculationResults();
+    for( final RrmCalculationResult result : results )
+    {
+      if( result.getFolder().exists() )
+      {
+        setEnabled( true );
+        return;
+      }
+    }
+
+    setEnabled( false );
   }
 
   @Override
   public void run( )
   {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final boolean confirmed = MessageDialog.openConfirm( shell, "Löschen", String.format( "Sie möchten das Berechnungsergebnis '%s' löschen?", m_calculation.getName() ) );
+    final boolean confirmed = MessageDialog.openConfirm( shell, "Löschen", "Sie möchten alle Berechnungsergebnisse wirklich löschen?" );
     if( !confirmed )
       return;
 
+    final RrmCalculationResult[] calculations = m_simulation.getCalculationResults();
+
     try
     {
-      final IFolder folder = m_calculation.getFolder();
-      folder.delete( true, new NullProgressMonitor() );
+      for( final RrmCalculationResult calculation : calculations )
+      {
+        final IFolder folder = calculation.getFolder();
+        folder.delete( true, new NullProgressMonitor() );
+      }
     }
     catch( final CoreException e )
     {

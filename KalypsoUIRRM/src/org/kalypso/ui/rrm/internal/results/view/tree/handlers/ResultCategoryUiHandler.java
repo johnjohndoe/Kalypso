@@ -44,6 +44,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 
 /**
  * @author Dirk Kuch
@@ -53,9 +54,9 @@ public class ResultCategoryUiHandler extends AbstractResultTreeNodeUiHandler
 
   private final String m_label;
 
-  public ResultCategoryUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final String label )
+  public ResultCategoryUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final String label, final ResultManagementView view )
   {
-    super( simulation, calculation );
+    super( simulation, calculation, view );
     m_label = label;
   }
 

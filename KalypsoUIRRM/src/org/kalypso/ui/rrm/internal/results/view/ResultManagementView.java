@@ -90,6 +90,8 @@ public class ResultManagementView extends ViewPart
 
   private HydrolgyManagementSearchControl m_searchPanel;
 
+  private RrmScenario m_scenario;
+
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -136,7 +138,6 @@ public class ResultManagementView extends ViewPart
 
   private Composite createTree( final Composite panel )
   {
-
     m_treeViewer = new TreeViewer( panel, SWT.FLAT | SWT.MULTI )
     {
       @Override
@@ -157,8 +158,9 @@ public class ResultManagementView extends ViewPart
       @Override
       public void doubleClick( final DoubleClickEvent event )
       {
-        m_stack.add( (IStructuredSelection) event.getSelection() );
-        m_treeViewer.refresh( true ); // trigger refresh event to get bold labels for selected items
+        final TreeNode[] changes = m_stack.add( (IStructuredSelection) event.getSelection() );
+        for( final TreeNode changed : changes )
+          m_treeViewer.refresh( changed );
       }
     } );
 
@@ -173,7 +175,8 @@ public class ResultManagementView extends ViewPart
 
   public void setInput( final RrmScenario scenario )
   {
-    final ITreeNodeStrategy strategy = new NaModelStrategy( scenario );
+    m_scenario = scenario;
+    final ITreeNodeStrategy strategy = new NaModelStrategy( scenario, this );
 
     final TreeNodeModel input = new TreeNodeModel( strategy, m_treeViewer );
     m_treeViewer.setInput( input );
@@ -213,5 +216,10 @@ public class ResultManagementView extends ViewPart
       return m_stack;
 
     return super.getAdapter( adapter );
+  }
+
+  public void refresh( )
+  {
+    setInput( m_scenario );
   }
 }

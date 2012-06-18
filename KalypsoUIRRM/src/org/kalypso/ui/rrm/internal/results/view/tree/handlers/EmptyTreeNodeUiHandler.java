@@ -53,7 +53,7 @@ public class EmptyTreeNodeUiHandler extends AbstractResultTreeNodeUiHandler
 
   public EmptyTreeNodeUiHandler( final String label )
   {
-    super( null, null );
+    super( null, null, null );
     m_label = label;
   }
 

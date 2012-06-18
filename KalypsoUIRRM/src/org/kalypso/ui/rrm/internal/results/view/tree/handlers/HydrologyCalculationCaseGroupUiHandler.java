@@ -46,6 +46,7 @@ import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 
 /**
  * @author Dirk Kuch
@@ -53,15 +54,15 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 public class HydrologyCalculationCaseGroupUiHandler extends AbstractResultTreeNodeUiHandler
 {
 
-  public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation )
+  public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final ResultManagementView view )
   {
-    super( simulation, calculation );
+    super( simulation, calculation, view );
 
   }
 
-  public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation )
+  public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation, final ResultManagementView view )
   {
-    super( simulation, null );
+    super( simulation, null, view );
   }
 
   @Override

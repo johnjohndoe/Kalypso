@@ -80,8 +80,10 @@ public class TreeViewerSelectionStack
     return new StructuredSelection( localStack.toArray() );
   }
 
-  public void add( final IStructuredSelection selection )
+  public TreeNode[] add( final IStructuredSelection selection )
   {
+    final Set<TreeNode> changed = new LinkedHashSet<>();
+
     final Iterator< ? > itr = selection.iterator();
     while( itr.hasNext() )
     {
@@ -91,9 +93,18 @@ public class TreeViewerSelectionStack
         final TreeNode node = (TreeNode) item;
 
         if( TreeNodes.getLevel( node ) > m_hierarchy )
-          m_stack.add( item );
+        {
+          if( m_stack.contains( item ) )
+            m_stack.remove( node );
+          else
+            m_stack.add( node );
+
+          changed.add( node );
+        }
       }
     }
+
+    return changed.toArray( new TreeNode[] {} );
   }
 
   public void reset( )

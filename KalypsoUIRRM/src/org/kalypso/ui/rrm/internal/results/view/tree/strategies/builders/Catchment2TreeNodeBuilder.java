@@ -47,6 +47,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 import org.kalypso.ui.rrm.internal.results.view.tree.strategies.ParameterSetBuilder;
@@ -65,38 +66,41 @@ public class Catchment2TreeNodeBuilder implements IFeatureBindingCollectionVisit
 
   private final TreeNode m_parent;
 
-  public Catchment2TreeNodeBuilder( final RrmSimulation simulation, final RrmCalculationResult calculation, final TreeNode parent )
+  private final ResultManagementView m_view;
+
+  public Catchment2TreeNodeBuilder( final RrmSimulation simulation, final RrmCalculationResult calculation, final TreeNode parent, final ResultManagementView view )
   {
     m_simulation = simulation;
     m_calculation = calculation;
     m_parent = parent;
+    m_view = view;
   }
 
   @Override
   public void visit( final Catchment catchment )
   {
     final ParameterSetBuilder builder = new ParameterSetBuilder( m_simulation, m_calculation, catchment );
-    builder.init( m_parent, UIRrmImages.DESCRIPTORS.CATCHMENT, UIRrmImages.DESCRIPTORS.INVALID_MODEL_ELEMENT, UIRrmImages.DESCRIPTORS.EMPTY_CATCHMENT );
+    builder.init( m_parent, UIRrmImages.DESCRIPTORS.CATCHMENT, UIRrmImages.DESCRIPTORS.INVALID_MODEL_ELEMENT, UIRrmImages.DESCRIPTORS.EMPTY_CATCHMENT, m_view );
 
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentTemperature ) );
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentNiederschlag ) );
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentSchneehoehe ) );
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentGesamtTeilgebietsQ ) );
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentOberflaechenQNatuerlich ) );
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentOberflaechenQVersiegelt ) );
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentInterflow ) );
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentBasisQ ) );
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentGrundwasserQ ) );
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentGrundwasserstand ) );
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentEvapotranspiration ) );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentTemperature ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentNiederschlag ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentSchneehoehe ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentGesamtTeilgebietsQ ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentOberflaechenQNatuerlich ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentOberflaechenQVersiegelt ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentInterflow ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentBasisQ ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentGrundwasserQ ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentGrundwasserstand ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentEvapotranspiration ), m_view );
 
     try
     {
       final URL context = catchment.getWorkspace().getContext();
 
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, catchment, catchment.getEvaporationLink(), RRM_RESULT.inputEvaporation ) );
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, catchment, catchment.getPrecipitationLink(), RRM_RESULT.inputRainfall ) );
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, catchment, catchment.getTemperatureLink(), RRM_RESULT.inputTemperature ) );
+      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, catchment, catchment.getEvaporationLink(), RRM_RESULT.inputEvaporation ), m_view );
+      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, catchment, catchment.getPrecipitationLink(), RRM_RESULT.inputRainfall ), m_view );
+      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, catchment, catchment.getTemperatureLink(), RRM_RESULT.inputTemperature ), m_view );
     }
     catch( final MalformedURLException e )
     {

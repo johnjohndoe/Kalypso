@@ -49,6 +49,7 @@ import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 
 /**
  * @author Dirk Kuch
@@ -60,9 +61,9 @@ public class HydrologyGroupUiHandler extends AbstractResultTreeNodeUiHandler
 
   private final DESCRIPTORS m_icon;
 
-  public HydrologyGroupUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final String label, final DESCRIPTORS icon )
+  public HydrologyGroupUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final String label, final DESCRIPTORS icon, final ResultManagementView view )
   {
-    super( simulation, calculation );
+    super( simulation, calculation, view );
     m_label = label;
     m_icon = icon;
   }

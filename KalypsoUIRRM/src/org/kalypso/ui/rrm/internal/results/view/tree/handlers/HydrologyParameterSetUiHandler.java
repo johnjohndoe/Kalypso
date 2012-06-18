@@ -57,6 +57,7 @@ import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -76,9 +77,9 @@ public class HydrologyParameterSetUiHandler extends AbstractResultTreeNodeUiHand
 
   private final DESCRIPTORS m_invalid;
 
-  public HydrologyParameterSetUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final Feature feature, final UIRrmImages.DESCRIPTORS existing, final UIRrmImages.DESCRIPTORS missing, final DESCRIPTORS invalid )
+  public HydrologyParameterSetUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final Feature feature, final UIRrmImages.DESCRIPTORS existing, final UIRrmImages.DESCRIPTORS missing, final DESCRIPTORS invalid, final ResultManagementView view )
   {
-    super( simulation, calculation );
+    super( simulation, calculation, view );
 
     m_feature = feature;
 
