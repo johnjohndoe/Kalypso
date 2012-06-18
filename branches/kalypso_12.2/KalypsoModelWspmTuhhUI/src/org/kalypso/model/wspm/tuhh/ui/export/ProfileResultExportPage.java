@@ -211,9 +211,6 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     return lengthSections.toArray( new IWspmResult[lengthSections.size()] );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.ValidatingWizardPage#validatePage()
-   */
   @Override
   protected IMessageProvider validatePage( )
   {
