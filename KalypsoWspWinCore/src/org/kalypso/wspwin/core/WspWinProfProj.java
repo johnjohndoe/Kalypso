@@ -97,7 +97,7 @@ public class WspWinProfProj
     pw.append( String.format( "%d %d%n", m_profiles.size(), profileStateMapping.size() ) );
 
     for( final ProfileBean profile : m_profiles )
-      pw.append( profile.formatLine() ).append( SystemUtils.LINE_SEPARATOR );
+      pw.append( profile.formatProfprojLine() ).append( SystemUtils.LINE_SEPARATOR );
 
     pw.append( SystemUtils.LINE_SEPARATOR );
 

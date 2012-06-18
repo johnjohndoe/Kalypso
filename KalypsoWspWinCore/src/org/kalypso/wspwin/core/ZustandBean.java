@@ -50,6 +50,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.wspwin.core.WspCfg.TYPE;
 
@@ -274,5 +275,11 @@ public class ZustandBean
   void setEndStation( final BigDecimal endStation )
   {
     m_endStation = endStation;
+  }
+
+  @Override
+  public String toString( )
+  {
+    return ToStringBuilder.reflectionToString( this );
   }
 }

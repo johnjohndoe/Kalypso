@@ -277,7 +277,7 @@ public class WspWinZustand
 
     /* Profiles */
     for( final ProfileBean profile : m_profileBeans )
-      pw.append( profile.formatLine() ).append( SystemUtils.LINE_SEPARATOR );
+      pw.append( profile.formatStrLine() ).append( SystemUtils.LINE_SEPARATOR );
 
     pw.append( SystemUtils.LINE_SEPARATOR );
 
@@ -326,5 +326,15 @@ public class WspWinZustand
   public ICalculationContentBean[] getCalculations( )
   {
     return m_calculations.toArray( new ICalculationContentBean[m_calculations.size()] );
+  }
+
+  @Override
+  public String toString( )
+  {
+    final StringBuilder buffer = new StringBuilder();
+
+    buffer.append( m_bean.toString() );
+
+    return buffer.toString();
   }
 }
