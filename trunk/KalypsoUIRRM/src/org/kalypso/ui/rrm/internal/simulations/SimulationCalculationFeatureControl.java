@@ -179,7 +179,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       desciptionLabel.setText( Messages.getString( "SimulationCalculationFeatureControl.0" ) ); //$NON-NLS-1$
 
       /* Create a status composite. */
-      m_calculationStatusComposite = new StatusComposite( main, SWT.NONE );
+      m_calculationStatusComposite = new StatusComposite( main, StatusComposite.DETAILS );
       m_calculationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       m_calculationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "SimulationCalculationFeatureControl.1" ) ) ); //$NON-NLS-1$
 
@@ -194,7 +194,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       resultsGroup.setText( Messages.getString( "SimulationCalculationFeatureControl.2" ) ); //$NON-NLS-1$
 
       /* Create a status composite. */
-      m_validationStatusComposite = new StatusComposite( resultsGroup, SWT.NONE );
+      m_validationStatusComposite = new StatusComposite( resultsGroup, StatusComposite.DETAILS );
       m_validationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       m_validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "SimulationCalculationFeatureControl.3" ) ) ); //$NON-NLS-1$
 
@@ -212,8 +212,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
       m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.4" ), Messages.getString( "SimulationCalculationFeatureControl.5" ), current.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       m_actions.add( new OpenOutputZipAction( Messages.getString( "SimulationCalculationFeatureControl.6" ), Messages.getString( "SimulationCalculationFeatureControl.7" ), current.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.",
-// simulation, false ) );
+      // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
       m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.8" ), Messages.getString( "SimulationCalculationFeatureControl.9" ), current.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.10" ), Messages.getString( "SimulationCalculationFeatureControl.11" ), current.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
