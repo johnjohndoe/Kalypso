@@ -46,6 +46,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
@@ -62,7 +63,7 @@ class LanduseHydrotopeInput extends AbstractHydrotopeInput<Landuse>
   @Override
   public String getLabel( )
   {
-    return "Landuse";
+    return Messages.getString("LanduseHydrotopeInput_0"); //$NON-NLS-1$
   }
 
   @Override
@@ -75,7 +76,7 @@ class LanduseHydrotopeInput extends AbstractHydrotopeInput<Landuse>
     {
       final IXLinkedFeature landuseClass = landuse.getLanduse();
       if( landuseClass == null )
-        log.add( IStatus.ERROR, formatMessage( "landuse class not set", landuse ) );
+        log.add( IStatus.ERROR, formatMessage( Messages.getString("LanduseHydrotopeInput_1"), landuse ) ); //$NON-NLS-1$
 
       final double sealingFactor = landuse.getCorrSealing();
       if( sealingFactor < 0 || sealingFactor > 1.0 )

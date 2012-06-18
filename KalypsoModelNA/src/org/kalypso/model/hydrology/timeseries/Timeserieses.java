@@ -79,7 +79,7 @@ public final class Timeserieses
     if( StringUtils.isBlank( quality ) )
       return periodName;
 
-    return String.format( "%s (%s)", periodName, quality );
+    return String.format( "%s (%s)", periodName, quality ); //$NON-NLS-1$
   }
 
   public static String[] findTimeseriereses( final IStation station )
@@ -153,24 +153,24 @@ public final class Timeserieses
       final String label = station.getDescription();
 
       if( StringUtils.isNotEmpty( label ) )
-        buffer.append( String.format( "%s:", label ) );
+        buffer.append( String.format( "%s:", label ) ); //$NON-NLS-1$
     }
 
     if( Objects.isNotNull( timestep ) )
     {
       final String dateString = PeriodUtils.formatDefault( timestep );
-      buffer.append( String.format( "%s -", dateString ) );
+      buffer.append( String.format( "%s -", dateString ) ); //$NON-NLS-1$
     }
 
     if( StringUtils.isNotEmpty( quality ) )
     {
-      buffer.append( String.format( "%s", quality ) );
+      buffer.append( String.format( "%s", quality ) ); //$NON-NLS-1$
     }
 
     if( StringUtils.isNotEmpty( type ) )
     {
       final ParameterTypeLabelProvider provider = new ParameterTypeLabelProvider();
-      buffer.append( String.format( " (%s)", provider.getText( type ) ) );
+      buffer.append( String.format( " (%s)", provider.getText( type ) ) ); //$NON-NLS-1$
     }
 
     return buffer.toString().trim();
@@ -194,6 +194,6 @@ public final class Timeserieses
     if( StringUtils.isEmpty( part ) )
       return StringUtils.EMPTY;
 
-    return StringUtils.trim( String.format( "_%s", part ) );
+    return StringUtils.trim( String.format( "_%s", part ) ); //$NON-NLS-1$
   }
 }

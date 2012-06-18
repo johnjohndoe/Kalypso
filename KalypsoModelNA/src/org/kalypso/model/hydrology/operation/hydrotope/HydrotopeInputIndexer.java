@@ -87,7 +87,7 @@ class HydrotopeInputIndexer implements ICoreRunnableWithProgress
     int count = 0;
     for( final IHydrotopeInput input : m_input )
     {
-      progress.subTask( String.format( "%d of %d - %s", count, m_input.size(), input.getLabel() ) );
+      progress.subTask( String.format( Messages.getString("HydrotopeInputIndexer.0"), count, m_input.size(), input.getLabel() ) ); //$NON-NLS-1$
 
       input.buildIndex( log );
 

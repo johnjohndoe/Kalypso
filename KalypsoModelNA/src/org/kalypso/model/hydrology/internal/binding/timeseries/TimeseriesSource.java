@@ -120,7 +120,7 @@ public class TimeseriesSource implements IZmlSourceElement
 
     final String timeseriesLabel = Timeserieses.getTreeLabel( m_timeseries );
 
-    return String.format( "%s\r\n%s - %s", stationName, timeseriesLabel, parameterLabel );
+    return String.format( "%s\r\n%s - %s", stationName, timeseriesLabel, parameterLabel ); //$NON-NLS-1$
   }
 
   @Override

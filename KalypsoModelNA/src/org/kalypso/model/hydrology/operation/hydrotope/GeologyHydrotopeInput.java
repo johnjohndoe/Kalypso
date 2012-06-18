@@ -46,6 +46,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -61,7 +62,7 @@ class GeologyHydrotopeInput extends AbstractHydrotopeInput<Geology>
   @Override
   public String getLabel( )
   {
-    return "Geology";
+    return Messages.getString("GeologyHydrotopeInput_0"); //$NON-NLS-1$
   }
 
   @Override
@@ -74,13 +75,13 @@ class GeologyHydrotopeInput extends AbstractHydrotopeInput<Geology>
     {
       final Double gwFactor = geology.getGWFactor();
       if( gwFactor == null )
-        log.add( IStatus.ERROR, formatMessage( "groundwater factor is not set", geology ) );
+        log.add( IStatus.ERROR, formatMessage( Messages.getString("GeologyHydrotopeInput_1"), geology ) ); //$NON-NLS-1$
       else if( gwFactor < 0.0 || gwFactor > 1.0 )
-        log.add( IStatus.ERROR, formatMessage( "groundwater factor is outside it's valid range [0.0 - 1.0]", geology ) );
+        log.add( IStatus.ERROR, formatMessage( Messages.getString("GeologyHydrotopeInput_2"), geology ) ); //$NON-NLS-1$
 
       final Double maxPerkRate = geology.getMaxPercolationRate();
       if( maxPerkRate == null )
-        log.add( IStatus.ERROR, formatMessage( "maximal perkolation rate is not set", geology ) );
+        log.add( IStatus.ERROR, formatMessage( Messages.getString("GeologyHydrotopeInput_3"), geology ) ); //$NON-NLS-1$
       // TODO: range check?
     }
 

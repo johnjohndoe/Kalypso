@@ -227,7 +227,7 @@ public class HydrotopeInfo
     if( area != null )
       return area;
 
-    final String msg = String.format( "Failed to determine area for hydrotope '%s'", getName() );
+    final String msg = String.format( Messages.getString("HydrotopeInfo.0"), getName() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
   }
 
@@ -250,7 +250,7 @@ public class HydrotopeInfo
     if( corrSealing != null )
       return corrSealing;
 
-    final String msg = String.format( "Failed to determine sealing correction factor for hydrotope %s", getName() );
+    final String msg = String.format( Messages.getString("HydrotopeInfo.1"), getName() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
   }
 
@@ -263,7 +263,7 @@ public class HydrotopeInfo
     final double totalSealingFactor = landuseSealing * corrSealing;
 
     if( totalSealingFactor < 0.0 || totalSealingFactor > 1.0 )
-      throw new NAPreprocessorException( String.format( "Total sealing %.2f outside valid range (0.0 - 1.0) for hydrotope %s.", totalSealingFactor, getName() ) );
+      throw new NAPreprocessorException( String.format( Messages.getString("HydrotopeInfo.2"), totalSealingFactor, getName() ) ); //$NON-NLS-1$
 
     return totalSealingFactor;
   }

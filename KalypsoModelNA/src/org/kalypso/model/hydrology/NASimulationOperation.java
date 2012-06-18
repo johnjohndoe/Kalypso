@@ -60,6 +60,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.simulation.NaModelInnerCalcJob;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -149,7 +150,7 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     catch( final SimulationException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Simulation failed", e );
+      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_0"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -179,11 +180,11 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     }
     catch( final MalformedURLException e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to access model file", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_1"), e ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to load model data", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_2"), e ) ); //$NON-NLS-1$
     }
   }
 
@@ -202,11 +203,11 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     try
     {
       /* Get the simulation log file. */
-      final File resultDir = new File( simulationTmpDir, "results/Ergebnisse/Aktuell" );
-      final File logDir = new File( resultDir, "Log" );
-      simulationLogFile = new File( logDir, "simulationLog.gml" );
+      final File resultDir = new File( simulationTmpDir, "results/Ergebnisse/Aktuell" ); //$NON-NLS-1$
+      final File logDir = new File( resultDir, "Log" ); //$NON-NLS-1$
+      simulationLogFile = new File( logDir, "simulationLog.gml" ); //$NON-NLS-1$
       if( !simulationLogFile.exists() )
-        return new Status( IStatus.INFO, ModelNA.PLUGIN_ID, "The simulation log does not exist." );
+        return new Status( IStatus.INFO, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_6") ); //$NON-NLS-1$
 
       /* Load the workspace. */
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( simulationLogFile, null );
@@ -221,7 +222,7 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "The simulation log could not be loaded.", ex );
+      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_7"), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -259,7 +260,7 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     }
     catch( final IOException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to delete temporary simulation directory", e );
+      final IStatus status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_8"), e ); //$NON-NLS-1$
       ModelNA.getDefault().getLog().log( status );
     }
   }

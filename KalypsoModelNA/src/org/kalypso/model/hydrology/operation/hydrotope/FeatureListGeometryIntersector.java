@@ -106,7 +106,7 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
 
     for( int i = 0; i < countSourcePolygons; i++ )
     {
-      ProgressUtilities.workedModulo( monitor, i, countSourcePolygons, 13, Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2" ) );
+      ProgressUtilities.workedModulo( monitor, i, countSourcePolygons, 13, Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2" ) ); //$NON-NLS-1$
 
       final Polygon sourcePolygon = (Polygon) sourcePolygons.get( i );
 
@@ -235,7 +235,7 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
           final String sourceLabel = ((HydrotopeUserData) sourcePolygon.getUserData()).toErrorString();
           final String targetLabel = ((HydrotopeUserData) targetPolygon.getUserData()).toErrorString();
 
-          final String message = Messages.getString( "FeatureListGeometryIntersector.5", sourceLabel, targetLabel );
+          final String message = Messages.getString( "FeatureListGeometryIntersector.5", sourceLabel, targetLabel ); //$NON-NLS-1$
           if( log != null )
             log.add( IStatus.ERROR, message, e2 );
           return null;

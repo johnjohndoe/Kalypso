@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -81,7 +82,7 @@ import org.kalypso.repository.IDataSourceItem;
  */
 public abstract class AbstractEvaporationCalculator implements IEvaporationCalculator
 {
-  public static final String DATA_SOURCE = IDataSourceItem.SOURCE_PREFIX + "evaporation.calculation";
+  public static final String DATA_SOURCE = IDataSourceItem.SOURCE_PREFIX + Messages.getString("AbstractEvaporationCalculator_0"); //$NON-NLS-1$
 
   private final ITimeseriesCache m_humidity;
 
@@ -209,7 +210,7 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.setTaskName( "Starting calcualtion of water based evaporation." );
+    monitor.setTaskName( Messages.getString("AbstractEvaporationCalculator_1") ); //$NON-NLS-1$
 
     final StatusCollector stati = new StatusCollector( ModelNA.PLUGIN_ID );
 
@@ -233,7 +234,7 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
         final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy" ); //$NON-NLS-1$
         sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
-        final String msg = String.format( "Can't calucate evaporation for date %s. Missing parameter: humidity: %.2f, sunshine: %.2f, temperature: %.2f, wind velocity: %.2f", //
+        final String msg = String.format( Messages.getString("AbstractEvaporationCalculator_2"), // //$NON-NLS-1$
             sdf.format( ptr.getTime() ), //
             Objects.firstNonNull( humidity, Double.NaN ), //
             Objects.firstNonNull( sunshine, Double.NaN ), //
@@ -254,7 +255,7 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
 
     monitor.done();
 
-    return stati.asMultiStatus( "Evaporation calculation" );
+    return stati.asMultiStatus( Messages.getString("AbstractEvaporationCalculator_3") ); //$NON-NLS-1$
   }
 
   protected abstract Double doCalculate( double humidity, double sunshine, double temperature, double windVelocity, Calendar ptr );

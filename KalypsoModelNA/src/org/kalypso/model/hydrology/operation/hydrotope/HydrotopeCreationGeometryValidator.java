@@ -48,6 +48,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -82,7 +83,7 @@ public class HydrotopeCreationGeometryValidator
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final String subTaskFormat = String.format( "%s - checking geometry %%d of %%d", m_label );
+    final String subTaskFormat = String.format( Messages.getString("HydrotopeCreationGeometryValidator_0"), m_label ); //$NON-NLS-1$
 
     for( int i = 0; i < m_allElements.size(); i++ )
     {
@@ -93,9 +94,9 @@ public class HydrotopeCreationGeometryValidator
       final IsValidOp isValidOp = new IsValidOp( polygon );
 
       if( polygon == null )
-        log.add( IStatus.WARNING, "Geometry is missing" );
+        log.add( IStatus.WARNING, Messages.getString("HydrotopeCreationGeometryValidator_1") ); //$NON-NLS-1$
       else if( polygon.getArea() < FeatureListGeometryIntersector.MIN_AREA )
-        addWarning( log, String.format( "Area is very small (%f m²)", polygon.getArea() ), polygon );
+        addWarning( log, String.format( Messages.getString("HydrotopeCreationGeometryValidator_2"), polygon.getArea() ), polygon ); //$NON-NLS-1$
       else if( !isValidOp.isValid() )
       {
         final TopologyValidationError error = isValidOp.getValidationError();
@@ -103,14 +104,14 @@ public class HydrotopeCreationGeometryValidator
       }
     }
 
-    return log.asMultiStatus( "Geometries" );
+    return log.asMultiStatus( Messages.getString("HydrotopeCreationGeometryValidator_3") ); //$NON-NLS-1$
   }
 
   public IStatus checkSelfIntersection( final IProgressMonitor monitor )
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final String subTaskFormat = String.format( "%s - checking intersection %%d of %%d", m_label );
+    final String subTaskFormat = String.format( Messages.getString("HydrotopeCreationGeometryValidator_4"), m_label ); //$NON-NLS-1$
 
     double totalArea = 0.0;
     double totalIntersectionArea = 0.0;
@@ -155,7 +156,7 @@ public class HydrotopeCreationGeometryValidator
           if( intersectionPercent >= 0.01 )
           {
 
-            final String format = String.format( "overlaps another element (%.2f m² = %.2f %%)", intersectionArea, intersectionPercent );
+            final String format = String.format( Messages.getString("HydrotopeCreationGeometryValidator_5"), intersectionArea, intersectionPercent ); //$NON-NLS-1$
             addWarning( log, format, polygon );
           }
         }
@@ -168,17 +169,17 @@ public class HydrotopeCreationGeometryValidator
     {
       final int severity = totalIntersectionPercent >= 1.0 ? IStatus.WARNING : IStatus.INFO;
 
-      final String format = String.format( "Total overlap area is %.2f m² (%.2f %%%%)", totalIntersectionArea, totalIntersectionPercent );
+      final String format = String.format( Messages.getString("HydrotopeCreationGeometryValidator_6"), totalIntersectionArea, totalIntersectionPercent ); //$NON-NLS-1$
       log.add( severity, format );
     }
 
-    return log.asMultiStatus( "Topological correctness" );
+    return log.asMultiStatus( Messages.getString("HydrotopeCreationGeometryValidator_7") ); //$NON-NLS-1$
   }
 
   private static void addWarning( final IStatusCollector log, final String message, final Polygon polygon )
   {
     final HydrotopeUserData data = (HydrotopeUserData) polygon.getUserData();
     final String label = data.toErrorString();
-    log.add( IStatus.WARNING, "Element '%s': %s", null, label, message );
+    log.add( IStatus.WARNING, Messages.getString("HydrotopeCreationGeometryValidator_8"), null, label, message ); //$NON-NLS-1$
   }
 }

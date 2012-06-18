@@ -46,6 +46,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
@@ -62,7 +63,7 @@ class PedologyHydrotopeInput extends AbstractHydrotopeInput<SoilType>
   @Override
   public String getLabel( )
   {
-    return "Pedology";
+    return Messages.getString("PedologyHydrotopeInput_0"); //$NON-NLS-1$
   }
 
   @Override
@@ -75,7 +76,7 @@ class PedologyHydrotopeInput extends AbstractHydrotopeInput<SoilType>
     {
       final IXLinkedFeature soilType = pedology.getSoilType();
       if( soilType == null )
-        log.add( IStatus.ERROR, formatMessage( "soil type not set", pedology ) );
+        log.add( IStatus.ERROR, formatMessage( Messages.getString("PedologyHydrotopeInput_1"), pedology ) ); //$NON-NLS-1$
     }
 
     return log.asMultiStatus( STR_ATTRIBUTES );

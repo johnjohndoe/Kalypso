@@ -56,7 +56,7 @@ public interface INaCalcCaseConstants
 
   String CALCULATION_GML_FILE = "calculation.gml"; //$NON-NLS-1$
 
-  String CALCULATION_GML_PATH = INaProjectConstants.FOLDER_MODELS + "/" + "calculation.gml"; //$NON-NLS-1$
+  String CALCULATION_GML_PATH = INaProjectConstants.FOLDER_MODELS + "/" + "calculation.gml"; //$NON-NLS-1$ //$NON-NLS-2$
 
   String ANFANGSWERTE_DIR = "Anfangswerte"; //$NON-NLS-1$
 

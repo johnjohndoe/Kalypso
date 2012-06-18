@@ -79,7 +79,7 @@ class HydrotopeCreationInputValidation implements ICoreRunnableWithProgress
     {
       final IHydrotopeInput input = m_input[i];
 
-      final String subTask = String.format( "Validating layer %d of %d - %s", i + 1, m_input.length, input.getLabel() );
+      final String subTask = String.format( Messages.getString("HydrotopeCreationInputValidation.0"), i + 1, m_input.length, input.getLabel() ); //$NON-NLS-1$
       progress.subTask( subTask );
 
       final IStatus status = validateIndex( input, subTask, progress.newChild( 1 ) );

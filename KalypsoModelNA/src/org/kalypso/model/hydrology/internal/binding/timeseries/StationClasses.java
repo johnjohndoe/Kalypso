@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.timeseries.IStationClass;
 import org.kalypso.model.hydrology.binding.timeseries.IStationClasses;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -95,7 +96,7 @@ public class StationClasses extends Feature_Impl implements IStationClasses
     final Map<Class< ? extends Station>, Set<String>> classCatalog = getClassCatalog();
     final Set<String> allowedTypes = classCatalog.get( station.getClass() );
     if( allowedTypes == null )
-      throw new IllegalArgumentException( String.format( "Unknown station class: %s", station.getClass() ) );
+      throw new IllegalArgumentException( String.format( Messages.getString("StationClasses_0"), station.getClass() ) ); //$NON-NLS-1$
 
     return allowedTypes.toArray( new String[allowedTypes.size()] );
   }
@@ -155,10 +156,10 @@ public class StationClasses extends Feature_Impl implements IStationClasses
     {
       final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( STATION_CLASSES_URN, STATION_CLASSES_URN );
 
-      if( uri.startsWith( "urn:" ) )
+      if( uri.startsWith( "urn:" ) ) //$NON-NLS-1$
       {
         // id was not found in catalog, what to do?
-        throw new IllegalArgumentException( "Unknown dictionary: " + STATION_CLASSES_URN );
+        throw new IllegalArgumentException( Messages.getString("StationClasses_2") + STATION_CLASSES_URN ); //$NON-NLS-1$
       }
 
       final URL url = new URI( uri ).toURL();

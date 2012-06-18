@@ -156,7 +156,7 @@ public class NaOptimizeLoader
         // prefix; but this prefix is not defined in the gml, so it is never found.
         // We assume that the used prefix is always 'gnModell', but is meant to be the default namespace
         // TODO: we should get the prefix mapping from the input as well
-        if( "gnModell".equals( prefix ) )
+        if( "gnModell".equals( prefix ) ) //$NON-NLS-1$
           return dom.getDocumentElement().getNamespaceURI();
 
         return dom.lookupNamespaceURI( prefix );

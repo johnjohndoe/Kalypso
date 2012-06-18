@@ -59,6 +59,7 @@ import org.kalypso.model.hydrology.binding.timeseries.IMeteorologicalStation;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.IStationClass;
 import org.kalypso.model.hydrology.binding.timeseries.IStationClasses;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -90,7 +91,7 @@ public class StationClassesCatalog
         return allowedTypes.toArray( new String[allowedTypes.size()] );
     }
 
-    throw new IllegalArgumentException( String.format( "Unknown station class: %s", station.getClass() ) );
+    throw new IllegalArgumentException( String.format( Messages.getString("StationClassesCatalog_0"), station.getClass() ) ); //$NON-NLS-1$
 
   }
 
@@ -102,7 +103,7 @@ public class StationClassesCatalog
 
     final Set<String> allowedTypes = classCatalog.get( clazz );
     if( allowedTypes == null )
-      throw new IllegalArgumentException( String.format( "Unknown station class: %s", clazz ) );
+      throw new IllegalArgumentException( String.format( Messages.getString("StationClassesCatalog_1"), clazz ) ); //$NON-NLS-1$
 
     return allowedTypes.toArray( new String[allowedTypes.size()] );
   }
@@ -181,10 +182,10 @@ public class StationClassesCatalog
     {
       final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( IStationClasses.STATION_CLASSES_URN, IStationClasses.STATION_CLASSES_URN );
 
-      if( uri.startsWith( "urn:" ) )
+      if( uri.startsWith( "urn:" ) ) //$NON-NLS-1$
       {
         // id was not found in catalog, what to do?
-        throw new IllegalArgumentException( "Unknown dictionary: " + IStationClasses.STATION_CLASSES_URN );
+        throw new IllegalArgumentException( Messages.getString("StationClassesCatalog_3") + IStationClasses.STATION_CLASSES_URN ); //$NON-NLS-1$
       }
 
       final URL url = new URI( uri ).toURL();

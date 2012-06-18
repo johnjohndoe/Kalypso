@@ -101,7 +101,7 @@ public abstract class Station extends Feature_Impl implements IStation
   @Override
   public String getTimeseriesFoldername( )
   {
-    final String dirtyFoldername = String.format( "%s", getDescription() );
+    final String dirtyFoldername = String.format( "%s", getDescription() ); //$NON-NLS-1$
 
     // don't encode string - use plain folder name!
     // return URIUtil.fromString( dirtyFoldername ).toASCIIString();

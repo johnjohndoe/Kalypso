@@ -61,7 +61,7 @@ import com.vividsolutions.jts.geom.util.PolygonExtracter;
  */
 abstract class AbstractHydrotopeInput<T extends Feature> implements IHydrotopeInput
 {
-  protected static final String STR_ATTRIBUTES = "Attributes";
+  protected static final String STR_ATTRIBUTES = "Attributes"; //$NON-NLS-1$
 
   private SpatialIndexExt m_index = null;
 
@@ -152,6 +152,6 @@ abstract class AbstractHydrotopeInput<T extends Feature> implements IHydrotopeIn
 
   protected String formatMessage( final String message, final Feature element )
   {
-    return String.format( "Element '%s': %s", element.getName(), message );
+    return String.format( Messages.getString("AbstractHydrotopeInput.1"), element.getName(), message ); //$NON-NLS-1$
   }
 }

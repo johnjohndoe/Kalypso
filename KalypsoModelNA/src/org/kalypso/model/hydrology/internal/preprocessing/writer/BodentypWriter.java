@@ -95,7 +95,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
       final SoilLayerParameter[] invalidParameters = visitor.getInvalidParameters();
       for( final SoilLayerParameter parameter : invalidParameters )
       {
-        Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), parameter.getId() ) );
+        Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), parameter.getId() ) ); //$NON-NLS-1$
       }
 
       final SoilLayerParameter[] validParameters = visitor.getValidParameters();
@@ -119,7 +119,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
       final DRWBMSoilLayerParameter[] invalidParameters = visitor.getInvalidParameters();
       for( final DRWBMSoilLayerParameter parameter : invalidParameters )
       {
-        Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), parameter.getId() ) );
+        Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), parameter.getId() ) ); //$NON-NLS-1$
       }
 
       final DRWBMSoilLayerParameter[] validParameters = visitor.getValidParameters();

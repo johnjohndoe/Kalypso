@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -80,7 +81,7 @@ public class HydrotopeDissolver implements ICoreRunnableWithProgress
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final SubMonitor progress = SubMonitor.convert( monitor, "Dissolving hydrotopes", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("HydrotopeDissolver_0"), 100 ); //$NON-NLS-1$
 
     final Map<String, HydrotopeUserData> hash = new HashMap<>();
 
@@ -92,7 +93,7 @@ public class HydrotopeDissolver implements ICoreRunnableWithProgress
     {
       if( i % 10 == 0 )
       {
-        progress.subTask( String.format( "Hashing geometry %d of %d", i, intersectionsSize ) );
+        progress.subTask( String.format( Messages.getString("HydrotopeDissolver_1"), i, intersectionsSize ) ); //$NON-NLS-1$
         ProgressUtilities.worked( progress, 10 );
       }
 
