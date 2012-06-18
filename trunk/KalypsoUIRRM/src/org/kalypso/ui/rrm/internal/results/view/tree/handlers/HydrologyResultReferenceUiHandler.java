@@ -55,6 +55,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 import org.kalypso.ui.rrm.internal.results.view.actions.OpenResultTimeseriesTableAction;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
@@ -66,9 +67,9 @@ public class HydrologyResultReferenceUiHandler extends AbstractResultTreeNodeUiH
 {
   private final IHydrologyResultReference m_reference;
 
-  public HydrologyResultReferenceUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final IHydrologyResultReference reference )
+  public HydrologyResultReferenceUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final IHydrologyResultReference reference, final ResultManagementView view )
   {
-    super( simulation, calculation );
+    super( simulation, calculation, view );
     m_reference = reference;
   }
 

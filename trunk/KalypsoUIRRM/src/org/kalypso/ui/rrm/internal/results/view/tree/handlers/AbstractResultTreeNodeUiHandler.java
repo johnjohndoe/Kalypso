@@ -60,7 +60,9 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 import org.kalypso.ui.rrm.internal.simulations.actions.DeleteRrmCalcualtionAction;
+import org.kalypso.ui.rrm.internal.simulations.actions.DeleteRrmCalcualtionsAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
@@ -71,15 +73,17 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUiHandler
 {
-
   private final RrmSimulation m_simulation;
 
   private final RrmCalculationResult m_calculation;
 
-  public AbstractResultTreeNodeUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation )
+  private final ResultManagementView m_view;
+
+  public AbstractResultTreeNodeUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final ResultManagementView view )
   {
     m_simulation = simulation;
     m_calculation = calculation;
+    m_view = view;
   }
 
   protected RrmSimulation getSimulation( )
@@ -90,6 +94,11 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
   protected RrmCalculationResult getCalculation( )
   {
     return m_calculation;
+  }
+
+  protected ResultManagementView getView( )
+  {
+    return m_view;
   }
 
   @Override
@@ -124,8 +133,10 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_5" ), Messages.getString( "AbstractResultTreeNodeUiHandler_6" ), m_calculation.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), m_calculation.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      actions.add( new DeleteRrmCalcualtionAction( m_calculation ) );
+      actions.add( new DeleteRrmCalcualtionAction( m_calculation, getView() ) );
     }
+    else
+      actions.add( new DeleteRrmCalcualtionsAction( getSimulation(), getView() ) );
 
     /* Create the image hyperlinks. */
     for( final Action action : actions )

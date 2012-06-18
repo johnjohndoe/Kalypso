@@ -47,6 +47,7 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 import org.kalypso.ui.rrm.internal.results.view.tree.strategies.ParameterSetBuilder;
@@ -65,25 +66,28 @@ public class Node2TreeNodeBuilder implements IFeatureBindingCollectionVisitor<No
 
   private final TreeNode m_parent;
 
-  public Node2TreeNodeBuilder( final RrmSimulation simulation, final RrmCalculationResult calculationFolder, final TreeNode parent )
+  private final ResultManagementView m_view;
+
+  public Node2TreeNodeBuilder( final RrmSimulation simulation, final RrmCalculationResult calculationFolder, final TreeNode parent, final ResultManagementView view )
   {
     m_simulation = simulation;
     m_calculation = calculationFolder;
     m_parent = parent;
+    m_view = view;
   }
 
   @Override
   public void visit( final Node node )
   {
     final ParameterSetBuilder builder = new ParameterSetBuilder( m_simulation, m_calculation, node );
-    builder.init( m_parent, UIRrmImages.DESCRIPTORS.NA_NODE, UIRrmImages.DESCRIPTORS.INVALID_MODEL_ELEMENT, UIRrmImages.DESCRIPTORS.EMPTY_NA_NODE );
+    builder.init( m_parent, UIRrmImages.DESCRIPTORS.NA_NODE, UIRrmImages.DESCRIPTORS.INVALID_MODEL_ELEMENT, UIRrmImages.DESCRIPTORS.EMPTY_NA_NODE, m_view );
 
-    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, node, RRM_RESULT.nodeGesamtknotenAbfluss ) );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, node, RRM_RESULT.nodeGesamtknotenAbfluss ), m_view );
 
     try
     {
       final URL context = node.getWorkspace().getContext();
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, node, node.getZuflussLink(), RRM_RESULT.inputInflow ) );
+      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, node, node.getZuflussLink(), RRM_RESULT.inputInflow ), m_view );
     }
     catch( final MalformedURLException e )
     {

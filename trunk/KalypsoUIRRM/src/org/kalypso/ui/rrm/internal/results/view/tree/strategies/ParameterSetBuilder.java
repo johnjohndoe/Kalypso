@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.results.view.tree.strategies;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyParameterSetUiHandler;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyResultReferenceUiHandler;
@@ -72,17 +73,17 @@ public class ParameterSetBuilder
     m_feature = feature;
   }
 
-  public void init( final TreeNode base, final DESCRIPTORS imgExisting, final DESCRIPTORS imgMissing, final DESCRIPTORS imgInvalid )
+  public void init( final TreeNode base, final DESCRIPTORS imgExisting, final DESCRIPTORS imgMissing, final DESCRIPTORS imgInvalid, final ResultManagementView view )
   {
-    m_handler = new HydrologyParameterSetUiHandler( m_simulation, m_calculation, m_feature, imgExisting, imgMissing, imgInvalid );
+    m_handler = new HydrologyParameterSetUiHandler( m_simulation, m_calculation, m_feature, imgExisting, imgMissing, imgInvalid, view );
     m_node = new TreeNode( base, m_handler, m_feature );
 
     base.addChild( m_node );
   }
 
-  public void doAddNode( final IHydrologyResultReference reference )
+  public void doAddNode( final IHydrologyResultReference reference, final ResultManagementView view )
   {
-    m_node.addChild( new TreeNode( m_node, new HydrologyResultReferenceUiHandler( m_simulation, m_calculation, reference ), reference ) );
+    m_node.addChild( new TreeNode( m_node, new HydrologyResultReferenceUiHandler( m_simulation, m_calculation, reference, view ), reference ) );
     m_handler.addReferences( reference );
   }
 

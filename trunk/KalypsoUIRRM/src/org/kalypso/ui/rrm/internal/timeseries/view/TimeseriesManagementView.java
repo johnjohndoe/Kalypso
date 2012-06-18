@@ -158,7 +158,9 @@ public class TimeseriesManagementView extends ViewPart
       public void doubleClick( final DoubleClickEvent event )
       {
         m_stack.add( (IStructuredSelection) event.getSelection() );
-        m_treeViewer.refresh( true ); // trigger refresh event to get bold labels for selected items
+        final TreeNode[] changes = m_stack.add( (IStructuredSelection) event.getSelection() );
+        for( final TreeNode changed : changes )
+          m_treeViewer.refresh( changed );
       }
     } );
 
