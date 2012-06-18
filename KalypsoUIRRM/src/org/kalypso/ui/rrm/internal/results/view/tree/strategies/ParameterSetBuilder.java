@@ -72,9 +72,9 @@ public class ParameterSetBuilder
     m_feature = feature;
   }
 
-  public void init( final TreeNode base, final DESCRIPTORS imgExisting, final DESCRIPTORS imgMissing )
+  public void init( final TreeNode base, final DESCRIPTORS imgExisting, final DESCRIPTORS imgMissing, final DESCRIPTORS imgInvalid )
   {
-    m_handler = new HydrologyParameterSetUiHandler( m_simulation, m_calculation, m_feature, imgExisting, imgMissing );
+    m_handler = new HydrologyParameterSetUiHandler( m_simulation, m_calculation, m_feature, imgExisting, imgMissing, imgInvalid );
     m_node = new TreeNode( base, m_handler, m_feature );
 
     base.addChild( m_node );

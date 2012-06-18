@@ -44,13 +44,15 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmCalculation;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
@@ -72,13 +74,17 @@ public class HydrologyParameterSetUiHandler extends AbstractResultTreeNodeUiHand
 
   private final DESCRIPTORS m_missing;
 
-  public HydrologyParameterSetUiHandler( final RrmSimulation simulation, final RrmCalculation calculation, final Feature feature, final UIRrmImages.DESCRIPTORS existing, final UIRrmImages.DESCRIPTORS missing )
+  private final DESCRIPTORS m_invalid;
+
+  public HydrologyParameterSetUiHandler( final RrmSimulation simulation, final RrmCalculation calculation, final Feature feature, final UIRrmImages.DESCRIPTORS existing, final UIRrmImages.DESCRIPTORS missing, final DESCRIPTORS invalid )
   {
     super( simulation, calculation );
 
     m_feature = feature;
+
     m_existing = existing;
     m_missing = missing;
+    m_invalid = invalid;
   }
 
   public void addReferences( final IHydrologyResultReference... reference )
@@ -113,17 +119,40 @@ public class HydrologyParameterSetUiHandler extends AbstractResultTreeNodeUiHand
   public ImageDescriptor getTreeImage( )
   {
     final IHydrologyResultReference[] references = getReferences();
-
-    if( ArrayUtils.isEmpty( references ) )
-      return UIRrmImages.id( m_missing );
-
     for( final IHydrologyResultReference refernce : references )
     {
-      if( refernce.isValid() )
+      if( refernce.isValid() && !refernce.isCalcualtionInput() )
         return UIRrmImages.id( m_existing );
     }
 
+    if( isInvalid() )
+      return UIRrmImages.id( m_invalid );
+
     return UIRrmImages.id( m_missing );
+  }
+
+  private boolean isInvalid( )
+  {
+    if( m_feature instanceof Catchment )
+    {
+      final Catchment catchment = (Catchment) m_feature;
+      if( !catchment.isGenerateResults() )
+        return true;
+    }
+    else if( m_feature instanceof Node )
+    {
+      final Node node = (Node) m_feature;
+      if( !node.isGenerateResults() )
+        return true;
+    }
+    else if( m_feature instanceof StorageChannel )
+    {
+      final StorageChannel channel = (StorageChannel) m_feature;
+      if( !channel.isGenerateResults() )
+        return true;
+    }
+
+    return false;
   }
 
   protected Feature getFeature( )

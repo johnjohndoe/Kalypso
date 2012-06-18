@@ -87,6 +87,8 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
 
   private final RrmCalculation m_calculation;
 
+  private final boolean m_calculationInput;
+
   public HydrologyResultReference( final RrmSimulation simulation, final RrmCalculation calculation, final Feature feature, final RRM_RESULT result )
   {
     m_simulation = simulation;
@@ -115,6 +117,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     }
 
     m_type = result;
+    m_calculationInput = false;
   }
 
   public HydrologyResultReference( final RrmSimulation simulation, final RrmCalculation calculation, final URL context, final Feature parent, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
@@ -136,7 +139,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
       m_file = null;
 
     m_type = type;
-
+    m_calculationInput = true;
   }
 
   @Override
@@ -334,5 +337,11 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
   public int getIndex( )
   {
     return 0;
+  }
+
+  @Override
+  public boolean isCalcualtionInput( )
+  {
+    return m_calculationInput;
   }
 }

@@ -119,6 +119,8 @@ public class UIRrmImages
     PARAMETER_TYPE_VOLUME("icons/resultview/storage.png"), //$NON-NLS-1$
     PARAMETER_TYPE_WATERLEVEL("icons/timeseries/parameterType_W.png"), //$NON-NLS-1$
 
+    INVALID_MODEL_ELEMENT("icons/timeseries/invalidItem.png"), //$NON-NLS-1$
+
     SIMULATION("icons/simulations/simulation.gif"), //$NON-NLS-1$
     STATION("icons/timeseries/station.gif"), //$NON-NLS-1$
     STATION_HYDROLOGICAL("icons/timeseries/station_hydrological.png"), //$NON-NLS-1$

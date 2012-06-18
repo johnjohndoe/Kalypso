@@ -79,7 +79,7 @@ public class Channel2TreeNodeBuilder implements IFeatureBindingCollectionVisitor
     if( channel instanceof StorageChannel )
     {
       final ParameterSetBuilder builder = new ParameterSetBuilder( m_simulation, m_calculation, channel );
-      builder.init( m_parent, UIRrmImages.DESCRIPTORS.STORAGE_CHANNEL, UIRrmImages.DESCRIPTORS.EMPTY_STORAGE_CHANNEL );
+      builder.init( m_parent, UIRrmImages.DESCRIPTORS.STORAGE_CHANNEL, UIRrmImages.DESCRIPTORS.INVALID_MODEL_ELEMENT, UIRrmImages.DESCRIPTORS.EMPTY_STORAGE_CHANNEL );
 
       builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, channel, RRM_RESULT.storageFuellvolumen ) );
       builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, channel, RRM_RESULT.storageSpeicherUeberlauf ) );
@@ -97,5 +97,4 @@ public class Channel2TreeNodeBuilder implements IFeatureBindingCollectionVisitor
       }
     }
   }
-
 }
