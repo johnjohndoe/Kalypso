@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -126,7 +127,11 @@ public class CalculationKnauf2WspmConverter implements ICalculationWspmConverter
     calc.setRunOffRef( runOffRef );
 
     // set q-Range
-    calc.setQRange( contentBean.getQMin().doubleValue(), contentBean.getQMax().doubleValue(), contentBean.getQStep().doubleValue() );
+    final BigDecimal qMin = contentBean.getQMin();
+    final BigDecimal qMax = contentBean.getQMax();
+    final BigDecimal qStep = contentBean.getQStep();
+    if( qMin != null && qMax != null && qStep != null )
+      calc.setQRange( qMin.doubleValue(), qMax.doubleValue(), qStep.doubleValue() );
   }
 
   private START_KONDITION_KIND findStartConditionType( final CalculationContentBeanKnauf contentBean )
