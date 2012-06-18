@@ -75,24 +75,20 @@ public class Node2TreeNodeBuilder implements IFeatureBindingCollectionVisitor<No
   @Override
   public void visit( final Node node )
   {
-// if( node.isGenerateResults() )
+    final ParameterSetBuilder builder = new ParameterSetBuilder( m_simulation, m_calculation, node );
+    builder.init( m_parent, UIRrmImages.DESCRIPTORS.NA_NODE, UIRrmImages.DESCRIPTORS.INVALID_MODEL_ELEMENT, UIRrmImages.DESCRIPTORS.EMPTY_NA_NODE );
+
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, node, RRM_RESULT.nodeGesamtknotenAbfluss ) );
+
+    try
     {
-      final ParameterSetBuilder builder = new ParameterSetBuilder( m_simulation, m_calculation, node );
-      builder.init( m_parent, UIRrmImages.DESCRIPTORS.NA_NODE, UIRrmImages.DESCRIPTORS.EMPTY_NA_NODE );
-
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, node, RRM_RESULT.nodeGesamtknotenAbfluss ) );
-
-      try
-      {
-        final URL context = node.getWorkspace().getContext();
-        builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, node, node.getZuflussLink(), RRM_RESULT.inputInflow ) );
-      }
-      catch( final MalformedURLException e )
-      {
-        e.printStackTrace();
-      }
+      final URL context = node.getWorkspace().getContext();
+      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, node, node.getZuflussLink(), RRM_RESULT.inputInflow ) );
     }
-
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
   }
 
 }

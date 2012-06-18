@@ -62,38 +62,46 @@ public class KalypsoHydrologyResults
   public enum RRM_RESULT
   {
     nodeGesamtknotenAbfluss(
-        Messages.getString("KalypsoHydrologyResults_0"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml", RRM_RESULT_TYPE.eNode),  //$NON-NLS-1$//$NON-NLS-2$
+        Messages.getString( "KalypsoHydrologyResults_0" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml", RRM_RESULT_TYPE.eNode), //$NON-NLS-1$//$NON-NLS-2$
 
-    catchmentTemperature(Messages.getString("KalypsoHydrologyResults_1"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_TEMPERATURE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_TEMPERATURE, "Temperatur.zml", RRM_RESULT_TYPE.eCatchment),  //$NON-NLS-1$//$NON-NLS-2$
-    catchmentNiederschlag(Messages.getString("KalypsoHydrologyResults_2"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_RAINFALL, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_RAINFALL, "Niederschlag.zml", RRM_RESULT_TYPE.eCatchment),  //$NON-NLS-1$//$NON-NLS-2$
-    catchmentSchneehoehe(Messages.getString("KalypsoHydrologyResults_3"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_SNOW_HEIGHT, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_SNOW_HEIGHT, null, RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$ // FIXME //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+    catchmentTemperature(
+        Messages.getString( "KalypsoHydrologyResults_1" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_TEMPERATURE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_TEMPERATURE, "Temperatur.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-1$//$NON-NLS-2$
+    catchmentNiederschlag(
+        Messages.getString( "KalypsoHydrologyResults_2" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_RAINFALL, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_RAINFALL, "Niederschlag.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-1$//$NON-NLS-2$
+    catchmentSchneehoehe(
+        Messages.getString( "KalypsoHydrologyResults_3" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_SNOW_HEIGHT, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_SNOW_HEIGHT, null, RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$ // FIXME //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
     catchmentGesamtTeilgebietsQ(
-        Messages.getString("KalypsoHydrologyResults_4"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml", RRM_RESULT_TYPE.eCatchment),  //$NON-NLS-1$//$NON-NLS-2$
+        Messages.getString( "KalypsoHydrologyResults_4" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Gesamtabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-1$//$NON-NLS-2$
     catchmentOberflaechenQNatuerlich(
-        Messages.getString("KalypsoHydrologyResults_5"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(natuerlich).zml", RRM_RESULT_TYPE.eCatchment),  //$NON-NLS-1$//$NON-NLS-2$
+        Messages.getString( "KalypsoHydrologyResults_5" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(natuerlich).zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-1$//$NON-NLS-2$
     catchmentOberflaechenQVersiegelt(
-        Messages.getString("KalypsoHydrologyResults_6"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(versiegelt).zml", RRM_RESULT_TYPE.eCatchment),  //$NON-NLS-1$//$NON-NLS-2$
-    catchmentInterflow(Messages.getString("KalypsoHydrologyResults_7"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Interflow.zml", RRM_RESULT_TYPE.eCatchment),  //$NON-NLS-1$//$NON-NLS-2$
-    catchmentBasisQ(Messages.getString("KalypsoHydrologyResults_8"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Basisabfluss.zml", RRM_RESULT_TYPE.eCatchment),  //$NON-NLS-1$//$NON-NLS-2$
+        Messages.getString( "KalypsoHydrologyResults_6" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Oberflaechenabfluss(versiegelt).zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-1$//$NON-NLS-2$
+    catchmentInterflow(
+        Messages.getString( "KalypsoHydrologyResults_7" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Interflow.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-1$//$NON-NLS-2$
+    catchmentBasisQ(
+        Messages.getString( "KalypsoHydrologyResults_8" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Basisabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-1$//$NON-NLS-2$
     catchmentGrundwasserQ(
-        Messages.getString("KalypsoHydrologyResults_9"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Grundwasserabfluss.zml", RRM_RESULT_TYPE.eCatchment),  //$NON-NLS-1$//$NON-NLS-2$
+        Messages.getString( "KalypsoHydrologyResults_9" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Grundwasserabfluss.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-1$//$NON-NLS-2$
     catchmentGrundwasserstand(
-        Messages.getString("KalypsoHydrologyResults_10"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_WATERLEVEL, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_WATERLEVEL, "Grundwasserstand.zml", RRM_RESULT_TYPE.eCatchment),  //$NON-NLS-1$//$NON-NLS-2$
-    catchmentEvapotranspiration(Messages.getString("KalypsoHydrologyResults_11"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_EVAPORATION, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_EVAPORATION, null, RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$ // FIXME //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+        Messages.getString( "KalypsoHydrologyResults_10" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_WATERLEVEL, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_WATERLEVEL, "Grundwasserstand.zml", RRM_RESULT_TYPE.eCatchment), //$NON-NLS-1$//$NON-NLS-2$
+    catchmentEvapotranspiration(
+        Messages.getString( "KalypsoHydrologyResults_11" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_EVAPORATION, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_EVAPORATION, null, RRM_RESULT_TYPE.eCatchment), //$NON-NLS-2$ // FIXME //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
 
-    storageFuellvolumen(Messages.getString("KalypsoHydrologyResults_12"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_VOLUME, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_VOLUME, "Fuellvolumen.zml", RRM_RESULT_TYPE.eStorage),  //$NON-NLS-1$//$NON-NLS-2$
+    storageFuellvolumen(
+        Messages.getString( "KalypsoHydrologyResults_12" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_VOLUME, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_VOLUME, "Fuellvolumen.zml", RRM_RESULT_TYPE.eStorage), //$NON-NLS-1$//$NON-NLS-2$
     storageSpeicherUeberlauf(
-        Messages.getString("KalypsoHydrologyResults_13"), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Speicherueberlauf.zml", RRM_RESULT_TYPE.eStorage),  //$NON-NLS-1$//$NON-NLS-2$
+        Messages.getString( "KalypsoHydrologyResults_13" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, "Speicherueberlauf.zml", RRM_RESULT_TYPE.eStorage), //$NON-NLS-1$//$NON-NLS-2$
 
     inputEvaporation(
-        Messages.getString("KalypsoHydrologyResults_14"), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_EVAPORATION, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_EVAPORATION, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
-    inputInflow(Messages.getString("KalypsoHydrologyResults_15"), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_INFLOW, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_INFLOW, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+        Messages.getString( "KalypsoHydrologyResults_14" ), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_EVAPORATION, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_EVAPORATION, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+    inputInflow(
+        Messages.getString( "KalypsoHydrologyResults_15" ), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_INFLOW, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_INFLOW, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
     inputRainfall(
-        Messages.getString("KalypsoHydrologyResults_16"), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_RAINFALL, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_RAINFALL, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+        Messages.getString( "KalypsoHydrologyResults_16" ), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_RAINFALL, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_RAINFALL, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
     inputSeaEvaporation(
-        Messages.getString("KalypsoHydrologyResults_17"), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_SEA_EVAPORATION, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_SEA_EVAPORATION, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+        Messages.getString( "KalypsoHydrologyResults_17" ), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_SEA_EVAPORATION, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_SEA_EVAPORATION, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
     inputTemperature(
-        Messages.getString("KalypsoHydrologyResults_18"), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_TEMPERATURE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_TEMPERATURE, null, RRM_RESULT_TYPE.eInputTimeseries); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+        Messages.getString( "KalypsoHydrologyResults_18" ), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_TEMPERATURE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_TEMPERATURE, null, RRM_RESULT_TYPE.eInputTimeseries); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
 
     private final String m_label;
 

@@ -58,4 +58,6 @@ public interface IHydrologyResultReference extends IAdaptable, IZmlSourceElement
 
   boolean isValid( );
 
+  boolean isCalcualtionInput( );
+
 }
