@@ -53,7 +53,7 @@ import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
@@ -83,6 +83,8 @@ public class TimeseriesBrowserParameterTypeFilterControl extends Composite
 
   private ComboViewer m_viewer;
 
+  protected TreeViewer m_tree;
+
   public TimeseriesBrowserParameterTypeFilterControl( final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NONE );
@@ -104,10 +106,12 @@ public class TimeseriesBrowserParameterTypeFilterControl extends Composite
     super.dispose();
   }
 
-  public void setViewer( final StructuredViewer viewer )
+  public void setViewer( final TreeViewer viewer )
   {
-    m_filter.setViewer( viewer );
-    viewer.addFilter( m_filter );
+    m_tree = viewer;
+
+    m_filter.setViewer( m_tree );
+    m_tree.addFilter( m_filter );
   }
 
   private void createContents( final Composite parent )
@@ -137,7 +141,6 @@ public class TimeseriesBrowserParameterTypeFilterControl extends Composite
     final IObservableValue modelValue = PojoObservables.observeValue( m_filter, TimeseriesBrowserParameterTypeFilter.PROPERTY_TYPE );
 
     m_binding.bindValue( targetValue, modelValue );
-
     m_viewer.setSelection( new StructuredSelection( StringUtils.EMPTY ) );
   }
 

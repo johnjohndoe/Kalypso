@@ -105,6 +105,7 @@ public class TimeseriesBrowserSearchViewer extends Composite implements IRrmDiag
     final ImageHyperlink lnkCollapseAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new CollapseAllTreeItemsAction( viewer ) );
     lnkCollapseAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) ); //$NON-NLS-1$
     lnkCollapseAll.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+
   }
 
   public void doClean( )

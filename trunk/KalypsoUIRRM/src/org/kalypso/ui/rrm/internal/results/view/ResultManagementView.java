@@ -86,7 +86,7 @@ public class ResultManagementView extends ViewPart
 
   protected TreeViewer m_treeViewer;
 
-  protected final TreeViewerSelectionStack m_stack = new TreeViewerSelectionStack();
+  protected final TreeViewerSelectionStack m_stack = new TreeViewerSelectionStack( 3 );
 
   private HydrolgyManagementSearchControl m_searchPanel;
 

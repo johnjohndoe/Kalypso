@@ -47,6 +47,8 @@ import java.util.Set;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodes;
 
 /**
  * additional selected items of a tree view. items was added by double clicking of tree viewer elements
@@ -56,6 +58,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 public class TreeViewerSelectionStack
 {
   Set<Object> m_stack = new LinkedHashSet<>();
+
+  private final int m_hierarchy;
+
+  public TreeViewerSelectionStack( final int hierarchy )
+  {
+    m_hierarchy = hierarchy;
+  }
 
   public ISelection getSelection( final IStructuredSelection selection )
   {
@@ -76,7 +85,14 @@ public class TreeViewerSelectionStack
     final Iterator< ? > itr = selection.iterator();
     while( itr.hasNext() )
     {
-      m_stack.add( itr.next() );
+      final Object item = itr.next();
+      if( item instanceof TreeNode )
+      {
+        final TreeNode node = (TreeNode) item;
+
+        if( TreeNodes.getLevel( node ) > m_hierarchy )
+          m_stack.add( item );
+      }
     }
   }
 
