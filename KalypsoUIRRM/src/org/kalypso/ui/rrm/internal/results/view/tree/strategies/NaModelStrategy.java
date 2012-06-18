@@ -59,6 +59,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.project.RrmCalculation;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -155,7 +156,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   private void doAddEmptyNode( final TreeNode root )
   {
-    root.addChild( new TreeNode( root, new EmptyTreeNodeUiHandler( Messages.getString("NaModelStrategy_0") ), "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    root.addChild( new TreeNode( root, new EmptyTreeNodeUiHandler( Messages.getString( "NaModelStrategy_0" ) ), "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
   }
 
@@ -171,20 +172,20 @@ public class NaModelStrategy implements ITreeNodeStrategy
       final HydrologyCalculationFoldersCollector visitor = new HydrologyCalculationFoldersCollector( simulation );
       simulation.getResultsFolder().accept( visitor, 1, false );
 
-      final IFolder[] caluculationResultsFolders = visitor.getFolders();
+      final RrmCalculation[] caluculationResultsFolders = visitor.getFolders();
 
-      for( final IFolder calculationResultFolder : caluculationResultsFolders )
+      for( final RrmCalculation calculation : caluculationResultsFolders )
       {
         final Map<String, Set<Feature>> resultCategories = new TreeMap<>();
 
-        final TreeNode calculationResultNode = new TreeNode( calcCase, new HydrologyCalculationCaseGroupUiHandler( simulation, calculationResultFolder ), calculationResultFolder );
+        final TreeNode calculationResultNode = new TreeNode( calcCase, new HydrologyCalculationCaseGroupUiHandler( simulation, calculation ), calculation );
 
-        calculationResultNode.addChild( doAddNodes( model.getNodes(), calculationResultNode, simulation, calculationResultFolder, resultCategories ) );
-        calculationResultNode.addChild( doAddCatchments( model.getCatchments(), calculationResultNode, simulation, calculationResultFolder, resultCategories ) );
-        calculationResultNode.addChild( doAddStorageChannels( model.getChannels(), calculationResultNode, simulation, calculationResultFolder, resultCategories ) );
+        calculationResultNode.addChild( doAddNodes( model.getNodes(), calculationResultNode, simulation, calculation, resultCategories ) );
+        calculationResultNode.addChild( doAddCatchments( model.getCatchments(), calculationResultNode, simulation, calculation, resultCategories ) );
+        calculationResultNode.addChild( doAddStorageChannels( model.getChannels(), calculationResultNode, simulation, calculation, resultCategories ) );
 
         if( !resultCategories.isEmpty() )
-          calculationResultNode.addChild( doAddResultCategories( resultCategories, calculationResultNode, simulation, calculationResultFolder ) );
+          calculationResultNode.addChild( doAddResultCategories( resultCategories, calculationResultNode, simulation, calculation ) );
 
         calcCase.addChild( calculationResultNode );
       }
@@ -198,9 +199,9 @@ public class NaModelStrategy implements ITreeNodeStrategy
     return calcCase;
   }
 
-  private TreeNode doAddResultCategories( final Map<String, Set<Feature>> categories, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationResultFolder )
+  private TreeNode doAddResultCategories( final Map<String, Set<Feature>> categories, final TreeNode parent, final RrmSimulation simulation, final RrmCalculation calculation )
   {
-    final TreeNode base = new TreeNode( parent, new ResultCategoryUiHandler( simulation, Messages.getString("NaModelStrategy_2") ), Messages.getString("NaModelStrategy_3") ); //$NON-NLS-1$ //$NON-NLS-2$
+    final TreeNode base = new TreeNode( parent, new ResultCategoryUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_2" ) ), Messages.getString( "NaModelStrategy_3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Map<Pair<Integer, String>, TreeNode> registry = new HashMap<>();
 
@@ -210,19 +211,19 @@ public class NaModelStrategy implements ITreeNodeStrategy
       final String path = entry.getKey();
       final Set<Feature> elements = entry.getValue();
 
-      final TreeNode category = doAddResultCategries( simulation, base, path, registry );
+      final TreeNode category = doAddResultCategries( simulation, calculation, base, path, registry );
 
-      doAddResultCategories( simulation, category, calculationResultFolder, elements.toArray( new Feature[] {} ) );
+      doAddResultCategories( simulation, category, calculation, elements.toArray( new Feature[] {} ) );
     }
 
     return base;
   }
 
-  private void doAddResultCategories( final RrmSimulation simulation, final TreeNode parent, final IFolder calculationFolder, final Feature[] elements )
+  private void doAddResultCategories( final RrmSimulation simulation, final TreeNode parent, final RrmCalculation calculation, final Feature[] elements )
   {
-    final Catchment2TreeNodeBuilder catchmentBuilder = new Catchment2TreeNodeBuilder( simulation, calculationFolder, parent );
-    final Channel2TreeNodeBuilder channelBuilder = new Channel2TreeNodeBuilder( simulation, calculationFolder, parent );
-    final Node2TreeNodeBuilder nodeBuilder = new Node2TreeNodeBuilder( simulation, calculationFolder, parent );
+    final Catchment2TreeNodeBuilder catchmentBuilder = new Catchment2TreeNodeBuilder( simulation, calculation, parent );
+    final Channel2TreeNodeBuilder channelBuilder = new Channel2TreeNodeBuilder( simulation, calculation, parent );
+    final Node2TreeNodeBuilder nodeBuilder = new Node2TreeNodeBuilder( simulation, calculation, parent );
 
     for( final Feature element : elements )
     {
@@ -236,7 +237,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   }
 
-  private TreeNode doAddResultCategries( final RrmSimulation simulation, final TreeNode parent, final String path, final Map<Pair<Integer, String>, TreeNode> registry )
+  private TreeNode doAddResultCategries( final RrmSimulation simulation, final RrmCalculation calculation, final TreeNode parent, final String path, final Map<Pair<Integer, String>, TreeNode> registry )
   {
     final CharMatcher matcher = new CharMatcher()
     {
@@ -245,9 +246,9 @@ public class NaModelStrategy implements ITreeNodeStrategy
       {
         switch( c )
         {
-          case '/':
-          case '\\':
-          case ';':
+          case '/': //$NON-NLS-1$
+          case '\\'://$NON-NLS-1$
+          case ';'://$NON-NLS-1$
             return true;
 
           default:
@@ -267,7 +268,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
       TreeNode node = registry.get( index );
       if( Objects.isNull( node ) )
       {
-        node = new TreeNode( ptr, new ResultCategoryUiHandler( simulation, part ), part );
+        node = new TreeNode( ptr, new ResultCategoryUiHandler( simulation, calculation, part ), part );
         ptr.addChild( node );
 
         registry.put( index, node );
@@ -280,28 +281,28 @@ public class NaModelStrategy implements ITreeNodeStrategy
     return ptr;
   }
 
-  private TreeNode doAddStorageChannels( final IFeatureBindingCollection<Channel> channels, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder, final Map<String, Set<Feature>> categories )
+  private TreeNode doAddStorageChannels( final IFeatureBindingCollection<Channel> channels, final TreeNode parent, final RrmSimulation simulation, final RrmCalculation calculation, final Map<String, Set<Feature>> categories )
   {
-    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, Messages.getString("NaModelStrategy_4"), DESCRIPTORS.STORAGE_CHANNEL ), RRM_RESULT.class ); //$NON-NLS-1$
-    channels.accept( new Channel2TreeNodeBuilder( simulation, calculationFolder, base ) );
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_4" ), DESCRIPTORS.STORAGE_CHANNEL ), RRM_RESULT.class ); //$NON-NLS-1$
+    channels.accept( new Channel2TreeNodeBuilder( simulation, calculation, base ) );
     channels.accept( new ChannelResultCategoriesCollector( categories ) );
 
     return base;
   }
 
-  private TreeNode doAddCatchments( final IFeatureBindingCollection<Catchment> catchments, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder, final Map<String, Set<Feature>> categories )
+  private TreeNode doAddCatchments( final IFeatureBindingCollection<Catchment> catchments, final TreeNode parent, final RrmSimulation simulation, final RrmCalculation calculation, final Map<String, Set<Feature>> categories )
   {
-    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, Messages.getString("NaModelStrategy_5"), DESCRIPTORS.CATCHMENT ), RRM_RESULT.class ); //$NON-NLS-1$
-    catchments.accept( new Catchment2TreeNodeBuilder( simulation, calculationFolder, base ) );
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_5" ), DESCRIPTORS.CATCHMENT ), RRM_RESULT.class ); //$NON-NLS-1$
+    catchments.accept( new Catchment2TreeNodeBuilder( simulation, calculation, base ) );
     catchments.accept( new CatchmentResultCategoriesCollector( categories ) );
 
     return base;
   }
 
-  private TreeNode doAddNodes( final IFeatureBindingCollection<Node> nodes, final TreeNode parent, final RrmSimulation simulation, final IFolder calculationFolder, final Map<String, Set<Feature>> categories )
+  private TreeNode doAddNodes( final IFeatureBindingCollection<Node> nodes, final TreeNode parent, final RrmSimulation simulation, final RrmCalculation calculation, final Map<String, Set<Feature>> categories )
   {
-    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, Messages.getString("NaModelStrategy_6"), DESCRIPTORS.NA_NODE ), RRM_RESULT.class ); //$NON-NLS-1$
-    nodes.accept( new Node2TreeNodeBuilder( simulation, calculationFolder, base ) );
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_6" ), DESCRIPTORS.NA_NODE ), RRM_RESULT.class ); //$NON-NLS-1$
+    nodes.accept( new Node2TreeNodeBuilder( simulation, calculation, base ) );
     nodes.accept( new NodeResultCategoriesCollector( categories ) );
 
     return base;

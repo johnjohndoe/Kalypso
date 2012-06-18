@@ -45,6 +45,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.model.hydrology.project.RrmCalculation;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -59,9 +60,9 @@ public class HydrologyGroupUiHandler extends AbstractResultTreeNodeUiHandler
 
   private final DESCRIPTORS m_icon;
 
-  public HydrologyGroupUiHandler( final RrmSimulation simulation, final String label, final DESCRIPTORS icon )
+  public HydrologyGroupUiHandler( final RrmSimulation simulation, final RrmCalculation calculation, final String label, final DESCRIPTORS icon )
   {
-    super( simulation );
+    super( simulation, calculation );
     m_label = label;
     m_icon = icon;
   }

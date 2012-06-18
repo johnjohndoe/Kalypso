@@ -38,48 +38,63 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
+package org.kalypso.model.hydrology.project;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.hydrology.project.RrmCalculation;
-import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 
 /**
+ * Helper class which encapsulates an rrm calculation result folder
+ * 
  * @author Dirk Kuch
  */
-public class HydrologyCalculationCaseGroupUiHandler extends AbstractResultTreeNodeUiHandler
+public class RrmCalculation
 {
+  private final IFolder m_folder;
 
-  public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation, final RrmCalculation calculation )
+  public RrmCalculation( final IFolder folder )
   {
-    super( simulation, calculation );
-
+    m_folder = folder;
   }
 
-  public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation )
+  public IFolder getFolder( )
   {
-    super( simulation, null );
+    return m_folder;
   }
 
-  @Override
-  public String getTreeLabel( )
+  public String getName( )
   {
-    if( Objects.isNotNull( getCalculation() ) )
-      return getCalculation().getName();
-
-    return getSimulation().getName();
+    return m_folder.getName();
   }
 
-  @Override
-  public ImageDescriptor getTreeImage( )
+  public IFile getCalculationLog( )
   {
-    if( Objects.isNotNull( getCalculation() ) )
-      return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( UIRrmImages.DESCRIPTORS.CALC_CASE_FOLDER );
+    return getLogFolder().getFile( RrmSimulation.FILE_CALCULATION_LOG );
+  }
 
-    return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( UIRrmImages.DESCRIPTORS.SIMULATION );
+  public IFile getOutputZip( )
+  {
+    return getLogFolder().getFile( RrmSimulation.FILE_OUTPUT_ZIP );
+  }
+
+  public IFile getBilanzTxt( )
+  {
+    return getBilanzFolder().getFile( RrmSimulation.FILE_BILANZ_TXT );
+  }
+
+  private IFolder getBilanzFolder( )
+  {
+    return getFolder().getFolder( RrmSimulation.FOLDER_BILANZ );
+  }
+
+  public IFile getStatisticsCsv( )
+  {
+    return getLogFolder().getFile( RrmSimulation.FILE_CALCULATION_LOG );
+  }
+
+  public IFolder getLogFolder( )
+  {
+    return getFolder().getFolder( "Log" ); //$NON-NLS-1$
   }
 
 }

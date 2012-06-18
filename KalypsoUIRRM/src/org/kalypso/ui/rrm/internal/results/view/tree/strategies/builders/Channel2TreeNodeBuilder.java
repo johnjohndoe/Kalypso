@@ -43,9 +43,9 @@ package org.kalypso.ui.rrm.internal.results.view.tree.strategies.builders;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.resources.IFolder;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
+import org.kalypso.model.hydrology.project.RrmCalculation;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
@@ -62,14 +62,14 @@ public class Channel2TreeNodeBuilder implements IFeatureBindingCollectionVisitor
 
   private final RrmSimulation m_simulation;
 
-  private final IFolder m_calculationFolder;
+  private final RrmCalculation m_calculation;
 
   private final TreeNode m_parent;
 
-  public Channel2TreeNodeBuilder( final RrmSimulation simulation, final IFolder calculationFolder, final TreeNode parent )
+  public Channel2TreeNodeBuilder( final RrmSimulation simulation, final RrmCalculation calculationFolder, final TreeNode parent )
   {
     m_simulation = simulation;
-    m_calculationFolder = calculationFolder;
+    m_calculation = calculationFolder;
     m_parent = parent;
   }
 
@@ -78,18 +78,18 @@ public class Channel2TreeNodeBuilder implements IFeatureBindingCollectionVisitor
   {
     if( channel instanceof StorageChannel )
     {
-      final ParameterSetBuilder builder = new ParameterSetBuilder( m_simulation, channel );
+      final ParameterSetBuilder builder = new ParameterSetBuilder( m_simulation, m_calculation, channel );
       builder.init( m_parent, UIRrmImages.DESCRIPTORS.STORAGE_CHANNEL, UIRrmImages.DESCRIPTORS.EMPTY_STORAGE_CHANNEL );
 
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculationFolder, channel, RRM_RESULT.storageFuellvolumen ) );
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculationFolder, channel, RRM_RESULT.storageSpeicherUeberlauf ) );
+      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, channel, RRM_RESULT.storageFuellvolumen ) );
+      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, channel, RRM_RESULT.storageSpeicherUeberlauf ) );
 
       try
       {
         final StorageChannel storage = (StorageChannel) channel;
         final URL context = storage.getWorkspace().getContext();
 
-        builder.doAddNode( new HydrologyResultReference( m_simulation, context, storage, storage.getSeaEvaporationTimeseriesLink(), RRM_RESULT.inputEvaporation ) );
+        builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, storage, storage.getSeaEvaporationTimeseriesLink(), RRM_RESULT.inputEvaporation ) );
       }
       catch( final MalformedURLException e )
       {
