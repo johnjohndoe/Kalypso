@@ -93,7 +93,7 @@ public class TimeseriesManagementView extends ViewPart
 
   private TimeseriesBrowserSearchViewer m_searchPanel;
 
-  protected final TreeViewerSelectionStack m_stack = new TreeViewerSelectionStack();
+  protected final TreeViewerSelectionStack m_stack = new TreeViewerSelectionStack( 1 );
 
   @Override
   public void createPartControl( final Composite parent )
