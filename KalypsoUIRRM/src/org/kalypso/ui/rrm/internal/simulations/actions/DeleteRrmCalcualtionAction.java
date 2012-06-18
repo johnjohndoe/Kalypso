@@ -38,48 +38,64 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
+package org.kalypso.ui.rrm.internal.simulations.actions;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
-import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 
 /**
  * @author Dirk Kuch
  */
-public class HydrologyCalculationCaseGroupUiHandler extends AbstractResultTreeNodeUiHandler
+public class DeleteRrmCalcualtionAction extends Action implements IUpdateable
 {
 
-  public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation )
+  private final RrmCalculationResult m_calculation;
+
+  public DeleteRrmCalcualtionAction( final RrmCalculationResult calculation )
   {
-    super( simulation, calculation );
+    super( "Lösche Berechnungsergebnisse" );
 
-  }
-
-  public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation )
-  {
-    super( simulation, null );
-  }
-
-  @Override
-  public String getTreeLabel( )
-  {
-    if( Objects.isNotNull( getCalculation() ) )
-      return getCalculation().getName();
-
-    return getSimulation().getName();
+    setToolTipText( "Lösche Berechnungsergebnisse." );
+    m_calculation = calculation;
   }
 
   @Override
-  public ImageDescriptor getTreeImage( )
+  public void update( )
   {
-    if( Objects.isNotNull( getCalculation() ) )
-      return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( UIRrmImages.DESCRIPTORS.CALC_CASE_FOLDER );
-
-    return KalypsoUIRRMPlugin.getDefault().getImageProvider().getImageDescriptor( UIRrmImages.DESCRIPTORS.SIMULATION );
+    // TODO current?!?
   }
 
+  @Override
+  public void run( )
+  {
+// try
+// {
+// /* Get the file. */
+// final IFile errorGml = m_simulation.getErrorGml();
+//
+// /* Check if the file exists. */
+// if( !errorGml.exists() )
+//        throw new IOException( String.format( Messages.getString( "OpenErrorGmlAction_0" ), errorGml.getName() ) ); //$NON-NLS-1$
+//
+// // TODO
+// }
+// catch( final Exception ex )
+// {
+// /* Display the error. */
+// final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+// final String dialogTitle = getText();
+//      final String message = Messages.getString( "OpenErrorGmlAction_1" ); //$NON-NLS-1$
+// final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex );
+// ErrorDialog.openError( shell, dialogTitle, message, status );
+// }
+  }
+
+  @Override
+  public ImageDescriptor getImageDescriptor( )
+  {
+    return UIRrmImages.id( UIRrmImages.DESCRIPTORS.DELETE );
+  }
 }

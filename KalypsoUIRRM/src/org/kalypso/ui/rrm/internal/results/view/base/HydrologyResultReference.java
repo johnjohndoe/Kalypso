@@ -54,7 +54,7 @@ import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.model.hydrology.project.RrmCalculation;
+import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -85,11 +85,11 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
 
   private final RrmSimulation m_simulation;
 
-  private final RrmCalculation m_calculation;
+  private final RrmCalculationResult m_calculation;
 
   private final boolean m_calculationInput;
 
-  public HydrologyResultReference( final RrmSimulation simulation, final RrmCalculation calculation, final Feature feature, final RRM_RESULT result )
+  public HydrologyResultReference( final RrmSimulation simulation, final RrmCalculationResult calculation, final Feature feature, final RRM_RESULT result )
   {
     m_simulation = simulation;
     m_calculation = calculation;
@@ -120,7 +120,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     m_calculationInput = false;
   }
 
-  public HydrologyResultReference( final RrmSimulation simulation, final RrmCalculation calculation, final URL context, final Feature parent, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
+  public HydrologyResultReference( final RrmSimulation simulation, final RrmCalculationResult calculation, final URL context, final Feature parent, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
   {
     m_simulation = simulation;
     m_calculation = calculation;

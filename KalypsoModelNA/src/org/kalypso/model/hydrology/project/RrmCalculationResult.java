@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.project;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 
@@ -48,11 +49,31 @@ import org.eclipse.core.resources.IFolder;
  * 
  * @author Dirk Kuch
  */
-public class RrmCalculation
+public class RrmCalculationResult
 {
+  public static final String CURRENT_FOLDRER_NAME = "Aktuell"; //$NON-NLS-1$
+
+  public static final String FILE_STATISTICS_CSV = "statistics.csv"; //$NON-NLS-1$
+
+  public static final String FOLDER_BILANZ = "Bilanz"; //$NON-NLS-1$
+
+  public static final String FILE_CALCULATION_LOG = "calculation.log"; //$NON-NLS-1$
+
+  public static final String FILE_BILANZ_TXT = "bilanz.txt"; //$NON-NLS-1$
+
+  private static final String FOLDER_REPORT = "Report"; //$NON-NLS-1$
+
+  private static final String FOLDER_LOG = "Log"; //$NON-NLS-1$
+
+  static final String FILE_OUTPUT_ZIP = "output.zip"; //$NON-NLS-1$
+
+  private static final String FILE_CALCULATION_STATUS_GML = "calculationStatus.gml"; //$NON-NLS-1$
+
+  private static final String FILE_ERROR_GML = "error.gml"; //$NON-NLS-1$
+
   private final IFolder m_folder;
 
-  public RrmCalculation( final IFolder folder )
+  public RrmCalculationResult( final IFolder folder )
   {
     m_folder = folder;
   }
@@ -69,32 +90,56 @@ public class RrmCalculation
 
   public IFile getCalculationLog( )
   {
-    return getLogFolder().getFile( RrmSimulation.FILE_CALCULATION_LOG );
+    return getLogFolder().getFile( FILE_CALCULATION_LOG );
   }
 
   public IFile getOutputZip( )
   {
-    return getLogFolder().getFile( RrmSimulation.FILE_OUTPUT_ZIP );
+    return getLogFolder().getFile( FILE_OUTPUT_ZIP );
   }
 
   public IFile getBilanzTxt( )
   {
-    return getBilanzFolder().getFile( RrmSimulation.FILE_BILANZ_TXT );
+    return getBilanzFolder().getFile( FILE_BILANZ_TXT );
   }
 
   private IFolder getBilanzFolder( )
   {
-    return getFolder().getFolder( RrmSimulation.FOLDER_BILANZ );
-  }
-
-  public IFile getStatisticsCsv( )
-  {
-    return getLogFolder().getFile( RrmSimulation.FILE_CALCULATION_LOG );
+    return getFolder().getFolder( FOLDER_BILANZ );
   }
 
   public IFolder getLogFolder( )
   {
-    return getFolder().getFolder( "Log" ); //$NON-NLS-1$
+    return getFolder().getFolder( FOLDER_LOG );
   }
 
+  public IFile getCalculationStatusGml( )
+  {
+    return getLogFolder().getFile( FILE_CALCULATION_STATUS_GML );
+  }
+
+  public IFile getErrorGml( )
+  {
+    return getLogFolder().getFile( FILE_ERROR_GML );
+  }
+
+  public IFolder getReportFolder( )
+  {
+    return getFolder().getFolder( FOLDER_REPORT );
+  }
+
+  public IFile getStatisticsCsv( )
+  {
+    return getReportFolder().getFile( FILE_STATISTICS_CSV );
+  }
+
+  public IFolder getLzimResultFolder( )
+  {
+    return getFolder().getFolder( RrmSimulation.FOLDER_ANFANGSWERTE );
+  }
+
+  public boolean isCurrent( )
+  {
+    return StringUtils.equalsIgnoreCase( CURRENT_FOLDRER_NAME, m_folder.getName() );
+  }
 }
