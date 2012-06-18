@@ -54,6 +54,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
@@ -128,8 +129,7 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     {
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_1" ), Messages.getString( "AbstractResultTreeNodeUiHandler_2" ), m_calculation.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       actions.add( new OpenOutputZipAction( Messages.getString( "AbstractResultTreeNodeUiHandler_3" ), Messages.getString( "AbstractResultTreeNodeUiHandler_4" ), m_calculation.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.",
-// m_simulation, false ) );
+      // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.", m_simulation, false ) );
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_5" ), Messages.getString( "AbstractResultTreeNodeUiHandler_6" ), m_calculation.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), m_calculation.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -144,6 +144,9 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
       final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, actionPanel, SWT.NONE, action );
       imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       imageHyperlink.setText( action.getText() );
+      
+      if( action instanceof IUpdateable )
+        ((IUpdateable) action).update();
     }
 
   }
