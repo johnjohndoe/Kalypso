@@ -45,7 +45,7 @@ import java.net.URL;
 
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.model.hydrology.project.RrmCalculation;
+import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
@@ -62,11 +62,11 @@ public class Channel2TreeNodeBuilder implements IFeatureBindingCollectionVisitor
 
   private final RrmSimulation m_simulation;
 
-  private final RrmCalculation m_calculation;
+  private final RrmCalculationResult m_calculation;
 
   private final TreeNode m_parent;
 
-  public Channel2TreeNodeBuilder( final RrmSimulation simulation, final RrmCalculation calculationFolder, final TreeNode parent )
+  public Channel2TreeNodeBuilder( final RrmSimulation simulation, final RrmCalculationResult calculationFolder, final TreeNode parent )
   {
     m_simulation = simulation;
     m_calculation = calculationFolder;

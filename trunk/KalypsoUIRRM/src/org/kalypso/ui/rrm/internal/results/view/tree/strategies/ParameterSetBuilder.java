@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.strategies;
 
-import org.kalypso.model.hydrology.project.RrmCalculation;
+import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
@@ -63,9 +63,9 @@ public class ParameterSetBuilder
 
   private TreeNode m_node;
 
-  private final RrmCalculation m_calculation;
+  private final RrmCalculationResult m_calculation;
 
-  public ParameterSetBuilder( final RrmSimulation simulation, final RrmCalculation calculation, final Feature feature )
+  public ParameterSetBuilder( final RrmSimulation simulation, final RrmCalculationResult calculation, final Feature feature )
   {
     m_simulation = simulation;
     m_calculation = calculation;

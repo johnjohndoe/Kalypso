@@ -53,7 +53,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.model.hydrology.project.RrmCalculation;
+import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -76,7 +76,7 @@ public class HydrologyParameterSetUiHandler extends AbstractResultTreeNodeUiHand
 
   private final DESCRIPTORS m_invalid;
 
-  public HydrologyParameterSetUiHandler( final RrmSimulation simulation, final RrmCalculation calculation, final Feature feature, final UIRrmImages.DESCRIPTORS existing, final UIRrmImages.DESCRIPTORS missing, final DESCRIPTORS invalid )
+  public HydrologyParameterSetUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final Feature feature, final UIRrmImages.DESCRIPTORS existing, final UIRrmImages.DESCRIPTORS missing, final DESCRIPTORS invalid )
   {
     super( simulation, calculation );
 

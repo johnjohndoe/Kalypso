@@ -274,11 +274,11 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
   private void handleResults( final File resultDir ) throws CoreException
   {
     /* Create a filename with the timestamp format. */
-    final SimpleDateFormat timestampFormat = new SimpleDateFormat( "yyyy.MM.dd_(HH_mm_ss)" );
+    final SimpleDateFormat timestampFormat = new SimpleDateFormat( "yyyy.MM.dd_(HH_mm_ss)" ); //$NON-NLS-1$
     final String timestampFilename = timestampFormat.format( new Date() );
 
     /* Get the current result directory. */
-    final IFolder currentResultFolder = m_simulation.getCurrentResultsFolder();
+    final IFolder currentResultFolder = m_simulation.getCurrentCalculationResult().getFolder();
     final File currentResultDir = currentResultFolder.getLocation().toFile();
 
     /* Get the timestamp directory. */
@@ -293,14 +293,14 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
         FileUtils.forceDelete( currentResultDir );
 
       /* Move new result to calc Folder: move is way faster... */
-      FileUtils.moveDirectory( new File( resultDir, "Aktuell" ), currentResultDir );
+      FileUtils.moveDirectory( new File( resultDir, "Aktuell" ), currentResultDir ); //$NON-NLS-1$
 
       /* Make copy with timestamp. */
       FileUtils.copyDirectory( currentResultDir, timestampDir );
     }
     catch( final IOException e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to copy result data", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to copy result data", e ) ); //$NON-NLS-1$
     }
     finally
     {

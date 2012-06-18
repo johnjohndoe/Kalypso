@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.results.view.tree;
+package org.kalypso.model.hydrology.project;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -46,8 +46,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
-import org.kalypso.model.hydrology.project.RrmCalculation;
-import org.kalypso.model.hydrology.project.RrmSimulation;
 
 /**
  * Collects simulation results folders
@@ -56,7 +54,7 @@ import org.kalypso.model.hydrology.project.RrmSimulation;
  */
 public class HydrologyCalculationFoldersCollector implements IResourceVisitor
 {
-  Set<RrmCalculation> m_folders = new LinkedHashSet<>();
+  Set<RrmCalculationResult> m_folders = new LinkedHashSet<>();
 
   private final RrmSimulation m_simulation;
 
@@ -76,12 +74,12 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
       return true;
 
     if( isResultFolder( folder ) )
-      m_folders.add( new RrmCalculation( folder ) );
+      m_folders.add( new RrmCalculationResult( folder ) );
 
     return true;
   }
 
-  private boolean isResultFolder( final IFolder folder )
+  public static boolean isResultFolder( final IFolder folder )
   {
     final IFolder nodes = folder.getFolder( "Knoten" ); //$NON-NLS-1$
     final IFolder storageChannels = folder.getFolder( "SpeicherStrang" ); //$NON-NLS-1$
@@ -99,9 +97,9 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
     return folder.equals( m_simulation.getResultsFolder() );
   }
 
-  public RrmCalculation[] getFolders( )
+  public RrmCalculationResult[] getFolders( )
   {
-    return m_folders.toArray( new RrmCalculation[] {} );
+    return m_folders.toArray( new RrmCalculationResult[] {} );
   }
 
 }

@@ -158,29 +158,29 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     try
     {
       /* Monitor. */
-      monitor.beginTask( String.format( Messages.getString("CalcCaseConverter.12"), m_sourceCalcCaseDir.getName() ), 1000 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("CalcCaseConverter.13") ); //$NON-NLS-1$
+      monitor.beginTask( String.format( Messages.getString( "CalcCaseConverter.12" ), m_sourceCalcCaseDir.getName() ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "CalcCaseConverter.13" ) ); //$NON-NLS-1$
 
       /* Create the scenario. */
       createScenario();
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( Messages.getString("CalcCaseConverter.14") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "CalcCaseConverter.14" ) ); //$NON-NLS-1$
 
       /* Copy the basic data. */
       copyBasicData();
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( Messages.getString("CalcCaseConverter.15") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "CalcCaseConverter.15" ) ); //$NON-NLS-1$
 
       /* Rename the old results. */
       renameOldResults();
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( Messages.getString("CalcCaseConverter.16") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "CalcCaseConverter.16" ) ); //$NON-NLS-1$
 
       /* Convert old meta control. */
       convertMetaControl();
@@ -190,7 +190,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
       /* Monitor. */
       monitor.worked( 200 );
-      monitor.subTask( Messages.getString("CalcCaseConverter.17") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "CalcCaseConverter.17" ) ); //$NON-NLS-1$
 
       /* Load the models. */
       final NaModell naModel = m_data.loadModel( INaProjectConstants.GML_MODELL_PATH );
@@ -201,7 +201,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       final IStatusCollector mappingLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
       final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel, catchmentModel, mappingLog );
       final TimeseriesMappingBuilder timeseriesMappingBuilder = guessTimeseriesMappings( naModel, mappings, mappingLog );
-      getLog().add( mappingLog.asMultiStatus( Messages.getString("CalcCaseConverter.18") ) ); //$NON-NLS-1$
+      getLog().add( mappingLog.asMultiStatus( Messages.getString( "CalcCaseConverter.18" ) ) ); //$NON-NLS-1$
 
       /* SPECIAL CASE: Must save and copy the modell.gml before emptying the timeseries links. */
       m_data.saveModel( INaProjectConstants.GML_MODELL_PATH, naModel );
@@ -222,21 +222,21 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( Messages.getString("CalcCaseConverter.20") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "CalcCaseConverter.20" ) ); //$NON-NLS-1$
 
       /* Add the simulation. */
       final NAControl simulation = addSimulation( catchmentModelBuilder, timeseriesMappingBuilder );
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( Messages.getString("CalcCaseConverter.21") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "CalcCaseConverter.21" ) ); //$NON-NLS-1$
 
       /* Finalize the simulation. */
       finalizeSimulation();
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( Messages.getString("CalcCaseConverter.22") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "CalcCaseConverter.22" ) ); //$NON-NLS-1$
 
       /* Verify timeseries of the catchment models of the created simulation. */
       final CatchmentModelVerifier verifier = new CatchmentModelVerifier( m_data, simulation, new File( m_targetScenarioDir, RrmScenario.FOLDER_SIMULATIONEN ) );
@@ -301,6 +301,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   private void renameOldResults( )
   {
     /* Get the current folder. */
+    // TODO Is this the target project, if so use RRMScenario, RRMSimulation etc.
     final File aktuellDir = new File( m_targetScenarioDir, m_simulationPath + "/" + INaCalcCaseConstants.AKTUELL_PATH ); //$NON-NLS-1$
     if( aktuellDir.isDirectory() )
     {
@@ -336,7 +337,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     if( createEmpty )
     {
-      getLog().add( IStatus.INFO, String.format( Messages.getString("CalcCaseConverter.23"), sourcePath ) ); //$NON-NLS-1$
+      getLog().add( IStatus.INFO, String.format( Messages.getString( "CalcCaseConverter.23" ), sourcePath ) ); //$NON-NLS-1$
       modelTargetDir.mkdirs();
       return;
     }
@@ -585,7 +586,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final TimeseriesWalker walker = new TimeseriesWalker( new FixDotDotTimeseriesVisitor(), localLog );
     naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
 
-    final IStatus status = localLog.asMultiStatus( Messages.getString("CalcCaseConverter.28") ); //$NON-NLS-1$
+    final IStatus status = localLog.asMultiStatus( Messages.getString( "CalcCaseConverter.28" ) ); //$NON-NLS-1$
     log.add( status );
   }
 }

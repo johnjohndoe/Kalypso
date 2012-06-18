@@ -44,7 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.project.RrmCalculation;
+import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
@@ -61,11 +61,11 @@ public class Catchment2TreeNodeBuilder implements IFeatureBindingCollectionVisit
 
   private final RrmSimulation m_simulation;
 
-  private final RrmCalculation m_calculation;
+  private final RrmCalculationResult m_calculation;
 
   private final TreeNode m_parent;
 
-  public Catchment2TreeNodeBuilder( final RrmSimulation simulation, final RrmCalculation calculation, final TreeNode parent )
+  public Catchment2TreeNodeBuilder( final RrmSimulation simulation, final RrmCalculationResult calculation, final TreeNode parent )
   {
     m_simulation = simulation;
     m_calculation = calculation;

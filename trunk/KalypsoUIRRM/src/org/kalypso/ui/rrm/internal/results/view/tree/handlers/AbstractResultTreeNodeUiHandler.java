@@ -57,9 +57,10 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.model.hydrology.project.RrmCalculation;
+import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.simulations.actions.DeleteRrmCalcualtionAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
@@ -73,9 +74,9 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
 
   private final RrmSimulation m_simulation;
 
-  private final RrmCalculation m_calculation;
+  private final RrmCalculationResult m_calculation;
 
-  public AbstractResultTreeNodeUiHandler( final RrmSimulation simulation, final RrmCalculation calculation )
+  public AbstractResultTreeNodeUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation )
   {
     m_simulation = simulation;
     m_calculation = calculation;
@@ -86,7 +87,7 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     return m_simulation;
   }
 
-  protected RrmCalculation getCalculation( )
+  protected RrmCalculationResult getCalculation( )
   {
     return m_calculation;
   }
@@ -122,6 +123,8 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
 // m_simulation, false ) );
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_5" ), Messages.getString( "AbstractResultTreeNodeUiHandler_6" ), m_calculation.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), m_calculation.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      actions.add( new DeleteRrmCalcualtionAction( m_calculation ) );
     }
 
     /* Create the image hyperlinks. */
