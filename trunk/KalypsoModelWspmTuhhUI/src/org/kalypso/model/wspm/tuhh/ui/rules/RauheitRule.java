@@ -98,8 +98,8 @@ public class RauheitRule extends AbstractValidatorRule
       if( result == null )
       {
 
-        final String msg = String.format( "Fehlende Profilpunkt-Rauheit ab Profilpunkt: %.2f m", point.getBreite() );
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, stationId, 0, "", new AddRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS,
+        final String msg = String.format( Messages.getString("RauheitRule.0"), point.getBreite() ); //$NON-NLS-1$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, stationId, 0, "", new AddRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, //$NON-NLS-1$
             IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS } ) );
 
         return;

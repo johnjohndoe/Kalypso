@@ -217,7 +217,7 @@ public class WeirPanel extends AbstractProfilView
   {
     if( hint.isObjectDataChanged() || hint.isProfilPropertyChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() )
     {
-      final UIJob job = new UIJob( "updating controls" )
+      final UIJob job = new UIJob( Messages.getString("WeirPanel.0") ) //$NON-NLS-1$
       {
 
         @Override

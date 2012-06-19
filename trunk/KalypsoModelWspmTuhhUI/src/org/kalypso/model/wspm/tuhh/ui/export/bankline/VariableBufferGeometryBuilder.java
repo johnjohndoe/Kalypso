@@ -280,7 +280,7 @@ public class VariableBufferGeometryBuilder
       final Coordinate[] coordinates = segStr.getCoordinates();
       if( coordinates.length < 2 )
       {
-        System.out.println( "oups" );
+        System.out.println( "oups" ); //$NON-NLS-1$
       }
       else
       {
