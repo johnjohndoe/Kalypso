@@ -46,7 +46,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -98,6 +101,12 @@ public class GlobalConversionData
    * The case list.
    */
   private CaseList m_caseList;
+
+  /**
+   * list of time series which have be converted at the end of the import (Map<target parameter type, Set<time series to
+   * convert>).
+   */
+  private final Map<String, Set<TimeseriesIndexEntry>> m_convert = new HashMap<>();
 
   /**
    * The constructor.
@@ -236,5 +245,10 @@ public class GlobalConversionData
     {
       IOUtils.closeQuietly( stream );
     }
+  }
+
+  public Map<String, Set<TimeseriesIndexEntry>> getConversionMap( )
+  {
+    return m_convert;
   }
 }

@@ -98,6 +98,12 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
       final CalcCasesConverter casesConverter = new CalcCasesConverter( globalData );
       final IStatus calcCaseStatus = casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
       getLog().add( calcCaseStatus );
+
+      /* convert invalid timeseries parameter types */
+      final TimeseriesParameterTypeConverter timeseriesParameterTypeConverter = new TimeseriesParameterTypeConverter( m_targetDir, globalData.getConversionMap() );
+      final IStatus timeseriesParameterTypeConverterStatus = timeseriesParameterTypeConverter.execute( new SubProgressMonitor( monitor, globalData.getConversionMap().size() ) );
+      getLog().add( timeseriesParameterTypeConverterStatus );
+
     }
     finally
     {
