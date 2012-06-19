@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,28 +36,24 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.postprocessing.statistics;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -85,9 +81,6 @@ public class NAStatistics implements INaStatistics
    */
   public class NAStatisticComparator implements Comparator<Feature>
   {
-    /**
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
     @Override
     public int compare( final Feature o1, final Feature o2 )
     {
@@ -97,13 +90,14 @@ public class NAStatistics implements INaStatistics
     }
   }
 
-  private static final String FILENAME_CSV = "statistics.csv"; //$NON-NLS-1$
+  // REMARK: using extension 'txt', so excel opens the file correctly
+  private static final String FILENAME_CSV = "statistics.txt"; //$NON-NLS-1$
 
   private static final String FILENAME_ZML = "statistics.zml"; //$NON-NLS-1$
 
-  private static final SimpleDateFormat CSV_DATE_FORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss Z" ); //$NON-NLS-1$
+  private static final SimpleDateFormat CSV_DATE_FORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" ); //$NON-NLS-1$
 
-  private static final String SEPARATOR_CSV = ","; //$NON-NLS-1$
+  private static final char SEPARATOR_CSV = '\t'; //$NON-NLS-1$
 
   private final Map<Feature, NAStatisticsData> m_resultMap = new TreeMap<Feature, NAStatisticsData>( new NAStatisticComparator() );
 
@@ -206,11 +200,11 @@ public class NAStatistics implements INaStatistics
   private IAxis[] createAxes( )
   {
     final List<IAxis> resultAxisList = new ArrayList<IAxis>();
-    resultAxisList.add( new DefaultAxis( AXIS_NODE_ID, ITimeseriesConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ 
-    resultAxisList.add( new DefaultAxis( AXIS_STATION, ITimeseriesConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ 
-    resultAxisList.add( new DefaultAxis( AXIS_DATE, ITimeseriesConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ 
+    resultAxisList.add( new DefaultAxis( AXIS_NODE_ID, ITimeseriesConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( AXIS_STATION, ITimeseriesConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( AXIS_DATE, ITimeseriesConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$
     resultAxisList.add( new DefaultAxis( AXIS_DISCHARGE, ITimeseriesConstants.TYPE_RUNOFF, TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
-    resultAxisList.add( new DefaultAxis( AXIS_PATH, ITimeseriesConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$ 
+    resultAxisList.add( new DefaultAxis( AXIS_PATH, ITimeseriesConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$
     resultAxisList.add( new DefaultAxis( AXIS_VOLUME, ITimeseriesConstants.TYPE_VOLUME, TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_VOLUME ), Double.class, false ) ); //$NON-NLS-1$
     return resultAxisList.toArray( new IAxis[resultAxisList.size()] );
   }
@@ -228,14 +222,23 @@ public class NAStatistics implements INaStatistics
     final ITupleModel values = observation.getValues( null );
     final IAxis[] resultAxisList = observation.getAxes();
 
-    FileOutputStream streamCSV = null;
-    OutputStreamWriter writerCSV = null;
-    try
+    try (PrintWriter pw = new PrintWriter( reportFileCSV ))
     {
-      streamCSV = new FileOutputStream( reportFileCSV );
+      /* Header */
+      pw.print( "Knoten" );
+      pw.print( SEPARATOR_CSV );
+      pw.print( "Beschreibung" );
+      pw.print( SEPARATOR_CSV );
+      pw.print( "Zeitpunkt maximaler Wert" );
+      pw.print( SEPARATOR_CSV );
+      pw.print( "maximaler Wert" );
+      pw.print( SEPARATOR_CSV );
+      pw.print( "Datendatei" );
+      pw.print( SEPARATOR_CSV );
+      pw.println( "Gesamtvolumen" );
+
       // REMARK/BUGFIX: using the default charset here, because this file is usually intended to be opened with excel
       // Excel automatically assumes the default charset of the platform
-      writerCSV = new OutputStreamWriter( streamCSV, Charset.defaultCharset().name() );
       for( int i = 0; i < values.size(); i++ )
       {
         for( int j = 0; j < 6; j++ )
@@ -243,20 +246,17 @@ public class NAStatistics implements INaStatistics
           final Object currentElement = values.get( i, resultAxisList[j] );
 
           final String asText = asText( currentElement, j );
-          writerCSV.write( asText );
+          pw.print( asText );
 
           if( j == 5 )
-            writerCSV.write( "\n" ); //$NON-NLS-1$
+            pw.format( "%n" ); //$NON-NLS-1$
           else
-            writerCSV.write( SEPARATOR_CSV );
+            pw.print( SEPARATOR_CSV );
         }
       }
-      writerCSV.flush();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writerCSV );
-      IOUtils.closeQuietly( streamCSV );
+
+      pw.flush();
+      pw.close();
     }
   }
 
@@ -280,8 +280,10 @@ public class NAStatistics implements INaStatistics
       {
         final Double value = getDoubleValueFormatted( currentElement );
         if( value == null )
-          return "";//$NON-NLS-1$
-        return String.format( Locale.ENGLISH, "%.8f", value ); //$NON-NLS-1$
+          return StringUtils.EMPTY;
+
+        // REMARK: using platform default (',' in german) because we want excel to open the file
+        return String.format( "%.8f", value ); //$NON-NLS-1$
       }
     }
 
