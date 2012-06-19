@@ -50,12 +50,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.statistics.INaStatistics;
 import org.kalypso.ogc.sensor.IAxis;
@@ -95,7 +97,7 @@ public class NAStatistics implements INaStatistics
 
   private static final String FILENAME_ZML = "statistics.zml"; //$NON-NLS-1$
 
-  private static final SimpleDateFormat CSV_DATE_FORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" ); //$NON-NLS-1$
+  private final SimpleDateFormat m_csvDateFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" ); //$NON-NLS-1$
 
   private static final char SEPARATOR_CSV = '\t'; //$NON-NLS-1$
 
@@ -106,6 +108,7 @@ public class NAStatistics implements INaStatistics
   public NAStatistics( final Logger logger )
   {
     m_logger = logger;
+    m_csvDateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
   }
 
   public void writeStatistics( final File inputDir, final File reportDir )
@@ -222,6 +225,9 @@ public class NAStatistics implements INaStatistics
     final ITupleModel values = observation.getValues( null );
     final IAxis[] resultAxisList = observation.getAxes();
 
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    final String timezoneName = timeZone.getDisplayName();
+
     try (PrintWriter pw = new PrintWriter( reportFileCSV ))
     {
       /* Header */
@@ -229,7 +235,7 @@ public class NAStatistics implements INaStatistics
       pw.print( SEPARATOR_CSV );
       pw.print( "Beschreibung" );
       pw.print( SEPARATOR_CSV );
-      pw.print( "Zeitpunkt maximaler Wert" );
+      pw.format( "Zeitpunkt maximaler Wert (%s)", timezoneName );
       pw.print( SEPARATOR_CSV );
       pw.print( "maximaler Wert" );
       pw.print( SEPARATOR_CSV );
@@ -273,7 +279,7 @@ public class NAStatistics implements INaStatistics
         return currentElement.toString();
 
       case 2:
-        return CSV_DATE_FORMAT.format( currentElement );
+        return m_csvDateFormat.format( currentElement );
 
       case 3:
       case 5:
