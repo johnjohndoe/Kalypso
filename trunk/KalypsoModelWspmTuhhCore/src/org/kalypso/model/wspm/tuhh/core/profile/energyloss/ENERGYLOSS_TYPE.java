@@ -47,8 +47,8 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
  */
 public enum ENERGYLOSS_TYPE
 {
-  eEinlauf("EINLAUF", Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.energyloss.ENERGYLOSS_TYPE.0" )), //$NON-NLS-1$
-  eZusatzverlust("ZUSATZVERLUST", Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.energyloss.ENERGYLOSS_TYPE.1" )); //$NON-NLS-1$
+  eEinlauf("EINLAUF", Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.energyloss.ENERGYLOSS_TYPE.0" )), //$NON-NLS-1$ //$NON-NLS-2$
+  eZusatzverlust("ZUSATZVERLUST", Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.energyloss.ENERGYLOSS_TYPE.1" )); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final String m_label;
 

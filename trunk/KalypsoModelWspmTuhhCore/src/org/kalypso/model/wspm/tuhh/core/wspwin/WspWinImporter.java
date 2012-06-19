@@ -347,7 +347,7 @@ public final class WspWinImporter
       else
       {
         // REMARK: if file is missing and referenced from a strand, we really have a problem.
-        final String message = String.format( "Profile file '%s' missing.", fileName );
+        final String message = String.format( Messages.getString("WspWinImporter.0"), fileName ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message );
         throw new CoreException( status );
       }
