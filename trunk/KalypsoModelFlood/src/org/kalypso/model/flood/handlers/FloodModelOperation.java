@@ -124,7 +124,7 @@ public final class FloodModelOperation implements ICoreRunnableWithProgress
       }
       catch( final Exception e )
       {
-        final String message = Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.14" ) + e.getLocalizedMessage();
+        final String message = Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.14" ) + e.getLocalizedMessage(); //$NON-NLS-1$
         ProcessFloodModelHandler.showErrorDialog( m_shell, message ); //$NON-NLS-1$
         return new Status( IStatus.ERROR, KalypsoModelFloodPlugin.PLUGIN_ID, message, e );
       }
