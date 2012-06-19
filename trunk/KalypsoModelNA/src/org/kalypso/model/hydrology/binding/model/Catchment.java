@@ -147,6 +147,10 @@ public class Catchment extends AbstractNaModelElement
 
   public static final QName PROPERTY_CORRSEALING = new QName( NS_NAMODELL, "corrSealing" ); //$NON-NLS-1$
 
+  public static final QName PROPERTY_CORR_MAX_PERC = new QName( NS_NAMODELL, "corrMaxPerc" ); //$NON-NLS-1$
+
+  public static final QName PROPERTY_CORR_GW_INFLOW_RATE = new QName( NS_NAMODELL, "corrGWInflowRate" ); //$NON-NLS-1$
+
   private IFeatureBindingCollection<Bodenschichtkorrektur> m_bodenKorrekturCollection = null;
 
   private IFeatureBindingCollection<Grundwasserabfluss> m_grundwasserAbflussCollection = null;
@@ -438,6 +442,26 @@ public class Catchment extends AbstractNaModelElement
   public void setCorrSealing( final Double corrSealing )
   {
     setProperty( PROPERTY_CORRSEALING, corrSealing );
+  }
+
+  public double getCorrMaxPercolation( )
+  {
+    return getDoubleProperty( PROPERTY_CORR_MAX_PERC, 1.0 );
+  }
+
+  public void setCorrMaxPercolation( final Double corrMaxPerc )
+  {
+    setProperty( PROPERTY_CORR_MAX_PERC, corrMaxPerc );
+  }
+
+  public double getCorrGwInflowRate( )
+  {
+    return getDoubleProperty( PROPERTY_CORR_GW_INFLOW_RATE, 1.0 );
+  }
+
+  public void setCorrGwInflowRater( final Double corrGwInflowRater )
+  {
+    setProperty( PROPERTY_CORR_GW_INFLOW_RATE, corrGwInflowRater );
   }
 
   public String getResultCategory( )

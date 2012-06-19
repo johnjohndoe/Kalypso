@@ -378,15 +378,7 @@
           <element name="faktorRetbas" type="double" minOccurs="0" />
           <element name="faktorRetgw" type="double" minOccurs="0" />
           <element name="faktorRetklu" type="double" minOccurs="0" />
-          <element name="corrSealing" minOccurs="0">
-            <!--  FIXME: factor always < 1 ? we would like to increase sealing as well! -->
-            <simpleType>
-              <restriction base="double">
-                <minInclusive value="0.0" />
-                <maxInclusive value="1.0" />
-              </restriction>
-            </simpleType>
-          </element>
+          <element name="corrSealing" type="na:correctionFactorType"  minOccurs="0"/>
           <element name="corrMaxPerc" type="na:correctionFactorType" minOccurs="0"/>
           <element name="corrGWInflowRate" type="na:correctionFactorType" minOccurs="0" />
         </sequence>
