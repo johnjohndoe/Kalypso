@@ -187,7 +187,7 @@ public class WspWinProjectWriter
       try
       {
         final String id = rec.getValue( iType ).toString();
-        LOSSKIND lk = LOSSKIND.valueOf( id.replace( "ü", "UE" ).toUpperCase() );
+        LOSSKIND lk = LOSSKIND.valueOf( id.replace( "ü", "UE" ).toUpperCase() ); //$NON-NLS-1$ //$NON-NLS-2$
         return lk;
       }
       catch( IllegalArgumentException e )

@@ -86,7 +86,7 @@ public class TuhhCalcEnergylossWriter
       {
         final IProfileFeature profileFeature = segment.getProfileMember();
         if( profileFeature == null ){
-          System.out.println(this.getClass()+": No profilemember found in segment "+segment.getId());
+          System.out.println(this.getClass()+": No profilemember found in segment "+segment.getId()); //$NON-NLS-1$
           continue;
         }
         final IProfil profil = profileFeature.getProfil();
@@ -98,23 +98,23 @@ public class TuhhCalcEnergylossWriter
           final TupleResult result = energyloss.getObservation().getResult();
           if( result == null )
           {
-            System.out.println(this.getClass()+": Profile "+profil.getName()+" does not contain any Energyloss values");
+            System.out.println(this.getClass()+": Profile "+profil.getName()+" does not contain any Energyloss values"); //$NON-NLS-1$ //$NON-NLS-2$
             continue;
           }
           final int iType = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
           final int iValue = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
-          psiWriter.print( "STATION " + segment.getStation() );
+          psiWriter.print( "STATION " + segment.getStation() ); //$NON-NLS-1$
           int i = 1;
           for( final IRecord record : result )
           {
             final String type = record.getValue( iType ).toString();
             if( type.compareTo( ENERGYLOSS_TYPE.eEinlauf.getId() ) == 0 )
             {
-              psiWriter.print( " " + ENERGYLOSS_TYPE.eEinlauf.getId() + " " + record.getValue( iValue ) );
+              psiWriter.print( " " + ENERGYLOSS_TYPE.eEinlauf.getId() + " " + record.getValue( iValue ) ); //$NON-NLS-1$ //$NON-NLS-2$
             }
             else
             {
-              psiWriter.print( " " + ENERGYLOSS_TYPE.eZusatzverlust.getId() + i++ + " " + record.getValue( iValue ) );
+              psiWriter.print( " " + ENERGYLOSS_TYPE.eZusatzverlust.getId() + i++ + " " + record.getValue( iValue ) ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
           psiWriter.println();
