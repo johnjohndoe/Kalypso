@@ -59,7 +59,7 @@ import de.renew.workflow.connector.cases.IModel;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}NaModell.
- *
+ * 
  * @author Gernot Belger
  */
 public class NaModell extends Feature_Impl implements IModel
@@ -72,14 +72,11 @@ public class NaModell extends Feature_Impl implements IModel
 
   private static final QName MEMBER_CHANNEL_COLLECTION = new QName( NS_NAMODELL, "ChannelCollectionMember" ); //$NON-NLS-1$
 
-  // /**
-  // * @deprecated Should not be used outside of this class.
-  // */
-  private static final QName MEMBER_CHANNEL = new QName( NS_NAMODELL, "channelMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_CHANNEL = new QName( NS_NAMODELL, "channelMember" ); //$NON-NLS-1$
 
   private static final QName MEMBER_NODE_COLLECTION = new QName( NS_NAMODELL, "NodeCollectionMember" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_NODE = new QName( NS_NAMODELL, "nodeMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_NODE = new QName( NS_NAMODELL, "nodeMember" ); //$NON-NLS-1$
 
   public static final QName PROPERTY_LOCATION = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 
