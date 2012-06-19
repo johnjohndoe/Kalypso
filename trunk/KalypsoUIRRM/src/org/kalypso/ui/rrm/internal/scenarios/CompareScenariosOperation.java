@@ -150,8 +150,8 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         monitor.subTask( Messages.getString( "CompareScenariosOperation_2" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceModelFile, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_MODEL, selectedModelFile, new QName[] { NaModell.MEMBER_CATCHMENT, NaModell.MEMBER_CHANNEL,
-            NaModell.MEMBER_NODE }, new QName[] { NaModell.QN_NAME, NaModell.QN_NAME, NaModell.QN_NAME } ) );
+        compare( referenceModelFile, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_MODEL, selectedModelFile, new QName[] { NaModell.MEMBER_CATCHMENT_COLLECTION,
+            NaModell.MEMBER_CHANNEL_COLLECTION, NaModell.MEMBER_NODE_COLLECTION }, new QName[] { NaModell.QN_NAME, NaModell.QN_NAME, NaModell.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
