@@ -214,7 +214,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       m_actions.add( new OpenOutputZipAction( Messages.getString( "SimulationCalculationFeatureControl.6" ), Messages.getString( "SimulationCalculationFeatureControl.7" ), current.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
       m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.8" ), Messages.getString( "SimulationCalculationFeatureControl.9" ), current.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.10" ), Messages.getString( "SimulationCalculationFeatureControl.11" ), current.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.10" ), Messages.getString( "SimulationCalculationFeatureControl.11" ), current.getStatisticsCsv(), "xls" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-1$
 
       /* Create the image hyperlinks. */
       for( final Action action : m_actions )
