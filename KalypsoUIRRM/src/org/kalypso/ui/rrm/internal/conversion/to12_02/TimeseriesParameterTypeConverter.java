@@ -54,6 +54,7 @@ import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -68,7 +69,7 @@ public class TimeseriesParameterTypeConverter extends AbstractLoggingOperation
 
   public TimeseriesParameterTypeConverter( final File targetDir, final Map<String, Set<TimeseriesIndexEntry>> conversionMap )
   {
-    super( "Timeseries Parameter Type Converter" );
+    super( Messages.getString("TimeseriesParameterTypeConverter_0") ); //$NON-NLS-1$
     m_conversionMap = conversionMap;
 
     final File timeseriesDirectory = new File( targetDir, INaProjectConstants.PATH_TIMESERIES );
@@ -81,10 +82,10 @@ public class TimeseriesParameterTypeConverter extends AbstractLoggingOperation
   {
     if( m_conversionMap.isEmpty() )
     {
-      getLog().add( IStatus.OK, "Conversion map is empty. No conversion needed." );
+      getLog().add( IStatus.OK, Messages.getString("TimeseriesParameterTypeConverter_1") ); //$NON-NLS-1$
     }
 
-    monitor.beginTask( "Converting timeseries parameter types", m_conversionMap.size() );
+    monitor.beginTask( Messages.getString("TimeseriesParameterTypeConverter_2"), m_conversionMap.size() ); //$NON-NLS-1$
 
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_stationsFile, null );
     final IStationCollection stations = (IStationCollection) workspace.getRootFeature();
@@ -95,7 +96,7 @@ public class TimeseriesParameterTypeConverter extends AbstractLoggingOperation
       final String targetType = entry.getKey();
       final Set<TimeseriesIndexEntry> timeserieses = entry.getValue();
 
-      monitor.subTask( String.format( "Converting time series of paramter type '%s'", targetType ) );
+      monitor.subTask( String.format( Messages.getString("TimeseriesParameterTypeConverter_3"), targetType ) ); //$NON-NLS-1$
 
       for( final TimeseriesIndexEntry indexEntry : timeserieses )
       {
@@ -117,7 +118,7 @@ public class TimeseriesParameterTypeConverter extends AbstractLoggingOperation
       monitor.worked( 1 );
     }
 
-    GmlSerializer.serializeWorkspace( m_stationsFile, workspace, "UTF-8" );
+    GmlSerializer.serializeWorkspace( m_stationsFile, workspace, "UTF-8" ); //$NON-NLS-1$
 
     monitor.done();
   }

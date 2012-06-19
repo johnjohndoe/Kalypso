@@ -194,8 +194,8 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
     final ISWTObservableValue target = SWTObservables.observeText( text, new int[] { SWT.Modify } );
     final IObservableValue model = BeansObservables.observeValue( m_data, CalculateEvaporationData.PROPERTY_QUALITY );
 
-    final StringIsAsciiPrintableValidator ascii = new StringIsAsciiPrintableValidator( IStatus.ERROR, Messages.getString( "EvaporationParameterPage_11" ) );
-    final StringFilenameValidator filename = new StringFilenameValidator( IStatus.ERROR, Messages.getString( "EvaporationParameterPage_11" ) );
+    final StringIsAsciiPrintableValidator ascii = new StringIsAsciiPrintableValidator( IStatus.ERROR, Messages.getString( "EvaporationParameterPage_11" ) ); //$NON-NLS-1$
+    final StringFilenameValidator filename = new StringFilenameValidator( IStatus.ERROR, Messages.getString( "EvaporationParameterPage_11" ) ); //$NON-NLS-1$
     final TimeSeriesAlreadyExistsValidator exists = new TimeSeriesAlreadyExistsValidator( m_station, m_data );
 
     m_binding.bindValue( target, model, new MultiValidator( ascii, filename, exists ) ); //$NON-NLS-1$

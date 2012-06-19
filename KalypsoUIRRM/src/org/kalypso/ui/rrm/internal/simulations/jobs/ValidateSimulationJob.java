@@ -213,7 +213,7 @@ public class ValidateSimulationJob extends Job
   private IStatus validateGenerator( final IRainfallGenerator generator, final long lastModifiedResults )
   {
     if( generator == null )
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "No generator available..." );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob.0") ); //$NON-NLS-1$
 
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
@@ -257,7 +257,7 @@ public class ValidateSimulationJob extends Job
   private IStatus validateSimulation( final NAControl control, final long lastModifiedResults )
   {
     if( control == null )
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "No simulation available..." );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ValidateSimulationJob.1") ); //$NON-NLS-1$
 
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
