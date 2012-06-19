@@ -389,7 +389,7 @@ public class HydrotopeInfo
     // REMARK: sealing of 1.0 is not allowed, because the calculation core cannot handle this:
     // it calculates the sealed area as sealingRate * naturalArea / (1 - sealingRate );
     // so we get a division by zero here.
-    final double maxSealing = 9e-10;
+    final double maxSealing = 0.99999999;
 
     if( m_totalSealingRate < 0.0 || m_totalSealingRate > maxSealing )
       throw new NAPreprocessorException( String.format( Messages.getString( "HydrotopeInfo.2" ), m_totalSealingRate, maxSealing, getName() ) ); //$NON-NLS-1$
