@@ -143,11 +143,6 @@ public class RrmSimulation
     return m_simulation.getFolder( FOLDER_RESULTS );
   }
 
-// public IFolder getCurrentResultsFolder( )
-// {
-// return getResultsFolder().getFolder( FOLDER_AKTUELL );
-// }
-
   public IFolder getLzsimFolder( )
   {
     return m_simulation.getFolder( FOLDER_ANFANGSWERTE );
