@@ -293,7 +293,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 
     if( leftDistances == null || rightDistances == null )
     {
-      final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to determine bankline distances. Please check river line and marker positions." );
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("BanklineBuilder.0") ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 

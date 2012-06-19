@@ -68,7 +68,7 @@ public class EnergylossLayer extends ComponentLayer
   public void removeYourself( )
   {
     final IEnergylossProfileObject[] elpo = getProfil().getProfileObjects( IEnergylossProfileObject.class );
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.layers.EnergylossLayer.0" ), getProfil(), true ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( "", getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectRemove( getProfil(), elpo ) );
     new ProfilOperationJob( operation ).schedule();
   }
@@ -114,7 +114,7 @@ public class EnergylossLayer extends ComponentLayer
   @Override
   public String getTitle( )
   {
-    return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.0");
+    return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.0"); //$NON-NLS-1$
   /**  final IEnergylossProfileObject[] elpo = getProfil().getProfileObjects( IEnergylossProfileObject.class );
     if( elpo.length > 0)
     {

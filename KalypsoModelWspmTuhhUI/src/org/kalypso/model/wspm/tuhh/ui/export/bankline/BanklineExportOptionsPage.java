@@ -121,12 +121,12 @@ public class BanklineExportOptionsPage extends WizardPage
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
 
     final Button checkbox = new Button( panel, SWT.CHECK );
-    checkbox.setText( "Densify Riverline" );
-    checkbox.setToolTipText( "If checked, additional vertices will be inserted into the riverline, so that the maximal distance between two adjacent vertices is smaller than the given value." );
+    checkbox.setText( Messages.getString("BanklineExportOptionsPage.0") ); //$NON-NLS-1$
+    checkbox.setToolTipText( Messages.getString("BanklineExportOptionsPage.1") ); //$NON-NLS-1$
 
     final Text densifyField = new Text( panel, SWT.BORDER | SWT.RIGHT );
     densifyField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    densifyField.setText( "minimal vertex distance" );
+    densifyField.setText( Messages.getString("BanklineExportOptionsPage.2") ); //$NON-NLS-1$
 
     /* binding */
     final ISWTObservableValue targetCheckbox = SWTObservables.observeSelection( checkbox );

@@ -170,7 +170,7 @@ public class EnergylossPanel extends AbstractProfilView
     final Text text = toolkit.createText( m_propPanel, StringUtils.EMPTY, SWT.BORDER | SWT.RIGHT );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     text.setMessage( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.1" ) ); //$NON-NLS-1$
-    text.setText( model.getEnergylossValue() == null ? "" : model.getEnergylossValue().toString() );
+    text.setText( model.getEnergylossValue() == null ? "" : model.getEnergylossValue().toString() ); //$NON-NLS-1$
     text.addModifyListener( getModifyListener() );
     final DataBinder binder = bind( text, model );
     final IDataBinding binding = new AbstractDatabinding( toolkit )
@@ -187,7 +187,7 @@ public class EnergylossPanel extends AbstractProfilView
     elType.setInput( ArrayUtils.remove( ENERGYLOSS_TYPE.values(), 0 ) );
     final Combo combo = elType.getCombo();
     combo.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
-    combo.setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.2" ) );
+    combo.setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.2" ) ); //$NON-NLS-1$
     combo.addFocusListener( new FocusListener()
     {
       @Override
@@ -204,11 +204,11 @@ public class EnergylossPanel extends AbstractProfilView
           return;
         }
 
-        if( ((Combo) e.getSource()).getSelectionIndex() > -1 || ((Combo) e.getSource()).getText() != "" )
+        if( ((Combo) e.getSource()).getSelectionIndex() > -1 || ((Combo) e.getSource()).getText() != "" ) //$NON-NLS-1$
         {
           model.fireObjectChange( ((Combo) e.getSource()).getText(), model.getEnergylossValue() );
         }
-        else if( ((Combo) e.getSource()).getText() == "" )
+        else if( ((Combo) e.getSource()).getText() == "" ) //$NON-NLS-1$
         {
           model.removeEnergyloss();
         }
@@ -282,7 +282,7 @@ public class EnergylossPanel extends AbstractProfilView
         buildText( m_toolkit, model );
       }
     }
-    final Label label = m_toolkit.createLabel( m_propPanel, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.4" ) + ": " + ENERGYLOSS_TYPE.eEinlauf.toString() );//$NON-NLS-1$
+    final Label label = m_toolkit.createLabel( m_propPanel, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.4" ) + ": " + ENERGYLOSS_TYPE.eEinlauf.toString() );//$NON-NLS-1$ //$NON-NLS-2$
     label.setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.5" ) );//$NON-NLS-1$
     dataModel.setEnergylossType( ENERGYLOSS_TYPE.eEinlauf.getId() );
     buildText( m_toolkit, dataModel ); //$NON-NLS-1$
