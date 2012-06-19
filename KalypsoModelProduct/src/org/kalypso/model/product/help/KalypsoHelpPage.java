@@ -12,7 +12,7 @@ public class KalypsoHelpPage extends AbstractHelpDisplay
   @Override
   public String getHelpHome( final String hostname, final int port, final String tab )
   {
-    return "https://sourceforge.net/apps/mediawiki/kalypso/index.php?title=Main_Page";
+    return "https://sourceforge.net/apps/mediawiki/kalypso/index.php?title=Main_Page"; //$NON-NLS-1$
   }
 
   /**
@@ -26,8 +26,8 @@ public class KalypsoHelpPage extends AbstractHelpDisplay
   @Override
   public String getHelpForTopic( final String topic, final String hostname, final int port )
   {
-    if( "main".equals( topic ) )
-      return "https://sourceforge.net/apps/mediawiki/kalypso/index.php?title=Main_Page";
+    if( "main".equals( topic ) ) //$NON-NLS-1$
+      return "https://sourceforge.net/apps/mediawiki/kalypso/index.php?title=Main_Page"; //$NON-NLS-1$
 
     return null;
   }
