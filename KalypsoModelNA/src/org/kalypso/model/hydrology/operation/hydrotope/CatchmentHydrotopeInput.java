@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -54,8 +57,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 class CatchmentHydrotopeInput extends AbstractHydrotopeInput<Catchment>
 {
-  static final String STR_SEALING_FACTOR_OUTSIDE_VALID_RANGE_0_0_1_0 = Messages.getString("CatchmentHydrotopeInput_0"); //$NON-NLS-1$
-
   public CatchmentHydrotopeInput( final NaModell naModel )
   {
     super( naModel.getCatchments() );
@@ -64,7 +65,7 @@ class CatchmentHydrotopeInput extends AbstractHydrotopeInput<Catchment>
   @Override
   public String getLabel( )
   {
-    return Messages.getString("CatchmentHydrotopeInput_1"); //$NON-NLS-1$
+    return Messages.getString( "CatchmentHydrotopeInput_1" ); //$NON-NLS-1$
   }
 
   @Override
@@ -76,10 +77,27 @@ class CatchmentHydrotopeInput extends AbstractHydrotopeInput<Catchment>
     for( final Catchment catchment : features )
     {
       final double sealingFactor = catchment.getCorrSealing();
-      if( sealingFactor < 0 || sealingFactor > 1.0 )
-        log.add( IStatus.ERROR, formatMessage( STR_SEALING_FACTOR_OUTSIDE_VALID_RANGE_0_0_1_0, catchment ) );
+      if( sealingFactor < 0 )
+        errorCorrectionFactor( log, catchment, Catchment.PROPERTY_CORRSEALING );
+
+      final double maxPercFactor = catchment.getCorrMaxPercolation();
+      if( maxPercFactor < 0 )
+        errorCorrectionFactor( log, catchment, Catchment.PROPERTY_CORR_MAX_PERC );
+
+      final double gwInflowFactor = catchment.getCorrGwInflowRate();
+      if( gwInflowFactor < 0 )
+        errorCorrectionFactor( log, catchment, Catchment.PROPERTY_CORR_GW_INFLOW_RATE );
     }
 
     return log.asMultiStatus( STR_ATTRIBUTES );
+  }
+
+  private void errorCorrectionFactor( final IStatusCollector log, final Catchment catchment, final QName property )
+  {
+    final IPropertyType propertyType = catchment.getFeatureType().getProperty( property );
+    final String propertyLabel = propertyType.getAnnotation().getLabel();
+
+    final String message = Messages.getString( "CatchmentHydrotopeInput_0", propertyLabel ); //$NON-NLS-1$
+    log.add( IStatus.ERROR, formatMessage( message, catchment ) );
   }
 }

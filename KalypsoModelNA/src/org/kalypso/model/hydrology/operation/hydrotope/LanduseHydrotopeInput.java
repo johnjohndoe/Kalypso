@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -63,7 +66,7 @@ class LanduseHydrotopeInput extends AbstractHydrotopeInput<Landuse>
   @Override
   public String getLabel( )
   {
-    return Messages.getString("LanduseHydrotopeInput_0"); //$NON-NLS-1$
+    return Messages.getString( "LanduseHydrotopeInput_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -76,13 +79,22 @@ class LanduseHydrotopeInput extends AbstractHydrotopeInput<Landuse>
     {
       final IXLinkedFeature landuseClass = landuse.getLanduse();
       if( landuseClass == null )
-        log.add( IStatus.ERROR, formatMessage( Messages.getString("LanduseHydrotopeInput_1"), landuse ) ); //$NON-NLS-1$
+        log.add( IStatus.ERROR, formatMessage( Messages.getString( "LanduseHydrotopeInput_1" ), landuse ) ); //$NON-NLS-1$
 
       final double sealingFactor = landuse.getCorrSealing();
-      if( sealingFactor < 0 || sealingFactor > 1.0 )
-        log.add( IStatus.ERROR, formatMessage( CatchmentHydrotopeInput.STR_SEALING_FACTOR_OUTSIDE_VALID_RANGE_0_0_1_0, landuse ) );
+      if( sealingFactor < 0 )
+        errorCorrectionFactor( log, landuse, Landuse.PROPERTY_CORRSEALING );
     }
 
     return log.asMultiStatus( STR_ATTRIBUTES );
+  }
+
+  private void errorCorrectionFactor( final IStatusCollector log, final Landuse landuse, final QName property )
+  {
+    final IPropertyType propertyType = landuse.getFeatureType().getProperty( property );
+    final String propertyLabel = propertyType.getAnnotation().getLabel();
+
+    final String message = Messages.getString( "CatchmentHydrotopeInput_0", propertyLabel ); //$NON-NLS-1$
+    log.add( IStatus.ERROR, formatMessage( message, landuse ) );
   }
 }
