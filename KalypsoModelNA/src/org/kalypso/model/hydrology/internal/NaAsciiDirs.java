@@ -97,8 +97,6 @@ public class NaAsciiDirs
 
   public final File schneeFile;
 
-  public final File swaleAndTrenchFile;
-
   public NaAsciiDirs( @SuppressWarnings("hiding") final File asciiDir )
   {
     this.asciiDir = asciiDir;
@@ -125,7 +123,6 @@ public class NaAsciiDirs
     hrbFile = new File( inpDir, "we_nat.hrb" ); //$NON-NLS-1$
     hydrotopFile = new File( inpDir, "we.hyd" ); //$NON-NLS-1$
     hydrotopMappingFile = new File( inpDir, "mapping.txt" ); //$NON-NLS-1$
-    swaleAndTrenchFile = new File( inpDir, "we_nat.mr" ); //$NON-NLS-1$
 
     bodentypFile = new File( hydroTopDir, "boden.dat" ); //$NON-NLS-1$
     bodenartFile = new File( hydroTopDir, "bod_art.dat" ); //$NON-NLS-1$
