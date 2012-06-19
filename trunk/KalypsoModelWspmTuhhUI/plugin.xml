@@ -128,14 +128,14 @@
    </extension>
 
    <extension point="org.eclipse.ui.perspectives">
-      <perspective 
+      <perspective
             class="org.kalypso.model.wspm.tuhh.ui.light.WspmLightPerspective"
             icon="icons/obj16/wspmLight.gif"
             id="WspmLightPerspective"
             name="%perspective.name">
       </perspective>
    </extension>
-   
+
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension targetID="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory">
@@ -447,7 +447,7 @@
           name="%org.kalypso.model.wspm.calcTuhhAction.name">
     </command>
   </extension>
-  
+
   <extension point="org.eclipse.ui.commandImages">
      <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
      <image commandId="org.kalypso.model.wspm.command.calcTuhh" icon="icons/obj16/startCalulation.gif"/>
@@ -521,7 +521,7 @@
       </enabledWhen>
    </handler>
   </extension>
-  
+
   <extension
         point="org.eclipse.core.runtime.preferences">
      <initializer
@@ -593,7 +593,7 @@
             restorable="true">
       </view>
   </extension>
-  
+
  <extension
          point="org.eclipse.ui.menus">
         <menuContribution
@@ -604,10 +604,10 @@
              <command commandId="org.kalypso.ogc.gml.map.PanToCommand" style="radio"/>
              <command commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" style="radio" />
              <!--command commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand" style="radio"/-->
-             
+
              <separator name="crossSectionActions" visible="true"/>
              <command commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" style="push"/>
-             
+
              <separator name="actions" visible="true"/>
              <command commandId="org.kalypso.ogc.gml.map.FullExtentCommand" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand" style="push"/>
@@ -634,13 +634,13 @@
              <command commandId="org.kalypso.ogc.gml.map.Screenshot" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.ExportPdfCommand" style="push"/>
           </menuContribution>
-    
+
         <menuContribution
               allPopups="false"
               locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
             <separator name="outline" visible="false"/>
             <command commandId="org.kalypso.ui.map.outline.command.CollapseOutline" style="push"/>
-        
+
             <separator name="theme" visible="true"/>
             <command commandId="org.kalypso.ui.map.outline.command.OpenWmsWizardCommand" style="push"/>
             <command commandId="org.kalypso.ui.map.outline.command.RemoveTheme" style="push"/>
@@ -710,7 +710,6 @@
               name="%org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard.name">
            <description>%org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard.description</description>
         </wizard>
-        <!--
         <wizard
               category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufProfileExportWizard"
@@ -719,7 +718,6 @@
               name="%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.name">
            <description>%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.description</description>
         </wizard>
-        -->
         <wizard
               category="exportWizards/shapeExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard"
@@ -978,7 +976,7 @@
                <visibleWhen checkEnabled="true"/>
             </command>
          </menuContribution>
-         
+
         <menuContribution locationURI="toolbar:org.kalypso.gml.toolbar?before=gmlToolsEnd">
             <command commandId="org.kalypso.model.wspm.command.calcTuhh" style="push">
                   <visibleWhen checkEnabled="true"/>
@@ -988,7 +986,7 @@
             </command>
         </menuContribution>
      </extension>
-     
+
      <extension point="org.eclipse.core.expressions.propertyTesters">
         <propertyTester class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportTester"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportTester"
@@ -1006,5 +1004,5 @@
               name="%KalypsoModelWspmTuhhUIPreferencePage.name">
         </page>
      </extension>
-     
+
 </plugin>
