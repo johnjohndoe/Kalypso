@@ -61,8 +61,8 @@ public class RiskZonesCalculationHandler extends AbstractHandler
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final Shell shell = workbench.getDisplay().getActiveShell();
 
-    final String title = Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.1" );
-    if( !MessageDialog.openConfirm( shell, title, Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.2" ) ) )
+    final String title = Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.1" ); //$NON-NLS-1$
+    if( !MessageDialog.openConfirm( shell, title, Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.2" ) ) ) //$NON-NLS-1$
       return null;
 
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();

@@ -79,7 +79,7 @@ public class ChangeEventAction extends Action implements IUpdateable
 
   public ChangeEventAction( final IRasterDataModel model, final IScenarioDataProvider dataProvider, final TreeViewer eventViewer, final IMapPanel mapPanel )
   {
-    super( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.12" ) );
+    super( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.12" ) ); //$NON-NLS-1$
 
     m_mapPanel = mapPanel;
 

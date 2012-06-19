@@ -46,6 +46,7 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -112,17 +113,17 @@ public class RiskStatisticItem
   {
     final StringBuilder buffer = new StringBuilder();
 
-    buffer.append( "Key: " ).append( m_key.getName() ).append( '\n' );
-    buffer.append( "Group: " ).append( m_key.getGroupLabel() ).append( '\n' );
-    buffer.append( "Specific Damages:\n" );
+    buffer.append( Messages.getString("RiskStatisticItem_0") ).append( m_key.getName() ).append( '\n' ); //$NON-NLS-1$
+    buffer.append( Messages.getString("RiskStatisticItem_1") ).append( m_key.getGroupLabel() ).append( '\n' ); //$NON-NLS-1$
+    buffer.append( Messages.getString("RiskStatisticItem_2") ); //$NON-NLS-1$
 
     for( final Entry<Integer, SpecificDamageStatistic> entry : m_specificDamagestatistics.entrySet() )
     {
-      buffer.append( "\tReturn Period: " ).append( entry.getKey() + "\t" );
+      buffer.append( Messages.getString("RiskStatisticItem_3") ).append( entry.getKey() + "\t" ); //$NON-NLS-1$ //$NON-NLS-2$
       buffer.append( entry.getValue() ).append( '\n' );
     }
 
-    buffer.append( "Average Damage:\n" );
+    buffer.append( Messages.getString("RiskStatisticItem_5") ); //$NON-NLS-1$
 
     return buffer.toString();
   }

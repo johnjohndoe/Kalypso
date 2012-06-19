@@ -106,7 +106,7 @@ public class RiskStatisticsResultView extends ViewPart
     {
       e.printStackTrace();
       final StatusComposite statusComposite = new StatusComposite( parent, StatusComposite.DETAILS );
-      final IStatus status = new Status( IStatus.ERROR, KalypsoRiskPlugin.PLUGIN_ID, "Failed to initialize statistic result view", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoRiskPlugin.PLUGIN_ID, Messages.getString("RiskStatisticsResultView.0"), e ); //$NON-NLS-1$
       statusComposite.setStatus( status );
       m_control = statusComposite;
 

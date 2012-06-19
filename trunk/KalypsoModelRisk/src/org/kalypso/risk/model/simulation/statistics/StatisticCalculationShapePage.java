@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.jface.viewers.FileLabelProvider;
+import org.kalypso.risk.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -73,8 +74,8 @@ public class StatisticCalculationShapePage extends WizardPage
 
     m_data = data;
 
-    setTitle( "Additional Categorization" );
-    setDescription( "Choose a shape file to additionally group the statistic results. Choose <None> for no additional categories." );
+    setTitle( Messages.getString("StatisticCalculationShapePage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("StatisticCalculationShapePage_1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -85,7 +86,7 @@ public class StatisticCalculationShapePage extends WizardPage
 
     m_binding = new DatabindingWizardPage( this, null );
 
-    panel.setText( "Available Shape Files" );
+    panel.setText( Messages.getString("StatisticCalculationShapePage_2") ); //$NON-NLS-1$
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
 
     createShapeFileControl( panel );
@@ -94,10 +95,10 @@ public class StatisticCalculationShapePage extends WizardPage
 
   private void createShapeFileControl( final Composite parent )
   {
-    final String tooltip = "If set, the damage values get additionally grouped by the areas defined in the shape file.";
+    final String tooltip = Messages.getString("StatisticCalculationShapePage_3"); //$NON-NLS-1$
 
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Shape File" );
+    label.setText( Messages.getString("StatisticCalculationShapePage_4") ); //$NON-NLS-1$
     label.setToolTipText( tooltip );
 
     final ComboViewer comboViewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
@@ -117,10 +118,10 @@ public class StatisticCalculationShapePage extends WizardPage
 
   private void createShapeAttributeControl( final Composite parent )
   {
-    final String tooltip = "The Value of this shape attribute is shown as group name.";
+    final String tooltip = Messages.getString("StatisticCalculationShapePage_5"); //$NON-NLS-1$
 
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Shape Attribute" );
+    label.setText( Messages.getString("StatisticCalculationShapePage_6") ); //$NON-NLS-1$
     label.setToolTipText( tooltip );
 
     final ComboViewer comboViewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );

@@ -51,6 +51,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
@@ -86,16 +87,16 @@ public class StatisticElementBuilder
   public void createElements( final ILandusePolygonCollection landusePolygons, final ShapeFile shape, final String shapeNameField, final String shapeSRS, final IProgressMonitor monitor ) throws GM_Exception, IOException, DBaseException
   {
     final SubMonitor progress = SubMonitor.convert( monitor );
-    progress.beginTask( "Intersect statistic areas", 30 );
+    progress.beginTask( Messages.getString("StatisticElementBuilder_0"), 30 ); //$NON-NLS-1$
 
     /* Load shape if given */
-    progress.subTask( "Loading shape..." );
+    progress.subTask( Messages.getString("StatisticElementBuilder_1") ); //$NON-NLS-1$
     final StatisticGroup[] groups = readShape( shape, shapeNameField, shapeSRS );
     ProgressUtilities.worked( progress, 50 );
 
     /* Intersect groups with landuses and build all areas */
     final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection = landusePolygons.getLandusePolygonCollection();
-    progress.subTask( "Adding evaluation areas..." );
+    progress.subTask( Messages.getString("StatisticElementBuilder_2") ); //$NON-NLS-1$
     final int progressCount = landusePolygonCollection.size() * groups.length;
     progress.setWorkRemaining( progressCount );
 

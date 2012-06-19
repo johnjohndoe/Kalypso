@@ -58,6 +58,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -83,7 +84,7 @@ public class StatisticCalculationData extends AbstractModelObject
 
   public static final String PROPERTY_SELECTED_ATTRIBUTE = "selectedAttribute"; //$NON-NLS-1$
 
-  static final String[] NO_ATTRIBUTES = new String[] { "<No useable attributes available>" };
+  static final String[] NO_ATTRIBUTES = new String[] { Messages.getString("StatisticCalculationData_0") }; //$NON-NLS-1$
 
   private final IRasterizationControlModel m_controlModel;
 

@@ -101,7 +101,7 @@ public class RemoveEventAction extends Action implements IUpdateable
     final Shell shell = event.display.getActiveShell();
 
     final String selectedLabel = ((ILabelProvider) m_eventViewer.getLabelProvider()).getText( selectedElements[0] );
-    final String deleteQuestion = String.format( "Really delete event '%s'?", selectedLabel );
+    final String deleteQuestion = String.format( Messages.getString("RemoveEventAction.0"), selectedLabel ); //$NON-NLS-1$
     if( !MessageDialog.openConfirm( shell, getText(), deleteQuestion ) )
       return;
 

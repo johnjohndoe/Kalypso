@@ -50,7 +50,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
 
     // force plug-in to start
     // Dangerous: do not call this stuff in plugin-start method -> rather start a job to do it...
-    final Job job = new Job( "" )
+    final Job job = new Job( "" ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor arg0 )

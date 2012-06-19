@@ -62,7 +62,7 @@ public class StatisticCollector
 
   private RiskStatisticItem[] m_items;
 
-  private final RiskStatisticItem m_total = new RiskStatisticItem( new StatisticItemKey( "Total", StringUtils.EMPTY ) );
+  private final RiskStatisticItem m_total = new RiskStatisticItem( new StatisticItemKey( "Total", StringUtils.EMPTY ) ); //$NON-NLS-1$
 
   public void addSpecificDamage( final int returnPeriod, final Coordinate position, final double cellArea )
   {
