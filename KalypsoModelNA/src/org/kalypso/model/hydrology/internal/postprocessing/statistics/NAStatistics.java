@@ -237,11 +237,11 @@ public class NAStatistics implements INaStatistics
       pw.print( SEPARATOR_CSV );
       pw.format( "Zeitpunkt maximaler Wert (%s)", timezoneName );
       pw.print( SEPARATOR_CSV );
-      pw.print( "maximaler Wert" );
+      pw.print( "maximaler Wert [m³/s)" );
       pw.print( SEPARATOR_CSV );
       pw.print( "Datendatei" );
       pw.print( SEPARATOR_CSV );
-      pw.println( "Gesamtvolumen" );
+      pw.println( "Gesamtvolumen [m³]" );
 
       // REMARK/BUGFIX: using the default charset here, because this file is usually intended to be opened with excel
       // Excel automatically assumes the default charset of the platform
