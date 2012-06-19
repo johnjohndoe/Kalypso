@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,14 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.actions;
 
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -64,33 +65,42 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
  */
 public class OpenTextLogAction extends Action implements IUpdateable
 {
+  private static final String DEFAULT_PROGRAM_EXTENSION = "txt"; //$NON-NLS-1$
+
   /**
    * The text file.
    */
   private final IFile m_textFile;
 
+  private final String m_programExtension;
+
+  public OpenTextLogAction( final String text, final String tooltipText, final IFile textFile )
+  {
+    this( text, tooltipText, textFile, DEFAULT_PROGRAM_EXTENSION );
+  }
+
   /**
-   * The constructor.
-   * 
    * @param text
    *          The text.
    * @param tooltipText
    *          The tooltip text.
    * @param textFile
    *          The text file.
+   * @param programExtension
+   *          If non <code>null</code>, We will search for a program via this extension. Else the extension of the given
+   *          file is used.
    */
-  public OpenTextLogAction( final String text, final String tooltipText, final IFile textFile )
+  public OpenTextLogAction( final String text, final String tooltipText, final IFile textFile, final String programExtension )
   {
     super( text );
+
+    m_programExtension = programExtension;
 
     setToolTipText( tooltipText );
 
     m_textFile = textFile;
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#run()
-   */
   @Override
   public void run( )
   {
@@ -101,10 +111,11 @@ public class OpenTextLogAction extends Action implements IUpdateable
 
       /* Check if the text file exists. */
       if( !textFile.exists() )
-        throw new IOException( String.format( Messages.getString("OpenTextLogAction_0"), textFile.getName() ) ); //$NON-NLS-1$
+        throw new IOException( String.format( Messages.getString( "OpenTextLogAction_0" ), textFile.getName() ) ); //$NON-NLS-1$
 
       /* Find the text editor registered for txt files. */
-      final Program program = Program.findProgram( "txt" ); //$NON-NLS-1$
+      final String programExtension = getProgrammExtension( textFile );
+      final Program program = Program.findProgram( programExtension );
       if( program == null )
       {
         Program.launch( textFile.getAbsolutePath() );
@@ -119,24 +130,28 @@ public class OpenTextLogAction extends Action implements IUpdateable
       /* Display the error. */
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final String dialogTitle = getText();
-      final String message = Messages.getString("OpenTextLogAction_2"); //$NON-NLS-1$
+      final String message = Messages.getString( "OpenTextLogAction_2" ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex );
       ErrorDialog.openError( shell, dialogTitle, message, status );
     }
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#getImageDescriptor()
-   */
+  private String getProgrammExtension( final File textFile )
+  {
+    if( m_programExtension != null )
+      return m_programExtension;
+
+    /* Fall back to own extension */
+    final String name = textFile.getName();
+    return FilenameUtils.getExtension( name );
+  }
+
   @Override
   public ImageDescriptor getImageDescriptor( )
   {
     return UIRrmImages.id( UIRrmImages.DESCRIPTORS.OPEN_TEXT_LOG_ACTION );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.wizard.IUpdateable#update()
-   */
   @Override
   public void update( )
   {
