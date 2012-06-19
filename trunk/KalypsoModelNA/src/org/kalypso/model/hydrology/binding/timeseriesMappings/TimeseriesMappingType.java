@@ -59,9 +59,10 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 public enum TimeseriesMappingType
 {
-  gaugeMeasurement(Messages.getString("TimeseriesMappingType_0"), Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_PEGEL_ZR), //$NON-NLS-1$
-  nodeInflow(Messages.getString("TimeseriesMappingType_1"), Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_ZUFLUSS_ZR), //$NON-NLS-1$
-  storageEvaporation(Messages.getString("TimeseriesMappingType_2"), StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED, StorageChannel.PROPERTY_SEA_EVAPORATION_ZMLLINK); //$NON-NLS-1$
+  gaugeMeasurement(Messages.getString( "TimeseriesMappingType_0" ), Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_PEGEL_ZR), //$NON-NLS-1$
+  nodeInflow(Messages.getString( "TimeseriesMappingType_1" ), Node.FEATURE_NODE, ITimeseriesConstants.TYPE_DISCHARGE, Node.PROPERTY_ZUFLUSS_ZR), //$NON-NLS-1$
+  storageEvaporation(
+      Messages.getString( "TimeseriesMappingType_2" ), StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED, StorageChannel.PROPERTY_SEA_EVAPORATION_ZMLLINK); //$NON-NLS-1$
 
   private String m_label;
 
