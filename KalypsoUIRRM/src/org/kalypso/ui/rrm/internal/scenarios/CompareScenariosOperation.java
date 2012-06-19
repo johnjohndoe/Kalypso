@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.scenarios;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
 import org.eclipse.core.filesystem.IFileStore;
@@ -54,8 +56,12 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.project.RrmScenario;
+import org.kalypso.ogc.gml.compare.FeatureListComparator;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -111,10 +117,10 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
       /* Get the selected scenarios. */
       final IScenario[] selectedScenarios = m_scenariosData.getSelectedScenarios();
       if( selectedScenarios == null || selectedScenarios.length == 0 )
-        throw new IllegalArgumentException( Messages.getString("CompareScenariosOperation_0") ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "CompareScenariosOperation_0" ) ); //$NON-NLS-1$
 
       /* Monitor. */
-      monitor.beginTask( String.format( Messages.getString("CompareScenariosOperation_1"), targetScenario.getName() ), 750 * selectedScenarios.length ); //$NON-NLS-1$
+      monitor.beginTask( String.format( Messages.getString( "CompareScenariosOperation_1" ), targetScenario.getName() ), 750 * selectedScenarios.length ); //$NON-NLS-1$
 
       /* Get the reference rrm scenario. */
       final IFolder referenceScenariofolder = targetScenario.getFolder();
@@ -138,47 +144,35 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         final IFile selectedHydrotopGml = selectedRrmScenario.getHydrotopGml();
 
         /* Monitor. */
-        monitor.subTask( Messages.getString("CompareScenariosOperation_2") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "CompareScenariosOperation_2" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        if( !m_compareStatus.hasStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_MODEL ) )
-        {
-          final IStatus modelStatus = compareFiles( referenceModelFile, selectedModelFile );
-          m_compareStatus.putStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_MODEL, modelStatus );
-        }
+        compare( referenceModelFile, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_MODEL, selectedModelFile, new QName[] {}, new QName[] {} ) );
 
         /* Monitor. */
         monitor.worked( 250 );
-        monitor.subTask( Messages.getString("CompareScenariosOperation_3") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "CompareScenariosOperation_3" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        if( !m_compareStatus.hasStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_PARAMETER ) )
-        {
-          final IStatus parameterStatus = compareFiles( referenceParameterGml, selectedParameterGml );
-          m_compareStatus.putStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_PARAMETER, parameterStatus );
-        }
+        compare( referenceParameterGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_PARAMETER, selectedParameterGml, new QName[] {}, new QName[] {} ) );
 
         /* Monitor. */
         monitor.worked( 250 );
-        monitor.subTask( Messages.getString("CompareScenariosOperation_4") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "CompareScenariosOperation_4" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        if( !m_compareStatus.hasStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_HYDROTOPES ) )
-        {
-          final IStatus hydrotopeStatus = compareFiles( referenceHydrotopGml, selectedHydrotopGml );
-          m_compareStatus.putStatus( selectedScenario.getURI(), ScenarioCompareStatus.KEY_HYDROTOPES, hydrotopeStatus );
-        }
+        compare( referenceHydrotopGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_HYDROTOPES, selectedHydrotopGml, new QName[] {}, new QName[] {} ) );
 
         /* Monitor. */
         monitor.worked( 250 );
       }
 
-      return collector.asMultiStatus( String.format( Messages.getString("CompareScenariosOperation_5"), targetScenario.getName() ) ); //$NON-NLS-1$
+      return collector.asMultiStatus( String.format( Messages.getString( "CompareScenariosOperation_5" ), targetScenario.getName() ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( String.format( Messages.getString("CompareScenariosOperation_6"), targetScenario.getName() ) ); //$NON-NLS-1$
+      return collector.asMultiStatus( String.format( Messages.getString( "CompareScenariosOperation_6" ), targetScenario.getName() ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -187,21 +181,103 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private IStatus compareFiles( final IFile referenceModelFile, final IFile selectedModelFile ) throws CoreException
+  private void compare( final IFile referenceFile, final CompareData compareData ) throws Exception
   {
-    final IFileStore referenceStore = EFS.getStore( referenceModelFile.getLocationURI() );
+    final String uri = compareData.getScenario().getURI();
+    final String key = compareData.getKey();
+
+    if( !m_compareStatus.hasStatus( uri, key ) )
+    {
+      final IStatus status = compareData( referenceFile, compareData );
+      m_compareStatus.putStatus( uri, key, status );
+    }
+  }
+
+  private IStatus compareData( final IFile referenceFile, final CompareData compareData ) throws Exception
+  {
+    /* The status collector. */
+    final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
+
+    /* Compare the file size. */
+    final IStatus fileSizeStatus = compareFileSize( referenceFile, compareData );
+    collector.add( fileSizeStatus );
+
+    /* Compare the model. */
+    final IStatus modelStatus = compareModel( referenceFile, compareData );
+    collector.add( modelStatus );
+
+    /* Compare something else? */
+    // TODO
+
+    /* Return with 'Changed' message. */
+    if( !collector.isOK() )
+      return collector.asMultiStatus( Messages.getString( "CompareScenariosOperation_7" ) ); //$NON-NLS-1$
+
+    /* Return with 'Not changed' message. */
+    return collector.asMultiStatus( Messages.getString( "CompareScenariosOperation_8" ) ); //$NON-NLS-1$
+
+  }
+
+  private IStatus compareFileSize( final IFile referenceFile, final CompareData compareData ) throws CoreException
+  {
+    final IFileStore referenceStore = EFS.getStore( referenceFile.getLocationURI() );
     final IFileInfo referenceFileInfo = referenceStore.fetchInfo();
     final long referenceLength = referenceFileInfo.getLength();
 
-    final IFileStore selectedStore = EFS.getStore( selectedModelFile.getLocationURI() );
+    final IFile selectedFile = compareData.getFile();
+    final IFileStore selectedStore = EFS.getStore( selectedFile.getLocationURI() );
     final IFileInfo selectedFileInfo = selectedStore.fetchInfo();
     final long selectedLength = selectedFileInfo.getLength();
 
     if( referenceLength != selectedLength )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("CompareScenariosOperation_7") ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The file size has changed." );
 
-    // TODO Eventually other checks...
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The file size has not changed." );
+  }
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CompareScenariosOperation_8") ); //$NON-NLS-1$
+  private IStatus compareModel( final IFile referenceFile, final CompareData compareData ) throws Exception
+  {
+    /* The status collector. */
+    final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
+
+    /* Get some data. */
+    final IFile selectedFile = compareData.getFile();
+    final QName[] listProperties = compareData.getListProperties();
+    final QName[] uniqueProperties = compareData.getUniqueProperties();
+
+    /* Load the workspaces. */
+    final GMLWorkspace referenceWorkspace = GmlSerializer.createGMLWorkspace( referenceFile );
+    final GMLWorkspace selectedWorkspace = GmlSerializer.createGMLWorkspace( selectedFile );
+
+    /* Get the models. */
+    final Feature referenceModel = referenceWorkspace.getRootFeature();
+    final Feature selectedModel = selectedWorkspace.getRootFeature();
+
+    /* Compare each configured list. */
+    for( int i = 0; i < listProperties.length; i++ )
+    {
+      final QName listProperty = listProperties[i];
+      final QName uniqueProperty = uniqueProperties[i];
+
+      final IStatus listStatus = compareList( referenceModel, selectedModel, listProperty, uniqueProperty );
+      collector.add( listStatus );
+    }
+
+    /* Dispose the workspaces. */
+    referenceWorkspace.dispose();
+    selectedWorkspace.dispose();
+
+    /* Return with 'Changed' message. */
+    if( !collector.isOK() )
+      return collector.asMultiStatus( "The model has changed." );
+
+    /* Return with 'Not changed' message. */
+    return collector.asMultiStatus( "The model has not changed." );
+  }
+
+  private IStatus compareList( final Feature referenceFeature, final Feature selectedFeature, final QName listProperty, final QName uniqueProperty ) throws Exception
+  {
+    final FeatureListComparator comparator = new FeatureListComparator( referenceFeature, selectedFeature, listProperty, uniqueProperty );
+    return comparator.compareList();
   }
 }

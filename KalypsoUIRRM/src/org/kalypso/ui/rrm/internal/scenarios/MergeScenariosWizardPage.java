@@ -49,6 +49,10 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -119,8 +123,8 @@ public class MergeScenariosWizardPage extends WizardPage
     m_dataBinding = null;
     m_treeViewer = null;
 
-    setTitle( Messages.getString("MergeScenariosWizardPage_0") ); //$NON-NLS-1$
-    setDescription( String.format( Messages.getString("MergeScenariosWizardPage_1"), scenariosData.getTargetScenario().getName() ) ); //$NON-NLS-1$
+    setTitle( Messages.getString( "MergeScenariosWizardPage_0" ) ); //$NON-NLS-1$
+    setDescription( String.format( Messages.getString( "MergeScenariosWizardPage_1" ), scenariosData.getTargetScenario().getName() ) ); //$NON-NLS-1$
   }
 
   /**
@@ -144,16 +148,24 @@ public class MergeScenariosWizardPage extends WizardPage
     m_treeViewer.setContentProvider( new WorkflowBreadcrumbContentProvider() );
     m_treeViewer.setFilters( new ViewerFilter[] { new ScenarioViewerFilter() } );
     m_treeViewer.setInput( m_scenariosData.getTargetScenario().getProject() );
+    m_treeViewer.addOpenListener( new IOpenListener()
+    {
+      @Override
+      public void open( final OpenEvent event )
+      {
+        handleOpen( event );
+      }
+    } );
 
     /* Create a button. */
     final Button deleteButton = new Button( main, SWT.CHECK );
     deleteButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    deleteButton.setText( Messages.getString("MergeScenariosWizardPage_2") ); //$NON-NLS-1$
+    deleteButton.setText( Messages.getString( "MergeScenariosWizardPage_2" ) ); //$NON-NLS-1$
 
     /* Create a button. */
     final Button compareButton = new Button( main, SWT.PUSH );
     compareButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
-    compareButton.setText( String.format( Messages.getString("MergeScenariosWizardPage_3"), m_scenariosData.getTargetScenario().getName() ) ); //$NON-NLS-1$
+    compareButton.setText( String.format( Messages.getString( "MergeScenariosWizardPage_3" ), m_scenariosData.getTargetScenario().getName() ) ); //$NON-NLS-1$
     compareButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -190,7 +202,7 @@ public class MergeScenariosWizardPage extends WizardPage
     final TreeViewerColumn scenariosViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
     scenariosViewerColumn.setLabelProvider( new ScenariosColumnLabelProvider( m_scenariosData.getTargetScenario() ) );
     final TreeColumn scenariosColumn = scenariosViewerColumn.getColumn();
-    scenariosColumn.setText( Messages.getString("MergeScenariosWizardPage_4") ); //$NON-NLS-1$
+    scenariosColumn.setText( Messages.getString( "MergeScenariosWizardPage_4" ) ); //$NON-NLS-1$
     scenariosColumn.setWidth( 200 );
     scenariosColumn.setAlignment( SWT.LEAD );
 
@@ -198,7 +210,7 @@ public class MergeScenariosWizardPage extends WizardPage
     final TreeViewerColumn modelViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
     modelViewerColumn.setLabelProvider( new ScenarioCompareStatusLabelProvider( m_compareStatus, ScenarioCompareStatus.KEY_MODEL, m_scenariosData.getTargetScenario() ) );
     final TreeColumn modelColumn = modelViewerColumn.getColumn();
-    modelColumn.setText( Messages.getString("MergeScenariosWizardPage_5") ); //$NON-NLS-1$
+    modelColumn.setText( Messages.getString( "MergeScenariosWizardPage_5" ) ); //$NON-NLS-1$
     modelColumn.setWidth( 125 );
     modelColumn.setAlignment( SWT.LEAD );
 
@@ -206,7 +218,7 @@ public class MergeScenariosWizardPage extends WizardPage
     final TreeViewerColumn parameterViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
     parameterViewerColumn.setLabelProvider( new ScenarioCompareStatusLabelProvider( m_compareStatus, ScenarioCompareStatus.KEY_PARAMETER, m_scenariosData.getTargetScenario() ) );
     final TreeColumn parameterColumn = parameterViewerColumn.getColumn();
-    parameterColumn.setText( Messages.getString("MergeScenariosWizardPage_6") ); //$NON-NLS-1$
+    parameterColumn.setText( Messages.getString( "MergeScenariosWizardPage_6" ) ); //$NON-NLS-1$
     parameterColumn.setWidth( 125 );
     parameterColumn.setAlignment( SWT.LEAD );
 
@@ -214,7 +226,7 @@ public class MergeScenariosWizardPage extends WizardPage
     final TreeViewerColumn hydrotopesViewerColumn = new TreeViewerColumn( treeViewer, SWT.NONE );
     hydrotopesViewerColumn.setLabelProvider( new ScenarioCompareStatusLabelProvider( m_compareStatus, ScenarioCompareStatus.KEY_HYDROTOPES, m_scenariosData.getTargetScenario() ) );
     final TreeColumn hydrotopesColumn = hydrotopesViewerColumn.getColumn();
-    hydrotopesColumn.setText( Messages.getString("MergeScenariosWizardPage_7") ); //$NON-NLS-1$
+    hydrotopesColumn.setText( Messages.getString( "MergeScenariosWizardPage_7" ) ); //$NON-NLS-1$
     hydrotopesColumn.setWidth( 125 );
     hydrotopesColumn.setAlignment( SWT.LEAD );
   }
@@ -233,6 +245,28 @@ public class MergeScenariosWizardPage extends WizardPage
     final IObservableValue model = BeansObservables.observeValue( m_scenariosData, "deleteScenarios" ); //$NON-NLS-1$
     final DataBinder dataBinder = new DataBinder( target, model );
     m_dataBinding.bindValue( dataBinder );
+  }
+
+  protected void handleOpen( final OpenEvent event )
+  {
+    final ISelection selection = event.getSelection();
+    if( selection.isEmpty() || !(selection instanceof IStructuredSelection) )
+      return;
+
+    final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+    final Object firstElement = structuredSelection.getFirstElement();
+    if( !(firstElement instanceof IScenario) )
+      return;
+
+    final IScenario scenario = (IScenario) firstElement;
+    final String uri = scenario.getURI();
+    final String name = scenario.getName();
+    final IStatus status = m_compareStatus.getMergedStatus( uri, name );
+    if( status == null )
+      return;
+
+    final StatusDialog dialog = new StatusDialog( getShell(), status, getTitle() );
+    dialog.open();
   }
 
   /**

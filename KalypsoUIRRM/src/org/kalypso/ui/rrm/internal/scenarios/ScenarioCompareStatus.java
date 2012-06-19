@@ -45,6 +45,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
@@ -64,14 +66,14 @@ public class ScenarioCompareStatus
   /**
    * The stati.
    */
-  private final Map<String, IStatus> m_stati;
+  private final Map<String, Map<String, IStatus>> m_stati;
 
   /**
    * The constructor.
    */
   public ScenarioCompareStatus( )
   {
-    m_stati = new HashMap<String, IStatus>();
+    m_stati = new HashMap<String, Map<String, IStatus>>();
   }
 
   /**
@@ -86,8 +88,11 @@ public class ScenarioCompareStatus
    */
   public void putStatus( final String uri, final String key, final IStatus status )
   {
-    final String internalKey = String.format( "%s_%s", uri, key ); //$NON-NLS-1$
-    m_stati.put( internalKey, status );
+    if( !m_stati.containsKey( uri ) )
+      m_stati.put( uri, new HashMap<String, IStatus>() );
+
+    final Map<String, IStatus> stati = m_stati.get( uri );
+    stati.put( key, status );
   }
 
   /**
@@ -101,8 +106,11 @@ public class ScenarioCompareStatus
    */
   public boolean hasStatus( final String uri, final String key )
   {
-    final String internalKey = String.format( "%s_%s", uri, key ); //$NON-NLS-1$
-    return m_stati.containsKey( internalKey );
+    if( !m_stati.containsKey( uri ) )
+      return false;
+
+    final Map<String, IStatus> stati = m_stati.get( uri );
+    return stati.containsKey( key );
   }
 
   /**
@@ -116,10 +124,69 @@ public class ScenarioCompareStatus
    */
   public IStatus getStatus( final String uri, final String key )
   {
-    final String internalKey = String.format( "%s_%s", uri, key ); //$NON-NLS-1$
-    if( !m_stati.containsKey( internalKey ) )
-      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("ScenarioCompareStatus_6") ); //$NON-NLS-1$
+    if( !m_stati.containsKey( uri ) )
+      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "ScenarioCompareStatus_6" ) ); //$NON-NLS-1$
 
-    return m_stati.get( internalKey );
+    final Map<String, IStatus> stati = m_stati.get( uri );
+    if( !stati.containsKey( key ) )
+      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "ScenarioCompareStatus_6" ) ); //$NON-NLS-1$
+
+    return stati.get( key );
+  }
+
+  /**
+   * This function returns a merged status for an uri. It will merge all stati of all keys for that uri.
+   * 
+   * @param uri
+   *          The uri of the scenario.
+   * @param statusLabel
+   *          The label for the merged status.
+   * @return The merged status.
+   */
+  public IStatus getMergedStatus( final String uri, final String statusLabel )
+  {
+    if( !m_stati.containsKey( uri ) )
+      return null;
+
+    final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final Map<String, IStatus> stati = m_stati.get( uri );
+    final String[] keys = stati.keySet().toArray( new String[] {} );
+    for( final String key : keys )
+    {
+      final IStatus status = stati.get( key );
+      if( status == null )
+        continue;
+
+      if( !status.isMultiStatus() )
+      {
+        collector.add( status );
+        continue;
+      }
+
+      final IStatusCollector collector1 = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+      final IStatus[] children = status.getChildren();
+      for( final IStatus oneStatus : children )
+        collector1.add( oneStatus );
+
+      collector.add( collector1.asMultiStatus( getLabel( key ) ) );
+    }
+
+    return collector.asMultiStatus( statusLabel );
+  }
+
+  private String getLabel( final String key )
+  {
+    if( KEY_MODEL.equals( key ) )
+      return "Model";
+
+    if( KEY_PARAMETER.equals( key ) )
+      return "Parameter";
+
+    if( KEY_HYDROTOPES.equals( key ) )
+      return "Hydrotopes";
+
+    return key;
   }
 }
