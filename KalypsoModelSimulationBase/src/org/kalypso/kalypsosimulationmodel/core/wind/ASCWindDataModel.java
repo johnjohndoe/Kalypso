@@ -142,7 +142,7 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
       // final String[] strRow;
       for( int y = N_ROWS - 1; y >= 0; y-- )
       {
-        final StringTokenizer lStrTokenizer = new StringTokenizer( br.readLine().trim(), " " );
+        final StringTokenizer lStrTokenizer = new StringTokenizer( br.readLine().trim(), " " ); //$NON-NLS-1$
         for( int x = 0; x < N_COLS; x++ )
         {
           final String lStrPairOfValues = lStrTokenizer.nextToken();

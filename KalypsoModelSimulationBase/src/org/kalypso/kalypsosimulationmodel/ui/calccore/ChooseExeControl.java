@@ -180,7 +180,7 @@ public class ChooseExeControl extends AbstractFeatureControl
     {
       final String value = (String) feature.getProperty( property );
       if( StringUtils.isBlank( value ) )
-        m_button.setText( "<none selected>" );
+        m_button.setText( Messages.getString("ChooseExeControl.0") ); //$NON-NLS-1$
       else
       {
         final String text = String.format( m_displayFormat, value );

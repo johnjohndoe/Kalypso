@@ -49,6 +49,7 @@ import org.kalypso.grid.IGeoGridWalker;
 import org.kalypso.grid.IGeoWalkingStrategy;
 import org.kalypso.grid.areas.IGeoGridArea;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.GMRectanglesClip;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -94,7 +95,7 @@ public class SimpleWindDataGridWalkingStrategy implements IGeoWalkingStrategy
       }
       catch( Exception e2 )
       {
-        throw new GeoGridException( "cannot get the envelope for the grid", e2 );
+        throw new GeoGridException( Messages.getString("SimpleWindDataGridWalkingStrategy_0"), e2 ); //$NON-NLS-1$
       }
       final GM_Envelope env = GMRectanglesClip.getIntersectionEnv( lWalker.getEnvelopeToVisit(), lGmEnvelope );
       GM_Position lGmPointOrigin = null;
@@ -133,7 +134,7 @@ public class SimpleWindDataGridWalkingStrategy implements IGeoWalkingStrategy
           N_ROW_ENV = lGridDescriptor.getNumRows() - 1;
 
         /* Monitor. */
-        monitor.beginTask( "Walking wind data", N_COL_ENV * N_ROW_ENV );
+        monitor.beginTask( Messages.getString("SimpleWindDataGridWalkingStrategy_1"), N_COL_ENV * N_ROW_ENV ); //$NON-NLS-1$
 
         for( int i = rowStart; i < N_ROW_ENV; i += lIntScale )
         {
@@ -159,7 +160,7 @@ public class SimpleWindDataGridWalkingStrategy implements IGeoWalkingStrategy
 
       /* Monitor. */
       if( monitor.isCanceled() )
-        throw new OperationCanceledException( "Wind Data walking canceled" ); 
+        throw new OperationCanceledException( Messages.getString("SimpleWindDataGridWalkingStrategy_2") );  //$NON-NLS-1$
 
       /* Finish the processing. */
       return lWalker.finish();

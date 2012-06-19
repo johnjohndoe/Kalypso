@@ -95,13 +95,13 @@ public class BinaryGeoGridWrapperForPairsModel extends BinaryGeoGrid
        * If url cannot be converted to a file, write its contents to a temporary file which will be deleted after the
        * grid gets disposed.
        */
-      fileFromUrl = File.createTempFile( "local", ".bin" );
+      fileFromUrl = File.createTempFile( "local", ".bin" ); //$NON-NLS-1$ //$NON-NLS-2$
       fileFromUrl.deleteOnExit();
       FileUtils.copyURLToFile( url, fileFromUrl );
       binFile = fileFromUrl; // set in order to delete on dispose
     }
 
-    final String flags = writeable ? "rw" : "r";
+    final String flags = writeable ? "rw" : "r"; //$NON-NLS-1$ //$NON-NLS-2$
     
     final RandomAccessFile randomAccessFile = new RandomAccessFile( fileFromUrl, flags );
     return new BinaryGeoGridWrapperForPairsModel( randomAccessFile, binFile, origin, offsetX, offsetY, sourceCRS );

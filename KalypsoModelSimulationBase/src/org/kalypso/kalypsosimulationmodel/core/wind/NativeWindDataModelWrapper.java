@@ -87,7 +87,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
     final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
     final String lStrDate = (new Date()).toGMTString();
     final Feature newFeature = Util.createFeatureAsProperty( parentFeature, propQName, SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, new Object[] { sourceName, gregorianCalendar,
-        parentFeature.getName() + " imported on " + lStrDate }, new QName[] { KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME, QNAME_PROP_DATE, Feature.QN_DESCRIPTION } );
+        parentFeature.getName() + Messages.getString("NativeWindDataModelWrapper.0") + lStrDate }, new QName[] { KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME, QNAME_PROP_DATE, Feature.QN_DESCRIPTION } ); //$NON-NLS-1$
     return (INativeWindDataModelWrapper) newFeature;
   }
 
@@ -117,7 +117,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
     final IFile file = getSourceFile();
     if( file == null )
     {
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.windmodel.NativeWindDataModelWrapper.2" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "" ); //$NON-NLS-1$
     }
     try
     {
