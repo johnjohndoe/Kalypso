@@ -150,23 +150,23 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         monitor.subTask( Messages.getString( "CompareScenariosOperation_2" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceModelFile, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_MODEL, selectedModelFile, new QName[] { NaModell.MEMBER_CATCHMENT_COLLECTION,
-            NaModell.MEMBER_CHANNEL_COLLECTION, NaModell.MEMBER_NODE_COLLECTION }, new QName[] { NaModell.QN_NAME, NaModell.QN_NAME, NaModell.QN_NAME } ) );
+        compare( referenceModelFile, new QName[] { NaModell.MEMBER_CATCHMENT_COLLECTION, NaModell.MEMBER_CHANNEL_COLLECTION, NaModell.MEMBER_NODE_COLLECTION }, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_MODEL, selectedModelFile, new QName[] {
+            NaModell.MEMBER_CATCHMENT, NaModell.MEMBER_CHANNEL, NaModell.MEMBER_NODE }, new QName[] { NaModell.QN_NAME, NaModell.QN_NAME, NaModell.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
         monitor.subTask( Messages.getString( "CompareScenariosOperation_3" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceParameterGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_PARAMETER, selectedParameterGml, new QName[] { Parameter.MEMBER_SNOW, Parameter.MEMBER_SOILTYPE,
-            Parameter.MEMBER_DRWBM_SOILTYPE }, new QName[] { Parameter.QN_NAME, Parameter.QN_NAME, Parameter.QN_NAME } ) );
+        compare( referenceParameterGml, null, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_PARAMETER, selectedParameterGml, new QName[] { Parameter.MEMBER_SNOW,
+            Parameter.MEMBER_SOILTYPE, Parameter.MEMBER_DRWBM_SOILTYPE }, new QName[] { Parameter.QN_NAME, Parameter.QN_NAME, Parameter.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
         monitor.subTask( Messages.getString( "CompareScenariosOperation_4" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceHydrotopGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_HYDROTOPES, selectedHydrotopGml, new QName[] { HydrotopeCollection.MEMBER_HYDROTOPE }, new QName[] { HydrotopeCollection.QN_NAME } ) );
+        compare( referenceHydrotopGml, null, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_HYDROTOPES, selectedHydrotopGml, new QName[] { HydrotopeCollection.MEMBER_HYDROTOPE }, new QName[] { HydrotopeCollection.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
@@ -186,19 +186,19 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private void compare( final IFile referenceFile, final CompareData compareData ) throws Exception
+  private void compare( final IFile referenceFile, final QName[] collectionQNames, final CompareData compareData ) throws Exception
   {
     final String uri = compareData.getScenario().getURI();
     final String key = compareData.getKey();
 
     if( !m_compareStatus.hasStatus( uri, key ) )
     {
-      final IStatus status = compareData( referenceFile, compareData );
+      final IStatus status = compareData( referenceFile, collectionQNames, compareData );
       m_compareStatus.putStatus( uri, key, status );
     }
   }
 
-  private IStatus compareData( final IFile referenceFile, final CompareData compareData ) throws Exception
+  private IStatus compareData( final IFile referenceFile, final QName[] collectionQNames, final CompareData compareData ) throws Exception
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
@@ -208,7 +208,7 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     collector.add( fileSizeStatus );
 
     /* Compare the model. */
-    final IStatus modelStatus = compareModel( referenceFile, compareData );
+    final IStatus modelStatus = compareModel( referenceFile, collectionQNames, compareData );
     collector.add( modelStatus );
 
     /* Compare something else? */
@@ -240,7 +240,7 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The file size has not changed." );
   }
 
-  private IStatus compareModel( final IFile referenceFile, final CompareData compareData ) throws Exception
+  private IStatus compareModel( final IFile referenceFile, final QName[] collectionQNames, final CompareData compareData ) throws Exception
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
@@ -264,8 +264,20 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
       final QName listProperty = listProperties[i];
       final QName uniqueProperty = uniqueProperties[i];
 
-      final IStatus listStatus = compareList( referenceModel, selectedModel, listProperty, uniqueProperty );
-      collector.add( listStatus );
+      if( collectionQNames == null || collectionQNames.length == 0 )
+      {
+        final IStatus listStatus = compareList( referenceModel, selectedModel, listProperty, uniqueProperty );
+        collector.add( listStatus );
+      }
+      else
+      {
+        final QName collectionQName = collectionQNames[i];
+        final Feature referenceCollection = (Feature) referenceModel.getProperty( collectionQName );
+        final Feature selectedCollection = (Feature) selectedModel.getProperty( collectionQName );
+
+        final IStatus listStatus = compareList( referenceCollection, selectedCollection, listProperty, uniqueProperty );
+        collector.add( listStatus );
+      }
     }
 
     /* Dispose the workspaces. */
