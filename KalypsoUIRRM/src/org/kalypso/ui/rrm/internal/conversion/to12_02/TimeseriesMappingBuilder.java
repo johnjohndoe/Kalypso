@@ -46,6 +46,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -93,13 +94,16 @@ public class TimeseriesMappingBuilder
 
   private final File m_sourceProjectDir;
 
-  public TimeseriesMappingBuilder( final File sourceProjectDir, final NaModell naModel, final ITimeseriesMappingCollection mappings, final File simulationDir, final TimeseriesIndex timeseriesIndex )
+  private final Map<String, Set<TimeseriesIndexEntry>> m_convertsionMap;
+
+  public TimeseriesMappingBuilder( final File sourceProjectDir, final NaModell naModel, final ITimeseriesMappingCollection mappings, final File simulationDir, final TimeseriesIndex timeseriesIndex, final Map<String, Set<TimeseriesIndexEntry>> convertIndex )
   {
     m_sourceProjectDir = sourceProjectDir;
     m_naModel = naModel;
     m_mappings = mappings;
     m_simulationDir = simulationDir;
     m_timeseriesIndex = timeseriesIndex;
+    m_convertsionMap = convertIndex;
   }
 
   public String getMappingPath( final TimeseriesMappingType mappingType )
@@ -145,7 +149,7 @@ public class TimeseriesMappingBuilder
         try
         {
           /* Guess timeseries link */
-          final TimeseriesMappingGuesser timeseriesGuesser = new TimeseriesMappingGuesser( link, mappingType, m_timeseriesIndex, m_oldMappings );
+          final TimeseriesMappingGuesser timeseriesGuesser = new TimeseriesMappingGuesser( link, mappingType, m_timeseriesIndex, m_oldMappings, m_convertsionMap );
 
           final IStatus guessStatus = timeseriesGuesser.execute();
           log.add( guessStatus );

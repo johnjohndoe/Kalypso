@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA10Bean;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class KnaufSA10Printer extends AbstractKnaufPrinter
 {

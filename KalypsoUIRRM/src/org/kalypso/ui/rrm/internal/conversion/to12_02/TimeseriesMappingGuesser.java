@@ -41,7 +41,9 @@
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -50,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -73,12 +76,15 @@ public class TimeseriesMappingGuesser
 
   private final Map<String, TimeseriesIndexEntry> m_oldMappings;
 
-  public TimeseriesMappingGuesser( final ZmlLink modelTimeseriesLink, final TimeseriesMappingType mappingType, final TimeseriesIndex timeseriesIndex, final Map<String, TimeseriesIndexEntry> oldMappings )
+  private final Map<String, Set<TimeseriesIndexEntry>> m_convertsionMap;
+
+  public TimeseriesMappingGuesser( final ZmlLink modelTimeseriesLink, final TimeseriesMappingType mappingType, final TimeseriesIndex timeseriesIndex, final Map<String, TimeseriesIndexEntry> oldMappings, final Map<String, Set<TimeseriesIndexEntry>> convertsionMap )
   {
     m_modelTimeseriesLink = modelTimeseriesLink;
     m_mappingType = mappingType;
     m_timeseriesIndex = timeseriesIndex;
     m_oldMappings = oldMappings;
+    m_convertsionMap = convertsionMap;
   }
 
   public String getResult( )
@@ -113,17 +119,49 @@ public class TimeseriesMappingGuesser
   {
     final TimeseriesIndexEntry guess1 = guessByMapping();
     if( guess1 != null )
+    {
+      doRegisterEvapotionTimeseries( guess1 );
+
       return guess1.getHref();
+    }
 
     final TimeseriesIndexEntry guess2 = guessByValues();
     if( guess2 != null )
+    {
+      doRegisterEvapotionTimeseries( guess2 );
+
       return guess2.getHref();
+    }
 
     final TimeseriesIndexEntry guess3 = guessByFilename();
     if( guess3 != null )
+    {
+      doRegisterEvapotionTimeseries( guess3 );
+
       return guess3.getHref();
+    }
 
     return null;
+  }
+
+  private void doRegisterEvapotionTimeseries( final TimeseriesIndexEntry item )
+  {
+    final String parameterType = m_mappingType.getLinkParameterType();
+    if( !StringUtils.equals( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED, parameterType ) )
+      return;
+
+    final String needed = m_mappingType.getLinkParameterType();
+    if( StringUtils.equals( needed, item.getParameterType() ) )
+      return;
+
+    Set<TimeseriesIndexEntry> convert = m_convertsionMap.get( needed );
+    if( convert == null )
+    {
+      convert = new LinkedHashSet<>();
+      m_convertsionMap.put( needed, convert );
+    }
+
+    convert.add( item );
   }
 
   private TimeseriesIndexEntry guessByMapping( )
@@ -138,7 +176,6 @@ public class TimeseriesMappingGuesser
     final String timeseriesName = FilenameUtils.removeExtension( name );
 
     final TimeseriesIndexEntry entry = m_oldMappings.get( timeseriesName );
-
     if( entry != null )
     {
       final String message = String.format( Messages.getString( "TimeseriesMappingGuesser.2" ), entry.getOldProjectRelativePath() ); //$NON-NLS-1$
@@ -188,8 +225,7 @@ public class TimeseriesMappingGuesser
 
     for( final TimeseriesIndexEntry info : infos )
     {
-      final String parameterType = info.getParameterType();
-      if( parameterType.equals( neededParameterType ) )
+      if( isTypeOf( neededParameterType, info ) )
       {
         // TODO: also use timestep to determine best guess; find all infos with same type
         m_log.add( IStatus.INFO, Messages.getString( "CatchmentTimeseriesGuesser_7" ) ); //$NON-NLS-1$
@@ -201,6 +237,20 @@ public class TimeseriesMappingGuesser
     m_log.add( IStatus.WARNING, Messages.getString( "CatchmentTimeseriesGuesser_8" ), null, neededParameterType ); //$NON-NLS-1$
 
     return null;
+  }
+
+  /**
+   * special handling for WATER_BASED evaporation time series.
+   */
+  private boolean isTypeOf( final String needed, final TimeseriesIndexEntry info )
+  {
+    final String parameterType = info.getParameterType();
+    if( StringUtils.equals( needed, parameterType ) )
+      return true;
+    else if( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED.equals( needed ) && StringUtils.equals( ITimeseriesConstants.TYPE_EVAPORATION, parameterType ) )
+      return true;
+
+    return false;
   }
 
   private String findExistingFilename( )

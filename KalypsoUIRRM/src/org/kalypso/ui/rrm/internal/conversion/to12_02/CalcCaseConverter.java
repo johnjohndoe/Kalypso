@@ -486,7 +486,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     if( mappings == null )
       return null;
 
-    final TimeseriesMappingBuilder builder = new TimeseriesMappingBuilder( m_globalData.getSourceDir(), naModel, mappings, new File( m_targetScenarioDir, m_simulationPath ), m_globalData.getTimeseriesIndex() );
+    final TimeseriesMappingBuilder builder = new TimeseriesMappingBuilder( m_globalData.getSourceDir(), naModel, mappings, new File( m_targetScenarioDir, m_simulationPath ), m_globalData.getTimeseriesIndex(), m_globalData.getConversionMap() );
 
     guessTimeseriesMapping( builder, TimeseriesMappingType.gaugeMeasurement, mappingLog );
     guessTimeseriesMapping( builder, TimeseriesMappingType.nodeInflow, mappingLog );
