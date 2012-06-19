@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
@@ -129,7 +130,7 @@ public class StatisticAnalysisHandler extends AbstractHandler
     /* No dialog if no shape data is available */
     if( !data.hasShapes() )
     {
-      final String message = "No suitable shape data available.\nRun statistic calculation only based on landuse areas?";
+      final String message = Messages.getString("StatisticAnalysisHandler_0"); //$NON-NLS-1$
       return MessageDialog.openConfirm( shell, title, message );
     }
 

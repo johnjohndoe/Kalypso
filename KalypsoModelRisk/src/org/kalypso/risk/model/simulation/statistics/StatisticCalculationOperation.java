@@ -55,6 +55,7 @@ import org.kalypso.grid.IGeoGridWalker;
 import org.kalypso.grid.IGeoWalkingStrategy;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.grid.SequentialBinaryGeoGrid;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -84,7 +85,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor );
-    progress.beginTask( "Statistic Calculation", 100 );
+    progress.beginTask( Messages.getString("StatisticCalculationOperation_0"), 100 ); //$NON-NLS-1$
 
     buildStatisticElements( progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
 
@@ -94,7 +95,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
 
     monitor.done();
 
-    return new Status( IStatus.OK, KalypsoRiskPlugin.PLUGIN_ID, "Operation successfully terminated" );
+    return new Status( IStatus.OK, KalypsoRiskPlugin.PLUGIN_ID, Messages.getString("StatisticCalculationOperation_1") ); //$NON-NLS-1$
   }
 
   private void buildStatisticElements( final IProgressMonitor monitor ) throws CoreException
@@ -114,7 +115,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
     }
     catch( final IOException | GM_Exception | DBaseException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoRiskPlugin.PLUGIN_ID, "Failed to load shape file", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoRiskPlugin.PLUGIN_ID, Messages.getString("StatisticCalculationOperation_2"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -134,7 +135,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
       coverageCount += coverages.size();
     }
 
-    progress.beginTask( "Collecting specific damage", coverageCount );
+    progress.beginTask( Messages.getString("StatisticCalculationOperation_3"), coverageCount ); //$NON-NLS-1$
 
     for( final IAnnualCoverageCollection specificDamageEvent : specificDamages )
     {
@@ -147,7 +148,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
       for( int i = 0; i < coverages.size(); i++ )
       {
         final ICoverage coverage = coverages.get( i );
-        progress.subTask( String.format( "%s - Grid %d", specificDamageEvent.getName(), i ) );
+        progress.subTask( String.format( Messages.getString("StatisticCalculationOperation_4"), specificDamageEvent.getName(), i ) ); //$NON-NLS-1$
 
         final RectifiedGridCoverageGeoGrid templateGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( coverage );
 
@@ -183,7 +184,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
   private void writeResultObservation( final IProgressMonitor monitor )
   {
     final SubMonitor progress = SubMonitor.convert( monitor );
-    progress.beginTask( "Building result table", 100 );
+    progress.beginTask( Messages.getString("StatisticCalculationOperation_5"), 100 ); //$NON-NLS-1$
 
     final IRasterizationControlModel controlModel = m_data.getControlModel();
     m_statistics.createResultObservation( controlModel );

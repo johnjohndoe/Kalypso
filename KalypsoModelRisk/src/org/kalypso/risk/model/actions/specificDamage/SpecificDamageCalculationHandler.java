@@ -64,9 +64,9 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
 
     // TODO: command should have a name
     // final String commandName = HandlerUtils.getCommandName( event );
-    final String title = Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.1" );
+    final String title = Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.1" ); //$NON-NLS-1$
 
-    if( !MessageDialog.openConfirm( shell, title, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.2" ) ) )
+    if( !MessageDialog.openConfirm( shell, title, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.2" ) ) ) //$NON-NLS-1$
       return null;
 
     final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();

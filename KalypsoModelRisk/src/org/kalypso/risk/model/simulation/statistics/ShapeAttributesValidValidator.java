@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.risk.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -52,7 +53,7 @@ public class ShapeAttributesValidValidator extends TypedValidator<String[]>
 {
   public ShapeAttributesValidValidator( )
   {
-    super( String[].class, IStatus.ERROR, "Shape file has no useable attributes and cannot be used for categorization." );
+    super( String[].class, IStatus.ERROR, Messages.getString("ShapeAttributesValidValidator_0") ); //$NON-NLS-1$
   }
 
   @Override

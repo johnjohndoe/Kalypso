@@ -261,7 +261,7 @@ public class WaterdepthCollectionsManagementComposite extends Composite
     final PluginImageProvider imageProvider = KalypsoGmlUIPlugin.getImageProvider();
 
     final IAction moveUpAction = new MoveEventAction( m_dataProvider, m_eventViewer, -1 );
-    moveUpAction.setText( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.16" ) );
+    moveUpAction.setText( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.16" ) ); //$NON-NLS-1$
     moveUpAction.setImageDescriptor( imageProvider.getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP ) );
 
     final Action moveDownAction = new MoveEventAction( m_dataProvider, m_eventViewer, 1 );

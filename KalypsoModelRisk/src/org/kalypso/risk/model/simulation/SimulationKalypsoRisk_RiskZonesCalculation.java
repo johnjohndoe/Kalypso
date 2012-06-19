@@ -119,7 +119,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Risk zones calculation failed.", e );
+      throw new SimulationException( Messages.getString("SimulationKalypsoRisk_RiskZonesCalculation.0"), e ); //$NON-NLS-1$
     }
   }
 

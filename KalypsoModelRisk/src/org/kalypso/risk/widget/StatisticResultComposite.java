@@ -191,7 +191,7 @@ public class StatisticResultComposite extends Composite
           }
           if( phenName.equals( "Group" ) )//$NON-NLS-1$
           {
-            final String headerName = "Group";
+            final String headerName = "Group"; //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_STRING ) )
