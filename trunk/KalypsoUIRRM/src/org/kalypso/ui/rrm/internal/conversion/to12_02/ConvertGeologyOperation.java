@@ -51,6 +51,7 @@ import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -97,7 +98,7 @@ public class ConvertGeologyOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      log.add( IStatus.ERROR, "Failed to convert geology.gml", e );
+      log.add( IStatus.ERROR, Messages.getString("ConvertGeologyOperation_0"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -107,7 +108,7 @@ public class ConvertGeologyOperation implements ICoreRunnableWithProgress
         newWorkspace.dispose();
     }
 
-    return log.asMultiStatus( "Convert geology.gml" );
+    return log.asMultiStatus( Messages.getString("ConvertGeologyOperation_1") ); //$NON-NLS-1$
   }
 
   private void copyData( final org.kalypso.model.hydrology.binding._11_6.GeologyCollection oldCollection, final GeologyCollection newCollection )

@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.databinding.validation.TypedValidator;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -61,7 +62,7 @@ public class TimeSeriesAlreadyExistsValidator extends TypedValidator<String>
 
   public TimeSeriesAlreadyExistsValidator( final IStation station, final CalculateEvaporationData data )
   {
-    super( String.class, IStatus.ERROR, "Verdunstungszeitreihe mit gleicher Qualität existiert bereits." );
+    super( String.class, IStatus.ERROR, Messages.getString("TimeSeriesAlreadyExistsValidator_0") ); //$NON-NLS-1$
     m_station = station;
     m_data = data;
   }

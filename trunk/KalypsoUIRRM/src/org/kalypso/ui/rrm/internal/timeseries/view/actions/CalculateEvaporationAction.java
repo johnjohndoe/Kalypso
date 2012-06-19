@@ -79,8 +79,8 @@ public class CalculateEvaporationAction extends Action
     m_station = station;
     m_model = model;
 
-    setText( "Verdunstung berechnen" );
-    setToolTipText( "Berechene Gras-/Seeverdunstungs-Zeitreihe für die gewählte Station." );
+    setText( Messages.getString("CalculateEvaporationAction.0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("CalculateEvaporationAction.1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.PARAMETER_TYPE_EVAPORATION ) );
   }

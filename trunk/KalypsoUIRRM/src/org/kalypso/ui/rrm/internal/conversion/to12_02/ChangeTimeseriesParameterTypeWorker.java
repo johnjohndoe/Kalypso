@@ -64,6 +64,7 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 import com.google.common.base.Objects;
 
@@ -127,9 +128,9 @@ public class ChangeTimeseriesParameterTypeWorker implements ICoreRunnableWithPro
     }
     catch( final Exception e )
     {
-      collector.add( IStatus.WARNING, "Error - couldn't change parameter type.", e );
+      collector.add( IStatus.WARNING, Messages.getString("ChangeTimeseriesParameterTypeWorker_0"), e ); //$NON-NLS-1$
     }
 
-    return collector.asMultiStatusOrOK( String.format( "Changed parameter type of time series '%s' to '%s'", m_timeseries.getName(), m_targetType ) );
+    return collector.asMultiStatusOrOK( String.format( Messages.getString("ChangeTimeseriesParameterTypeWorker_1"), m_timeseries.getName(), m_targetType ) ); //$NON-NLS-1$
   }
 }

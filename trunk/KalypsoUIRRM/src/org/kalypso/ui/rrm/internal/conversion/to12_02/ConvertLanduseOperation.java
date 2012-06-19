@@ -51,6 +51,7 @@ import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -96,10 +97,10 @@ public class ConvertLanduseOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      log.add( IStatus.ERROR, "Failed to convert landuse.gml", e );
+      log.add( IStatus.ERROR, Messages.getString("ConvertLanduseOperation_0"), e ); //$NON-NLS-1$
     }
 
-    return log.asMultiStatus( "Convert landuse.gml" );
+    return log.asMultiStatus( Messages.getString("ConvertLanduseOperation_1") ); //$NON-NLS-1$
   }
 
   private void copyData( final org.kalypso.model.hydrology.binding._11_6.LanduseCollection oldCollection, final LanduseCollection newCollection )

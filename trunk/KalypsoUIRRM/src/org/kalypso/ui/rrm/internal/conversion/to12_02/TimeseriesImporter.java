@@ -216,9 +216,9 @@ public class TimeseriesImporter
 
     if( observation == null )
     {
-      stati.add( IStatus.WARNING, "Import abgebrochen - Zeitreihe enthält keine Werte." );
+      stati.add( IStatus.WARNING, Messages.getString("TimeseriesImporter.1") ); //$NON-NLS-1$
 
-      return stati.asMultiStatus( String.format( Messages.getString( "TimeseriesImporter.0" ), baseName ) );
+      return stati.asMultiStatus( String.format( Messages.getString( "TimeseriesImporter.0" ), baseName ) ); //$NON-NLS-1$
     }
 
     final IAxis[] axes = observation.getAxes();

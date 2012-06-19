@@ -57,6 +57,7 @@ import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -92,7 +93,7 @@ public class TimeseriesReferencesUpdater implements ICoreRunnableWithProgress
     final IScenarioList children = m_base.getDerivedScenarios();
     doIterate( children, stati );
 
-    return stati.asMultiStatus( "Updating of timeseries references." );
+    return stati.asMultiStatus( Messages.getString("TimeseriesReferencesUpdater_0") ); //$NON-NLS-1$
   }
 
   private void doIterate( final IScenarioList list, final StatusCollector stati )
@@ -123,7 +124,7 @@ public class TimeseriesReferencesUpdater implements ICoreRunnableWithProgress
   private IStatus doUpdateCatchmentModel( final IResource resource )
   {
     if( !resource.exists() )
-      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "%s is missing.", resource.getLocation().toOSString() ) );
+      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("TimeseriesReferencesUpdater_1"), resource.getLocation().toOSString() ) ); //$NON-NLS-1$
 
     final IFile file = (IFile) resource;
     try
@@ -145,17 +146,17 @@ public class TimeseriesReferencesUpdater implements ICoreRunnableWithProgress
     {
       e.printStackTrace();
 
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "%s update failed.", resource.getLocation().toOSString() ), e );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("TimeseriesReferencesUpdater_2"), resource.getLocation().toOSString() ), e ); //$NON-NLS-1$
     }
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "%s was updated.", resource.getLocation().toOSString() ) );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("TimeseriesReferencesUpdater_3"), resource.getLocation().toOSString() ) ); //$NON-NLS-1$
 
   }
 
   private IStatus doUpdateTimeseriesMappingModel( final IResource resource )
   {
     if( !resource.exists() )
-      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "%s is missing.", resource.getLocation().toOSString() ) );
+      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("TimeseriesReferencesUpdater_4"), resource.getLocation().toOSString() ) ); //$NON-NLS-1$
 
     final IFile file = (IFile) resource;
     try
@@ -178,9 +179,9 @@ public class TimeseriesReferencesUpdater implements ICoreRunnableWithProgress
     {
       e.printStackTrace();
 
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "%s update failed.", resource.getLocation().toOSString() ), e );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("TimeseriesReferencesUpdater_5"), resource.getLocation().toOSString() ), e ); //$NON-NLS-1$
     }
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "%s was updated.", resource.getLocation().toOSString() ) );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("TimeseriesReferencesUpdater_6"), resource.getLocation().toOSString() ) ); //$NON-NLS-1$
   }
 }

@@ -127,7 +127,7 @@ public class EditTimeseriesAction extends Action
           final IStatus status = updater.execute( new NullProgressMonitor() );
           if( !status.isOK() )
           {
-            final StatusDialog2 dialog2 = new StatusDialog2( shell, status, "Aktualisierung Zeitreihen-Verweise", "Bei der Aktualisierung von Zeitreihen-Verweise traten Fehler auf." );
+            final StatusDialog2 dialog2 = new StatusDialog2( shell, status, Messages.getString("EditTimeseriesAction.0"), Messages.getString("EditTimeseriesAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
             dialog2.open();
           }
 

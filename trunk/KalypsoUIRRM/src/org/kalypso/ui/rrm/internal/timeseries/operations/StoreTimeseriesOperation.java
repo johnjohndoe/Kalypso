@@ -129,7 +129,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "StoreTimeseriesOperation.2" ) ); //$NON-NLS-1$
 
     final DateRange daterange = m_operation.getDateRange();
-    final String quality = Objects.firstNonNull( m_operation.getQuality(), "" );
+    final String quality = Objects.firstNonNull( m_operation.getQuality(), "" ); //$NON-NLS-1$
 
     final IFile targetFile = createDataFile( m_bean, timestep, stati );
     m_timeseries = createTimeseries( timestep, targetFile, daterange, quality );

@@ -79,7 +79,7 @@ public class StoreTimeseriesStatusOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final IFolder folder = (IFolder) m_zmlFile.getParent();
-    final IFile status = folder.getFile( m_zmlFile.getName() + ".status" ); //$NON-NLS-N$ //$NON-NLS-1$
+    final IFile status = folder.getFile( m_zmlFile.getName() + ".status" ); //$NON-NLS-N$ //$NON-NLS-1$ //$NON-NLS-1$
 
     final GeoStatusLog log = new GeoStatusLog( status );
     log.log( m_status );

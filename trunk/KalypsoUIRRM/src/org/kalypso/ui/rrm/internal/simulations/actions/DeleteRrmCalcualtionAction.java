@@ -51,6 +51,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 
 /**
@@ -65,11 +66,11 @@ public class DeleteRrmCalcualtionAction extends Action implements IUpdateable
 
   public DeleteRrmCalcualtionAction( final RrmCalculationResult calculation, final ResultManagementView view )
   {
-    super( "Lösche Berechnungsergebnisse" );
+    super( Messages.getString("DeleteRrmCalcualtionAction_0") ); //$NON-NLS-1$
 
     m_view = view;
 
-    setToolTipText( "Lösche Berechnungsergebnisse." );
+    setToolTipText( Messages.getString("DeleteRrmCalcualtionAction_1") ); //$NON-NLS-1$
     m_calculation = calculation;
   }
 
@@ -83,7 +84,7 @@ public class DeleteRrmCalcualtionAction extends Action implements IUpdateable
   public void run( )
   {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final boolean confirmed = MessageDialog.openConfirm( shell, "Löschen", String.format( "Sie möchten das Berechnungsergebnis '%s' löschen?", m_calculation.getName() ) );
+    final boolean confirmed = MessageDialog.openConfirm( shell, Messages.getString("DeleteRrmCalcualtionAction_2"), String.format( Messages.getString("DeleteRrmCalcualtionAction_3"), m_calculation.getName() ) ); //$NON-NLS-1$ //$NON-NLS-2$
     if( !confirmed )
       return;
 
