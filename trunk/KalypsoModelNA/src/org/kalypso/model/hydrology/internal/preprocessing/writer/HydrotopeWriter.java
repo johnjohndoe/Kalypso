@@ -146,7 +146,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     {
       final String hydrotopeName = hydrotopInfo.getName();
       final String catchmentName = catchment.getName();
-      final String message = String.format( Messages.getString("HydrotopeWriter.1"), countSoilLayers, hydrotopeName, countSoilFactors, catchmentName ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "HydrotopeWriter.1" ), countSoilLayers, hydrotopeName, countSoilFactors, catchmentName ); //$NON-NLS-1$
       getLogger().log( Level.WARNING, message );
     }
     return soiltypeName;
