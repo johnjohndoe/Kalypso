@@ -60,7 +60,7 @@ public class HydrotopeCollection extends UnversionedModel
 
   public static final QName FEATURE_HYDROTOPE_COLLECTION = new QName( NS_NAHYDROTOP, "HydrotopeCollection" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_HYDROTOPE = new QName( NS_NAHYDROTOP, "hydrotopeMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_HYDROTOPE = new QName( NS_NAHYDROTOP, "hydrotopeMember" ); //$NON-NLS-1$
 
   private IFeatureBindingCollection<IHydrotope> m_hydrotopes;
 

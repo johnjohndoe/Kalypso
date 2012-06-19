@@ -61,11 +61,11 @@ public class Parameter extends UnversionedModel
 
   public static final QName FEATURE_PARAMETER = new QName( NS_NAPARAMETER, "Parameter" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_SOILTYPE = new QName( NS_NAPARAMETER, "soiltypeMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_SOILTYPE = new QName( NS_NAPARAMETER, "soiltypeMember" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_DRWBM_SOILTYPE = new QName( NS_NAPARAMETER, "drwbmSoiltypeMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_DRWBM_SOILTYPE = new QName( NS_NAPARAMETER, "drwbmSoiltypeMember" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_SNOW = new QName( NS_NAPARAMETER, "snowMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_SNOW = new QName( NS_NAPARAMETER, "snowMember" ); //$NON-NLS-1$
 
   private IFeatureBindingCollection<Soiltype> m_soiltypes;
 

@@ -55,6 +55,9 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.hydrology.binding.HydrotopeCollection;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ogc.gml.compare.FeatureListComparator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -147,21 +150,23 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         monitor.subTask( Messages.getString( "CompareScenariosOperation_2" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceModelFile, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_MODEL, selectedModelFile, new QName[] {}, new QName[] {} ) );
+        compare( referenceModelFile, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_MODEL, selectedModelFile, new QName[] { NaModell.MEMBER_CATCHMENT, NaModell.MEMBER_CHANNEL,
+            NaModell.MEMBER_NODE }, new QName[] { NaModell.QN_NAME, NaModell.QN_NAME, NaModell.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
         monitor.subTask( Messages.getString( "CompareScenariosOperation_3" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceParameterGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_PARAMETER, selectedParameterGml, new QName[] {}, new QName[] {} ) );
+        compare( referenceParameterGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_PARAMETER, selectedParameterGml, new QName[] { Parameter.MEMBER_SNOW, Parameter.MEMBER_SOILTYPE,
+            Parameter.MEMBER_DRWBM_SOILTYPE }, new QName[] { Parameter.QN_NAME, Parameter.QN_NAME, Parameter.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
         monitor.subTask( Messages.getString( "CompareScenariosOperation_4" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceHydrotopGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_HYDROTOPES, selectedHydrotopGml, new QName[] {}, new QName[] {} ) );
+        compare( referenceHydrotopGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_HYDROTOPES, selectedHydrotopGml, new QName[] { HydrotopeCollection.MEMBER_HYDROTOPE }, new QName[] { HydrotopeCollection.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
