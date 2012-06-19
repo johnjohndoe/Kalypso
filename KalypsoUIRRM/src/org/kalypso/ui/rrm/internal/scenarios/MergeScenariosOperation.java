@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,6 +62,8 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioList;
+import de.renew.workflow.connector.cases.IScenarioManager;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
 /**
  * This operation merges the selected scenarios into one other scenario.
@@ -268,7 +271,7 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
    * @param monitor
    *          A progress monitor.
    */
-  private void cleanUpScenarios( final IScenario[] selectedScenarios, final boolean deleteScenarios, final IProgressMonitor monitor )
+  private void cleanUpScenarios( final IScenario[] selectedScenarios, final boolean deleteScenarios, final IProgressMonitor monitor ) throws CoreException
   {
     /* If the selected scenarios should not be deleted, return. */
     if( !deleteScenarios )
@@ -285,10 +288,11 @@ public class MergeScenariosOperation implements ICoreRunnableWithProgress
       if( derivedScenarios != null && derivedScenarios.getScenarios().size() > 0 )
         continue;
 
-      // TODO
-
-      /* Monitor. */
-      monitor.worked( 250 );
+      /* Remove the scenario. */
+      final IProject project = selectedScenario.getProject();
+      final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+      final IScenarioManager scenarioManager = nature.getCaseManager();
+      scenarioManager.removeCase( selectedScenario, new SubProgressMonitor( monitor, 250 ) );
     }
   }
 }
