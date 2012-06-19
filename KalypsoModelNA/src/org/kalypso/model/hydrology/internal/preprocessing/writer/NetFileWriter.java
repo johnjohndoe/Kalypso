@@ -143,9 +143,6 @@ public class NetFileWriter extends AbstractCoreFileWriter
     m_metaControl = metaControl;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractCoreFileWriter#writeContent(java.io.PrintWriter)
-   */
   @Override
   protected void writeContent( final PrintWriter writer ) throws IOException, NAPreprocessorException
   {
