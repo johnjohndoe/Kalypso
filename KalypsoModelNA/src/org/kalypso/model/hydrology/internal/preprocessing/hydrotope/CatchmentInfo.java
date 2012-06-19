@@ -80,6 +80,8 @@ public class CatchmentInfo
   {
     final HydrotopeInfo hydrotopeInfo = new HydrotopeInfo( hydrotop, m_landuseHash, m_hydrotopeHash.size() + 1 );
 
+    hydrotopeInfo.validateAttributes();
+
     final String attributeHashKey = hydrotopeInfo.getAttributeHash();
 
     if( m_hydrotopeHash.containsKey( attributeHashKey ) )
