@@ -317,6 +317,9 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       if( catchmentModelsStatus.getSeverity() >= IStatus.ERROR )
         return collector.asMultiStatus( errorMessage );
 
+      /* Save a copy (before ascii files are written, because that changes the net structure internally) */
+      saveCopy( rrmSimulation, simulationData, simulationWorkspace );
+
       /* Monitor. */
       monitor.subTask( Messages.getString( "CalculateSimulationRunnable_11" ) ); //$NON-NLS-1$
 
@@ -348,9 +351,6 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     }
     finally
     {
-      /* Save a copy. */
-      saveCopy( rrmSimulation, simulationData, simulationWorkspace );
-
       /* Save the log. */
       saveLog( simulation, rrmSimulation, collector );
 

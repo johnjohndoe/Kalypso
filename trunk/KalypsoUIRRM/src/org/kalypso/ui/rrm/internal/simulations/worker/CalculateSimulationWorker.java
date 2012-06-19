@@ -85,9 +85,6 @@ public class CalculateSimulationWorker implements ICoreRunnableWithProgress
     m_simulationData = simulationData;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( IProgressMonitor monitor )
   {
