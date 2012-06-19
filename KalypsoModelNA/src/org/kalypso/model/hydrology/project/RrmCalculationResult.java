@@ -53,13 +53,13 @@ public class RrmCalculationResult
 {
   public static final String CURRENT_FOLDRER_NAME = "Aktuell"; //$NON-NLS-1$
 
-  public static final String FILE_STATISTICS_CSV = "statistics.csv"; //$NON-NLS-1$
+  public static final String FILE_STATISTICS_CSV = "statistics.txt"; //$NON-NLS-1$
 
   public static final String FOLDER_BILANZ = "Bilanz"; //$NON-NLS-1$
 
   public static final String FILE_CALCULATION_LOG = "calculation.log"; //$NON-NLS-1$
 
-  public static final String FILE_BILANZ_TXT = "bilanz.txt"; //$NON-NLS-1$
+  public static final String FILE_BILANZ_TXT = "Bilanz.txt"; //$NON-NLS-1$
 
   private static final String FOLDER_REPORT = "Report"; //$NON-NLS-1$
 
