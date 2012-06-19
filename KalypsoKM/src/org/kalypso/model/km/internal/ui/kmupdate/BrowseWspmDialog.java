@@ -130,7 +130,7 @@ public class BrowseWspmDialog extends Dialog
     {
       treeViewer.setContentProvider( new ArrayTreeContentProvider() );
       treeViewer.setLabelProvider( new LabelProvider() );
-      treeViewer.setInput( new String[] { "<no WSPM projects found>" } );
+      treeViewer.setInput( new String[] { Messages.getString("BrowseWspmDialog.0") } ); //$NON-NLS-1$
     }
     else
     {
