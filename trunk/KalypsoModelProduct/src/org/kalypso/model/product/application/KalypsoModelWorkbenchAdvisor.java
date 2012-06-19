@@ -98,6 +98,6 @@ public class KalypsoModelWorkbenchAdvisor extends KalypsoWorkbenchAdvisor
      */
     final IWorkbench workbench = getWorkbenchConfigurer().getWorkbench();
     final IWorkbenchActivitySupport activitySupport = workbench.getActivitySupport();
-    activitySupport.setEnabledActivityIds( Collections.singleton( "org.kalypso.activities.activities.team-enabled" ) );
+    activitySupport.setEnabledActivityIds( Collections.singleton( "org.kalypso.activities.activities.team-enabled" ) ); //$NON-NLS-1$
   }
 }

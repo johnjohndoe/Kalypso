@@ -83,7 +83,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 {
   public static final String PART_ID = "org.kalypso.model.product.introID"; //$NON-NLS-1$
 
-  private static final String KALYPSO_WEB_PAGE = "http://kalypso.sourceforge.net/";
+  private static final String KALYPSO_WEB_PAGE = "http://kalypso.sourceforge.net/"; //$NON-NLS-1$
 
   private static final Image IMG_BACKGROUND = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/background.gif" ) ); //$NON-NLS-1$
 
@@ -256,7 +256,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
     };
 
     footerLogo.setImage( IMG_FOOTER );
-    final String footerLogoTooltip = Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.6" );
+    final String footerLogoTooltip = Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.6" ); //$NON-NLS-1$
     footerLogo.setTooltip( footerLogoTooltip ); //$NON-NLS-1$
     footerLogo.setMouseListener( new MouseAdapter()
     {
@@ -274,13 +274,13 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
         }
         catch( final PartInitException ex )
         {
-          final String message = String.format( "Failed to open external browser at %s", KALYPSO_WEB_PAGE );
+          final String message = String.format( Messages.getString("KalypsoWelcomePage.1"), KALYPSO_WEB_PAGE ); //$NON-NLS-1$
           MessageDialog.openError( e.widget.getDisplay().getActiveShell(), footerLogoTooltip, message );
           KalypsoModelProductPlugin.getDefault().getLog().log( ex.getStatus() );
         }
         catch( final MalformedURLException ex )
         {
-          final String message = String.format( "Failed to open external browser at %s", KALYPSO_WEB_PAGE );
+          final String message = String.format( Messages.getString("KalypsoWelcomePage.0"), KALYPSO_WEB_PAGE ); //$NON-NLS-1$
           MessageDialog.openError( e.widget.getDisplay().getActiveShell(), footerLogoTooltip, message );
         }
       }
