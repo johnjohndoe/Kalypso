@@ -75,10 +75,10 @@ public class ChooseExeControlFactory implements IExtensionsFeatureControlFactory
     final Object property = feature.getProperty( pt );
     if( property == null )
     {
-      feature.setProperty( pt, "" );
+      feature.setProperty( pt, "" ); //$NON-NLS-1$
     }
 
-    if( dir == null || !".".equals( dir.toLowerCase() ) )
+    if( dir == null || !".".equals( dir.toLowerCase() ) ) //$NON-NLS-1$
     {
       final ChooseExeControl control = new ChooseExeControl( feature, pt, filePattern, label );
       if( alignment != null )
