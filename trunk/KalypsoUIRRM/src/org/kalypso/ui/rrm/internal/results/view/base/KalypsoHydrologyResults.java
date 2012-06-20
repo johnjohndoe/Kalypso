@@ -51,6 +51,7 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
  */
 public class KalypsoHydrologyResults
 {
+
   public enum RRM_RESULT_TYPE
   {
     eNode,

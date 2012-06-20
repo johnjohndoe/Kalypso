@@ -66,7 +66,8 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
+import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT_TYPE;
+import org.kalypso.ui.rrm.internal.results.view.base.RrmResultBean;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.EmptyTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyCalculationCaseGroupUiHandler;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyGroupUiHandler;
@@ -282,7 +283,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   private TreeNode doAddStorageChannels( final IFeatureBindingCollection<Channel> channels, final TreeNode parent, final RrmSimulation simulation, final RrmCalculationResult calculation, final Map<String, Set<Feature>> categories )
   {
-    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_4" ), DESCRIPTORS.STORAGE_CHANNEL, m_view ), RRM_RESULT.class ); //$NON-NLS-1$
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_4" ), DESCRIPTORS.STORAGE_CHANNEL, m_view ), new RrmResultBean( calculation, RRM_RESULT_TYPE.eStorage ) ); //$NON-NLS-1$
     channels.accept( new Channel2TreeNodeBuilder( simulation, calculation, base, m_view ) );
     channels.accept( new ChannelResultCategoriesCollector( categories ) );
 
@@ -291,7 +292,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   private TreeNode doAddCatchments( final IFeatureBindingCollection<Catchment> catchments, final TreeNode parent, final RrmSimulation simulation, final RrmCalculationResult calculation, final Map<String, Set<Feature>> categories )
   {
-    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_5" ), DESCRIPTORS.CATCHMENT, m_view ), RRM_RESULT.class ); //$NON-NLS-1$
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_5" ), DESCRIPTORS.CATCHMENT, m_view ), new RrmResultBean( calculation, RRM_RESULT_TYPE.eCatchment ) ); //$NON-NLS-1$
     catchments.accept( new Catchment2TreeNodeBuilder( simulation, calculation, base, m_view ) );
     catchments.accept( new CatchmentResultCategoriesCollector( categories ) );
 
@@ -300,7 +301,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   private TreeNode doAddNodes( final IFeatureBindingCollection<Node> nodes, final TreeNode parent, final RrmSimulation simulation, final RrmCalculationResult calculation, final Map<String, Set<Feature>> categories )
   {
-    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_6" ), DESCRIPTORS.NA_NODE, m_view ), RRM_RESULT.class ); //$NON-NLS-1$
+    final TreeNode base = new TreeNode( parent, new HydrologyGroupUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_6" ), DESCRIPTORS.NA_NODE, m_view ), new RrmResultBean( calculation, RRM_RESULT_TYPE.eNode ) ); //$NON-NLS-1$
     nodes.accept( new Node2TreeNodeBuilder( simulation, calculation, base, m_view ) );
     nodes.accept( new NodeResultCategoriesCollector( categories ) );
 
