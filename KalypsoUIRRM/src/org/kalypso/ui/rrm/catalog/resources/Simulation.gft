@@ -66,29 +66,19 @@
       </label>
       <text property="xjah" style="SWT.BORDER">
         <enabledOperation>
-          <and>
-            <ogc:PropertyIsEqualTo>
-              <ogc:Literal>true</ogc:Literal>
-              <ogc:PropertyName>pns</ogc:PropertyName>
-            </ogc:PropertyIsEqualTo>
-            <ogc:PropertyIsNull>
-              <ogc:PropertyName>returnPeriod</ogc:PropertyName>
-            </ogc:PropertyIsNull>
-          </and>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
         </enabledOperation>
         <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" />
       </text>
       <validatorlabel style="SWT.NONE" property="xjah">
         <visibleOperation>
-          <and>
-            <ogc:PropertyIsEqualTo>
-              <ogc:Literal>true</ogc:Literal>
-              <ogc:PropertyName>pns</ogc:PropertyName>
-            </ogc:PropertyIsEqualTo>
-            <ogc:PropertyIsNull>
-              <ogc:PropertyName>returnPeriod</ogc:PropertyName>
-            </ogc:PropertyIsNull>
-          </and>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
         </visibleOperation>
       </validatorlabel>
 
