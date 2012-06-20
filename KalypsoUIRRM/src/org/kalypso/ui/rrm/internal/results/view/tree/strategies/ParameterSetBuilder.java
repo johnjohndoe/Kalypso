@@ -55,6 +55,19 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ParameterSetBuilder
 {
+  public class CalculationFeatureBean
+  {
+    private final RrmCalculationResult m_calculation2;
+
+    private final Feature m_feature2;
+
+    public CalculationFeatureBean( final RrmCalculationResult calculation, final Feature feature )
+    {
+      m_calculation2 = calculation;
+      m_feature2 = feature;
+
+    }
+  }
 
   private final Feature m_feature;
 
@@ -76,7 +89,7 @@ public class ParameterSetBuilder
   public void init( final TreeNode base, final DESCRIPTORS imgExisting, final DESCRIPTORS imgMissing, final DESCRIPTORS imgInvalid, final ResultManagementView view )
   {
     m_handler = new HydrologyParameterSetUiHandler( m_simulation, m_calculation, m_feature, imgExisting, imgMissing, imgInvalid, view );
-    m_node = new TreeNode( base, m_handler, m_feature );
+    m_node = new TreeNode( base, m_handler, new CalculationFeatureBean( m_calculation, m_feature ) );
 
     base.addChild( m_node );
   }
