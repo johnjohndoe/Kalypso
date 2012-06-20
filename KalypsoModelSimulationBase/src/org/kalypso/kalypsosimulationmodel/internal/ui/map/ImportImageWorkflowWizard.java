@@ -58,16 +58,16 @@ import org.kalypso.ui.wizard.AbstractDataImportWizard;
  * 
  * @author Gernot Belger
  */
-public class ImportShapeWorkflowWizard extends AbstractDataImportWizard
+public class ImportImageWorkflowWizard extends AbstractDataImportWizard
 {
   private IStructuredSelection m_initialSelection;
 
-  private ImportBaseMapImportShpPage m_pageImportShp;
+  private ImportBaseMapImportImgPage m_pageImportImg;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public ImportShapeWorkflowWizard( )
+  public ImportImageWorkflowWizard( )
   {
     setNeedsProgressMonitor( true );
     // setWindowTitle( "" );
@@ -88,11 +88,11 @@ public class ImportShapeWorkflowWizard extends AbstractDataImportWizard
   @Override
   public void addPages( )
   {
-    m_pageImportShp = new ImportBaseMapImportShpPage();
+    m_pageImportImg = new ImportBaseMapImportImgPage();
 
-    m_pageImportShp.init( m_initialSelection );
+    m_pageImportImg.init( m_initialSelection );
 
-    addPage( m_pageImportShp );
+    addPage( m_pageImportImg );
   }
 
   @Override
@@ -103,7 +103,7 @@ public class ImportShapeWorkflowWizard extends AbstractDataImportWizard
 
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
-    final IImportBaseMapOperation operation = m_pageImportShp.createOperation( commandTarget, mapModell, scenarioFolder );
+    final IImportBaseMapOperation operation = m_pageImportImg.createOperation( commandTarget, mapModell, scenarioFolder );
 
     if( !operation.checkPreconditions( getShell(), getWindowTitle() ) )
       return false;
