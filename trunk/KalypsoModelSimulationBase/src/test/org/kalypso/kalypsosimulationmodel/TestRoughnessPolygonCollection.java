@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
@@ -72,7 +72,7 @@ public class TestRoughnessPolygonCollection extends TestCase
 
     GMLWorkspace workspace = null;
     // GM_Point point = GeometryFactory.createGM_Point( 0.17174177831912307, 0.7929354445797808, cs );
-    GM_Point point = GeometryFactory.createGM_Point( 0.1, 0.53, cs );
+    final GM_Point point = GeometryFactory.createGM_Point( 0.1, 0.53, cs );
     IRoughnessPolygonCollection m_polygonCollection;
 
     workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION, null );
@@ -83,7 +83,7 @@ public class TestRoughnessPolygonCollection extends TestCase
     }
 
     m_polygonCollection = new RoughnessPolygonCollection( feature);
-    List<IRoughnessPolygon> polygons = m_polygonCollection.selectRoughnessPolygons( point.getPosition() );
+    final List<IRoughnessPolygon> polygons = m_polygonCollection.selectRoughnessPolygons( point.getPosition() );
     System.out.println( "" ); //$NON-NLS-1$
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
     System.out.println( "* TESTING FILE: " + TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION ); //$NON-NLS-1$
@@ -91,8 +91,8 @@ public class TestRoughnessPolygonCollection extends TestCase
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
     System.out.println( "* TEST: select                                                   *" ); //$NON-NLS-1$
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
-    System.out.println( Messages.getString( "TestRoughnessPolygonCollection.12" ) + point.getX() + ", " + point.getY() + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    System.out.println( Messages.getString( "TestRoughnessPolygonCollection.14" ) ); //$NON-NLS-1$
+    System.out.println( "Point (x,y): (" + point.getX() + ", " + point.getY() + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    System.out.println( "is contained in:" ); //$NON-NLS-1$
     for( int i = 0; i < polygons.size(); i++ )
     {
       System.out.println( (i + 1) + ". - " + polygons.get( i ).getId() ); //$NON-NLS-1$
@@ -100,17 +100,17 @@ public class TestRoughnessPolygonCollection extends TestCase
 
     if( polygons.size() == 0 )
     {
-      System.out.println( Messages.getString( "TestRoughnessPolygonCollection.16" ) ); //$NON-NLS-1$
+      System.out.println( " - no polygons contains this point" ); //$NON-NLS-1$
     }
 
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
     System.out.println( "" ); //$NON-NLS-1$
 
-    List<IRoughnessPolygon> polygonsList = m_polygonCollection.getOverlappedPolygons();
+    final List<IRoughnessPolygon> polygonsList = m_polygonCollection.getOverlappedPolygons();
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
     System.out.println( "* TEST: checksOverlapping                                        *" ); //$NON-NLS-1$
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
-    System.out.println( Messages.getString( "TestRoughnessPolygonCollection.13" ) ); //$NON-NLS-1$
+    System.out.println( "Overlapping polygons:" ); //$NON-NLS-1$
     for( int i = 0; i < polygonsList.size(); i++ )
     {
       System.out.println( (i + 1) + ". - " + polygonsList.get( i ).getId() ); //$NON-NLS-1$
@@ -118,7 +118,7 @@ public class TestRoughnessPolygonCollection extends TestCase
 
     if( polygonsList.size() == 0 )
     {
-      System.out.println( Messages.getString( "TestRoughnessPolygonCollection.24" ) ); //$NON-NLS-1$
+      System.out.println( " - final no overlapping" ); //$NON-NLS-1$
     }
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
     System.out.println( "" ); //$NON-NLS-1$

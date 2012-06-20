@@ -71,7 +71,7 @@ public class TestTerrainModelWithElevation extends TestCase
       final ITerrainModel itrModel = (ITerrainModel) rcFeature.getAdapter( ITerrainModel.class );
       // System.out.println("ITerrainModel.class"+ITerrainModel.class);
 
-      assertNull( Messages.getString( "TestTerrainModelWithElevation.0" ), itrModel.getTerrainElevationModelSystem() ); //$NON-NLS-1$
+      assertNull( "Must be Null.. Not Avai in GML", itrModel.getTerrainElevationModelSystem() ); //$NON-NLS-1$
 
       final ITerrainElevationModelSystem itrEleSystem =  itrModel.getTerrainElevationModelSystem() ;
 

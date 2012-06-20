@@ -67,7 +67,7 @@ public class TestGridCoverageELevationModel extends TestCase
         {
           final GM_Point curPoint = GeometryFactory.createGM_Point( 5 * i + 1, 5 * j + 1, TestWorkspaces.getGaussKrueger() );
           final double ele = eleModel.getElevation( curPoint );
-          assertEquals( "i=" + i + " j=" + j + Messages.getString( "TestGridCoverageELevationModel.2" ) + ele, i * j * 1.000, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          assertEquals( "i=" + i + " j=" + j + " ele=" + ele, i * j * 1.000, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         }
         else
