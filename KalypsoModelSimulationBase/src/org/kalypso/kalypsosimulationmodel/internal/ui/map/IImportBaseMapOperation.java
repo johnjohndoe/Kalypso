@@ -38,56 +38,15 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.imports.baseMap;
+package org.kalypso.kalypsosimulationmodel.internal.ui.map;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * @author Gernot Belger
  */
-final class ImportBaseMapUtils
+public interface IImportBaseMapOperation extends ICoreRunnableWithProgress
 {
-  private ImportBaseMapUtils( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  static void copy( final File source, final IFile destination, final IProgressMonitor monitor ) throws CoreException
-  {
-    final File destFile = destination.getLocation().toFile();
-
-    CoreException throwing = null;
-
-    try
-    {
-      FileUtils.copyFile( source, destFile );
-    }
-    catch( final IOException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
-      throwing = new CoreException( status );
-    }
-
-    try
-    {
-      destination.refreshLocal( IResource.DEPTH_ZERO, monitor );
-    }
-    catch( final CoreException e )
-    {
-      if( throwing != null )
-        throw throwing;
-
-      throw e;
-    }
-  }
+  boolean checkPreconditions( Shell shell, String windowTitle );
 }
