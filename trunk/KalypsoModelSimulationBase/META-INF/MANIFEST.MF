@@ -12,8 +12,7 @@ Require-Bundle:
  org.kalypso.model.wspm.schema;visibility:=reexport,
  org.kalypso.afgui;visibility:=reexport,
  org.junit;resolution:=optional
-Export-Package: org.kalypso.kalypsosimulationmodel,
- org.kalypso.kalypsosimulationmodel.core,
+Export-Package: org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.kalypsosimulationmodel.core.discr,
  org.kalypso.kalypsosimulationmodel.core.flowrel,
  org.kalypso.kalypsosimulationmodel.core.modeling,
@@ -27,5 +26,5 @@ Export-Package: org.kalypso.kalypsosimulationmodel,
  test.org.kalypso.kalypsosimulationmodel
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-Activator: org.kalypso.kalypsosimulationmodel.KalypsoModelSimulationBase
+Bundle-Activator: org.kalypso.kalypsosimulationmodel.internal.KalypsoModelSimulationBase
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

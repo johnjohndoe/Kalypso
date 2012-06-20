@@ -26,33 +26,6 @@
             id="org.kalypso.kalypsosimulationmodel.core.wind.geom.WindDataShapeGeometry"
             name="Native-Wind-Data-Shape-Builder"/>
    </extension>
-   <extension
-         point="org.kalypso.afgui.scenarioData">
-         <!-- FIXME: does NOT belong here; wrong dependency direction. Move to 1d2d -->
-      <dataSet
-            id="org.kalypso.kalypso1d2d">
-         <scenarioDatum
-               bundle="org.kalypso.ModelSimulationBase"
-               classKey="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection"
-               modelPath="project:/.metadata/roughness.gml">
-         </scenarioDatum>
-         <scenarioDatum
-               bundle="org.kalypso.ModelSimulationBase"
-               classKey="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel"
-               modelPath="models/flowrelations.gml">
-         </scenarioDatum>
-         <scenarioDatum
-               bundle="org.kalypso.ModelSimulationBase"
-               classKey="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"
-               modelPath="models/terrain.gml">
-         </scenarioDatum>
-         <scenarioDatum
-               bundle="org.kalypso.ModelSimulationBase"
-               classKey="org.kalypso.kalypsosimulationmodel.core.wind.IWindModel"
-               modelPath="models/wind.gml"> 
-         </scenarioDatum>
-      </dataSet>
-   </extension>
    <extension point="org.kalypso.ui.featureViewExtensionControl">
     <extensionControl class="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory"
       					id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
@@ -128,5 +101,14 @@
             qname="{http://www.tu-harburg.de/wb/kalypso/schemata/roughness}RoughnessClsCollection">
       </feature>
    </extension>
+
+    <extension point="org.eclipse.ui.newWizards">
+            <wizard
+            class="org.kalypso.kalypsosimulationmodel.internal.ui.map.ImportBaseMapWizard"
+            icon="icons/kalypso_gmt.gif"
+            id="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
+            name="BaseMap"
+            project="false"/>
+    </extension>
 
 </plugin>

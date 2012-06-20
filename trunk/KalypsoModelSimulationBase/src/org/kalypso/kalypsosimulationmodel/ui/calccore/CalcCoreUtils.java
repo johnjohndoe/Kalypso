@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.ui.calccore;
 
@@ -54,8 +54,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.kalypsosimulationmodel.KalypsoModelSimulationBase;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.KalypsoModelSimulationBase;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -102,7 +102,7 @@ public final class CalcCoreUtils
       {
         // Version des Rechenkerns nicht angegeben. Die Version muss in den Steuerparametern gesetzt werden.
         final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.1" ); //$NON-NLS-1$
-        final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
+        final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.PLUGIN_ID, msg );
         throw new CoreException( status );
       }
 
@@ -134,21 +134,21 @@ public final class CalcCoreUtils
     if( !exeFile.exists() )
     {
       final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.6", exeFile.getAbsolutePath() ); //$NON-NLS-1$
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.PLUGIN_ID, msg );
       throw new CoreException( status );
     }
 
     if( !exeFile.isFile() )
     {
       final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.2", exeFile.getAbsolutePath() ); //$NON-NLS-1$
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.PLUGIN_ID, msg );
       throw new CoreException( status );
     }
 
     if( !exeFile.canExecute() )
     {
       final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.5", exeFile.getAbsolutePath() ); //$NON-NLS-1$
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.PLUGIN_ID, msg );
       throw new CoreException( status );
     }
 
@@ -177,7 +177,7 @@ public final class CalcCoreUtils
     {
       final File exeDir = getExecutablesDirectory();
       final String msg = String.format( Messages.getString( "org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils.0" ), exeDir.getAbsolutePath() ); //$NON-NLS-1$
-      final IStatus status = new Status( IStatus.WARNING, KalypsoModelSimulationBase.ID, msg );
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModelSimulationBase.PLUGIN_ID, msg );
       throw new CoreException( status );
     }
     return executables;
