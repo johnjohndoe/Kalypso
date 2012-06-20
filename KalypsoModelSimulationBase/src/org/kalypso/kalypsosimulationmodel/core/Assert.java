@@ -1,6 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core;
 
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 
 /**
  * Provides assertion methods

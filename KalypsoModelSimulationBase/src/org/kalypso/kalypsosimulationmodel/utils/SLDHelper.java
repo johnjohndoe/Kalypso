@@ -65,7 +65,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
