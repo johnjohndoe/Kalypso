@@ -49,7 +49,7 @@ import org.kalypso.grid.IGeoGridWalker;
 import org.kalypso.grid.IGeoWalkingStrategy;
 import org.kalypso.grid.areas.IGeoGridArea;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.GMRectanglesClip;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;

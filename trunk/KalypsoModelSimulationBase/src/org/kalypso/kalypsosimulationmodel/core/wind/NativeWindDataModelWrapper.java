@@ -56,7 +56,7 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.IGeoGrid;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;

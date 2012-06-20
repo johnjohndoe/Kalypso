@@ -4,7 +4,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;

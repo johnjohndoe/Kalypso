@@ -45,7 +45,7 @@ import java.io.File;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 
 /**
  * Choose one from a list of files.

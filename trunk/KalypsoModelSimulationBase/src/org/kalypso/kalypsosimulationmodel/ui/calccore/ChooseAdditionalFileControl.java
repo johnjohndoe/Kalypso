@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
