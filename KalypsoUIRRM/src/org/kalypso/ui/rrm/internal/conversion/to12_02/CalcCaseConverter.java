@@ -203,6 +203,9 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       final TimeseriesMappingBuilder timeseriesMappingBuilder = guessTimeseriesMappings( naModel, mappings, mappingLog );
       getLog().add( mappingLog.asMultiStatus( Messages.getString( "CalcCaseConverter.18" ) ) ); //$NON-NLS-1$
 
+      /* IMPORTANT: Update the categories before the links have been fixed. */
+      naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
+
       /* SPECIAL CASE: Must save and copy the modell.gml before emptying the timeseries links. */
       m_data.saveModel( INaProjectConstants.GML_MODELL_PATH, naModel );
       FileUtils.copyFile( new File( m_targetScenarioDir, INaProjectConstants.GML_MODELL_PATH ), new File( m_targetScenarioDir, m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH ), true ); //$NON-NLS-1$
@@ -559,7 +562,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   }
 
   /**
-   * This function finzalizes a simulation. It copies some files for reference and fixes links in one of them.
+   * This function finalizes a simulation. It copies some files for reference and fixes links in one of them.
    */
   private void finalizeSimulation( ) throws IOException, Exception, GmlSerializeException
   {
