@@ -65,7 +65,7 @@ public class TestTerrainElevationModelSystem extends TestCase
     // ITerrainElevationModelSystem.class );
     // TODO test with adapater
     final ITerrainElevationModelSystem temSystem = (ITerrainElevationModelSystem) rcFeature;
-    assertNotNull( Messages.getString( "TestTerrainElevationModelSystem.0" ) + ITerrainElevationModelSystem.class, //$NON-NLS-1$
+    assertNotNull( "Could not adapt to" + ITerrainElevationModelSystem.class, //$NON-NLS-1$
         temSystem );
 
     for( int i = 0; i < 10; i++ )
