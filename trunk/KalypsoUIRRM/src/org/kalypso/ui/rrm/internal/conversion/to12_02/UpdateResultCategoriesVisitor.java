@@ -65,12 +65,13 @@ public class UpdateResultCategoriesVisitor implements IFeatureBindingCollectionV
       return;
 
     final String category = doCategorize( href );
-
     node.setProperty( Node.PROPERTY_RESULT_CATEGORY, category );
   }
 
   private String doCategorize( final String href )
   {
+    return "Pegel"; //$NON-NLS-1$
+
     // final CharMatcher matcher = new CharMatcher()
     // {
     // @Override
@@ -95,7 +96,6 @@ public class UpdateResultCategoriesVisitor implements IFeatureBindingCollectionV
     //
     // return String.format( "Pegel/${%s}", name ); //$NON-NLS-1$
 
-    return "Pegel"; //$NON-NLS-1$
   }
 
   private String getHref( final Node node )

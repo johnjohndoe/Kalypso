@@ -147,6 +147,7 @@ public class Node extends AbstractNaModelElement implements INode
     return resultAsInflowLink;
   }
 
+  @Deprecated
   @Override
   public ZmlLink getResultLink( )
   {
