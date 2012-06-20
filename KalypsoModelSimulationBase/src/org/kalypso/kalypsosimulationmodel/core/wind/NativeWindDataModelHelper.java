@@ -51,7 +51,7 @@ import java.util.Set;
 import org.deegree.framework.util.Pair;
 import org.kalypso.contribs.java.util.CollectionsHelper;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Triangle;

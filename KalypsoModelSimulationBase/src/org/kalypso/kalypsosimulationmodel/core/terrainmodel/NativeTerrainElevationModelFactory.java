@@ -45,7 +45,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.adaptor.CacheMap;
 import org.shiftone.cache.policy.fifo.FifoCacheFactory;
