@@ -11,7 +11,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsosimulationmodel.core.wind.INativeWindDataModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModel;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
