@@ -65,6 +65,7 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -150,23 +151,25 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         monitor.subTask( Messages.getString( "CompareScenariosOperation_2" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceModelFile, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_MODEL, selectedModelFile, new QName[] { NaModell.MEMBER_CATCHMENT, NaModell.MEMBER_CHANNEL,
-            NaModell.MEMBER_NODE }, new QName[] { NaModell.QN_NAME, NaModell.QN_NAME, NaModell.QN_NAME } ) );
+        compare( referenceModelFile, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_MODEL, selectedModelFile, new GMLXPath[] {
+            new GMLXPath( NaModell.MEMBER_CATCHMENT_COLLECTION ).append( new GMLXPath( NaModell.MEMBER_CATCHMENT ) ),
+            new GMLXPath( NaModell.MEMBER_CHANNEL_COLLECTION ).append( new GMLXPath( NaModell.MEMBER_CHANNEL ) ),
+            new GMLXPath( NaModell.MEMBER_NODE_COLLECTION ).append( new GMLXPath( NaModell.MEMBER_NODE ) ) }, new QName[] { NaModell.QN_NAME, NaModell.QN_NAME, NaModell.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
         monitor.subTask( Messages.getString( "CompareScenariosOperation_3" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceParameterGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_PARAMETER, selectedParameterGml, new QName[] { Parameter.MEMBER_SNOW, Parameter.MEMBER_SOILTYPE,
-            Parameter.MEMBER_DRWBM_SOILTYPE }, new QName[] { Parameter.QN_NAME, Parameter.QN_NAME, Parameter.QN_NAME } ) );
+        compare( referenceParameterGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_PARAMETER, selectedParameterGml, new GMLXPath[] { new GMLXPath( Parameter.MEMBER_SNOW ),
+            new GMLXPath( Parameter.MEMBER_SOILTYPE ), new GMLXPath( Parameter.MEMBER_DRWBM_SOILTYPE ) }, new QName[] { Parameter.QN_NAME, Parameter.QN_NAME, Parameter.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
         monitor.subTask( Messages.getString( "CompareScenariosOperation_4" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceHydrotopGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_HYDROTOPES, selectedHydrotopGml, new QName[] { HydrotopeCollection.MEMBER_HYDROTOPE }, new QName[] { HydrotopeCollection.QN_NAME } ) );
+        compare( referenceHydrotopGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_HYDROTOPES, selectedHydrotopGml, new GMLXPath[] { new GMLXPath( HydrotopeCollection.MEMBER_HYDROTOPE ) }, new QName[] { HydrotopeCollection.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
@@ -247,7 +250,7 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
 
     /* Get some data. */
     final IFile selectedFile = compareData.getFile();
-    final QName[] listProperties = compareData.getListProperties();
+    final GMLXPath[] listPaths = compareData.getListPaths();
     final QName[] uniqueProperties = compareData.getUniqueProperties();
 
     /* Load the workspaces. */
@@ -259,12 +262,12 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     final Feature selectedModel = selectedWorkspace.getRootFeature();
 
     /* Compare each configured list. */
-    for( int i = 0; i < listProperties.length; i++ )
+    for( int i = 0; i < listPaths.length; i++ )
     {
-      final QName listProperty = listProperties[i];
+      final GMLXPath listPath = listPaths[i];
       final QName uniqueProperty = uniqueProperties[i];
 
-      final IStatus listStatus = compareList( referenceModel, selectedModel, listProperty, uniqueProperty );
+      final IStatus listStatus = compareList( referenceModel, selectedModel, listPath, uniqueProperty );
       collector.add( listStatus );
     }
 
@@ -280,9 +283,9 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     return collector.asMultiStatus( "The model has not changed." );
   }
 
-  private IStatus compareList( final Feature referenceFeature, final Feature selectedFeature, final QName listProperty, final QName uniqueProperty ) throws Exception
+  private IStatus compareList( final Feature referenceFeature, final Feature selectedFeature, final GMLXPath listPath, final QName uniqueProperty ) throws Exception
   {
-    final FeatureListComparator comparator = new FeatureListComparator( referenceFeature, selectedFeature, listProperty, uniqueProperty );
+    final FeatureListComparator comparator = new FeatureListComparator( referenceFeature, selectedFeature, listPath, uniqueProperty );
     return comparator.compareList();
   }
 }

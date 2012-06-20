@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.scenarios;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -57,16 +58,16 @@ public class CompareData
 
   private final IFile m_file;
 
-  private final QName[] m_listProperties;
+  private final GMLXPath[] m_listPaths;
 
   private final QName[] m_uniqueProperties;
 
-  public CompareData( final IScenario scenario, final String key, final IFile file, final QName[] listProperties, final QName[] uniqueProperties )
+  public CompareData( final IScenario scenario, final String key, final IFile file, final GMLXPath[] listPaths, final QName[] uniqueProperties )
   {
     m_scenario = scenario;
     m_key = key;
     m_file = file;
-    m_listProperties = listProperties;
+    m_listPaths = listPaths;
     m_uniqueProperties = uniqueProperties;
   }
 
@@ -85,9 +86,9 @@ public class CompareData
     return m_file;
   }
 
-  public QName[] getListProperties( )
+  public GMLXPath[] getListPaths( )
   {
-    return m_listProperties;
+    return m_listPaths;
   }
 
   public QName[] getUniqueProperties( )
