@@ -1316,6 +1316,46 @@
   </Landuse>
  </landuseMember>
  <landuseMember>
+  <Landuse gml:id="Landuse134019702746727">
+   <gml:description>DRWBM-Maßnahme Entsiegelung: Rasengittersteine</gml:description>
+   <gml:name>ent_ras</gml:name>
+   <idealLandUsePeriodLink xlink:href="#IdealLandUse_2"/>
+   <sealingLink xlink:href="#Sealing134019716631489"/>
+  </Landuse>
+ </landuseMember>
+ <landuseMember>
+  <Landuse gml:id="Landuse1340197028491218">
+   <gml:description>DRWBM-Maßnahme Entsiegelung: Kies- bzw. Splittdecken</gml:description>
+   <gml:name>ent_kies</gml:name>
+   <idealLandUsePeriodLink xlink:href="#IdealLandUse_2"/>
+   <sealingLink xlink:href="#Sealing134019716674247"/>
+  </Landuse>
+ </landuseMember>
+ <landuseMember>
+  <Landuse gml:id="Landuse1340197029091275">
+   <gml:description>DRWBM-Maßnahme Entsiegelung: Schotterrasen</gml:description>
+   <gml:name>ent_scho</gml:name>
+   <idealLandUsePeriodLink xlink:href="#IdealLandUse_2"/>
+   <sealingLink xlink:href="#Sealing1340197167145160"/>
+  </Landuse>
+ </landuseMember>
+ <landuseMember>
+  <Landuse gml:id="Landuse1340197029947226">
+   <gml:description>DRWBM-Maßnahme Entsiegelung: Porenstein</gml:description>
+   <gml:name>ent_por</gml:name>
+   <idealLandUsePeriodLink xlink:href="#IdealLandUse_2"/>
+   <sealingLink xlink:href="#Sealing1340197167640221"/>
+  </Landuse>
+ </landuseMember>
+ <landuseMember>
+  <Landuse gml:id="Landuse1340197030538228">
+   <gml:description>DRWBM-Maßnahme Entsiegelung: Fugenpflaster</gml:description>
+   <gml:name>eng_fug</gml:name>
+   <idealLandUsePeriodLink xlink:href="#IdealLandUse_2"/>
+   <sealingLink xlink:href="#Sealing134019716815290"/>
+  </Landuse>
+ </landuseMember>
+ <landuseMember>
   <Landuse gml:id="Landuse_ALB_114">
    <gml:description>Gebäude- und Freifläche;öffentliche Zwecke;öffentlich (Kirche)</gml:description>
    <gml:name>ALB_114</gml:name>
@@ -2772,7 +2812,7 @@
   &lt;name&gt;Bebauung&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Bebauung"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;1.0;1.0;1.0;1.0;1.0;1.05;1.1;1.1;1.1;1.1;1.1;1.0;1.0&lt;/valueArray&gt;
@@ -2784,7 +2824,7 @@
     &lt;valueArray separator=";"&gt;0.6;0.6;0.6;0.6;0.6;0.65;0.65;0.65;0.65;0.7;0.65;0.65;0.6&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="d" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T11:00:00;2000-12-15T11:00:00;2001-01-15T11:00:00;2001-02-15T11:00:00;2001-03-15T11:00:00;2001-04-15T10:00:00;2001-05-15T10:00:00;2001-06-15T10:00:00;2001-07-15T10:00:00;2001-08-15T10:00:00;2001-09-15T10:00:00;2001-10-15T10:00:00;2001-11-15T11:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T11:00:00;2001-05-15T11:00:00;2001-06-15T11:00:00;2001-07-15T11:00:00;2001-08-15T11:00:00;2001-09-15T11:00:00;2001-10-15T11:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -2799,7 +2839,7 @@
   &lt;name&gt;Strassen und Wege&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Strassen und Wege"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;0.75;0.75;0.75;0.75;0.9;0.95;1.15;1.35;1.3;1.0;0.75;0.75;0.75&lt;/valueArray&gt;
@@ -2811,7 +2851,7 @@
     &lt;valueArray separator=";"&gt;0.4;0.35;0.35;0.35;0.35;0.5;0.52;0.55;0.55;0.55;0.35;0.45;0.4&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="d" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T11:00:00;2000-12-15T11:00:00;2001-01-15T11:00:00;2001-02-15T11:00:00;2001-03-15T11:00:00;2001-04-15T10:00:00;2001-05-15T10:00:00;2001-06-15T10:00:00;2001-07-15T10:00:00;2001-08-15T10:00:00;2001-09-15T10:00:00;2001-10-15T10:00:00;2001-11-15T11:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T11:00:00;2001-05-15T11:00:00;2001-06-15T11:00:00;2001-07-15T11:00:00;2001-08-15T11:00:00;2001-09-15T11:00:00;2001-10-15T11:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -2826,7 +2866,7 @@
   &lt;name&gt;Mischwald&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Mischwald"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;1.0;0.95;0.95;0.95;0.95;0.95;1.0;1.05;1.1;1.1;1.1;1.0;1.0&lt;/valueArray&gt;
@@ -2838,7 +2878,7 @@
     &lt;valueArray separator=";"&gt;0.75;0.75;0.75;0.75;0.75;0.75;0.8;0.8;0.8;0.8;0.8;0.8;0.75&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="d" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T11:00:00;2000-12-15T11:00:00;2001-01-15T11:00:00;2001-02-15T11:00:00;2001-03-15T11:00:00;2001-04-15T10:00:00;2001-05-15T10:00:00;2001-06-15T10:00:00;2001-07-15T10:00:00;2001-08-15T10:00:00;2001-09-15T10:00:00;2001-10-15T10:00:00;2001-11-15T11:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T11:00:00;2001-05-15T11:00:00;2001-06-15T11:00:00;2001-07-15T11:00:00;2001-08-15T11:00:00;2001-09-15T11:00:00;2001-10-15T11:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -2853,7 +2893,7 @@
   &lt;name&gt;Acker&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Acker"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;0.65;0.65;0.65;0.65;0.9;0.95;1.15;1.35;1.3;1.0;0.9;0.7;0.65&lt;/valueArray&gt;
@@ -2865,7 +2905,7 @@
     &lt;valueArray separator=";"&gt;0.3;0.3;0.3;0.3;0.3;0.3;0.3;0.4;0.45;0.5;0.55;0.4;0.3&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="d" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T11:00:00;2000-12-15T11:00:00;2001-01-15T11:00:00;2001-02-15T11:00:00;2001-03-15T11:00:00;2001-04-15T10:00:00;2001-05-15T10:00:00;2001-06-15T10:00:00;2001-07-15T10:00:00;2001-08-15T10:00:00;2001-09-15T10:00:00;2001-10-15T10:00:00;2001-11-15T11:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T11:00:00;2001-05-15T11:00:00;2001-06-15T11:00:00;2001-07-15T11:00:00;2001-08-15T11:00:00;2001-09-15T11:00:00;2001-10-15T11:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -2880,7 +2920,7 @@
   &lt;name&gt;Laubwald&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Laubwald"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;1.0;0.9;0.9;0.9;0.9;0.95;1.0;1.05;1.1;1.1;1.1;1.0;1.0&lt;/valueArray&gt;
@@ -2892,7 +2932,7 @@
     &lt;valueArray separator=";"&gt;0.85;0.75;0.75;0.75;0.75;0.75;0.75;0.75;0.8;0.85;0.85;0.85;0.85&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="d" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T11:00:00;2000-12-15T11:00:00;2001-01-15T11:00:00;2001-02-15T11:00:00;2001-03-15T11:00:00;2001-04-15T10:00:00;2001-05-15T10:00:00;2001-06-15T10:00:00;2001-07-15T10:00:00;2001-08-15T10:00:00;2001-09-15T10:00:00;2001-10-15T10:00:00;2001-11-15T11:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T11:00:00;2001-05-15T11:00:00;2001-06-15T11:00:00;2001-07-15T11:00:00;2001-08-15T11:00:00;2001-09-15T11:00:00;2001-10-15T11:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -2907,7 +2947,7 @@
   &lt;name&gt;Gruenland&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Gruenland"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;1.0;1.0;1.0;1.0;1.0;1.0;1.05;1.1;1.1;1.05;1.05;1.0;1.0&lt;/valueArray&gt;
@@ -2919,7 +2959,7 @@
     &lt;valueArray separator=";"&gt;0.41;0.4;0.4;0.4;0.4;0.41;0.42;0.44;0.45;0.5;0.45;0.43;0.41&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="d" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T11:00:00;2000-12-15T11:00:00;2001-01-15T11:00:00;2001-02-15T11:00:00;2001-03-15T11:00:00;2001-04-15T10:00:00;2001-05-15T10:00:00;2001-06-15T10:00:00;2001-07-15T10:00:00;2001-08-15T10:00:00;2001-09-15T10:00:00;2001-10-15T10:00:00;2001-11-15T11:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T11:00:00;2001-05-15T11:00:00;2001-06-15T11:00:00;2001-07-15T11:00:00;2001-08-15T11:00:00;2001-09-15T11:00:00;2001-10-15T11:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -2934,7 +2974,7 @@
   &lt;name&gt;Nadelwald&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Nadelwald"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;0.95;0.9;0.9;0.9;0.9;0.93;0.97;1.0;1.0;1.0;1.0;1.0;0.95&lt;/valueArray&gt;
@@ -2946,7 +2986,7 @@
     &lt;valueArray separator=";"&gt;0.75;0.75;0.75;0.75;0.75;0.75;0.85;0.85;0.85;0.85;0.85;0.8;0.75&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="d" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T11:00:00;2000-12-15T11:00:00;2001-01-15T11:00:00;2001-02-15T11:00:00;2001-03-15T11:00:00;2001-04-15T10:00:00;2001-05-15T10:00:00;2001-06-15T10:00:00;2001-07-15T10:00:00;2001-08-15T10:00:00;2001-09-15T10:00:00;2001-10-15T10:00:00;2001-11-15T11:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T11:00:00;2001-05-15T11:00:00;2001-06-15T11:00:00;2001-07-15T11:00:00;2001-08-15T11:00:00;2001-09-15T11:00:00;2001-10-15T11:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -2960,7 +3000,7 @@
   &lt;name&gt;Gewaesser&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Gewaesser"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;0.65;0.65;0.65;0.65;0.9;0.95;1.15;1.35;1.3;1.0;0.65;0.65;0.65&lt;/valueArray&gt;
@@ -2972,7 +3012,7 @@
     &lt;valueArray separator=";"&gt;0.4;0.35;0.35;0.35;0.35;0.5;0.52;0.55;0.55;0.55;0.35;0.45;0.4&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="d" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T11:00:00;2000-12-15T11:00:00;2001-01-15T11:00:00;2001-02-15T11:00:00;2001-03-15T11:00:00;2001-04-15T10:00:00;2001-05-15T10:00:00;2001-06-15T10:00:00;2001-07-15T10:00:00;2001-08-15T10:00:00;2001-09-15T10:00:00;2001-10-15T10:00:00;2001-11-15T11:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T11:00:00;2001-05-15T11:00:00;2001-06-15T11:00:00;2001-07-15T11:00:00;2001-08-15T11:00:00;2001-09-15T11:00:00;2001-10-15T11:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -2987,7 +3027,7 @@
   &lt;name&gt;&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value=""/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0&lt;/valueArray&gt;
@@ -2999,7 +3039,7 @@
     &lt;valueArray separator=";"&gt;0.3;0.3;0.3;0.3;0.3;0.3;0.44;0.48;0.4;0.4;0.3;0.3;0.3&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T12:00:00;2001-05-15T12:00:00;2001-06-15T12:00:00;2001-07-15T12:00:00;2001-08-15T12:00:00;2001-09-15T12:00:00;2001-10-15T12:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T13:00:00;2000-12-15T13:00:00;2001-01-15T13:00:00;2001-02-15T13:00:00;2001-03-15T13:00:00;2001-04-15T13:00:00;2001-05-15T13:00:00;2001-06-15T13:00:00;2001-07-15T13:00:00;2001-08-15T13:00:00;2001-09-15T13:00:00;2001-10-15T13:00:00;2001-11-15T13:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -3014,7 +3054,7 @@
   &lt;name&gt;Idealisierter Jahres Vegetationszyklus&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Idealisierter Jahres Vegetationszyklus"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0&lt;/valueArray&gt;
@@ -3026,7 +3066,7 @@
     &lt;valueArray separator=";"&gt;0.3;0.3;0.3;0.3;0.3;0.3;0.44;0.48;0.4;0.4;0.3;0.3;0.3&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T12:00:00;2001-05-15T12:00:00;2001-06-15T12:00:00;2001-07-15T12:00:00;2001-08-15T12:00:00;2001-09-15T12:00:00;2001-10-15T12:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T13:00:00;2000-12-15T13:00:00;2001-01-15T13:00:00;2001-02-15T13:00:00;2001-03-15T13:00:00;2001-04-15T13:00:00;2001-05-15T13:00:00;2001-06-15T13:00:00;2001-07-15T13:00:00;2001-08-15T13:00:00;2001-09-15T13:00:00;2001-10-15T13:00:00;2001-11-15T13:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -3041,7 +3081,7 @@
   &lt;name&gt;Idealisierter Jahres Vegetationszyklus&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Idealisierter Jahres Vegetationszyklus"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0&lt;/valueArray&gt;
@@ -3053,7 +3093,7 @@
     &lt;valueArray separator=";"&gt;0.6;0.6;0.6;0.6;0.6;0.65;0.65;0.65;0.65;0.7;0.65;0.65;0.65&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T12:00:00;2001-05-15T12:00:00;2001-06-15T12:00:00;2001-07-15T12:00:00;2001-08-15T12:00:00;2001-09-15T12:00:00;2001-10-15T12:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T13:00:00;2000-12-15T13:00:00;2001-01-15T13:00:00;2001-02-15T13:00:00;2001-03-15T13:00:00;2001-04-15T13:00:00;2001-05-15T13:00:00;2001-06-15T13:00:00;2001-07-15T13:00:00;2001-08-15T13:00:00;2001-09-15T13:00:00;2001-10-15T13:00:00;2001-11-15T13:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -3068,7 +3108,7 @@
   &lt;name&gt;Idealisierter Jahres Vegetationszyklus&lt;/name&gt;
   &lt;metadataList&gt;
     &lt;metadata name="Name" value="Idealisierter Jahres Vegetationszyklus"/&gt;
-    &lt;metadata name="Zeitzone" value="GMT"/&gt;
+    &lt;metadata name="Zeitzone" value="GMT+01:00"/&gt;
   &lt;/metadataList&gt;
   &lt;axis name="Cropfactor" type="KC" unit="-" key="false" datatype="TYPE=double"&gt;
     &lt;valueArray separator=";"&gt;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0;2.0&lt;/valueArray&gt;
@@ -3080,7 +3120,7 @@
     &lt;valueArray separator=";"&gt;0.3;0.3;0.3;0.3;0.3;0.3;0.3;0.3;0.3;0.3;0.3;0.3;0.3&lt;/valueArray&gt;
   &lt;/axis&gt;
   &lt;axis name="Datum" type="date" unit="" key="true" datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss"&gt;
-    &lt;valueArray separator=";"&gt;2000-11-15T12:00:00;2000-12-15T12:00:00;2001-01-15T12:00:00;2001-02-15T12:00:00;2001-03-15T12:00:00;2001-04-15T12:00:00;2001-05-15T12:00:00;2001-06-15T12:00:00;2001-07-15T12:00:00;2001-08-15T12:00:00;2001-09-15T12:00:00;2001-10-15T12:00:00;2001-11-15T12:00:00&lt;/valueArray&gt;
+    &lt;valueArray separator=";"&gt;2000-11-15T13:00:00;2000-12-15T13:00:00;2001-01-15T13:00:00;2001-02-15T13:00:00;2001-03-15T13:00:00;2001-04-15T13:00:00;2001-05-15T13:00:00;2001-06-15T13:00:00;2001-07-15T13:00:00;2001-08-15T13:00:00;2001-09-15T13:00:00;2001-10-15T13:00:00;2001-11-15T13:00:00&lt;/valueArray&gt;
   &lt;/axis&gt;
 &lt;/observation&gt;
 </idealLandUseZML>
@@ -3289,6 +3329,41 @@
    <m_vers>0.0</m_vers>
   </Sealing>
  </sealingMember>
+ <sealingMember>
+  <Sealing gml:id="Sealing134019716815290">
+   <gml:description>DRWBM-Maßnahme Entsiegelung Fugenpflaster</gml:description>
+   <gml:name>ent_fug</gml:name>
+   <m_vers/>
+  </Sealing>
+ </sealingMember>
+ <sealingMember>
+  <Sealing gml:id="Sealing134019716674247">
+   <gml:description>DRWBM-Maßnahme Entsiegelung Kies- bzw. Splittdecken</gml:description>
+   <gml:name>ent_kies</gml:name>
+   <m_vers>0.6</m_vers>
+  </Sealing>
+ </sealingMember>
+ <sealingMember>
+  <Sealing gml:id="Sealing1340197167640221">
+   <gml:description>DRWBM-Maßnahme Entsiegelung Porenstein</gml:description>
+   <gml:name>ent_por</gml:name>
+   <m_vers>0.25</m_vers>
+  </Sealing>
+ </sealingMember>
+ <sealingMember>
+  <Sealing gml:id="Sealing134019716631489">
+   <gml:description>DRWBM-Maßnahme Entsiegelung: Rasengittersteine</gml:description>
+   <gml:name>ent_ras</gml:name>
+   <m_vers>0.15</m_vers>
+  </Sealing>
+ </sealingMember>
+ <sealingMember>
+  <Sealing gml:id="Sealing1340197167145160">
+   <gml:description>DRWBM-Maßnahme Entsiegelung Schotterrasen</gml:description>
+   <gml:name>ent_scho</gml:name>
+   <m_vers>0.3</m_vers>
+  </Sealing>
+ </sealingMember>
  <drwbmDefinitionMember>
   <DRWBMDefinition gml:id="DRWBMDefinition1339408501177224">
    <gml:description>DRWBM-Maßnahme</gml:description>
@@ -3335,6 +3410,46 @@
    <gml:name>Mulde 4.0</gml:name>
    <soilLayerLink xlink:href="#DRWBMSoiltype1339407403481440"/>
    <landuseclassLink xlink:href="#Landuse1339408377777407"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition134019690904947">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Entsiegelung: Rasengittersteine</gml:name>
+   <soilLayerLink/>
+   <landuseclassLink xlink:href="#Landuse134019702746727"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1340196909794162">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Entsiegelung: Kies- bzw. Splittdecken</gml:name>
+   <soilLayerLink/>
+   <landuseclassLink xlink:href="#Landuse1340197028491218"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1340196910978199">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Entsiegelung: Schotterrasen</gml:name>
+   <soilLayerLink/>
+   <landuseclassLink xlink:href="#Landuse1340197029091275"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition1340196911610166">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Entsiegelung: Porenstein</gml:name>
+   <soilLayerLink/>
+   <landuseclassLink xlink:href="#Landuse1340197029947226"/>
+  </DRWBMDefinition>
+ </drwbmDefinitionMember>
+ <drwbmDefinitionMember>
+  <DRWBMDefinition gml:id="DRWBMDefinition134019691213076">
+   <gml:description>DRWBM-Maßnahme</gml:description>
+   <gml:name>Entsiegelung: Fugenpflaster</gml:name>
+   <soilLayerLink/>
+   <landuseclassLink xlink:href="#Landuse1340197030538228"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
  <drwbmDefinitionMember>
