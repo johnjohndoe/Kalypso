@@ -63,12 +63,6 @@
 				%org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard.description
 		</description>
 		</wizard>
-		<wizard
-            class="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
-            icon="icons/kalypso_gmt.gif"
-            id="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
-            name="BaseMap"
-            project="false"/>
 	  	<category
             id="org.kalypso.kalypsosimulationmodel.ui.shapeimportwizards"
             name="Kalypso import wizards"/>

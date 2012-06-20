@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.imports.baseMap;
+package org.kalypso.kalypsosimulationmodel.internal.ui.map;
 
 import java.io.File;
 

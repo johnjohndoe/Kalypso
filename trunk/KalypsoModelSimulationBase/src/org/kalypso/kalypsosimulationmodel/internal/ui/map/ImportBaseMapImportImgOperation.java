@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.imports.baseMap;
+package org.kalypso.kalypsosimulationmodel.internal.ui.map;
 
 import java.io.File;
 import java.net.URL;
@@ -54,9 +54,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.grid.WorldFileReader;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.action.AddThemeCommand;
-import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
  * @author Gernot Belger
