@@ -257,6 +257,10 @@
                  commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
                  style="push">
            </command>
+           <command
+                 commandId="org.kalypso.ui.rrm.internal.open.diagramm.with.grafik.exe"
+                 style="push">
+           </command>
            <separator
                  name="diagram.view.seperator1"
                  visible="true">
@@ -610,7 +614,7 @@
       <handler class="org.kalypso.ui.rrm.internal.modelConstruction.CompleteNetElementsTaskHandler" commandId="org.kalypso.model.rrm.completeNetElements"/>
 
       <handler class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsTaskHandler" commandId="org.kalypso.model.rrm.catchmentModels"/>
-      
+
       <handler class="org.kalypso.ui.rrm.internal.calibration.EditCalibrationTaskHandler" commandId="org.kalypso.model.rrm.editCalibration"/>
       <handler class="org.kalypso.ui.rrm.internal.results.output.management.ResultOutputManagementTaskHandler" commandId="org.kalypso.model.rrm.simulationResultOutputManagement"/>
       <handler class="org.kalypso.ui.rrm.internal.simulations.SimulationManagementTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement"/>
@@ -995,7 +999,7 @@
     </menuContribution>
     <menuContribution locationURI="popup:org.kalypso.afgui.breadcrumbs?after=additions">
        <command commandId="org.kalypso.model.rrm.MergeScenariosCommand">
-          <visibleWhen checkEnabled="true"/> 
+          <visibleWhen checkEnabled="true"/>
        </command>
     </menuContribution>
  </extension>
