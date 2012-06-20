@@ -3,7 +3,7 @@ package org.kalypso.kalypsosimulationmodel.core.roughness;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
