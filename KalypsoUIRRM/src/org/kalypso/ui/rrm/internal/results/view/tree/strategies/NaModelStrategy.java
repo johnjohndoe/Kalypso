@@ -185,7 +185,7 @@ public class NaModelStrategy implements ITreeNodeStrategy
         calculationResultNode.addChild( doAddStorageChannels( model.getChannels(), calculationResultNode, simulation, calculation, resultCategories ) );
 
         if( !resultCategories.isEmpty() )
-          calculationResultNode.addChild( doAddResultCategories( resultCategories, calculationResultNode, simulation, calculation ) );
+          doAddResultCategories( resultCategories, calculationResultNode, simulation, calculation );
 
         calcCase.addChild( calculationResultNode );
       }
@@ -199,9 +199,9 @@ public class NaModelStrategy implements ITreeNodeStrategy
     return calcCase;
   }
 
-  private TreeNode doAddResultCategories( final Map<String, Set<Feature>> categories, final TreeNode parent, final RrmSimulation simulation, final RrmCalculationResult calculation )
+  private void doAddResultCategories( final Map<String, Set<Feature>> categories, final TreeNode parent, final RrmSimulation simulation, final RrmCalculationResult calculation )
   {
-    final TreeNode base = new TreeNode( parent, new ResultCategoryUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_2" ), m_view ), Messages.getString( "NaModelStrategy_3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+//    final TreeNode base = new TreeNode( parent, new ResultCategoryUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_2" ), m_view ), Messages.getString( "NaModelStrategy_3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Map<Pair<Integer, String>, TreeNode> registry = new HashMap<>();
 
@@ -211,12 +211,10 @@ public class NaModelStrategy implements ITreeNodeStrategy
       final String path = entry.getKey();
       final Set<Feature> elements = entry.getValue();
 
-      final TreeNode category = doAddResultCategries( simulation, calculation, base, path, registry );
-
+      final TreeNode category = doAddResultCategries( simulation, calculation, parent, path, registry );
       doAddResultCategories( simulation, category, calculation, elements.toArray( new Feature[] {} ) );
     }
 
-    return base;
   }
 
   private void doAddResultCategories( final RrmSimulation simulation, final TreeNode parent, final RrmCalculationResult calculation, final Feature[] elements )

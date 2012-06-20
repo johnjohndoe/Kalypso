@@ -57,19 +57,29 @@ public class ParameterSetBuilder
 {
   public class CalculationFeatureBean
   {
-    private final RrmCalculationResult m_calculation2;
+    private final RrmCalculationResult m_calculation;
 
-    private final Feature m_feature2;
+    private final Feature m_feature;
 
     public CalculationFeatureBean( final RrmCalculationResult calculation, final Feature feature )
     {
-      m_calculation2 = calculation;
-      m_feature2 = feature;
+      m_calculation = calculation;
+      m_feature = feature;
 
+    }
+
+    public RrmCalculationResult getCalculation( )
+    {
+      return m_calculation;
+    }
+
+    public Feature getFeature( )
+    {
+      return m_feature;
     }
   }
 
-  private final Feature m_feature;
+  private final CalculationFeatureBean m_bean;
 
   private final RrmSimulation m_simulation;
 
@@ -77,26 +87,23 @@ public class ParameterSetBuilder
 
   private TreeNode m_node;
 
-  private final RrmCalculationResult m_calculation;
-
   public ParameterSetBuilder( final RrmSimulation simulation, final RrmCalculationResult calculation, final Feature feature )
   {
     m_simulation = simulation;
-    m_calculation = calculation;
-    m_feature = feature;
+    m_bean = new CalculationFeatureBean( calculation, feature );
   }
 
   public void init( final TreeNode base, final DESCRIPTORS imgExisting, final DESCRIPTORS imgMissing, final DESCRIPTORS imgInvalid, final ResultManagementView view )
   {
-    m_handler = new HydrologyParameterSetUiHandler( m_simulation, m_calculation, m_feature, imgExisting, imgMissing, imgInvalid, view );
-    m_node = new TreeNode( base, m_handler, new CalculationFeatureBean( m_calculation, m_feature ) );
+    m_handler = new HydrologyParameterSetUiHandler( m_simulation, m_bean.getCalculation(), m_bean.getFeature(), imgExisting, imgMissing, imgInvalid, view );
+    m_node = new TreeNode( base, m_handler, new CalculationFeatureBean( m_bean.getCalculation(), m_bean.getFeature() ) );
 
     base.addChild( m_node );
   }
 
   public void doAddNode( final IHydrologyResultReference reference, final ResultManagementView view )
   {
-    m_node.addChild( new TreeNode( m_node, new HydrologyResultReferenceUiHandler( m_simulation, m_calculation, reference, view ), reference ) );
+    m_node.addChild( new TreeNode( m_node, new HydrologyResultReferenceUiHandler( m_simulation, m_bean.getCalculation(), reference, view ), reference ) );
     m_handler.addReferences( reference );
   }
 
