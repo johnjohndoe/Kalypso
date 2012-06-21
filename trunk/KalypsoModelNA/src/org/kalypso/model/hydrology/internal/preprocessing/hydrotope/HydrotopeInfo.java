@@ -46,9 +46,11 @@ import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.OverlayElement;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.parameter.DRWBMDefinition;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
@@ -69,7 +71,7 @@ public class HydrotopeInfo
 
   private final double m_maxPerc;
 
-  private final String m_landuseClassName;
+  private final Feature m_landuseClass;
 
   private final double m_totalSealingRate;
 
@@ -86,9 +88,10 @@ public class HydrotopeInfo
 
     m_gwFactor = calculateGWFactor();
     m_maxPerc = calculateMaxPerkolationRate();
-    m_landuseClassName = calculateLanduseClassName();
+    m_landuseClass = calculateLanduseClass();
+    m_soilType = calculateSoiltype();
+
     m_totalSealingRate = calculateTotalSealingFactor();
-    m_soilType = findSoiltype();
 
     validateAttributes();
   }
@@ -123,22 +126,48 @@ public class HydrotopeInfo
     return m_soilType;
   }
 
-  private String calculateLanduseClassName( )
+  private Feature calculateLanduseClass( ) throws NAPreprocessorException
   {
+    /* overlay always wins */
+    final DRWBMDefinition drwbm = getDrwbmDefinition();
+    if( drwbm != null )
+    {
+      final IXLinkedFeature landuseClassLink = drwbm.getLanduse();
+      if( landuseClassLink != null )
+        return landuseClassLink.getFeature();
+    }
+
+    /* Else try linked landuse */
     final Landuse linkedLanduse = getLinkedLanduse();
-
     if( linkedLanduse != null )
-      return linkedLanduse.getLanduseClassName();
+    {
+      final IXLinkedFeature landuseClassLink = linkedLanduse.getLanduse();
+      if( landuseClassLink == null )
+      {
+        final String msg = String.format( "Landuse class not set in landuse for hydrotope: '%s'.", getName() );
+        throw new NAPreprocessorException( msg );
+      }
 
-    return m_hydrotope.getLanduse();
+      return landuseClassLink.getFeature();
+    }
+
+    /* last resort, the old direct value */
+    final String landuseName = m_hydrotope.getLanduse();
+    final Feature landuseClass = m_landuseHash.getLanduseClass( landuseName );
+    if( landuseClass != null )
+      return landuseClass;
+
+    final String msg = String.format( "Missing landuse class with name '%s' for hydrotope: '%s'.", landuseName, getName() );
+    throw new NAPreprocessorException( msg );
   }
 
   private double getLanduseSealingRate( ) throws NAPreprocessorException
   {
-    final Double landuseSealing = m_landuseHash.getSealingRate( m_landuseClassName );
+    final Double landuseSealing = m_landuseHash.getSealingRate( m_landuseClass );
     if( landuseSealing == null )
     {
-      final String msg = String.format( "Unknown landuse: '%s' for hydrotope '%s'.", m_landuseClassName, getName() );
+      final String landuseName = m_landuseClass.getName();
+      final String msg = String.format( "Missing sealing rate in landuse '%s' for hydrotope '%s'.", landuseName, getName() );
       throw new NAPreprocessorException( msg );
     }
 
@@ -147,6 +176,16 @@ public class HydrotopeInfo
 
   private double calculateMaxPerkolationRate( ) throws NAPreprocessorException
   {
+    /* overlay always wins */
+    final DRWBMDefinition drwbm = getDrwbmDefinition();
+    if( drwbm != null )
+    {
+      final Double maxPercolationRate = drwbm.getMaxPercolationRate();
+      if( maxPercolationRate != null )
+        return maxPercolationRate;
+    }
+
+    /* No overlay, use correctionFactor * geology-value */
     final double maxPercCorrection = getMaxPercCorrection();
 
     final Geology linkedGeology = getLinkedGeology();
@@ -182,6 +221,15 @@ public class HydrotopeInfo
 
   private double calculateGWFactor( ) throws NAPreprocessorException
   {
+    /* overlay always wins */
+    final DRWBMDefinition drwbm = getDrwbmDefinition();
+    if( drwbm != null )
+    {
+      final Double gwFactor = drwbm.getGWFactor();
+      if( gwFactor != null )
+        return gwFactor;
+    }
+
     final double gwInflowCorrection = getGwInflowCorrection();
 
     final Geology linkedGeology = getLinkedGeology();
@@ -215,8 +263,18 @@ public class HydrotopeInfo
     return linkedCatchment.getCorrGwInflowRate();
   }
 
-  private Soiltype findSoiltype( ) throws NAPreprocessorException
+  private Soiltype calculateSoiltype( ) throws NAPreprocessorException
   {
+    /* overlay always wins */
+    final DRWBMDefinition drwbm = getDrwbmDefinition();
+    if( drwbm != null )
+    {
+      final IXLinkedFeature soiltypeLink = drwbm.getSoiltype();
+      if( soiltypeLink != null )
+        return (Soiltype) soiltypeLink.getFeature();
+    }
+
+    /* use link to pedology */
     final SoilType linkedPedology = getLinkedPedology();
     if( linkedPedology != null )
     {
@@ -228,6 +286,7 @@ public class HydrotopeInfo
       throw new NAPreprocessorException( msg );
     }
 
+    /* last resort, use direct value in hydrotope */
     final String soilTypeID = m_hydrotope.getSoilType();
     final Soiltype soiltype = m_landuseHash.getSoilType( soilTypeID );
     if( soiltype != null )
@@ -247,7 +306,7 @@ public class HydrotopeInfo
     if( area != null )
       return area;
 
-    final String msg = String.format( Messages.getString("HydrotopeInfo.0"), getName() ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "HydrotopeInfo.0" ), getName() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
   }
 
@@ -285,9 +344,7 @@ public class HydrotopeInfo
 
   public String getLanduseShortName( )
   {
-    final String landuseClassName = calculateLanduseClassName();
-
-    return m_landuseHash.getLanduseFeatureShortedName( landuseClassName );
+    return m_landuseHash.getLanduseFeatureShortedName( m_landuseClass );
   }
 
   public void addArea( final HydrotopeInfo hydrotopInfo )
@@ -301,13 +358,13 @@ public class HydrotopeInfo
 
     buffer.append( m_gwFactor );
     buffer.append( '#' );
-    buffer.append( m_landuseClassName );
+    buffer.append( m_landuseClass.getId() );
     buffer.append( '#' );
     buffer.append( m_maxPerc );
     buffer.append( '#' );
     buffer.append( m_totalSealingRate );
     buffer.append( '#' );
-    buffer.append( m_soilType.getName() );
+    buffer.append( m_soilType.getId() );
 
     return buffer.toString();
   }
@@ -370,6 +427,19 @@ public class HydrotopeInfo
       return null;
 
     return (OverlayElement) overlayLink.getFeature();
+  }
+
+  private DRWBMDefinition getDrwbmDefinition( )
+  {
+    final OverlayElement overlay = getLinkedOverlay();
+    if( overlay == null )
+      return null;
+
+    final IXLinkedFeature drwbmDefinitionLink = overlay.getDRWBMDefinition();
+    if( drwbmDefinitionLink == null )
+      return null;
+
+    return (DRWBMDefinition) drwbmDefinitionLink.getFeature();
   }
 
   public void validateAttributes( ) throws NAPreprocessorException

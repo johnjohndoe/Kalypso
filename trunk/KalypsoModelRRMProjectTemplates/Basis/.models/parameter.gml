@@ -704,7 +704,6 @@
      <overflowHeight>70.0</overflowHeight>
      <areaPerOutlet>300.0</areaPerOutlet>
      <widthOfArea>60.0</widthOfArea>
-     <isSealed>false</isSealed>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -720,7 +719,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -736,7 +734,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>0.0</widthOfArea>
-     <isSealed>true</isSealed>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -758,7 +755,6 @@
      <overflowHeight>35.0</overflowHeight>
      <areaPerOutlet>300.0</areaPerOutlet>
      <widthOfArea>60.0</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -774,7 +770,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -790,7 +785,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>0.0</widthOfArea>
-     <isSealed>true</isSealed>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -812,7 +806,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>1.8</widthOfArea>
-     <isSealed>false</isSealed>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -828,7 +821,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -844,7 +836,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -866,7 +857,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>1.8</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -882,7 +872,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -898,7 +887,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>0.0</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -914,7 +902,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -936,7 +923,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>1.8</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -952,7 +938,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -968,7 +953,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>0.0</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -984,7 +968,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -1006,7 +989,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>1.8</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1022,7 +1004,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1038,7 +1019,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>0.0</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1054,7 +1034,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -1076,7 +1055,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>1.8</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1092,7 +1070,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1108,7 +1085,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>0.0</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1124,7 +1100,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -1146,7 +1121,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>1.8</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1162,7 +1136,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1178,7 +1151,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -1200,7 +1172,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>1.8</widthOfArea>
-     <isSealed>false</isSealed>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1216,7 +1187,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1232,7 +1202,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -1254,7 +1223,6 @@
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
      <widthOfArea>1.8</widthOfArea>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1270,7 +1238,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1286,7 +1253,6 @@
      <overflowHeight/>
      <areaPerOutlet/>
      <widthOfArea/>
-     <isSealed/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -3368,7 +3334,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1339408501177224">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Gründach Intensiv</gml:name>
-   <soilLayerLink xlink:href="#DRWBMSoiltype1339407169031438"/>
+   <soiltypeLink xlink:href="#DRWBMSoiltype1339407169031438"/>
    <landuseclassLink xlink:href="#Landuse1339408380585498"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3376,7 +3342,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1339408522424307">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Gründach Extensiv</gml:name>
-   <soilLayerLink xlink:href="#DRWBMSoiltype1339407062108216"/>
+   <soiltypeLink xlink:href="#DRWBMSoiltype1339407062108216"/>
    <landuseclassLink xlink:href="#Landuse1339408379080393"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3384,7 +3350,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1339408522912183">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Mude-Rigole 4.0</gml:name>
-   <soilLayerLink xlink:href="#DRWBMSoiltype1339407220571639"/>
+   <soiltypeLink xlink:href="#DRWBMSoiltype1339407220571639"/>
    <landuseclassLink xlink:href="#Landuse1339408378256669"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3392,7 +3358,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1339408523942201">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Mulde 6.0</gml:name>
-   <soilLayerLink xlink:href="#DRWBMSoiltype1339407402569513"/>
+   <soiltypeLink xlink:href="#DRWBMSoiltype1339407402569513"/>
    <landuseclassLink xlink:href="#Landuse1339408377777407"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3400,7 +3366,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1339408524504444">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Mulde 3.0</gml:name>
-   <soilLayerLink xlink:href="#DRWBMSoiltype1339407403056370"/>
+   <soiltypeLink xlink:href="#DRWBMSoiltype1339407403056370"/>
    <landuseclassLink xlink:href="#Landuse1339408377777407"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3408,7 +3374,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1339408525062577">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Mulde 4.0</gml:name>
-   <soilLayerLink xlink:href="#DRWBMSoiltype1339407403481440"/>
+   <soiltypeLink xlink:href="#DRWBMSoiltype1339407403481440"/>
    <landuseclassLink xlink:href="#Landuse1339408377777407"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3416,7 +3382,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition134019690904947">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Entsiegelung: Rasengittersteine</gml:name>
-   <soilLayerLink/>
+   <soiltypeLink/>
    <landuseclassLink xlink:href="#Landuse134019702746727"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3424,7 +3390,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1340196909794162">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Entsiegelung: Kies- bzw. Splittdecken</gml:name>
-   <soilLayerLink/>
+   <soiltypeLink/>
    <landuseclassLink xlink:href="#Landuse1340197028491218"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3432,7 +3398,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1340196910978199">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Entsiegelung: Schotterrasen</gml:name>
-   <soilLayerLink/>
+   <soiltypeLink/>
    <landuseclassLink xlink:href="#Landuse1340197029091275"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3440,7 +3406,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1340196911610166">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Entsiegelung: Porenstein</gml:name>
-   <soilLayerLink/>
+   <soiltypeLink/>
    <landuseclassLink xlink:href="#Landuse1340197029947226"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3448,7 +3414,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition134019691213076">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Entsiegelung: Fugenpflaster</gml:name>
-   <soilLayerLink/>
+   <soiltypeLink/>
    <landuseclassLink xlink:href="#Landuse1340197030538228"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3456,7 +3422,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition133940852564072">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Mulde-Rigole 8.0</gml:name>
-   <soilLayerLink xlink:href="#DRWBMSoiltype1339407284372148"/>
+   <soiltypeLink xlink:href="#DRWBMSoiltype1339407284372148"/>
    <landuseclassLink xlink:href="#Landuse1339408378256669"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3464,7 +3430,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1339408526280225">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Mulde-Rigole 6.0</gml:name>
-   <soilLayerLink xlink:href="#DRWBMSoiltype1339407284997251"/>
+   <soiltypeLink xlink:href="#DRWBMSoiltype1339407284997251"/>
    <landuseclassLink xlink:href="#Landuse1339408378256669"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>
@@ -3472,7 +3438,7 @@
   <DRWBMDefinition gml:id="DRWBMDefinition1339408502217357">
    <gml:description>DRWBM-Maßnahme</gml:description>
    <gml:name>Mulde-Rigole 3.0</gml:name>
-   <soilLayerLink xlink:href="#DRWBMSoiltype133940728540426"/>
+   <soiltypeLink xlink:href="#DRWBMSoiltype133940728540426"/>
    <landuseclassLink xlink:href="#Landuse1339408378256669"/>
   </DRWBMDefinition>
  </drwbmDefinitionMember>

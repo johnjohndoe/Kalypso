@@ -132,7 +132,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
         buffer.append( String.format( Locale.US, "%-8s%.1f %.1f", parameter.getName(), parameter.getThickness(), parameter.isInterflowFloat() ) ); //$NON-NLS-1$
 
         // additional drwbm soil type parameters
-        buffer.append( String.format( Locale.US, " %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f", parameter.getPipeDiameter(), parameter.getPipeRoughness(), parameter.getDrainagePipeKfValue(), parameter.getDrainagePipeSlope(), parameter.getOverflowHeight(), parameter.getAreaPerOutlet(), parameter.getWidthOfArea(), parameter.isSealedFloat() ) ); //$NON-NLS-1$
+        buffer.append( String.format( Locale.US, " %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f", parameter.getPipeDiameter(), parameter.getPipeRoughness(), parameter.getDrainagePipeKfValue(), parameter.getDrainagePipeSlope(), parameter.getOverflowHeight(), parameter.getAreaPerOutlet(), parameter.getWidthOfArea() ) ); //$NON-NLS-1$
         buffer.append( "\n" ); //$NON-NLS-1$
       }
     }

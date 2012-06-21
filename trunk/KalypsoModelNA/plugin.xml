@@ -317,6 +317,8 @@
               class="org.kalypso.model.hydrology.binding.parameter.SoilLayerParameter"
               qname="{http://www.tuhh.de/parameter}SoilLayerParameter">
         </feature>
+        <feature class="org.kalypso.model.hydrology.binding.parameter.DRWBMDefinition" qname="{http://www.tuhh.de/parameter}DRWBMDefinition">
+        </feature>
         <feature
               class="org.kalypso.model.hydrology.binding.parameter.DRWBMSoiltype"
               qname="{http://www.tuhh.de/parameter}DRWBMSoiltype">

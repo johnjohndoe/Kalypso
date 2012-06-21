@@ -71,8 +71,6 @@ public class DRWBMSoilLayerParameter extends SoilLayerParameter
 
   public static final QName PROPERTY_WIDTH_OF_AREA = new QName( NS_NAPARAMETER, "widthOfArea" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_IS_SEALED = new QName( NS_NAPARAMETER, "isSealed" ); //$NON-NLS-1$
-
   public DRWBMSoilLayerParameter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -111,18 +109,5 @@ public class DRWBMSoilLayerParameter extends SoilLayerParameter
   public Double getWidthOfArea( )
   {
     return getProperty( PROPERTY_WIDTH_OF_AREA, Double.class );
-  }
-
-  public Boolean isSealed( )
-  {
-    return getProperty( PROPERTY_IS_SEALED, Boolean.class );
-  }
-
-  public float isSealedFloat( )
-  {
-    if( isSealed() )
-      return 1.0f;
-
-    return 0.0f;
   }
 }
