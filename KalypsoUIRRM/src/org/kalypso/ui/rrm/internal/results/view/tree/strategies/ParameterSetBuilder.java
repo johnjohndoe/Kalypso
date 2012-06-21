@@ -44,6 +44,7 @@ import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
+import org.kalypso.ui.rrm.internal.results.view.base.CalculationFeatureBean;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyParameterSetUiHandler;
 import org.kalypso.ui.rrm.internal.results.view.tree.handlers.HydrologyResultReferenceUiHandler;
@@ -55,30 +56,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ParameterSetBuilder
 {
-  public class CalculationFeatureBean
-  {
-    private final RrmCalculationResult m_calculation;
-
-    private final Feature m_feature;
-
-    public CalculationFeatureBean( final RrmCalculationResult calculation, final Feature feature )
-    {
-      m_calculation = calculation;
-      m_feature = feature;
-
-    }
-
-    public RrmCalculationResult getCalculation( )
-    {
-      return m_calculation;
-    }
-
-    public Feature getFeature( )
-    {
-      return m_feature;
-    }
-  }
-
   private final CalculationFeatureBean m_bean;
 
   private final RrmSimulation m_simulation;

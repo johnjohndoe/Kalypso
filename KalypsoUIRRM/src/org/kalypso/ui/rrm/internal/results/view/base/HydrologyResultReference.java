@@ -101,15 +101,15 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     // FIXME i18n - english project template
 
       case eCatchment:
-        m_file = m_calculation.getFolder().getFile( String.format( "/Teilgebiet/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
+        m_file = getCalculation().getFolder().getFile( String.format( "/Teilgebiet/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
         break;
 
       case eNode:
-        m_file = m_calculation.getFolder().getFile( String.format( "/Knoten/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
+        m_file = getCalculation().getFolder().getFile( String.format( "/Knoten/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
         break;
 
       case eStorage:
-        m_file = m_calculation.getFolder().getFile( String.format( "/SpeicherStrang/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
+        m_file = getCalculation().getFolder().getFile( String.format( "/SpeicherStrang/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
         break;
 
       default:
@@ -257,8 +257,8 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     final String parent = m_parent.getName();
     final String label = getType().getLabel();
 
-    if( m_calculation != null )
-      return String.format( "%s (%s): %s\r\n%s", simulation, m_calculation.getName(), parent, label ); //$NON-NLS-1$
+    if( getCalculation() != null )
+      return String.format( "%s (%s): %s\r\n%s", simulation, getCalculation().getName(), parent, label ); //$NON-NLS-1$
 
     return String.format( "%s: %s\r\n%s", simulation, parent, label ); //$NON-NLS-1$
   }
@@ -343,5 +343,10 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
   public boolean isCalcualtionInput( )
   {
     return m_calculationInput;
+  }
+
+  public RrmCalculationResult getCalculation( )
+  {
+    return m_calculation;
   }
 }
