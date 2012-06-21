@@ -37,8 +37,8 @@
                     <kapp:documentReference>parameter.gml</kapp:documentReference>
                   </appinfo>
                 </annotation>
-                <sequence minOccurs="0" maxOccurs="0">
-                  <element ref="par:DRWBMDefinition" />
+                <sequence>
+                  <element ref="par:DRWBMDefinition" minOccurs="0" maxOccurs="0"/>
                 </sequence>
                 <attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
               </complexType>
