@@ -60,6 +60,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
@@ -74,6 +75,7 @@ import org.kalypso.ui.rrm.internal.simulations.actions.DeleteRrmCalcualtionActio
 import org.kalypso.ui.rrm.internal.simulations.actions.DeleteRrmCalcualtionsAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
+import org.kalypso.ui.rrm.internal.simulations.actions.RenameRrmCalcualtionAction;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypsodeegree.model.feature.Feature;
@@ -143,6 +145,8 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_5" ), Messages.getString( "AbstractResultTreeNodeUiHandler_6" ), m_calculation.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), m_calculation.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
+      actions.add( new RenameRrmCalcualtionAction( getView(), m_calculation ) );
+
       final RrmCalculationResult[] calculations = doFindCalculations( m_view.getSelection() );
       if( ArrayUtils.isNotEmpty( calculations ) )
         actions.add( new DeleteRrmCalcualtionAction( getView(), calculations ) );
@@ -150,10 +154,14 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     else
       actions.add( new DeleteRrmCalcualtionsAction( getSimulation(), getView() ) );
 
+    final Composite body = toolkit.createComposite( actionPanel );
+    body.setLayout( Layouts.createGridLayout( 2, true ) );
+    body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
     /* Create the image hyperlinks. */
     for( final Action action : actions )
     {
-      final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, actionPanel, SWT.NONE, action );
+      final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, body, SWT.NONE, action );
       imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       imageHyperlink.setText( action.getText() );
 
