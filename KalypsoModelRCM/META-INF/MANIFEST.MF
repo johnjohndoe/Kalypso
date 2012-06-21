@@ -4,7 +4,7 @@ Bundle-Name: Kalypso Rainfall-Catchment-Model
 Bundle-SymbolicName: org.kalypso.model.rcm;singleton:=true
 Bundle-Version: 11.6.5.qualifier
 Bundle-Activator: org.kalypso.model.rcm.internal.KalypsoModelRcmActivator
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.eclipse.ant.core,
  org.eclipse.core.runtime,
  org.eclipse.ui,
