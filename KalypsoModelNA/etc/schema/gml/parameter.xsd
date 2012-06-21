@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
-<schema xmlns:par="http://www.tuhh.de/parameter" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.8">
+<schema xmlns:par="http://www.tuhh.de/parameter" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" xmlns:ht="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" targetNamespace="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.8">
 
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="obslink.zml.kalypso.org" />
   <import namespace="inline.zml.kalypso.org" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" />
 
   <element name="Parameter" substitutionGroup="gml:_Feature">
     <complexType>
@@ -347,8 +348,10 @@
       <complexContent>
         <extension base="gml:AbstractFeatureType">
           <sequence>
-            <element name="soilLayerLink" type="par:DRWBMSoilLayerLinkType" />
-            <element name="landuseclassLink" type="par:DRWBMLanduseLinkType" />
+            <element name="soilLayerLink" type="par:DRWBMSoilLayerLinkType" minOccurs="0"/>
+            <element name="landuseclassLink" type="par:DRWBMLanduseLinkType" minOccurs="0" />
+            <element name="maxPerc" type="ht:maxPercType" minOccurs="0"/>
+            <element name="gwInflowRate" type="ht:gwInflowRateType" minOccurs="0"/>
           </sequence>
         </extension>
       </complexContent>
