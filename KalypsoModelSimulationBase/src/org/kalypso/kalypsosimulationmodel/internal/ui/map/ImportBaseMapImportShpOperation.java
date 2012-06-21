@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.wizard.shape.ImportShapeFileData;
 import org.kalypso.ui.wizard.shape.ImportShapeFileData.StyleImport;
@@ -136,8 +137,8 @@ public class ImportBaseMapImportShpOperation implements IImportBaseMapOperation
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final IContainer destinationFolder = m_dstFileShape.getParent();
-    if( destinationFolder instanceof IFolder && !destinationFolder.exists() )
-      ((IFolder) destinationFolder).create( true, true, monitor );
+
+    FolderUtilities.mkdirs( destinationFolder );
 
     ImportBaseMapUtils.copy( m_srcFileShape, m_dstFileShape, monitor );
     ImportBaseMapUtils.copy( m_srcFileIndex, m_dstFileIndex, monitor );
