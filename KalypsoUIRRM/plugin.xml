@@ -97,7 +97,7 @@
 			    -->
 					<iterate ifEmpty="false" operator="and">
 					    <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
-						  <test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>
+						  <test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2}Landuse"/>
 					    </adapt>
 					</iterate>
 					<!-- FIXME: introduce context/source for gis-table and implement tester against it
@@ -126,7 +126,7 @@
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
                         <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
-						  <test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
+						  <test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geology}Geology"/>
                         </adapt>
 					</iterate>
 				</and>
