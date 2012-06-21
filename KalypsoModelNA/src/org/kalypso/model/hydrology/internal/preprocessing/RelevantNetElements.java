@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
@@ -77,15 +76,6 @@ public class RelevantNetElements
   {
     if( !m_catchments.contains( channel ) )
       m_catchments.add( channel );
-  }
-
-  public boolean containsChannel( final Channel channel )
-  {
-    /*
-     * FIXME - m_channels contains list of net elements (.equals(), .hashId() not overwritten) - so a channel will never
-     * exists in the list
-     */
-    return m_channels.contains( channel );
   }
 
   public boolean containsCatchment( final Catchment catchment )
