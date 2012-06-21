@@ -41,12 +41,12 @@
 package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
@@ -71,11 +71,9 @@ import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 import org.kalypso.ui.rrm.internal.results.view.base.CalculationFeatureBean;
 import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.RrmResultBean;
-import org.kalypso.ui.rrm.internal.simulations.actions.DeleteRrmCalcualtionAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.DeleteRrmCalcualtionsAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
-import org.kalypso.ui.rrm.internal.simulations.actions.RenameRrmCalcualtionAction;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypsodeegree.model.feature.Feature;
@@ -130,29 +128,26 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
   }
 
   @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
+  protected final void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    if( m_simulation == null )
+    if( getSimulation() == null )
       return;
 
     final List<Action> actions = new ArrayList<Action>();
-    if( m_calculation != null )
+    if( getCalculation() != null )
     {
-      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_1" ), Messages.getString( "AbstractResultTreeNodeUiHandler_2" ), m_calculation.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      actions.add( new OpenOutputZipAction( Messages.getString( "AbstractResultTreeNodeUiHandler_3" ), Messages.getString( "AbstractResultTreeNodeUiHandler_4" ), m_calculation.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_1" ), Messages.getString( "AbstractResultTreeNodeUiHandler_2" ), getCalculation().getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      actions.add( new OpenOutputZipAction( Messages.getString( "AbstractResultTreeNodeUiHandler_3" ), Messages.getString( "AbstractResultTreeNodeUiHandler_4" ), getCalculation().getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.",
 // m_simulation, false ) );
-      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_5" ), Messages.getString( "AbstractResultTreeNodeUiHandler_6" ), m_calculation.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), m_calculation.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_5" ), Messages.getString( "AbstractResultTreeNodeUiHandler_6" ), getCalculation().getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), getCalculation().getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      actions.add( new RenameRrmCalcualtionAction( getView(), m_calculation ) );
-
-      final RrmCalculationResult[] calculations = doFindCalculations( m_view.getSelection() );
-      if( ArrayUtils.isNotEmpty( calculations ) )
-        actions.add( new DeleteRrmCalcualtionAction( getView(), calculations ) );
     }
     else
       actions.add( new DeleteRrmCalcualtionsAction( getSimulation(), getView() ) );
+
+    Collections.addAll( actions, getAdditionalActions() );
 
     final Composite body = toolkit.createComposite( actionPanel );
     body.setLayout( Layouts.createGridLayout( 2, true ) );
@@ -171,7 +166,15 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
 
   }
 
-  private RrmCalculationResult[] doFindCalculations( final IStructuredSelection selection )
+  /**
+   * overwrite for additional actions
+   */
+  protected Action[] getAdditionalActions( )
+  {
+    return new Action[] {};
+  }
+
+  protected RrmCalculationResult[] doFindCalculations( final IStructuredSelection selection )
   {
     final Set<RrmCalculationResult> results = new LinkedHashSet<>();
 

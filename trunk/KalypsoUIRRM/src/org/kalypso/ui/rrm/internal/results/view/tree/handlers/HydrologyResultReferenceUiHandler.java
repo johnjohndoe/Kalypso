@@ -43,16 +43,12 @@ package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
@@ -97,18 +93,16 @@ public class HydrologyResultReferenceUiHandler extends AbstractResultTreeNodeUiH
   }
 
   @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
+  protected Action[] getAdditionalActions( )
   {
     try
     {
       if( m_reference.isValid() )
       {
         final URL url = m_reference.getUrl();
-        final OpenResultTimeseriesTableAction actionZmlTable = new OpenResultTimeseriesTableAction( url );
+        final OpenResultTimeseriesTableAction action = new OpenResultTimeseriesTableAction( url );
 
-        final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, actionPanel, SWT.NONE, actionZmlTable );
-        imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-        imageHyperlink.setText( actionZmlTable.getText() );
+        return new Action[] { action };
       }
     }
     catch( final MalformedURLException e )
@@ -116,7 +110,7 @@ public class HydrologyResultReferenceUiHandler extends AbstractResultTreeNodeUiH
       e.printStackTrace();
     }
 
-    super.createHyperlinks( toolkit, actionPanel );
+    return new Action[] {};
   }
 
 }
