@@ -67,11 +67,11 @@ public class RenameRrmCalcualtionAction extends Action implements IUpdateable
 
   public RenameRrmCalcualtionAction( final ResultManagementView view, final RrmCalculationResult calculation )
   {
-    super( "Rename calculation" );
+    super( "Rename Calculation" );
 
     m_view = view;
 
-    setToolTipText( "Rename caluclation" );
+    setToolTipText( getText() );
     m_calculation = calculation;
   }
 
@@ -89,7 +89,7 @@ public class RenameRrmCalcualtionAction extends Action implements IUpdateable
     final String msg = String.format( "New calculation name for calculation '%s'?", m_calculation.getName() );
 
     final IFolder srcFolder = m_calculation.getFolder();
-    final InputDialog inputDialog = new InputDialog( shell, "Rename calculation", msg, m_calculation.getName(), new NewFilenameValidator( srcFolder, true ) );
+    final InputDialog inputDialog = new InputDialog( shell, getText(), msg, m_calculation.getName(), new NewFilenameValidator( srcFolder, true ) );
     final int confirmed = inputDialog.open();
     if( confirmed != Window.OK )
       return;
@@ -107,6 +107,7 @@ public class RenameRrmCalcualtionAction extends Action implements IUpdateable
 
     /* update tree */
     m_view.refresh();
+    m_view.getTreeViewer().expandToLevel( 2 );
   }
 
   @Override

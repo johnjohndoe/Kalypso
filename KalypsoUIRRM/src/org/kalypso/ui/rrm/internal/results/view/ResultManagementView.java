@@ -92,6 +92,8 @@ public class ResultManagementView extends ViewPart
 
   private RrmScenario m_scenario;
 
+  private TreeNodeModel m_model;
+
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -178,8 +180,8 @@ public class ResultManagementView extends ViewPart
     m_scenario = scenario;
     final ITreeNodeStrategy strategy = new NaModelStrategy( scenario, this );
 
-    final TreeNodeModel input = new TreeNodeModel( strategy, m_treeViewer );
-    m_treeViewer.setInput( input );
+    m_model = new TreeNodeModel( strategy, m_treeViewer );
+    m_treeViewer.setInput( m_model );
 
     /** set tree viewer selection to it's first item! */
     new UIJob( "" ) //$NON-NLS-1$
@@ -187,7 +189,7 @@ public class ResultManagementView extends ViewPart
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        final TreeNode[] elements = input.getRootElements();
+        final TreeNode[] elements = m_model.getRootElements();
         if( ArrayUtils.isNotEmpty( elements ) )
           m_treeViewer.setSelection( new StructuredSelection( elements[0] ) );
 
@@ -200,6 +202,11 @@ public class ResultManagementView extends ViewPart
   public TreeViewer getTreeViewer( )
   {
     return m_treeViewer;
+  }
+
+  public TreeNodeModel getModel( )
+  {
+    return m_model;
   }
 
   public IRrmDiagramFilterControl getFilterControl( )

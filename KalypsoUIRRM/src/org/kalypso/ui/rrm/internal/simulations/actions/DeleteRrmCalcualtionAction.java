@@ -104,6 +104,7 @@ public class DeleteRrmCalcualtionAction extends Action implements IUpdateable
 
     /* update tree */
     m_view.refresh();
+    m_view.getTreeViewer().expandToLevel( 2 );
   }
 
   @Override
