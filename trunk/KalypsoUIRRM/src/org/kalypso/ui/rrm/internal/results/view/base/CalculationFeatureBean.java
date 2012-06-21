@@ -41,21 +41,22 @@
 package org.kalypso.ui.rrm.internal.results.view.base;
 
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
-import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT_TYPE;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public class RrmResultBean
+public class CalculationFeatureBean
 {
   private final RrmCalculationResult m_calculation;
 
-  private final RRM_RESULT_TYPE m_type;
+  private final Feature m_feature;
 
-  public RrmResultBean( final RrmCalculationResult calculation, final RRM_RESULT_TYPE type )
+  public CalculationFeatureBean( final RrmCalculationResult calculation, final Feature feature )
   {
     m_calculation = calculation;
-    m_type = type;
+    m_feature = feature;
+
   }
 
   public RrmCalculationResult getCalculation( )
@@ -63,8 +64,8 @@ public class RrmResultBean
     return m_calculation;
   }
 
-  public RRM_RESULT_TYPE getType( )
+  public Feature getFeature( )
   {
-    return m_type;
+    return m_feature;
   }
 }

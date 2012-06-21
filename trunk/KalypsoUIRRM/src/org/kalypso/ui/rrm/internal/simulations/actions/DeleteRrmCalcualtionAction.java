@@ -60,18 +60,18 @@ import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 public class DeleteRrmCalcualtionAction extends Action implements IUpdateable
 {
 
-  private final RrmCalculationResult m_calculation;
+  private final RrmCalculationResult[] m_calculations;
 
   private final ResultManagementView m_view;
 
-  public DeleteRrmCalcualtionAction( final RrmCalculationResult calculation, final ResultManagementView view )
+  public DeleteRrmCalcualtionAction( final ResultManagementView view, final RrmCalculationResult... calculations )
   {
-    super( Messages.getString("DeleteRrmCalcualtionAction_0") ); //$NON-NLS-1$
+    super( Messages.getString( "DeleteRrmCalcualtionAction_0" ) ); //$NON-NLS-1$
 
     m_view = view;
 
-    setToolTipText( Messages.getString("DeleteRrmCalcualtionAction_1") ); //$NON-NLS-1$
-    m_calculation = calculation;
+    setToolTipText( Messages.getString( "DeleteRrmCalcualtionAction_1" ) ); //$NON-NLS-1$
+    m_calculations = calculations;
   }
 
   @Override
@@ -84,18 +84,22 @@ public class DeleteRrmCalcualtionAction extends Action implements IUpdateable
   public void run( )
   {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final boolean confirmed = MessageDialog.openConfirm( shell, Messages.getString("DeleteRrmCalcualtionAction_2"), String.format( Messages.getString("DeleteRrmCalcualtionAction_3"), m_calculation.getName() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    if( !confirmed )
-      return;
 
-    try
+    for( final RrmCalculationResult calculation : m_calculations )
     {
-      final IFolder folder = m_calculation.getFolder();
-      folder.delete( true, new NullProgressMonitor() );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
+      final boolean confirmed = MessageDialog.openConfirm( shell, Messages.getString( "DeleteRrmCalcualtionAction_2" ), String.format( Messages.getString( "DeleteRrmCalcualtionAction_3" ), calculation.getName() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      if( !confirmed )
+        return;
+
+      try
+      {
+        final IFolder folder = calculation.getFolder();
+        folder.delete( true, new NullProgressMonitor() );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     /* update tree */

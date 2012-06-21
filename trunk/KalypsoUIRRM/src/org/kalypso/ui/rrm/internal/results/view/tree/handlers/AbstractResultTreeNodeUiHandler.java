@@ -41,11 +41,16 @@
 package org.kalypso.ui.rrm.internal.results.view.tree.handlers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -62,11 +67,15 @@ import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
+import org.kalypso.ui.rrm.internal.results.view.base.CalculationFeatureBean;
+import org.kalypso.ui.rrm.internal.results.view.base.HydrologyResultReference;
+import org.kalypso.ui.rrm.internal.results.view.base.RrmResultBean;
 import org.kalypso.ui.rrm.internal.simulations.actions.DeleteRrmCalcualtionAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.DeleteRrmCalcualtionsAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -129,11 +138,14 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     {
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_1" ), Messages.getString( "AbstractResultTreeNodeUiHandler_2" ), m_calculation.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       actions.add( new OpenOutputZipAction( Messages.getString( "AbstractResultTreeNodeUiHandler_3" ), Messages.getString( "AbstractResultTreeNodeUiHandler_4" ), m_calculation.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.", m_simulation, false ) );
+      // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.",
+// m_simulation, false ) );
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_5" ), Messages.getString( "AbstractResultTreeNodeUiHandler_6" ), m_calculation.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), m_calculation.getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      actions.add( new DeleteRrmCalcualtionAction( m_calculation, getView() ) );
+      final RrmCalculationResult[] calculations = doFindCalculations( m_view.getSelection() );
+      if( ArrayUtils.isNotEmpty( calculations ) )
+        actions.add( new DeleteRrmCalcualtionAction( getView(), calculations ) );
     }
     else
       actions.add( new DeleteRrmCalcualtionsAction( getSimulation(), getView() ) );
@@ -144,11 +156,43 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
       final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, actionPanel, SWT.NONE, action );
       imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       imageHyperlink.setText( action.getText() );
-      
+
       if( action instanceof IUpdateable )
         ((IUpdateable) action).update();
     }
 
+  }
+
+  private RrmCalculationResult[] doFindCalculations( final IStructuredSelection selection )
+  {
+    final Set<RrmCalculationResult> results = new LinkedHashSet<>();
+
+    final Iterator< ? > itr = selection.iterator();
+    while( itr.hasNext() )
+    {
+      final TreeNode node = (TreeNode) itr.next();
+      final Object data = node.getData();
+
+      if( data instanceof CalculationFeatureBean )
+      {
+        final CalculationFeatureBean bean = (CalculationFeatureBean) data;
+        results.add( bean.getCalculation() );
+      }
+      else if( data instanceof RrmResultBean )
+      {
+        final RrmResultBean bean = (RrmResultBean) data;
+        results.add( bean.getCalculation() );
+      }
+      else if( data instanceof HydrologyResultReference )
+      {
+        final HydrologyResultReference reference = (HydrologyResultReference) data;
+        results.add( reference.getCalculation() );
+      }
+      else if( data instanceof RrmCalculationResult )
+        results.add( (RrmCalculationResult) data );
+    }
+
+    return results.toArray( new RrmCalculationResult[] {} );
   }
 
   @Override

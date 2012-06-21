@@ -222,4 +222,9 @@ public class ResultManagementView extends ViewPart
   {
     setInput( m_scenario );
   }
+
+  public IStructuredSelection getSelection( )
+  {
+    return (IStructuredSelection) m_treeViewer.getSelection();
+  }
 }
