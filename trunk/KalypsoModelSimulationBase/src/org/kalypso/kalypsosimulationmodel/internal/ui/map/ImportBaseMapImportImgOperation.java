@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.grid.WorldFileReader;
 import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
@@ -94,6 +95,8 @@ public class ImportBaseMapImportImgOperation implements IImportBaseMapOperation
   {
     final IFolder importsFolder = m_scenarioFolder.getProject().getFolder( "imports" ); //$NON-NLS-1$
     final IFolder dstFileFolder = importsFolder.getFolder( "basemap" ); //$NON-NLS-1$
+
+    FolderUtilities.mkdirs( dstFileFolder );
 
     final File srcFileImage = new File( m_sourceLocation.toString() );
     final IFile dstFileImage = dstFileFolder.getFile( srcFileImage.getName() );
