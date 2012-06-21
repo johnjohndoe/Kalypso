@@ -89,8 +89,7 @@ public class NutzungWriter
       final List<Feature> list = (List<Feature>) parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
       for( final Feature nutzungFE : list )
       {
-        final Feature linkedIdealLanduseFE = nutzungFE.getMember( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK );
-        writeFeature( nutzungFE, linkedIdealLanduseFE, landuseHash );
+        writeFeature( nutzungFE, landuseHash );
       }
     }
     catch( final SensorException e )
@@ -100,11 +99,14 @@ public class NutzungWriter
     }
   }
 
-  private void writeFeature( final Feature feature, final Feature linkedIdealLanduseFE, final ParameterHash landuseHash ) throws IOException, SensorException
+  private void writeFeature( final Feature nutzung, final ParameterHash landuseHash ) throws IOException, SensorException
   {
-    final String nutzName = landuseHash.getLanduseFeatureShortedName( feature.getName() );
+    final String nutzName = landuseHash.getLanduseFeatureShortedName( nutzung );
     final File outputFile = new File( m_nutzungDir, nutzName + ".nuz" ); //$NON-NLS-1$
     final FileWriter writer = new FileWriter( outputFile );
+
+    final Feature linkedIdealLanduseFE = nutzung.getMember( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK );
+
     writer.write( linkedIdealLanduseFE.getName() );
     writer.write( "\nidealisierter jahresgang" );// "ideali" ist Kennung! //$NON-NLS-1$
     writer.write( "\nxxdatum     F EVA    We    BIMAX\n" ); //$NON-NLS-1$
@@ -125,7 +127,7 @@ public class NutzungWriter
     final int count = values.size();
     final int yearOffset = 2001;
     for( int row = 0; row < count; row++ )
-    {// TODO: hier evtl. noch Zeitzone berücksichtigen - außerdem mit Fortran abgleichen!!!
+    {
       final Date date = (Date) values.get( row, idleDateAxis );
       final Calendar calendar = NATimeSettings.getInstance().getCalendar( date );
 

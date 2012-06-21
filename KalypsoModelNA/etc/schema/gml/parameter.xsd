@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
-<schema xmlns:par="http://www.tuhh.de/parameter" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" xmlns:ht="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" targetNamespace="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.8">
+<schema xmlns:par="http://www.tuhh.de/parameter" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" xmlns:ht="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" targetNamespace="http://www.tuhh.de/parameter"
+  elementFormDefault="qualified" version="0.8">
 
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="obslink.zml.kalypso.org" />
@@ -317,30 +318,11 @@
             <element name="overflowHeight" type="double" />
             <element name="areaPerOutlet" type="double" />
             <element name="widthOfArea" type="double" />
-            <element name="isSealed" type="boolean" />
           </sequence>
         </extension>
       </complexContent>
     </complexType>
   </element>
-
-
-  <complexType name="DRWBMSoilLayerLinkType">
-    <sequence>
-      <!-- Set maxOccurs to 0, so only links are allowed: we get Combo-Boxes in UI -->
-      <element ref="par:DRWBMSoiltype" minOccurs="0" maxOccurs="0" />
-    </sequence>
-    <attributeGroup ref="gml:AssociationAttributeGroup" />
-  </complexType>
-
-  <complexType name="DRWBMLanduseLinkType">
-    <sequence>
-      <!-- Set maxOccurs to 0, so only links are allowed: we get Combo-Boxes in UI -->
-      <element ref="par:Landuse" minOccurs="0" maxOccurs="0" />
-    </sequence>
-    <attributeGroup ref="gml:AssociationAttributeGroup" />
-  </complexType>
-
 
   <!-- DRWBM Definition -->
   <element name="DRWBMDefinition" substitutionGroup="gml:_Feature">
@@ -348,10 +330,27 @@
       <complexContent>
         <extension base="gml:AbstractFeatureType">
           <sequence>
-            <element name="soilLayerLink" type="par:DRWBMSoilLayerLinkType" minOccurs="0"/>
-            <element name="landuseclassLink" type="par:DRWBMLanduseLinkType" minOccurs="0" />
-            <element name="maxPerc" type="ht:maxPercType" minOccurs="0"/>
-            <element name="gwInflowRate" type="ht:gwInflowRateType" minOccurs="0"/>
+            <element name="soiltypeLink" minOccurs="0">
+              <complexType>
+                <sequence>
+                  <!-- Set maxOccurs to 0, so only links are allowed: we get Combo-Boxes in UI -->
+                  <element ref="par:DRWBMSoiltype" minOccurs="0" maxOccurs="0" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+
+            <element name="landuseclassLink" minOccurs="0">
+              <complexType>
+                <sequence>
+                  <element ref="par:Landuse" minOccurs="0" maxOccurs="0" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+            
+            <element name="maxPerc" type="ht:maxPercType" minOccurs="0" />
+            <element name="gwInflowRate" type="ht:gwInflowRateType" minOccurs="0" />
           </sequence>
         </extension>
       </complexContent>
