@@ -814,7 +814,7 @@ public class CatchmentModelHelper
         collector.add( IStatus.WARNING, Messages.getString("CatchmentModelHelper_18"), null, percent, differences ); //$NON-NLS-1$
       }
 
-      return collector.asMultiStatus( statusLabel );
+      return collector.asMultiStatusOrOK( statusLabel, statusLabel );
     }
     catch( final Exception ex )
     {

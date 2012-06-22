@@ -72,8 +72,6 @@ public class CalcCasesConverter extends AbstractLoggingOperation
   private final GlobalConversionData m_globalData;
 
   /**
-   * The constructor.
-   * 
    * @param globalData
    *          The global conversion data.
    */
@@ -84,9 +82,6 @@ public class CalcCasesConverter extends AbstractLoggingOperation
     m_globalData = globalData;
   }
 
-  /**
-   * @see org.kalypso.module.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws InterruptedException
   {

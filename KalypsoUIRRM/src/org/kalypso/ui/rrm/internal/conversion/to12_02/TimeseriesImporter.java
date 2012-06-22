@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -264,9 +265,12 @@ public class TimeseriesImporter
     final LocalTime timestamp = TimeseriesUtils.guessTimestamp( values, timestep );
 
     final RepairTimeseriesOperation repair = new RepairTimeseriesOperation( observation, timestep, timestamp, zmlFile.getName() );
-    stati.add( repair.execute( new NullProgressMonitor() ) );
+    final MultiStatus repairStatus = repair.execute( new NullProgressMonitor() );
+    /* add all children to avoid too deep status hierarchy */
+    stati.addAll( Arrays.asList( repairStatus.getChildren() ) );
 
     observation = repair.getObservation();
+
     /* Assign station and timeseries parameters. */
     final String stationDescription = baseName;
     final String timeseriesDescription = baseName;

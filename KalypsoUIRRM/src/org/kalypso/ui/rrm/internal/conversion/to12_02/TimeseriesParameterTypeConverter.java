@@ -74,7 +74,6 @@ public class TimeseriesParameterTypeConverter extends AbstractLoggingOperation
 
     final File timeseriesDirectory = new File( targetDir, INaProjectConstants.PATH_TIMESERIES );
     m_stationsFile = new File( timeseriesDirectory, INaProjectConstants.GML_STATIONS );
-
   }
 
   @Override

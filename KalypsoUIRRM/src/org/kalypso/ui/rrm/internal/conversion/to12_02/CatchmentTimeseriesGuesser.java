@@ -163,7 +163,8 @@ public class CatchmentTimeseriesGuesser
 
   private TimeseriesIndexEntry guessByFilename( )
   {
-    m_log.add( IStatus.INFO, Messages.getString( "CatchmentTimeseriesGuesser_4" ) ); //$NON-NLS-1$
+    // Removed log, we only do this kind of guess
+    // m_log.add( IStatus.INFO, Messages.getString( "CatchmentTimeseriesGuesser_4" ) ); //$NON-NLS-1$
 
     final String existingTimeseriesFilename = findExistingFilename();
 
