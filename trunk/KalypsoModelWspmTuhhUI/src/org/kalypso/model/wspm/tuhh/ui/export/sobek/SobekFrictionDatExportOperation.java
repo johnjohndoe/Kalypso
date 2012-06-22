@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
@@ -118,7 +118,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
 
     for( final SobekFrictionZone zone : frictionZones )
     {
-      formatter.format( "%d %s <%n", zone.getFrictionType(), zone.getFrictionString() ); //$NON-NLS-1$
+      formatter.format( Locale.US, "%d %s <%n", zone.getFrictionType(), zone.getFrictionString() ); //$NON-NLS-1$
     }
 
     formatter.format( "tble%n" ); //$NON-NLS-1$

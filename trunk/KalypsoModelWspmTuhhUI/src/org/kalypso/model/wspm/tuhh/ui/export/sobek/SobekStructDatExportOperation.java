@@ -60,20 +60,12 @@ public class SobekStructDatExportOperation extends AbstractSobekStructExportOper
     super( info, STRUCT_DAT );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return STRUCT_DAT;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekStructExportOperation#writeBuilding(java.lang.String,
-   *      org.kalypso.model.wspm.core.profil.IProfil, java.lang.String,
-   *      org.kalypso.model.wspm.core.profil.IProfileObject)
-   */
   @Override
   protected boolean writeBuilding( final String structId, final IProfil profil, final String profileName, final IProfileObject profileObject )
   {
