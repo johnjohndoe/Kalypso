@@ -40,57 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Properties;
 
-import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.binding.control.SimulationCollection;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2;
+import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * The simulation utilities.
- * 
  * @author Holger Albert
  */
-public class SimulationUtilities
+public class InitialValueFeatureControlFactory implements IExtensionsFeatureControlFactory2
 {
-  /**
-   * The constructor.
-   */
-  public SimulationUtilities( )
+  @Override
+  public IFeatureControl createFeatureControl( final FormToolkit toolkit, final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-  }
-
-  /**
-   * This function returns true, if the simulation is a longterm simulation.
-   * 
-   * @param simulation
-   *          The simulation.
-   * @return True, if the simulation is a longterm simulation.
-   */
-  public static boolean isLongterm( final NAControl simulation )
-  {
-    final Integer timestep = simulation.getMinutesOfTimestep();
-    if( timestep != null && timestep.intValue() == 1440 )
-      return true;
-
-    return false;
-  }
-
-  public static String[] getLongtermSimulations( final NAControl simulation )
-  {
-    final List<String> longtermSimulations = new ArrayList<String>();
-
-    final SimulationCollection owner = (SimulationCollection) simulation.getOwner();
-    final IFeatureBindingCollection<NAControl> allSimulations = owner.getSimulations();
-    for( final NAControl oneSimulation : allSimulations )
-    {
-      if( !SimulationUtilities.isLongterm( oneSimulation ) )
-        continue;
-
-      longtermSimulations.add( oneSimulation.getDescription() );
-    }
-
-    return longtermSimulations.toArray( new String[] {} );
+    return new InitialValueFeatureControl( feature, pt );
   }
 }

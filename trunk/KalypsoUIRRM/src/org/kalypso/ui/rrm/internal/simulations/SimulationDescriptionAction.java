@@ -80,11 +80,11 @@ public class SimulationDescriptionAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    final Feature feature = m_control.getFeature();
-    final String initialDescription = feature.getDescription();
-
     final Display display = event.widget.getDisplay();
     final Shell shell = display.getActiveShell();
+
+    final Feature feature = m_control.getFeature();
+    final String initialDescription = feature.getDescription();
 
     final InputDialog dialog = new InputDialog( shell, getText(), "Bitte geben Sie einen Namen ein", initialDescription, new SimulationDescriptionValidator( (NAControl) feature ) );
     final int open = dialog.open();

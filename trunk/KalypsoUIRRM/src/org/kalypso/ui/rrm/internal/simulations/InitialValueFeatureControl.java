@@ -54,19 +54,16 @@ import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Feature control for editing the description of a simulation. The description of a simulation must be a filename
- * compatible string.
- * 
  * @author Holger Albert
  */
-public class SimulationDescriptionFeatureControl extends AbstractFeatureControl
+public class InitialValueFeatureControl extends AbstractFeatureControl
 {
-  public SimulationDescriptionFeatureControl( final IPropertyType ftp )
+  public InitialValueFeatureControl( final IPropertyType ftp )
   {
     super( ftp );
   }
 
-  public SimulationDescriptionFeatureControl( final Feature feature, final IPropertyType ftp )
+  public InitialValueFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
   }
@@ -79,9 +76,9 @@ public class SimulationDescriptionFeatureControl extends AbstractFeatureControl
     main.setLayout( new GridLayout( 1, false ) );
 
     /* Create a button. */
-    final Action descriptionAction = new SimulationDescriptionAction( this );
-    final Button descriptionButton = ActionButton.createButton( null, main, descriptionAction );
-    descriptionButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    final Action initialValueAction = new InitialValueAction( this );
+    final Button InitialValueButton = ActionButton.createButton( null, main, initialValueAction );
+    InitialValueButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     return main;
   }
