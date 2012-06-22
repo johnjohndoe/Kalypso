@@ -193,12 +193,12 @@
       <label property="rrm:initialValueSource" style="SWT.NONE">
         <gridData horizontalAlignment="SWT.BEGINNING" />
       </label>
-      <text property="rrm:initialValueSource" style="SWT.BORDER">
+      <text property="rrm:initialValueSource" style="SWT.BORDER" enabled="false">
         <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
       </text>
-      <validatorlabel property="rrm:initialValueSource" visible="true" style="SWT.NONE">
-        <gridData horizontalAlignment="SWT.BEGINNING" />
-      </validatorlabel>
+      <extensioncontrol style="SWT.NONE" property="rrm:initialValueSource" extension-id="initialValueFeatureControl">
+        <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+      </extensioncontrol>
     </group>
 
     <group text="%control.gft.timeseriesMapping" style="SWT.NONE">
