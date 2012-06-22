@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,9 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
+
+import java.util.Locale;
 
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat.FrictionType;
 
@@ -93,13 +95,13 @@ public class SobekFrictionZone
     switch( m_type )
     {
       case Strickler_Ks:
-        return String.format( "%.1f", m_friction ); //$NON-NLS-1$
+        return String.format( Locale.US, "%.1f", m_friction ); //$NON-NLS-1$
 
       case White_Colebrook:
-        return String.format( "%.3f", m_friction ); //$NON-NLS-1$
+        return String.format( Locale.US, "%.3f", m_friction ); //$NON-NLS-1$
 
       default:
-        return String.format( "%.2f", m_friction ); //$NON-NLS-1$
+        return String.format( Locale.US, "%.2f", m_friction ); //$NON-NLS-1$
     }
   }
 }

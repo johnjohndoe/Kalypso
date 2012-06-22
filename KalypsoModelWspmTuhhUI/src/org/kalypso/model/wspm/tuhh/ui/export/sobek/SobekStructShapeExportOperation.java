@@ -75,18 +75,12 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
     m_shapePoint = new SobekShapePoint( profilesToExport, LOCATION );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return LOCATION;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekExportOperation#initTargetFile()
-   */
   @Override
   protected void initTargetFile( ) throws DBaseException, IOException
   {
@@ -94,9 +88,6 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
     m_shapePoint.create( dir );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekExportOperation#close()
-   */
   @Override
   protected void close( ) throws IOException
   {
@@ -112,9 +103,6 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
     m_shapePoint.closeQuiet();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekExportOperation#writeProfile(org.kalypso.model.wspm.core.gml.IProfileFeature)
-   */
   @Override
   protected void writeProfile( final IProfileFeature profileFeature ) throws IOException, DBaseException, SHPException, ShapeDataException
   {
@@ -144,7 +132,6 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
         reallyExportedBuildings++;
       }
     }
-
   }
 
   private boolean writeBuilding( final GM_Point lowPoint, final String structId, final String name, final IProfileObject profileObject ) throws ShapeDataException, IOException, DBaseException, SHPException

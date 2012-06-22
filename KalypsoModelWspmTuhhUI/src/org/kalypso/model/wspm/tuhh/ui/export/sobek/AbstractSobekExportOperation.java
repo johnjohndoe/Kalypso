@@ -76,9 +76,6 @@ public abstract class AbstractSobekExportOperation implements ISobekProfileExpor
     return m_stati;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
