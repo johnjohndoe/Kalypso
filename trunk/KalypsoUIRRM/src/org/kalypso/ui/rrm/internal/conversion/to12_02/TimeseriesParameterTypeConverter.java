@@ -62,7 +62,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class TimeseriesParameterTypeConverter extends AbstractLoggingOperation
 {
-
   private final File m_stationsFile;
 
   private final Map<String, Set<TimeseriesIndexEntry>> m_conversionMap;
