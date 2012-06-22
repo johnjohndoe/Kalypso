@@ -51,7 +51,6 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -119,14 +118,9 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    */
   private final ConverterData m_data;
 
-  /**
-   * The simulation path.
-   */
   private final String m_simulationPath;
 
   /**
-   * The constructor.
-   * 
    * @param sourceCalcCaseDir
    *          The directory of the source calc case.
    * @param targetScenarioDir
@@ -145,9 +139,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     m_simulationPath = RrmScenario.FOLDER_SIMULATIONEN + "/" + sourceCalcCaseDir.getName(); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.module.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected void doExecute( IProgressMonitor monitor ) throws Exception
   {
@@ -276,6 +267,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    */
   private void copyBasicData( ) throws IOException
   {
+    getLog().add( IStatus.OK, Messages.getString( "CalcCaseConverter_0" ) ); //$NON-NLS-1$
+
     /* Copy gml files into the .models folder of the scenario. */
     copyFile( DOT_CALCULATION, m_simulationPath + "/" + INaCalcCaseConstants.CALCULATION_GML_PATH ); //$NON-NLS-1$
     copyFile( CALC_CASE, INaProjectConstants.GML_MODELL_PATH );
@@ -283,7 +276,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyFile( CALC_PARAMETER, INaProjectConstants.GML_PARAMETER_PATH );
     copyFile( INaCalcCaseConstants.EXPERT_CONTROL_FILE, INaCalcCaseConstants.EXPERT_CONTROL_PATH );
 
-    // FIXME: landuse and others?
+    // FIXME: landuse and others? -> Problem! not in calc case; but hydrotopes might have been built with the gml files
+    // -> we need to copy them from the basic model into each calc case
 
     getLog().add( new ConvertHydrotopesOperation( hydrotope ).execute( new NullProgressMonitor() ) );
 
@@ -294,8 +288,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyDir( INaCalcCaseConstants.NIEDERSCHLAG_DIR, m_simulationPath + "/" + INaCalcCaseConstants.NIEDERSCHLAG_DIR, false ); //$NON-NLS-1$
     copyDir( INaCalcCaseConstants.PEGEL_DIR, m_simulationPath + "/" + INaCalcCaseConstants.PEGEL_DIR, true ); //$NON-NLS-1$
     copyDir( "Zufluss", m_simulationPath + "/" + "Zufluss", true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "CalcCaseConverter_0" ) ) ); //$NON-NLS-1$
   }
 
   /**

@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
@@ -87,7 +88,7 @@ public class RepairTimeseriesOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public MultiStatus execute( final IProgressMonitor monitor )
   {
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
