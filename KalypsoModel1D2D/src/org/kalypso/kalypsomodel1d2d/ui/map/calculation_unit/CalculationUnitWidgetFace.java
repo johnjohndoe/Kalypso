@@ -94,6 +94,7 @@ class CalculationUnitWidgetFace
     final Section calculationElementUnitSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
     calculationElementUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.2" ) ); //$NON-NLS-1$
     final TableWrapData calculationElementUnitData = new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB, 1, 1 );
+    calculationElementUnitData.maxWidth = 350;
     calculationElementUnitSection.setLayoutData( calculationElementUnitData );
 
     createCalculationUnit( calculationUnitSection, toolkit );
