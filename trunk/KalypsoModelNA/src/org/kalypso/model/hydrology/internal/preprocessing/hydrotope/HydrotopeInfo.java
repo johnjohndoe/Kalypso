@@ -313,6 +313,24 @@ public class HydrotopeInfo
   private double getSealingCorrection( ) throws NAPreprocessorException
   {
     final Landuse linkedLanduse = getLinkedLanduse();
+
+    /* If landuse is overwritten by overlay: catchment correction is not considered */
+    final DRWBMDefinition drwbmDefinition = getDrwbmDefinition();
+    if( drwbmDefinition != null )
+    {
+      /* If we have overlays we must have landuse references */
+      if( linkedLanduse == null )
+      {
+        final String message = String.format( "Landuse link missing for hydrotope '%s'.", getName() );
+        throw new NAPreprocessorException( message );
+      }
+
+      final IXLinkedFeature landuse = drwbmDefinition.getLanduse();
+      if( landuse != null )
+        return linkedLanduse.getCorrSealing();
+    }
+
+    /* Else multiply catchment correction with landuse correction */
     final Catchment linkedCatchment = getLinkedCatchment();
 
     if( linkedCatchment != null && linkedLanduse != null )
