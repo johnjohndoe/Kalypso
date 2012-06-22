@@ -154,7 +154,7 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         compare( referenceModelFile, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_MODEL, selectedModelFile, new GMLXPath[] {
             new GMLXPath( NaModell.MEMBER_CATCHMENT_COLLECTION ).append( new GMLXPath( NaModell.MEMBER_CATCHMENT ) ),
             new GMLXPath( NaModell.MEMBER_CHANNEL_COLLECTION ).append( new GMLXPath( NaModell.MEMBER_CHANNEL ) ),
-            new GMLXPath( NaModell.MEMBER_NODE_COLLECTION ).append( new GMLXPath( NaModell.MEMBER_NODE ) ) }, new QName[] { NaModell.QN_NAME, NaModell.QN_NAME, NaModell.QN_NAME } ) );
+            new GMLXPath( NaModell.MEMBER_NODE_COLLECTION ).append( new GMLXPath( NaModell.MEMBER_NODE ) ) }, new QName[] { NaModell.QN_NAME, FeatureListComparator.PROPERTY_COUNTER, NaModell.QN_NAME } ) );
 
         /* Monitor. */
         monitor.worked( 250 );
@@ -169,7 +169,7 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
         monitor.subTask( Messages.getString( "CompareScenariosOperation_4" ) ); //$NON-NLS-1$
 
         /* Compare. */
-        compare( referenceHydrotopGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_HYDROTOPES, selectedHydrotopGml, new GMLXPath[] { new GMLXPath( HydrotopeCollection.MEMBER_HYDROTOPE ) }, new QName[] { HydrotopeCollection.QN_NAME } ) );
+        compare( referenceHydrotopGml, new CompareData( selectedScenario, ScenarioCompareStatus.KEY_HYDROTOPES, selectedHydrotopGml, new GMLXPath[] { new GMLXPath( HydrotopeCollection.MEMBER_HYDROTOPE ) }, new QName[] { FeatureListComparator.PROPERTY_COUNTER } ) );
 
         /* Monitor. */
         monitor.worked( 250 );

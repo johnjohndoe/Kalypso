@@ -757,6 +757,10 @@
           class="org.kalypso.ui.rrm.internal.simulations.SimulationCalculationFeatureControlFactory"
           id="simulationCalculationFeatureControl">
     </extensionControl>
+    <extensionControl
+          class="org.kalypso.ui.rrm.internal.simulations.SimulationDescriptionFeatureControlFactory"
+          id="simulationDescriptionFeatureControl">
+    </extensionControl>
  </extension>
  <extension
        point="org.eclipse.ui.menus">
