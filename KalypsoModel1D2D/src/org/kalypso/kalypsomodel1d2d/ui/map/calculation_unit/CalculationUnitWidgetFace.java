@@ -72,6 +72,8 @@ class CalculationUnitWidgetFace
     scrolledForm.setExpandVertical( true );
     final Composite body = scrolledForm.getBody();
     body.setLayout( new TableWrapLayout() );
+    final TableWrapData componentLayoutData = new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB );
+    body.setLayoutData( componentLayoutData );
 
     // Calculation Unit Section
     final Section calculationUnitSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
