@@ -41,16 +41,29 @@
 package org.kalypso.ui.rrm.internal.simulations;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypsodeegree.model.feature.Feature;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Holger Albert
@@ -80,9 +93,33 @@ public class SimulationDescriptionAction extends Action
 
     final String newDescription = dialog.getValue();
     if( !ObjectUtils.equals( initialDescription, newDescription ) )
+      changeDescription( shell, feature, initialDescription, newDescription );
+  }
+
+  private void changeDescription( final Shell shell, final Feature feature, final String initialDescription, final String newDescription )
+  {
+    try
     {
+      /* Change the property. */
       final IPropertyType pt = m_control.getFeatureTypeProperty();
       m_control.fireFeatureChanges( new ChangeFeatureCommand( feature, pt, newDescription ) );
+
+      /* Get the folder simulations folder. */
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+      final IContainer scenarioFolder = dataProvider.getScenarioFolder();
+      final IFolder simulationsFolder = scenarioFolder.getFolder( new Path( RrmScenario.FOLDER_SIMULATIONEN ) );
+
+      /* Create the source and target folder. */
+      final IFolder initialFolder = simulationsFolder.getFolder( initialDescription );
+      final IFolder newFolder = simulationsFolder.getFolder( newDescription );
+
+      /* Rename the source folder. */
+      initialFolder.move( newFolder.getFullPath(), false, new NullProgressMonitor() );
+    }
+    catch( final CoreException ex )
+    {
+      /* Show an error. */
+      ErrorDialog.openError( shell, getText(), "Could not rename the simulation folder...", new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
     }
   }
 

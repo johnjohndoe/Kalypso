@@ -212,7 +212,8 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
       m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.4" ), Messages.getString( "SimulationCalculationFeatureControl.5" ), current.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       m_actions.add( new OpenOutputZipAction( Messages.getString( "SimulationCalculationFeatureControl.6" ), Messages.getString( "SimulationCalculationFeatureControl.7" ), current.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
+      // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.",
+// simulation, false ) );
       m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.8" ), Messages.getString( "SimulationCalculationFeatureControl.9" ), current.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.10" ), Messages.getString( "SimulationCalculationFeatureControl.11" ), current.getStatisticsCsv(), "xls" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-1$
 
@@ -295,8 +296,8 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     /* Get the folder of the current simulation. */
     final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IContainer scenarioFolder = dataProvider.getScenarioFolder();
-    final IFolder calcCasesFolder = scenarioFolder.getFolder( new Path( RrmScenario.FOLDER_SIMULATIONEN ) );
-    final IFolder simulationFolder = calcCasesFolder.getFolder( description );
+    final IFolder simulationsFolder = scenarioFolder.getFolder( new Path( RrmScenario.FOLDER_SIMULATIONEN ) );
+    final IFolder simulationFolder = simulationsFolder.getFolder( description );
 
     return new RrmSimulation( simulationFolder );
   }
