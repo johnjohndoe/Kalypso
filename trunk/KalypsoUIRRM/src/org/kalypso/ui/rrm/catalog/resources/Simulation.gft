@@ -10,41 +10,44 @@
 
     <group text="%control.gft.general" style="0">
       <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
-      <gridLayout numColumns="2" horizontalSpacing="10" />
+      <gridLayout numColumns="3" horizontalSpacing="10" />
 
       <label property="gml:description" style="SWT.NONE">
         <gridData horizontalAlignment="SWT.BEGINNING" />
       </label>
-      <text property="gml:description" style="SWT.BORDER">
+      <text property="gml:description" style="SWT.BORDER" enabled="false">
         <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
       </text>
+      <extensioncontrol style="SWT.NONE" property="gml:description" extension-id="simulationDescriptionFeatureControl">
+        <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+      </extensioncontrol>
 
       <label property="rrm:comment" style="SWT.NONE">
         <gridData horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.BEGINNING" />
       </label>
       <text property="rrm:comment" style="SWT.BORDER">
-        <gridData heightHint="50" horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+        <gridData horizontalSpan="2" heightHint="50" horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
       </text>
 
       <label property="rrm:editor" style="SWT.NONE">
         <gridData horizontalAlignment="SWT.BEGINNING" />
       </label>
       <text property="rrm:editor" style="SWT.BORDER">
-        <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+        <gridData horizontalSpan="2" horizontalAlignment="4" grabExcessHorizontalSpace="true" />
       </text>
 
       <label property="rrm:creationTime" style="SWT.NONE">
         <gridData horizontalAlignment="SWT.BEGINNING" />
       </label>
       <text property="rrm:creationTime" style="SWT.BORDER">
-        <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+        <gridData horizontalSpan="2" horizontalAlignment="4" grabExcessHorizontalSpace="true" />
       </text>
 
       <label property="rrm:returnPeriod" style="SWT.NONE">
         <gridData horizontalAlignment="SWT.BEGINNING" />
       </label>
       <text property="rrm:returnPeriod" style="SWT.BORDER">
-        <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+        <gridData horizontalSpan="2" horizontalAlignment="4" grabExcessHorizontalSpace="true" />
       </text>
     </group>
 
@@ -136,7 +139,6 @@
         </visibleOperation>
       </validatorlabel>
     </group>
-
   </composite>
 
   <composite style="SWT.NONE">
