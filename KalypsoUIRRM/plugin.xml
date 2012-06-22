@@ -168,7 +168,7 @@
     <command
           categoryId="org.kalypso.ui.rrm.commandCategory"
           id="org.kalypso.model.rrm.MergeScenariosCommand"
-          name="Szenarien zusammenführen...">
+          name="%command.name">
     </command>
  </extension>
 
@@ -185,7 +185,7 @@
             class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
             icon="icons/timeseries/timeseriesManagementView.gif"
             id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
-            name="Zeitreihenverwaltung"
+            name="%view.name"
             restorable="true">
       </view>
       <view
@@ -193,7 +193,7 @@
             class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"
             icon="icons/cm/catchmentModelsView.png"
             id="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"
-            name="Timeseries Mappings"
+            name="%view.name.0"
             restorable="true">
       </view>
       <view
@@ -201,7 +201,7 @@
             class="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"
             icon="icons/timeseries/propertiesView.gif"
             id="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"
-            name="Properties"
+            name="%view.name.1"
             restorable="true">
       </view>
       <view
@@ -209,7 +209,7 @@
             class="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"
             icon="icons/timeseries/table.gif"
             id="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"
-            name="Zeitreihen-Diagramm"
+            name="%view.name.2"
             restorable="true">
       </view>
       <view
@@ -217,7 +217,7 @@
             class="org.kalypso.ui.rrm.internal.results.view.ResultManagementView"
             icon="icons/resultview/resultView.png"
             id="org.kalypso.ui.rrm.internal.results.view.ResultManagementView"
-            name="Ergebnisansicht"
+            name="%view.name.3"
             restorable="true">
       </view>
    </extension>
@@ -268,9 +268,9 @@
            <command
                  commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
                  icon="icons/chart/stuetzstelle.png"
-                 label="Stuetzstellen einblenden"
+                 label="%command.label"
                  style="toggle"
-                 tooltip="Stützstellen einblenden">
+                 tooltip="%command.tooltip">
           <parameter
                 name="layer.parameter"
                 value="content.stuetzstelle">
@@ -283,9 +283,9 @@
           <command
              commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
              icon="icons/chart/fehlwert.png"
-             label="Fehlwerte einblenden"
+             label="%command.label.0"
              style="toggle"
-             tooltip="Fehlwerte einblenden">
+             tooltip="%command.tooltip.0">
           <parameter
                 name="layer.parameter"
                 value="content.fehlwert">
@@ -301,7 +301,7 @@
            </separator>
            <command
                  commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
-                 label="Debug"
+                 label="%command.label.1"
                  style="push">
            </command>
         </menuContribution>
@@ -401,7 +401,7 @@
       <workflowSystem
             definition="etc/workflow/workflow.xml"
             id="org.kalypso.model.rrm.workflow"
-            name="KalypsoHydrology Workflow">
+            name="%workflowSystem.name">
          <scenarioConfiguration
                derivedFolder="Szenarios">
          </scenarioConfiguration>
@@ -510,7 +510,7 @@
             <command id="org.kalypso.model.rrm.simulationManagement" name="%org.kalypso.model.rrm.simulationManagement.name" description="%org.kalypso.model.rrm.simulationManagement.description"/>
 
 			<!-- non workflow -->
-            <command id="org.kalypso.model.rrm.simulationManagement.refreshSimulations" name="Create Simulations"/>
+            <command id="org.kalypso.model.rrm.simulationManagement.refreshSimulations" name="%command.name.5"/>
             <command
                   description="%org.kalypso.model.rrm.resultView.description"
                   id="org.kalypso.model.rrm.resultView"
@@ -518,23 +518,23 @@
             </command>
             <command
                   id="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items"
-                  name="Öffne Baumelemente">
+                  name="%command.name.6">
             </command>
             <command
                   id="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items"
-                  name="Schließe Baumelemente">
+                  name="%command.name.7">
             </command>
             <command
                   id="org.kalypso.ui.rrm.internal.result.view.expand.tree.items"
-                  name="Öffne Baumelemente">
+                  name="%command.name.8">
             </command>
             <command
                   id="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items"
-                  name="Schließe Baumelemente">
+                  name="%command.name.9">
             </command>
             <command
                   id="org.kalypso.ui.rrm.internal.view.clear.selection.stack"
-                  name="Leere Diagramm-Selektion">
+                  name="%command.name.10">
             </command>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
@@ -785,9 +785,9 @@
        <command
              commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
              icon="icons/chart/stuetzstelle.png"
-             label="Stuetzstellen einblenden"
+             label="%command.label.2"
              style="toggle"
-             tooltip="Stützstellen einblenden">
+             tooltip="%command.tooltip.1">
           <parameter
                 name="layer.parameter"
                 value="content.stuetzstelle">
@@ -800,9 +800,9 @@
        <command
              commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
              icon="icons/chart/fehlwert.png"
-             label="Fehlwerte einblenden"
+             label="%command.label.3"
              style="toggle"
-             tooltip="Fehlwerte einblenden">
+             tooltip="%command.tooltip.2">
           <parameter
                 name="layer.parameter"
                 value="content.fehlwert">
@@ -877,30 +877,30 @@
             allPopups="false"
             locationURI="menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu">
          <menu
-               label="Werte setzen">
+               label="%menu.label">
             <command
                   commandId="org.kalypso.zml.ui.table.commands.value.set.all"
-                  label="Alle"
+                  label="%command.label.4"
                   style="push">
             </command>
             <command
                   commandId="org.kalypso.zml.ui.table.commands.value.set.selected"
-                  label="Selektion"
+                  label="%command.label.5"
                   style="push">
             </command>
             <command
                   commandId="org.kalypso.zml.ui.table.commands.value.set.above"
-                  label="Oberhalb"
+                  label="%command.label.6"
                   style="push">
             </command>
             <command
                   commandId="org.kalypso.zml.ui.table.commands.value.set.below"
-                  label="Unterhalb"
+                  label="%command.label.7"
                   style="push">
             </command>
          </menu>
          <menu
-               label="Erweitertes Bearbeiten">
+               label="%menu.label.0">
             <command
                   commandId="org.kalypso.zml.ui.table.commands.value.adjust.selection"
                   style="push">
@@ -935,30 +935,30 @@
             allPopups="false"
             locationURI="menu:org.kalypso.model.rrm.ui.zml.table.menu.sum.context.menu">
          <menu
-               label="Werte setzen">
+               label="%menu.label.1">
             <command
                   commandId="org.kalypso.zml.ui.table.commands.value.set.all"
-                  label="Alle"
+                  label="%command.label.8"
                   style="push">
             </command>
             <command
                   commandId="org.kalypso.zml.ui.table.commands.value.set.selected"
-                  label="Selektion"
+                  label="%command.label.9"
                   style="push">
             </command>
             <command
                   commandId="org.kalypso.zml.ui.table.commands.value.set.above"
-                  label="Oberhalb"
+                  label="%command.label.10"
                   style="push">
             </command>
             <command
                   commandId="org.kalypso.zml.ui.table.commands.value.set.below"
-                  label="Unterhalb"
+                  label="%command.label.11"
                   style="push">
             </command>
          </menu>
          <menu
-               label="Erweitertes Bearbeiten">
+               label="%menu.label.2">
             <command
                   commandId="org.kalypso.zml.ui.table.commands.value.adjust.selection"
                   style="push">
