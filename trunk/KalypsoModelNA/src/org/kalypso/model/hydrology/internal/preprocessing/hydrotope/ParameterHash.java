@@ -118,6 +118,7 @@ public class ParameterHash
         if( !shortName.equals( landuseName ) )
           shortNameCounter++;
 
+        m_landuseClassMap.put( landuseName, landuseClass );
         m_landuseNameMap.put( landuseClass, shortName );
       }
     }
