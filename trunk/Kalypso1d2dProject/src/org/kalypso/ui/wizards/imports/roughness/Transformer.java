@@ -1,7 +1,5 @@
 package org.kalypso.ui.wizards.imports.roughness;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,10 +19,13 @@ import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -93,43 +94,47 @@ public class Transformer implements ICoreRunnableWithProgress
       m_data.getRoughnessShapeStaticRelationMap().clear();
       // m_data.getRoughnessPolygonCollection().clear();
     }
-    final GMLWorkspace shapeWorkSpace = ShapeSerializer.deserialize( FileUtilities.nameWithoutExtension( m_data.getInputFile() ), m_data.getCoordinateSystem( true ) );
-    final String customNamespace = shapeWorkSpace.getGMLSchema().getTargetNamespace();
-    final QName shpGeomName = new QName( customNamespace, ShapeSerializer.PROPERTY_GEOM );
+
+    final ShapeCollection shapeCollection = ShapeSerializer.deserialize( FileUtilities.nameWithoutExtension( m_data.getInputFile() ), m_data.getCoordinateSystem( true ) );
+
+    final GMLWorkspace shapeWorkspace = shapeCollection.getWorkspace();
+    final String customNamespace = shapeWorkspace.getGMLSchema().getTargetNamespace();
     final QName shpCustomPropertyName = new QName( customNamespace, m_data.getShapeProperty() );
-    final Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
-    final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    // final Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
+    // final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty(
+    // ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+
+    final IFeatureBindingCollection<AbstractShape> shapes = shapeCollection.getShapes();
+
     final IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
 
     m_NumberOfEntriesAdded = 0;
-    for( int i = 0; i < shapeFeatureList.size(); i++ )
+    for( int i = 0; i < shapes.size(); i++ )
     {
-      final Feature shapeFeature = (Feature) shapeFeatureList.get( i );
+      final AbstractShape shapeFeature = shapes.get( i );
       final String propertyValue = shapeFeature.getProperty( shpCustomPropertyName ).toString();
-      final Object gm_Whatever = shapeFeature.getProperty( shpGeomName );
-      if( gm_Whatever instanceof GM_Object )
+      final GM_Object gm_Whatever = shapeFeature.getGeometry();
+
+      if( gm_Whatever instanceof GM_MultiSurface )
       {
-        if( gm_Whatever instanceof GM_MultiSurface )
-        {
-          final GM_MultiSurface multiSurface = (GM_MultiSurface) ((GM_MultiSurface) gm_Whatever).clone();
-          final GM_Surface< ? >[] surfaces = multiSurface.getAllSurfaces();
-          for( final GM_Surface< ? > element : surfaces )
-          {
-            final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
-            m_NumberOfEntriesAdded++;
-            roughnessPolygon.setSurface( element );
-            m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getId(), propertyValue );
-          }
-        }
-        else if( gm_Whatever instanceof GM_Surface )
+        final GM_MultiSurface multiSurface = (GM_MultiSurface) ((GM_MultiSurface) gm_Whatever).clone();
+        final GM_Surface< ? >[] surfaces = multiSurface.getAllSurfaces();
+        for( final GM_Surface< ? > element : surfaces )
         {
           final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
           m_NumberOfEntriesAdded++;
-          roughnessPolygon.setSurface( (GM_Surface< ? >) gm_Whatever );
+          roughnessPolygon.setSurface( element );
           m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getId(), propertyValue );
         }
-        else
-          throw new ClassCastException( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.Transformer.2" ) + gm_Whatever.getClass().getName() ); //$NON-NLS-1$
+      }
+      else if( gm_Whatever instanceof GM_Surface )
+      {
+        // FIXME: this will never happen
+
+        final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
+        m_NumberOfEntriesAdded++;
+        roughnessPolygon.setSurface( (GM_Surface< ? >) gm_Whatever );
+        m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getId(), propertyValue );
       }
       else
         throw new ClassCastException( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.Transformer.2" ) + gm_Whatever.getClass().getName() ); //$NON-NLS-1$

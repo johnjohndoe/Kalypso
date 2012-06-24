@@ -71,7 +71,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 
 /**
  * Helper that guesses timeseries mappings for each existing calculation case.
@@ -170,7 +170,6 @@ public class TimeseriesMappingBuilder
         }
         catch( final Exception e )
         {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
       }
@@ -219,11 +218,11 @@ public class TimeseriesMappingBuilder
 
       final GMLWorkspace mappingWorkspace = GmlSerializer.createGMLWorkspace( mappingSourceFile, GmlSerializer.DEFAULT_FACTORY );
       final Feature rootFeature = mappingWorkspace.getRootFeature();
-      final FeatureList mappingList = (FeatureList) rootFeature.getProperty( UrlCatalogUpdateObservationMapping.RESULT_LIST_PROP );
+      final FeatureList mappingList = (FeatureList) rootFeature.getProperty( DeegreeUrlCatalog.RESULT_LIST_PROP );
       for( final Object object : mappingList )
       {
         final Feature feature = (Feature) object;
-        final ZmlLink oldLink = new ZmlLink( feature, UrlCatalogUpdateObservationMapping.RESULT_TS_IN_PROP );
+        final ZmlLink oldLink = new ZmlLink( feature, DeegreeUrlCatalog.RESULT_TS_IN_PROP );
 
         final String name = feature.getName();
         final String href = oldLink.getHref();

@@ -80,6 +80,9 @@ import org.kalypso.risk.plugin.KalypsoRiskDebug;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 
 /**
  * JUnit Test Case for the Kalypso Risk Model.<br>
@@ -150,9 +153,8 @@ public class TestRiskModel extends TestCase
     final String sourceShapeFilePath = shapeFile.getLocation().toFile().toString();
     final String crs = "EPSG:31467"; // the coordinate system of the shape file //$NON-NLS-1$
 
-    final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, crs );
-    final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
-    final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final ShapeCollection shapeCollection = ShapeSerializer.deserialize( sourceShapeFilePath, crs );
+    final IFeatureBindingCollection<AbstractShape> shapes = shapeCollection.getShapes();
 
     // name of the shape file field that represents the landuse classes
     final String landUseProperty = "LANDUSE"; //$NON-NLS-1$
@@ -173,7 +175,7 @@ public class TestRiskModel extends TestCase
     /* IMPORT PREDEFINED DATA */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Konvertiere Landnutzung in GML...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final ICoreRunnableWithProgress importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeFeatureList, landUseProperty, assetValuesCollectionName, damageFunctionsCollectionName, predefinedAssetValueClassesCollection, predefinedDamageFunctionsCollection, predefinedLanduseColorsCollection );
+    final ICoreRunnableWithProgress importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeCollection, landUseProperty, assetValuesCollectionName, damageFunctionsCollectionName, predefinedAssetValueClassesCollection, predefinedDamageFunctionsCollection, predefinedLanduseColorsCollection );
     RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, importLanduseRunnable );
 
     /* IMPORT WATERDEPTH */

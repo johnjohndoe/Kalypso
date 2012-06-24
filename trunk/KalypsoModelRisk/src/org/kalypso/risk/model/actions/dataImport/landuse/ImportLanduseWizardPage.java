@@ -38,8 +38,8 @@ import org.kalypso.risk.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.utils.shape.ShapeUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -445,9 +445,9 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
           final File file = new File( txt_InputFile.getText() );
           if( file.exists() && file.isFile() && file.canRead() )
           {
-            final ShapeFile shape = new ShapeFile( FileUtilities.nameWithoutExtension( txt_InputFile.getText() ) );
-            final String[] propertyNames = shape.getProperties();
-            shape.close();
+            final String shapePath = FileUtilities.nameWithoutExtension( txt_InputFile.getText() );
+            final String[] propertyNames = ShapeUtilities.readShapeAttributes( shapePath );
+
             cmb_ShapeProperty.setItems( propertyNames );
             cmb_ShapeProperty.select( 0 );
             cmb_ShapeProperty.setEnabled( true );

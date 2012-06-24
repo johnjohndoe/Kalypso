@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -81,6 +82,9 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -173,9 +177,6 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     addPage( m_wizardPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#canFinish()
-   */
   @Override
   public boolean canFinish( )
   {
@@ -204,21 +205,22 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       final IVectorDataModel vectorDataModel = szenarioDataProvider.getModel( IVectorDataModel.class.getName() );
       final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class.getName() );
 
-      final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
+      final ShapeCollection shapeCollection = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
 
       final TransformVisitor visitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+
+      final GMLWorkspace landuseShapeWS = shapeCollection.getWorkspace();
       final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
       landuseShapeWS.accept( visitor, shapeRootFeature, FeatureVisitor.DEPTH_INFINITE );
 
-      final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+      final IFeatureBindingCollection<AbstractShape> shapeFeatureList = shapeCollection.getShapes();
 
       /* check for right user selection */
-      final HashSet<String> landuseTypeSet = new HashSet<String>();
+      final Set<String> landuseTypeSet = new HashSet<String>();
 
       int count = 0;
-      for( int i = 0; i < shapeFeatureList.size(); i++ )
+      for( final AbstractShape shpFeature : shapeFeatureList )
       {
-        final Feature shpFeature = (Feature) shapeFeatureList.get( i );
         final QName shapeLandusePropertyName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), landuseProperty );
         final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
         if( !landuseTypeSet.contains( shpPropertyValue ) )
@@ -251,7 +253,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
           break;
 
         case DB_USE_PREDEFINED:
-          importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, landuseProperty, assetValuesCollectionName, damageFunctionsCollectionName, m_predefinedAssetValueClassesCollection, m_predefinedDamageFunctionsCollection, m_predefinedLanduseColorsCollection );
+          importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( controlModel, vectorDataModel, shapeCollection, landuseProperty, assetValuesCollectionName, damageFunctionsCollectionName, m_predefinedAssetValueClassesCollection, m_predefinedDamageFunctionsCollection, m_predefinedLanduseColorsCollection );
 
           break;
 

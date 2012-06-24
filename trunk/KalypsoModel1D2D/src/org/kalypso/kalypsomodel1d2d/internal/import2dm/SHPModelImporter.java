@@ -41,30 +41,18 @@
 package org.kalypso.kalypsomodel1d2d.internal.import2dm;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
-import javax.xml.namespace.QName;
+import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.ShapeType;
+import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.geometry.ISHPGeometry;
+import org.kalypso.shape.shp.SHPException;
+import org.kalypso.shape.tools.JTS2SHP;
 
-import org.kalypso.gmlschema.EmptyGMLSchema;
-import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.feature.CustomFeatureType;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
-import org.kalypsodeegree_impl.io.shpapi.dataprovider.SurfacePolygonZShapeDataProvider;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author Thomas Jung
@@ -73,34 +61,14 @@ class SHPModelImporter implements ISmsConversionTarget
 {
   private final File m_file;
 
-  private final GMLWorkspace m_workspace;
+  private final ShapeFile m_shapeFile;
 
-  private final Feature m_shapeRootFeature;
-
-  private final IRelationType m_shapeParentRelation;
-
-  private final IFeatureType m_shapeFT;
-
-  private int m_count = 0;
-
-  public SHPModelImporter( final File outputFile )
+  public SHPModelImporter( final File outputFile ) throws IOException, DBaseException
   {
     m_file = outputFile;
-    /* Create feature type which describes what data the shape file contains */
-    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
-    final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GM_Polygon.POLYGON_ELEMENT );
-
-    final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), polygonTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IPropertyType[] properties = new IPropertyType[] { polygonType };
-    m_shapeFT = new CustomFeatureType( new EmptyGMLSchema(), shapeTypeQName, properties, Feature.QNAME_FEATURE );
-
-    m_shapeRootFeature = ShapeSerializer.createWorkspaceRootFeature( m_shapeFT, ShapeConst.SHAPE_TYPE_POLYGONZ );
-    m_workspace = m_shapeRootFeature.getWorkspace();
-    m_shapeParentRelation = (IRelationType) m_shapeRootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final IDBFField[] fields = new IDBFField[] {};
+    m_shapeFile = ShapeFile.create( m_file.getAbsolutePath(), ShapeType.POLYGONZ, Charset.defaultCharset(), fields );
   }
 
   @Override
@@ -108,16 +76,16 @@ class SHPModelImporter implements ISmsConversionTarget
   {
     try
     {
-      m_count++;
+      final Polygon polygon = item.getPolygon();
 
-      final GM_Object surface = JTSAdapter.wrapWithSrid( item.getPolygon() );
-      final Object[] data = new Object[] { surface };
-      final Feature feature = FeatureFactory.createFeature( m_shapeRootFeature, m_shapeParentRelation, "Feature_" + m_count, m_shapeFT, data ); //$NON-NLS-1$
-      m_workspace.addFeatureAsComposition( m_shapeRootFeature, m_shapeParentRelation, -1, feature );
+      final Object[] data = new Object[] {};
+
+      final ISHPGeometry geometry = JTS2SHP.toShape( polygon );
+      m_shapeFile.addFeature( geometry, data );
     }
-    catch( final Exception e )
+    catch( IOException | DBaseException | SHPException e )
     {
-      // TODO Auto-generated catch block
+      // FIXME exception handling
       e.printStackTrace();
     }
   }
@@ -127,13 +95,12 @@ class SHPModelImporter implements ISmsConversionTarget
   {
     try
     {
-      final Feature[] features = FeatureHelper.getFeaturesWithType( m_workspace, m_shapeFT );
-      ShapeSerializer.serialize( m_workspace, m_file.getAbsolutePath(), new SurfacePolygonZShapeDataProvider( features, ShapeConst.SHAPE_TYPE_POLYGONZ ) );
+      m_shapeFile.close();
       System.out.println( "Wrote shapeFile to:" + m_file.getAbsolutePath() ); //$NON-NLS-1$
     }
-    catch( final GmlSerializeException e )
+    catch( final IOException e )
     {
-      // TODO Auto-generated catch block
+      // FIXME exception handling
       e.printStackTrace();
     }
   }

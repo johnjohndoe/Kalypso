@@ -66,6 +66,7 @@ import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
+import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
@@ -77,8 +78,8 @@ import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -87,6 +88,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -162,7 +165,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     String crs;
     GM_TriangulatedSurface gmSurface = null;
     TriangulatedSurfaceTriangleEater eater;
-    GMLWorkspace sourceWorkspace;
+    GMLWorkspace sourceWorkspace = null;
 
     final IProgressMonitor subMon = new SubProgressMonitor( monitor, 33 );
     switch( sourceType )
@@ -179,7 +182,8 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         if( surface == null )
         {
           final String msg = Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.4", sourcePath, sourceObject ); //$NON-NLS-1$
-          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+          final IStatus status = new Status( IStatus.ERROR, KalypsoModelFloodPlugin.PLUGIN_ID, msg );
+          throw new CoreException( status );
         }
 
         ProgressUtilities.worked( monitor, 33 );
@@ -271,37 +275,33 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
         try
         {
-          sourceWorkspace = ShapeSerializer.deserialize( shapeBase, crs );
+          final ShapeCollection shapeCollection = ShapeSerializer.deserialize( shapeBase, crs );
+          sourceWorkspace = shapeCollection.getWorkspace();
 
-          final Feature fRoot = sourceWorkspace.getRootFeature();
-          final FeatureList lstMembers = (FeatureList) fRoot.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+          final IFeatureBindingCollection<AbstractShape> shapes = shapeCollection.getShapes();
 
-          final GM_Object geom = ((Feature) lstMembers.get( 0 )).getDefaultGeometryPropertyValue();
+          final GM_Object geom = shapes.get( 0 ).getGeometry();
           gmSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
 
           if( geom instanceof GM_MultiSurface )
           {
             // conversion
             // convert the gm_surfaces.exterior rings into gm.triangle
-            for( final Object object : lstMembers )
+            for( final AbstractShape shape : shapes )
             {
-              if( object instanceof Feature )
+              final GM_Object geometry = shape.getGeometry();
+              if( geometry instanceof GM_MultiSurface )
               {
-                final Feature feat = (Feature) object;
-                final GM_Object[] geometryProperties = feat.getGeometryPropertyValues();
-                if( geometryProperties[0] instanceof GM_MultiSurface )
-                {
-                  final GM_MultiSurface polygonSurface = (GM_MultiSurface) geometryProperties[0];
-                  final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, crs );
+                final GM_MultiSurface polygonSurface = (GM_MultiSurface) geometry;
+                final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, crs );
 
-                  // add the triangles into the gm_triang_surfaces
-                  for( final GM_Triangle element : triangles )
-                  {
-                    GM_Triangle triangle;
-                    triangle = element;
-                    gmSurface.add( triangle );
-                    monitor.subTask( Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.17" ) + gmSurface.size() ); //$NON-NLS-1$
-                  }
+                // add the triangles into the gm_triang_surfaces
+                for( final GM_Triangle element : triangles )
+                {
+                  GM_Triangle triangle;
+                  triangle = element;
+                  gmSurface.add( triangle );
+                  monitor.subTask( Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.17" ) + gmSurface.size() ); //$NON-NLS-1$
                 }
               }
             }

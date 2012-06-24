@@ -67,22 +67,22 @@ import org.kalypso.shape.ShapeType;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 
 /**
  * Data (and binding) object for the Kalypso RRM project wizard.
- *
+ * 
  * @author Gernot Belger
  */
 public class KalypsoNAMappingData extends AbstractModelObject
 {
   public static final String PROPERTY_SHAPE_TYPE_STATUS = "shapeTypeStatus"; //$NON-NLS-1$
 
-  private static final IStatus SHAPE_TYPE_STATUS_NONE = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAMappingData.0") ); //$NON-NLS-1$
+  private static final IStatus SHAPE_TYPE_STATUS_NONE = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "KalypsoNAMappingData.0" ) ); //$NON-NLS-1$
 
-  private static final IStatus SHAPE_TYPE_STATUS_LOADING = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAMappingData.1") ); //$NON-NLS-1$
+  private static final IStatus SHAPE_TYPE_STATUS_LOADING = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "KalypsoNAMappingData.1" ) ); //$NON-NLS-1$
 
   private String m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
@@ -96,7 +96,7 @@ public class KalypsoNAMappingData extends AbstractModelObject
 
   private final Map<IValuePropertyType, IValuePropertyType> m_mapping = new HashMap<IValuePropertyType, IValuePropertyType>();
 
-  private FeatureList m_sourceData;
+  private ShapeCollection m_sourceData;
 
   private final IFeatureType m_targetFeatureType;
 
@@ -146,22 +146,19 @@ public class KalypsoNAMappingData extends AbstractModelObject
 
   public void readShapeFile( final WizardPage page )
   {
-    final GMLWorkspace workspace = loadShapeFile( page );
+    final ShapeCollection shapeCollection = loadShapeFile( page );
 
     if( m_sourceData != null )
     {
-      m_sourceData.getOwner().getWorkspace().dispose();
+      m_sourceData.getWorkspace().dispose();
       m_sourceData = null;
     }
 
-    if( workspace != null )
-    {
-      final Feature rootFeature = workspace.getRootFeature();
-      m_sourceData = (FeatureList) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    }
+    if( shapeCollection != null )
+      m_sourceData = shapeCollection;
   }
 
-  private GMLWorkspace loadShapeFile( final WizardPage page )
+  private ShapeCollection loadShapeFile( final WizardPage page )
   {
     setShapeTypeStatus( SHAPE_TYPE_STATUS_NONE );
 
@@ -177,15 +174,15 @@ public class KalypsoNAMappingData extends AbstractModelObject
       setShapeTypeStatus( SHAPE_TYPE_STATUS_LOADING );
 
       final String srs = getSrs();
-      final GMLWorkspace workspace = ShapeSerializer.deserialize( fileBase, srs );
+      final ShapeCollection shapeCollection = ShapeSerializer.deserialize( fileBase, srs );
 
-      final IStatus typeStatus = checkShapeType( workspace );
+      final IStatus typeStatus = checkShapeType( shapeCollection.getShapeType() );
       setShapeTypeStatus( typeStatus );
 
       if( typeStatus.matches( IStatus.ERROR ) )
         page.setPageComplete( false );
 
-      return workspace;
+      return shapeCollection;
     }
     catch( final GmlSerializeException e )
     {
@@ -202,17 +199,13 @@ public class KalypsoNAMappingData extends AbstractModelObject
     }
   }
 
-  private IStatus checkShapeType( final GMLWorkspace workspace )
+  private IStatus checkShapeType( final ShapeType shapeType )
   {
-    final Feature rootFeature = workspace.getRootFeature();
+    final String typeName = shapeType.getLabel();
 
-    final Integer actualTypeNumber = (Integer) rootFeature.getProperty( ShapeSerializer.PROPERTY_TYPE );
-    final ShapeType actualType = ShapeType.valueOf( actualTypeNumber );
-    final String typeName = actualType.getLabel();
-
-    if( m_allowedShapeTypes.contains( actualType ) )
+    if( m_allowedShapeTypes.contains( shapeType ) )
     {
-      final String message = String.format( Messages.getString("KalypsoNAMappingData.2"), typeName ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "KalypsoNAMappingData.2" ), typeName ); //$NON-NLS-1$
       return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), message );
     }
 
@@ -222,7 +215,7 @@ public class KalypsoNAMappingData extends AbstractModelObject
 
     final String allAllowedTypes = StringUtils.join( allowedNames, ',' );
 
-    final String message = String.format( Messages.getString("KalypsoNAMappingData.3"), typeName, allAllowedTypes ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "KalypsoNAMappingData.3" ), typeName, allAllowedTypes ); //$NON-NLS-1$
     return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
   }
 
@@ -255,11 +248,11 @@ public class KalypsoNAMappingData extends AbstractModelObject
     if( m_sourceData == null )
       return null;
 
+    final IFeatureType featureType = getSourceFeatureType();
+    final IPropertyType[] ftp = featureType.getProperties();
+
+    /* filter all value types */
     final List<IValuePropertyType> result = new ArrayList<IValuePropertyType>();
-
-    final IFeatureType srcFT = m_sourceData.getPropertyType().getTargetFeatureType();
-    final IPropertyType[] ftp = srcFT.getProperties();
-
     for( final IPropertyType element : ftp )
     {
       if( element instanceof IValuePropertyType )
@@ -273,6 +266,15 @@ public class KalypsoNAMappingData extends AbstractModelObject
     return result.toArray( new IValuePropertyType[result.size()] );
   }
 
+  private IFeatureType getSourceFeatureType( )
+  {
+    final IFeatureBindingCollection<AbstractShape> shapes = m_sourceData.getShapes();
+    if( shapes.isEmpty() )
+      return shapes.getFeatureList().getPropertyType().getTargetFeatureType();
+
+    return shapes.get( 0 ).getFeatureType();
+  }
+
   public Map<IValuePropertyType, IValuePropertyType> getMapping( )
   {
     if( getSkip() )
@@ -282,7 +284,10 @@ public class KalypsoNAMappingData extends AbstractModelObject
 
     /* add geometry mapping by default */
     final IValuePropertyType targetGeometry = m_targetFeatureType.getDefaultGeometryProperty();
-    final IValuePropertyType sourceGeometry = m_sourceData.getPropertyType().getTargetFeatureType().getDefaultGeometryProperty();
+
+    final IFeatureType sourceFeatureType = getSourceFeatureType();
+
+    final IValuePropertyType sourceGeometry = (IValuePropertyType) sourceFeatureType.getProperty( AbstractShape.PROPERTY_GEOM );
     clone.put( targetGeometry, sourceGeometry );
 
     return clone;
@@ -290,6 +295,6 @@ public class KalypsoNAMappingData extends AbstractModelObject
 
   public List< ? > getSourceData( )
   {
-    return m_sourceData;
+    return m_sourceData.getShapes().getFeatureList();
   }
 }
