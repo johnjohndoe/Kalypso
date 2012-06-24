@@ -1,7 +1,7 @@
 package org.kalypso.risk.model.operation;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -22,6 +22,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 
 /**
  * @author Thomas Jung
@@ -34,7 +35,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
 
   private final String m_landuseProperty;
 
-  private final List< ? > m_shapeFeatureList;
+  private final List<AbstractShape> m_shapeFeatureList;
 
   private final IRasterizationControlModel m_controlModel;
 
@@ -42,7 +43,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
 
   private final List<Feature> m_predefinedLanduseColorsCollection;
 
-  public RiskImportNewLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List< ? > shapeFeatureList, final String landuseProperty, final List<Feature> predefinedLanduseColorsCollection )
+  public RiskImportNewLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List<AbstractShape> shapeFeatureList, final String landuseProperty, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
@@ -62,7 +63,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
       final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection = m_vectorModel.getLandusePolygonCollection().getLandusePolygonCollection();
 
       /* create entries for landuse database */
-      final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
+      final Set<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
 
       monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.10" ) ); //$NON-NLS-1$
 

@@ -23,6 +23,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 
 /**
  * @author Thomas Jung
@@ -35,7 +36,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
 
   private final String m_landuseProperty;
 
-  private final List< ? > m_shapeFeatureList;
+  private final List<AbstractShape> m_shapeFeatureList;
 
   private final String m_externalProjectName;
 
@@ -47,7 +48,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
 
   private final IFolder m_scenarioFolder;
 
-  public RiskImportDBLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List< ? > shapeFeatureList, final IFolder scenarioFolder, final String landuseProperty, final String externalProjectName, final List<Feature> predefinedLanduseColorsCollection )
+  public RiskImportDBLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List<AbstractShape> shapeFeatureList, final IFolder scenarioFolder, final String landuseProperty, final String externalProjectName, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;

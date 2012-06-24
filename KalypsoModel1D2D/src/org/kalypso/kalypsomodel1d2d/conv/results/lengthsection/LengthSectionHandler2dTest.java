@@ -61,6 +61,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
@@ -165,7 +166,7 @@ public class LengthSectionHandler2dTest extends TestCase
     }
   }
 
-  public static GMLWorkspace getShapeWorkspace( final File fShape ) throws GmlSerializeException
+  public static ShapeCollection getShapeWorkspace( final File fShape ) throws GmlSerializeException
   {
     if( fShape == null )
       throw new IllegalStateException();
@@ -188,5 +189,4 @@ public class LengthSectionHandler2dTest extends TestCase
 
     return ShapeSerializer.deserialize( shape, cSystem );
   }
-
 }

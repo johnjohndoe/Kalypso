@@ -58,7 +58,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
@@ -74,6 +73,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -324,19 +324,17 @@ public class RiskLanduseHelper
     }
   }
 
-  public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List< ? > shapeFeatureList, final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
+  public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List<AbstractShape> shapeFeatureList, final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
   {
     monitor.subTask( Messages.getString( "org.kalypso.risk.model.utils.ImportLanduseWizard.9" ) ); //$NON-NLS-1$
     final List<Feature> createdFeatures = new ArrayList<Feature>();
 
-    for( int i = 0; i < shapeFeatureList.size(); i++ )
+    for( final AbstractShape shpFeature : shapeFeatureList )
     {
-      final Feature shpFeature = (Feature) shapeFeatureList.get( i );
-      final QName shpGeomQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), ShapeSerializer.PROPERTY_GEOM );
       final QName shpPropQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), landuseProperty );
       final String shpPropertyValue = shpFeature.getProperty( shpPropQName ).toString();
 
-      final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( shpGeomQName );
+      final GM_Object shpGeometryProperty = shpFeature.getGeometry();
 
       // we don't like multi surfaces, so...
       if( shpGeometryProperty instanceof GM_MultiSurface )
@@ -355,6 +353,8 @@ public class RiskLanduseHelper
       }
       else if( shpGeometryProperty instanceof GM_Surface )
       {
+        // FIXME: will never happen
+
         final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
         polygon.setGeometry( (GM_Surface< ? >) shpGeometryProperty );
         polygon.setLanduseClass( getLanduseClassByName( polygon, shpPropertyValue, landuseClassesList ) );
@@ -387,13 +387,13 @@ public class RiskLanduseHelper
     return null;
   }
 
-  public static HashSet<String> getLanduseTypeSet( final List< ? > shapeFeatureList, final String propertyLanduse )
+  public static Set<String> getLanduseTypeSet( final List<AbstractShape> shapeFeatureList, final String propertyLanduse )
   {
-    final HashSet<String> set = new HashSet<String>();
+    final Set<String> set = new HashSet<String>();
 
     for( int i = 0; i < shapeFeatureList.size(); i++ )
     {
-      final Feature shpFeature = (Feature) shapeFeatureList.get( i );
+      final Feature shpFeature = shapeFeatureList.get( i );
       final QName shapeLandusePropertyName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), propertyLanduse );
       final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
       if( !set.contains( shpPropertyValue ) )

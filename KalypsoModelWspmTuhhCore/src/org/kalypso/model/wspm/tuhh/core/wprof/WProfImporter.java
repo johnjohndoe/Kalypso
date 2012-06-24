@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wprof;
 
@@ -55,7 +55,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 
 /**
  * @author Gernot Belger
@@ -98,9 +98,10 @@ public class WProfImporter
     final String shapeSrs = ShapeSerializer.loadCrs( prjFile.toURI().toURL(), m_shapeDefaultSrs );
 
     monitor.subTask( Messages.getString( "WProfImporter_1" ) ); //$NON-NLS-1$
-    final GMLWorkspace w80shapeWorkspace = ShapeSerializer.deserialize( m_shapePath, shapeSrs, m_shapeCharset, new SubProgressMonitor( monitor, 500 ) );
+    final ShapeCollection shapeCollection = ShapeSerializer.deserialize( m_shapePath, shapeSrs, m_shapeCharset, new SubProgressMonitor( monitor, 500 ) );
 
-    final FeatureList w80features = (FeatureList) w80shapeWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final FeatureList w80features = shapeCollection.getShapes().getFeatureList();
+
     System.out.println( String.format( Messages.getString( "WProfImporter_2" ), w80features.size() ) ); //$NON-NLS-1$
 
     /* Data */

@@ -1,7 +1,7 @@
 package org.kalypso.risk.model.operation;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -22,6 +22,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 
 /**
  * @author Thomas Jung
@@ -48,13 +50,13 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
   private final List<Feature> m_predefinedLanduseColorsCollection;
 
-  private final List< ? > m_shapeFeatureList;
+  private final ShapeCollection m_shapeCollection;
 
-  public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List< ? > shapeFeatureList, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection )
+  public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final ShapeCollection shapeCollection, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
-    m_shapeFeatureList = shapeFeatureList;
+    m_shapeCollection = shapeCollection;
     m_assetValuesCollectionName = assetValuesCollectionName;
     m_landuseProperty = landuseProperty;
     m_damageFunctionsCollectionName = damageFunctionsCollectionName;
@@ -73,8 +75,11 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
       final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection = m_vectorModel.getLandusePolygonCollection().getLandusePolygonCollection();
 
+      @SuppressWarnings("unchecked")
+      final List<AbstractShape> shapes = m_shapeCollection.getShapes().getFeatureList();
+
       /* create entries for landuse database */
-      final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
+      final Set<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( shapes, m_landuseProperty );
 
       landusePolygonCollection.clear();
 
@@ -97,7 +102,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
       // TODO try to guess damage function if no function is linked to the landuse class
 
       /* creating landuse polygons */
-      final List<Feature> createdFeatures = RiskLanduseHelper.createLandusePolygons( m_landuseProperty, monitor, m_shapeFeatureList, landusePolygonCollection, landuseClassesList );
+      final List<Feature> createdFeatures = RiskLanduseHelper.createLandusePolygons( m_landuseProperty, monitor, shapes, landusePolygonCollection, landuseClassesList );
       final GMLWorkspace workspace = m_vectorModel.getWorkspace();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landusePolygonCollection.getParentFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
