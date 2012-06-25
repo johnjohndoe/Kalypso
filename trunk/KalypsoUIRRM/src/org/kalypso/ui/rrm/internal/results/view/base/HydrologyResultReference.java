@@ -98,7 +98,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     final RRM_RESULT_TYPE type = result.getType();
     switch( type )
     {
-    // FIXME i18n - english project template
+      // FIXME i18n - english project template
 
       case eCatchment:
         m_file = getCalculation().getFolder().getFile( String.format( "/Teilgebiet/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
@@ -109,7 +109,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
         break;
 
       case eStorage:
-        m_file = getCalculation().getFolder().getFile( String.format( "/SpeicherStrang/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
+        m_file = getCalculation().getFolder().getFile( String.format( "/Speicherstrang/%s/%s", feature.getName(), result.getFileName() ) ); //$NON-NLS-1$
         break;
 
       default:
