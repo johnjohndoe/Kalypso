@@ -50,15 +50,14 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
 /**
  * @author Dirk Kuch
  */
-public class ValidSoilParametersVisitor implements IFeatureBindingCollectionVisitor<SoilLayerParameter>
+public class ValidSoilParametersVisitor<T extends SoilLayerParameter> implements IFeatureBindingCollectionVisitor<T>
 {
+  private final Set<SoilLayerParameter> m_valid = new LinkedHashSet<SoilLayerParameter>();
 
-  Set<SoilLayerParameter> m_valid = new LinkedHashSet<SoilLayerParameter>();
-
-  Set<SoilLayerParameter> m_invalid = new LinkedHashSet<SoilLayerParameter>();
+  private final Set<SoilLayerParameter> m_invalid = new LinkedHashSet<SoilLayerParameter>();
 
   @Override
-  public void visit( final SoilLayerParameter parameter )
+  public void visit( final T parameter )
   {
     final Feature linkedSoilLayer = parameter.getLinkedSoilLayer();
     if( linkedSoilLayer == null )
@@ -76,5 +75,4 @@ public class ValidSoilParametersVisitor implements IFeatureBindingCollectionVisi
   {
     return m_invalid.toArray( new SoilLayerParameter[] {} );
   }
-
 }
