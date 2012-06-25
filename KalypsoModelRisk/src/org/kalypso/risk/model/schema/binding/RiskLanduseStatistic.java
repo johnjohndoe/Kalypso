@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -61,16 +62,16 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   private int m_numberOfEntries = 0;
 
   // minimal occurred cell value
-  private BigDecimal m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+  private BigDecimal m_min = new BigDecimal( Double.MAX_VALUE ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
 
   // maximal occured cell value
-  private BigDecimal m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+  private BigDecimal m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
 
   // average value of all cells
-  private BigDecimal m_average = new BigDecimal( 0 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+  private BigDecimal m_average = new BigDecimal( 0 ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP );
 
   // summation of all values
-  private BigDecimal m_sum = new BigDecimal( 0 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+  private BigDecimal m_sum = new BigDecimal( 0 ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
 
   private BigDecimal m_cellSize = null;
 
@@ -98,7 +99,7 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
 
     m_sum = m_sum.add( value );
     final double averageValue = (m_sum.doubleValue() / m_numberOfEntries);
-    m_average = new BigDecimal( averageValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    m_average = new BigDecimal( averageValue ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP );
 
     update();
   }
@@ -116,7 +117,7 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   {
     /* calculate the landuse area [m²] */
     final double totalArea = m_cellSize.doubleValue() * m_numberOfEntries;
-    final BigDecimal totalAreaValue = new BigDecimal( totalArea ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal totalAreaValue = new BigDecimal( totalArea ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP );
     setProperty( IRiskLanduseStatistic.PROPERTY_FLOODED_AREA, totalAreaValue );
 
     /* calculate the total damage [€] */

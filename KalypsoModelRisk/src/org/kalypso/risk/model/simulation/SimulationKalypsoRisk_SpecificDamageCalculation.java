@@ -424,7 +424,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       {
         final Object value = newRecord.getValue( i );
         if( value == null )
-          newRecord.setValue( i, new BigDecimal( 0.0 ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+          newRecord.setValue( i, new BigDecimal( 0.0 ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP ) );
       }
 
       // average annual damage value for the whole landuse class
@@ -632,7 +632,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       // final BigDecimal sumStat = statEntry2.getDamageSum().add( statEntry1.getDamageSum() );
       final BigDecimal sumStat = statEntry2.getAverageDamageValue().add( statEntry1.getAverageDamageValue() );
       final double value = sumStat.doubleValue() / 2;
-      final BigDecimal si = new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+      final BigDecimal si = new BigDecimal( value ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
 
       /* calculate the average damage and add it */
       averageSum = averageSum + si.doubleValue() * d_pi;

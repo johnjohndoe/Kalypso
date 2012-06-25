@@ -113,7 +113,7 @@ public class RiskLanduseHelper
 
       entry.setName( entryName );
       entry.setReturnPeriod( returnPeriod );
-      entry.setCellSize( new BigDecimal( cellSize ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      entry.setCellSize( new BigDecimal( cellSize ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_MEDIUM, BigDecimal.ROUND_HALF_UP ) );
       entry.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.2" ) + returnPeriod + Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return entry;
     }

@@ -51,13 +51,13 @@ public class RiskPolygonStatistics
 {
   final double m_returnPeriod;
 
-  BigDecimal m_minValue = new BigDecimal( Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+  BigDecimal m_minValue = new BigDecimal( Double.MAX_VALUE ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
 
-  BigDecimal m_maxValue = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+  BigDecimal m_maxValue = new BigDecimal( -Double.MAX_VALUE ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
 
-  BigDecimal m_sumValue = new BigDecimal( 0 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+  BigDecimal m_sumValue = new BigDecimal( 0 ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP );
 
-  BigDecimal m_averageValue = new BigDecimal( 0 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+  BigDecimal m_averageValue = new BigDecimal( 0 ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP );
 
   int m_numOfValues = 0;
 
@@ -68,7 +68,7 @@ public class RiskPolygonStatistics
 
   public void update( final double doubleValue )
   {
-    final BigDecimal value = new BigDecimal( doubleValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal value = new BigDecimal( doubleValue ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
 
     m_numOfValues++;
 
@@ -97,7 +97,7 @@ public class RiskPolygonStatistics
 
   public BigDecimal getAverageValue( )
   {
-    return m_averageValue = m_sumValue.divide( new BigDecimal( m_numOfValues ).setScale( 0, BigDecimal.ROUND_HALF_UP ), BigDecimal.ROUND_HALF_UP );
+    return m_averageValue = m_sumValue.divide( new BigDecimal( m_numOfValues ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP ), BigDecimal.ROUND_HALF_UP );
   }
 
   public double getReturnPeriod( )

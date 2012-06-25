@@ -117,9 +117,18 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       resultEater.addResult( MODELSPEC_KALYPSORISK.VECTOR_MODEL.name(), tmpVectorModel );
       resultEater.addResult( MODELSPEC_KALYPSORISK.OUTPUT_RASTER_FOLDER.name(), outputRasterTmpDir );
     }
-    catch( final Exception e )
+    catch( final Exception ex )
     {
-      throw new SimulationException( Messages.getString("SimulationKalypsoRisk_RiskZonesCalculation.0"), e ); //$NON-NLS-1$
+      if( ex instanceof SimulationException )
+      {
+        final String message = ex.getLocalizedMessage();
+        if( message == null || message.trim().length() == 0 )
+          throw new SimulationException( Messages.getString( "SimulationKalypsoRisk_RiskZonesCalculation.0" ), ex ); //$NON-NLS-1$
+        else
+          throw new SimulationException( message, ex ); //$NON-NLS-1$
+      }
+      else
+        throw new SimulationException( Messages.getString( "SimulationKalypsoRisk_RiskZonesCalculation.0" ), ex ); //$NON-NLS-1$
     }
   }
 
