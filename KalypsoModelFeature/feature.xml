@@ -26,6 +26,10 @@
          id="org.kalypso.base.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.kalypso.base.feature.xml"
+         version="0.0.0"/>
+
    <plugin
          id="org.kalypso.KalypsoManual1D2D"
          download-size="0"
