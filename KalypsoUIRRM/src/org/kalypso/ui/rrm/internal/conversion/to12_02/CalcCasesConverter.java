@@ -151,6 +151,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
   {
     final File baseScenarioDir = m_globalData.getBaseScenarioDir();
     final IPath baseScenarioPath = Path.fromOSString( baseScenarioDir.getAbsolutePath() );
+    // TODO Better take this segment from the (workflow) extension point?
     final IPath scenariosPath = baseScenarioPath.append( ScenariosExclusionFileFilter.SCENARIOS_FOLDER );
     final String scenarioName = findScenarioName( sourceDir );
     final IPath scenarioPath = scenariosPath.append( scenarioName );

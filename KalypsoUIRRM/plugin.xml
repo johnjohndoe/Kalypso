@@ -403,7 +403,7 @@
             id="org.kalypso.model.rrm.workflow"
             name="%workflowSystem.name">
          <scenarioConfiguration
-               derivedFolder="Szenarios">
+               derivedFolder="Szenarien">
          </scenarioConfiguration>
       </workflowSystem>
    </extension>
