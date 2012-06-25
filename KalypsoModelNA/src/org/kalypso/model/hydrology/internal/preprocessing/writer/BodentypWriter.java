@@ -88,23 +88,26 @@ public class BodentypWriter extends AbstractCoreFileWriter
   {
     for( final Soiltype soiltype : soiltypes )
     {
-      final IFeatureBindingCollection<SoilLayerParameter> base = soiltype.getParameters();
-      final ValidSoilParametersVisitor visitor = new ValidSoilParametersVisitor();
-      base.accept( visitor );
+      final IFeatureBindingCollection<SoilLayerParameter> layerList = soiltype.getParameters();
 
-      final SoilLayerParameter[] invalidParameters = visitor.getInvalidParameters();
-      for( final SoilLayerParameter parameter : invalidParameters )
-      {
-        Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), parameter.getId() ) ); //$NON-NLS-1$
-      }
+      final ValidSoilParametersVisitor<SoilLayerParameter> visitor = new ValidSoilParametersVisitor<>();
+      layerList.accept( visitor );
+
+      final String soiltypeName = soiltype.getName();
+
+      reportInvalidParameters( soiltypeName, visitor );
 
       final SoilLayerParameter[] validParameters = visitor.getValidParameters();
-      buffer.append( String.format( Locale.US, "%-10s%4d\n", soiltype.getName(), ArrayUtils.getLength( validParameters ) ) ); //$NON-NLS-1$
+      writeSoilType( buffer, soiltypeName, validParameters );
+    }
+  }
 
-      for( final SoilLayerParameter parameter : validParameters )
-      {
-        buffer.append( String.format( Locale.US, "%-8s%.1f %.1f\n", parameter.getName(), parameter.getThickness(), parameter.isInterflowFloat() ) ); //$NON-NLS-1$
-      }
+  private void reportInvalidParameters( final String soilType, final ValidSoilParametersVisitor< ? extends SoilLayerParameter> visitor )
+  {
+    final SoilLayerParameter[] invalidParameters = visitor.getInvalidParameters();
+    for( final SoilLayerParameter parameter : invalidParameters )
+    {
+      Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soilType, parameter.getName() ) ); //$NON-NLS-1$
     }
   }
 
@@ -112,29 +115,39 @@ public class BodentypWriter extends AbstractCoreFileWriter
   {
     for( final DRWBMSoiltype soiltype : soiltypes )
     {
-      final IFeatureBindingCollection<DRWBMSoilLayerParameter> base = soiltype.getParameters();
-      final ValidDRWBMSoilParametersVisitor visitor = new ValidDRWBMSoilParametersVisitor();
-      base.accept( visitor );
+      final IFeatureBindingCollection<DRWBMSoilLayerParameter> layerList = soiltype.getParameters();
+      final ValidSoilParametersVisitor<DRWBMSoilLayerParameter> visitor = new ValidSoilParametersVisitor<>();
+      layerList.accept( visitor );
 
-      final DRWBMSoilLayerParameter[] invalidParameters = visitor.getInvalidParameters();
-      for( final DRWBMSoilLayerParameter parameter : invalidParameters )
+      final String soiltypeName = soiltype.getName();
+
+      reportInvalidParameters( soiltypeName, visitor );
+
+      final SoilLayerParameter[] validParameters = visitor.getValidParameters();
+
+      writeSoilType( buffer, soiltypeName, validParameters );
+    }
+  }
+
+  private void writeSoilType( final PrintWriter buffer, final String soiltype, final SoilLayerParameter[] parameters )
+  {
+    buffer.format( Locale.US, "%-10s%4d%n", soiltype, ArrayUtils.getLength( parameters ) ); //$NON-NLS-1$
+
+    for( final SoilLayerParameter parameter : parameters )
+    {
+      // basic soil type parameters
+      final String layerName = parameter.getLinkedSoilLayer().getName();
+      buffer.format( Locale.US, "%-8s%.1f %.1f", layerName, parameter.getThickness(), parameter.isInterflowFloat() ); //$NON-NLS-1$
+
+      // additional drwbm soil type parameters
+      if( parameter instanceof DRWBMSoilLayerParameter )
       {
-        Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), parameter.getId() ) ); //$NON-NLS-1$
+        final DRWBMSoilLayerParameter drwbmParam = (DRWBMSoilLayerParameter) parameter;
+        buffer.append( String.format( Locale.US, " %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f", drwbmParam.getPipeDiameter(), drwbmParam.getPipeRoughness(), drwbmParam.getDrainagePipeKfValue(), drwbmParam.getDrainagePipeSlope(), drwbmParam.getOverflowHeight(), drwbmParam.getAreaPerOutlet(), drwbmParam.getWidthOfArea() ) ); //$NON-NLS-1$
       }
 
-      final DRWBMSoilLayerParameter[] validParameters = visitor.getValidParameters();
-      buffer.append( String.format( Locale.US, "%-10s%4d\n", soiltype.getName(), ArrayUtils.getLength( validParameters ) ) ); //$NON-NLS-1$
-
-      for( final DRWBMSoilLayerParameter parameter : validParameters )
-      {
-
-        // basic soil type parameters
-        buffer.append( String.format( Locale.US, "%-8s%.1f %.1f", parameter.getName(), parameter.getThickness(), parameter.isInterflowFloat() ) ); //$NON-NLS-1$
-
-        // additional drwbm soil type parameters
-        buffer.append( String.format( Locale.US, " %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f", parameter.getPipeDiameter(), parameter.getPipeRoughness(), parameter.getDrainagePipeKfValue(), parameter.getDrainagePipeSlope(), parameter.getOverflowHeight(), parameter.getAreaPerOutlet(), parameter.getWidthOfArea() ) ); //$NON-NLS-1$
-        buffer.append( "\n" ); //$NON-NLS-1$
-      }
+      // line end
+      buffer.format( "%n" ); //$NON-NLS-1$
     }
   }
 }
