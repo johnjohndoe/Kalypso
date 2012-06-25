@@ -438,7 +438,15 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       @Override
       public void run( )
       {
-        m_calculationStatusComposite.setStatus( calculationStatus );
+        IStatus statusToSet = calculationStatus;
+        if( calculationStatus.isMultiStatus() )
+        {
+          final IStatus[] children = calculationStatus.getChildren();
+          if( children.length == 1 )
+            statusToSet = children[0];
+        }
+
+        m_calculationStatusComposite.setStatus( statusToSet );
       }
     } );
 

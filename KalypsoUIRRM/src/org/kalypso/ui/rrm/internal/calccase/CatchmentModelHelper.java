@@ -68,7 +68,6 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.math.IntervalUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.binding.cm.ICatchment;
@@ -91,7 +90,7 @@ import org.kalypso.ogc.sensor.TIMESERIES_TYPE;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.MultiBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -100,6 +99,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 import com.google.common.base.Charsets;
 
@@ -278,8 +278,8 @@ public class CatchmentModelHelper
     /* No generators available. */
     if( generators.length == 0 )
     {
-      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_0"), description ) ) ); //$NON-NLS-1$
-      return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelHelper_1"), description ) ); //$NON-NLS-1$
+      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "CatchmentModelHelper_0" ), description ) ) ); //$NON-NLS-1$
+      return collector.asMultiStatus( String.format( Messages.getString( "CatchmentModelHelper_1" ), description ) ); //$NON-NLS-1$
     }
 
     /* The values of the first generator will be the reference for the others. */
@@ -295,7 +295,7 @@ public class CatchmentModelHelper
       /* (1) All generators must be of the type ILinearSumGenerator. */
       if( !(generator instanceof ILinearSumGenerator) )
       {
-        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_2"), generator.getDescription() ) ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "CatchmentModelHelper_2" ), generator.getDescription() ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -314,7 +314,7 @@ public class CatchmentModelHelper
       /* (4) The areas must be the same and must have the same order in all generators. */
       if( !compareGeneratorCatchments( firstGenerator, linearSumGenerator, false ) )
       {
-        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_3"), generator.getDescription(), firstGenerator.getDescription() ) ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "CatchmentModelHelper_3" ), generator.getDescription(), firstGenerator.getDescription() ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -324,16 +324,16 @@ public class CatchmentModelHelper
       /* (5) Generators may not overlap. Touch is ok. */
       if( !compareGeneratorValidityOverlap( linearSumGenerator, generators ) )
       {
-        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_4"), generator.getDescription() ) ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "CatchmentModelHelper_4" ), generator.getDescription() ) ) ); //$NON-NLS-1$
         continue;
       }
     }
 
     /* (6) There are no gaps allowed between the validity ranges of adjacent generators. */
     if( !compareGeneratorValidityGaps( generators, simulationStart, simulationEnd, firstGenerator.getTimestep(), firstGenerator.getTimestamp() ) )
-      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_5"), description ) ) ); //$NON-NLS-1$
+      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "CatchmentModelHelper_5" ), description ) ) ); //$NON-NLS-1$
 
-    return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelHelper_6"), description ) ); //$NON-NLS-1$
+    return collector.asMultiStatus( String.format( Messages.getString( "CatchmentModelHelper_6" ), description ) ); //$NON-NLS-1$
   }
 
   /**
@@ -356,14 +356,14 @@ public class CatchmentModelHelper
     final Integer timestep1 = generator1.getTimestep();
     final Integer timestep2 = generator2.getTimestep();
     if( !ObjectUtils.equals( timestep1, timestep2 ) )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_7"), generator2.getDescription(), generator1.getDescription() ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "CatchmentModelHelper_7" ), generator2.getDescription(), generator1.getDescription() ) ); //$NON-NLS-1$
 
     final LocalTime timestamp1 = generator1.getTimestamp();
     final LocalTime timestamp2 = generator2.getTimestamp();
     if( !ObjectUtils.equals( timestamp1, timestamp2 ) )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_8"), generator2.getDescription(), generator1.getDescription() ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "CatchmentModelHelper_8" ), generator2.getDescription(), generator1.getDescription() ) ); //$NON-NLS-1$
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper_9"), generator2.getDescription(), generator1.getDescription() ) ); //$NON-NLS-1$
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "CatchmentModelHelper_9" ), generator2.getDescription(), generator1.getDescription() ) ); //$NON-NLS-1$
   }
 
   /**
@@ -658,21 +658,23 @@ public class CatchmentModelHelper
 
       /* Compare the catchments. */
       final QName[] linkProperties = new QName[] { Catchment.PROP_PRECIPITATION_LINK, Catchment.PROP_TEMPERATURE_LINK, Catchment.PROP_EVAPORATION_LINK };
-      final String[] linkLabels = new String[] { Messages.getString("CatchmentModelHelper_12"), Messages.getString("CatchmentModelHelper_13"), Messages.getString("CatchmentModelHelper_14") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final String[] linkLabels = new String[] { Messages.getString( "CatchmentModelHelper_12" ), Messages.getString( "CatchmentModelHelper_13" ), Messages.getString( "CatchmentModelHelper_14" ) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       for( int i = 0; i < linkLabels.length; i++ )
       {
         final IStatus status = compareCatchments( model, tmpModel, context, tmpContext, linkProperties[i], linkLabels[i] );
-        collector.add( status );
+        if( status != null )
+          collector.add( status );
       }
 
       /* Compare other timeseries (created by timeseries mappings). */
       for( final TimeseriesMappingType mappingType : TimeseriesMappingType.values() )
       {
         final IStatus status = compareMapping( model, tmpModel, context, tmpContext, mappingType );
-        collector.add( status );
+        if( status != null )
+          collector.add( status );
       }
 
-      return collector.asMultiStatus( Messages.getString("CatchmentModelHelper_15") ); //$NON-NLS-1$
+      return collector.asMultiStatus( Messages.getString( "CatchmentModelHelper_15" ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -715,23 +717,23 @@ public class CatchmentModelHelper
       final Catchment tmpCatchment = tmpCatchments.get( i );
 
       final IStatus status = compareCatchment( catchment, tmpCatchment, context, tmpContext, linkProperty );
-      collector.add( status );
+      if( status != null )
+        collector.add( status );
     }
 
-    return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelHelper_16"), linkLabel ) ); //$NON-NLS-1$
+    return collector.asMultiStatus( String.format( Messages.getString( "CatchmentModelHelper_16" ), linkLabel ) ); //$NON-NLS-1$
   }
 
   private static IStatus compareCatchment( final Catchment catchment, final Catchment tmpCatchment, final URL context, final URL tmpContext, final QName linkProperty )
   {
     /* Get the timeseries links of the catchment. */
-    final TimeseriesLinkType link = (TimeseriesLinkType) catchment.getProperty( linkProperty );
+    final ZmlLink zmlLink = new ZmlLink( catchment, new GMLXPath( linkProperty ), context );
 
     /* Get the timeseries links of the temporary catchment. */
-    final TimeseriesLinkType tmpLink = (TimeseriesLinkType) tmpCatchment.getProperty( linkProperty );
+    final ZmlLink tmpZmlLink = new ZmlLink( tmpCatchment, new GMLXPath( linkProperty ), tmpContext );
 
     /* Compare the temperature timeseries. */
-    return compareTimeseries( context, link, tmpContext, tmpLink, catchment.getName() );
-
+    return compareTimeseries( zmlLink, tmpZmlLink, catchment.getName() );
   }
 
   private static IStatus compareMapping( final NaModell model, final NaModell tmpModel, final URL context, final URL tmpContext, final TimeseriesMappingType mappingType )
@@ -743,23 +745,24 @@ public class CatchmentModelHelper
     final Feature[] modelElements = mappingType.getModelElements( model );
     final Feature[] tmpModelElements = mappingType.getModelElements( tmpModel );
 
-    final QName modelLinkProperty = mappingType.getModelLinkProperty();
+    final QName linkProperty = mappingType.getModelLinkProperty();
     for( int i = 0; i < modelElements.length; i++ )
     {
       final Feature modelElement = modelElements[i];
       final Feature tmpModelElement = tmpModelElements[i];
 
-      final TimeseriesLinkType modelLink = (TimeseriesLinkType) modelElement.getProperty( modelLinkProperty );
-      final TimeseriesLinkType tmpModelLink = (TimeseriesLinkType) tmpModelElement.getProperty( modelLinkProperty );
+      final ZmlLink zmlLink = new ZmlLink( modelElement, new GMLXPath( linkProperty ), context );
+      final ZmlLink tmpZmlLink = new ZmlLink( tmpModelElement, new GMLXPath( linkProperty ), tmpContext );
 
-      final IStatus status = compareTimeseries( context, modelLink, tmpContext, tmpModelLink, modelElement.getName() );
-      collector.add( status );
+      final IStatus status = compareTimeseries( zmlLink, tmpZmlLink, modelElement.getName() );
+      if( status != null )
+        collector.add( status );
     }
 
-    return collector.asMultiStatus( String.format( Messages.getString("CatchmentModelHelper_17"), mappingType.getLabel() ) ); //$NON-NLS-1$
+    return collector.asMultiStatus( String.format( Messages.getString( "CatchmentModelHelper_17" ), mappingType.getLabel() ) ); //$NON-NLS-1$
   }
 
-  private static IStatus compareTimeseries( final URL context, final TimeseriesLinkType link, final URL tmpContext, final TimeseriesLinkType tmpLink, final String statusLabel )
+  private static IStatus compareTimeseries( final ZmlLink link, final ZmlLink tmpLink, final String statusLabel )
   {
     /* No links? */
     if( link == null && tmpLink == null )
@@ -770,15 +773,21 @@ public class CatchmentModelHelper
 
     try
     {
+      /* If there is no link in the new model, no status. */
+      if( !(tmpLink.isLinkSet() && tmpLink.isLinkExisting()) )
+        return null;
+
+      /* If there is no link in the old model, create a warning. */
+      if( !(link.isLinkSet() && link.isLinkExisting()) )
+        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "There is no timeseries in the imported results, to compare the new timeseries against." );
+
       /* Load the timeseries. */
       /* The time zone may be different to that of the newly generated timeseries. */
-      final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
-      final IObservation observation = ZmlFactory.parseXML( location );
+      final IObservation observation = link.loadObservation();
 
       /* Load the temporary timeseries. */
       /* The time zone may be different to that of the original timeseries. */
-      final URL tmpLocation = UrlResolverSingleton.resolveUrl( tmpContext, tmpLink.getHref() );
-      final IObservation tmpObservation = ZmlFactory.parseXML( tmpLocation );
+      final IObservation tmpObservation = tmpLink.loadObservation();
 
       /* Get the values of both timeseries. */
       final ITupleModel values = observation.getValues( null );
@@ -811,14 +820,14 @@ public class CatchmentModelHelper
       if( differences > 0 )
       {
         final int percent = (differences * 100) / tmpHash.size();
-        collector.add( IStatus.WARNING, Messages.getString("CatchmentModelHelper_18"), null, percent, differences ); //$NON-NLS-1$
+        collector.add( IStatus.WARNING, Messages.getString( "CatchmentModelHelper_18" ), null, percent, differences ); //$NON-NLS-1$
       }
 
       return collector.asMultiStatusOrOK( statusLabel, statusLabel );
     }
     catch( final Exception ex )
     {
-      collector.add( IStatus.WARNING, Messages.getString("CatchmentModelHelper_19"), null, ex.getLocalizedMessage() ); //$NON-NLS-1$
+      collector.add( IStatus.WARNING, Messages.getString( "CatchmentModelHelper_19" ), null, ex.getLocalizedMessage() ); //$NON-NLS-1$
       return collector.asMultiStatus( statusLabel );
     }
   }
@@ -865,7 +874,7 @@ public class CatchmentModelHelper
 
     /* Does the size match? */
     if( modelCatchments.size() != generatorCatchments.size() )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelHelper_20") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "CatchmentModelHelper_20" ) ); //$NON-NLS-1$
 
     /* Does the order match? */
     for( int i = 0; i < modelCatchments.size(); i++ )
@@ -878,9 +887,9 @@ public class CatchmentModelHelper
       final String generatorId = generatorLink.getFeatureId();
 
       if( !modelId.equals( generatorId ) )
-        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelHelper_21") ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "CatchmentModelHelper_21" ) ); //$NON-NLS-1$
     }
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelHelper_22") ); //$NON-NLS-1$
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "CatchmentModelHelper_22" ) ); //$NON-NLS-1$
   }
 }
