@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -71,16 +68,12 @@ public class InitialValueFeatureControl extends AbstractFeatureControl
   @Override
   protected Control createControl( final Composite parent, final int style )
   {
-    /* Create the main composite. */
-    final Composite main = new Composite( parent, style );
-    main.setLayout( new GridLayout( 1, false ) );
-
     /* Create a button. */
     final Action initialValueAction = new InitialValueAction( this );
-    final Button InitialValueButton = ActionButton.createButton( null, main, initialValueAction );
-    InitialValueButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    final Button initialValueButton = ActionButton.createButton( null, parent, initialValueAction );
+// InitialValueButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
-    return main;
+    return initialValueButton;
   }
 
   @Override
