@@ -184,19 +184,19 @@ public class ResultManagementView extends ViewPart
     m_treeViewer.setInput( m_model );
 
     /** set tree viewer selection to it's first item! */
+    final TreeNodeModel model = m_model;
     new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        final TreeNode[] elements = m_model.getRootElements();
+        final TreeNode[] elements = model.getRootElements();
         if( ArrayUtils.isNotEmpty( elements ) )
           m_treeViewer.setSelection( new StructuredSelection( elements[0] ) );
 
         return Status.OK_STATUS;
       }
     }.schedule();
-
   }
 
   public TreeViewer getTreeViewer( )
@@ -215,7 +215,7 @@ public class ResultManagementView extends ViewPart
   }
 
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == TreeViewer.class )
       return m_treeViewer;

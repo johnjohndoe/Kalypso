@@ -330,7 +330,9 @@
                  commandId="org.kalypso.ui.rrm.internal.view.clear.selection.stack"
                  style="push">
            </command>
+           <!-- Removed because it is too dangerous: thousands of nodes may open which takes verrrry long.
            <command commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items" style="push"/>
+           -->
            <command commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items" style="push"/>
         </menuContribution>
    </extension>
