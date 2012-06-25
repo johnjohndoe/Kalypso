@@ -12,7 +12,6 @@
 <fastViewBars/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.views.mapView"/>
-<viewLayoutRec closeable="false" id="org.kalypso.risk.views.RiskStatisticsResultView"/>
 <viewLayoutRec closeable="false" id="org.kalypso.zml.ui.table.view.TableViewPart"/>
 <viewLayoutRec closeable="false" id="org.kalypso.zml.ui.chart.view.DiagramViewPart"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.views.featuretemplateview"/>
@@ -24,6 +23,7 @@
 <viewLayoutRec closeable="false" id="org.kalypso.ui.editor.gistableeditor.GttViewPart"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.repository.view.RepositoryExplorerPart"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"/>
+<viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.results.view.ResultManagementView"/>
 <layout>
 <mainWindow>
 <info folder="true" part="leftTop">
@@ -51,7 +51,6 @@
 <page content="org.kalypso.ui.editor.gistableeditor.GttViewPart" label="LabelNotFound"/>
 <page content="org.kalypso.ui.views.featuretemplateview" label="LabelNotFound"/>
 <page content="org.kalypso.zml.ui.chart.view.DiagramViewPart" label="LabelNotFound"/>
-<page content="org.kalypso.risk.views.RiskStatisticsResultView" label="LabelNotFound"/>
 <page content="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="1"/>
