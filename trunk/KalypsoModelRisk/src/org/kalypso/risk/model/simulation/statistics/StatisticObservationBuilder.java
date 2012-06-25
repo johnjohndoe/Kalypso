@@ -54,6 +54,7 @@ import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
+import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -163,9 +164,9 @@ class StatisticObservationBuilder
     {
       final SpecificDamageStatistic specificDamamage = item.getSpecificDamage( returnPeriod );
 
-      newRecord.setValue( i++, new BigDecimal( specificDamamage.getTotalDamageValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( i++, new BigDecimal( specificDamamage.getTotalFloodedArea() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( i++, new BigDecimal( specificDamamage.getAverageDamage() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( i++, new BigDecimal( specificDamamage.getTotalDamageValue() ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( i++, new BigDecimal( specificDamamage.getTotalFloodedArea() ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( i++, new BigDecimal( specificDamamage.getAverageDamage() ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP ) );
     }
 
     newRecord.setValue( components.length - 1, item.calcAnnualAverageDamage() );

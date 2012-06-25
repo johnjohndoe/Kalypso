@@ -94,6 +94,16 @@ public class RiskModelHelper
 
   public static final String THEME_NAME__DAMAGE_POTENTIAL = "%SpecificDamagePotentialMap.gismapview.Schadenspotentiale"; //$NON-NLS-1$
 
+  /**
+   * Please use fine scale for the risk calculation, as many landuse types have very low damage values in EUR per m2. If
+   * it is rounded to one cent (scale 2) before updating the statistics, the total statistics will be wrong at the end.
+   */
+  public static int BIGDECIMAL_SCALE_FINE = 16;
+
+  public static int BIGDECIMAL_SCALE_MEDIUM = 4;
+
+  public static int BIGDECIMAL_SCALE_COARSE = 2;
+
   public static enum LAYER_TYPE
   {
     WATERLEVEL,
@@ -135,7 +145,7 @@ public class RiskModelHelper
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
-   *
+   * 
    * @param scenarioFolder
    * @param model
    * @param sldFile
@@ -145,8 +155,8 @@ public class RiskModelHelper
    */
   public static void updateDamageStyle( final IFile sldFile, final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection ) throws IOException, SAXException, CoreException
   {
-    BigDecimal maxDamageValue = new BigDecimal( -Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-    BigDecimal minDamageValue = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    BigDecimal maxDamageValue = new BigDecimal( -Double.MAX_VALUE ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_MEDIUM, BigDecimal.ROUND_HALF_UP );
+    BigDecimal minDamageValue = new BigDecimal( Double.MAX_VALUE ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_MEDIUM, BigDecimal.ROUND_HALF_UP );
 
     for( final ICoverageCollection specificDamageCoverage : specificDamageCoverageCollection )
     {
@@ -169,7 +179,7 @@ public class RiskModelHelper
   public synchronized static void fillStatistics( final int returnPeriod, final ILanduseClass landuseClass, final double damageValue, final double cellSize )
   {
     final IRiskLanduseStatistic statistic = RiskLanduseHelper.getLanduseStatisticEntry( landuseClass, returnPeriod, cellSize );
-    final BigDecimal value = new BigDecimal( damageValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal value = new BigDecimal( damageValue ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
     statistic.updateStatistic( value );
   }
 
@@ -223,7 +233,7 @@ public class RiskModelHelper
 
   /**
    * creates a map layer for the grid collection
-   *
+   * 
    * @param parentKalypsoTheme
    *          {@link AbstractCascadingLayerTheme} in which we add the new theme layer
    * @param coverageCollection
@@ -272,9 +282,9 @@ public class RiskModelHelper
   }
 
   /**
-   *
+   * 
    * creates the land use raster files. The grid cells get the ordinal number of the the land use class.
-   *
+   * 
    * @param scenarioFolder
    *          relative path needed for the output file path to append on
    * @param inputCoverages
@@ -367,7 +377,7 @@ public class RiskModelHelper
 
   /**
    * get the water depth raster with the greatest annuality
-   *
+   * 
    * @param waterDepthCoverageCollection
    *          raster collection
    * @return {@link IAnnualCoverageCollection} with greatest return period value
@@ -389,7 +399,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layer, add the new one and modifies the style according to the max values
-   *
+   * 
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -418,7 +428,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layers and adds the new ones
-   *
+   * 
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -587,9 +597,9 @@ public class RiskModelHelper
 
   /**
    * Import new events into the risk model.<br>
-   *
+   * 
    * The parameters 'names', 'returnPeriods', 'grids' must eb of the same size.
-   *
+   * 
    * @param names
    *          The names of the events to import
    * @param descriptions
@@ -696,7 +706,7 @@ public class RiskModelHelper
 
   /**
    * Finds and activates the event theme if present.
-   *
+   * 
    * @return <code>true</code>, if the theme was successfully activated.
    */
   public static boolean activateEventTheme( final IMapPanel mapPanel )

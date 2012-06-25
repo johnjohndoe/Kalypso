@@ -150,8 +150,8 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       m_gridMap.put( collection.getId(), gridList );
     }
 
-    m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 1, BigDecimal.ROUND_HALF_UP );
-    m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 1, BigDecimal.ROUND_HALF_UP );
+    m_min = new BigDecimal( Double.MAX_VALUE ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
+    m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
 
     for( final IRiskZoneDefinition riskZoneDefinition : m_riskZoneDefinitionsList )
       if( riskZoneDefinition.isUrbanLanduseType() )
@@ -227,8 +227,8 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
             return Double.NaN;
 
           /* check min/max */
-          m_min = m_min.min( new BigDecimal( returnValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-          m_max = m_max.max( new BigDecimal( returnValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+          m_min = m_min.min( new BigDecimal( returnValue ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP ) );
+          m_max = m_max.max( new BigDecimal( returnValue ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP ) );
 
           return returnValue;
         }
@@ -237,11 +237,20 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
     catch( final Exception ex )
     {
-      throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesGrid.0" ), ex ); //$NON-NLS-1$
+      if( ex instanceof GeoGridException )
+      {
+        final String message = ex.getLocalizedMessage();
+        if( message == null || message.trim().length() == 0 )
+          throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesGrid.0" ), ex ); //$NON-NLS-1$
+        else
+          throw new GeoGridException( message, ex ); //$NON-NLS-1$
+      }
+      else
+        throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesGrid.0" ), ex ); //$NON-NLS-1$
     }
   }
 
-  private double getReturnValue( final double averageAnnualDamageValue, final ILandusePolygon polygon )
+  private double getReturnValue( final double averageAnnualDamageValue, final ILandusePolygon polygon ) throws GeoGridException
   {
     if( m_produceZoneIdentifiers )
     {
@@ -252,12 +261,19 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       return riskZone;
     }
     else
-      return polygon.isUrbanLanduseType() ? averageAnnualDamageValue : -averageAnnualDamageValue;
+    {
+      final Boolean landuseType = polygon.isUrbanLanduseType();
+      if( landuseType == null )
+      {
+        throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesGrid.2" ), new RuntimeException() ); //$NON-NLS-1$
+      }
+      return landuseType ? averageAnnualDamageValue : -averageAnnualDamageValue;
+    }
   }
 
   /**
    * returns the flow depth value for a given position.
-   *
+   * 
    * @param collection
    *          grid collection of water depth grids
    * @param x

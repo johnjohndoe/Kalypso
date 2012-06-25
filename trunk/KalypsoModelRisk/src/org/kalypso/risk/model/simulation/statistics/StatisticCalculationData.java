@@ -234,7 +234,7 @@ public class StatisticCalculationData extends AbstractModelObject
 
   public ShapeFile loadSelectedShape( ) throws IOException, DBaseException
   {
-    if( m_selectedShape == SHAPE_FILE_NONE )
+    if( m_selectedShape ==null || m_selectedShape == SHAPE_FILE_NONE )
       return null;
 
     final String shapeBase = FilenameUtils.removeExtension( m_selectedShape.getAbsolutePath() );
