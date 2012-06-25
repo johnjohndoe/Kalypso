@@ -19,7 +19,7 @@
         <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
       </text>
       <extensioncontrol style="SWT.NONE" property="gml:description" extension-id="simulationDescriptionFeatureControl">
-        <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+        <gridData horizontalAlignment="SWT.TRUE" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="false" />
       </extensioncontrol>
 
       <label property="rrm:comment" style="SWT.NONE">
@@ -197,7 +197,7 @@
         <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
       </text>
       <extensioncontrol style="SWT.NONE" property="rrm:initialValueSource" extension-id="initialValueFeatureControl">
-        <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+        <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.CENTER" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="false" />
       </extensioncontrol>
     </group>
 
