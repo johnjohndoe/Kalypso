@@ -54,12 +54,20 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.ogc.gml.table.ILayerTableInput;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.gistableeditor.command.GmlTableHandlerUtils;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.util.command.WaitForFeatureChanges;
 import org.kalypsodeegree.model.feature.Feature;
+
+import de.renew.workflow.base.ITask;
+import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
 
 /**
  * Create / Updates simulations from the simulations table.
@@ -74,7 +82,7 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
   {
     /* Get the shell and the title. */
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
-    final String title = Messages.getString("RefreshSimulationsTaskHandler.0"); //$NON-NLS-1$
+    final String title = Messages.getString( "RefreshSimulationsTaskHandler.0" ); //$NON-NLS-1$
 
     /* Get the input. */
     final LayerTableViewer tableViewer = GmlTableHandlerUtils.getTableViewerChecked( event );
@@ -110,8 +118,19 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
       return null;
     }
 
-    /* Calculate the simulations. */
-    handler.calculateSimulation( shell, simulations );
+    /* Must wait for eventually done changes to the feature. */
+    final ICoreRunnableWithProgress commandWaiter = new WaitForFeatureChanges();
+    ProgressUtilities.busyCursorWhile( commandWaiter );
+
+    /* Ask the user to save. */
+    final ITaskExecutionAuthority executionAuthority = KalypsoAFGUIFrameworkPlugin.getTaskExecutionAuthority();
+    final ITaskExecutor taskExecutor = KalypsoAFGUIFrameworkPlugin.getTaskExecutor();
+    final ITask task = taskExecutor.getActiveTask();
+    if( executionAuthority.canStopTask( task ) )
+    {
+      /* Calculate the simulations. */
+      handler.calculateSimulation( shell, simulations );
+    }
 
     return null;
   }

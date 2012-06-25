@@ -113,6 +113,8 @@ public class SimulationDescriptionAction extends Action
       final IFolder initialFolder = simulationsFolder.getFolder( initialDescription );
       final IFolder newFolder = simulationsFolder.getFolder( newDescription );
 
+      // FIXME: change all short term simulation that reeference this one
+
       /* Rename the source folder. */
       initialFolder.move( newFolder.getFullPath(), false, new NullProgressMonitor() );
     }

@@ -68,7 +68,7 @@ public class SimulationDescriptionValidator implements IInputValidator
       return "Please enter a description...";
 
     final NAControl[] allSimulations = getAllSimulations();
-    final String duplicate = findDuplicates( allSimulations );
+    final String duplicate = findDuplicates( allSimulations, newText );
     if( duplicate != null )
       return String.format( "There is already a simulation with the description '%s'...", newText );
 
@@ -93,18 +93,18 @@ public class SimulationDescriptionValidator implements IInputValidator
    *          All simulations.
    * @return The first name of the simulation, which is a duplicate or null.
    */
-  public String findDuplicates( final NAControl[] allSimulations )
+  public String findDuplicates( final NAControl[] allSimulations, final String currentText )
   {
     final Set<String> allNames = new HashSet<>();
 
     for( final NAControl simulation : allSimulations )
     {
       final String name = simulation.getDescription();
-      if( allNames.contains( name ) )
-        return name;
-
       allNames.add( name );
     }
+
+    if( allNames.contains( currentText ) )
+      return currentText;
 
     return null;
   }
