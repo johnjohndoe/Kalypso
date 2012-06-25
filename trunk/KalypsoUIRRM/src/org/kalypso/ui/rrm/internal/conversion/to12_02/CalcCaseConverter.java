@@ -255,7 +255,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     /* Create the directory. */
     m_targetScenarioDir.mkdirs();
 
-    /* Copy all data from the base scenario except the "Szenarios" folder. */
+    /* Copy all data from the base scenario except the "Szenarien" folder. */
     FileUtils.copyDirectory( m_globalData.getBaseScenarioDir(), m_targetScenarioDir, new ScenariosExclusionFileFilter() );
 
     /* Update the cases file. */
