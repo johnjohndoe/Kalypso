@@ -38,39 +38,34 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.project;
+package org.kalypso.ui.rrm.internal.conversion.to12_02;
+
 
 /**
- * Constants relevant for the structure of a na model calc case.<br/>
- * Most pathes are relative to the calc case.
+ * Constants relevant for the OLD (prior to version 12.7) project structure of an na model.<br/>
+ * Most pathes are relative to the project root.
  * 
  * @author Gernot Belger
- * @deprecated Use {@link CalcCaseAccessor} instead.
  */
-@Deprecated
-public interface INaCalcCaseConstants
+interface INaProjectConstants
 {
-  String EXPERT_CONTROL_FILE = "expertControl.gml"; //$NON-NLS-1$
+  String FOLDER_ZEITREIHEN = "Zeitreihen";//$NON-NLS-1$
 
-  String EXPERT_CONTROL_PATH = INaProjectConstants.FOLDER_MODELS + "/" + EXPERT_CONTROL_FILE; //$NON-NLS-1$
+  String FOLDER_MODEL = ".model";//$NON-NLS-1$
 
-  String CALCULATION_GML_FILE = "calculation.gml"; //$NON-NLS-1$
+  String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
 
-  String CALCULATION_GML_PATH = INaProjectConstants.FOLDER_MODELS + "/" + "calculation.gml"; //$NON-NLS-1$ //$NON-NLS-2$
+  String PATH_OBSERVATION_CONF = FOLDER_MODEL + "/" + "observationConf"; //$NON-NLS-1$ //$NON-NLS-1$
 
-  String ANFANGSWERTE_DIR = "Anfangswerte"; //$NON-NLS-1$
+  String GML_MODELL_FILE = "modell.gml"; //$NON-NLS-1$
 
-  String ANFANGSWERTE_FILE = "lzsim.gml"; //$NON-NLS-1$
+  String GML_HYDROTOP_FILE = "hydrotop.gml";//$NON-NLS-1$
 
-  String KLIMA_DIR = "Klima"; //$NON-NLS-1$
+  String GML_GEOLOGIE_FILE = "geologie.gml";//$NON-NLS-1$
 
-  String NIEDERSCHLAG_DIR = "Niederschlag"; //$NON-NLS-1$
+  String GML_LANDUSE_FILE = "landuse.gml";//$NON-NLS-1$
 
-  String PEGEL_DIR = "Pegel"; //$NON-NLS-1$
+  String GML_PARAMETER_FILE = "parameter.gml";//$NON-NLS-1$
 
-  String ERGEBNISSE_DIR = "Ergebnisse"; //$NON-NLS-1$
-
-  String AKTUELL_PATH = ERGEBNISSE_DIR + '/' + "Aktuell"; //$NON-NLS-1$
-
-  String CATCHMENT_FILE = "catchmentModels.gml"; //$NON-NLS-1$
+  String GML_PEDOLOGIE_FILE = "pedologie.gml";//$NON-NLS-1$
 }

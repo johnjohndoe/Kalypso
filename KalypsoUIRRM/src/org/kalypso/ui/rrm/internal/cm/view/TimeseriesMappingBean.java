@@ -64,7 +64,7 @@ import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ogc.gml.command.AddLinkCommand;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
@@ -257,7 +257,7 @@ public class TimeseriesMappingBean extends FeatureBean<ITimeseriesMapping>
 
         final IFeatureProvider newElementProvider = addCommand;
 
-        final String modelRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelFeature.getId() ); //$NON-NLS-1$
+        final String modelRef = String.format( "%s#%s", RrmScenario.FILE_MODELL_GML, modelFeature.getId() ); //$NON-NLS-1$
 
         final AddLinkCommand linkCommand = new AddLinkCommand( newElementProvider, mappingElementLinkRelation, -1, modelRef );
         commands.addCommand( linkCommand );

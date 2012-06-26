@@ -47,7 +47,7 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -77,21 +77,15 @@ public class TimeseriesDataLinkFunctionProperty extends FeaturePropertyFunction
 
     final String timeseriesFilename = Timeserieses.formatTimeseriesFilename( timeseries.getParameterType(), timeseries.getQuality(), timeseries.getTimestep() );
 
-    final String timeseriesPath = stationFoldername + IPath.SEPARATOR + timeseriesFilename;
-    final String link = getProjectPath( timeseriesPath );
+    final IPath timeseriesFolder = RrmProject.getTimeseriesPath();
+    final IPath timeseriesPath = timeseriesFolder.append( stationFoldername ).append( timeseriesFilename );
+
+    final String link = UrlResolver.PROJECT_PROTOCOLL + IPath.SEPARATOR + timeseriesPath.toPortableString();
 
     final TimeseriesLinkType type = new TimeseriesLinkType();
     type.setHref( link );
 
     return type;
-  }
-
-  private String getProjectPath( final String timeseriesPath )
-  {
-    final String projectRelativePath = INaProjectConstants.PATH_TIMESERIES + "/" + timeseriesPath; //$NON-NLS-1$
-    final String projectPath = UrlResolver.PROJECT_PROTOCOLL + "//" + projectRelativePath; //$NON-NLS-1$
-
-    return projectPath;
   }
 
   @Override

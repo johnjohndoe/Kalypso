@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.tests;
 
@@ -59,7 +59,7 @@ import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
@@ -113,8 +113,9 @@ public class MultiCatchmentModelTest
   public void test( ) throws Exception
   {
     /* Get the simulation folder. */
-    final IFolder baseFolder = m_project.getFolder( INaProjectConstants.FOLDER_BASIS );
-    final RrmScenario rrmScenario = new RrmScenario( baseFolder );
+    final RrmProject rrmProject = new RrmProject( m_project );
+
+    final RrmScenario rrmScenario = rrmProject.getBaseScenario();
     final IFolder simulationsFolder = rrmScenario.getSimulationsFolder();
     final IFolder actualSimulationFolder = simulationsFolder.getFolder( "Actual" ); //$NON-NLS-1$
     final IFolder expectedSimulationFolder = simulationsFolder.getFolder( "Expected" ); //$NON-NLS-1$

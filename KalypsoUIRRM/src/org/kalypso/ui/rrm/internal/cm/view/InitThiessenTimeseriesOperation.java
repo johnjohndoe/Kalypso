@@ -47,9 +47,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -59,7 +59,8 @@ import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.rcm.binding.IThiessenStation;
 import org.kalypso.model.rcm.binding.IThiessenStationCollection;
@@ -108,7 +109,9 @@ public class InitThiessenTimeseriesOperation implements ICoreRunnableWithProgres
 
       /* save workspace */
       final IContainer scenarioFolder = scenarioDataProvider.getScenarioFolder();
-      final IFile thiessenFile = scenarioFolder.getFile( new Path( INaProjectConstants.GML_THIESSEN_STATION_PATH ) );
+      final RrmScenario rrmScenario = new RrmScenario( scenarioFolder );
+      final IFile thiessenFile = rrmScenario.getThiessenTempFile();
+
       GmlSerializer.serializeWorkspace( thiessenFile, stationsWorkspace, monitor );
 
       return Status.OK_STATUS;
@@ -188,8 +191,10 @@ public class InitThiessenTimeseriesOperation implements ICoreRunnableWithProgres
     newThiessenStation.setActive( active );
 
     /* Link to underlying timeseries */
+    final IPath stationsGmlPath = RrmProject.getStationsGmlPath();
+
     final String refId = timeseries.getId();
-    final String href = String.format( "%s//%s#%s", UrlResolver.PROJECT_PROTOCOLL, INaProjectConstants.GML_STATIONS_PATH, refId ); //$NON-NLS-1$
+    final String href = String.format( "%s//%s#%s", UrlResolver.PROJECT_PROTOCOLL, stationsGmlPath.toPortableString(), refId ); //$NON-NLS-1$
     newThiessenStation.setStation( href );
 
     /* Copy properties from station and timeseries, it is hard to access them via gtt and gmt templates */

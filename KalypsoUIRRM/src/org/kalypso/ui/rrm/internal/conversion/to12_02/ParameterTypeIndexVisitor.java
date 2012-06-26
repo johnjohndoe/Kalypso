@@ -53,7 +53,6 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.conversion.ITimeseriesVisitor;

@@ -69,7 +69,7 @@ import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.timeseries.HydrologyTimeseriesImportWorker;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -109,20 +109,22 @@ public class TimeseriesImporter
 
   private final File m_sourceDir;
 
-  private final File m_timeseriesDir;
-
   private IStationCollection m_stations;
 
   private final IStatusCollector m_log;
 
   private final IParameterTypeIndex m_parameterIndex;
 
+  private final File m_stationsFile;
+
   public TimeseriesImporter( final File sourceDir, final File targetDir, final IStatusCollector log, final IParameterTypeIndex parameterIndex )
   {
     m_log = log;
     m_parameterIndex = parameterIndex;
     m_sourceDir = new File( sourceDir, INaProjectConstants.FOLDER_ZEITREIHEN );
-    m_timeseriesDir = new File( targetDir, INaProjectConstants.PATH_TIMESERIES );
+
+    final IPath stationsGmlPath = RrmProject.getStationsGmlPath();
+    m_stationsFile = new File( targetDir, stationsGmlPath.toOSString() );
   }
 
   /** Read timeseries management */
@@ -130,8 +132,7 @@ public class TimeseriesImporter
   {
     try
     {
-      final File stationsFile = new File( m_timeseriesDir, INaProjectConstants.GML_STATIONS );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( stationsFile, null );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_stationsFile, null );
       m_stations = (IStationCollection) workspace.getRootFeature();
     }
     catch( final Exception e )
@@ -146,8 +147,7 @@ public class TimeseriesImporter
   {
     try
     {
-      final File stationsFile = new File( m_timeseriesDir, INaProjectConstants.GML_STATIONS );
-      GmlSerializer.serializeWorkspace( stationsFile, m_stations.getWorkspace(), Charsets.UTF_8.name() );
+      GmlSerializer.serializeWorkspace( m_stationsFile, m_stations.getWorkspace(), Charsets.UTF_8.name() );
     }
     catch( final Exception e )
     {

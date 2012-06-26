@@ -47,7 +47,6 @@ import java.util.Collection;
 
 import org.apache.commons.io.DirectoryWalker;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
 
 /**
  * Searches for calc case folders.

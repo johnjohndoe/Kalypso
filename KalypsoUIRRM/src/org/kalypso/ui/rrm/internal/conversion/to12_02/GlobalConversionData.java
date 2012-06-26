@@ -59,7 +59,7 @@ import org.kalypso.afgui.scenarios.ObjectFactory;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioList;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.cases.CaseList;
@@ -125,7 +125,7 @@ public class GlobalConversionData
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
     m_timeseriesIndex = timeseriesIndex;
-    m_baseScenarioDir = new File( targetDir, INaProjectConstants.FOLDER_BASIS );
+    m_baseScenarioDir = new File( targetDir, RrmProject.FOLDER_BASIS );
     m_caseList = null;
   }
 

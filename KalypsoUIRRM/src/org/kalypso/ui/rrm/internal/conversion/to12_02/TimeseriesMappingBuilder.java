@@ -53,6 +53,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -61,8 +62,7 @@ import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
-import org.kalypso.model.hydrology.project.RrmProject;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -112,7 +112,7 @@ public class TimeseriesMappingBuilder
     if( id == null )
       return null;
 
-    return String.format( "%s#%s", INaProjectConstants.GML_CATCHMENT_MODEL_FILE, id ); //$NON-NLS-1$
+    return String.format( "%s#%s", RrmScenario.FILE_CATCHMENT_MODELS_GML, id ); //$NON-NLS-1$
   }
 
   public IStatus execute( final TimeseriesMappingType mappingType )
@@ -155,7 +155,7 @@ public class TimeseriesMappingBuilder
           log.add( guessStatus );
 
           final String timeseriesPath = timeseriesGuesser.getResult();
-          final String modelElementRef = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelElement.getId() ); //$NON-NLS-1$
+          final String modelElementRef = String.format( "%s#%s", RrmScenario.FILE_MODELL_GML, modelElement.getId() ); //$NON-NLS-1$
 
           /* always add a mapping if link exists */
           if( !StringUtils.isBlank( timeseriesPath ) )
@@ -211,7 +211,7 @@ public class TimeseriesMappingBuilder
 
     try
     {
-      final IPath observationConfPath = RrmProject.getObservationConfPath();
+      final IPath observationConfPath = new Path( INaProjectConstants.PATH_OBSERVATION_CONF );
 
       final File mappingSourceFolder = new File( m_sourceProjectDir, observationConfPath.toOSString() );
       final File mappingSourceFile = new File( mappingSourceFolder, filename );
