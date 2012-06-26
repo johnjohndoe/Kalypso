@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal;
 
@@ -51,6 +51,12 @@ import org.kalypso.model.hydrology.NaModelConstants;
  */
 public class NaSimulationDirs
 {
+  public static final String DIR_CURRENT_RESULT = "Aktuell"; //$NON-NLS-1$
+
+  String ASCII_DIR_NAME = "ascii"; //$NON-NLS-1$
+
+  String RESULT_DIR_NAME = "Ergebnisse"; //$NON-NLS-1$
+
   public final File simulationDir;
 
   public final File outputDir;
@@ -69,14 +75,14 @@ public class NaSimulationDirs
   {
     simulationDir = simDir;
 
-    asciiDir = new File( simulationDir, NaModelConstants.ASCII_DIR_NAME );
+    asciiDir = new File( simulationDir, ASCII_DIR_NAME );
     asciiDirs = new NaAsciiDirs( asciiDir );
 
     outputDir = new File( simulationDir, NaModelConstants.OUTPUT_DIR_NAME );
 
-    resultDir = new File( outputDir, NaModelConstants.RESULT_DIR_NAME );
+    resultDir = new File( outputDir, RESULT_DIR_NAME );
 
-    currentResultDir = new File( resultDir, "Aktuell" ); //$NON-NLS-1$
+    currentResultDir = new File( resultDir, DIR_CURRENT_RESULT );
     currentResultDirs = new NaResultDirs( currentResultDir );
   }
 }

@@ -57,11 +57,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class RrmScenario
 {
-  public static final String FOLDER_SIMULATIONEN = "Simulationen";//$NON-NLS-1$
-
   public static final String FOLDER_MODELS = ".models"; //$NON-NLS-1$
 
-  private static final String FOLDER_ANFANGSWERTE = "Anfangswerte"; //$NON-NLS-1$
+  public static final String FOLDER_SIMULATIONEN = "Simulations";//$NON-NLS-1$
 
   public static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
 
@@ -139,11 +137,6 @@ public class RrmScenario
   public IFolder getModelsFolder( )
   {
     return m_scenarioFolder.getFolder( new Path( FOLDER_MODELS ) );
-  }
-
-  public IFolder getLzsimFolder( )
-  {
-    return m_scenarioFolder.getFolder( new Path( FOLDER_ANFANGSWERTE ) );
   }
 
   public IFolder getSimulationsFolder( )

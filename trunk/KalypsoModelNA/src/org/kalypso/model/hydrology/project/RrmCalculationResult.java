@@ -51,8 +51,6 @@ import org.eclipse.core.resources.IFolder;
  */
 public class RrmCalculationResult
 {
-  public static final String CURRENT_FOLDRER_NAME = "Aktuell"; //$NON-NLS-1$
-
   public static final String FILE_STATISTICS_CSV = "statistics.txt"; //$NON-NLS-1$
 
   public static final String FOLDER_BILANZ = "Bilanz"; //$NON-NLS-1$
@@ -140,6 +138,6 @@ public class RrmCalculationResult
 
   public boolean isCurrent( )
   {
-    return StringUtils.equalsIgnoreCase( CURRENT_FOLDRER_NAME, m_folder.getName() );
+    return StringUtils.equalsIgnoreCase( RrmSimulation.FOLDER_LAST_RESULT, m_folder.getName() );
   }
 }

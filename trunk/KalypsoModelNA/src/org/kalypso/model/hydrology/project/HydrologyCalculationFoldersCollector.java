@@ -52,9 +52,9 @@ import org.eclipse.core.resources.IResourceVisitor;
  * 
  * @author Dirk Kuch
  */
-public class HydrologyCalculationFoldersCollector implements IResourceVisitor
+class HydrologyCalculationFoldersCollector implements IResourceVisitor
 {
-  Set<RrmCalculationResult> m_folders = new LinkedHashSet<>();
+  private final Set<RrmCalculationResult> m_folders = new LinkedHashSet<>();
 
   private final RrmSimulation m_simulation;
 
@@ -81,6 +81,7 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
 
   public static boolean isResultFolder( final IFolder folder )
   {
+    // FIXME remove constants form here
     final IFolder nodes = folder.getFolder( "Knoten" ); //$NON-NLS-1$
     final IFolder storageChannels = folder.getFolder( "SpeicherStrang" ); //$NON-NLS-1$
     final IFolder catchments = folder.getFolder( "Teilgebiet" ); //$NON-NLS-1$
@@ -89,7 +90,6 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
       return false;
 
     return true;
-
   }
 
   private boolean isCalculationCaseFolder( final IFolder folder )
@@ -101,5 +101,4 @@ public class HydrologyCalculationFoldersCollector implements IResourceVisitor
   {
     return m_folders.toArray( new RrmCalculationResult[] {} );
   }
-
 }

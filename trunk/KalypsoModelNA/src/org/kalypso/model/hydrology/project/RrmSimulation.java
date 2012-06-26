@@ -49,7 +49,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
 
 /**
  * Represents a simulation of the rrm model (i.e. one calculation case folder) and allows access to its data.
@@ -58,19 +57,19 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
  */
 public class RrmSimulation
 {
-  public static final String FOLDER_ANFANGSWERTE = "Anfangswerte"; //$NON-NLS-1$
+  public static final String FOLDER_ANFANGSWERTE = "InitialValues"; //$NON-NLS-1$
 
   public static final String FOLDER_MODELS = ".models"; //$NON-NLS-1$
 
-  public static final String FOLDER_KLIMA = "Klima"; //$NON-NLS-1$
+  public static final String FOLDER_KLIMA = "Timeseries_Climate"; //$NON-NLS-1$
 
-  public static final String FOLDER_RESULTS = "Ergebnisse"; //$NON-NLS-1$
+  public static final String FOLDER_RESULTS = "Results"; //$NON-NLS-1$
 
-  public static final String FOLDER_NIEDERSCHLAG = "Niederschlag"; //$NON-NLS-1$
+  public static final String FOLDER_NIEDERSCHLAG = "Timeseries_Precipitation"; //$NON-NLS-1$
 
-  public static final String FOLDER_PEGEL = "Pegel"; //$NON-NLS-1$
+  public static final String FOLDER_PEGEL = "Timeseries_Gauges"; //$NON-NLS-1$
 
-  public static final String FOLDER_ZUFLUSS = "Zufluss"; //$NON-NLS-1$
+  public static final String FOLDER_ZUFLUSS = "Timeseries_Tributary"; //$NON-NLS-1$
 
   public static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
 
@@ -86,7 +85,7 @@ public class RrmSimulation
 
   private static final String FILE_LZSIM_GML = "lzsim.gml"; //$NON-NLS-1$
 
-  public static final String FOLDER_LAST_RESULT = "Aktuell"; //$NON-NLS-1$
+  public static final String FOLDER_LAST_RESULT = "MostRecent"; //$NON-NLS-1$
 
   private final IFolder m_simulation;
 
@@ -114,7 +113,7 @@ public class RrmSimulation
 
   public RrmCalculationResult getCurrentCalculationResult( )
   {
-    final IFolder folder = getResultsFolder().getFolder( RrmCalculationResult.CURRENT_FOLDRER_NAME ); //$NON-NLS-1$
+    final IFolder folder = getResultsFolder().getFolder( FOLDER_LAST_RESULT ); //$NON-NLS-1$
 
     return new RrmCalculationResult( folder );
   }
@@ -227,21 +226,21 @@ public class RrmSimulation
   // FIXME
   public IFolder getClimateFolder( )
   {
-    return m_simulation.getFolder( Messages.getString( "RrmSimulation.0" ) ); // $NON-NLS-1$ //$NON-NLS-1$
+    return m_simulation.getFolder( FOLDER_KLIMA );
   }
 
   public IFolder getPrecipitationFolder( )
   {
-    return m_simulation.getFolder( Messages.getString( "RrmSimulation.1" ) ); // $NON-NLS-1$ //$NON-NLS-1$
+    return m_simulation.getFolder( FOLDER_NIEDERSCHLAG );
   }
 
   public IFolder getGaugeFolder( )
   {
-    return m_simulation.getFolder( Messages.getString( "RrmSimulation.2" ) ); // $NON-NLS-1$ //$NON-NLS-1$
+    return m_simulation.getFolder( FOLDER_PEGEL );
   }
 
   public IFolder getNodeInflowFolder( )
   {
-    return m_simulation.getFolder( Messages.getString( "RrmSimulation.3" ) ); // $NON-NLS-1$ //$NON-NLS-1$
+    return m_simulation.getFolder( FOLDER_ZUFLUSS );
   }
 }
