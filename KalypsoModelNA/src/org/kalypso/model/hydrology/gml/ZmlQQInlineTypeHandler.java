@@ -42,18 +42,18 @@ package org.kalypso.model.hydrology.gml;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 
 /**
  * @author Gernot Belger
  */
 public class ZmlQQInlineTypeHandler extends ZmlInlineTypeHandler
 {
-  private static final QName TYPE_NAME = new QName( NaModelConstants.NAMESPACE_ZML_INLINE, "ZmlInlineQQType" ); //$NON-NLS-1$
+  private static final QName TYPE_NAME = new QName( DeegreeUrlCatalog.NAMESPACE_ZML_INLINE, "ZmlInlineQQType" ); //$NON-NLS-1$
 
   public ZmlQQInlineTypeHandler( )
   {

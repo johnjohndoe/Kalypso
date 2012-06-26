@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 
 /**
  * @author Gernot Belger
@@ -54,6 +55,6 @@ public class ZmlWtKcLaiInlineTypeHandler extends ZmlInlineTypeHandler
 
   public ZmlWtKcLaiInlineTypeHandler( )
   {
-    super( new QName( NaModelConstants.NAMESPACE_ZML_INLINE, ZML_INLINE_IDEAL_KC_WT_LAI_TYPE ), NaModelConstants.WTKCLAI_AXES );
+    super( new QName( DeegreeUrlCatalog.NAMESPACE_ZML_INLINE, ZML_INLINE_IDEAL_KC_WT_LAI_TYPE ), NaModelConstants.WTKCLAI_AXES );
   }
 }

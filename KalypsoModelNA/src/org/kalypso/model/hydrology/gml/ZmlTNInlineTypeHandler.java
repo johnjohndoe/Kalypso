@@ -44,13 +44,14 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 
 /**
  * @author Gernot Belger
  */
 public class ZmlTNInlineTypeHandler extends ZmlInlineTypeHandler
 {
-  private static final QName TYPE_NAME = new QName( NaModelConstants.NAMESPACE_ZML_INLINE, "ZmlInlineTNType" ); //$NON-NLS-1$
+  private static final QName TYPE_NAME = new QName( DeegreeUrlCatalog.NAMESPACE_ZML_INLINE, "ZmlInlineTNType" ); //$NON-NLS-1$
 
   public ZmlTNInlineTypeHandler( )
   {
