@@ -47,7 +47,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -61,9 +60,6 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
-import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -76,7 +72,6 @@ import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
@@ -204,44 +199,5 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     }
 
     return results.toArray( new RrmCalculationResult[] {} );
-  }
-
-  @Override
-  protected String getTreeCompareLabel( )
-  {
-    if( this instanceof HydrologyCalculationCaseGroupUiHandler )
-    {
-      final String label = getTreeLabel();
-      if( StringUtils.equalsIgnoreCase( label, "aktuell" ) ) //$NON-NLS-1$
-        return String.format( "AAA_%s", label ); //$NON-NLS-1$
-      else if( StringUtils.equalsIgnoreCase( label, "berechnet" ) ) //$NON-NLS-1$
-        return String.format( "AAA_%s", label ); //$NON-NLS-1$
-
-      return String.format( "ZZZ_%s", label ); //$NON-NLS-1$
-    }
-    else if( this instanceof HydrologyParameterSetUiHandler )
-    {
-      final HydrologyParameterSetUiHandler handler = (HydrologyParameterSetUiHandler) this;
-      final Feature feature = handler.getFeature();
-
-      if( feature instanceof Catchment )
-      {
-        return String.format( "AAA_%s", getTreeLabel() ); //$NON-NLS-1$
-      }
-      else if( feature instanceof Node )
-      {
-        return String.format( "BBB_%s", getTreeLabel() ); //$NON-NLS-1$
-      }
-      else if( feature instanceof StorageChannel )
-      {
-        return String.format( "CCC_%s", getTreeLabel() ); //$NON-NLS-1$
-      }
-    }
-    else if( this instanceof ResultCategoryUiHandler )
-    {
-      return String.format( "ZZZ_%s", getTreeLabel() ); //$NON-NLS-1$
-    }
-
-    return super.getTreeCompareLabel();
   }
 }

@@ -111,6 +111,27 @@ public class HydrologyParameterSetUiHandler extends AbstractResultTreeNodeUiHand
   }
 
   @Override
+  protected String getTreeCompareLabel( )
+  {
+    final Feature feature = getFeature();
+
+    if( feature instanceof Catchment )
+    {
+      return String.format( "AAA_%s", getTreeLabel() ); //$NON-NLS-1$
+    }
+    else if( feature instanceof Node )
+    {
+      return String.format( "BBB_%s", getTreeLabel() ); //$NON-NLS-1$
+    }
+    else if( feature instanceof StorageChannel )
+    {
+      return String.format( "CCC_%s", getTreeLabel() ); //$NON-NLS-1$
+    }
+
+    return super.getTreeCompareLabel();
+  }
+
+  @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
     return null;

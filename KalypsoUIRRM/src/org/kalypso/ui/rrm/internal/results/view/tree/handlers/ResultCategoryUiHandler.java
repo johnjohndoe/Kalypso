@@ -51,7 +51,6 @@ import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
  */
 public class ResultCategoryUiHandler extends AbstractResultTreeNodeUiHandler
 {
-
   private final String m_label;
 
   public ResultCategoryUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final String label, final ResultManagementView view )
@@ -64,6 +63,12 @@ public class ResultCategoryUiHandler extends AbstractResultTreeNodeUiHandler
   public String getTreeLabel( )
   {
     return m_label;
+  }
+
+  @Override
+  protected String getTreeCompareLabel( )
+  {
+    return String.format( "ZZZ_%s", getTreeLabel() ); //$NON-NLS-1$
   }
 
   @Override
