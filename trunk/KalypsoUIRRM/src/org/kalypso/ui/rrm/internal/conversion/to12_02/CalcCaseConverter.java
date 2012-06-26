@@ -72,7 +72,6 @@ import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingT
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
@@ -193,6 +192,9 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       final ICatchmentModel catchmentModel = m_data.loadModel( catchmentModelPath );
       final ITimeseriesMappingCollection mappings = m_data.loadModel( timeseriesMappingPath );
 
+      /* Fix timeseries link: relative to simulations model folder, and new sub directories */
+      fixTimeseriesLinks( naModel, getLog() );
+
       /* Do the timeseries mappings. */
       final IStatusCollector mappingLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
       final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel, catchmentModel, mappingLog );
@@ -203,9 +205,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
 
       /* SPECIAL CASE: Must save and copy the modell.gml before emptying the timeseries links. */
-      m_data.saveModel( modelPath, naModel );
       final String simulationModelPath = RrmSimulation.FOLDER_MODELS + '/' + RrmSimulation.FILE_MODELL_GML;
-      FileUtils.copyFile( new File( m_targetScenarioDir, modelPath ), new File( m_targetScenarioDir, m_simulationPath + '/' + simulationModelPath ), true );
+      m_data.saveModel( m_simulationPath + '/' + simulationModelPath, naModel );
 
       /* Empty timeseries links. */
       BasicModelConverter.emptyTimeseriesLinks( naModel, getLog() );
@@ -578,7 +579,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   /**
    * This function finalizes a simulation. It copies some files for reference and fixes links in one of them.
    */
-  private void finalizeSimulation( ) throws IOException, Exception, GmlSerializeException
+  private void finalizeSimulation( ) throws IOException, Exception
   {
     /* Copy the expertMappings.gml into the simulation for reference. */
     final File exportControlScenario = new File( m_targetScenarioDir, RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_EXPERT_CONTROL_GML );
@@ -587,16 +588,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     /* The calculation.gml is already saved there. */
     /* The model.gml is already saved there, because it must be copied before its timeseries links are emptied. */
-
-    /* Load the model in the simulation. */
-    final String simulationModelPath = m_simulationPath + '/' + RrmSimulation.FOLDER_MODELS + '/' + RrmSimulation.FILE_MODELL_GML;
-    final NaModell simModel = m_data.loadModel( simulationModelPath );
-
-    /* Fix timeseries links there, that all is correct within a simulation. */
-    fixTimeseriesLinks( simModel, getLog() );
-
-    /* Save the model in the simulation. */
-    m_data.saveModel( simulationModelPath, simModel );
   }
 
   private void fixTimeseriesLinks( final NaModell naModel, final IStatusCollector log ) throws Exception
