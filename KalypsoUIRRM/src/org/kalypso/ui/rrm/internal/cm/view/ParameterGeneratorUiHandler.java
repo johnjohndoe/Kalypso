@@ -88,7 +88,7 @@ public class ParameterGeneratorUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTreeLabel( )
   {
-    return Messages.getString("ParameterGeneratorUiHandler.0") + ParameterTypeUtils.formatParameterType( m_parameterType ); //$NON-NLS-1$
+    return Messages.getString( "ParameterGeneratorUiHandler.0", ParameterTypeUtils.formatParameterType( m_parameterType ) ); //$NON-NLS-1$
   }
 
   @Override
