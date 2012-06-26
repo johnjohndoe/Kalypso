@@ -49,7 +49,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -59,7 +58,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class NAControl extends Feature_Impl
 {
-  private static final String NS_NAMETA = NaModelConstants.NS_NAMETA_11_6;
+  public static final String NS_NAMETA = "org.kalypso.na.control"; //$NON-NLS-1$
 
   private static final QName PROP_STARTSIMULATION = new QName( NS_NAMETA, "startsimulation" ); //$NON-NLS-1$
 

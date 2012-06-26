@@ -49,7 +49,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -61,7 +60,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class NAModellControl extends Feature_Impl
 {
-  public static final String NS_NACONTROL = NaModelConstants.NS_NACONTROL_11_6;
+  public static final String NS_NACONTROL = "org.kalypso.namodell.control"; //$NON-NLS-1$
 
   private static final QName PROP_INITIALVALUEDATE = new QName( NS_NACONTROL, "InitialValueDate" ); //$NON-NLS-1$
 

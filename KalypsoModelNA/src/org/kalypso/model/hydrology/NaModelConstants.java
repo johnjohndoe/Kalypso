@@ -53,21 +53,9 @@ public interface NaModelConstants
 
   /** namespaces */
 
-  /**
-   * @deprecated Do not use, only for conversion of existing projects.
-   */
-  @Deprecated
-  String NS_NAMETA_11_6 = "org.kalypso.na.control"; //$NON-NLS-1$
-
   String NS_NAMETA = "org.kalypso.na.control_v2"; //$NON-NLS-1$
 
   String NS_NAMODELL = "http://www.tuhh.de/kalypsoNA"; //$NON-NLS-1$
-
-  /**
-   * @deprecated Do not use, only for conversion of existing projects.
-   */
-  @Deprecated
-  String NS_NACONTROL_11_6 = "org.kalypso.namodell.control"; //$NON-NLS-1$
 
   String NS_NACONTROL = "org.kalypso.namodell.control_v2"; //$NON-NLS-1$
 
@@ -165,22 +153,6 @@ public interface NaModelConstants
   String OUT_OPTIMIZEFILE = "OUT_OPTIMIZEFILE"; //$NON-NLS-1$
 
   String OUTPUT_DIR_NAME = "results"; //$NON-NLS-1$
-
-  String ASCII_DIR_NAME = "ascii"; //$NON-NLS-1$
-
-  String RESULT_DIR_NAME = "Ergebnisse"; //$NON-NLS-1$
-
-  String LZSIM_OUT_ID = "LZSIM_OUT"; //$NON-NLS-1$
-
-  String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT"; //$NON-NLS-1$
-
-  String LOG_EXE_ERROUT_ID = "LOG_EXE_ERROUT"; //$NON-NLS-1$
-
-  String LOG_OUTRES_ID = "LOG_OUTRES"; //$NON-NLS-1$
-
-  String LOG_OUTERR_ID = "LOG_OUTERR"; //$NON-NLS-1$
-
-  String LOG_INFO_ID = "LOG_INFO"; //$NON-NLS-1$
 
   /** namodell.xsd */
 
@@ -280,6 +252,4 @@ public interface NaModelConstants
   String[] WTKCLAI_AXES = new String[] { ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_LAI, ITimeseriesConstants.TYPE_WT, ITimeseriesConstants.TYPE_KC };
 
   String[] TN_AXES = new String[] { ITimeseriesConstants.TYPE_MIN, ITimeseriesConstants.TYPE_RAINFALL };
-
-  String NAMESPACE_ZML_INLINE = "inline.zml.kalypso.org"; //$NON-NLS-1$
 }
