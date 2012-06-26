@@ -42,7 +42,7 @@ package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFolder;
-import org.kalypso.model.hydrology.project.RrmCalculationResult;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
@@ -67,18 +67,10 @@ public class CurrentResultFilter extends AbstractResultViewerFilter
     {
       final IFolder folder = (IFolder) data;
 
-      // FIXME english project template
-      if( StringUtils.equalsIgnoreCase( folder.getName(), "berechnet" ) ) /* //$NON-NLS-1$
-                                                                           * //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
-                                                                           * current result folder name set by project
-                                                                           * import
-                                                                           */
-        return true;
-      else if( StringUtils.equalsIgnoreCase( folder.getName(), RrmCalculationResult.CURRENT_FOLDRER_NAME ) )
+      if( StringUtils.equalsIgnoreCase( folder.getName(), RrmSimulation.FOLDER_LAST_RESULT ) )
         return true;
 
       return false;
-
     }
 
     return false;
@@ -88,5 +80,4 @@ public class CurrentResultFilter extends AbstractResultViewerFilter
   {
     m_doFilter = doFilter;
   }
-
 }
