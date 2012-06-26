@@ -60,11 +60,9 @@ import org.kalypso.ui.rrm.internal.simulations.actions.RenameRrmCalcualtionActio
  */
 public class HydrologyCalculationCaseGroupUiHandler extends AbstractResultTreeNodeUiHandler
 {
-
   public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation, final RrmCalculationResult calculation, final ResultManagementView view )
   {
     super( simulation, calculation, view );
-
   }
 
   public HydrologyCalculationCaseGroupUiHandler( final RrmSimulation simulation, final ResultManagementView view )
@@ -75,10 +73,33 @@ public class HydrologyCalculationCaseGroupUiHandler extends AbstractResultTreeNo
   @Override
   public String getTreeLabel( )
   {
-    if( Objects.isNotNull( getCalculation() ) )
-      return getCalculation().getName();
+    final RrmCalculationResult calculation = getCalculation();
+    if( Objects.isNotNull( calculation ) )
+    {
+      if( calculation.isCurrent() )
+        return "letzte Rechnung";
+
+      return calculation.getName();
+    }
 
     return getSimulation().getName();
+  }
+
+  @Override
+  protected String getTreeCompareLabel( )
+  {
+    final String label = getTreeLabel();
+
+    final RrmCalculationResult calculation = getCalculation();
+    if( Objects.isNotNull( calculation ) )
+    {
+      // FIXME: would be nice to sort by time instead
+
+      if( calculation.isCurrent() )
+        return String.format( "ZZZ_%s", label ); //$NON-NLS-1$
+    }
+
+    return String.format( "AAA_%s", label ); //$NON-NLS-1$
   }
 
   @Override
@@ -104,5 +125,4 @@ public class HydrologyCalculationCaseGroupUiHandler extends AbstractResultTreeNo
 
     return actions.toArray( new Action[] {} );
   }
-
 }
