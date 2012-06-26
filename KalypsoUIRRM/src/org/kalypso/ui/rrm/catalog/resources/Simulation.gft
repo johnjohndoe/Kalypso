@@ -52,7 +52,7 @@
     </group>
 
     <group text="%control.gft.synthN" style="SWT.NONE">
-      <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+      <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
       <gridLayout numColumns="3" horizontalSpacing="10" />
 
       <checkbox enabled="true" property="pns" style="SWT.NONE">
