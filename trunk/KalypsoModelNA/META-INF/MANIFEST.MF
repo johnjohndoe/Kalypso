@@ -4,16 +4,17 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.kalypso.model.rrm.core;singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Require-Bundle: org.kalypso.deegree;visibility:=reexport,
+Require-Bundle: org.eclipse.wst.xml.core;resolution:=optional,
+ org.junit;resolution:=optional,
  org.kalypso.commons;visibility:=reexport,
  org.kalypso.core;visibility:=reexport,
+ org.kalypso.deegree;visibility:=reexport,
+ org.kalypso.gml.ui,
+ org.kalypso.ModelSimulationBase;visibility:=reexport,
+ org.kalypso.model.rcm,
  org.kalypso.optimize;visibility:=reexport,
- org.junit;resolution:=optional,
  org.kalypso.simulation.core;visibility:=reexport,
  org.kalypso.ui,
- org.kalypso.ModelSimulationBase;visibility:=reexport,
- org.eclipse.wst.xml.core;resolution:=optional,
- org.kalypso.model.rcm,
  org.kalypso.zml.core
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
