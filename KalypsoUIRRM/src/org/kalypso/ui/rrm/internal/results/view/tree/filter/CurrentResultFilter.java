@@ -40,9 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFolder;
-import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
@@ -66,11 +65,7 @@ public class CurrentResultFilter extends AbstractResultViewerFilter
     if( data instanceof IFolder )
     {
       final IFolder folder = (IFolder) data;
-
-      if( StringUtils.equalsIgnoreCase( folder.getName(), RrmSimulation.FOLDER_LAST_RESULT ) )
-        return true;
-
-      return false;
+      return new RrmCalculationResult( folder ).isCurrent();
     }
 
     return false;
