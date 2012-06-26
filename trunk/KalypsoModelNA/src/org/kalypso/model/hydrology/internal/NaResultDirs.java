@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
+
+import org.kalypso.model.hydrology.project.RrmCalculationResult;
 
 /**
  * Helper class that holds all the directories inside the 'current' result dir
@@ -53,21 +55,25 @@ public class NaResultDirs
 
   public final File logDir;
 
-  public final File bilanzDir;
-
   public final File anfangswertDir;
 
   public final File reportDir;
 
   public final File exe_logs_zip;
 
+  public File bilanceFile;
+
   public NaResultDirs( final File resultDir )
   {
     currentResultDir = resultDir;
-    anfangswertDir = new File( currentResultDir, "Anfangswerte" );//$NON-NLS-1$
-    bilanzDir = new File( currentResultDir, "Bilanz" );//$NON-NLS-1$
-    logDir = new File( currentResultDir, "Log" );//$NON-NLS-1$
-    exe_logs_zip = new File( logDir, "output.zip" );//$NON-NLS-1$
-    reportDir = new File( currentResultDir, "Report" );//$NON-NLS-1$
+
+    // REMARK: we need to use the same folder names as in the target result folder;
+    // because the complete result folder is moved into the workspace)
+
+    anfangswertDir = new File( currentResultDir, RrmCalculationResult.FOLDER_INITIAL_VALUES );
+    logDir = new File( currentResultDir, RrmCalculationResult.FOLDER_LOG );
+    exe_logs_zip = new File( logDir, RrmCalculationResult.FILE_OUTPUT_ZIP );
+    reportDir = new File( currentResultDir, RrmCalculationResult.FOLDER_REPORT );
+    bilanceFile = new File( reportDir, RrmCalculationResult.FILE_BILANZ_TXT );
   }
 }
