@@ -23,13 +23,13 @@
     <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 
-  <label xmlns:gml="http://www.opengis.net/gml" property="rrmParam:soilLayerLink" style="SWT.NONE" visible="true">
+  <label xmlns:gml="http://www.opengis.net/gml" property="rrmParam:soiltypeLink" style="SWT.NONE" visible="true">
     <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
-  <combo property="rrmParam:soilLayerLink" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+  <combo property="rrmParam:soiltypeLink" style="SWT.DROP_DOWN | SWT.READ_ONLY">
     <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
   </combo>
-  <validatorlabel property="rrmParam:soilLayerLink" style="SWT.NONE" visible="true">
+  <validatorlabel property="rrmParam:soiltypeLink" style="SWT.NONE" visible="true">
     <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 
