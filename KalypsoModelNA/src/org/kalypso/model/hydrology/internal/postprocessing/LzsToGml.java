@@ -180,11 +180,11 @@ public class LzsToGml
     }
     catch( final NumberFormatException e )
     {
-      m_logger.severe( String.format( Messages.getString("LzsToGml.0"), e.getLocalizedMessage() ) ); //$NON-NLS-1$
+      m_logger.severe( String.format( Messages.getString( "LzsToGml.0" ), e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
-      m_logger.warning( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", catchment.getName()) ); //$NON-NLS-1$
+      m_logger.warning( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", catchment.getName() ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -212,10 +212,10 @@ public class LzsToGml
       if( line == null )
         break;
 
+      final String cleanLine = line.trim().replaceAll( "\\s+", " " ); //$NON-NLS-1$ //$NON-NLS-2$
       switch( status )
       {
         case SEARCH_HEADER:
-          final String cleanLine = line.trim().replaceAll( "\\s+", " " ); //$NON-NLS-1$ //$NON-NLS-2$
           final Matcher matcherBODF = PATTERN_HEADER_BODF.matcher( cleanLine );
           if( cleanLine.endsWith( "snow" ) && cleanLine.startsWith( iniDate ) ) //$NON-NLS-1$
             status = CatchmentStatus.READ_SNOW;
@@ -232,54 +232,45 @@ public class LzsToGml
         {
           final Feature lzHydFE = m_lzWorkspace.createFeature( lzCatchmentFE, lzinitHydMemberRT, lzinitHydMemberRT.getTargetFeatureType() );
           m_lzWorkspace.addFeatureAsComposition( lzCatchmentFE, lzinitHydMemberRT, 0, lzHydFE );
-
-          final int pos = Integer.parseInt( line.substring( 0, 4 ).trim() ) - 1;
+          final String[] strings = cleanLine.split( " " ); //$NON-NLS-1$
+          final int pos = Integer.parseInt( strings[0] ) - 1;
           final String hydroID = m_hydroHash.getHydroFeatureId( catchment, pos );
           lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ), hydroID ); //$NON-NLS-1$
-
-          final Double interception = Double.valueOf( line.substring( 4, 11 ) );
-          lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "bi" ), interception ); //$NON-NLS-1$
-
+          final Double interception = Double.valueOf( strings[1] );
           final List<Double> bofs = new ArrayList<Double>();
-          for( int i = 11; i < line.length(); i++ )
+          for( int i = 2; i < strings.length; i++ )
           {
-            final Double bf = Double.valueOf( line.substring( i, i + 7 ) );
+            final Double bf = Double.valueOf( strings[i] );
             bofs.add( bf );
-
-            i += 6;
           }
-
+          lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "bi" ), interception ); //$NON-NLS-1$
           lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "bofs" ), bofs ); //$NON-NLS-1$
-
           counterHydros++;
-
           if( counterHydros >= maxHydros )
           {
             status = CatchmentStatus.SEARCH_HEADER;
             counterHydros = 0;
           }
         }
-        break;
+          break;
 
         case READ_GWSP:
         {
-          final Double hgws = Double.valueOf( line.substring( 4, 13 ) );// hoehe gw
+          final String[] strings = cleanLine.split( " " ); //$NON-NLS-1$
+          final Double hgws = Double.valueOf( strings[1] );// hoehe gw
+          final Double qb = Double.valueOf( strings[2] );// basisabfluss
           lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "hgws" ), hgws ); //$NON-NLS-1$
-
-          final Double qb = Double.valueOf( line.substring( 13, 22 ) );// basisabfluss
           lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ), qb ); //$NON-NLS-1$
-
           status = CatchmentStatus.SEARCH_HEADER;
         }
-        break;
+          break;
 
         case READ_SNOW:
-          final Double h = Double.valueOf( line.substring( 4, 13 ) );// hoehe schnee
+          final String[] strings = cleanLine.split( " " ); //$NON-NLS-1$
+          final Double h = Double.valueOf( strings[1] );// hoehe schnee
+          final Double ws = Double.valueOf( strings[2] );// wassergehalt
           lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "h" ), h ); //$NON-NLS-1$
-
-          final Double ws = Double.valueOf( line.substring( 13, 22 ) );// wassergehalt
           lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "ws" ), ws ); //$NON-NLS-1$
-
           status = CatchmentStatus.SEARCH_HEADER;
           break;
       }
