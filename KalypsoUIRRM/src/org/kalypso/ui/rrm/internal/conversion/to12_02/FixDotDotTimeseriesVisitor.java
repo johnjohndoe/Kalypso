@@ -45,13 +45,14 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.conversion.ITimeseriesVisitor;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Prepends '../' to every timeseries link it encounters.
- *
+ * 
  * @author Gernot Belger
  */
 public class FixDotDotTimeseriesVisitor implements ITimeseriesVisitor
@@ -67,9 +68,36 @@ public class FixDotDotTimeseriesVisitor implements ITimeseriesVisitor
     if( StringUtils.isBlank( href ) )
       return Status.OK_STATUS;
 
-    final String newHref = "../" + href; //$NON-NLS-1$
+    final String fixedHref = fixFoldername( href );
+
+    final String newHref = "../" + fixedHref; //$NON-NLS-1$
     link.setHref( newHref );
 
     return Status.OK_STATUS;
+  }
+
+  private String fixFoldername( final String href )
+  {
+    if( href.startsWith( "Niederschlag/" ) )
+      return StringUtils.replaceOnce( href, "Niederschlag/", RrmSimulation.FOLDER_NIEDERSCHLAG + '/' );
+    if( href.startsWith( "Precipitation/" ) )
+      return StringUtils.replaceOnce( href, "Precipitation/", RrmSimulation.FOLDER_NIEDERSCHLAG + '/' );
+
+    if( href.startsWith( "Klima/" ) )
+      return StringUtils.replaceOnce( href, "Klima/", RrmSimulation.FOLDER_KLIMA + '/' );
+    if( href.startsWith( "Climate/" ) )
+      return StringUtils.replaceOnce( href, "Climate/", RrmSimulation.FOLDER_KLIMA + '/' );
+
+    if( href.startsWith( "Pegel/" ) )
+      return StringUtils.replaceOnce( href, "Pegel/", RrmSimulation.FOLDER_PEGEL + '/' );
+    if( href.startsWith( "Gauges/" ) )
+      return StringUtils.replaceOnce( href, "Gauges/", RrmSimulation.FOLDER_PEGEL + '/' );
+
+    if( href.startsWith( "Zufluss/" ) )
+      return StringUtils.replaceOnce( href, "Zufluss/", RrmSimulation.FOLDER_ZUFLUSS + '/' );
+    if( href.startsWith( "Tributary/" ) )
+      return StringUtils.replaceOnce( href, "Tributary/", RrmSimulation.FOLDER_ZUFLUSS + '/' );
+
+    return href;
   }
 }

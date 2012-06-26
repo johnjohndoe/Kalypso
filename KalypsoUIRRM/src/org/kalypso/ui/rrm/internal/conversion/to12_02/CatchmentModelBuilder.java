@@ -65,6 +65,7 @@ import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmScenario;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.util.ZmlLink;
@@ -133,7 +134,7 @@ public class CatchmentModelBuilder
       }
       catch( final MalformedURLException e )
       {
-        log.add( IStatus.WARNING, Messages.getString("CatchmentModelBuilder.0"), e ); //$NON-NLS-1$
+        log.add( IStatus.WARNING, Messages.getString( "CatchmentModelBuilder.0" ), e ); //$NON-NLS-1$
       }
     }
 
@@ -154,10 +155,9 @@ public class CatchmentModelBuilder
 
   private IStatus buildCatchment( final ILinearSumGenerator generator, final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType, final MutablePeriod smallestTimestep, final Map<LocalTime, Integer> timestamps ) throws MalformedURLException
   {
-    // IMPORTANT: we use the simulation folder as context, because this is the right relative location
-    // for the existing timeseries links. Like this, the links do not need to be fixed before this operation.
-    // The links will be removed in any way after this operation.
-    final URL timeseriesContext = m_simulationDir.toURI().toURL();
+    // IMPORTANT: we use the simulation-models folder as context, because this is the right relative location
+    // for the fixed timeseries links.
+    final URL timeseriesContext = new File( m_simulationDir, RrmSimulation.FOLDER_MODELS ).toURI().toURL();
     final ZmlLink modelTargetLink = new ZmlLink( modelCatchment, modelTimeseriesLink, timeseriesContext );
 
     /* Create new catchment. */

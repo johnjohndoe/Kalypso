@@ -63,6 +63,7 @@ import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 import org.kalypso.model.hydrology.project.RrmScenario;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -191,10 +192,9 @@ public class TimeseriesMappingBuilder
   {
     try
     {
-      // IMPORTANT: we use the simulation folder as context, because this is the right relative location
-      // for the existing timeseries links. Like this, the links do not need to be fixed before this operation.
-      // The links will be removed in any way after this operation.
-      return m_simulationDir.toURI().toURL();
+      // IMPORTANT: we use the simulation-models folder as context, because this is the right relative location
+      // for the fixed timeseries links.
+      return new File( m_simulationDir, RrmSimulation.FOLDER_MODELS ).toURI().toURL();
     }
     catch( final MalformedURLException e )
     {
