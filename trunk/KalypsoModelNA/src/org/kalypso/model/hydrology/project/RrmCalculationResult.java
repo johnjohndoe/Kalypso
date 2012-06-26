@@ -53,21 +53,27 @@ public class RrmCalculationResult
 {
   public static final String FILE_STATISTICS_CSV = "statistics.txt"; //$NON-NLS-1$
 
-  public static final String FOLDER_BILANZ = "Bilanz"; //$NON-NLS-1$
-
   public static final String FILE_CALCULATION_LOG = "calculation.log"; //$NON-NLS-1$
 
-  public static final String FILE_BILANZ_TXT = "Bilanz.txt"; //$NON-NLS-1$
+  public static final String FILE_BILANZ_TXT = "balance.txt"; //$NON-NLS-1$
 
-  private static final String FOLDER_REPORT = "Report"; //$NON-NLS-1$
+  public static final String FOLDER_INITIAL_VALUES = "InitialValues"; //$NON-NLS-1$
 
-  private static final String FOLDER_LOG = "Log"; //$NON-NLS-1$
+  public static final String FOLDER_REPORT = "Report"; //$NON-NLS-1$
 
-  static final String FILE_OUTPUT_ZIP = "output.zip"; //$NON-NLS-1$
+  public static final String FOLDER_LOG = "Log"; //$NON-NLS-1$
+
+  public static final String FILE_OUTPUT_ZIP = "output.zip"; //$NON-NLS-1$
 
   private static final String FILE_CALCULATION_STATUS_GML = "calculationStatus.gml"; //$NON-NLS-1$
 
   private static final String FILE_ERROR_GML = "error.gml"; //$NON-NLS-1$
+
+  public static final String FOLDER_CATCHMENT = "Catchment";
+
+  public static final String FOLDER_NODE = "Node";
+
+  public static final String FOLDER_STROAGE_CHANNEL = "StorageChannel";
 
   private final IFolder m_folder;
 
@@ -103,7 +109,7 @@ public class RrmCalculationResult
 
   private IFolder getBilanzFolder( )
   {
-    return getFolder().getFolder( FOLDER_BILANZ );
+    return getFolder().getFolder( FOLDER_REPORT );
   }
 
   public IFolder getLogFolder( )
@@ -133,11 +139,35 @@ public class RrmCalculationResult
 
   public IFolder getLzimResultFolder( )
   {
-    return getFolder().getFolder( RrmSimulation.FOLDER_ANFANGSWERTE );
+    return getFolder().getFolder( FOLDER_INITIAL_VALUES );
   }
 
   public boolean isCurrent( )
   {
     return StringUtils.equalsIgnoreCase( RrmSimulation.FOLDER_LAST_RESULT, m_folder.getName() );
+  }
+
+  public boolean isResultFolder( )
+  {
+    final IFolder nodes = getNodeFolder();
+    final IFolder storageChannels = getStorageChannelFolder();
+    final IFolder catchments = getCatchmentFolder();
+
+    return nodes.exists() || storageChannels.exists() || catchments.exists();
+  }
+
+  private IFolder getNodeFolder( )
+  {
+    return m_folder.getFolder( FOLDER_NODE );
+  }
+
+  private IFolder getStorageChannelFolder( )
+  {
+    return m_folder.getFolder( FOLDER_STROAGE_CHANNEL );
+  }
+
+  private IFolder getCatchmentFolder( )
+  {
+    return m_folder.getFolder( FOLDER_CATCHMENT );
   }
 }

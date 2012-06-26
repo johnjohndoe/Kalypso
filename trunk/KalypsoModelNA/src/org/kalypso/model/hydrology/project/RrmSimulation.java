@@ -223,7 +223,6 @@ public class RrmSimulation
     return folders.toArray( new IFolder[] {} );
   }
 
-  // FIXME
   public IFolder getClimateFolder( )
   {
     return m_simulation.getFolder( FOLDER_KLIMA );
