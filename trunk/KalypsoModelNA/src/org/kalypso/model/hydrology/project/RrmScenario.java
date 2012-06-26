@@ -76,9 +76,6 @@ public class RrmScenario
 
   public static final String FILE_PEDOLOGIE = "pedologie.gml";//$NON-NLS-1$
 
-  @Deprecated
-  private static final String FILE_SUDS_GML = "suds.gml"; //$NON-NLS-1$
-
   public static final String FILE_OVERLAY = "overlay.gml"; //$NON-NLS-1$
 
   private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
@@ -128,7 +125,9 @@ public class RrmScenario
     if( !simulationsFolder.exists() )
       return false;
 
-    // TODO: should check more...
+    final IFile modelFile = accessor.getModelFile();
+    if( !modelFile.exists() )
+      return false;
 
     return true;
   }
@@ -166,12 +165,6 @@ public class RrmScenario
   public IFile getHydrotopGml( )
   {
     return getModelsFolder().getFile( FILE_HYDROTOP_GML );
-  }
-
-  @Deprecated
-  public IFile getSudsGml( )
-  {
-    return getModelsFolder().getFile( FILE_SUDS_GML );
   }
 
   public IFile getSyntnGml( )
