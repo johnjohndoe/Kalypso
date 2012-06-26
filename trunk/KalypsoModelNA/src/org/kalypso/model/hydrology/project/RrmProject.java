@@ -56,9 +56,11 @@ public class RrmProject
 
   static final String FOLDER_CALC_CASE_TEMPLATE = "calcCaseTemplate"; //$NON-NLS-1$
 
-  static final String FOLDER_OBSERVATION_CONF = "observationConf"; //$NON-NLS-1$
+  private static final String FOLDER_TIMESERIES = "timeseries"; //$NON-NLS-1$
 
-  static final String FOLDER_BASIS = "Basis"; //$NON-NLS-1$
+  private static final String FILE_STATIONS_GML = "stations.gml"; //$NON-NLS-1$
+
+  public static final String FOLDER_BASIS = "Basis"; //$NON-NLS-1$
 
   private final IProject m_project;
 
@@ -77,6 +79,11 @@ public class RrmProject
     return m_project.getFolder( FOLDER_MODEL );
   }
 
+  public IFolder getTimeseriesFolder( )
+  {
+    return getModelFolder().getFolder( FOLDER_TIMESERIES );
+  }
+
   public IFolder getBaseFolder( )
   {
     return m_project.getFolder( FOLDER_BASIS );
@@ -87,18 +94,18 @@ public class RrmProject
     return getModelFolder().getFolder( FOLDER_CALC_CASE_TEMPLATE );
   }
 
-  public IFolder getObservationConfFolder( )
-  {
-    return getModelFolder().getFolder( FOLDER_OBSERVATION_CONF );
-  }
-
   public RrmScenario getBaseScenario( )
   {
     return new RrmScenario( getBaseFolder() );
   }
 
-  public static IPath getObservationConfPath( )
+  public static IPath getTimeseriesPath( )
   {
-    return new Path( FOLDER_MODEL ).append( FOLDER_OBSERVATION_CONF );
+    return new Path( FOLDER_MODEL ).append( FOLDER_TIMESERIES );
+  }
+
+  public static IPath getStationsGmlPath( )
+  {
+    return getTimeseriesPath().append( FILE_STATIONS_GML );
   }
 }

@@ -46,12 +46,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -71,8 +72,8 @@ public class TimeseriesParameterTypeConverter extends AbstractLoggingOperation
     super( Messages.getString("TimeseriesParameterTypeConverter_0") ); //$NON-NLS-1$
     m_conversionMap = conversionMap;
 
-    final File timeseriesDirectory = new File( targetDir, INaProjectConstants.PATH_TIMESERIES );
-    m_stationsFile = new File( timeseriesDirectory, INaProjectConstants.GML_STATIONS );
+    final IPath stationsGmlPath = RrmProject.getStationsGmlPath();
+    m_stationsFile = new File( targetDir, stationsGmlPath.toOSString() );
   }
 
   @Override

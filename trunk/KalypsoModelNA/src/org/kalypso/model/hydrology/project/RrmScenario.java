@@ -46,6 +46,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -58,17 +59,17 @@ public class RrmScenario
 {
   public static final String FOLDER_SIMULATIONEN = "Simulationen";//$NON-NLS-1$
 
-  private static final String FOLDER_MODELS = ".models"; //$NON-NLS-1$
+  public static final String FOLDER_MODELS = ".models"; //$NON-NLS-1$
 
   private static final String FOLDER_ANFANGSWERTE = "Anfangswerte"; //$NON-NLS-1$
 
   public static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
 
-  private static final String FILE_EXPERT_CONTROL_GML = "expertControl.gml"; //$NON-NLS-1$
+  public static final String FILE_EXPERT_CONTROL_GML = "expertControl.gml"; //$NON-NLS-1$
 
   public static final String FILE_PARAMETER_GML = "parameter.gml"; //$NON-NLS-1$
 
-  private static final String FILE_HYDROTOP_GML = "hydrotop.gml"; //$NON-NLS-1$
+  public static final String FILE_HYDROTOP_GML = "hydrotop.gml"; //$NON-NLS-1$
 
   public static final String FILE_GEOLOGIE = "geologie.gml";//$NON-NLS-1$
 
@@ -78,15 +79,18 @@ public class RrmScenario
 
   public static final String FILE_OVERLAY = "overlay.gml"; //$NON-NLS-1$
 
-  private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
+  public static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
 
   public static final String FILE_CATCHMENT_MODELS_GML = "catchmentModels.gml"; //$NON-NLS-1$
 
   public static final String FILE_TIMESERIES_MAPPINGS_GML = "timeseriesMappings.gml"; //$NON-NLS-1$
 
-  private static final String FILE_SIMULATIONS_GML = "simulations.gml"; //$NON-NLS-1$
+  public static final String FILE_SIMULATIONS_GML = "simulations.gml"; //$NON-NLS-1$
 
-  private final IFolder m_scenarioFolder;
+  /** Temporary thiessen stations; only used in thiessen wizard */
+  private final String FILE_THIESSEN_STATIONS = ".thiessenStations.gml"; //$NON-NLS-1$
+
+  private final IContainer m_scenarioFolder;
 
   /**
    * Find a {@link RrmScenario} for a given model workspace.
@@ -103,12 +107,12 @@ public class RrmScenario
     final IContainer scenarioFolder = modelFolder.getParent();
 
     if( scenarioFolder instanceof IFolder )
-      return new RrmScenario( (IFolder) scenarioFolder );
+      return new RrmScenario( scenarioFolder );
 
     return null;
   }
 
-  public RrmScenario( final IFolder scenarioFolder )
+  public RrmScenario( final IContainer scenarioFolder )
   {
     m_scenarioFolder = scenarioFolder;
   }
@@ -116,7 +120,7 @@ public class RrmScenario
   /**
    * Check if a folder is a scenario folder.
    */
-  public static boolean isScenarioFolder( final IFolder parent )
+  public static boolean isScenarioFolder( final IContainer parent )
   {
     final RrmScenario accessor = new RrmScenario( parent );
 
@@ -134,17 +138,17 @@ public class RrmScenario
 
   public IFolder getModelsFolder( )
   {
-    return m_scenarioFolder.getFolder( FOLDER_MODELS );
+    return m_scenarioFolder.getFolder( new Path( FOLDER_MODELS ) );
   }
 
   public IFolder getLzsimFolder( )
   {
-    return m_scenarioFolder.getFolder( FOLDER_ANFANGSWERTE );
+    return m_scenarioFolder.getFolder( new Path( FOLDER_ANFANGSWERTE ) );
   }
 
   public IFolder getSimulationsFolder( )
   {
-    return m_scenarioFolder.getFolder( FOLDER_SIMULATIONEN );
+    return m_scenarioFolder.getFolder( new Path( FOLDER_SIMULATIONEN ) );
   }
 
   public IFile getModelFile( )
@@ -205,5 +209,21 @@ public class RrmScenario
   public IFile getOverlayFile( )
   {
     return getModelsFolder().getFile( FILE_OVERLAY );
+  }
+
+  /**
+   * Returns the handle to a simulation with the given name.<br/>
+   * The returned simulation might not exist yet.
+   */
+  public RrmSimulation getSimulation( final String simulationName )
+  {
+    final IFolder simulationsFolder = getSimulationsFolder();
+    final IFolder simulationFolder = simulationsFolder.getFolder( simulationName );
+    return new RrmSimulation( simulationFolder );
+  }
+
+  public IFile getThiessenTempFile( )
+  {
+    return getModelsFolder().getFile( FILE_THIESSEN_STATIONS );
   }
 }

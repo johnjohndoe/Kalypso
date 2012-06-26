@@ -64,7 +64,7 @@ import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.util.ZmlLink;
@@ -165,7 +165,7 @@ public class CatchmentModelBuilder
     final ICatchment newCatchment = catchments.addNew( ICatchment.FEATURE_CATCHMENT );
 
     /* Link to model's catchment. */
-    final String href = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelCatchment.getId() ); //$NON-NLS-1$
+    final String href = String.format( "%s#%s", RrmScenario.FILE_MODELL_GML, modelCatchment.getId() ); //$NON-NLS-1$
     newCatchment.setAreaLink( href );
 
     /* Guess timeseries link... */
@@ -229,6 +229,6 @@ public class CatchmentModelBuilder
     if( id == null )
       return null;
 
-    return String.format( "%s#%s", INaProjectConstants.GML_CATCHMENT_MODEL_FILE, id ); //$NON-NLS-1$
+    return String.format( "%s#%s", RrmScenario.FILE_CATCHMENT_MODELS_GML, id ); //$NON-NLS-1$
   }
 }

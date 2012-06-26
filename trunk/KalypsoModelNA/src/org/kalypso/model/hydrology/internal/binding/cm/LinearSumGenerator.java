@@ -55,13 +55,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -76,7 +74,7 @@ import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.util.cm.CatchmentHelper;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
@@ -513,10 +511,11 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       /* Get the .models folder of the current scenario. */
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IContainer scenarioFolder = dataProvider.getScenarioFolder();
-      final IFolder modelsFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_MODELS ) );
+
+      final RrmScenario rrmScenario = new RrmScenario( scenarioFolder );
 
       /* This is the last modified timestamp of the modell.gml. */
-      final IFile modellFile = modelsFolder.getFile( INaProjectConstants.GML_MODELL_FILE );
+      final IFile modellFile = rrmScenario.getModelFile();
 
       return modellFile.getLocation().toFile().lastModified();
     }

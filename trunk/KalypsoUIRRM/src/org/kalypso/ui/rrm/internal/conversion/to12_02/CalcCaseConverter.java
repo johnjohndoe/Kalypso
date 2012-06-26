@@ -48,9 +48,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -67,9 +69,8 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmScenario;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -184,9 +185,13 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       monitor.subTask( Messages.getString( "CalcCaseConverter.17" ) ); //$NON-NLS-1$
 
       /* Load the models. */
-      final NaModell naModel = m_data.loadModel( INaProjectConstants.GML_MODELL_PATH );
-      final ICatchmentModel catchmentModel = m_data.loadModel( INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
-      final ITimeseriesMappingCollection mappings = m_data.loadModel( INaProjectConstants.GML_TIMESERIES_MAPPINGS_PATH );
+      final String modelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_MODELL_GML;
+      final String catchmentModelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_CATCHMENT_MODELS_GML;
+      final String timeseriesMappingPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_TIMESERIES_MAPPINGS_GML;
+
+      final NaModell naModel = m_data.loadModel( modelPath );
+      final ICatchmentModel catchmentModel = m_data.loadModel( catchmentModelPath );
+      final ITimeseriesMappingCollection mappings = m_data.loadModel( timeseriesMappingPath );
 
       /* Do the timeseries mappings. */
       final IStatusCollector mappingLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
@@ -198,16 +203,17 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
 
       /* SPECIAL CASE: Must save and copy the modell.gml before emptying the timeseries links. */
-      m_data.saveModel( INaProjectConstants.GML_MODELL_PATH, naModel );
-      FileUtils.copyFile( new File( m_targetScenarioDir, INaProjectConstants.GML_MODELL_PATH ), new File( m_targetScenarioDir, m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH ), true ); //$NON-NLS-1$
+      m_data.saveModel( modelPath, naModel );
+      final String simulationModelPath = RrmSimulation.FOLDER_MODELS + '/' + RrmSimulation.FILE_MODELL_GML;
+      FileUtils.copyFile( new File( m_targetScenarioDir, modelPath ), new File( m_targetScenarioDir, m_simulationPath + '/' + simulationModelPath ), true );
 
       /* Empty timeseries links. */
       BasicModelConverter.emptyTimeseriesLinks( naModel, getLog() );
 
       /* Save the models. */
-      m_data.saveModel( INaProjectConstants.GML_MODELL_PATH, naModel );
-      m_data.saveModel( INaProjectConstants.GML_CATCHMENT_MODEL_PATH, catchmentModel );
-      m_data.saveModel( INaProjectConstants.GML_TIMESERIES_MAPPINGS_PATH, mappings );
+      m_data.saveModel( modelPath, naModel );
+      m_data.saveModel( catchmentModelPath, catchmentModel );
+      m_data.saveModel( timeseriesMappingPath, mappings );
 
       /* Dispose it, because of the links. */
       naModel.getWorkspace().dispose();
@@ -269,12 +275,16 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     getLog().add( IStatus.OK, Messages.getString( "CalcCaseConverter_0" ) ); //$NON-NLS-1$
 
+    final IPath modelsPath = new Path( RrmScenario.FOLDER_MODELS );
+
+    final String calculationGmlPath = getCaclulationGmlPath();
+
     /* Copy gml files into the .models folder of the scenario. */
-    copyFile( DOT_CALCULATION, m_simulationPath + "/" + INaCalcCaseConstants.CALCULATION_GML_PATH ); //$NON-NLS-1$
-    copyFile( CALC_CASE, INaProjectConstants.GML_MODELL_PATH );
-    final File hydrotope = copyFile( CALC_HYDROTOP, INaProjectConstants.GML_HYDROTOP_PATH );
-    copyFile( CALC_PARAMETER, INaProjectConstants.GML_PARAMETER_PATH );
-    copyFile( INaCalcCaseConstants.EXPERT_CONTROL_FILE, INaCalcCaseConstants.EXPERT_CONTROL_PATH );
+    copyFile( DOT_CALCULATION, calculationGmlPath );
+    copyFile( CALC_CASE, modelsPath.append( RrmScenario.FILE_MODELL_GML ).toOSString() );
+    final File hydrotope = copyFile( CALC_HYDROTOP, modelsPath.append( RrmScenario.FILE_HYDROTOP_GML ).toOSString() );
+    copyFile( CALC_PARAMETER, modelsPath.append( RrmScenario.FILE_PARAMETER_GML ).toOSString() );
+    copyFile( INaCalcCaseConstants.EXPERT_CONTROL_FILE, modelsPath.append( RrmScenario.FILE_EXPERT_CONTROL_GML ).toOSString() );
 
     // FIXME: landuse and others? -> Problem! not in calc case; but hydrotopes might have been built with the gml files
     // -> we need to copy them from the basic model into each calc case
@@ -282,12 +292,17 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     getLog().add( new ConvertHydrotopesOperation( hydrotope ).execute( new NullProgressMonitor() ) );
 
     /* Copy special directories into the calccases/calccase folder of the scenario. */
-    copyDir( INaCalcCaseConstants.ANFANGSWERTE_DIR, m_simulationPath + "/" + INaCalcCaseConstants.ANFANGSWERTE_DIR, false ); //$NON-NLS-1$
-    copyDir( INaCalcCaseConstants.ERGEBNISSE_DIR, m_simulationPath + "/" + INaCalcCaseConstants.ERGEBNISSE_DIR, false ); //$NON-NLS-1$
-    copyDir( INaCalcCaseConstants.KLIMA_DIR, m_simulationPath + "/" + INaCalcCaseConstants.KLIMA_DIR, false ); //$NON-NLS-1$
-    copyDir( INaCalcCaseConstants.NIEDERSCHLAG_DIR, m_simulationPath + "/" + INaCalcCaseConstants.NIEDERSCHLAG_DIR, false ); //$NON-NLS-1$
-    copyDir( INaCalcCaseConstants.PEGEL_DIR, m_simulationPath + "/" + INaCalcCaseConstants.PEGEL_DIR, true ); //$NON-NLS-1$
-    copyDir( "Zufluss", m_simulationPath + "/" + "Zufluss", true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    copyDir( INaCalcCaseConstants.ANFANGSWERTE_DIR, m_simulationPath + '/' + RrmSimulation.FOLDER_ANFANGSWERTE, false );
+    copyDir( INaCalcCaseConstants.ERGEBNISSE_DIR, m_simulationPath + '/' + RrmSimulation.FOLDER_RESULTS, false );
+    copyDir( INaCalcCaseConstants.KLIMA_DIR, m_simulationPath + '/' + RrmSimulation.FOLDER_KLIMA, false );
+    copyDir( INaCalcCaseConstants.NIEDERSCHLAG_DIR, m_simulationPath + '/' + RrmSimulation.FOLDER_NIEDERSCHLAG, false );
+    copyDir( INaCalcCaseConstants.PEGEL_DIR, m_simulationPath + '/' + RrmSimulation.FOLDER_PEGEL, true );
+    copyDir( INaCalcCaseConstants.ZUFLUSS_DIR, m_simulationPath + '/' + RrmSimulation.FOLDER_ZUFLUSS, true );
+  }
+
+  private String getCaclulationGmlPath( )
+  {
+    return m_simulationPath + '/' + RrmSimulation.FOLDER_MODELS + '/' + RrmSimulation.FILE_CALCULATION_GML;
   }
 
   /**
@@ -297,10 +312,10 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     /* Get the current folder. */
     // TODO Is this the target project, if so use RRMScenario, RRMSimulation etc.
-    final File aktuellDir = new File( m_targetScenarioDir, m_simulationPath + "/" + INaCalcCaseConstants.AKTUELL_PATH ); //$NON-NLS-1$
+    final File aktuellDir = new File( m_targetScenarioDir, m_simulationPath + '/' + RrmSimulation.FOLDER_RESULTS + '/' + RrmSimulation.FOLDER_LAST_RESULT );
     if( aktuellDir.isDirectory() )
     {
-      final File resultDir = new File( m_targetScenarioDir, m_simulationPath + "/" + INaCalcCaseConstants.ERGEBNISSE_DIR ); //$NON-NLS-1$
+      final File resultDir = new File( m_targetScenarioDir, m_simulationPath + '/' + RrmSimulation.FOLDER_RESULTS );
       final File origCurrentResultDir = new File( resultDir, Messages.getString( "CalcCaseConverter.0" ) ); //$NON-NLS-1$
 
       aktuellDir.renameTo( origCurrentResultDir );
@@ -344,14 +359,16 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    */
   private void convertMetaControl( ) throws Exception
   {
+    final String calculationGmlPath = getCaclulationGmlPath();
+
     /* Load the old meta control. */
-    final org.kalypso.model.hydrology.binding._11_6.NAControl oldControl = m_data.loadModel( m_simulationPath + "/" + INaCalcCaseConstants.CALCULATION_GML_PATH ); //$NON-NLS-1$
+    final org.kalypso.model.hydrology.binding._11_6.NAControl oldControl = m_data.loadModel( calculationGmlPath );
 
     /* Convert the old meta control to the new meta control. */
     final NAControl newControl = convertMetaControl( oldControl );
 
     /* Save the new meta control, overwriting the file with the old meta control. */
-    m_data.saveModel( m_simulationPath + "/" + INaCalcCaseConstants.CALCULATION_GML_PATH, newControl ); //$NON-NLS-1$
+    m_data.saveModel( calculationGmlPath, newControl );
 
     newControl.getWorkspace().dispose();
   }
@@ -397,14 +414,16 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    */
   private void convertExpertControl( ) throws Exception
   {
+    final String exportControlPath = RrmSimulation.FOLDER_MODELS + '/' + RrmSimulation.FILE_EXPERT_CONTROL_GML;
+
     /* Load the old expert control. */
-    final org.kalypso.model.hydrology.binding._11_6.NAModellControl oldControl = m_data.loadModel( INaCalcCaseConstants.EXPERT_CONTROL_PATH );
+    final org.kalypso.model.hydrology.binding._11_6.NAModellControl oldControl = m_data.loadModel( exportControlPath );
 
     /* Convert the old expert control to the new expert control. */
     final NAModellControl newControl = convertExpertControl( oldControl );
 
     /* Save the new expert control, overwriting the file with the old expert control. */
-    m_data.saveModel( INaCalcCaseConstants.EXPERT_CONTROL_PATH, newControl );
+    m_data.saveModel( exportControlPath, newControl );
   }
 
   /**
@@ -500,8 +519,9 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     try
     {
-      /* Load the meta control. */
-      final NAControl metaControl = m_data.loadModel( m_simulationPath + "/" + INaCalcCaseConstants.CALCULATION_GML_PATH ); //$NON-NLS-1$
+      final String calculationGmlPath = getCaclulationGmlPath();
+
+      final NAControl metaControl = m_data.loadModel( calculationGmlPath );
 
       /* Adjust with the catchments model builder. */
       if( catchmentModelBuilder != null )
@@ -530,10 +550,12 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       }
 
       /* Save the meta control. */
-      m_data.saveModel( m_simulationPath + "/" + INaCalcCaseConstants.CALCULATION_GML_PATH, metaControl ); //$NON-NLS-1$
+      m_data.saveModel( calculationGmlPath, metaControl );
 
       /* Load the simulations. */
-      final SimulationCollection simulations = m_data.loadModel( INaProjectConstants.GML_SIMULATIONS_PATH );
+      final String simulationsPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_SIMULATIONS_GML; //$NON-NLS-1$
+
+      final SimulationCollection simulations = m_data.loadModel( simulationsPath );
 
       /* Add the meta control. */
       final NAControl simulation = simulations.getSimulations().addNew( NAControl.FEATURE_NACONTROL );
@@ -541,7 +563,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       simulation.setDescription( m_sourceCalcCaseDir.getName() );
 
       /* Save the simulations. */
-      m_data.saveModel( INaProjectConstants.GML_SIMULATIONS_PATH, simulations );
+      m_data.saveModel( simulationsPath, simulations );
 
       return simulation;
     }
@@ -559,19 +581,22 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   private void finalizeSimulation( ) throws IOException, Exception, GmlSerializeException
   {
     /* Copy the expertMappings.gml into the simulation for reference. */
-    FileUtils.copyFile( new File( m_targetScenarioDir, INaCalcCaseConstants.EXPERT_CONTROL_PATH ), new File( m_targetScenarioDir, m_simulationPath + "/" + INaCalcCaseConstants.EXPERT_CONTROL_PATH ), true ); //$NON-NLS-1$
+    final File exportControlScenario = new File( m_targetScenarioDir, RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_EXPERT_CONTROL_GML );
+    final File exportControlSimulation = new File( m_targetScenarioDir, m_simulationPath + '/' + RrmSimulation.FOLDER_MODELS + '/' + RrmSimulation.FILE_EXPERT_CONTROL_GML );
+    FileUtils.copyFile( exportControlScenario, exportControlSimulation, true ); //$NON-NLS-1$
 
     /* The calculation.gml is already saved there. */
     /* The model.gml is already saved there, because it must be copied before its timeseries links are emptied. */
 
     /* Load the model in the simulation. */
-    final NaModell simModel = m_data.loadModel( m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH ); //$NON-NLS-1$
+    final String simulationModelPath = m_simulationPath + '/' + RrmSimulation.FOLDER_MODELS + '/' + RrmSimulation.FILE_MODELL_GML;
+    final NaModell simModel = m_data.loadModel( simulationModelPath );
 
     /* Fix timeseries links there, that all is correct within a simulation. */
     fixTimeseriesLinks( simModel, getLog() );
 
     /* Save the model in the simulation. */
-    m_data.saveModel( m_simulationPath + "/" + INaProjectConstants.GML_MODELL_PATH, simModel ); //$NON-NLS-1$
+    m_data.saveModel( simulationModelPath, simModel );
   }
 
   private void fixTimeseriesLinks( final NaModell naModel, final IStatusCollector log ) throws Exception

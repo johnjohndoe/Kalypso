@@ -60,7 +60,7 @@ import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.util.ZmlLink;
@@ -246,8 +246,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     final Feature newFeature = command.getNewFeature();
 
     /* Build the area link. */
-
-    final String href = INaProjectConstants.GML_MODELL_FILE + "#" + m_catchmentRef; //$NON-NLS-1$
+    final String href = RrmScenario.FILE_MODELL_GML + "#" + m_catchmentRef; //$NON-NLS-1$
     final IRelationType relation = (IRelationType) getFeatureType().getProperty( ICatchment.PROPERTY_AREA_LINK );
     final IXLinkedFeature areaLink = FeatureFactory.createXLink( newFeature, relation, null, href );
 

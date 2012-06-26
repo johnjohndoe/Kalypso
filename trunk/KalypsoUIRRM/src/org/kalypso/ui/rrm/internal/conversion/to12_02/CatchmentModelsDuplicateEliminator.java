@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,19 +36,21 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -56,9 +58,8 @@ import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmScenario;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -106,7 +107,9 @@ public class CatchmentModelsDuplicateEliminator
     try
     {
       /* All generators. */
-      final ICatchmentModel catchmentModel = m_data.loadModel( INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
+      final String catchmentModelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_CATCHMENT_MODELS_GML;
+
+      final ICatchmentModel catchmentModel = m_data.loadModel( catchmentModelPath );
       final IFeatureBindingCollection<IRainfallGenerator> allGenerators = catchmentModel.getGenerators();
 
       /* Used generators. */
@@ -121,7 +124,7 @@ public class CatchmentModelsDuplicateEliminator
       }
 
       /* Save the catchments models. */
-      m_data.saveModel( INaProjectConstants.GML_CATCHMENT_MODEL_PATH, catchmentModel );
+      m_data.saveModel( catchmentModelPath, catchmentModel );
 
       return collector.asMultiStatusOrOK( Messages.getString( "CatchmentModelsDuplicateEliminator.0" ) ); //$NON-NLS-1$
     }
@@ -210,7 +213,10 @@ public class CatchmentModelsDuplicateEliminator
   private void adjustSimulationsGml( final ILinearSumGenerator usedGenerator, final String generatorName ) throws Exception
   {
     /* Adjust the corresponding simulation. */
-    final SimulationCollection simulations = m_data.loadModel( INaProjectConstants.GML_SIMULATIONS_PATH );
+
+    final String simulationsPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_SIMULATIONS_GML;
+
+    final SimulationCollection simulations = m_data.loadModel( simulationsPath );
     for( final NAControl simulation : simulations.getSimulations() )
     {
       final String simulationName = simulation.getDescription();
@@ -223,19 +229,21 @@ public class CatchmentModelsDuplicateEliminator
     }
 
     /* Save the simulations */
-    m_data.saveModel( INaProjectConstants.GML_SIMULATIONS_PATH, simulations );
+    m_data.saveModel( simulationsPath, simulations );
   }
 
   private void adjustCalculationGml( final ILinearSumGenerator usedGenerator, final String generatorName ) throws Exception
   {
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+
+    final File baseDir = m_data.getBaseDir();
+    final IContainer[] baseDirContainers = root.findContainersForLocationURI( baseDir.toURI() );
+    final IFolder baseFolder = (IFolder) baseDirContainers[0];
+
     /* Create the file handle to the calculation.gml file. */
-    final IPath basePath = Path.fromOSString( m_data.getBaseDir().getAbsolutePath() );
-    final IPath simulationsPath = basePath.append( RrmScenario.FOLDER_SIMULATIONEN );
-    final IPath simulationPath = simulationsPath.append( generatorName );
-    final IPath modelsPath = simulationPath.append( INaProjectConstants.FOLDER_MODELS );
-    final IPath calculationGmlPath = modelsPath.append( INaCalcCaseConstants.CALCULATION_GML_FILE );
-    final IFile[] calculationGmlFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI( calculationGmlPath.toFile().toURI() );
-    final IFile calculationGmlFile = calculationGmlFiles[0];
+    final RrmScenario rrmScenario = new RrmScenario( baseFolder );
+    final RrmSimulation simulation = rrmScenario.getSimulation( generatorName );
+    final IFile calculationGmlFile = simulation.getCalculationGml();
 
     /* Load the calculation.gml. */
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( calculationGmlFile );
@@ -254,7 +262,7 @@ public class CatchmentModelsDuplicateEliminator
   private void adjustNaControl( final ILinearSumGenerator usedGenerator, final NAControl control )
   {
     /* Build the href. */
-    final String usedHref = String.format( "%s#%s", INaProjectConstants.GML_CATCHMENT_MODEL_FILE, usedGenerator.getId() ); //$NON-NLS-1$
+    final String usedHref = String.format( "%s#%s", RrmScenario.FILE_CATCHMENT_MODELS_GML, usedGenerator.getId() ); //$NON-NLS-1$
 
     /* Adjust the generator reference for parameter type N, if needed. */
     if( usedGenerator.getParameterType().equals( ITimeseriesConstants.TYPE_RAINFALL ) )

@@ -66,7 +66,6 @@ import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
@@ -208,7 +207,9 @@ public class CatchmentModelVerifier
     /* The status collector. */
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final ICatchmentModel catchmentModel = m_data.loadModel( INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
+    final String catchmentModelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_CATCHMENT_MODELS_GML;
+
+    final ICatchmentModel catchmentModel = m_data.loadModel( catchmentModelPath );
     final IFeatureBindingCollection<IRainfallGenerator> generators = catchmentModel.getGenerators();
 
     final String generatorIdN = ((IXLinkedFeature) m_simulation.getProperty( NAControl.PROP_GENERATOR_N )).getFeatureId();

@@ -52,7 +52,7 @@ import org.eclipse.core.runtime.Path;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 
 /**
- * Represents a simulation of the rrm model (i.e. one calculation case folder) and allows access to its data-
+ * Represents a simulation of the rrm model (i.e. one calculation case folder) and allows access to its data.
  * 
  * @author Gernot Belger
  */
@@ -60,15 +60,23 @@ public class RrmSimulation
 {
   public static final String FOLDER_ANFANGSWERTE = "Anfangswerte"; //$NON-NLS-1$
 
-  private static final String FOLDER_MODELS = ".models"; //$NON-NLS-1$
+  public static final String FOLDER_MODELS = ".models"; //$NON-NLS-1$
 
-  private static final String FOLDER_RESULTS = "Ergebnisse"; //$NON-NLS-1$
+  public static final String FOLDER_KLIMA = "Klima"; //$NON-NLS-1$
 
-  private static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
+  public static final String FOLDER_RESULTS = "Ergebnisse"; //$NON-NLS-1$
 
-  private static final String FILE_EXPERT_CONTROL_GML = "expertControl.gml"; //$NON-NLS-1$
+  public static final String FOLDER_NIEDERSCHLAG = "Niederschlag"; //$NON-NLS-1$
 
-  private static final String FILE_CALCULATION_GML = "calculation.gml"; //$NON-NLS-1$
+  public static final String FOLDER_PEGEL = "Pegel"; //$NON-NLS-1$
+
+  public static final String FOLDER_ZUFLUSS = "Zufluss"; //$NON-NLS-1$
+
+  public static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
+
+  public static final String FILE_EXPERT_CONTROL_GML = "expertControl.gml"; //$NON-NLS-1$
+
+  public static final String FILE_CALCULATION_GML = "calculation.gml"; //$NON-NLS-1$
 
   private static final String FILE_PARAMETER_GML = "parameter.gml"; //$NON-NLS-1$
 
@@ -77,6 +85,8 @@ public class RrmSimulation
   private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
 
   private static final String FILE_LZSIM_GML = "lzsim.gml"; //$NON-NLS-1$
+
+  public static final String FOLDER_LAST_RESULT = "Aktuell"; //$NON-NLS-1$
 
   private final IFolder m_simulation;
 
@@ -117,10 +127,10 @@ public class RrmSimulation
   public RrmScenario getScenario( )
   {
     IContainer parent = m_simulation.getParent();
-    while( parent instanceof IFolder )
+    while( parent != null )
     {
-      if( RrmScenario.isScenarioFolder( (IFolder) parent ) )
-        return new RrmScenario( (IFolder) parent );
+      if( RrmScenario.isScenarioFolder( parent ) )
+        return new RrmScenario( parent );
       else
         parent = parent.getParent();
     }
@@ -214,6 +224,7 @@ public class RrmSimulation
     return folders.toArray( new IFolder[] {} );
   }
 
+  // FIXME
   public IFolder getClimateFolder( )
   {
     return m_simulation.getFolder( Messages.getString( "RrmSimulation.0" ) ); // $NON-NLS-1$ //$NON-NLS-1$

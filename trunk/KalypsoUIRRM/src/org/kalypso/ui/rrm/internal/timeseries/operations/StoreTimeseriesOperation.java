@@ -69,7 +69,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.DateRange;
@@ -225,7 +225,10 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     }
 
     final IProject project = ScenarioHelper.getScenarioFolder().getProject();
-    final IFolder timeseriesFolder = project.getFolder( INaProjectConstants.PATH_TIMESERIES );
+    final RrmProject rrmProject = new RrmProject( project );
+
+    final IFolder timeseriesFolder = rrmProject.getTimeseriesFolder();
+
     final IFolder stationFolder = timeseriesFolder.getFolder( stationFoldername );
 
     return stationFolder.getFile( timeseriesFilename );

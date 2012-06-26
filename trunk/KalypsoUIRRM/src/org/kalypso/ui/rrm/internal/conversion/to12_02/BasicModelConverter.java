@@ -54,7 +54,8 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
@@ -93,7 +94,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
-    m_data = new ConverterData( new File( m_targetDir, INaProjectConstants.FOLDER_BASIS ) );
+    m_data = new ConverterData( new File( m_targetDir, RrmProject.FOLDER_BASIS ) );
     m_timeseriesIndex = null;
   }
 
@@ -132,15 +133,17 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   private void copyBasicFiles( ) throws IOException
   {
-    final IPath basisPath = new Path( INaProjectConstants.FOLDER_BASIS );
+    final IPath basisPath = new Path( RrmProject.FOLDER_BASIS );
 
-    copyFile( new Path( INaProjectConstants.GML_MODELL_FILE ), basisPath.append( INaProjectConstants.GML_MODELL_PATH ) );
-    final File hydrotope = copyFile( new Path( INaProjectConstants.GML_HYDROTOP_FILE ), basisPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) );
-    copyFile( new Path( INaProjectConstants.GML_PARAMETER_FILE ), basisPath.append( INaProjectConstants.GML_PARAMETER_PATH ) );
-    copyFile( new Path( "calcSynthN.gml" ), basisPath.append( INaProjectConstants.GML_SYNTH_N_PATH ) ); //$NON-NLS-1$
-    final File landuse = copyFile( new Path( INaProjectConstants.GML_LANDUSE_FILE ), basisPath.append( INaProjectConstants.GML_LANDUSE_PATH ) );
-    final File geology = copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
-    copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_PEDOLOGIE_PATH ) );
+    final IPath modelsPath = basisPath.append( RrmScenario.FOLDER_MODELS );
+
+    copyFile( new Path( INaProjectConstants.GML_MODELL_FILE ), modelsPath.append( RrmScenario.FILE_MODELL_GML ) );
+    final File hydrotope = copyFile( new Path( INaProjectConstants.GML_HYDROTOP_FILE ), modelsPath.append( RrmScenario.FILE_HYDROTOP_GML ) );
+    copyFile( new Path( INaProjectConstants.GML_PARAMETER_FILE ), modelsPath.append( RrmScenario.FILE_PARAMETER_GML ) );
+    copyFile( new Path( "calcSynthN.gml" ), basisPath.append( RrmScenario.FILE_SYNTHN_GML ) ); //$NON-NLS-1$
+    final File landuse = copyFile( new Path( INaProjectConstants.GML_LANDUSE_FILE ), modelsPath.append( RrmScenario.FILE_LANDUSE ) );
+    final File geology = copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), modelsPath.append( RrmScenario.FILE_GEOLOGIE ) );
+    copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), modelsPath.append( RrmScenario.FILE_PEDOLOGIE ) );
 
     final IStatus convertHydrotopesStatus = new ConvertHydrotopesOperation( hydrotope ).execute( new NullProgressMonitor() );
     getLog().add( convertHydrotopesStatus );
@@ -193,7 +196,8 @@ public class BasicModelConverter extends AbstractLoggingOperation
   private IParameterTypeIndex fixTimeseries( ) throws Exception
   {
     /* Load the na model. */
-    final NaModell naModel = m_data.loadModel( INaProjectConstants.GML_MODELL_PATH );
+    final String modelFilePath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_MODELL_GML;
+    final NaModell naModel = m_data.loadModel( modelFilePath );
 
     /* IMPORTANT: Index parameter types before the links have been fixed, so file paths are correct. */
     final IParameterTypeIndex parameterIndex = collectTimeseriesParameterTypes( naModel, m_sourceDir, getLog() );
@@ -205,7 +209,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     emptyTimeseriesLinks( naModel, getLog() );
 
     /* Save the na model. */
-    m_data.saveModel( INaProjectConstants.GML_MODELL_PATH, naModel );
+    m_data.saveModel( modelFilePath, naModel );
 
     return parameterIndex;
   }

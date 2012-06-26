@@ -47,12 +47,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IThiessenStationCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
@@ -127,7 +126,8 @@ public class LinearSumHelper
       /* Timeseries file. */
       final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IContainer scenarioFolder = scenarioDataProvider.getScenarioFolder();
-      final IFile stationFile = scenarioFolder.getFile( new Path( INaProjectConstants.GML_THIESSEN_STATION_PATH ) );
+      final RrmScenario rrmScenario = new RrmScenario( scenarioFolder );
+      final IFile stationFile = rrmScenario.getThiessenTempFile();
 
       /* Load the file and transform to the kalypso coordinate system. */
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( stationFile );
@@ -153,7 +153,10 @@ public class LinearSumHelper
     {
       final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IContainer scenarioFolder = scenarioDataProvider.getScenarioFolder();
-      final IFile stationFile = scenarioFolder.getFile( new Path( INaProjectConstants.GML_THIESSEN_STATION_PATH ) );
+
+      final RrmScenario rrmScenario = new RrmScenario( scenarioFolder );
+      final IFile stationFile = rrmScenario.getThiessenTempFile();
+
       stationFile.delete( true, new NullProgressMonitor() );
     }
     catch( final Exception ex )
