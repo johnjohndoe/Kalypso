@@ -111,8 +111,8 @@ public class CalculateSimulationDialog extends TitleAreaDialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( Messages.getString("CalculateSimulationDialog_0") ); //$NON-NLS-1$
-    setTitle( Messages.getString("CalculateSimulationDialog_1") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "CalculateSimulationDialog_0" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString( "CalculateSimulationDialog_1" ) ); //$NON-NLS-1$
 
     /* Create the main composite. */
     final Composite main = (Composite) super.createDialogArea( parent );
@@ -122,40 +122,40 @@ public class CalculateSimulationDialog extends TitleAreaDialog
     /* Create a label. */
     final Label questionLabel = new Label( main, SWT.WRAP );
     questionLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    questionLabel.setText( Messages.getString("CalculateSimulationDialog_2") ); //$NON-NLS-1$
+    questionLabel.setText( Messages.getString( "CalculateSimulationDialog_2" ) ); //$NON-NLS-1$
 
     /* Create a empty label. */
     final Label emptyLabel = new Label( main, SWT.NONE );
     emptyLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* Create a group. */
-    final Group refreshGroup = new Group( main, SWT.NONE );
-    refreshGroup.setLayout( new GridLayout( 1, false ) );
-    refreshGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    refreshGroup.setText( Messages.getString("CalculateSimulationDialog_3") ); //$NON-NLS-1$
-
-    /* Create a label. */
-    final Label refreshLabel = new Label( refreshGroup, SWT.WRAP );
-    refreshLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    refreshLabel.setText( Messages.getString("CalculateSimulationDialog_4") ); //$NON-NLS-1$
-
-    /* Create a empty label. */
-    final Label emptyLabel1 = new Label( refreshGroup, SWT.NONE );
-    emptyLabel1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    /* Create a button. */
-    final Button catchmentModelButton = new Button( refreshGroup, SWT.CHECK );
-    catchmentModelButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    catchmentModelButton.setText( Messages.getString("CalculateSimulationDialog_5") ); //$NON-NLS-1$
-    catchmentModelButton.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        final Button source = (Button) e.getSource();
-        m_calculateCatchmentModels = source.getSelection();
-      }
-    } );
+    // final Group refreshGroup = new Group( main, SWT.NONE );
+    // refreshGroup.setLayout( new GridLayout( 1, false ) );
+    // refreshGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    //    refreshGroup.setText( Messages.getString( "CalculateSimulationDialog_3" ) ); //$NON-NLS-1$
+    //
+    // /* Create a label. */
+    // final Label refreshLabel = new Label( refreshGroup, SWT.WRAP );
+    // refreshLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    //    refreshLabel.setText( Messages.getString( "CalculateSimulationDialog_4" ) ); //$NON-NLS-1$
+    //
+    // /* Create a empty label. */
+    // final Label emptyLabel1 = new Label( refreshGroup, SWT.NONE );
+    // emptyLabel1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    //
+    // /* Create a button. */
+    // final Button catchmentModelButton = new Button( refreshGroup, SWT.CHECK );
+    // catchmentModelButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    //    catchmentModelButton.setText( Messages.getString("CalculateSimulationDialog_5") ); //$NON-NLS-1$
+    // catchmentModelButton.addSelectionListener( new SelectionAdapter()
+    // {
+    // @Override
+    // public void widgetSelected( final SelectionEvent e )
+    // {
+    // final Button source = (Button) e.getSource();
+    // m_calculateCatchmentModels = source.getSelection();
+    // }
+    // } );
 
     /* Show the group, only if there is a longterm simulation. */
     if( !containsLongtermSimulation( m_simulations ) )
@@ -165,12 +165,12 @@ public class CalculateSimulationDialog extends TitleAreaDialog
     final Group startConditionsGroup = new Group( main, SWT.NONE );
     startConditionsGroup.setLayout( new GridLayout( 1, false ) );
     startConditionsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    startConditionsGroup.setText( Messages.getString("CalculateSimulationDialog_6") ); //$NON-NLS-1$
+    startConditionsGroup.setText( Messages.getString( "CalculateSimulationDialog_6" ) ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label startConditionsLabel = new Label( startConditionsGroup, SWT.WRAP );
     startConditionsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    startConditionsLabel.setText( Messages.getString("CalculateSimulationDialog_7") ); //$NON-NLS-1$
+    startConditionsLabel.setText( Messages.getString( "CalculateSimulationDialog_7" ) ); //$NON-NLS-1$
 
     /* Create a empty label. */
     final Label emptyLabel2 = new Label( startConditionsGroup, SWT.NONE );
@@ -179,7 +179,7 @@ public class CalculateSimulationDialog extends TitleAreaDialog
     /* Create a button. */
     final Button startConditionsButton = new Button( startConditionsGroup, SWT.CHECK );
     startConditionsButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    startConditionsButton.setText( Messages.getString("CalculateSimulationDialog_8") ); //$NON-NLS-1$
+    startConditionsButton.setText( Messages.getString( "CalculateSimulationDialog_8" ) ); //$NON-NLS-1$
     startConditionsButton.addSelectionListener( new SelectionAdapter()
     {
       @Override

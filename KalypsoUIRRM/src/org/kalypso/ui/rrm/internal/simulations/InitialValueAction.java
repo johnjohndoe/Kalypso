@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -60,6 +63,8 @@ import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
  */
 public class InitialValueAction extends Action
 {
+  private static final String RESET_CONSTANT = "< No start conditions >";
+
   private final InitialValueFeatureControl m_control;
 
   public InitialValueAction( final InitialValueFeatureControl control )
@@ -70,9 +75,11 @@ public class InitialValueAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
+    /* Get the shell. */
     final Display display = event.widget.getDisplay();
     final Shell shell = display.getActiveShell();
 
+    /* Longterm simulations may not have start conditions. */
     final NAControl simulation = (NAControl) m_control.getFeature();
     if( SimulationUtilities.isLongterm( simulation ) )
     {
@@ -80,26 +87,53 @@ public class InitialValueAction extends Action
       return;
     }
 
+    /* Get the old initial value. */
+    final String oldInitialValue = simulation.getInitialValueSource();
+
+    /* Create the dialog. */
     final ListDialog dialog = new ListDialog( shell );
     dialog.setTitle( getText() );
     dialog.setMessage( "Select longterm simulation" );
     dialog.setLabelProvider( new LabelProvider() );
     dialog.setContentProvider( new ArrayContentProvider() );
 
-    final String[] longtermSimulations = SimulationUtilities.getLongtermSimulations( simulation );
-    dialog.setInput( longtermSimulations );
+    /* Create the input. */
+    final List<String> input = new ArrayList<String>();
+    input.add( RESET_CONSTANT );
 
+    /* Add all longterm simulations. */
+    final String[] longtermSimulations = SimulationUtilities.getLongtermSimulations( simulation );
+    for( final String longtermSimulation : longtermSimulations )
+      input.add( longtermSimulation );
+
+    /* Set the input. */
+    dialog.setInput( input );
+
+    /* Set the old initial value as selection. */
+    if( oldInitialValue != null && input.contains( oldInitialValue ) )
+      dialog.setInitialSelections( new String[] { oldInitialValue } );
+    else
+      dialog.setInitialSelections( new String[] { RESET_CONSTANT } );
+
+    /* Open the dialog. */
     final int open = dialog.open();
     if( open != Window.OK )
       return;
 
+    /* Get the result. */
     final Object[] result = dialog.getResult();
     if( result == null || result.length == 0 )
       return;
 
-    final String initialInitialValue = simulation.getInitialValueSource();
-    final String newInitialValue = (String) result[0];
-    if( !ObjectUtils.equals( initialInitialValue, newInitialValue ) )
+    /* Get the new initial value. */
+    String newInitialValue = (String) result[0];
+
+    /* HINT: It may be a the reset constant. */
+    if( RESET_CONSTANT.equals( newInitialValue ) )
+      newInitialValue = "";
+
+    /* Only change, if the old initial value is different from the new initial value. */
+    if( !ObjectUtils.equals( oldInitialValue, newInitialValue ) )
     {
       final IPropertyType pt = m_control.getFeatureTypeProperty();
       m_control.fireFeatureChanges( new ChangeFeatureCommand( simulation, pt, newInitialValue ) );
