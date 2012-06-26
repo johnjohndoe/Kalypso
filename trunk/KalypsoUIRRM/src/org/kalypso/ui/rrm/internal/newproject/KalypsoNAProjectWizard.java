@@ -110,10 +110,18 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   public KalypsoNAProjectWizard( )
   {
-    super( new ProjectTemplatePage( Messages.getString( "KalypsoNAProjectWizard_2" ), Messages.getString( "KalypsoNAProjectWizard_3" ), CATEGORY_TEMPLATE ), true, KalypsoModuleRRM.ID ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( new ProjectTemplatePage( Messages.getString( "KalypsoNAProjectWizard_2" ), Messages.getString( "KalypsoNAProjectWizard_3" ), CATEGORY_TEMPLATE ), false, KalypsoModuleRRM.ID ); //$NON-NLS-1$ //$NON-NLS-2$
 
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "KalypsoNAProjectWizard.9" ) ); //$NON-NLS-1$
+
+    final ProjectTemplatePage templatePage = getTemplatePage();
+
+    /**
+     * Automatically choose language by current settings. It is not so important any more.
+     */
+    final String language = Locale.getDefault().getLanguage();
+    templatePage.selectTemplate( language );
   }
 
   @Override
@@ -126,22 +134,22 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
     m_catchmentMapping = getCatchmentTargetData();
     final KalypsoNAProjectWizardPage catchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, Messages.getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_catchmentMapping );
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_catchmentMapping );
     addPage( catchmentPage );
 
     m_channelMapping = getChannelTargetData();
     final KalypsoNAProjectWizardPage riverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, Messages.getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_channelMapping );
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_channelMapping );
     addPage( riverPage );
 
     m_nodeMapping = getNodeTargetProperties();
     final KalypsoNAProjectWizardPage nodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, Messages.getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_nodeMapping ); //$NON-NLS-1$
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_nodeMapping ); //$NON-NLS-1$
     addPage( nodePage );
 
     m_hydrotopeMapping = getHydrotopeTargetProperties();
     final KalypsoNAProjectWizardPage hydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, Messages.getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_hydrotopeMapping ); //$NON-NLS-1$
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_hydrotopeMapping ); //$NON-NLS-1$
     addPage( hydrotopPage );
   }
 
