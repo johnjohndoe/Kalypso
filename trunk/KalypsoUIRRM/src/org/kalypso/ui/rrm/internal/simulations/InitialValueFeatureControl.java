@@ -41,6 +41,8 @@
 package org.kalypso.ui.rrm.internal.simulations;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -71,7 +73,7 @@ public class InitialValueFeatureControl extends AbstractFeatureControl
     /* Create a button. */
     final Action initialValueAction = new InitialValueAction( this );
     final Button initialValueButton = ActionButton.createButton( null, parent, initialValueAction );
-// InitialValueButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    initialValueButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     return initialValueButton;
   }

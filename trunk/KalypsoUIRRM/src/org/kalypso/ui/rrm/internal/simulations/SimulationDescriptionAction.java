@@ -96,6 +96,12 @@ public class SimulationDescriptionAction extends Action
       changeDescription( shell, feature, initialDescription, newDescription );
   }
 
+  @Override
+  public String getText( )
+  {
+    return "Rename";
+  }
+
   private void changeDescription( final Shell shell, final Feature feature, final String initialDescription, final String newDescription )
   {
     try
@@ -103,6 +109,18 @@ public class SimulationDescriptionAction extends Action
       /* Change the property. */
       final IPropertyType pt = m_control.getFeatureTypeProperty();
       m_control.fireFeatureChanges( new ChangeFeatureCommand( feature, pt, newDescription ) );
+
+      /* Change all short term simulation that reference this one. */
+      if( SimulationUtilities.isLongterm( (NAControl) feature ) )
+      {
+        final SimulationAccessor accessor = new SimulationAccessor( (NAControl) feature );
+        final NAControl[] referencingSimulations = accessor.findReferencingShortTermSimulations();
+        for( final NAControl referencingSimulation : referencingSimulations )
+        {
+          final IPropertyType referencingPt = referencingSimulation.getFeatureType().getProperty( NAControl.QN_DESCRIPTION );
+          m_control.fireFeatureChanges( new ChangeFeatureCommand( referencingSimulation, referencingPt, newDescription ) );
+        }
+      }
 
       /* Get the folder simulations folder. */
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
@@ -113,8 +131,6 @@ public class SimulationDescriptionAction extends Action
       final IFolder initialFolder = simulationsFolder.getFolder( initialDescription );
       final IFolder newFolder = simulationsFolder.getFolder( newDescription );
 
-      // FIXME: change all short term simulation that reeference this one
-
       /* Rename the source folder. */
       initialFolder.move( newFolder.getFullPath(), false, new NullProgressMonitor() );
     }
@@ -123,11 +139,5 @@ public class SimulationDescriptionAction extends Action
       /* Show an error. */
       ErrorDialog.openError( shell, getText(), "Could not rename the simulation folder...", new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
     }
-  }
-
-  @Override
-  public String getText( )
-  {
-    return "Rename";
   }
 }
