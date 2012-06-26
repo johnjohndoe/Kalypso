@@ -69,6 +69,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
+import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
@@ -311,18 +312,40 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    */
   private void renameOldResults( )
   {
-    /* Get the current folder. */
-    // TODO Is this the target project, if so use RRMScenario, RRMSimulation etc.
-    final File aktuellDir = new File( m_targetScenarioDir, m_simulationPath + '/' + RrmSimulation.FOLDER_RESULTS + '/' + RrmSimulation.FOLDER_LAST_RESULT );
-    if( aktuellDir.isDirectory() )
+    final File resultDir = new File( m_targetScenarioDir, m_simulationPath + '/' + RrmSimulation.FOLDER_RESULTS );
+    final File[] subFolders = resultDir.listFiles();
+    for( final File subFolder : subFolders )
     {
-      final File resultDir = new File( m_targetScenarioDir, m_simulationPath + '/' + RrmSimulation.FOLDER_RESULTS );
-      final File origCurrentResultDir = new File( resultDir, Messages.getString( "CalcCaseConverter.0" ) ); //$NON-NLS-1$
+      if( subFolder.isDirectory() )
+      {
+        final String name = subFolder.getName();
 
-      aktuellDir.renameTo( origCurrentResultDir );
-      final String msg = String.format( Messages.getString( "CalcCaseConverter.1" ), aktuellDir.getName(), origCurrentResultDir.getName() ); //$NON-NLS-1$
-      getLog().add( IStatus.INFO, msg );
+        /* Rename old german sub folder names */
+        renameSubFolder( subFolder, "Anfangswerte", RrmCalculationResult.FOLDER_INITIAL_VALUES ); //$NON-NLS-1$
+        renameSubFolder( subFolder, "Bilanz/Bilanz.txt", RrmCalculationResult.FOLDER_REPORT + '/' + RrmCalculationResult.FILE_BILANZ_TXT ); //$NON-NLS-1$
+        renameSubFolder( subFolder, "Knoten", RrmCalculationResult.FOLDER_NODE ); //$NON-NLS-1$
+        renameSubFolder( subFolder, "Teilgebiet", RrmCalculationResult.FOLDER_CATCHMENT ); //$NON-NLS-1$
+        renameSubFolder( subFolder, "Speicherstrang", RrmCalculationResult.FOLDER_STROAGE_CHANNEL ); //$NON-NLS-1$
+
+        /* Rename last current dir, so it is not automatically overwritten on next calculation */
+        if( name.equals( "Aktuell" ) ) //$NON-NLS-1$
+        {
+          final File origCurrentResultDir = new File( resultDir, Messages.getString( "CalcCaseConverter.0" ) ); //$NON-NLS-1$
+          subFolder.renameTo( origCurrentResultDir );
+
+          final String msg = String.format( Messages.getString( "CalcCaseConverter.1" ), name, origCurrentResultDir.getName() ); //$NON-NLS-1$
+          getLog().add( IStatus.INFO, msg );
+        }
+      }
     }
+  }
+
+  private void renameSubFolder( final File parent, final String oldName, final String newName )
+  {
+    final File oldFile = new File( parent, oldName );
+    final File newFile = new File( parent, newName );
+    if( oldFile.exists() )
+      oldFile.renameTo( newFile );
   }
 
   private File copyFile( final String sourcePath, final String targetPath ) throws IOException
