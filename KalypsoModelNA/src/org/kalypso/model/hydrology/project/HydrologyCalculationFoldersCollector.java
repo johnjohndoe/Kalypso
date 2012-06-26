@@ -81,15 +81,8 @@ class HydrologyCalculationFoldersCollector implements IResourceVisitor
 
   public static boolean isResultFolder( final IFolder folder )
   {
-    // FIXME remove constants form here
-    final IFolder nodes = folder.getFolder( "Knoten" ); //$NON-NLS-1$
-    final IFolder storageChannels = folder.getFolder( "SpeicherStrang" ); //$NON-NLS-1$
-    final IFolder catchments = folder.getFolder( "Teilgebiet" ); //$NON-NLS-1$
-
-    if( !nodes.exists() && !storageChannels.exists() && !catchments.exists() )
-      return false;
-
-    return true;
+    final RrmCalculationResult result = new RrmCalculationResult( folder );
+    return result.isResultFolder();
   }
 
   private boolean isCalculationCaseFolder( final IFolder folder )
