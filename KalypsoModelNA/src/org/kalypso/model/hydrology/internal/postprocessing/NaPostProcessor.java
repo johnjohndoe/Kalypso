@@ -244,7 +244,7 @@ public class NaPostProcessor
   // FIXME: why copy? bilanz does not belong to ascii and should be directly written to result dirs
   private void copyStatisticResultFile( final NaAsciiDirs asciiDirs, final NaResultDirs resultDirs )
   {
-    resultDirs.bilanzDir.mkdirs();
+    resultDirs.reportDir.mkdirs();
 
     final String[] wildcards = new String[] { "*bil*" }; //$NON-NLS-1$
     final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( wildcards, false, false, true );
@@ -256,8 +256,8 @@ public class NaPostProcessor
       try
       {
         m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.220", bilFile.getName() ) ); //$NON-NLS-1$
-        final File resultFile = new File( resultDirs.bilanzDir, "Bilanz.txt" ); //$NON-NLS-1$
-        FileUtils.copyFile( bilFile, resultFile );
+
+        FileUtils.copyFile( bilFile, resultDirs.bilanceFile );
       }
       catch( final IOException e )
       {
