@@ -60,6 +60,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.simulation.NaModelInnerCalcJob;
 import org.kalypso.model.hydrology.project.RrmSimulation;
@@ -294,7 +295,7 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
         FileUtils.forceDelete( currentResultDir );
 
       /* Move new result to calc Folder: move is way faster... */
-      FileUtils.moveDirectory( new File( resultDir, "Aktuell" ), currentResultDir ); //$NON-NLS-1$
+      FileUtils.moveDirectory( new File( resultDir, NaSimulationDirs.DIR_CURRENT_RESULT ), currentResultDir );
 
       /* Make copy with timestamp. */
       FileUtils.copyDirectory( currentResultDir, timestampDir );
