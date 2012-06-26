@@ -46,6 +46,8 @@ import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding._11_6.NAControl;
+import org.kalypso.model.hydrology.binding._11_6.NAModellControl;
 
 /**
  * class UrlCatalogNA provides the schemas for kalypso rainfall runoff simulation created by
@@ -59,8 +61,8 @@ public class UrlCatalogNA extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    catalog.put( NaModelConstants.NS_NAMETA_11_6, myClass.getResource( "/etc/schema/gml/11.6/control.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NACONTROL_11_6, myClass.getResource( "/etc/schema/gml/11.6/nacontrol.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NAControl.NS_NAMETA, myClass.getResource( "/etc/schema/gml/11.6/control.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NAModellControl.NS_NACONTROL, myClass.getResource( "/etc/schema/gml/11.6/nacontrol.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAHYDROTOP_11_6, myClass.getResource( "/etc/schema/gml/11.6/hydrotop.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NALANDUSE_11_6, myClass.getResource( "/etc/schema/gml/11.6/landuse.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAGEOLOGIE_11_6, myClass.getResource( "/etc/schema/gml/11.6/geologie.xsd" ) ); //$NON-NLS-1$
