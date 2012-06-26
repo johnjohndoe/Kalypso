@@ -78,25 +78,25 @@ public class FixDotDotTimeseriesVisitor implements ITimeseriesVisitor
 
   private String fixFoldername( final String href )
   {
-    if( href.startsWith( "Niederschlag/" ) )
-      return StringUtils.replaceOnce( href, "Niederschlag/", RrmSimulation.FOLDER_NIEDERSCHLAG + '/' );
-    if( href.startsWith( "Precipitation/" ) )
-      return StringUtils.replaceOnce( href, "Precipitation/", RrmSimulation.FOLDER_NIEDERSCHLAG + '/' );
+    if( href.startsWith( "Niederschlag/" ) ) // $NON-NLS-1$
+      return StringUtils.replaceOnce( href, "Niederschlag/", RrmSimulation.FOLDER_NIEDERSCHLAG + '/' ); // $NON-NLS-1$ // $NON-NLS-2$
+    if( href.startsWith( "Precipitation/" ) ) // $NON-NLS-1$
+      return StringUtils.replaceOnce( href, "Precipitation/", RrmSimulation.FOLDER_NIEDERSCHLAG + '/' ); // $NON-NLS-1$ // $NON-NLS-2$
 
-    if( href.startsWith( "Klima/" ) )
-      return StringUtils.replaceOnce( href, "Klima/", RrmSimulation.FOLDER_KLIMA + '/' );
-    if( href.startsWith( "Climate/" ) )
-      return StringUtils.replaceOnce( href, "Climate/", RrmSimulation.FOLDER_KLIMA + '/' );
+    if( href.startsWith( "Klima/" ) ) // $NON-NLS-1$
+      return StringUtils.replaceOnce( href, "Klima/", RrmSimulation.FOLDER_KLIMA + '/' ); // $NON-NLS-1$ // $NON-NLS-2$
+    if( href.startsWith( "Climate/" ) ) // $NON-NLS-1$
+      return StringUtils.replaceOnce( href, "Climate/", RrmSimulation.FOLDER_KLIMA + '/' ); // $NON-NLS-1$ // $NON-NLS-2$
 
-    if( href.startsWith( "Pegel/" ) )
-      return StringUtils.replaceOnce( href, "Pegel/", RrmSimulation.FOLDER_PEGEL + '/' );
-    if( href.startsWith( "Gauges/" ) )
-      return StringUtils.replaceOnce( href, "Gauges/", RrmSimulation.FOLDER_PEGEL + '/' );
+    if( href.startsWith( "Pegel/" ) ) // $NON-NLS-1$
+      return StringUtils.replaceOnce( href, "Pegel/", RrmSimulation.FOLDER_PEGEL + '/' ); // $NON-NLS-1$ // $NON-NLS-2$
+    if( href.startsWith( "Gauges/" ) ) // $NON-NLS-1$
+      return StringUtils.replaceOnce( href, "Gauges/", RrmSimulation.FOLDER_PEGEL + '/' ); // $NON-NLS-1$ // $NON-NLS-2$
 
-    if( href.startsWith( "Zufluss/" ) )
-      return StringUtils.replaceOnce( href, "Zufluss/", RrmSimulation.FOLDER_ZUFLUSS + '/' );
-    if( href.startsWith( "Tributary/" ) )
-      return StringUtils.replaceOnce( href, "Tributary/", RrmSimulation.FOLDER_ZUFLUSS + '/' );
+    if( href.startsWith( "Zufluss/" ) ) // $NON-NLS-1$
+      return StringUtils.replaceOnce( href, "Zufluss/", RrmSimulation.FOLDER_ZUFLUSS + '/' ); // $NON-NLS-1$ // $NON-NLS-2$
+    if( href.startsWith( "Tributary/" ) ) // $NON-NLS-1$
+      return StringUtils.replaceOnce( href, "Tributary/", RrmSimulation.FOLDER_ZUFLUSS + '/' ); // $NON-NLS-1$ // $NON-NLS-2$
 
     return href;
   }

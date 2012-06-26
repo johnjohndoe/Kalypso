@@ -106,10 +106,6 @@ public class SimulationDescriptionAction extends Action
   {
     try
     {
-      /* Change the property. */
-      final IPropertyType pt = m_control.getFeatureTypeProperty();
-      m_control.fireFeatureChanges( new ChangeFeatureCommand( feature, pt, newDescription ) );
-
       /* Change all short term simulation that reference this one. */
       if( SimulationUtilities.isLongterm( (NAControl) feature ) )
       {
@@ -117,10 +113,14 @@ public class SimulationDescriptionAction extends Action
         final NAControl[] referencingSimulations = accessor.findReferencingShortTermSimulations();
         for( final NAControl referencingSimulation : referencingSimulations )
         {
-          final IPropertyType referencingPt = referencingSimulation.getFeatureType().getProperty( NAControl.QN_DESCRIPTION );
+          final IPropertyType referencingPt = referencingSimulation.getFeatureType().getProperty( NAControl.PROP_INITIAL_VALUE_SOURCE );
           m_control.fireFeatureChanges( new ChangeFeatureCommand( referencingSimulation, referencingPt, newDescription ) );
         }
       }
+
+      /* After (!) that change the property. */
+      final IPropertyType pt = m_control.getFeatureTypeProperty();
+      m_control.fireFeatureChanges( new ChangeFeatureCommand( feature, pt, newDescription ) );
 
       /* Get the folder simulations folder. */
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
