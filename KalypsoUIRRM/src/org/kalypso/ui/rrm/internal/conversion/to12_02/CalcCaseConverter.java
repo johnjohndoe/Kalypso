@@ -320,6 +320,12 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       {
         final String name = subFolder.getName();
 
+        if( "Logs".equals( name ) ) //$NON-NLS-1$
+        {
+          FileUtils.deleteQuietly( subFolder );
+          continue;
+        }
+
         /* Rename old german sub folder names */
         renameSubFolder( subFolder, "Anfangswerte", RrmCalculationResult.FOLDER_INITIAL_VALUES ); //$NON-NLS-1$
         renameSubFolder( subFolder, "Bilanz/Bilanz.txt", RrmCalculationResult.FOLDER_REPORT + '/' + RrmCalculationResult.FILE_BILANZ_TXT ); //$NON-NLS-1$
