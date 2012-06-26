@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.control;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -51,7 +53,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.gml.ui.internal.feature.marker.IDuplicateFeatureMarker;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
@@ -59,6 +63,9 @@ import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -67,7 +74,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * 
  * @author Gernot Belger
  */
-public class NAControl extends Feature_Impl
+public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
 {
   private static final String NS_CONTROL = NaModelConstants.NS_NAMETA;
 
@@ -442,5 +449,44 @@ public class NAControl extends Feature_Impl
   public ITimeseriesMapping getMappingStorageEvaporation( )
   {
     return (ITimeseriesMapping) resolveMember( PROPERTY_MAPPING_STORAGE_EVAPORATION );
+  }
+
+  @Override
+  public void postDuplicated( final CommandableWorkspace workspace ) throws Exception
+  {
+    /* Get the previous description. */
+    final String previousDescription = getDescription();
+
+    /* Get all simulations. */
+    final SimulationCollection owner = (SimulationCollection) getOwner();
+    final IFeatureBindingCollection<NAControl> allSimulations = owner.getSimulations();
+
+    /* Collect all existing descriptions. */
+    final List<String> existingDescriptions = new ArrayList<String>();
+    for( final NAControl oneSimulation : allSimulations )
+    {
+      if( oneSimulation != this )
+        existingDescriptions.add( oneSimulation.getDescription() );
+    }
+
+    /* The new description. */
+    String newDescription = String.format( "%s (Copy)", previousDescription );
+
+    /* Find the new description. */
+    int cnt = 1;
+    while( true )
+    {
+
+      /* Check if it is already used. */
+      if( !existingDescriptions.contains( newDescription ) )
+        break;
+
+      /* The new description. */
+      newDescription = String.format( "%s (Copy %d)", previousDescription, cnt++ );
+    }
+
+    /* Set the new description. */
+    final IPropertyType pt = getFeatureType().getProperty( NAControl.QN_DESCRIPTION );
+    workspace.postCommand( new ChangeFeatureCommand( this, pt, newDescription ) );
   }
 }
