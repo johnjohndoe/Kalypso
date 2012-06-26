@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,18 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.postprocessing;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang3.StringUtils;
-import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -59,15 +64,23 @@ public class DefaultPathGenerator
       extraString = extra;
     final String observationTitle = getObservationTitle( feature );
 
-    final String annotationName = getAnnotationName( feature );
-    final String result = annotationName + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    return result;
+    final String directoryName = getDirectoryName( feature );
+    return directoryName + '/' + observationTitle + extraString + '/' + getTitleForSuffix( suffix ) + ".zml"; //$NON-NLS-1$
   }
 
-  private static String getAnnotationName( final Feature feature )
+  private static String getDirectoryName( final Feature feature )
   {
-    final IAnnotation annotation = feature.getFeatureType().getAnnotation();
-    return annotation.getValue( IAnnotation.ANNO_NAME );
+    final QName qName = feature.getFeatureType().getQName();
+    if( Node.FEATURE_NODE.equals( qName ) )
+      return RrmCalculationResult.FOLDER_NODE;
+
+    if( StorageChannel.FEATURE_STORAGE_CHANNEL.equals( qName ) )
+      return RrmCalculationResult.FOLDER_STROAGE_CHANNEL;
+
+    if( Catchment.FEATURE_CATCHMENT.equals( qName ) )
+      return RrmCalculationResult.FOLDER_CATCHMENT;
+
+    throw new IllegalArgumentException( String.format( "Illegal result feature type: %s", qName ) );
   }
 
   private static String getObservationTitle( final Feature feature )
@@ -82,7 +95,7 @@ public class DefaultPathGenerator
   public static String generateTitleForObservation( final Feature feature, final String suffix )
   {
     final String observationTitle = getObservationTitle( feature );
-    final String annotationName = getAnnotationName( feature );
+    final String annotationName = getDirectoryName( feature );
     return observationTitle + " - " + DefaultPathGenerator.getTitleForSuffix( suffix ) + " " + annotationName; //$NON-NLS-1$ //$NON-NLS-2$
   }
 

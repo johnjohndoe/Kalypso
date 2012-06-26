@@ -72,7 +72,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts result timeseries of Kalypso-NA.exe to zml's.
- *
+ * 
  * @author Gernot Belger
  */
 public class ResultTimeseriesLoader
@@ -119,9 +119,9 @@ public class ResultTimeseriesLoader
     if( qgsFiles.length == 0 )
       return;
 
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" );  //$NON-NLS-1$//$NON-NLS-2$
+    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" ); //$NON-NLS-1$//$NON-NLS-2$
 
-    final BlockTimeSeries ts = new BlockTimeSeries(m_resultsFormat);
+    final BlockTimeSeries ts = new BlockTimeSeries( m_resultsFormat );
     ts.importBlockFile( qgsFiles[0] );
 
     final Feature[] resultFeatures = FeatureHelper.getFeaturesWithName( m_modelWorkspace, descriptor.getFeatureType() );
@@ -151,7 +151,7 @@ public class ResultTimeseriesLoader
     }
 
     final String suffix = descriptor.name();
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" );  //$NON-NLS-1$//$NON-NLS-2$
+    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-1$//$NON-NLS-2$
 
     final String resultPathRelative = generateResultPath( resultFeature, descriptor );
 
@@ -178,31 +178,7 @@ public class ResultTimeseriesLoader
   {
     final String suffix = descriptor.name();
 
-    if( descriptor != TSResultDescriptor.qgs )
-      return DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, null );
-
-    // We know it s node for qgs results
-    final Node node = (Node) resultFeature;
-    final ZmlLink resultLink = node.getResultLink();
-
-    try
-    {
-      // FIXME: shouldn't we use the link?
-      final String href = resultLink.getHref();
-      if( href == null )
-      {
-        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.134", resultFeature.getId() ) ); //$NON-NLS-1$
-        return DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, null );
-      }
-
-      // FIXME: warum?! we should just use the link provided!
-      return "Pegel" + href.substring( href.lastIndexOf( "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-    catch( final Exception e )
-    {
-      // if there is target defined or there are some problems with that we generate one
-      return DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, null );
-    }
+    return DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, null );
   }
 
   /**
