@@ -53,9 +53,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
@@ -138,20 +138,16 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor )
   {
-    /* If no monitor is given, take a null progress monitor. */
-    if( monitor == null )
-      monitor = new NullProgressMonitor();
-
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
 
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString( "CalculateSimulationRunnable_1" ), 1000 * m_simulations.length ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString( "CalculateSimulationRunnable_2" ) ); //$NON-NLS-1$
+      final SubMonitor moni = SubMonitor.convert( monitor, Messages.getString( "CalculateSimulationRunnable_1" ), m_simulations.length );
+      moni.subTask( Messages.getString( "CalculateSimulationRunnable_2" ) ); //$NON-NLS-1$
 
       /* Sort the simulations. */
       /* Longterm simulations should be calculated first. */
@@ -167,7 +163,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         monitor.setTaskName( String.format( Messages.getString( "CalculateSimulationRunnable_3" ), i + 1, m_simulations.length ) ); //$NON-NLS-1$
 
         /* Calculate the simulation. */
-        final IStatus status = calculateSimulation( simulation, new SubProgressMonitor( monitor, 1000 ) );
+        final IStatus status = calculateSimulation( simulation, moni.newChild( 1, SubMonitor.SUPPRESS_SETTASKNAME | SubMonitor.SUPPRESS_BEGINTASK ) );
         collector.add( status );
       }
 
