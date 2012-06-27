@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoFloodSimulation">
+    <input id="FLOOD_MODEL"/>
+    <input id="GRID_FOLDER"/>
+
+    <output id="FLOOD_MODEL"/>
+	<output id="EVENTS_BASE_FOLDER"/>
+</modelspec>
