@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoRisk_InnundationDifferenceCalculation">
+	<input id="RASTER_MODEL_1" path="models1/RasterDataModel.gml" relativeToCalcCase="true"/>
+	<input id="RASTER_MODEL_2" path="models2/RasterDataModel.gml" relativeToCalcCase="true"/>
+	<output id="OUTPUT_RASTER_MODEL" path="models3/RasterDataModel.gml" relativeToCalcCase="true"/>
+	<output id="OUTPUT_RASTER_FOLDER" path="models3/raster/output" relativeToCalcCase="true"/>
+</modelspec>
