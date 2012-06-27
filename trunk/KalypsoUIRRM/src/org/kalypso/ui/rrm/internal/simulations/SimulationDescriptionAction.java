@@ -127,12 +127,13 @@ public class SimulationDescriptionAction extends Action
       final IContainer scenarioFolder = dataProvider.getScenarioFolder();
       final IFolder simulationsFolder = scenarioFolder.getFolder( new Path( RrmScenario.FOLDER_SIMULATIONEN ) );
 
-      /* Create the source and target folder. */
+      /* Rename the source folder, if it exists. */
       final IFolder initialFolder = simulationsFolder.getFolder( initialDescription );
-      final IFolder newFolder = simulationsFolder.getFolder( newDescription );
-
-      /* Rename the source folder. */
-      initialFolder.move( newFolder.getFullPath(), false, new NullProgressMonitor() );
+      if( initialFolder.exists() )
+      {
+        final IFolder newFolder = simulationsFolder.getFolder( newDescription );
+        initialFolder.move( newFolder.getFullPath(), false, new NullProgressMonitor() );
+      }
     }
     catch( final CoreException ex )
     {
