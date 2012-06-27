@@ -41,7 +41,6 @@
 package org.kalypso.model.hydrology.timeseries;
 
 import java.lang.ref.WeakReference;
-import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,6 +52,7 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.binding.timeseries.IHydrologicalStation;
 import org.kalypso.model.hydrology.binding.timeseries.IMeteorologicalStation;
@@ -188,7 +188,7 @@ public class StationClassesCatalog
         throw new IllegalArgumentException( Messages.getString("StationClassesCatalog_3") + IStationClasses.STATION_CLASSES_URN ); //$NON-NLS-1$
       }
 
-      final URL url = new URI( uri ).toURL();
+      final URL url = URIUtil.fromString( uri ).toURL();
       return GmlSerializer.createGMLWorkspace( url, null );
     }
     catch( final Exception e )
