@@ -288,9 +288,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyFile( CALC_PARAMETER, modelsPath.append( RrmScenario.FILE_PARAMETER_GML ).toOSString() );
     copyFile( INaCalcCaseConstants.EXPERT_CONTROL_FILE, modelsPath.append( RrmScenario.FILE_EXPERT_CONTROL_GML ).toOSString() );
 
-    // FIXME: landuse and others? -> Problem! not in calc case; but hydrotopes might have been built with the gml files
-    // -> we need to copy them from the basic model into each calc case
-
     getLog().add( new ConvertHydrotopesOperation( hydrotope ).execute( new NullProgressMonitor() ) );
 
     /* Copy special directories into the calccases/calccase folder of the scenario. */
