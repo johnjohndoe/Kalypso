@@ -141,6 +141,9 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
 
     /* Get all simulations. */
     final SimulationCollection owner = (SimulationCollection) getOwner();
+    if( owner == null )
+      return;
+
     final IFeatureBindingCollection<NAControl> allSimulations = owner.getSimulations();
 
     /* Find the new description. */
