@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
+<schema xmlns:hyd="http://sourceforge.kalypso.org/schemata/hydrology/hydrotope" targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotope" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:naModel="http://www.tuhh.de/kalypsoNA" xmlns:par="http://www.tuhh.de/parameter" elementFormDefault="qualified"
+  version="2.0" xmlns:ht="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes">
+
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="http://www.tuhh.de/kalypsoNA" />
+  <import namespace="http://www.tuhh.de/parameter" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeTypes" />
+
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/geology" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/pedologie" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" />
+
+  <element name="HydrotopeCollection" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="hydrotopeMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element ref="hyd:Hydrotope" />
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="Hydrotope" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="position" type="gml:MultiPolygonPropertyType" />
+
+            <element name="area" type="double" minOccurs="0" />
+
+            <element name="corrSealing" type="ht:corrSealingType" minOccurs="0" />
+
+            <element name="landuse" type="string" minOccurs="0" />
+            <element name="landuseLink" minOccurs="0">
+              <complexType>
+                <sequence>
+                  <element ref="landuse:Landuse" minOccurs="0" maxOccurs="0" xmlns:landuse="http://sourceforge.kalypso.org/schemata/hydrology/landuse_v2" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+
+            <element name="soiltype" type="string" minOccurs="0"/>
+            <element name="pedologyLink" minOccurs="0">
+              <complexType>
+                <sequence>
+                  <element ref="pedology:Soiltype" minOccurs="0" maxOccurs="0" xmlns:pedology="http://sourceforge.kalypso.org/schemata/hydrology/pedologie" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+
+            <element ref="naModel:catchmentLinkMember" minOccurs="0" />
+
+            <element name="maxPerc" type="ht:maxPercType" minOccurs="0"/>
+            <element name="gwInflowRate" type="ht:gwInflowRateType" minOccurs="0"/>
+            <element name="geologyLink" minOccurs="0">
+              <complexType>
+                <sequence>
+                  <element ref="geology:Geology" minOccurs="0" maxOccurs="0" xmlns:geology="http://sourceforge.kalypso.org/schemata/hydrology/geology" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+
+            <element name="overlayLink" minOccurs="0">
+              <complexType>
+                <sequence>
+                  <element ref="overlay:OverlayElement" minOccurs="0" maxOccurs="0" xmlns:overlay="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+</schema>

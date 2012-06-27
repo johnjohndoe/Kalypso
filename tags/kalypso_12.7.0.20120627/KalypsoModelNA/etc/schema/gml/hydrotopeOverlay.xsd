@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" xmlns:hydo="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" xmlns:par="http://www.tuhh.de/parameter" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="http://www.tuhh.de/parameter" />
+
+  <element name="OverlayCollection" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="elementMembers" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence minOccurs="1">
+                  <element ref="hydo:OverlayElement" />
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <!-- Definition of the members of the above collection. Just a simple feature. -->
+  <element name="OverlayElement" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="location" type="gml:MultiPolygonPropertyType" />
+
+            <element name="lnkDefinition" minOccurs="0">
+              <complexType>
+                <annotation>
+                  <appinfo xmlns:kapp="org.kalypso.appinfo">
+                    <kapp:documentReference>parameter.gml</kapp:documentReference>
+                  </appinfo>
+                </annotation>
+                <sequence>
+                  <element ref="par:DRWBMDefinition" minOccurs="0" maxOccurs="0"/>
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+              </complexType>
+            </element>
+
+            <!-- TODO: 1:n link auf knoten/drwbm/xxx -->
+
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+</schema>
