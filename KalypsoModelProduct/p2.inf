@@ -1,3 +1,0 @@
-instructions.configure=\
-  addRepository(type:0,name:Kalypso,location:http${#58}//kalypso.bjoernsen.de/downloads/update-site_12.7/);\
-  addRepository(type:1,,name:Kalypso,location:http${#58}//kalypso.bjoernsen.de/downloads/update-site_12.7/);
