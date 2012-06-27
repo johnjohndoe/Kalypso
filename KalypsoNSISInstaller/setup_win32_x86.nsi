@@ -65,7 +65,7 @@ ShowUninstDetails show
 Section -Main SEC0000
     SetOutPath $INSTDIR\${VERSION}
     SetOverwrite on
-    File /r data\x86\*
+    File /r /x .svn data\x86\*
     WriteRegStr HKLM "${REGKEY}\${VERSION}\Components" Main 1
 SectionEnd
 
