@@ -1,0 +1,1020 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="Kalypso1D2DAllgemeines">
+  <title>Allgemeine Einführung Kalypso 1D2D</title>
+
+  <para>Das zweidimensionale Strömungsmodell wird über den Ansatz der
+  zweidimensionalen, tiefengemittelten, REYNOLDS-gemittelten
+  Flachwassergleichungen formuliert. Im polynombasierten eindimensionalen
+  Modell werden die SAINT-VENANT-Gleichungen verwendet. Mit diesem Ansatz
+  können auch komplexe Gewässerprofile auf Basis einer stationär
+  ungleichförmigen Spiegellinienberechnung berechnet werden, in der die
+  beschreibenden Polynome bestimmt werden. Die Lösung in Kalypso1D2D erfolgt
+  über eine Diskretisierung des Modellgebietes nach dem
+  Finite-Elemente-Verfahren mit der Methode der gewichteten Residuen nach
+  GALERKIN. Für die Diskretisierung können unterschiedliche Elementformen
+  verwendet werden: Zweidimensionale Gebiete werden über planare Dreiecke oder
+  Vierecke modelliert. Eindimensionale Bereiche werden über rein lineare
+  Elemente mit zwei Eckknoten für den polynombasierten Berechnungsansatz
+  modelliert. Die Zeitabhängigkeit wird über ein modifiziertes CRANK-NICHOLSON
+  Verfahren abgebildet, wobei das NEWTON-RAPHSON Verfahren verwendet wird.
+  Innovative Ansätze sind in den Bereichen Rauheitsmodellierung und Turbulenz
+  enthalten. Die Rauheitsmodellierung erfolgt über das COLEBROOK-WHITE'sche
+  Widerstandsgesetz und beinhaltet die Modellierung von Fließverlusten infolge
+  von überströmten und durchströmten Bewuchs. Verschiedene Turbulenzmodelle
+  sind bei der Simulation verfügbar: Ein konstantes Wirbelviskositätsmodell,
+  ein bodeninduziertes Turbulenz-Modell, der PRANDTL'sche Mischungswegansatz
+  und das SMAGORINSKY Modell. Das hydrodynamische Modell Kalypso1D2D berechnet
+  Wasserstände und horizontale Komponenten der Fließgeschwindigkeiten sowohl
+  für strömenden als auch schießenden Abfluss in offenen Gewässern.</para>
+
+  <section id="Kalypso1D2DProjektbearbeitung">
+    <title>Projektbearbeitung</title>
+
+    <para><indexterm>
+        <primary>Kalypso1D2D Projektbearbeitung</primary>
+      </indexterm></para>
+
+    <para>Beim Programmstart erscheint zunächst die Welcome Seite mit einer
+    Auflistung aller verfügbarer Modelle. Hier ist das Kalypso1D2D Modell zu
+    wählen.</para>
+
+    <para>Auf der Welcome Seite von Kalypso1D2D kann zwischen den folgenden
+    Aktionen gewählt werden:<itemizedlist>
+        <listitem>
+          <para>Neues Projekt erstellen: Über den Knopf <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Icon_NeuesProjekt.png" />
+              </imageobject>
+            </inlinemediaobject> kann ein neues Projekt erstellt
+          werden.</para>
+        </listitem>
+
+        <listitem>
+          <para>Vorhandene Projekte öffnen: Bereits vorhandene Projekte können
+          hier bearbeitet werden. Hierfür muss der Knopf <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Icon_VorhandenesProjekt.png" />
+              </imageobject>
+            </inlinemediaobject> des Projektes gewählt werden, das geöffnet
+          werden soll.</para>
+        </listitem>
+
+        <listitem>
+          <para>Vorhandene Projekte löschen: Über den Knopf <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Icon_ProjektLoeschen.png" />
+              </imageobject>
+            </inlinemediaobject> können bereits vorhandene Projekte aus dem
+          Workspace gelöscht werden.</para>
+        </listitem>
+      </itemizedlist></para>
+
+    <figure>
+      <title>Startseite des 1D2D Modells</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/1D2D/welcome.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="Kalypso1D2DPerspektive">
+      <title>Die Kalypso1D2D Perspektive</title>
+
+      <indexterm>
+        <primary>Kalypso1D2D Perspektive</primary>
+      </indexterm>
+
+      <para>Die Bearbeitung der Kalypso1D2D Projekte erfolgt einheitlich in
+      der Kalypso1D2D Perspektive. Hauptelement der Perspektive ist die
+      Workflowansicht, welche den Arbeitsablauf durch die Bereitstellung der
+      zu bearbeitenden Aufgaben steuert. Neben der Workflowansicht ist die
+      Szenarienansicht in der Perspektive verfügbar. Durch die
+      Szenarienansicht wird die Organisation der Szenarien ermöglicht. Neben
+      diesen ständig vorhandenen Ansichten werden im rechten Fensterbereich je
+      nach Aufgabenbearbeitung die Kalypso Ansichten (Kartenansicht, Feature
+      View, Diagrammansicht, Tabellenansicht,..) geöffnet.</para>
+
+      <figure>
+        <title>Perspektive in Kalypso1D2D</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Perspektive1D2D.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <section id="Kalypso1D2DWorkflow">
+        <title>Workflow</title>
+
+        <indexterm>
+          <primary>Workflow Kalypso1D2D</primary>
+        </indexterm>
+
+        <para>Der Arbeitsablauf in Kalypso1D2D wird über den Workflow
+        gesteuert. Der Benutzer wird in der Modellbearbeitung von einem
+        Bearbeitungsschritt zum nächsten geführt. Dieser Ablauf soll
+        verhindern, dass wichtige Schritte im Modellaufbau oder der Berechnung
+        übersehen oder vergessen werden, so dass eine zielgerichtete und
+        effektive Modellbearbeitung vorgegeben wird. Der Anwender wird durch
+        den Workflow auch von der Verwaltung der verschiedenen Dateien
+        entbunden, da die Datenorganisation übergeordnet übernommen
+        wird.</para>
+
+        <para>Der Workflow gliedert sich in drei Hauptabschnitte:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Preprocessing</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Modellaufbau</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>Processing</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Kalibrieren</para>
+              </listitem>
+
+              <listitem>
+                <para>Rechnen</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>Postprocessing</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Ergebnisauswertung</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </orderedlist>
+
+        <para>Innerhalb dieser drei Hauptschritte werden dann alle
+        erforderlichen Unterschritte der Reihe nach durchgeführt. Wenn das
+        Programm beendet wird, so ist beim nächsten Aufruf des Programms und
+        dem entsprechenden Projekt, der Arbeitsschritt, an dem zuletzt
+        gearbeitet wurde, fett markiert.</para>
+      </section>
+
+      <section id="Kalypso1D2DSzenarienansicht">
+        <title>Szenarienansicht</title>
+
+        <indexterm>
+          <primary>Szenarien Ansicht</primary>
+        </indexterm>
+
+        <para>Die Ansicht ''Szenarien'' ermöglicht den Wechsel der zu
+        bearbeitenden Szenarien sowie das Ableiten und Löschen erweiterter
+        Szenarien eines Modells.</para>
+
+        <para>Das aktivierte Basisszenario (blaue Kugel) wird in
+        Fettbuchstaben dargestellt. Dieses ist das ausgewählte Projekt, das
+        nun im Navigator geöffnet ist. Um die Funktionen der Ansicht
+        ''Szenarien'' sichtbar zu machen, muss ein Basisszenario markiert
+        werden, indem es mit dem linken Mauszeiger angeklickt wird. Es
+        erscheinen Symbole, die in der folgenden Tabelle vorgestellt
+        werden.</para>
+
+        <figure>
+          <title>Szenarienansicht</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/szenario_ansicht.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <table>
+          <title>Funktionen in der Szenarien Ansicht</title>
+
+          <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <tbody>
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/szenario_Icon_neuesprojekt.png"
+                                 width="" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Neues Projekt
+                erstellen</entry>
+
+                <entry align="left" valign="middle">Bei der Benutzung dieses
+                Knopfes öffnet sich der Assistent um ein neues Projekt zu
+                erstellen. (Siehe <xref
+                linkend="Kalypso1D2DNeuesProjekt" />)</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/szenario_Icon_loeschen.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Szenario löschen</entry>
+
+                <entry align="left" valign="middle">Bei der Benutzung dieses
+                Knopfes wird das markierte Szenario gelöscht. Es können nur
+                nicht aktivierte Szenarien gelöscht werden.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/szenario_Icon_aktivieren.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left">Szenario aktivieren</entry>
+
+                <entry valign="middle">Bei der Benutzung dieses Knopfes wird
+                das markierte Szenario aktiviert. Das aktivierte Szenario wird
+                in Fettbuchstaben dargestellt.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/szenario_Icon_hinzufuegen.png"
+                                 srccredit="" valign="middle" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Abgeleitetes Szenario
+                hinzufügen</entry>
+
+                <entry align="left" charoff="" valign="middle">Von
+                Basisszenarien können weitere Szenarien abgeleitet werden. Das
+                Basisszenario, von dem ein Szenario abgeleitet werden soll,
+                sollte nicht aktiviert sein. Zunächst muss das nicht
+                aktivierte Basisszenario markiert werden. Wenn nun
+                anschließend der Knopf betätigt wird öffnet sich ein
+                Assistent, in dem ein Name und gegebenenfalls eine
+                Beschreibung eingegeben werden muss.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <figure>
+          <title>Assistent zur Erstellung eines abgeleiteten Szenarios</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/szenario_hinzufuegen.png"
+                         scale="95" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+    </section>
+
+    <section id="Kalypso1D2DNeuesProjekt">
+      <title>Neues Projekt</title>
+
+      <indexterm>
+        <primary>Neues Projekt erstellen</primary>
+      </indexterm>
+
+      <para>Ein Assistent führt den Benutzer durch die Projekterstellung.
+      Hierbei muss der Projektname und der Speicherort des anzulegenden
+      Projektes definiert werden. Voreingestellt wird als Speicherort immer
+      das festgelegte Arbeitsverzeichnis gewählt. Um einen anderen Speicherort
+      festzulegen, muss das Häkchen vor <guilabel>Use default
+      location</guilabel> entfernt werden und dann über den Knopf
+      <guibutton>Durchsuchen...</guibutton> das gewünschte Verzeichnis
+      ausgewählt werden. Der Assistent wird durch den Knopf <guibutton>Fertig
+      stellen</guibutton> abgeschlossen. Zugleich wird das neue Projekt
+      angelegt und die 1D2D Perspektive (siehe <xref
+      linkend="Kalypso1D2DPerspektive" />) geöffnet.</para>
+
+      <figure>
+        <title>Assistent um ein neues Projekt zu erstellen in
+        Kalypso1D2D</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Projekt_neu.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="Kalypso1D2DVorhProjekt">
+      <title>Vorhandenes Projekt bearbeiten/ Projektaufbau</title>
+
+      <indexterm>
+        <primary>Vorhandenes Projekt bearbeiten und aufbauen</primary>
+      </indexterm>
+
+      <para>Sind bereits 1D2D Modell Projekte im Arbeitsverzeichnis vorhanden,
+      so kann die Bearbeitung dieser durch die Auswahl auf der Welcome Seite
+      fortgeführt werden. Nach der Projektauswahl werden die Daten des
+      Projektes geladen und die 1D2D Perspektive geöffnet. Nachdem alle Daten
+      des Projektes geladen wurden, kann mit der Bearbeitung entsprechend des
+      Workflows (siehe <xref linkend="Kalypso1D2DWorkflow" />) fortgefahren
+      werden.</para>
+    </section>
+
+    <section id="Kalypso1D2DVorhProjekt_loeschen">
+      <title>Vorhandenes Projekt löschen</title>
+
+      <indexterm>
+        <primary>Vorhandenes Projekt löschen</primary>
+      </indexterm>
+
+      <para>Ein vorhandenes Projekt kann von der Welcome Seite aus entfernt
+      werden. Hierbei ist es möglich das Projekt lediglich aus der Darstellung
+      im Arbeitsverzeichnis oder aber auch vollständig (physisch) zu
+      löschen.</para>
+
+      <figure>
+        <title>Projekt löschen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Projekt_loeschen.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Um die Daten komplett von der Festplatte zu löschen muss
+      <guilabel>Also delete contents under ...</guilabel> gewählt werden.
+      <guilabel>Do not delete contents</guilabel> entfernt das Projekt
+      lediglich aus der Kalypso Ansicht. Mit <guibutton>Yes</guibutton> wird
+      der Löschvorgang abgeschlossen, <guibutton>No</guibutton> bricht den
+      Löschvorgang ab.</para>
+    </section>
+
+    <section id="Kalypso1D2DKarte">
+      <title>Arbeiten und Darstellung in der Karte</title>
+
+      <indexterm>
+        <primary>Arbeiten in der Karte in Kalypso1D2D</primary>
+      </indexterm>
+
+      <para>Die Karte mit den dazugehörigen Funktionalitäten wird bei der
+      Aktivierung eines Bearbeitungsschrittes des Workflows automatisch
+      geladen. In der folgenden Tabelle sind die Standardfunktionen der Karte
+      aufgelistet, die bei jedem Bearbeitungsschritt mit Karte zur Verfügung
+      stehen.</para>
+
+      <table>
+        <title>Die Grundfunktionen der Karte</title>
+
+        <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <colspec colwidth="5*" />
+
+          <tbody>
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_zoomen.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Verkleinert einen gewählten
+              Kartenausschnitt, hereinzoomen</entry>
+
+              <entry align="left" valign="middle">Ausschnitt wählen (ziehe
+              Fenster von links oben nach rechts unten)</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_Hand.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Verschieben</entry>
+
+              <entry valign="middle">Blatt anfassen und Bildausschnitt
+              verschieben</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_TINWerte.png"
+                               scale="110" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">TIN Werte anzeigen</entry>
+
+              <entry align="left" valign="middle">Mauszeiger an gewünschte
+              Stelle halten</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_herauszoomen.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Verkleinert den
+              Kartenausschnitt, herauszoomen</entry>
+
+              <entry align="left" valign="middle">Aus der Mitte des
+              Kartenausschnitts in vordefinierten Schritten
+              herauszoomen.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_hereinzoomen.png"
+                               scale="110" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Vergrößert den
+              Kartenausschnitt, hereinzoomen in die Mitte des
+              Kartenausschnitts</entry>
+
+              <entry align="left" valign="middle">In die Mitte des
+              Kartenausschnitts in vordefinierten Schritten
+              hereinzoomen.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_Ausschnittverschieben.png"
+                               scale="110" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Verschieben der
+              Kartenansicht nach links, unten, oben oder rechts</entry>
+
+              <entry align="left" valign="middle">Kartenausschnitt in
+              voreingestellten Schritten verschieben.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_Gesamtansicht.png"
+                               scale="110" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Maximieren der
+              Kartenansicht</entry>
+
+              <entry align="left" valign="middle">Zeigt die gesamte Karte
+              an</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/1D2D/Icon_Karte_Kartenthema.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Verschiebt den
+              Kartenausschnitt auf das aktive Kartenthema</entry>
+
+              <entry align="left" valign="middle">Knopf betätigen</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/1D2D/Icon_Karte_screenshot.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Map screenshot</entry>
+
+              <entry align="left" valign="middle">Diese Funktion macht ein
+              Bild von dem aktuellen Kartenausschnitt</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/1D2D/Icon_Karte_Gliederung.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Gliederung der Karte
+              anzeigen/ ausblenden</entry>
+
+              <entry align="left" valign="middle">Die Gliederung der Karte
+              wird entweder angezeigt oder ausgeblendet.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>Damit die Menüleiste übersichtlich bleibt, sind zwei Pulldownmenüs
+      enthalten, in denen der Benutzer die gewünschten Funktionen auswählen
+      kann.</para>
+
+      <para>Zusätzlich zu der Menüleiste können die grundlegenden
+      Kartenfunktionalitäten, wie Zoomen und Ausschnitt verschieben, auch über
+      die Tastatur mit folgenden Tastenkombinationen gesteuert werden:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Strg + Pfeiltasten: Ausschnitt in die entsprechende Richtung
+          verschieben</para>
+        </listitem>
+
+        <listitem>
+          <para>Strg + ''+'' (sowohl Tastatur als auch Nummernblock möglich):
+          Hereinzoomen (statisch)</para>
+        </listitem>
+
+        <listitem>
+          <para>Strg + ''-'' : Herauszoomen (statisch)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Der Vorteil in der Bedienung mit der Tastatur ist bei den späteren
+      Arbeitsschritten des Preprocessing von Bedeutung. Muss z. B. in der
+      Karte etwas selektiert werden und ist aber nicht in dem Kartenausschnitt
+      zu sehen, müsste der Arbeitsschritt erst abgebrochen und zunächst der
+      Kartenausschnitt verschoben werden. Mit dieser Funktionalität der
+      Tastatur können somit auch mehrere Selektionen in verschiedenen
+      Kartenabschnitten vorgenommen werden, ohne dass zwischendurch die
+      Selektion unterbrochen werden muss.</para>
+
+      <section id="Kalypso1D2DKartenselektion">
+        <title>Selektion von Elementen in der Karte</title>
+
+        <indexterm>
+          <primary>Selektion in der Karte</primary>
+        </indexterm>
+
+        <para>Sobald für einen Arbeitsschritt eine Selektion von z. B.
+        Elementen erforderlich ist, öffnet sich ein Menüfenster in der Karte,
+        das bei der Selektion helfen soll. In der Abbildung unten ist
+        beispielhaft das Menüfenster zum Hinzufügen von Elementen zu einer
+        Berechnungseinheit zu sehen. Es gibt folgende drei Selektionsmodi, die
+        durch Betätigen der Space Taste gewechselt werden können:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Rechteck (Standardeinstellung): Linke Maustaste gedrückt
+            halten und ein Rechteck aufziehen. Danach müssen alle Elemente
+            umschlossen sein, die markiert werden sollen, denn es werden nur
+            die Elemente selektiert, die komplett im Rechteck liegen!</para>
+          </listitem>
+
+          <listitem>
+            <para>Polygon: Mit der linken Maustaste auf die Eckpunkte des
+            Polygons klicken und alle Elemente umschließen, die markiert
+            werden sollen, denn es werden wiederum nur die Elemente
+            selektiert, die komplett innerhalb des Polygons liegen! Das
+            Polygon wird mit einem Doppelklick auf den letzten Knoten des
+            Polygons beendet.</para>
+          </listitem>
+
+          <listitem>
+            <para>Punkt: ein einzelnes Element mit der linken Maustaste
+            selektieren</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Der ausgewählte Selektionsmodus wird in dem Menüfenster
+        angezeigt.</para>
+
+        <figure>
+          <title>Zwei Beispielmenüfenster für die Selektion von
+          Elementen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Selektion.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Nachdem der erste Selektionsvorgang abgeschlossen ist, gibt es
+        drei Möglichkeiten die Auswahl zu bearbeiten. Diese Funktionalitäten
+        werden hinter dem Selektionsmodus in eckigen Klammern angezeigt (siehe
+        Abbildung oben, unteres Menüfenster). Folgende drei Möglichkeiten
+        stehen zur Verfügung:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Elemente zur ersten Selektion <emphasis
+            role="bold">Hinzufügen</emphasis>: Während des gesamten
+            Selektionsvorgangs muss die Shift-Taste gedrückt gehalten werden.
+            Die ausgewählten Elemente werden zur alten Selektion
+            hinzugefügt.</para>
+          </listitem>
+
+          <listitem>
+            <para>Selektion <emphasis role="bold">Umschalten</emphasis>:
+            Während des gesamten Selektionsvorgangs muss die Strg-Taste
+            gedrückt gehalten werden. Bei dieser Art der Selektion werden
+            bereits selektierte Elemente deselektiert und umgekehrt.</para>
+          </listitem>
+
+          <listitem>
+            <para>Selektion <emphasis role="bold">Verschneiden</emphasis>:
+            Während des gesamten Selektionsvorgangs muss die Alt-Taste
+            gedrückt gehalten werden. Durch diese Selektion wird die alte
+            Selektion aufgehoben. Zusätzlich werden bei der Rechteck- und
+            Polygonselektion nun nicht nur die Elemente selektiert, die
+            innerhalb des Rechtecks bzw. Polygons liegen, sondern auch
+            diejenigen, die geschnitten werden.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section id="Kalypso1D2DDiagramm">
+      <title>Arbeiten und Darstellung im Diagramm</title>
+
+      <indexterm>
+        <primary>Arbeiten im Diagramm in Kalypso1D2D</primary>
+      </indexterm>
+
+      <para>Einige Berechnungsergebnisse werden als Diagramm ausgegeben
+      (Beispiel: Ganglinien). In der nachfolgenden Abbildung ist so ein
+      Diagramm dargestellt, an dem die Funktionalitäten erläutert
+      werden.</para>
+
+      <figure>
+        <title>Ansicht eines Diagramms</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="img/1D2D/Diagramm_Ansicht.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <table>
+        <title>Die Grundfunktionen des Diagramms</title>
+
+        <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <colspec colwidth="5*" />
+
+          <tbody>
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_zoomen.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Verkleinert einen gewählten
+              Kartenausschnitt, hereinzoomen</entry>
+
+              <entry align="left" valign="middle">Ausschnitt wählen (ziehe
+              Fenster von links oben nach rechts unten)</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_Hand.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Verschieben</entry>
+
+              <entry valign="middle">Blatt anfassen und Diagrammausschnitt
+              verschieben</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_Gesamtansicht.png"
+                               scale="110" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Maximieren der
+              Diagrammansicht</entry>
+
+              <entry align="left" valign="middle">Zeigt das gesamte Diagramm
+              an</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>Die Abbildung oben zeigt ein Diagramm, das drei Kurven enthält.
+      Die Zugehörigkeit der Kurven zu den Achsen wird über die Farbe
+      definiert.</para>
+
+      <para><emphasis role="bold">Zoomen</emphasis></para>
+
+      <para>Zusätzlich zu der normalen in der Tabelle erwähnten Zoomfunktion
+      ist es auch möglich einzelne Achsen zu zoomen bzw. auf allen drei Achsen
+      entweder vertikal oder horizontal zu zoomen. Hierfür muss der Knopf mit
+      der Lupe aktiviert sein.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">Shift- Taste</emphasis> gedrückt halten
+          und mit dem linken gehaltenen Mauszeiger entweder <emphasis
+          role="bold">auf</emphasis> einer vertikalen Achse (Bsp:
+          Wasserspiegel, Abfluss oder Geschwindigkeit) oder der horizontalen
+          Achse (Bsp: Datum) einen Ausschnitt wählen (linke Maustaste so lange
+          gedrückt halten, bis gewünschter Ausschnitt violett markiert ist,
+          dann Maustaste loslassen). Auf diese Weise werden <emphasis
+          role="bold">alle Achsen</emphasis> hereingezoomt und der Ausschnitt
+          wird nicht ''verzerrt''.</para>
+
+          <figure>
+            <title>Im Diagramm alle Achsen hereinzoomen</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Diagramm_Zoom_hor_ver.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Alt- Taste</emphasis> gedrückt halten
+          und mit dem linken gehaltenen Mauszeiger <emphasis
+          role="bold">auf</emphasis> der gewünschten vertikalen Achse einen
+          Ausschnitt wählen (linke Maustaste so lange gedrückt halten, bis
+          gewünschter Ausschnitt violett markiert ist, dann Maustaste
+          loslassen). Auf diese Weise wird die <emphasis role="bold">eine
+          Achse</emphasis> hereingezoomt. Der Ausschnitt der anderen Achsen
+          bleibt gleich. In der nachfolgenden Abbildung ist dies anhand der
+          Wasserspiegelachse dargestellt. Es ist zu sehen, dass die Achsen
+          Abfluss und Geschwindigkeit gleich bleiben.</para>
+
+          <figure>
+            <title>Im Diagramm eine Achse hereinzoomen (hier:
+            Wasserspiegel)</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Diagramm_Zoom_Alt.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </listitem>
+      </itemizedlist>
+
+      <para><emphasis role="bold">Ausschnitt verschieben</emphasis></para>
+
+      <para>Zusätzlich zu der normalen in der Tabelle erwähnten Panfunktion
+      ist es auch möglich den Ausschnitt einzelner Achsen zu verschieben bzw.
+      den Ausschnitt aller drei Achsen entweder vertikal oder horizontal zu
+      verschieben.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">Shift- Taste</emphasis> gedrückt halten
+          und mit dem linken gehaltenen Mauszeiger entweder <emphasis
+          role="bold">auf</emphasis> eine vertikale Achse (Bsp: Wasserspiegel,
+          Abfluss oder Geschwindigkeit) oder auf die horizontale Achse (Bsp:
+          Datum) klicken und den Ausschnitt <emphasis role="bold">aller
+          Achsen</emphasis> nach oben oder unten verschieben (vertikale
+          Achse), bzw. von rechts nach links (horizontale Achse). Ein
+          Verschieben in eine andere Richtung wird dadurch blockiert.</para>
+
+          <figure>
+            <title>Ausschnitt verschieben mit gedrückter Shift- Taste</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Diagramm_Pan_Shift.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Alt- Taste</emphasis> gedrückt halten
+          und mit dem linken gehaltenen Mauszeiger <emphasis
+          role="bold">auf</emphasis> die gewünschte vertikale Achse klicken
+          und den Ausschnitt der <emphasis role="bold">einen Achse</emphasis>
+          nach oben oder unten verschieben. Der Ausschnitt der beiden anderen
+          Achsen bleibt so erhalten.</para>
+
+          <figure>
+            <title>Ausschnitt einer Achse verschieben mit gedrückter Alt-
+            Taste</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Diagramm_Pan_Alt.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </listitem>
+      </itemizedlist>
+
+      <section id="Kalypso1D2DTabelle">
+        <title>Tabelle</title>
+
+        <indexterm>
+          <primary>Arbeiten mit der Tabelle zum Diagramm in
+          Kalypso1D2D</primary>
+        </indexterm>
+
+        <para>Wie in den Abbildungen oben schon zu sehen ist, gehört zu jedem
+        Diagramm auch eine Tabelle, in der die Werte einzeln aufgeführt sind.
+        Um die Tabelle zu betrachen, muss zunächst der Reiter
+        <guilabel>Tabelle</guilabel> aktiviert werden.</para>
+
+        <figure>
+          <title>Ansicht einer Tabelle</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Tabelle_Ansicht.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <table>
+          <title>Die Grundfunktionen der Tabelle</title>
+
+          <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <tbody>
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Tabelle_kopieren.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Tabelle kopieren</entry>
+
+                <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+                wird und kein Eintrag markiert ist, dann wird die gesamte
+                Tabelle in den Zwischenspeicher abgelegt und kann z. B. in
+                Word oder Excel kopiert werden. Wenn vorher ein Eintrag
+                markiert wurde, dann wird nur dieser eine Eintrag in den
+                Zwischenspeicher abgelegt.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Tabelle_einfuegen.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Einfügen</entry>
+
+                <entry valign="middle">Mit dieser Funktion können Tabellen,
+                die z.B. in Excel erstellt und im Zwischenspeicher abgelegt
+                worden sind in Kalypso1D2D per Knopfdruck eingefügt
+                werden.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Tabelle_loeschen.png"
+                                 scale="110" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Eintrag löschen</entry>
+
+                <entry align="left" valign="middle">Um einen Eintrag in der
+                Tabelle zu löschen, muss dieser zunächst markiert werden.
+                Durch Betätigung des Knopfes wird dieser dann
+                gelöscht.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+    </section>
+  </section>
+
+  <section id="Kalypso1D2DDatenakquisition">
+    <title>Datenakquisition</title>
+
+    <indexterm>
+      <primary>Datenakquisition und Aufbereitung Kalypso1D2D</primary>
+    </indexterm>
+
+    <para>Für die Modellierung eines 1D2D HN Modells müssen die in folgender
+    Liste aufgeführten Daten bereitgestellt werden.</para>
+
+    <para>Datenakquisition:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Hintergrundkarten</para>
+      </listitem>
+
+      <listitem>
+        <para>Rauheiten</para>
+      </listitem>
+
+      <listitem>
+        <para>Pegeldaten</para>
+      </listitem>
+
+      <listitem>
+        <para>Höhendaten</para>
+      </listitem>
+
+      <listitem>
+        <para>Bauwerksdaten</para>
+      </listitem>
+
+      <listitem>
+        <para>Profildaten</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Datenaufbereitung:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Rauheitsshape</para>
+      </listitem>
+
+      <listitem>
+        <para>Höhenmodell</para>
+      </listitem>
+
+      <listitem>
+        <para>Profildaten</para>
+      </listitem>
+
+      <listitem>
+        <para>1D Modell in KalypsoWSPM</para>
+      </listitem>
+
+      <listitem>
+        <para>Uferlinienshape</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Sind alle notwendigen Daten vorhanden, kann mit der Aufstellung des
+    Modells in der Oberfläche begonnen werden.</para>
+  </section>
+</chapter>
