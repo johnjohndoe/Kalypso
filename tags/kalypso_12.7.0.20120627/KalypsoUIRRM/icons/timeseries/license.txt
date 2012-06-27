@@ -1,0 +1,17 @@
+parameterType_SUNSHINE.png
+ - 1333008029_stock_weather-sunny.png
+ - http://www.iconfinder.com/icondetails/21226/32/sun_weather_icon
+ - from the gnome project icon set
+ - license: GPL
+ 
+parameterType_WIND_VELOCITY.png
+ - 1333008210_Wind_Flag_Storm.png
+ - http://www.iconfinder.com/icondetails/47317/16/flag_storm_weather_wind_windy_icon
+ - license: Free for commercial use (Include link to authors website)
+ - Authors website: http://www.icons-land.com/
+ 
+ collapseall.gif
+  - eclipse icon
+  
+ expandall.gif
+  - eclipse icon
