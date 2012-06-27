@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <layer id="id" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" linktype="gml" xlink:type="simple" xlink:href="../../.models/modell.gml" xlink:actuate="onRequest">
+    <column width="150" name="description" format="" editable="true" alignment="16384" />
+    <column width="50" name="name" format="" editable="true" alignment="SWT.LEFT" />
+    <column width="100" name="generateResult" format="" editable="true" alignment="SWT.CENTER" />
+    <column width="66" name="vmin" format="" editable="true" alignment="SWT.RIGHT" />
+    <column width="69" name="vmax" format="" editable="true" alignment="SWT.RIGHT" />
+    <column width="79" name="sv" format="" editable="true" alignment="SWT.RIGHT" />
+    <column alignment="16384" width="85" editable="true" name="iknotNodeMember" />
+    <column alignment="16384" width="86" editable="true" name="downStreamNodeMember_2nd" />
+    <column alignment="16384" width="81" editable="true" name="downStreamNodeMember_3rd" />
+    <column alignment="16384" width="100" editable="true" name="faktorSeaEvaporation" />
+    <sort propertyName="name" inverse="false" />
+  </layer>
+</gistableview>
