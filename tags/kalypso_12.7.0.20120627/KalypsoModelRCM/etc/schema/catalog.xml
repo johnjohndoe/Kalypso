@@ -1,0 +1,9 @@
+<!-- removed DTD reference - otherwise jaxb tries to connect to the referenced oasis web site -->
+
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+  <uri name="org.kalypso.model.rcm.ombrometer" uri="ombrometer.xsd" />
+  <uri name="org.kalypso.model.rcm.v2" uri="rainfallCatchmentModel_v2.xsd" />
+
+  <uri name="org.kalypso.model.rcm.thiessen" uri="thiessenStations.xsd" />
+</catalog>
