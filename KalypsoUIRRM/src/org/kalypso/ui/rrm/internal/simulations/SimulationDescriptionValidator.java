@@ -93,7 +93,7 @@ public class SimulationDescriptionValidator implements IInputValidator
    *          All simulations.
    * @return The first name of the simulation, which is a duplicate or null.
    */
-  public String findDuplicates( final NAControl[] allSimulations, final String currentText )
+  private String findDuplicates( final NAControl[] allSimulations, final String currentText )
   {
     final Set<String> allNames = new HashSet<>();
 
