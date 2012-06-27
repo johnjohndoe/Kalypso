@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.kalypso.contribs.eclipseplatform.projectTemplate">
+      <project
+            category="org.kalypso.model.wspm.tuhh.projectTemplate"
+            data="org.kalypso.model.wspm.tuhh.project.template:/"
+            description="%org.kalypso.model.wspm.tuhh.projectTemplate.description"
+            label="%org.kalypso.model.wspm.tuhh.projectTemplate">
+      </project>
+   </extension>
+</plugin>
