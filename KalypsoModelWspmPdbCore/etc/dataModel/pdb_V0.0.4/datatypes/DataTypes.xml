@@ -1,0 +1,9 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<DataTypesDesign class="oracle.dbtools.crest.model.design.datatypes.DataTypesDesign" name="DataTypes" id="F3CF515C-E300-FC81-CE9C-EE211C462BC5" mainViewID="6C8A39FD-0264-9F6C-0F45-0672C6D23010">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-17 14:48:41 UTC</createdTime>
+   <changedBy>thuel2</changedBy>
+   <changedTime>2011-05-17 14:48:41 UTC</changedTime>
+   <ownerDesignName>pdb</ownerDesignName>
+   <shouldBeOpen>false</shouldBeOpen>
+</DataTypesDesign>
