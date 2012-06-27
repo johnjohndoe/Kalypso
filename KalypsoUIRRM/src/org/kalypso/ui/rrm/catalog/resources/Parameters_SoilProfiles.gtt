@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+  <layer featurePath="soiltypeMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href=".models/parameter.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+    <column alignment="SWT.LEFT" editable="false" format="" name="name" width="100" />
+    <column alignment="SWT.LEFT" editable="false" format="" name="description" width="360" />
+    <sort inverse="false" propertyName="name" />
+  </layer>
+</gistableview>
+
