@@ -76,7 +76,7 @@ public class TimeseriesMappingGuesser
 
   private final Map<String, TimeseriesIndexEntry> m_oldMappings;
 
-  private final Map<String, Set<TimeseriesIndexEntry>> m_convertsionMap;
+  private final Map<String, Set<TimeseriesIndexEntry>> m_conversionMap;
 
   public TimeseriesMappingGuesser( final ZmlLink modelTimeseriesLink, final TimeseriesMappingType mappingType, final TimeseriesIndex timeseriesIndex, final Map<String, TimeseriesIndexEntry> oldMappings, final Map<String, Set<TimeseriesIndexEntry>> convertsionMap )
   {
@@ -84,7 +84,7 @@ public class TimeseriesMappingGuesser
     m_mappingType = mappingType;
     m_timeseriesIndex = timeseriesIndex;
     m_oldMappings = oldMappings;
-    m_convertsionMap = convertsionMap;
+    m_conversionMap = convertsionMap;
   }
 
   public String getResult( )
@@ -154,11 +154,11 @@ public class TimeseriesMappingGuesser
     if( StringUtils.equals( needed, item.getParameterType() ) )
       return;
 
-    Set<TimeseriesIndexEntry> convert = m_convertsionMap.get( needed );
+    Set<TimeseriesIndexEntry> convert = m_conversionMap.get( needed );
     if( convert == null )
     {
       convert = new LinkedHashSet<>();
-      m_convertsionMap.put( needed, convert );
+      m_conversionMap.put( needed, convert );
     }
 
     convert.add( item );
@@ -218,22 +218,19 @@ public class TimeseriesMappingGuesser
       return null;
     }
 
-    if( infos.length == 1 )
-      return infos[0];
-
     final String neededParameterType = m_mappingType.getLinkParameterType();
 
     for( final TimeseriesIndexEntry info : infos )
     {
       if( isTypeOf( neededParameterType, info ) )
       {
-        // TODO: also use timestep to determine best guess; find all infos with same type
-        m_log.add( IStatus.INFO, Messages.getString( "CatchmentTimeseriesGuesser_7" ) ); //$NON-NLS-1$
+        if( infos.length > 1 )
+          m_log.add( IStatus.INFO, Messages.getString( "CatchmentTimeseriesGuesser_7" ) ); //$NON-NLS-1$
+
         return info;
       }
     }
 
-    // TODO guess water based evaporation. remember time series and at the end change parameter type of time series
     m_log.add( IStatus.WARNING, Messages.getString( "CatchmentTimeseriesGuesser_8" ), null, neededParameterType ); //$NON-NLS-1$
 
     return null;
@@ -247,8 +244,13 @@ public class TimeseriesMappingGuesser
     final String parameterType = info.getParameterType();
     if( StringUtils.equals( needed, parameterType ) )
       return true;
-    else if( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED.equals( needed ) && StringUtils.equals( ITimeseriesConstants.TYPE_EVAPORATION, parameterType ) )
+
+    if( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED.equals( needed ) && StringUtils.equals( ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, parameterType ) )
+    {
+      // FIXME: remember this case! -> change parameter type later
+
       return true;
+    }
 
     return false;
   }
