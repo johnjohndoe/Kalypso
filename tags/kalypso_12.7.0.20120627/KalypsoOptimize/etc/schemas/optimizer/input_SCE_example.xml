@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autoCalibration xmlns="optimizer.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:schemaLocation="optimizer.kalypso.org optimizerInput.xsd" >
+	<pegel>                
+		<file>syntetic</file>
+		<startDate>2002-07-15T07:00:00</startDate> 
+		<endDate>16.07.2002 07:00</endDate> 
+	</pegel>
+    <parameterlist>
+        <parameter ID="1" mode="default">
+            <xpath>/theme/table[@key="rb"]/o/sp[@m_rbNumber="104" or @m_rbNumber="101" or @m_rbNumber="105" or @m_rbNumber="1000"]/@m_retAquif</xpath>
+            <synteticValue>100.0</synteticValue>
+            <initialValue>1.0</initialValue>
+            <upperBound>200</upperBound>
+            <lowerBound>0</lowerBound>
+        </parameter>
+        <parameter ID="2" mode="default">
+            <xpath>/theme/table[@key="rb"]/o/sp[@m_rbNumber="102" or @m_rbNumber="103" or @m_rbNumber="100"]/@m_retAquif</xpath>
+            <synteticValue>100.0</synteticValue>
+            <initialValue>50.0</initialValue>
+            <upperBound>200</upperBound>
+            <lowerBound>0</lowerBound>
+        </parameter>
+        <parameter ID="3" mode="offset">
+            <xpath><![CDATA[/theme/table[@key="rb"]/o/sp[@m_rbNumber <= 1000]/@m_retInterflow]]></xpath>
+            <synteticValue>0.0</synteticValue>
+            <initialValue>0.0</initialValue>
+            <upperBound>5.0</upperBound>
+            <lowerBound>0.0</lowerBound>
+        </parameter>
+        <parameter ID="4" mode="factor">
+            <xpath><![CDATA[/theme/table[@key="rb"]/o/sp[@m_rbNumber <= 1000]/@m_aquifPorosity]]></xpath>
+            <synteticValue>1.0</synteticValue>
+            <initialValue>1.0</initialValue>
+            <upperBound>2.0</upperBound>
+            <lowerBound>0.5</lowerBound>
+        </parameter>
+        <parameter ID="5" mode="default">
+            <xpath><![CDATA[/theme/table[@key="rb"]/o/sp[@m_rbNumber <= 1000]/@m_retAquifNeighbour]]></xpath>
+            <synteticValue>2500</synteticValue>
+            <initialValue>2500</initialValue>
+            <upperBound>5000</upperBound>
+            <lowerBound>1000</lowerBound>
+        </parameter>
+        <parameter ID="6" mode="factor">
+            
+            <xpath><![CDATA[/theme/table[@key="rb"]/o/sp[@m_rbNumber <= 1000]/@m_aquifMaxHeightChannel]]></xpath>
+            <xpath><![CDATA[/theme/table[@key="rb"]/o/sp[@m_rbNumber <= 1000]/@m_aquifMinHeightChannel]]></xpath>
+            <synteticValue>1.0</synteticValue>
+            <initialValue>1.0</initialValue>
+            <upperBound>2</upperBound>
+            <lowerBound>0.5</lowerBound>
+        </parameter>
+    </parameterlist>
+	<optParameter>
+		<maxN>20</maxN> <!--Maximum number of trials-->
+		<kStop>10</kStop> <!--Number of shuffling loops in which criterion must improve by specified percentage-->
+		<pcento>0.01</pcento> <!-- Percentage by which criterion must change (Percentage/100) -->
+		<iseed>-3</iseed> <!--Random seed used for optimization search. Enter any integer number-->
+		<ideflt>1</ideflt> <!--Flag for setting control variables. defaultSetting=0; userSpecified=1-->
+		<iniflg>1</iniflg> <!--Flag whether to include the initial point in the starting population. include=1; default=0-->
+		<iPrint>0</iPrint> <!--Print-out control flag. 0:print after each shuffling loop; 1:print every point-->
+		
+		<ngs>2</ngs> <!--Number of complexes. Minimum value is 1. Recommanded value between 2 and 20.-->
+		<npg>15</npg> <!--Number of points in each complex. Recommanded value: 2n+1-->
+		<nps>8</nps> <!--Number of points in each subcomplex. Recommanded value: n+1-->
+		<nspl>15</nspl> <!--Number of evolution steps taken by each complex before next shuffling. Recommanded value: npg-->
+		<mings>2</mings> <!--Minimum number of complexes. Recommanded value: ngs-->
+		
+		<objectiveFunction>
+			<transformationConstants>equal</transformationConstants> <!-- 2 possibilities: userdefined/equal -->
+			
+			<volumeError ID="1" mode="true"> <!--Overall volume error (water balance error)-->
+				<transformationConstant>0.0</transformationConstant>
+			</volumeError>
+			<rootMeanSquareError ID="2" mode="true"> <!-- Overall root mean square error (RMSE) -->
+				<transformationConstant>0.0</transformationConstant>
+			</rootMeanSquareError>
+			<rootMeanSquareError_PeakFlows ID="3" mode="true"> <!-- Average RMSE of peak flow events -->
+				<transformationConstant>3.0</transformationConstant>
+				<peakFlowLevel>1.2</peakFlowLevel>
+			</rootMeanSquareError_PeakFlows>
+			<rootMeanSquareError_LowFlows ID="4" mode="false"> <!-- Average RMSE of peak flow events -->
+				<transformationConstant>4.0</transformationConstant>
+				<lowFlowLevel>0.2</lowFlowLevel>
+			</rootMeanSquareError_LowFlows>
+		</objectiveFunction>
+	</optParameter>
+</autoCalibration>
