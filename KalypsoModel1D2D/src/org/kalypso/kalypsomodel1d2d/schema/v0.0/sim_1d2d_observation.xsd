@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  Provide schema for the operational model
+	@author Patrice Congo
+	@author Antanaskovic Dejan
+-->
+
+<xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+	<xs:annotation>
+		<xs:documentation>Observation definitions. Used by boundary conditions and buildings.</xs:documentation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import namespace="http://www.opengis.net/om" />
+
+	<xs:complexType name="ObservationWithSourcePropertyType">
+		<xs:sequence>
+			<xs:element ref="obs1d2d:ObservationWithSource" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="ObservationWithSource" type="obs1d2d:ObservationWithSourceType"
+		substitutionGroup="om:Observation" />
+
+	<xs:complexType name="ObservationWithSourceType">
+		<xs:complexContent>
+			<xs:extension base="om:ObservationType">
+				<xs:sequence>
+					<xs:element name="dataSourceURI" type="xs:anyURI">
+						<xs:annotation>
+							<xs:documentation>
+								Source
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
