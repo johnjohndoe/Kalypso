@@ -174,18 +174,18 @@ public class PrepareShorttermSimulationWorker implements ICoreRunnableWithProgre
     final IFolder folderSimulations = scenario.getSimulationsFolder();
     final RrmSimulation sourceSimulation = new RrmSimulation( folderSimulations.getFolder( new Path( sourceSimulationName ) ) );
     if( !sourceSimulation.exists() )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "PrepareShorttermSimulationWorker_8" ), sourceSimulation.getName() ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "PrepareShorttermSimulationWorker_8" ), sourceSimulation.getName() ) ); //$NON-NLS-1$
 
     final RrmCalculationResult sourceCurrent = sourceSimulation.getCurrentCalculationResult();
     if( sourceCurrent == null || !sourceCurrent.getFolder().exists() )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "PrepareShorttermSimulationWorker_9" ), sourceSimulation.getName() ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "PrepareShorttermSimulationWorker_9" ), sourceSimulation.getName() ) ); //$NON-NLS-1$
 
     final IFolder initialValuesSourceFolder = sourceCurrent.getLzimResultFolder();
     final Date startDate = control.getSimulationStart();
     final String initialValuesSourceFilename = new SimpleDateFormat( "yyyyMMdd'.gml'" ).format( startDate ); //$NON-NLS-1$
     final IFile initialValuesSourceFile = initialValuesSourceFolder.getFile( initialValuesSourceFilename );
     if( !initialValuesSourceFile.exists() )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "PrepareShorttermSimulationWorker_11" ), sourceSimulation.getName(), initialValuesSourceFilename ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "PrepareShorttermSimulationWorker_11" ), sourceSimulation.getName(), initialValuesSourceFilename ) ); //$NON-NLS-1$
 
     try
     {
