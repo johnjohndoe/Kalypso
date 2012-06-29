@@ -42,6 +42,7 @@ package org.kalypso.model.flood.ui.map;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Collection;
@@ -54,6 +55,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -137,7 +139,7 @@ import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
@@ -166,7 +168,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  *
  * @author Thomas Jung
  */
-public class EventManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private final static URL SLD_TEMPLATE_LOCATION = EventManagementWidget.class.getResource( "resources/wsp.sld" );//$NON-NLS-1$
 
@@ -571,7 +573,7 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
     return null;
   }
 
-  public static IFolder getEventFolder( final IRunoffEvent event ) throws CoreException
+  public static IFolder getEventFolder( final IRunoffEvent event )
   {
     final IFolder eventsFolder = getEventsFolder();
     return eventsFolder.getFolder( event.getDataPath() );
@@ -632,7 +634,8 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
 
     if( m_model == null )
     {
-      viewer.setInput( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.21" ) ) ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelFloodPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.21" ) ); //$NON-NLS-1$
+      viewer.setInput( status );
     }
     else
     {
@@ -1043,25 +1046,17 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
     ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.57" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.58" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
-   */
   @Override
   public void disposeControl( )
   {
   }
 
   @Override
-  public void moved( final java.awt.Point p )
+  public void mouseMoved( final MouseEvent e )
   {
-    super.moved( p );
-
-    m_infoWidget.moved( p );
+    m_infoWidget.mouseMoved( e );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -1276,9 +1271,6 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
     }
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
-   */
   @Override
   public String getPartName( )
   {
