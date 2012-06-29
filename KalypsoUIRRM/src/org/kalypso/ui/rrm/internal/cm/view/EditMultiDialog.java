@@ -61,6 +61,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -102,7 +103,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * This dialog allows the editing of the properties of a multi catchment model.
- *
+ * 
  * @author Holger Albert
  */
 public class EditMultiDialog extends TitleAreaDialog
@@ -166,7 +167,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * The constructor.
-   *
+   * 
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
    * @param model
@@ -199,8 +200,8 @@ public class EditMultiDialog extends TitleAreaDialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( Messages.getString("EditMultiDialog_0") ); //$NON-NLS-1$
-    setTitle( Messages.getString("EditMultiDialog_1") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "EditMultiDialog_0" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString( "EditMultiDialog_1" ) ); //$NON-NLS-1$
 
     /* Create the control. */
     final Composite control = (Composite) super.createDialogArea( parent );
@@ -213,25 +214,32 @@ public class EditMultiDialog extends TitleAreaDialog
     mainData.widthHint = 900;
     main.setLayoutData( mainData );
 
+    /* Create the main sash form. */
+    final SashForm mainSashForm = new SashForm( main, SWT.NONE );
+    mainSashForm.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     /* Create the main group. */
-    m_mainGroup = new Group( main, SWT.NONE );
+    m_mainGroup = new Group( mainSashForm, SWT.NONE );
     m_mainGroup.setLayout( new GridLayout( 1, false ) );
     final GridData mainGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainGroupData.widthHint = 250;
     m_mainGroup.setLayoutData( mainGroupData );
-    m_mainGroup.setText( Messages.getString("EditMultiDialog_2") ); //$NON-NLS-1$
+    m_mainGroup.setText( Messages.getString( "EditMultiDialog_2" ) ); //$NON-NLS-1$
 
     /* Create the content of the main group. */
     createMainContent( m_mainGroup );
 
     /* Create the details group. */
-    m_detailsGroup = new Group( main, SWT.NONE );
+    m_detailsGroup = new Group( mainSashForm, SWT.NONE );
     m_detailsGroup.setLayout( new GridLayout( 1, false ) );
     m_detailsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_detailsGroup.setText( Messages.getString("EditMultiDialog_3") ); //$NON-NLS-1$
+    m_detailsGroup.setText( Messages.getString( "EditMultiDialog_3" ) ); //$NON-NLS-1$
 
     /* Create the content of the details group. */
     createDetailsContent( m_detailsGroup );
+
+    /* Set the weights. */
+    mainSashForm.setWeights( new int[] { 35, 65 } );
 
     return control;
   }
@@ -276,7 +284,7 @@ public class EditMultiDialog extends TitleAreaDialog
     final IStatus bindingStatus = ValidationStatusUtilities.getFirstNonOkStatus( m_dataBinding );
     if( !bindingStatus.isOK() )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("EditMultiDialog_4"), bindingStatus.getMessage() ), bindingStatus.getException() ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "EditMultiDialog_4" ), bindingStatus.getMessage() ), bindingStatus.getException() ); //$NON-NLS-1$
       StatusDialog.open( getShell(), status, getShell().getText() );
       return;
     }
@@ -306,7 +314,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the main group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -339,7 +347,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the details group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -413,7 +421,7 @@ public class EditMultiDialog extends TitleAreaDialog
   {
     /* Create the description column. */
     final TableViewerColumn descriptionColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    descriptionColumn.getColumn().setText( Messages.getString("EditMultiDialog_5") ); //$NON-NLS-1$
+    descriptionColumn.getColumn().setText( Messages.getString( "EditMultiDialog_5" ) ); //$NON-NLS-1$
     descriptionColumn.getColumn().setWidth( 150 );
     descriptionColumn.setLabelProvider( new DescriptionColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( descriptionColumn.getColumn() );
@@ -421,7 +429,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
     /* Create the comment column. */
     final TableViewerColumn commentColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    commentColumn.getColumn().setText( Messages.getString("EditMultiDialog_6") ); //$NON-NLS-1$
+    commentColumn.getColumn().setText( Messages.getString( "EditMultiDialog_6" ) ); //$NON-NLS-1$
     commentColumn.getColumn().setWidth( 150 );
     commentColumn.setLabelProvider( new CommentColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( commentColumn.getColumn() );
@@ -429,7 +437,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
     /* Create the valid from column. */
     final TableViewerColumn validFromColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    validFromColumn.getColumn().setText( Messages.getString("EditMultiDialog_7") ); //$NON-NLS-1$
+    validFromColumn.getColumn().setText( Messages.getString( "EditMultiDialog_7" ) ); //$NON-NLS-1$
     validFromColumn.getColumn().setWidth( 75 );
     validFromColumn.setLabelProvider( new ValidFromColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( validFromColumn.getColumn() );
@@ -437,7 +445,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
     /* Create the valid to column. */
     final TableViewerColumn validToColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    validToColumn.getColumn().setText( Messages.getString("EditMultiDialog_8") ); //$NON-NLS-1$
+    validToColumn.getColumn().setText( Messages.getString( "EditMultiDialog_8" ) ); //$NON-NLS-1$
     validToColumn.getColumn().setWidth( 75 );
     validToColumn.setLabelProvider( new ValidToColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( validToColumn.getColumn() );
@@ -449,7 +457,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function returns all linear sum generators that can be linked in a multi generator.
-   *
+   * 
    * @return All linear sum generators that can be linked in a multi generator.
    */
   private ILinearSumGenerator[] getGenerators( )
@@ -480,7 +488,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function saves the changes.
-   *
+   * 
    * @return A ERROR status on error or an OK status.
    */
   private IStatus performOk( )
@@ -533,7 +541,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function handles the property changed event for the parameter type.
-   *
+   * 
    * @param evt
    *          The property change event.
    */
@@ -550,7 +558,7 @@ public class EditMultiDialog extends TitleAreaDialog
     final Shell shell = getShell();
 
     /* Show the confirm dialog. */
-    if( !MessageDialog.openConfirm( shell, shell.getText(), Messages.getString("EditMultiDialog_9") ) ) //$NON-NLS-1$
+    if( !MessageDialog.openConfirm( shell, shell.getText(), Messages.getString( "EditMultiDialog_9" ) ) ) //$NON-NLS-1$
     {
       m_ignoreNextChange = true;
       final MultiBean generator = m_bean;

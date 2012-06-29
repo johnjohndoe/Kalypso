@@ -60,12 +60,16 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.databinding.IDataBinding;
@@ -87,7 +91,9 @@ import org.kalypso.ui.rrm.internal.cm.view.comparator.NameComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.QualityComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.StationComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.TimestepComparator;
+import org.kalypso.ui.rrm.internal.cm.view.filter.GroupViewerFilter;
 import org.kalypso.ui.rrm.internal.cm.view.filter.ParameterTypeViewerFilter;
+import org.kalypso.ui.rrm.internal.cm.view.filter.TimestepViewerFilter;
 import org.kalypso.ui.rrm.internal.cm.view.provider.DescriptionColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.cm.view.provider.FactorColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.cm.view.provider.GroupColumnLabelProvider;
@@ -153,7 +159,11 @@ public class EditLinearSumDialog extends TitleAreaDialog
   /**
    * The timeseries viewer.
    */
-  private TableViewer m_timeseriesViewer;
+  protected TableViewer m_timeseriesViewer;
+
+  protected GroupViewerFilter m_groupViewerFilter;
+
+  protected TimestepViewerFilter m_timestepViewerFilter;
 
   /**
    * The status composite.
@@ -202,6 +212,8 @@ public class EditLinearSumDialog extends TitleAreaDialog
     m_detailsGroup = null;
     m_catchmentViewer = null;
     m_timeseriesViewer = null;
+    m_groupViewerFilter = null;
+    m_timestepViewerFilter = null;
     m_statusComposite = null;
     m_catchmentBean = null;
     m_dataBinding = null;
@@ -229,8 +241,12 @@ public class EditLinearSumDialog extends TitleAreaDialog
     mainData.widthHint = 1000;
     main.setLayoutData( mainData );
 
+    /* Create the main sash form. */
+    final SashForm mainSashForm = new SashForm( main, SWT.NONE );
+    mainSashForm.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     /* Create the main group. */
-    m_mainGroup = new Group( main, SWT.NONE );
+    m_mainGroup = new Group( mainSashForm, SWT.NONE );
     m_mainGroup.setLayout( new GridLayout( 1, false ) );
     final GridData mainGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainGroupData.widthHint = 200;
@@ -241,7 +257,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     createMainContent( m_mainGroup );
 
     /* Create the secondary group. */
-    m_secondaryGroup = new Group( main, SWT.NONE );
+    m_secondaryGroup = new Group( mainSashForm, SWT.NONE );
     m_secondaryGroup.setLayout( new GridLayout( 1, false ) );
     final GridData secondaryGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     secondaryGroupData.widthHint = 200;
@@ -252,13 +268,16 @@ public class EditLinearSumDialog extends TitleAreaDialog
     createSecondaryContent( m_secondaryGroup );
 
     /* Create the details group. */
-    m_detailsGroup = new Group( main, SWT.NONE );
+    m_detailsGroup = new Group( mainSashForm, SWT.NONE );
     m_detailsGroup.setLayout( new GridLayout( 1, false ) );
     m_detailsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     m_detailsGroup.setText( Messages.getString( "EditLinearSumDialog_2" ) ); //$NON-NLS-1$
 
     /* Create the content of the details group. */
     createDetailsContent( m_detailsGroup, null );
+
+    /* Set the weights. */
+    mainSashForm.setWeights( new int[] { 25, 25, 50 } );
 
     return control;
   }
@@ -441,6 +460,42 @@ public class EditLinearSumDialog extends TitleAreaDialog
    */
   private void createDetailsContent( final Composite parent, final CatchmentBean catchmentBean )
   {
+    /* Create a text field. */
+    final Text groupText = new Text( parent, SWT.BORDER );
+    groupText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    groupText.setMessage( "< Gruppenfilter >" );
+    groupText.addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        if( m_groupViewerFilter != null )
+        {
+          final Text source = (Text) e.getSource();
+          m_groupViewerFilter.updateSearchText( source.getText() );
+          m_timeseriesViewer.refresh();
+        }
+      }
+    } );
+
+    /* Create a text field. */
+    final Text timestepText = new Text( parent, SWT.BORDER );
+    timestepText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    timestepText.setMessage( "< Zeitschrittfilter >" );
+    timestepText.addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        if( m_timestepViewerFilter != null )
+        {
+          final Text source = (Text) e.getSource();
+          m_timestepViewerFilter.updateSearchText( source.getText() );
+          m_timeseriesViewer.refresh();
+        }
+      }
+    } );
+
     /* Create the timeseries viewer. */
     m_timeseriesViewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
     m_timeseriesViewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -448,7 +503,14 @@ public class EditLinearSumDialog extends TitleAreaDialog
     m_timeseriesViewer.getTable().setHeaderVisible( true );
     m_timeseriesViewer.getTable().addControlListener( new ColumnsResizeControlListener() );
     m_timeseriesViewer.setContentProvider( new ArrayContentProvider() );
-    m_timeseriesViewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( (String) m_bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) ) } );
+
+    /* Create the viewer filters. */
+    final ParameterTypeViewerFilter parameterTypeViewerFilter = new ParameterTypeViewerFilter( (String) m_bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) );
+    m_groupViewerFilter = new GroupViewerFilter();
+    m_timestepViewerFilter = new TimestepViewerFilter();
+
+    /* Set the viewer filters. */
+    m_timeseriesViewer.setFilters( new ViewerFilter[] { parameterTypeViewerFilter, m_groupViewerFilter, m_timestepViewerFilter } );
 
     /* Create the columns. */
     createTimeseriesViewerColumns( m_timeseriesViewer );
@@ -572,6 +634,8 @@ public class EditLinearSumDialog extends TitleAreaDialog
     m_detailsGroup = null;
     m_catchmentViewer = null;
     m_timeseriesViewer = null;
+    m_groupViewerFilter = null;
+    m_timestepViewerFilter = null;
     m_statusComposite = null;
     m_catchmentBean = null;
     m_dataBinding = null;
