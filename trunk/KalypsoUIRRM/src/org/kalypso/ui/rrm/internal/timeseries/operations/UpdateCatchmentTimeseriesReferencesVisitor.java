@@ -96,7 +96,6 @@ public class UpdateCatchmentTimeseriesReferencesVisitor implements IFeatureBindi
           m_changed = true;
         }
       }
-
     }
   }
 
@@ -104,5 +103,4 @@ public class UpdateCatchmentTimeseriesReferencesVisitor implements IFeatureBindi
   {
     return m_changed;
   }
-
 }

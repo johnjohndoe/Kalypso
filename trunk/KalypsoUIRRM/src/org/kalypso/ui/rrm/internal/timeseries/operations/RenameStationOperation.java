@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -86,7 +87,7 @@ public class RenameStationOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+      final IStatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
       final URL context = m_station.getWorkspace().getContext();
 
@@ -108,15 +109,16 @@ public class RenameStationOperation implements ICoreRunnableWithProgress
         final ITimeseries timeseries = timeserieses.get( index );
         final ZmlLink link = timeseries.getDataLink();
 
+        // FIXME: Handle all timeseries simultaniously... No outer loop...
         stati.add( UpdateTimeseriesLinks.doUpdateTimeseriesLinks( link.getFile().getProject(), old, link.getHref() ) );
       }
 
-      return stati.asMultiStatusOrOK( Messages.getString("RenameStationOperation_0") ); //$NON-NLS-1$
+      return stati.asMultiStatusOrOK( Messages.getString( "RenameStationOperation_0" ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("RenameStationOperation_1"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "RenameStationOperation_1" ), e ); //$NON-NLS-1$
     }
   }
 

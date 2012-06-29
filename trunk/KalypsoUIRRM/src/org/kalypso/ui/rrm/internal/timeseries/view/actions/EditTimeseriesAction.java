@@ -127,7 +127,7 @@ public class EditTimeseriesAction extends Action
           final IStatus status = updater.execute( new NullProgressMonitor() );
           if( !status.isOK() )
           {
-            final StatusDialog2 dialog2 = new StatusDialog2( shell, status, Messages.getString("EditTimeseriesAction.0"), Messages.getString("EditTimeseriesAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+            final StatusDialog2 dialog2 = new StatusDialog2( shell, status, Messages.getString( "EditTimeseriesAction.0" ), Messages.getString( "EditTimeseriesAction.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
             dialog2.open();
           }
 
@@ -136,13 +136,11 @@ public class EditTimeseriesAction extends Action
       }
 
       source.dispose();
-
     }
     catch( final Throwable t )
     {
       t.printStackTrace();
     }
-
   }
 
   private boolean isQualityChanged( final String oldQuality )
@@ -157,6 +155,5 @@ public class EditTimeseriesAction extends Action
     }
 
     return true;
-
   }
 }

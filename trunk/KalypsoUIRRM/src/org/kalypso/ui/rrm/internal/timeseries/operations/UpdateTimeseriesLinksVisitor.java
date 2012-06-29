@@ -136,5 +136,4 @@ public class UpdateTimeseriesLinksVisitor implements FeatureVisitor
 
     feature.getWorkspace().fireModellEvent( new FeaturesChangedModellEvent( feature.getWorkspace(), new Feature[] { feature } ) );
   }
-
 }

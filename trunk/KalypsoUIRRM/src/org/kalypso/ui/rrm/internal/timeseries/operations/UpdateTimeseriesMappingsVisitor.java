@@ -86,9 +86,7 @@ public class UpdateTimeseriesMappingsVisitor implements IFeatureBindingCollectio
 
         m_changed = true;
       }
-
     }
-
   }
 
   public boolean wasChanged( )
