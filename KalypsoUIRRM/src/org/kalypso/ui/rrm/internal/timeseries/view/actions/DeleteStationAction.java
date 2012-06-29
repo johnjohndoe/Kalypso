@@ -71,15 +71,15 @@ public class DeleteStationAction extends Action
   {
     m_stations = station;
 
-    setText( Messages.getString("DeleteStationAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("DeleteStationAction_1") ); //$NON-NLS-1$
+    setText( Messages.getString( "DeleteStationAction_0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "DeleteStationAction_1" ) ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
 
     if( station.length == 0 )
     {
       setEnabled( false );
-      setToolTipText( Messages.getString("DeleteStationAction_2") ); //$NON-NLS-1$
+      setToolTipText( Messages.getString( "DeleteStationAction_2" ) ); //$NON-NLS-1$
     }
   }
 
@@ -114,7 +114,7 @@ public class DeleteStationAction extends Action
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("DeleteStationAction_3"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "DeleteStationAction_3" ), e ); //$NON-NLS-1$
       StatusDialog.open( shell, status, getText() );
     }
   }
@@ -122,8 +122,8 @@ public class DeleteStationAction extends Action
   private String getDeleteMessage( )
   {
     if( m_stations.length > 1 )
-      return Messages.getString("DeleteStationAction_4"); //$NON-NLS-1$
+      return Messages.getString( "DeleteStationAction_4" ); //$NON-NLS-1$
 
-    return String.format( Messages.getString("DeleteStationAction_5"), m_stations[0].getDescription() ); //$NON-NLS-1$
+    return String.format( Messages.getString( "DeleteStationAction_5" ), m_stations[0].getDescription() ); //$NON-NLS-1$
   }
 }

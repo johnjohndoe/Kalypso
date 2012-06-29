@@ -98,5 +98,4 @@ public class EditStationAction extends Action
     if( !ObjectUtils.equals( oldGroup, newGroup ) )
       m_context.refreshTree( m_station );
   }
-
 }

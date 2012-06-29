@@ -70,9 +70,9 @@ public final class UpdateTimeseriesLinks
     final UpdateTimeseriesLinksVisitor visitor = new UpdateTimeseriesLinksVisitor( old, href );
 
     final RrmProject rrmProject = new RrmProject( project );
-    final IFolder modelFolder = rrmProject.getBaseFolder();
+    final IFolder baseFolder = rrmProject.getBaseFolder();
 
-    return doUpdateTimeseriesLinks( modelFolder, visitor );
+    return doUpdateTimeseriesLinks( baseFolder, visitor );
 
   }
 
@@ -81,9 +81,9 @@ public final class UpdateTimeseriesLinks
     final UpdateTimeseriesLinksVisitor visitor = new UpdateTimeseriesLinksVisitor( timeseries, current );
 
     final RrmProject rrmProject = new RrmProject( timeseries.getDataLink().getFile().getProject() );
-    final IFolder modelFolder = rrmProject.getBaseFolder();
+    final IFolder baseFolder = rrmProject.getBaseFolder();
 
-    return doUpdateTimeseriesLinks( modelFolder, visitor );
+    return doUpdateTimeseriesLinks( baseFolder, visitor );
   }
 
   private static IStatus doUpdateTimeseriesLinks( final IFolder modelFolder, final UpdateTimeseriesLinksVisitor visitor )
@@ -93,7 +93,7 @@ public final class UpdateTimeseriesLinks
     stati.add( doUpdateTimeseriesLinks( modelFolder.getFile( ".models/modell.gml" ), visitor ) ); //$NON-NLS-1$
     stati.add( doUpdateTimeseriesLinks( modelFolder.getFile( ".models/catchmentModels.gml" ), visitor ) ); //$NON-NLS-1$
 
-    return stati.asMultiStatusOrOK( Messages.getString("UpdateTimeseriesLinks_0") ); //$NON-NLS-1$
+    return stati.asMultiStatusOrOK( Messages.getString( "UpdateTimeseriesLinks_0" ) ); //$NON-NLS-1$
   }
 
   private static IStatus doUpdateTimeseriesLinks( final IFile file, final UpdateTimeseriesLinksVisitor visitor )
@@ -111,13 +111,13 @@ public final class UpdateTimeseriesLinks
     }
     catch( final Exception e )
     {
-      final String msg = String.format( Messages.getString("UpdateTimeseriesLinks_1"), file.getFullPath().toOSString() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "UpdateTimeseriesLinks_1" ), file.getFullPath().toOSString() ); //$NON-NLS-1$
       e.printStackTrace();
 
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg, e );
     }
 
-    final String msg = String.format( Messages.getString("UpdateTimeseriesLinks_2"), file.getFullPath().toOSString() ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "UpdateTimeseriesLinks_2" ), file.getFullPath().toOSString() ); //$NON-NLS-1$
 
     return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), msg );
   }

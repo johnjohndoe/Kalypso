@@ -141,5 +141,4 @@ public class EditStationWizard extends Wizard
 
     return true;
   }
-
 }
