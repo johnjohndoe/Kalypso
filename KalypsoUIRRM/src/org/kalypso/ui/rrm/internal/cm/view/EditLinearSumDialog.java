@@ -103,7 +103,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * This dialog allows the editing of the properties of a linear sum catchment model.
- *
+ * 
  * @author Holger Albert
  */
 public class EditLinearSumDialog extends TitleAreaDialog
@@ -182,7 +182,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * The constructor.
-   *
+   * 
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
    * @param model
@@ -291,7 +291,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     final IStatus bindingStatus = ValidationStatusUtilities.getFirstNonOkStatus( m_dataBinding );
     if( !bindingStatus.isOK() )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("EditLinearSumDialog.0"), bindingStatus.getMessage() ), bindingStatus.getException() ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "EditLinearSumDialog.0" ), bindingStatus.getMessage() ), bindingStatus.getException() ); //$NON-NLS-1$
       StatusDialog.open( getShell(), status, getShell().getText() );
       return;
     }
@@ -321,7 +321,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the main group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -354,7 +354,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the secondary group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -433,7 +433,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the details group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @param catchmentBean
@@ -537,7 +537,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
   /**
    * This function saves the changes.
-   *
+   * 
    * @return A ERROR status on error or an OK status.
    */
   private IStatus performOk( )
@@ -613,11 +613,14 @@ public class EditLinearSumDialog extends TitleAreaDialog
     }
     else
       m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "EditLinearSumDialog_6" ) ) ); //$NON-NLS-1$
+
+    if( m_catchmentViewer != null && !m_catchmentViewer.getTable().isDisposed() )
+      m_catchmentViewer.refresh();
   }
 
   /**
    * This function handles the property changed event for the parameter type.
-   *
+   * 
    * @param evt
    *          The property change event.
    */
@@ -634,7 +637,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     final Shell shell = getShell();
 
     /* Show the confirm dialog. */
-    if( !MessageDialog.openConfirm( shell, shell.getText(), Messages.getString("EditLinearSumDialog.1") ) ) //$NON-NLS-1$
+    if( !MessageDialog.openConfirm( shell, shell.getText(), Messages.getString( "EditLinearSumDialog.1" ) ) ) //$NON-NLS-1$
     {
       m_ignoreNextChange = true;
       final LinearSumBean generator = m_bean;
