@@ -250,7 +250,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
   }
 
-  private double getReturnValue( final double averageAnnualDamageValue, final ILandusePolygon polygon ) throws GeoGridException
+  private double getReturnValue( final double averageAnnualDamageValue, final ILandusePolygon polygon )
   {
     if( m_produceZoneIdentifiers )
     {
@@ -264,9 +264,8 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     {
       final Boolean landuseType = polygon.isUrbanLanduseType();
       if( landuseType == null )
-      {
-        throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesGrid.2" ), new RuntimeException() ); //$NON-NLS-1$
-      }
+        return Double.NaN;
+
       return landuseType ? averageAnnualDamageValue : -averageAnnualDamageValue;
     }
   }
