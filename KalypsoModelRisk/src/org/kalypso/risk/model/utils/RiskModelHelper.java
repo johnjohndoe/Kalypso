@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -119,29 +118,29 @@ public class RiskModelHelper
     I18N_LAYER_NAME
   }
 
-  private static Map<LAYER_TYPE, Map<FIELD, String>> LAYER_PROPERTY_MAP = new HashMap<LAYER_TYPE, Map<FIELD, String>>()
+  private static Map<LAYER_TYPE, Map<FIELD, String>> LAYER_PROPERTY_MAP = new HashMap<>();
+
+  static
   {
-    {
-      put( LAYER_TYPE.WATERLEVEL, new HashMap<FIELD, String>()
-      {
+    LAYER_PROPERTY_MAP.put( LAYER_TYPE.WATERLEVEL, new HashMap<FIELD, String>()
         {
-          put( FIELD.STYLE_URN, "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
-          put( FIELD.THEMEINFO_CLASS, "org.kalypso.gml.ui.map.CoverageThemeInfo" ); //$NON-NLS-1$
-          put( FIELD.I18N_THEMEINFO_LABEL, "WaterlevelMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
-          put( FIELD.I18N_LAYER_NAME, "WaterlevelMap.gismapview.layer" ); //$NON-NLS-1$
-        }
-      } );
-      put( LAYER_TYPE.SPECIFIC_DAMAGE_POTENTIAL, new HashMap<FIELD, String>()
       {
+        put( FIELD.STYLE_URN, "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
+        put( FIELD.THEMEINFO_CLASS, "org.kalypso.gml.ui.map.CoverageThemeInfo" ); //$NON-NLS-1$
+        put( FIELD.I18N_THEMEINFO_LABEL, "WaterlevelMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
+        put( FIELD.I18N_LAYER_NAME, "WaterlevelMap.gismapview.layer" ); //$NON-NLS-1$
+      }
+        } );
+    LAYER_PROPERTY_MAP.put( LAYER_TYPE.SPECIFIC_DAMAGE_POTENTIAL, new HashMap<FIELD, String>()
         {
-          put( FIELD.STYLE_URN, "urn:style:sld:risk:damage:specific" ); //$NON-NLS-1$
-          put( FIELD.STYLE_NAME, "default" ); //$NON-NLS-1$
-          put( FIELD.THEMEINFO_CLASS, "org.kalypso.risk.plugin.DamagePotentialThemeInfo" ); //$NON-NLS-1$
-          put( FIELD.I18N_LAYER_NAME, "SpecificDamagePotentialMap.gismapview.layer" ); //$NON-NLS-1$
-        }
-      } );
-    }
-  };
+      {
+        put( FIELD.STYLE_URN, "urn:style:sld:risk:damage:specific" ); //$NON-NLS-1$
+        put( FIELD.STYLE_NAME, "default" ); //$NON-NLS-1$
+        put( FIELD.THEMEINFO_CLASS, "org.kalypso.risk.plugin.DamagePotentialThemeInfo" ); //$NON-NLS-1$
+        put( FIELD.I18N_LAYER_NAME, "SpecificDamagePotentialMap.gismapview.layer" ); //$NON-NLS-1$
+      }
+        } );
+  }
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.

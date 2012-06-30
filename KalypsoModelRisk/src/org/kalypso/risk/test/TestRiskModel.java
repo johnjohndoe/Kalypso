@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.test;
 
-import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -62,7 +61,6 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -80,8 +78,6 @@ import org.kalypso.risk.plugin.KalypsoRiskDebug;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 
 /**
@@ -154,7 +150,6 @@ public class TestRiskModel extends TestCase
     final String crs = "EPSG:31467"; // the coordinate system of the shape file //$NON-NLS-1$
 
     final ShapeCollection shapeCollection = ShapeSerializer.deserialize( sourceShapeFilePath, crs );
-    final IFeatureBindingCollection<AbstractShape> shapes = shapeCollection.getShapes();
 
     // name of the shape file field that represents the landuse classes
     final String landUseProperty = "LANDUSE"; //$NON-NLS-1$
@@ -249,16 +244,6 @@ public class TestRiskModel extends TestCase
 
   private void saveGml( final IFile file, final GMLWorkspace workspace ) throws CoreException
   {
-    final SetContentHelper helper = new SetContentHelper( "Projekt Eigenschaften werden geschrieben" ) //$NON-NLS-1$
-    {
-      @Override
-      protected void write( final OutputStreamWriter writer ) throws Throwable
-      {
-        GmlSerializer.serializeWorkspace( writer, workspace, writer.getEncoding() );
-      }
-    };
-
-    helper.setFileContents( file, false, false, new NullProgressMonitor() );
+    GmlSerializer.serializeWorkspace( file, workspace, new NullProgressMonitor() );
   }
-
 }
