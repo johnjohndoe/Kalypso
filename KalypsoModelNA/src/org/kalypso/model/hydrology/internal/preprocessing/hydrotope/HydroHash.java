@@ -40,7 +40,6 @@ import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -68,10 +67,23 @@ public class HydroHash
 
   private SpatialIndexExt m_catchmentIndex;
 
+  private final boolean m_doAttributeDissolve;
+
   public HydroHash( final ParameterHash landuseHash, final Catchment[] catchments, final IDManager idManager )
+  {
+    this( landuseHash, catchments, idManager, true );
+  }
+
+  /**
+   * @param doAttributeDissolve
+   *          If hydrotopes with same attributes should be combined into a single one. Set to <code>false</code> for
+   *          debug purpose only.
+   */
+  public HydroHash( final ParameterHash landuseHash, final Catchment[] catchments, final IDManager idManager, final boolean doAttributeDissolve )
   {
     m_parameterHash = landuseHash;
     m_catchments = catchments;
+    m_doAttributeDissolve = doAttributeDissolve;
 
     m_catchmentSorter = new CatchmentByAsciiIdSorter( idManager );
     m_catchmentInfos = new TreeMap<Catchment, CatchmentInfo>( m_catchmentSorter );
@@ -87,11 +99,14 @@ public class HydroHash
 
       if( catchment == null )
       {
-        final String message = String.format( Messages.getString("HydroHash_0"), hydrotope.getName() ); //$NON-NLS-1$
-        throw new NAPreprocessorException( message );
-      }
+        // TODO: we cannot throw an exception, because sometimes not all catchments are calculated, in this case,
+        // finding no catchment is ok
 
-      addHydrotope( catchment, hydrotope );
+        // final String message = String.format( Messages.getString("HydroHash_0"), hydrotope.getName() ); //$NON-NLS-1$
+        // throw new NAPreprocessorException( message );
+      }
+      else
+        addHydrotope( catchment, hydrotope );
     }
   }
 
@@ -156,7 +171,7 @@ public class HydroHash
     if( info != null )
       return info;
 
-    final CatchmentInfo newInfo = new CatchmentInfo( catchment, m_parameterHash );
+    final CatchmentInfo newInfo = new CatchmentInfo( catchment, m_parameterHash, m_doAttributeDissolve );
     m_catchmentInfos.put( catchment, newInfo );
     return newInfo;
   }

@@ -43,12 +43,14 @@ package org.kalypso.model.hydrology.internal.postprocessing;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.StringUtils;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
@@ -95,7 +97,9 @@ public class DefaultPathGenerator
   public static String generateTitleForObservation( final Feature feature, final String suffix )
   {
     final String observationTitle = getObservationTitle( feature );
-    final String annotationName = getDirectoryName( feature );
+
+    final String annotationName = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
+
     return observationTitle + " - " + DefaultPathGenerator.getTitleForSuffix( suffix ) + " " + annotationName; //$NON-NLS-1$ //$NON-NLS-2$
   }
 

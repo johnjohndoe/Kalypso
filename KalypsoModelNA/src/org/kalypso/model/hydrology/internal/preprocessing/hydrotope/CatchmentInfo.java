@@ -70,10 +70,18 @@ public class CatchmentInfo
 
   private Sealing m_totalSealing = null;
 
-  public CatchmentInfo( final Catchment catchment, final ParameterHash landuseHash )
+  private final boolean m_doAttributeDissolve;
+
+  /**
+   * @param doAttributeDissolve
+   *          If hydrotopes with same attributes should be combined into a single one. Set to <code>false</code> for
+   *          debug purpose only.
+   */
+  public CatchmentInfo( final Catchment catchment, final ParameterHash landuseHash, final boolean doAttributeDissolve )
   {
     m_catchment = catchment;
     m_landuseHash = landuseHash;
+    m_doAttributeDissolve = doAttributeDissolve;
   }
 
   public void add( final IHydrotope hydrotop ) throws NAPreprocessorException
@@ -84,7 +92,7 @@ public class CatchmentInfo
 
     final String attributeHashKey = hydrotopeInfo.getAttributeHash();
 
-    if( m_hydrotopeHash.containsKey( attributeHashKey ) )
+    if( m_doAttributeDissolve && m_hydrotopeHash.containsKey( attributeHashKey ) )
     {
       final HydrotopeInfo existingInfo = m_hydrotopeHash.get( attributeHashKey );
       existingInfo.addArea( hydrotopeInfo );

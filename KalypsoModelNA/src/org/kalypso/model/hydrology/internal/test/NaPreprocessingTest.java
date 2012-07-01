@@ -92,12 +92,6 @@ public class NaPreprocessingTest
   }
 
   @Test
-  public void testDemoModelWithSuds( ) throws Exception
-  {
-    testRunPreprocessing( "naDemoModelWithSuds", "resources/demoModel_WithSuds" ); //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  @Test
   public void testWeisseElsterLangzeit( ) throws Exception
   {
     testRunPreprocessing( "WeisseElsterLangzeit", "resources/weisseElster_langzeit" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -143,11 +137,11 @@ public class NaPreprocessingTest
 
   private INaSimulationData createDemoModelsimulationData( final URL base ) throws Exception
   {
-    final URL modelUrl = new URL( base, "calcCase.gml" ); //$NON-NLS-1$
+    final URL modelUrl = new URL( base, "modell.gml" ); //$NON-NLS-1$
     final URL controlUrl = new URL( base, "expertControl.gml" ); //$NON-NLS-1$
     final URL metaUrl = new URL( base, ".calculation" ); //$NON-NLS-1$
-    final URL parameterUrl = new URL( base, "calcParameter.gml" ); //$NON-NLS-1$
-    final URL hydrotopUrl = new URL( base, "calcHydrotop.gml" ); //$NON-NLS-1$
+    final URL parameterUrl = new URL( base, "parameter.gml" ); //$NON-NLS-1$
+    final URL hydrotopUrl = new URL( base, "hydrotop.gml" ); //$NON-NLS-1$
     final URL syntNUrl = null;
     final URL lzsimUrl = checkUrlExists( new URL( base, "Anfangswerte/lzsim.gml" ) ); //$NON-NLS-1$
 
