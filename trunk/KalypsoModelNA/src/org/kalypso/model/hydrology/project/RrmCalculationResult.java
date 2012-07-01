@@ -69,7 +69,7 @@ public class RrmCalculationResult
 
   private static final String FILE_ERROR_GML = "error.gml"; //$NON-NLS-1$
 
-  public static final String FOLDER_CATCHMENT = "Catchment";
+  public static final String FOLDER_CATCHMENT = "SubCatchment";
 
   public static final String FOLDER_NODE = "Node";
 
