@@ -119,10 +119,10 @@ public class NAPostprocessingTest
     for( final Handler handler : handlers )
       logger.removeHandler( handler );
 
-    final URL modelResource = new URL( baseURL, "calcCase.gml" ); //$NON-NLS-1$
+    final URL modelResource = new URL( baseURL, "modell.gml" ); //$NON-NLS-1$
     final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelResource, null );
 
-    final URL parameterResource = new URL( baseURL, "calcParameter.gml" ); //$NON-NLS-1$
+    final URL parameterResource = new URL( baseURL, "parameter.gml" ); //$NON-NLS-1$
     final GMLWorkspace parameterWorkspace = GmlSerializer.createGMLWorkspace( parameterResource, null );
     final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
 
@@ -133,7 +133,7 @@ public class NAPostprocessingTest
     final NaAsciiDirs naAsciiDirs = new NaAsciiDirs( asciiBaseDir );
     final NaSimulationDirs naSimulationDirs = new NaSimulationDirs( resultsDir );
 
-    final URL hydrotopResource = new URL( baseURL, "calcHydrotop.gml" ); //$NON-NLS-1$
+    final URL hydrotopResource = new URL( baseURL, "hydrotop.gml" ); //$NON-NLS-1$
     final GMLWorkspace hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopResource, null );
     final HydrotopeCollection naHydrotop = (HydrotopeCollection) hydrotopWorkspace.getRootFeature();
 
@@ -145,7 +145,7 @@ public class NAPostprocessingTest
 
     final IDManager idManager = new IDManager();
 
-    final HydroHash hydroHash = new HydroHash( landuseHash, catchments, idManager );
+    final HydroHash hydroHash = new HydroHash( landuseHash, catchments, idManager, false );
     hydroHash.initHydrotopes( naHydrotop );
 
     final NaPostProcessor postProcessor = new NaPostProcessor( idManager, logger, modelWorkspace, naControl, hydroHash );
