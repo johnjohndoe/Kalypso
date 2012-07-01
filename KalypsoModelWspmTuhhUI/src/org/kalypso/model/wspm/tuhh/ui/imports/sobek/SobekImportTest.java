@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
@@ -55,6 +55,13 @@ import org.junit.Test;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Gernot Belger
@@ -62,18 +69,33 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 public class SobekImportTest extends Assert
 {
   @Test
-  public void testSobek2Wspm( ) throws IOException, CoreException, InvocationTargetException
+  public void testSobek2Wspm( ) throws IOException, CoreException, InvocationTargetException, GMLSchemaException
   {
     final File inputDir = FileUtilities.createNewTempDir( "testSobekImport" ); //$NON-NLS-1$
     final URL inputResource = getClass().getResource( "resources/testInputData.zip" ); //$NON-NLS-1$
     ZipUtilities.unzip( inputResource, inputDir );
 
     final SobekImportData data = new SobekImportData();
+
+    final GMLWorkspace waterWorkspace = FeatureFactory.createGMLWorkspace( WspmWaterBody.FEATURE_WSPM_WATER_BODY, null, null );
+    final WspmWaterBody water = (WspmWaterBody) waterWorkspace.getRootFeature();
+
+    final CommandableWorkspace workspace = new CommandableWorkspace( waterWorkspace );
+    final EasyFeatureWrapper selectedFeature = new EasyFeatureWrapper( workspace, water );
+
+    final FeatureSelectionManager2 selection = new FeatureSelectionManager2();
+    selection.setSelection( new EasyFeatureWrapper[] { selectedFeature } );
+
+    data.init( null, selection );
+
     final FileAndHistoryData inputData = data.getInputDir();
     inputData.setFile( inputDir );
 
     final SobekImportOperation operation = new SobekImportOperation( data );
     final IStatus result = operation.execute( new NullProgressMonitor() );
+
+    // TODO: REAMRK: this test fails, as we do not support enough of sobek for the moment...
+
     if( !result.isOK() )
       fail( result.getMessage() );
 
