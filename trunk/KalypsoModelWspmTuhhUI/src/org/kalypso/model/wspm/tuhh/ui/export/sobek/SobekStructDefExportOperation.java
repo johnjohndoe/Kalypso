@@ -96,6 +96,6 @@ public class SobekStructDefExportOperation extends AbstractSobekStructExportOper
     if( sohl == null )
       return null;
 
-    return SobekStructDef.createAbutmentBridge( buildingId, profileName, width, sohl.getBreite(), buildingId );
+    return SobekStructDef.createAbutmentBridge( buildingId, profileName, width, sohl.getHoehe(), buildingId );
   }
 }
