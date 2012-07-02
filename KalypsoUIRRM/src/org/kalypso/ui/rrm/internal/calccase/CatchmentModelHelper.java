@@ -76,6 +76,8 @@ import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.IMappingElement;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.TimeseriesMappingType;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.hydrology.util.cm.CatchmentHelper;
@@ -891,5 +893,67 @@ public class CatchmentModelHelper
     }
 
     return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "CatchmentModelHelper_22" ) ); //$NON-NLS-1$
+  }
+
+  public static boolean compareMultiGenerators( final IMultiGenerator generator1, final IMultiGenerator generator2 )
+  {
+    final IFeatureBindingCollection<IRainfallGenerator> subGenerators1 = generator1.getSubGenerators();
+    final IFeatureBindingCollection<IRainfallGenerator> subGenerators2 = generator2.getSubGenerators();
+
+    if( subGenerators1.size() != subGenerators2.size() )
+      return false;
+
+    /* The order and types must be identical. */
+    for( int i = 0; i < subGenerators1.size(); i++ )
+    {
+      final IRainfallGenerator subGenerator1 = subGenerators1.get( i );
+      final IRainfallGenerator subGenerator2 = subGenerators2.get( i );
+
+      if( (subGenerator1 instanceof ILinearSumGenerator && subGenerator2 instanceof IMultiGenerator) || (subGenerator1 instanceof IMultiGenerator && subGenerator2 instanceof ILinearSumGenerator) )
+        return false;
+
+      if( subGenerator1 instanceof ILinearSumGenerator && subGenerator2 instanceof ILinearSumGenerator )
+      {
+        if( !compareGeneratorCatchments( (ILinearSumGenerator) subGenerator1, (ILinearSumGenerator) subGenerator2, false ) )
+          return false;
+
+        continue;
+      }
+
+      if( subGenerator1 instanceof IMultiGenerator && subGenerator2 instanceof IMultiGenerator )
+      {
+        if( !compareMultiGenerators( (IMultiGenerator) subGenerator1, (IMultiGenerator) subGenerator2 ) )
+          return false;
+
+        continue;
+      }
+    }
+
+    return true;
+  }
+
+  public static boolean compareTimeseriesMappings( final ITimeseriesMapping existingMapping, final ITimeseriesMapping mapping )
+  {
+    final IFeatureBindingCollection<IMappingElement> existingMappings = existingMapping.getMappings();
+    final IFeatureBindingCollection<IMappingElement> mappings = mapping.getMappings();
+
+    if( existingMappings.size() != mappings.size() )
+      return false;
+
+    for( int i = 0; i < existingMappings.size(); i++ )
+    {
+      final IMappingElement existingElement = existingMappings.get( i );
+      final IMappingElement element = mappings.get( i );
+
+      final ZmlLink existingLink = existingElement.getLinkedTimeseries();
+      final ZmlLink link = element.getLinkedTimeseries();
+
+      final String existingHref = existingLink.getHref();
+      final String href = link.getHref();
+      if( !ObjectUtils.equals( existingHref, href ) )
+        return false;
+    }
+
+    return true;
   }
 }

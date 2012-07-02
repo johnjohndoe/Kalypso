@@ -45,6 +45,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
@@ -132,12 +133,14 @@ public class MergeMappingsHelper
 
   public String getGeneratorHref( final IScenario scenario, final String generatorId )
   {
-    /* Values for the key. */
     final String scenarioPath = scenario.getFolder().getFullPath().toOSString();
-    final String featureId = generatorId;
+    return getGeneratorHref( scenarioPath, generatorId );
+  }
 
+  public String getGeneratorHref( final String scenarioPath, final String generatorId )
+  {
     /* Create the generator key. */
-    final GeneratorKey generatorKey = new GeneratorKey( scenarioPath, featureId );
+    final GeneratorKey generatorKey = new GeneratorKey( scenarioPath, generatorId );
 
     /* Get the generator value. */
     final GeneratorValue generatorValue = m_generators.get( generatorKey );
@@ -152,12 +155,19 @@ public class MergeMappingsHelper
     final Collection<GeneratorValue> values = m_generators.values();
     for( final GeneratorValue value : values )
     {
-      // FIXME What about multi generators?
-      // FIXME Only compare hrefs...
-      // FIXME Links in multi generators must be repaired...
       final IRainfallGenerator existingGenerator = value.getGenerator();
-      if( CatchmentModelHelper.compareGeneratorCatchments( (ILinearSumGenerator) existingGenerator, (ILinearSumGenerator) generator, true ) )
-        return value;
+
+      if( generator instanceof ILinearSumGenerator && existingGenerator instanceof ILinearSumGenerator )
+      {
+        if( CatchmentModelHelper.compareGeneratorCatchments( (ILinearSumGenerator) existingGenerator, (ILinearSumGenerator) generator, false ) )
+          return value;
+      }
+
+      if( generator instanceof IMultiGenerator && existingGenerator instanceof IMultiGenerator )
+      {
+        if( CatchmentModelHelper.compareMultiGenerators( (IMultiGenerator) existingGenerator, (IMultiGenerator) generator ) )
+          return value;
+      }
     }
 
     return null;
@@ -234,7 +244,14 @@ public class MergeMappingsHelper
 
   private MappingValue isEqualMappingAvailable( final ITimeseriesMapping mapping )
   {
-    // TODO Implement. Like this all mappings (except the ones added with addExistingMapping()) will be copied.
+    final Collection<MappingValue> values = m_mappings.values();
+    for( final MappingValue value : values )
+    {
+      final ITimeseriesMapping existingMapping = value.getMapping();
+      if( CatchmentModelHelper.compareTimeseriesMappings( existingMapping, mapping ) )
+        return value;
+    }
+
     return null;
   }
 }
