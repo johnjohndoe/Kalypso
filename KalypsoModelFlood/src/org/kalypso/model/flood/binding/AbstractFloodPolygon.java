@@ -52,21 +52,17 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 /**
  * @author Thomas Jung
  * @author Gernot Belger
- * 
  */
 public abstract class AbstractFloodPolygon extends Feature_Impl implements IFloodPolygon
 {
   private final FeatureBindingCollection<IRunoffEvent> m_runoffEvents;
 
-  public AbstractFloodPolygon( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public AbstractFloodPolygon( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
     m_runoffEvents = new FeatureBindingCollection<IRunoffEvent>( this, IRunoffEvent.class, QNAME_PROP_EVENT );
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IFloodPolygon#appliesToEvent(java.lang.String)
-   */
   @Override
   public boolean appliesToEvent( final String eventId )
   {
@@ -85,9 +81,6 @@ public abstract class AbstractFloodPolygon extends Feature_Impl implements IFloo
     return getArea().contains( crd );
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IFloodPolygon#getArea()
-   */
   @Override
   @SuppressWarnings("unchecked")
   public GM_Surface<GM_SurfacePatch> getArea( )
@@ -95,13 +88,9 @@ public abstract class AbstractFloodPolygon extends Feature_Impl implements IFloo
     return getProperty( QNAME_PROP_AREA, GM_Surface.class );
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IFloodPolygon#getEvents()
-   */
   @Override
   public IFeatureBindingCollection<IRunoffEvent> getEvents( )
   {
     return m_runoffEvents;
   }
-
 }
