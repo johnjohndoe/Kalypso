@@ -6,13 +6,15 @@
   <view id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" />
   <view id="org.kalypso.ui.views.outline" />
   <view id="org.kalypso.ui.views.mapView" />
+  <view id="org.kalypso.featureview.views.FeatureView" />
   <fastViewBars />
   <viewLayoutRec closeable="false" id="org.kalypso.kalypso1d2d.pjt.views.WorklistView" />
-  <viewLayoutRec closeable="false" id="org.kalypso.ui.repository.view.RepositoryExplorerPart" />
-  <viewLayoutRec closeable="false" id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" />
   <viewLayoutRec closeable="false" id="org.kalypso.ui.views.outline" />
   <viewLayoutRec closeable="false" id="org.kalypso.ui.views.mapView" />
+  <viewLayoutRec closeable="false" id="org.kalypso.ui.repository.view.RepositoryExplorerPart" />
+  <viewLayoutRec closeable="false" id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" />
   <viewLayoutRec closeable="false" id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" />
+  <viewLayoutRec closeable="false" id="org.kalypso.featureview.views.FeatureView" />
   <layout>
     <mainWindow>
       <info folder="true" part="leftTop">
@@ -44,6 +46,14 @@
         <folder appearance="2" expanded="2">
           <page content="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" label="LabelNotFound" />
           <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory" />
+        </folder>
+      </info>
+      <info folder="true" part="org.eclipse.ui.internal.ViewStack@3d686e5f" ratio="0.6035665" ratioLeft="880" ratioRight="578" relationship="2" relative="org.eclipse.ui.internal.ViewStack@6c817f90">
+        <folder activePageID="org.kalypso.featureview.views.FeatureView" appearance="2" expanded="2">
+          <page content="org.kalypso.featureview.views.FeatureView" label="Feature View" />
+          <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+            <part id="0" />
+          </presentation>
         </folder>
       </info>
       <info folder="true" part="leftBottom" ratio="0.5980392" ratioLeft="366" ratioRight="246" relationship="4" relative="leftTop">
