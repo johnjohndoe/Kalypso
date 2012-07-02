@@ -53,7 +53,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
+import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
@@ -121,8 +124,8 @@ public class MergeMappingsWorker
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("MergeMappingsWorker_0"), 250 + 250 * m_sourceScenarios.length ); //$NON-NLS-1$
-      monitor.subTask( String.format( Messages.getString("MergeMappingsWorker_1"), m_targetScenario.getName() ) ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "MergeMappingsWorker_0" ), 250 + 250 * m_sourceScenarios.length ); //$NON-NLS-1$
+      monitor.subTask( String.format( Messages.getString( "MergeMappingsWorker_1" ), m_targetScenario.getName() ) ); //$NON-NLS-1$
 
       /* Analyze the target scenario. */
       analyzeGenerators( m_targetScenario, true );
@@ -135,7 +138,7 @@ public class MergeMappingsWorker
       for( final IScenario sourceScenario : m_sourceScenarios )
       {
         /* Monitor. */
-        monitor.subTask( String.format( Messages.getString("MergeMappingsWorker_2"), sourceScenario.getName() ) ); //$NON-NLS-1$
+        monitor.subTask( String.format( Messages.getString( "MergeMappingsWorker_2" ), sourceScenario.getName() ) ); //$NON-NLS-1$
 
         /* Analyze the source scenario. */
         analyzeGenerators( sourceScenario, false );
@@ -145,12 +148,12 @@ public class MergeMappingsWorker
         monitor.worked( 250 );
       }
 
-      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_3") ); //$NON-NLS-1$
+      return collector.asMultiStatus( Messages.getString( "MergeMappingsWorker_3" ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_4") ); //$NON-NLS-1$
+      return collector.asMultiStatus( Messages.getString( "MergeMappingsWorker_4" ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -213,8 +216,8 @@ public class MergeMappingsWorker
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("MergeMappingsWorker_5"), 500 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("MergeMappingsWorker_6") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "MergeMappingsWorker_5" ), 500 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "MergeMappingsWorker_6" ) ); //$NON-NLS-1$
 
       /* The target rrm scenario. */
       final RrmScenario targetRrmScenario = new RrmScenario( m_targetScenario.getFolder() );
@@ -233,7 +236,7 @@ public class MergeMappingsWorker
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( Messages.getString("MergeMappingsWorker_7") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "MergeMappingsWorker_7" ) ); //$NON-NLS-1$
 
       /* Add the catchment models and the timeseries mappings. */
       addGenerators( targetGenerators );
@@ -248,12 +251,12 @@ public class MergeMappingsWorker
       /* Save the target timeseries mappings. */
       GmlSerializer.saveWorkspace( targetTimeseriesMappingsWorkspace, (IFile) targetTimeseriesMappingsGml );
 
-      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_8") ); //$NON-NLS-1$
+      return collector.asMultiStatus( Messages.getString( "MergeMappingsWorker_8" ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_9") ); //$NON-NLS-1$
+      return collector.asMultiStatus( Messages.getString( "MergeMappingsWorker_9" ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -264,7 +267,10 @@ public class MergeMappingsWorker
 
   private void addGenerators( final IFeatureBindingCollection<IRainfallGenerator> targetGenerators ) throws Exception
   {
+    /* Get the generator keys. */
     final GeneratorKey[] generatorKeys = m_mappingsHelper.getGeneratorKeys();
+
+    /* Update the generators. */
     for( final GeneratorKey generatorKey : generatorKeys )
     {
       final GeneratorValue generatorValue = m_mappingsHelper.getGeneratorValue( generatorKey );
@@ -277,6 +283,53 @@ public class MergeMappingsWorker
 
       final IRainfallGenerator newGenerator = (IRainfallGenerator) FeatureHelper.cloneFeature( parentFeature, featureList.getPropertyType(), generator );
       m_mappingsHelper.updateGenerators( generator, newGenerator );
+    }
+
+    /* After all generators has been updated, fix the links in the multi generators. */
+    updateMultiGenerators( generatorKeys );
+  }
+
+  private void updateMultiGenerators( final GeneratorKey[] generatorKeys )
+  {
+    for( final GeneratorKey generatorKey : generatorKeys )
+    {
+      final GeneratorValue generatorValue = m_mappingsHelper.getGeneratorValue( generatorKey );
+      final IRainfallGenerator generator = generatorValue.getGenerator();
+      if( !(generator instanceof IMultiGenerator) )
+        continue;
+
+      /* If after updating the feature ids are still equal, this is a generator, which was not newly created. */
+      /* It should look like this after the update, if generators were copied and replaced. */
+      /* key: old feature id */
+      /* value: new feature id */
+      if( generatorKey.getFeatureId().equals( generatorValue.getFeatureId() ) )
+        continue;
+
+      final IMultiGenerator multiGenerator = (IMultiGenerator) generator;
+      final FeatureList subGenerators = (FeatureList) multiGenerator.getProperty( IMultiGenerator.MEMBER_SUB_GENERATOR );
+      if( subGenerators == null )
+        continue;
+
+      /* This is the path of the scenario where the multi generator and its sub generators were in. */
+      final String scenarioPath = generatorKey.getScenarioPath();
+
+      for( final Object object : subGenerators )
+      {
+        /* Sub generators may be a linear sum generator or a multi generator. */
+        final IXLinkedFeature subGenerator = (IXLinkedFeature) object;
+
+        /* This is the old feature id of the sub generator. */
+        /* With it and the scenario path, we can find the value with the new generator. */
+        final String featureId = subGenerator.getFeatureId();
+
+        final String generatorHref = m_mappingsHelper.getGeneratorHref( scenarioPath, featureId );
+        if( generatorHref != null )
+        {
+          final IRelationType relation = subGenerator.getParentRelation();
+          final IFeatureType featureType = subGenerator.getFeatureType();
+          subGenerator.setLink( relation, generatorHref, featureType );
+        }
+      }
     }
   }
 
@@ -314,7 +367,7 @@ public class MergeMappingsWorker
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("MergeMappingsWorker_10"), 250 * m_sourceScenarios.length ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "MergeMappingsWorker_10" ), 250 * m_sourceScenarios.length ); //$NON-NLS-1$
 
       /* The target rrm scenario. */
       final RrmScenario targetRrmScenario = new RrmScenario( m_targetScenario.getFolder() );
@@ -328,7 +381,7 @@ public class MergeMappingsWorker
       for( final IScenario sourceScenario : m_sourceScenarios )
       {
         /* Monitor. */
-        monitor.subTask( String.format( Messages.getString("MergeMappingsWorker_11"), sourceScenario.getName() ) ); //$NON-NLS-1$
+        monitor.subTask( String.format( Messages.getString( "MergeMappingsWorker_11" ), sourceScenario.getName() ) ); //$NON-NLS-1$
 
         /* The source rrm scenario. */
         final RrmScenario sourceRrmScenario = new RrmScenario( sourceScenario.getFolder() );
@@ -363,12 +416,12 @@ public class MergeMappingsWorker
       /* Save the target simulations. */
       GmlSerializer.saveWorkspace( targetSimulationsWorkspace, targetSimulationsGml );
 
-      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_13") ); //$NON-NLS-1$
+      return collector.asMultiStatus( Messages.getString( "MergeMappingsWorker_13" ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( Messages.getString("MergeMappingsWorker_14") ); //$NON-NLS-1$
+      return collector.asMultiStatus( Messages.getString( "MergeMappingsWorker_14" ) ); //$NON-NLS-1$
     }
     finally
     {
