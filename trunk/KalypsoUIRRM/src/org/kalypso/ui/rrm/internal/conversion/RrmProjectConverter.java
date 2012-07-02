@@ -59,14 +59,14 @@ import org.osgi.framework.Version;
 
 /**
  * {@link org.kalypso.module.conversion.IProjectConverter} implementation for KalypsoHydrology projects.
- *
+ * 
  * @author Gernot Belger
  */
 public class RrmProjectConverter implements IProjectConverter
 {
-// private final static Version V_10_10 = new Version( 10, 10, 0 );
+  private final static Version V_10_10 = new Version( 10, 10, 0 );
 
-  private final static Version V_11_06 = new Version( 11, 6, 0 );
+  // private final static Version V_11_06 = new Version( 11, 6, 0 );
 
   private final File m_sourceDir;
 
@@ -86,7 +86,7 @@ public class RrmProjectConverter implements IProjectConverter
   @Override
   public String getLabel( )
   {
-    return String.format( Messages.getString("RrmProjectConverter.0"), m_sourceDir.getName() ); //$NON-NLS-1$
+    return String.format( Messages.getString( "RrmProjectConverter.0" ), m_sourceDir.getName() ); //$NON-NLS-1$
   }
 
   @Override
@@ -97,7 +97,7 @@ public class RrmProjectConverter implements IProjectConverter
     m_converter = createConverter( rrmVersion );
     if( m_converter == null )
     {
-      final String msg = String.format( Messages.getString("RrmProjectConverter_0"), m_sourceVersion, rrmVersion ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "RrmProjectConverter_0" ), m_sourceVersion, rrmVersion ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg );
     }
 
@@ -113,7 +113,7 @@ public class RrmProjectConverter implements IProjectConverter
   private IProjectConverter createConverter( final Version targetVersion )
   {
     /* Everything above 10.10 */
-    if( m_sourceVersion != null && m_sourceVersion.compareTo( V_11_06 ) > 0 )
+    if( m_sourceVersion != null && m_sourceVersion.compareTo( V_10_10 ) >= 0 )
       return new RrmProjectConverter11_06to12_02( m_sourceDir, m_targetDir, targetVersion );
 
     return null;
@@ -121,12 +121,12 @@ public class RrmProjectConverter implements IProjectConverter
     // TODO: implement x -> 10.10 -> 12.02
 
     /* everything that is below 10.10 */
-// if( m_sourceVersion == null || m_sourceVersion.compareTo( V_10_10 ) < 0 )
+    // if( m_sourceVersion == null || m_sourceVersion.compareTo( V_10_10 ) < 0 )
 
     // For the moment, just everything, the converter should work well for all projects.
     // If we ever need another converter from some version on, we should start to check the version number.
 
-// return new RrmProjectConverterXto10_10( m_sourceDir, m_targetDir, targetVersion );
+    // return new RrmProjectConverterXto10_10( m_sourceDir, m_targetDir, targetVersion );
 
     // TODO: we should implement a converter for 11.xxx;
     // First ideas what the converter needs to do (in comparison to the 10.10 converter):
