@@ -52,7 +52,6 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.model.hydrology.internal.ModelNA;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
