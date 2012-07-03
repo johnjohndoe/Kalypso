@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
+import org.kalypso.model.wspm.tuhh.ui.IWspmTuhhUIConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
@@ -100,7 +101,6 @@ public class KalypsoWspmTuhhModule extends AbstractKalypsoModule
   {
     final INewProjectWizardProvider provider = new INewProjectWizardProvider()
     {
-
       @Override
       public INewProjectWizard createWizard( )
       {
@@ -128,4 +128,12 @@ public class KalypsoWspmTuhhModule extends AbstractKalypsoModule
     return file.exists();
   }
 
+  /**
+   * @see org.kalypso.module.IKalypsoModule#getNewProjectCategoryId()
+   */
+  @Override
+  public String getNewProjectCategoryId( )
+  {
+    return IWspmTuhhUIConstants.WSPM_TUHH_PROJECT_TEMPLATE_CATEGORY;
+  }
 }

@@ -98,4 +98,12 @@ public class Kalypso1d2dModule extends AbstractKalypsoModule
     return Kalypso1D2DProjectNature.isOfThisNature( project );
   }
 
+  /**
+   * @see org.kalypso.module.IKalypsoModule#getNewProjectCategoryId()
+   */
+  @Override
+  public String getNewProjectCategoryId( )
+  {
+    return Kalypso1D2DNewProjectWizard.CATEGORY_ID;
+  }
 }

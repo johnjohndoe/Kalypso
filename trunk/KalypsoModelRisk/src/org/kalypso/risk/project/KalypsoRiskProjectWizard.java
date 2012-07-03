@@ -4,10 +4,12 @@ import org.kalypso.risk.extension.KalypsoRiskModule;
 
 public class KalypsoRiskProjectWizard extends org.kalypso.afgui.wizards.NewProjectWizard
 {
-  final static public String ID = "org.kalypso.risk.project.KalypsoRiskProjectWizard"; //$NON-NLS-1$
+  public static final String CATEGORY_ID = "org.kalypso.risk.projectTemplate"; //$NON-NLS-1$
+
+  public static final String ID = "org.kalypso.risk.project.KalypsoRiskProjectWizard"; //$NON-NLS-1$
 
   public KalypsoRiskProjectWizard( )
   {
-    super( "org.kalypso.risk.projectTemplate", false, KalypsoRiskModule.ID ); //$NON-NLS-1$
+    super( CATEGORY_ID, false, KalypsoRiskModule.ID );
   }
 }

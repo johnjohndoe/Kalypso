@@ -406,6 +406,14 @@
             name="%workflowSystem.name">
          <scenarioConfiguration
                derivedFolder="Scenarios">
+            <ignoreFolder
+                  folderName="Scenarios"
+                  roleName="SetAsBaseScenario">
+            </ignoreFolder>
+            <ignoreFolder
+                  folderName="Simulations"
+                  roleName="SetAsBaseScenario">
+            </ignoreFolder>
          </scenarioConfiguration>
       </workflowSystem>
    </extension>
