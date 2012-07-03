@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
@@ -157,6 +158,11 @@ public class MergeMappingsHelper
     {
       final IRainfallGenerator existingGenerator = value.getGenerator();
 
+      final String parameterType = generator.getParameterType();
+      final String existingParameterType = existingGenerator.getParameterType();
+      if( !ObjectUtils.equals( parameterType, existingParameterType ) )
+        continue;
+
       if( generator instanceof ILinearSumGenerator && existingGenerator instanceof ILinearSumGenerator )
       {
         if( CatchmentModelHelper.compareGeneratorCatchments( (ILinearSumGenerator) existingGenerator, (ILinearSumGenerator) generator, false ) )
@@ -248,6 +254,12 @@ public class MergeMappingsHelper
     for( final MappingValue value : values )
     {
       final ITimeseriesMapping existingMapping = value.getMapping();
+
+      final String parameterType = mapping.getType().getLinkParameterType();
+      final String existingParameterType = existingMapping.getType().getLinkParameterType();
+      if( !ObjectUtils.equals( parameterType, existingParameterType ) )
+        continue;
+
       if( CatchmentModelHelper.compareTimeseriesMappings( existingMapping, mapping ) )
         return value;
     }
