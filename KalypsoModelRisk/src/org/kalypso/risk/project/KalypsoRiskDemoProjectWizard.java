@@ -47,8 +47,10 @@ import org.kalypso.risk.extension.KalypsoRiskModule;
  */
 public class KalypsoRiskDemoProjectWizard extends org.kalypso.afgui.wizards.NewProjectWizard
 {
+  public static final String CATEGORY_ID = "org.kalypso.model.risk.demoProject"; //$NON-NLS-1$
+
   public KalypsoRiskDemoProjectWizard( )
   {
-    super( "org.kalypso.model.risk.demoProject", true, KalypsoRiskModule.ID ); //$NON-NLS-1$
+    super( CATEGORY_ID, true, KalypsoRiskModule.ID );
   }
 }

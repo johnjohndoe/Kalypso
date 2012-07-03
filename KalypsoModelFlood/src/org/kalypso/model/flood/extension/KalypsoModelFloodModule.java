@@ -110,4 +110,12 @@ public class KalypsoModelFloodModule extends AbstractKalypsoModule
     return uri.contains( "org.kalypso.model.flood.WF_KalypsoFlood" ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.module.IKalypsoModule#getNewProjectCategoryId()
+   */
+  @Override
+  public String getNewProjectCategoryId( )
+  {
+    return NewProjectWizard.CATEGORY_ID;
+  }
 }

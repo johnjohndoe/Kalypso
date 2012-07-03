@@ -127,4 +127,13 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
   {
     return new KalypsoRrmNewProjectHandler();
   }
+
+  /**
+   * @see org.kalypso.module.IKalypsoModule#getNewProjectCategoryId()
+   */
+  @Override
+  public String getNewProjectCategoryId( )
+  {
+    return KalypsoNAProjectWizard.CATEGORY_TEMPLATE;
+  }
 }

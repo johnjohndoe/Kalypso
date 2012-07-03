@@ -110,4 +110,12 @@ public class KalypsoRiskModule extends AbstractKalypsoModule
     return uri.contains( "http___www.tu-harburg.de_wb_kalypso_risk__WF_KalypsoRisk" ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.module.IKalypsoModule#getNewProjectCategoryId()
+   */
+  @Override
+  public String getNewProjectCategoryId( )
+  {
+    return KalypsoRiskProjectWizard.CATEGORY_ID;
+  }
 }
