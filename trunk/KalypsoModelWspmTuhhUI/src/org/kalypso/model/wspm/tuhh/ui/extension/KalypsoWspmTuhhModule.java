@@ -15,6 +15,7 @@ import org.kalypso.model.wspm.tuhh.ui.wizards.NewWspmProjectWizard;
 import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.module.ISetAsBaseScenarioHandler;
 import org.kalypso.module.welcome.INewProjectWizard;
 import org.kalypso.module.welcome.INewProjectWizardProvider;
 import org.kalypso.module.welcome.SpecialImportProjectAction;
@@ -135,5 +136,14 @@ public class KalypsoWspmTuhhModule extends AbstractKalypsoModule
   public String getNewProjectCategoryId( )
   {
     return IWspmTuhhUIConstants.WSPM_TUHH_PROJECT_TEMPLATE_CATEGORY;
+  }
+
+  /**
+   * @see org.kalypso.module.IKalypsoModule#getSetAsBaseScenarioHandler()
+   */
+  @Override
+  public ISetAsBaseScenarioHandler getSetAsBaseScenarioHandler( )
+  {
+    return null;
   }
 }

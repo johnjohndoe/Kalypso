@@ -13,6 +13,7 @@ import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
 import org.kalypso.module.INewProjectHandler;
+import org.kalypso.module.ISetAsBaseScenarioHandler;
 import org.kalypso.module.welcome.INewProjectWizard;
 import org.kalypso.module.welcome.INewProjectWizardProvider;
 import org.kalypso.module.welcome.SpecialImportProjectAction;
@@ -20,6 +21,7 @@ import org.kalypso.project.database.client.extension.project.SzenarioProjectOpen
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.newproject.KalypsoNAProjectWizard;
+import org.kalypso.ui.rrm.internal.utils.KalypsoRrmSetAsBaseScenarioHandler;
 import org.kalypso.ui.rrm.internal.welcome.KalypsoRrmNewProjectHandler;
 import org.kalypso.ui.rrm.internal.welcome.KalypsoRrmWelcomePageFrame;
 
@@ -135,5 +137,14 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
   public String getNewProjectCategoryId( )
   {
     return KalypsoNAProjectWizard.CATEGORY_TEMPLATE;
+  }
+
+  /**
+   * @see org.kalypso.module.IKalypsoModule#getSetAsBaseScenarioHandler()
+   */
+  @Override
+  public ISetAsBaseScenarioHandler getSetAsBaseScenarioHandler( )
+  {
+    return new KalypsoRrmSetAsBaseScenarioHandler();
   }
 }
