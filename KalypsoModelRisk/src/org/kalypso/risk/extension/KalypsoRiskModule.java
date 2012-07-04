@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.module.ISetAsBaseScenarioHandler;
 import org.kalypso.module.welcome.INewProjectWizard;
 import org.kalypso.module.welcome.INewProjectWizardProvider;
 import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
@@ -117,5 +118,14 @@ public class KalypsoRiskModule extends AbstractKalypsoModule
   public String getNewProjectCategoryId( )
   {
     return KalypsoRiskProjectWizard.CATEGORY_ID;
+  }
+
+  /**
+   * @see org.kalypso.module.IKalypsoModule#getSetAsBaseScenarioHandler()
+   */
+  @Override
+  public ISetAsBaseScenarioHandler getSetAsBaseScenarioHandler( )
+  {
+    return null;
   }
 }
