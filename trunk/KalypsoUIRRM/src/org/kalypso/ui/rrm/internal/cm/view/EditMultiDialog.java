@@ -116,7 +116,10 @@ public class EditMultiDialog extends TitleAreaDialog
     @Override
     public void propertyChange( final PropertyChangeEvent evt )
     {
-      handleParameterTypeChanged( evt );
+      if( evt.getPropertyName().equals( IMultiGenerator.PROPERTY_PARAMETER_TYPE.toString() ) )
+        handleParameterTypeChanged( evt );
+      else
+        handlePropertyChanged( evt );
     }
   };
 
@@ -190,7 +193,7 @@ public class EditMultiDialog extends TitleAreaDialog
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
     m_ignoreNextChange = false;
 
-    m_bean.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_changeListener );
+    m_bean.addPropertyChangeListener( m_changeListener );
   }
 
   /**
@@ -337,8 +340,8 @@ public class EditMultiDialog extends TitleAreaDialog
     m_dataBinding = new DatabindingTitleAreaDialog( this, null );
 
     /* Create the multi new composite. */
-    final MultiNewComposite composite = new MultiNewComposite( body, m_bean, m_dataBinding );
-    composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final MultiNewComposite multiComposite = new MultiNewComposite( body, m_bean, m_dataBinding );
+    multiComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Do a reflow and a layout. */
     form.reflow( true );
@@ -413,7 +416,7 @@ public class EditMultiDialog extends TitleAreaDialog
     } );
 
     /* Create the status composite. */
-    m_statusComposite = new StatusComposite( parent, SWT.NONE );
+    m_statusComposite = new StatusComposite( parent, StatusComposite.DETAILS );
     m_statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
   }
 
@@ -577,10 +580,16 @@ public class EditMultiDialog extends TitleAreaDialog
 
     /* Reset the set generators. */
     m_bean.setSubGenerators( new ILinearSumGenerator[] {} );
+    updateStatus();
 
     /* Set the viewer filter of the generator viewer. */
     final String parameterType = (String) evt.getNewValue();
     if( m_generatorViewer != null && !m_generatorViewer.getTable().isDisposed() )
       m_generatorViewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( parameterType ) } );
+  }
+
+  protected void handlePropertyChanged( final PropertyChangeEvent evt )
+  {
+    updateStatus();
   }
 }
