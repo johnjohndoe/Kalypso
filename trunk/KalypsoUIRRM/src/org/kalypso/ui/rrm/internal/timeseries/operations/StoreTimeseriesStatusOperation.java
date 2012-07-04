@@ -58,7 +58,6 @@ import org.kalypso.utils.log.GeoStatusLog;
  */
 public class StoreTimeseriesStatusOperation implements ICoreRunnableWithProgress
 {
-
   private final IFile m_zmlFile;
 
   private final IStatus m_status;
@@ -66,7 +65,6 @@ public class StoreTimeseriesStatusOperation implements ICoreRunnableWithProgress
   public StoreTimeseriesStatusOperation( final ITimeseries timeseries, final IStatus status )
   {
     this( timeseries.getDataLink().getFile(), status );
-
   }
 
   public StoreTimeseriesStatusOperation( final IFile zmlFile, final IStatus status )
@@ -87,7 +85,6 @@ public class StoreTimeseriesStatusOperation implements ICoreRunnableWithProgress
 
     status.refreshLocal( IResource.DEPTH_ONE, monitor );
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("StoreTimeseriesStatusOperation_1") ); //$NON-NLS-1$
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "StoreTimeseriesStatusOperation_1" ) ); //$NON-NLS-1$
   }
-
 }

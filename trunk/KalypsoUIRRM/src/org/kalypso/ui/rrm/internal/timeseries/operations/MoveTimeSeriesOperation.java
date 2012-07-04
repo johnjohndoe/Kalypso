@@ -40,28 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.operations;
 
-import org.eclipse.core.resources.IFile;
+import java.net.URL;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * moves a timeseries from one station to the given target station
@@ -87,13 +84,9 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
   {
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final ZmlLink link = m_timeseries.getDataLink();
-    final IFile oldFile = link.getFile();
-
-    final IObservation observation = link.getObservationFromPool();
-
+    final ZmlLink oldLink = m_timeseries.getDataLink();
+    final IObservation observation = oldLink.getObservationFromPool();
     final ObservationImportOperation importOperation = new ObservationImportOperation( observation, m_timeseries.getParameterType(), m_timeseries.getQuality() );
-
     final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_target, importOperation );
     storeOperation.updateDataAfterFinish();
     stati.add( storeOperation.execute( monitor ) );
@@ -102,39 +95,31 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     if( m_moved == null )
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "MoveTimeSeriesOperation.0" ) ); //$NON-NLS-1$
 
-    stati.add( UpdateTimeseriesLinks.doUpdateTimeseriesLinks( m_timeseries, m_moved ) );
+    final ZmlLink newLink = m_moved.getDataLink();
+    final IStatus updateStatus = doUpdateTimeseriesLinks( oldLink.getLocation(), newLink.getHref() );
+    stati.add( updateStatus );
 
-    UpdateTimeseriesLinks.doUpdateTimeseriesLinks( m_timeseries, m_moved );
-
+    /* Delete the old timeseries. */
     final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( m_timeseries );
     stati.add( deleteOperation.execute( monitor ) );
 
+    /* Store the new timeseries. */
     final IStatus status = stati.asMultiStatusOrOK( String.format( Messages.getString( "MoveTimeSeriesOperation_0" ), m_timeseries.getName() ) ); //$NON-NLS-1$
-
     final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_moved, status );
     stati.add( storeStatusOperation.execute( monitor ) );
 
-    doUpdateMappings( oldFile, m_moved );
-
-    return status; //$NON-NLS-1$
+    return status;
   }
 
-  private void doUpdateMappings( final IFile oldFile, final ITimeseries target ) throws IllegalArgumentException, CoreException
+  private IStatus doUpdateTimeseriesLinks( final URL oldTimeseries, final String href )
   {
-    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-    final CommandableWorkspace timeseriesMappingsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_TIMESERIES_MAPPINGS );
-    final ITimeseriesMappingCollection mappings = (ITimeseriesMappingCollection) timeseriesMappingsWorkspace.getRootFeature();
-
-    if( mappings != null )
-    {
-      final IFeatureBindingCollection<ITimeseriesMapping> collection = mappings.getTimeseriesMappings();
-      collection.accept( new UpdateTimeseriesMappingsVisitor( oldFile, target.getDataLink().getHref() ) );
-    }
+    final IScenario scenario = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase();
+    final TimeseriesReferencesUpdater updater = new TimeseriesReferencesUpdater( scenario, oldTimeseries, href );
+    return updater.execute( new NullProgressMonitor() );
   }
 
   public ITimeseries getMovedTimeseries( )
   {
     return m_moved;
   }
-
 }
