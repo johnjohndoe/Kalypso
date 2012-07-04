@@ -290,6 +290,15 @@ public class CatchmentModelHelper
     /* Check each generator. */
     for( final IRainfallGenerator generator : generators )
     {
+      /* Check all generators, if their validity ranges are set. */
+      final Date validFrom = generator.getValidFrom();
+      final Date validTo = generator.getValidTo();
+      if( validFrom == null || validTo == null )
+      {
+        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The validity range of the generator '%s' is not correctly set. ", generator.getDescription() ) ) );
+        continue;
+      }
+
       /* Perfomance: Do not check the first generator with itself. */
       if( generator.getId().equals( firstGenerator.getId() ) )
         continue;

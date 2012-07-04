@@ -122,7 +122,10 @@ public class EditLinearSumDialog extends TitleAreaDialog
     @Override
     public void propertyChange( final PropertyChangeEvent evt )
     {
-      handleParameterTypeChanged( evt );
+      if( evt.getPropertyName().equals( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString() ) )
+        handleParameterTypeChanged( evt );
+      else
+        handlePropertyChanged();
     }
   };
 
@@ -220,7 +223,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
     m_ignoreNextChange = false;
 
-    m_bean.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_parameterTypeListener );
+    m_bean.addPropertyChangeListener( m_parameterTypeListener );
   }
 
   @Override
@@ -520,7 +523,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
       m_timeseriesViewer.setInput( catchmentBean.getTimeseries() );
 
     /* Create the status composite. */
-    m_statusComposite = new StatusComposite( parent, SWT.NONE );
+    m_statusComposite = new StatusComposite( parent, StatusComposite.DETAILS );
     m_statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Add a listener. */
@@ -726,5 +729,10 @@ public class EditLinearSumDialog extends TitleAreaDialog
     final String parameterType = (String) evt.getNewValue();
     if( m_timeseriesViewer != null && !m_timeseriesViewer.getTable().isDisposed() )
       m_timeseriesViewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( parameterType ) } );
+  }
+
+  protected void handlePropertyChanged( )
+  {
+    updateStatus();
   }
 }
