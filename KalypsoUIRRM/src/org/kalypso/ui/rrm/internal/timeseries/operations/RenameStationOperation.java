@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -60,12 +61,13 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
+import de.renew.workflow.connector.cases.IScenario;
+
 /**
  * @author Dirk Kuch
  */
 public class RenameStationOperation implements ICoreRunnableWithProgress
 {
-
   private final IStation m_station;
 
   private final String m_oldFolder;
@@ -105,12 +107,13 @@ public class RenameStationOperation implements ICoreRunnableWithProgress
       final IFeatureBindingCollection<ITimeseries> timeserieses = m_station.getTimeseries();
       for( int index = 0; index < m_oldTimeserieses.length; index++ )
       {
-        final URL old = m_oldTimeserieses[index];
+        final URL oldTimeseries = m_oldTimeserieses[index];
         final ITimeseries timeseries = timeserieses.get( index );
         final ZmlLink link = timeseries.getDataLink();
 
         // FIXME: Handle all timeseries simultaniously... No outer loop...
-        stati.add( UpdateTimeseriesLinks.doUpdateTimeseriesLinks( link.getFile().getProject(), old, link.getHref() ) );
+        final IStatus updateStatus = doUpdateTimeseriesLinks( oldTimeseries, link.getHref() );
+        stati.add( updateStatus );
       }
 
       return stati.asMultiStatusOrOK( Messages.getString( "RenameStationOperation_0" ) ); //$NON-NLS-1$
@@ -122,4 +125,10 @@ public class RenameStationOperation implements ICoreRunnableWithProgress
     }
   }
 
+  private IStatus doUpdateTimeseriesLinks( final URL oldTimeseries, final String href )
+  {
+    final IScenario scenario = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase();
+    final TimeseriesReferencesUpdater updater = new TimeseriesReferencesUpdater( scenario, oldTimeseries, href );
+    return updater.execute( new NullProgressMonitor() );
+  }
 }

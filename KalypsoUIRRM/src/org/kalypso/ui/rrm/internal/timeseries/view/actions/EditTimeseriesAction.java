@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
+import java.net.URL;
+
 import org.apache.commons.io.IOCase;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -123,7 +125,8 @@ public class EditTimeseriesAction extends Action
         {
           dataProvider.saveModel( new NullProgressMonitor() );
 
-          final TimeseriesReferencesUpdater updater = new TimeseriesReferencesUpdater( dataProvider.getScenario(), oldFile, link.getHref() );
+          final URL oldTimeseries = oldFile.getLocation().toFile().toURI().toURL();
+          final TimeseriesReferencesUpdater updater = new TimeseriesReferencesUpdater( dataProvider.getScenario(), oldTimeseries, link.getHref() );
           final IStatus status = updater.execute( new NullProgressMonitor() );
           if( !status.isOK() )
           {

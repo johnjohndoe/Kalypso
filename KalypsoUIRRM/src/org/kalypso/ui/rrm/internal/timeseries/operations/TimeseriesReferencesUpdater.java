@@ -40,26 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.operations;
 
+import java.net.URL;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
-import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
 import org.kalypso.model.hydrology.project.RrmScenario;
-import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioList;
@@ -69,16 +65,16 @@ import de.renew.workflow.connector.cases.IScenarioList;
  */
 public class TimeseriesReferencesUpdater implements ICoreRunnableWithProgress
 {
-  private final IFile m_oldFile;
+  private final URL m_oldTimeseries;
 
   private final String m_href;
 
   private final IScenario m_base;
 
-  public TimeseriesReferencesUpdater( final IScenario scenario, final IFile oldFile, final String href )
+  public TimeseriesReferencesUpdater( final IScenario scenario, final URL oldTimeseries, final String href )
   {
     m_base = ScenarioHelper.findRootScenario( scenario );
-    m_oldFile = oldFile;
+    m_oldTimeseries = oldTimeseries;
     m_href = href;
   }
 
@@ -113,73 +109,37 @@ public class TimeseriesReferencesUpdater implements ICoreRunnableWithProgress
 
   private void doUpdate( final RrmScenario scenario, final StatusCollector stati )
   {
-    final IResource timeseriesMappingsGml = scenario.getTimeseriesMappingsGml();
-    stati.add( doUpdateTimeseriesMappingModel( timeseriesMappingsGml ) );
+    final IFile timeseriesMappingsGml = scenario.getTimeseriesMappingsGml();
+    stati.add( doUpdateTimeseriesLinks( timeseriesMappingsGml ) );
 
-    final IResource catchmentModelsGml = scenario.getCatchmentModelsGml();
-    stati.add( doUpdateCatchmentModel( catchmentModelsGml ) );
+    final IFile catchmentModelsGml = scenario.getCatchmentModelsGml();
+    stati.add( doUpdateTimeseriesLinks( catchmentModelsGml ) );
   }
 
-  private IStatus doUpdateCatchmentModel( final IResource resource )
+  private IStatus doUpdateTimeseriesLinks( final IFile file )
   {
-    if( !resource.exists() )
-      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "TimeseriesReferencesUpdater_1" ), resource.getLocation().toOSString() ) ); //$NON-NLS-1$
+    if( !file.exists() )
+      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "TimeseriesReferencesUpdater_1" ), file.getLocation().toOSString() ) ); //$NON-NLS-1$
 
-    final IFile file = (IFile) resource;
     try
     {
+      final GMLWorkspaceChangedListener listener = new GMLWorkspaceChangedListener();
+      final UpdateTimeseriesLinksVisitor visitor = new UpdateTimeseriesLinksVisitor( m_oldTimeseries, m_href );
+
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( file );
-      final ICatchmentModel model = (ICatchmentModel) workspace.getRootFeature();
+      workspace.addModellListener( listener );
+      workspace.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
 
-      if( model != null )
-      {
-        final IFeatureBindingCollection<IRainfallGenerator> generators = model.getGenerators();
-        final UpdateCatchmentTimeseriesReferencesVisitor visitor = new UpdateCatchmentTimeseriesReferencesVisitor( m_oldFile, m_href );
-        generators.accept( visitor );
+      if( listener.isWorkspaceChanged() )
+        GmlSerializer.saveWorkspace( workspace, file );
 
-        if( visitor.wasChanged() )
-          GmlSerializer.saveWorkspace( workspace, file );
-      }
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "TimeseriesReferencesUpdater_3" ), file.getLocation().toOSString() ) ); //$NON-NLS-1$;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "TimeseriesReferencesUpdater_2" ), resource.getLocation().toOSString() ), e ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "TimeseriesReferencesUpdater_2" ), file.getLocation().toOSString() ), e ); //$NON-NLS-1$
     }
-
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "TimeseriesReferencesUpdater_3" ), resource.getLocation().toOSString() ) ); //$NON-NLS-1$
-
-  }
-
-  private IStatus doUpdateTimeseriesMappingModel( final IResource resource )
-  {
-    if( !resource.exists() )
-      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "TimeseriesReferencesUpdater_4" ), resource.getLocation().toOSString() ) ); //$NON-NLS-1$
-
-    final IFile file = (IFile) resource;
-    try
-    {
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( file );
-      final ITimeseriesMappingCollection collection = (ITimeseriesMappingCollection) workspace.getRootFeature();
-      if( collection != null )
-      {
-        final UpdateTimeseriesMappingsVisitor visitor = new UpdateTimeseriesMappingsVisitor( m_oldFile, m_href );
-
-        final IFeatureBindingCollection<ITimeseriesMapping> mappings = collection.getTimeseriesMappings();
-        mappings.accept( visitor );
-
-        if( visitor.wasChanged() )
-          GmlSerializer.saveWorkspace( workspace, file );
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "TimeseriesReferencesUpdater_5" ), resource.getLocation().toOSString() ), e ); //$NON-NLS-1$
-    }
-
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "TimeseriesReferencesUpdater_6" ), resource.getLocation().toOSString() ) ); //$NON-NLS-1$
   }
 }

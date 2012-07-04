@@ -45,7 +45,6 @@ import java.net.URL;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -169,12 +168,12 @@ public class RrmScenario
     return getModelsFolder().getFile( FILE_SYNTHN_GML );
   }
 
-  public IResource getCatchmentModelsGml( )
+  public IFile getCatchmentModelsGml( )
   {
     return getModelsFolder().getFile( FILE_CATCHMENT_MODELS_GML );
   }
 
-  public IResource getTimeseriesMappingsGml( )
+  public IFile getTimeseriesMappingsGml( )
   {
     return getModelsFolder().getFile( FILE_TIMESERIES_MAPPINGS_GML );
   }
