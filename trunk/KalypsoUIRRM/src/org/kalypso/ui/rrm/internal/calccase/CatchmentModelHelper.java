@@ -923,7 +923,7 @@ public class CatchmentModelHelper
 
       if( subGenerator1 instanceof ILinearSumGenerator && subGenerator2 instanceof ILinearSumGenerator )
       {
-        if( !compareGeneratorCatchments( (ILinearSumGenerator) subGenerator1, (ILinearSumGenerator) subGenerator2, false ) )
+        if( !compareGeneratorCatchments( (ILinearSumGenerator) subGenerator1, (ILinearSumGenerator) subGenerator2, true ) )
           return false;
 
         continue;
