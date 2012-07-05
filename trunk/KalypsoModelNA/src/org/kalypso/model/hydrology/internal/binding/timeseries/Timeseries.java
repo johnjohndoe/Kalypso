@@ -40,14 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.binding.timeseries;
 
-import java.io.File;
 import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.time.PeriodUtils;
@@ -180,13 +182,14 @@ public class Timeseries extends Feature_Impl implements ITimeseries
     final IFile file = dataLink.getFile();
     if( file != null && file.exists() )
     {
-      file.delete( false, true, null );
+      /* Delete the data file. */
+      file.delete( false, true, new NullProgressMonitor() );
 
-      /* zml import status file? so delete it, too */
-      final String href = file.getLocation().toOSString();
-      final File statusFile = new File( href + ".status" ); //$NON-NLS-1$
+      /* ZML import status file? so delete it, too. */
+      final IContainer parent = file.getParent();
+      final IFile statusFile = parent.getFile( new Path( file.getName() + ".status" ) );
       if( statusFile.exists() )
-        statusFile.delete();
+        statusFile.delete( false, new NullProgressMonitor() );
     }
   }
 
