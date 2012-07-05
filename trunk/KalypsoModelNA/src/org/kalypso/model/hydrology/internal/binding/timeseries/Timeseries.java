@@ -188,7 +188,6 @@ public class Timeseries extends Feature_Impl implements ITimeseries
       if( statusFile.exists() )
         statusFile.delete();
     }
-
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })

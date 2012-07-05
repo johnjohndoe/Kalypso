@@ -141,5 +141,4 @@ public class TimeseriesDialogSource implements IMultipleZmlSourceElement
     m_observation = null;
     FileUtils.deleteQuietly( m_tempFile );
   }
-
 }
