@@ -165,7 +165,7 @@ public class MergeMappingsHelper
 
       if( generator instanceof ILinearSumGenerator && existingGenerator instanceof ILinearSumGenerator )
       {
-        if( CatchmentModelHelper.compareGeneratorCatchments( (ILinearSumGenerator) existingGenerator, (ILinearSumGenerator) generator, false ) )
+        if( CatchmentModelHelper.compareGeneratorCatchments( (ILinearSumGenerator) existingGenerator, (ILinearSumGenerator) generator, true ) )
           return value;
       }
 
