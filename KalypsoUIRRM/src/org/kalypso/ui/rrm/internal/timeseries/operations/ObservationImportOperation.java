@@ -57,7 +57,6 @@ import org.kalypso.zml.ui.imports.IStoreObservationData;
  */
 public class ObservationImportOperation implements IImportTimeseriesOperation
 {
-
   private final IObservation m_observation;
 
   protected final String m_parameterType;
@@ -132,5 +131,4 @@ public class ObservationImportOperation implements IImportTimeseriesOperation
   {
     return m_quality;
   }
-
 }

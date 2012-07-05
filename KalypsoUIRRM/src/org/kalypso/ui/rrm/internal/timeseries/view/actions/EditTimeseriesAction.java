@@ -42,24 +42,23 @@ package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import java.net.URL;
 
-import org.apache.commons.io.IOCase;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -87,46 +86,49 @@ public class EditTimeseriesAction extends Action
 
     setText( Messages.getString( "EditTimeseriesAction_0" ) ); //$NON-NLS-1$
     setToolTipText( Messages.getString( "EditTimeseriesAction_1" ) ); //$NON-NLS-1$
-
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
   }
 
   @Override
   public void runWithEvent( final Event event )
   {
+    /* Get the shell. */
     final Shell shell = event.widget.getDisplay().getActiveShell();
-    final IWorkbench context = PlatformUI.getWorkbench();
 
     try
     {
+      /* Get the feature of the timeseries. */
       final ITimeseries timeseries = m_timeseries.getFeature();
-      final ZmlLink link = timeseries.getDataLink();
-      final IFile oldFile = link.getFile();
-      final String oldQuality = timeseries.getQuality();
 
+      /* Store some values, before the editing starts. */
+      final String oldQuality = timeseries.getQuality();
+      final String oldHref = timeseries.getDataLink().getHref();
+      final IFile oldFile = timeseries.getDataLink().getFile();
+
+      /* Create the timeseries dialog source. */
       final TimeseriesDialogSource source = new TimeseriesDialogSource( timeseries );
-      final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_timeseries, source, m_binding, context );
+
+      /* Create and open the dialog. */
+      final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_timeseries, source, m_binding, PlatformUI.getWorkbench() );
       final int open = dialog.open();
       if( Window.OK == open )
       {
-        source.save();
+        /* Save everything. */
+        save( source );
 
-        final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-
-        final ICommand command = m_timeseries.applyChanges();
-        if( Objects.isNotNull( command ) )
-        {
-          final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
-          stationsWorkspace.postCommand( command );
-        }
-
-        // quality changed? so rename zml file!
+        /* If the quality has changed, rename the zml file. */
         if( isQualityChanged( oldQuality ) )
         {
-          dataProvider.saveModel( new NullProgressMonitor() );
+          /* Get the data provider. */
+          final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
-          final URL oldTimeseries = oldFile.getLocation().toFile().toURI().toURL();
-          final TimeseriesReferencesUpdater updater = new TimeseriesReferencesUpdater( dataProvider.getScenario(), oldTimeseries, link.getHref() );
+          /* Get the new href. */
+          final String newHref = timeseries.getDataLink().getHref();
+
+          /* Create the old url. */
+          final URL oldUrl = UrlResolverSingleton.resolveUrl( timeseries.getWorkspace().getContext(), oldHref );
+
+          final TimeseriesReferencesUpdater updater = new TimeseriesReferencesUpdater( dataProvider.getScenario(), oldUrl, newHref );
           final IStatus status = updater.execute( new NullProgressMonitor() );
           if( !status.isOK() )
           {
@@ -134,10 +136,13 @@ public class EditTimeseriesAction extends Action
             dialog2.open();
           }
 
-          oldFile.move( link.getFile().getFullPath(), true, new NullProgressMonitor() );
+          /* Get the new file. */
+          final IFile newFile = timeseries.getDataLink().getFile();
+          oldFile.move( newFile.getFullPath(), true, new NullProgressMonitor() );
         }
       }
 
+      /* Dispose the source. */
       source.dispose();
     }
     catch( final Throwable t )
@@ -146,16 +151,32 @@ public class EditTimeseriesAction extends Action
     }
   }
 
+  private void save( final TimeseriesDialogSource source ) throws CoreException, Exception
+  {
+    /* Save the timeseries to the zml. */
+    source.save();
+
+    /* Get the data provider. */
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+
+    /* Update the gml. */
+    final ICommand command = m_timeseries.applyChanges();
+    if( Objects.isNotNull( command ) )
+    {
+      final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
+      stationsWorkspace.postCommand( command );
+    }
+
+    /* Save the model. */
+    dataProvider.saveModel( new NullProgressMonitor() );
+  }
+
   private boolean isQualityChanged( final String oldQuality )
   {
+    /* Get the quality. After editing, this property may have changed. */
     final String quality = m_timeseries.getFeature().getQuality();
-
-    if( Objects.allNull( quality, oldQuality ) )
+    if( Objects.equal( oldQuality, quality ) )
       return false;
-    else if( Objects.equal( oldQuality, quality ) )
-    {
-      return !IOCase.SYSTEM.checkEquals( oldQuality, quality );
-    }
 
     return true;
   }
