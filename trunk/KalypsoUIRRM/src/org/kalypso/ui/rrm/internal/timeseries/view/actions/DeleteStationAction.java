@@ -40,16 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
@@ -95,19 +100,26 @@ public class DeleteStationAction extends Action
 
     try
     {
-      /* Delete data files */
+      /* Delete the stations. */
       for( final IStation station : m_stations )
       {
+        /* Delete the data files. */
         for( final ITimeseries timeseries : station.getTimeseries() )
           timeseries.deleteDataFile();
+
+        /* Delete the station folder. */
+        final IProject project = ScenarioHelper.getScenarioFolder().getProject();
+        final RrmProject rrmProject = new RrmProject( project );
+        final IFolder timeseriesFolder = rrmProject.getTimeseriesFolder();
+        final IFolder stationFolder = timeseriesFolder.getFolder( station.getTimeseriesFoldername() );
+        if( stationFolder.exists() && stationFolder.members().length == 0 )
+          stationFolder.delete( false, new NullProgressMonitor() );
       }
 
-      /* Delete feature */
+      /* Delete the feature. */
       final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_stations );
-
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
-
       stationsWorkspace.postCommand( deleteCommand );
     }
     catch( final Exception e )
