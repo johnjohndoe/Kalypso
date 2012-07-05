@@ -99,11 +99,11 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     final IStatus updateStatus = doUpdateTimeseriesLinks( oldLink.getLocation(), newLink.getHref() );
     stati.add( updateStatus );
 
-    /* Delete the old timeseries. */
+    /* Delete the old timeseries and its status. */
     final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( m_timeseries );
     stati.add( deleteOperation.execute( monitor ) );
 
-    /* Store the new timeseries. */
+    /* Store the status for the new timeseries. */
     final IStatus status = stati.asMultiStatusOrOK( String.format( Messages.getString( "MoveTimeSeriesOperation_0" ), m_timeseries.getName() ) ); //$NON-NLS-1$
     final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_moved, status );
     stati.add( storeStatusOperation.execute( monitor ) );
