@@ -42,10 +42,12 @@ package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import java.net.URL;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
@@ -139,6 +141,16 @@ public class EditTimeseriesAction extends Action
           /* Get the new file. */
           final IFile newFile = timeseries.getDataLink().getFile();
           oldFile.move( newFile.getFullPath(), true, new NullProgressMonitor() );
+
+          /* Move the status file, too. */
+          final IContainer oldParent = oldFile.getParent();
+          final IFile oldStatusFile = oldParent.getFile( new Path( oldFile.getName() + ".status" ) );
+          if( oldStatusFile.exists() )
+          {
+            final IContainer newParent = newFile.getParent();
+            final IFile newStatusFile = newParent.getFile( new Path( newFile.getName() + ".status" ) );
+            oldStatusFile.move( newStatusFile.getFullPath(), false, new NullProgressMonitor() );
+          }
         }
       }
 

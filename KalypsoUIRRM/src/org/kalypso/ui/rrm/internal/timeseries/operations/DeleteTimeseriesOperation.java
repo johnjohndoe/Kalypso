@@ -80,7 +80,7 @@ public class DeleteTimeseriesOperation implements ICoreRunnableWithProgress
       }
       catch( final Exception ex )
       {
-        final String msg = String.format( Messages.getString("DeleteTimeseriesOperation_0"), timeseries.getName() ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "DeleteTimeseriesOperation_0" ), timeseries.getName() ); //$NON-NLS-1$
         stati.add( IStatus.ERROR, msg, ex );
       }
     }
@@ -96,10 +96,10 @@ public class DeleteTimeseriesOperation implements ICoreRunnableWithProgress
     }
     catch( final Exception ex )
     {
-      final String msg = String.format( Messages.getString("DeleteTimeseriesOperation_1") ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "DeleteTimeseriesOperation_1" ) ); //$NON-NLS-1$
       stati.add( IStatus.ERROR, msg, ex );
     }
 
-    return stati.asMultiStatusOrOK( Messages.getString("DeleteTimeseriesOperation_2") ); //$NON-NLS-1$
+    return stati.asMultiStatusOrOK( Messages.getString( "DeleteTimeseriesOperation_2" ) ); //$NON-NLS-1$
   }
 }
