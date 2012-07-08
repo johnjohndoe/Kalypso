@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.module.ISetAsBaseScenarioHandler;
 import org.kalypso.module.welcome.INewProjectWizard;
 import org.kalypso.module.welcome.INewProjectWizardProvider;
 import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
@@ -57,9 +58,6 @@ public class KalypsoStatisticsModule extends AbstractKalypsoModule
     return ID;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.AbstractKalypsoModule#getNewProjectWizard()
-   */
   @Override
   protected INewProjectWizardProvider getNewProjectWizard( )
   {
@@ -73,9 +71,6 @@ public class KalypsoStatisticsModule extends AbstractKalypsoModule
     };
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.AbstractKalypsoModule#getDemoProjectWizard()
-   */
   @Override
   protected INewProjectWizardProvider getDemoProjectWizard( )
   {
@@ -95,9 +90,6 @@ public class KalypsoStatisticsModule extends AbstractKalypsoModule
     return new SzenarioProjectOpenAction( ID );
   }
 
-  /**
-   * @see org.kalypso.module.IKalypsoModule#acceptProject(org.eclipse.core.resources.IProject)
-   */
   @Override
   public boolean acceptProject( final IProject project ) throws CoreException
   {
@@ -111,4 +103,15 @@ public class KalypsoStatisticsModule extends AbstractKalypsoModule
     return uri.contains( "http___www.tu-harburg.de_wb_kalypso_statistics__WF_KalypsoStatistics" ); //$NON-NLS-1$
   }
 
+  @Override
+  public String getNewProjectCategoryId( )
+  {
+    return KalypsoStatisticsProjectWizard.CATEGORY_STATISTIC_TEMPLATE;
+  }
+
+  @Override
+  public ISetAsBaseScenarioHandler getSetAsBaseScenarioHandler( )
+  {
+    return null;
+  }
 }
