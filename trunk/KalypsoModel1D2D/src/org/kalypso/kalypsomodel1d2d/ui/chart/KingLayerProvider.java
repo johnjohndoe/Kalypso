@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 
 import java.net.URL;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -68,11 +69,8 @@ public class KingLayerProvider extends AbstractLayerProvider
     if( kingFeature == null )
       throw new ConfigurationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.2", featureKey ) ); //$NON-NLS-1$
 
-    final KingDataContainer data = new KingDataContainer( kingFeature );
+    final IKingFlowRelation kingRelation = (IKingFlowRelation) kingFeature.getAdapter( IKingFlowRelation.class );
 
-    final KingLayer kingLayer = new KingLayer( data );
-
-    return kingLayer;
+    return new KingLayer( kingRelation );
   }
-
 }
