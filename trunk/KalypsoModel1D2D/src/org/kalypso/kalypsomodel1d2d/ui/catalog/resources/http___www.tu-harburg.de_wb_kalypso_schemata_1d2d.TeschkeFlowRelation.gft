@@ -61,7 +61,7 @@
         <param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:default" />
         <param name="chart" value="runoffChart" />
         <param name="featureKeyName" value="theResultFeatureKey" />
-        <param name="commands" value="org.kalypso.chart.ui.commands.zoomIn;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.zoom_pan_maximize" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
         <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
       </extensioncontrol>
     </tabItem>
@@ -72,7 +72,7 @@
         <param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:default" />
         <param name="chart" value="areaChart" />
         <param name="featureKeyName" value="theResultFeatureKey" />
-        <param name="commands" value="org.kalypso.chart.ui.commands.zoomIn;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.zoom_pan_maximize" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
         <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
       </extensioncontrol>
     </tabItem>
@@ -83,7 +83,7 @@
         <param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:default" />
         <param name="chart" value="alphaChart" />
         <param name="featureKeyName" value="theResultFeatureKey" />
-        <param name="commands" value="org.kalypso.chart.ui.commands.zoomIn;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.zoom_pan_maximize" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
         <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
       </extensioncontrol>
     </tabItem>
