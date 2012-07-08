@@ -88,7 +88,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public final class HydrographProcessResultOperation implements ICoreRunnableWithProgress
 {
@@ -177,6 +177,9 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
 
         final URL scenarioURL = ResourceUtilities.createURL( m_scenarioFolder );
         final URL resultURL = UrlUtilities.resolveWithZip( scenarioURL, docPath.toPortableString() );
+
+        if( !UrlUtilities.checkIsAccessible( resultURL ) )
+          continue;
 
         final GMLWorkspace w = GmlSerializer.createGMLWorkspace( resultURL, null );
 
@@ -273,7 +276,10 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( velocityDirComp, new BigDecimal( velocityDir ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
+
+      if( velocityDirComp != null )
+        newRecord.setValue( velocityDirComp, new BigDecimal( velocityDir ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
+
       if( discharge != null )
         newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       else
