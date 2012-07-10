@@ -114,4 +114,20 @@ public abstract class Station extends Feature_Impl implements IStation
   {
     return getProperty( PROPERTY_LOCATION, GM_Point.class );
   }
+
+  @Override
+  public boolean hasTimeseries( final String parameterType, final String quality )
+  {
+    final IFeatureBindingCollection<ITimeseries> timeserieses = getTimeseries();
+    for( final ITimeseries timeseries : timeserieses )
+    {
+      if( parameterType.equals( timeseries.getParameterType() ) )
+      {
+        if( quality.equalsIgnoreCase( timeseries.getQuality() ) )
+          return true;
+      }
+    }
+
+    return false;
+  }
 }
