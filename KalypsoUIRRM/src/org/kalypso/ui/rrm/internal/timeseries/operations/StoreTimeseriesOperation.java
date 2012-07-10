@@ -131,6 +131,15 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final DateRange daterange = m_operation.getDateRange();
     final String quality = Objects.firstNonNull( m_operation.getQuality(), "" ); //$NON-NLS-1$
 
+    final String parameterType = (String) m_bean.getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
+
+    if( m_station.hasTimeseries( parameterType, quality ) )
+    {
+      final String message = String.format( "A timeseries with the same quality '%s' already exists.", quality );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
+      throw new CoreException( status );
+    }
+
     final IFile targetFile = createDataFile( m_bean, timestep, stati );
     m_timeseries = createTimeseries( timestep, targetFile, daterange, quality );
 
