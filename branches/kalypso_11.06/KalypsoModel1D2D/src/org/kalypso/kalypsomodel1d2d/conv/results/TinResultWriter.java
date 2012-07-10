@@ -57,8 +57,9 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.io.sax.marshaller.TriangulatedSurfaceMarshaller;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
@@ -119,7 +120,7 @@ public class TinResultWriter
     if( nodes.length != 3 )
       return;
 
-    final GM_Triangle_Impl triangle = new GM_Triangle_Impl( nodes[0], nodes[1], nodes[2], m_crs );
+    final GM_Triangle triangle = GeometryFactory.createGM_Triangle( nodes[0], nodes[1], nodes[2], m_crs );
     if( triangle != null )
     {
       m_marshaller.marshallTriangle( triangle, m_crs );

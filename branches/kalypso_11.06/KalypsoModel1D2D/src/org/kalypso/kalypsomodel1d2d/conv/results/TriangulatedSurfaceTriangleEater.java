@@ -59,9 +59,10 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Thomas Jung
@@ -107,7 +108,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   {
     try
     {
-      final GM_Triangle_Impl gmTriangle = TriangulatedSurfaceDirectTriangleEater.createTriangle( nodes, m_parameter );
+      final GM_Triangle gmTriangle = TriangulatedSurfaceDirectTriangleEater.createTriangle( nodes, m_parameter );
       if( gmTriangle != null )
         m_surface.add( gmTriangle );
     }
@@ -184,7 +185,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   {
     final String crs = pointList.get( 0 ).getCoordinateSystem();
 
-    GM_Triangle_Impl gmTriangle = null;
+    GM_Triangle gmTriangle = null;
 
     final GM_Position pos[] = new GM_Position[3];
 
@@ -199,7 +200,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
       // for shape export we need a clockwise orientation, the algorithm that delivers the nodes is the nodes to the
       // eater is thinking counter-clockwise.
       // for that reason we switch the positions order to get that clockwise orientation.
-      gmTriangle = new GM_Triangle_Impl( pos[2], pos[1], pos[0], crs );
+      gmTriangle = GeometryFactory.createGM_Triangle( pos[2], pos[1], pos[0], crs );
     }
     catch( final GM_Exception e )
     {

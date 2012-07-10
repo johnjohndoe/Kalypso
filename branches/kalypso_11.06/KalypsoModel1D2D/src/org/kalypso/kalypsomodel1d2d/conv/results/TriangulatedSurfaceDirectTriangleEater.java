@@ -67,7 +67,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -126,7 +126,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
   }
 
-  public static GM_Triangle_Impl createTriangle( final INodeResult[] nodes, final ResultType.TYPE parameter ) throws GM_Exception
+  public static GM_Triangle createTriangle( final INodeResult[] nodes, final ResultType.TYPE parameter ) throws GM_Exception
   {
     if( nodes.length < 3 )
       return null;
@@ -135,7 +135,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     if( pos != null )
     {
       final String crs = nodes[0].getPoint().getCoordinateSystem();
-      return new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
+      return GeometryFactory.createGM_Triangle( pos[0], pos[1], pos[2], crs );
     }
 
     return null;
@@ -157,7 +157,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
       // exclude triangles with water levels below terrain surface
       if( parameter == ResultType.TYPE.WATERLEVEL && z < point.getZ() )
         return null;
-      
+
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
     }
     return pos;
