@@ -54,11 +54,14 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.gml.ui.util.GenericFeatureSelection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSettings;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -86,9 +89,14 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_profileSelection = new ProfileSelection( selection );
-    final Feature[] profiles = m_profileSelection.getProfiles();
+    Feature[] profiles = m_profileSelection.getProfiles();
 
-    final Feature[] selectedProfiles = m_profileSelection.getSelectedProfiles();
+    Feature[] selectedProfiles = m_profileSelection.getSelectedProfiles();
+    if( profiles.length == 0 )
+    {
+      final IFeatureSelection featureSelection = GenericFeatureSelection.create( selection, null );
+      profiles = FeatureSelectionHelper.getFeatures( featureSelection );
+    }
 
     final String pageMessage = Messages.getString( "ExportProfilesWizard_4" ); //$NON-NLS-1$
     final int numToSelect = getMinimumSelectionCount();
