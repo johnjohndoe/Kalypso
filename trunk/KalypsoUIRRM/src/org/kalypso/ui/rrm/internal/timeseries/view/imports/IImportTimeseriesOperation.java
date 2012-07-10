@@ -50,7 +50,6 @@ import org.kalypso.zml.ui.imports.IStoreObservationData;
  */
 public interface IImportTimeseriesOperation
 {
-
   IStoreObservationData getData( );
 
   Period getTimestep( );

@@ -78,7 +78,6 @@ public class ObservationImportOperation implements IImportTimeseriesOperation
   @Override
   public IStoreObservationData getData( )
   {
-
     return new IStoreObservationData()
     {
       @Override
