@@ -101,7 +101,7 @@ public class CalculateEvaporationAction extends Action
 
     final CalculateEvaporationData data = new CalculateEvaporationData( m_station );
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), CalculateEvaporationWizard.class.getName() );
-    data.init( settings );
+    // data.init( settings );
 
     final CalculateEvaporationWizard wizard = new CalculateEvaporationWizard( data );
     wizard.setDialogSettings( settings );
@@ -122,7 +122,6 @@ public class CalculateEvaporationAction extends Action
     if( dialog.open() == org.eclipse.jface.window.Window.OK )
     {
       final ITimeseries timeseries = wizard.getTimeseries();
-// m_model.refreshTree( m_station );
       m_model.refreshTree( timeseries );
     }
   }

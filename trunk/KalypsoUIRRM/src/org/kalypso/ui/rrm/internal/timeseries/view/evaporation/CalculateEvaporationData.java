@@ -42,7 +42,6 @@ package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
 
 import java.util.Date;
 
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.AbstractModelObject;
@@ -105,11 +104,6 @@ public class CalculateEvaporationData extends AbstractModelObject implements ICa
   public CalculateEvaporationData( final IStation station )
   {
     m_station = station;
-  }
-
-  public void init( final IDialogSettings settings )
-  {
-    // TODO Auto-generated method stub
   }
 
   private static IEvaporationCalculator[] createCalculators( )
