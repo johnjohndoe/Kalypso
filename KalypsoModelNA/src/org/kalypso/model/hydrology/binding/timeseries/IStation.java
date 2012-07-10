@@ -75,4 +75,9 @@ public interface IStation extends Feature
   String getTimeseriesFoldername( );
 
   GM_Point getStationLocation( );
+
+  /**
+   * Checks if a timeseries with same parameter type and quality already exists.
+   */
+  boolean hasTimeseries( String parameterType, String quality );
 }
