@@ -45,8 +45,8 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.model.hydrology.INaSimulationData;
-import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
+import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
@@ -116,9 +116,7 @@ public class NaSimulationData implements INaSimulationData
     m_hydrotopeCollection = readModel( hydrotopUrl, HydrotopeCollection.class );
     m_lzsimWorkspace = loadAndCheckForFile( lzsimUrl );
 
-    final String syntNpath = syntNUrl == null ? null : syntNUrl.getFile();
-    final File syntNGML = syntNpath == null ? null : new File( syntNpath, "calcSynthN.gml" ); //$NON-NLS-1$
-    m_synthNWorkspace = loadAndCheckForFile( syntNGML );
+    m_synthNWorkspace = loadAndCheckForFile( syntNUrl );
 
     m_catchmentModels = readCatchmentModels( catchmentModelsUrl );
     m_timeseriesMappings = readTimeseriesMappings( timeseriesMappingsUrl );

@@ -122,8 +122,8 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("CalculateCatchmentModelsWorker_0"), 600 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("CalculateCatchmentModelsWorker_1") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "CalculateCatchmentModelsWorker_0" ), 600 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "CalculateCatchmentModelsWorker_1" ) ); //$NON-NLS-1$
 
       /* Get the some data of the simulation data. */
       final NaModell naModel = m_simulationData.getNaModel();
@@ -135,17 +135,20 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
       /* Rainfall. */
       final ICatchmentModelInfo infoN = getCatchmentModelInfo( m_rrmSimulation, simulation, naModel, simulation.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
       final AbstractCatchmentModelRunner runnerN = getCatchmentModelRunner( infoN );
-      runnerN.executeCatchmentModel( infoN, new SubProgressMonitor( monitor, 100 ) );
+      if( infoN != null )
+        runnerN.executeCatchmentModel( infoN, new SubProgressMonitor( monitor, 100 ) );
 
       /* Temperature. */
       final ICatchmentModelInfo infoT = getCatchmentModelInfo( m_rrmSimulation, simulation, naModel, simulation.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
       final AbstractCatchmentModelRunner runnerT = getCatchmentModelRunner( infoT );
-      runnerT.executeCatchmentModel( infoT, new SubProgressMonitor( monitor, 100 ) );
+      if( infoT != null )
+        runnerT.executeCatchmentModel( infoT, new SubProgressMonitor( monitor, 100 ) );
 
       /* Evaporation. */
       final ICatchmentModelInfo infoE = getCatchmentModelInfo( m_rrmSimulation, simulation, naModel, simulation.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
       final AbstractCatchmentModelRunner runnerE = getCatchmentModelRunner( infoE );
-      runnerE.executeCatchmentModel( infoE, new SubProgressMonitor( monitor, 100 ) );
+      if( infoE != null )
+        runnerE.executeCatchmentModel( infoE, new SubProgressMonitor( monitor, 100 ) );
 
       /* Gauge measurement. */
       final TimeseriesMappingRunner mappingGaugeRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.gaugeMeasurement );
@@ -159,14 +162,14 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
       final TimeseriesMappingRunner mappingStorageEvaporationRunner = new TimeseriesMappingRunner( m_rrmSimulation, simulation, TimeseriesMappingType.storageEvaporation );
       mappingStorageEvaporationRunner.execute( new SubProgressMonitor( monitor, 100 ) );
 
-      return collector.asMultiStatus( Messages.getString("CalculateCatchmentModelsWorker_2") ); //$NON-NLS-1$
+      return collector.asMultiStatus( Messages.getString( "CalculateCatchmentModelsWorker_2" ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
       /* Add the exception to the log. */
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
 
-      return collector.asMultiStatus( Messages.getString("CalculateCatchmentModelsWorker_3") ); //$NON-NLS-1$
+      return collector.asMultiStatus( Messages.getString( "CalculateCatchmentModelsWorker_3" ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -177,23 +180,29 @@ public class CalculateCatchmentModelsWorker implements ICoreRunnableWithProgress
 
   private ICatchmentModelInfo getCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType )
   {
+    if( generator == null )
+      return null;
+
     if( generator instanceof ILinearSumGenerator )
       return new LinearSumCatchmentModelInfo( simulation, control, model, (ILinearSumGenerator) generator, targetLink, parameterType );
 
     if( generator instanceof IMultiGenerator )
       return new MultiCatchmentModelInfo( simulation, control, model, (IMultiGenerator) generator, targetLink, parameterType );
 
-    throw new IllegalArgumentException( Messages.getString("CalculateCatchmentModelsWorker_4") ); // $NON-NLS-1$ //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "CalculateCatchmentModelsWorker_4" ) ); // $NON-NLS-1$ //$NON-NLS-1$
   }
 
   private AbstractCatchmentModelRunner getCatchmentModelRunner( final ICatchmentModelInfo info )
   {
+    if( info == null )
+      return null;
+
     if( info instanceof LinearSumCatchmentModelInfo )
       return new LinearSumCatchmentModelRunner( null );
 
     if( info instanceof MultiCatchmentModelInfo )
       return new MultiCatchmentModelRunner();
 
-    throw new IllegalArgumentException( Messages.getString("CalculateCatchmentModelsWorker_5") ); // $NON-NLS-1$ //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "CalculateCatchmentModelsWorker_5" ) ); // $NON-NLS-1$ //$NON-NLS-1$
   }
 }
