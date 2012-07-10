@@ -68,6 +68,7 @@ import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
@@ -299,7 +300,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       monitor.subTask( Messages.getString( "CalculateSimulationRunnable_10" ) ); //$NON-NLS-1$
 
       final boolean isDesignRainfall = simulation.isUsePrecipitationForm();
-      final IStatus catchmentCheckStatus = checkCatchmentModels( simulationFeature, isDesignRainfall );
+      final IStatus catchmentCheckStatus = checkTimeseriesMappings( simulationFeature, isDesignRainfall );
       if( catchmentCheckStatus.matches( IStatus.ERROR ) )
       {
         collector.add( catchmentCheckStatus );
@@ -355,20 +356,30 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     }
   }
 
-  private IStatus checkCatchmentModels( final NAControl simulation, final boolean isDesignRainfall )
+  private IStatus checkTimeseriesMappings( final NAControl simulation, final boolean isDesignRainfall )
   {
+    // TODO: check timeseries mappings, same way...
+
     final IRainfallGenerator generatorN = simulation.getGeneratorN();
     final IRainfallGenerator generatorE = simulation.getGeneratorE();
     final IRainfallGenerator generatorT = simulation.getGeneratorT();
+
     if( isDesignRainfall )
     {
       if( generatorE != null || generatorN != null || generatorT != null )
-        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "CalculateSimulationRunnable_15" ) ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "CalculateSimulationRunnable_15" ) ); //$NON-NLS-1$
+
+      final ITimeseriesMapping mappingGauge = simulation.getMappingGauge();
+      final ITimeseriesMapping mappingStorageEvaporation = simulation.getMappingStorageEvaporation();
+      if( mappingGauge != null || mappingStorageEvaporation != null )
+      {
+        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "CalculateSimulationRunnable_18" ) ); //$NON-NLS-1$
+      }
     }
     else
     {
       if( generatorE == null || generatorN == null || generatorT == null )
-        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "CalculateSimulationRunnable_16" ) ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "CalculateSimulationRunnable_16" ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
