@@ -42,67 +42,34 @@ package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
 
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.j3d.geom.UnsupportedTypeException;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.operation.evaporation.FAOLandbasedEvaporationCalculator;
+import org.kalypso.model.hydrology.operation.evaporation.ICalculateEvaporationData;
+import org.kalypso.model.hydrology.operation.evaporation.IEvaporationCalculator;
+import org.kalypso.model.hydrology.operation.evaporation.WaterbasedEvaporationCalculator;
+import org.kalypso.model.hydrology.operation.evaporation.WendlingLandbasedEvaporationCalculator;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
+import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
 import org.kalypso.ogc.sensor.util.DateRanges;
 import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 
 /**
  * @author Dirk Kuch
  */
-public class CalculateEvaporationData extends AbstractModelObject
+public class CalculateEvaporationData extends AbstractModelObject implements ICalculateEvaporationData
 {
-  public enum EVAPORATION_TYPE
-  {
-    eLandBased,
-    eWaterBase;
-
-    @Override
-    public String toString( )
-    {
-      final EVAPORATION_TYPE type = valueOf( name() );
-      switch( type )
-      {
-        case eLandBased:
-          return Messages.getString( "CalculateEvaporationData_0" ); //$NON-NLS-1$
-        case eWaterBase:
-          return Messages.getString( "CalculateEvaporationData_1" ); //$NON-NLS-1$
-
-        default:
-          throw new UnsupportedTypeException();
-      }
-
-    }
-
-    public boolean isTypeOf( final String parameterType )
-    {
-      final EVAPORATION_TYPE type = valueOf( name() );
-      switch( type )
-      {
-        case eLandBased:
-          return StringUtils.equalsIgnoreCase( ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, parameterType );
-
-        case eWaterBase:
-          return StringUtils.equalsIgnoreCase( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED, parameterType );
-      }
-
-      return false;
-    }
-  }
-
   public static final String PROPERTY_HUMIDITY = "humidity"; //$NON-NLS-1$
 
   public static final String PROPERTY_TEMPERATURE = "temperature"; //$NON-NLS-1$
@@ -113,17 +80,9 @@ public class CalculateEvaporationData extends AbstractModelObject
 
   public static final String PROPERTY_QUALITY = "quality"; //$NON-NLS-1$
 
-  public static final String PROPERTY_EVAPORATION_TYPE = "evaporationType"; //$NON-NLS-1$
+  public static final String PROPERTY_CALCULATOR = "calculator"; //$NON-NLS-1$
 
   public static final String PROPERTY_LATITUDE = "latitude"; //$NON-NLS-1$
-
-  public static final String PROPERTY_FACTOR_CONVERSION_JW = "factorConversionJw"; //$NON-NLS-1$
-
-  public static final String PROPERTY_COEFFICIENT_EMISSION = "coefficientEmission"; //$NON-NLS-1$
-
-  public static final String PROPERTY_BOLTZMANN_WATER_CONSTANT = "boltzmannWaterConstant"; //$NON-NLS-1$
-
-  public static final String PROPERTY_ALBEDO_WATER = "albedoWater"; //$NON-NLS-1$
 
   private TimeseriesBean m_humidity;
 
@@ -135,21 +94,31 @@ public class CalculateEvaporationData extends AbstractModelObject
 
   private String m_quality;
 
-  private EVAPORATION_TYPE m_evaporationType;
+  private double m_latitude = 53.64;
 
-  private String m_latitude = "53,64"; //$NON-NLS-1$
+  private final IEvaporationCalculator[] m_allCalculators = createCalculators();
 
-  private String m_factorConversionJw = "8,64"; //$NON-NLS-1$
+  private IEvaporationCalculator m_calculator = m_allCalculators[0];
 
-  private String m_coefficientEmission = "0,97"; //$NON-NLS-1$
+  private final IStation m_station;
 
-  private String m_boltzmannWaterConstant = "0,0000000567"; //$NON-NLS-1$
-
-  private String m_albedoWater = "0.05"; //$NON-NLS-1$
+  public CalculateEvaporationData( final IStation station )
+  {
+    m_station = station;
+  }
 
   public void init( final IDialogSettings settings )
   {
     // TODO Auto-generated method stub
+  }
+
+  private static IEvaporationCalculator[] createCalculators( )
+  {
+    final WendlingLandbasedEvaporationCalculator landWendling = new WendlingLandbasedEvaporationCalculator();
+    final FAOLandbasedEvaporationCalculator landFAO = new FAOLandbasedEvaporationCalculator();
+    final WaterbasedEvaporationCalculator water = new WaterbasedEvaporationCalculator();
+
+    return new IEvaporationCalculator[] { landWendling, landFAO, water };
   }
 
   public TimeseriesBean getHumidity( )
@@ -192,6 +161,7 @@ public class CalculateEvaporationData extends AbstractModelObject
     m_sunshineHours = sunshineHours;
   }
 
+  @Override
   public DateRange getDateRange( )
   {
     return getDateRange( toObservation( getHumidity() ), toObservation( getSunshineHours() ), toObservation( getTemperature() ), toObservation( getWindVelocity() ) );
@@ -242,6 +212,7 @@ public class CalculateEvaporationData extends AbstractModelObject
     return result;
   }
 
+  @Override
   public String getQuality( )
   {
     return m_quality;
@@ -252,64 +223,59 @@ public class CalculateEvaporationData extends AbstractModelObject
     m_quality = quality;
   }
 
-  public EVAPORATION_TYPE getEvaporationType( )
+  public IEvaporationCalculator getCalculator( )
   {
-    return m_evaporationType;
+    return m_calculator;
   }
 
-  public void setEvaporationType( final EVAPORATION_TYPE evaporationType )
+  public void setCalculator( final IEvaporationCalculator evaporationCalculator )
   {
-    m_evaporationType = evaporationType;
+    m_calculator = evaporationCalculator;
   }
 
-  public String getLatitude( )
+  @Override
+  public double getLatitude( )
   {
     return m_latitude;
   }
 
-  public void setLatitude( final String latitude )
+  public void setLatitude( final double latitude )
   {
     m_latitude = latitude;
   }
 
-  public String getFactorConversionJw( )
+  @Override
+  public ITimeseriesCache getTemperatureData( ) throws SensorException
   {
-    return m_factorConversionJw;
+    return CacheTimeSeriesVisitor.cache( toObservation( m_temperature ) );
   }
 
-  public void setFactorConversionJw( final String factorConversionJw )
+  @Override
+  public ITimeseriesCache getHumidityData( ) throws SensorException
   {
-    m_factorConversionJw = factorConversionJw;
+    return CacheTimeSeriesVisitor.cache( toObservation( m_humidity ) );
   }
 
-  public String getCoefficientEmission( )
+  @Override
+  public ITimeseriesCache getSunshineData( ) throws SensorException
   {
-    return m_coefficientEmission;
+    return CacheTimeSeriesVisitor.cache( toObservation( m_sunshineHours ) );
   }
 
-  public void setCoefficientEmission( final String coefficientEmission )
+  @Override
+  public ITimeseriesCache getWindVelocityData( ) throws SensorException
   {
-    m_coefficientEmission = coefficientEmission;
+    return CacheTimeSeriesVisitor.cache( toObservation( m_windVelocity ) );
   }
 
-  public String getBoltzmannWaterConstant( )
+  public IEvaporationCalculator[] getAllCalculators( )
   {
-    return m_boltzmannWaterConstant;
+    return m_allCalculators;
   }
 
-  public void setBoltzmannWaterConstant( final String boltzmannWaterConstant )
+  @Override
+  public IStation getStation( )
   {
-    m_boltzmannWaterConstant = boltzmannWaterConstant;
+    return m_station;
   }
-
-  public String getAlbedoWater( )
-  {
-    return m_albedoWater;
-  }
-
-  public void setAlbedoWater( final String albedoWater )
-  {
-    m_albedoWater = albedoWater;
-  }
-
 }

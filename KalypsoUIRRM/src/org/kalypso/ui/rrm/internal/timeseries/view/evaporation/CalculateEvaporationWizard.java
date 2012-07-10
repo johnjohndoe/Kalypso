@@ -44,42 +44,33 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.operation.evaporation.IEvaporationCalculator;
-import org.kalypso.model.hydrology.operation.evaporation.LandbasedEvaporationCalculator;
-import org.kalypso.model.hydrology.operation.evaporation.WaterbasedEvaporationCalculator;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ObservationImportOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesStatusOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
 
 /**
  * @author Dirk Kuch
  */
 public class CalculateEvaporationWizard extends Wizard
 {
-  private final IStation m_station;
-
   private final CalculateEvaporationData m_data;
 
   private ITimeseries m_timeseries;
 
-  public CalculateEvaporationWizard( final IStation station, final CalculateEvaporationData data )
+  public CalculateEvaporationWizard( final CalculateEvaporationData data )
   {
-    m_station = station;
     m_data = data;
 
-    addPage( new ChooseEvaporationInputFilesPage( station, data ) );
-    addPage( new EvaporationParameterPage( station, data ) );
+    addPage( new ChooseEvaporationInputFilesPage( data ) );
+    addPage( new EvaporationParameterPage( data ) );
 
+    setNeedsProgressMonitor( true );
   }
 
   @Override
@@ -87,34 +78,46 @@ public class CalculateEvaporationWizard extends Wizard
   {
     try
     {
-      final IEvaporationCalculator calculator = getCalculator();
+      final IEvaporationCalculator calculator = m_data.getCalculator();
       if( Objects.isNull( calculator ) )
         return false;
+
+      calculator.init( m_data );
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, calculator );
       if( !status.isOK() )
       {
         StatusDialog.open( getShell(), status, getWindowTitle() );
+
+        if( status.matches( IStatus.ERROR ) )
+          return false;
       }
 
       final IObservation observation = calculator.getObservation();
 
-      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_station, new ObservationImportOperation( observation, null, m_data.getQuality() ) );
+      final String quality = m_data.getQuality();
+      final IStation station = m_data.getStation();
+
+      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), station, new ObservationImportOperation( observation, null, quality ) );
       storeOperation.updateDataAfterFinish();
 
-      final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );
-      if( !status2.isOK() )
+      final IStatus storeObservationStatus = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );
+      if( !storeObservationStatus.isOK() )
       {
-        StatusDialog.open( getShell(), status2, getWindowTitle() );
+        StatusDialog.open( getShell(), storeObservationStatus, getWindowTitle() );
+
+        if( storeObservationStatus.matches( IStatus.ERROR ) )
+          return false;
       }
 
       m_timeseries = storeOperation.getTimeseries();
 
       final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_timeseries, status );
-      RunnableContextHelper.execute( getContainer(), true, false, storeStatusOperation );
+      final IStatus storeStatusStatus = RunnableContextHelper.execute( getContainer(), true, false, storeStatusOperation );
+      if( !storeStatusStatus.isOK() )
+        StatusDialog.open( getShell(), storeStatusStatus, getWindowTitle() );
 
-      // FIXME better error handling
-      return status.isOK() && status2.isOK();
+      return true;
     }
     catch( final Exception e )
     {
@@ -123,44 +126,8 @@ public class CalculateEvaporationWizard extends Wizard
     }
   }
 
-  private IEvaporationCalculator getCalculator( ) throws SensorException
-  {
-    final IObservation humidity = m_data.toObservation( m_data.getHumidity() );
-    final IObservation sunshine = m_data.toObservation( m_data.getSunshineHours() );
-    final IObservation temperature = m_data.toObservation( m_data.getTemperature() );
-    final IObservation windVelocity = m_data.toObservation( m_data.getWindVelocity() );
-    if( Objects.isNull( humidity, sunshine, temperature, windVelocity ) )
-      return null;
-
-    final DateRange daterange = m_data.getDateRange();
-
-    final EVAPORATION_TYPE type = m_data.getEvaporationType();
-    if( EVAPORATION_TYPE.eLandBased.equals( type ) )
-    {
-
-      final LandbasedEvaporationCalculator calculator = new LandbasedEvaporationCalculator( CacheTimeSeriesVisitor.cache( humidity ), CacheTimeSeriesVisitor.cache( sunshine ), CacheTimeSeriesVisitor.cache( temperature ), CacheTimeSeriesVisitor.cache( windVelocity ), daterange );
-      calculator.setLatitude( NumberUtils.parseQuietDouble( m_data.getLatitude() ) );
-
-      return calculator;
-    }
-    else if( EVAPORATION_TYPE.eWaterBase.equals( type ) )
-    {
-      final WaterbasedEvaporationCalculator calculator = new WaterbasedEvaporationCalculator( CacheTimeSeriesVisitor.cache( humidity ), CacheTimeSeriesVisitor.cache( sunshine ), CacheTimeSeriesVisitor.cache( temperature ), CacheTimeSeriesVisitor.cache( windVelocity ), daterange );
-      calculator.setAlbedoWater( NumberUtils.parseQuietDouble( m_data.getAlbedoWater() ) );
-      calculator.setBoltzmannWaterConstant( NumberUtils.parseQuietDouble( m_data.getBoltzmannWaterConstant() ) );
-      calculator.setCoefficientEmission( NumberUtils.parseQuietDouble( m_data.getCoefficientEmission() ) );
-      calculator.setFactorConversionJw( NumberUtils.parseQuietDouble( m_data.getFactorConversionJw() ) );
-      calculator.setLatitude( NumberUtils.parseQuietDouble( m_data.getLatitude() ) );
-
-      return calculator;
-    }
-
-    throw new UnsupportedOperationException();
-  }
-
   public ITimeseries getTimeseries( )
   {
     return m_timeseries;
   }
-
 }

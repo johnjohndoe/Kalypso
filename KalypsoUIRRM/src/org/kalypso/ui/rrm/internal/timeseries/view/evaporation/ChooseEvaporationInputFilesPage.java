@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -70,17 +71,16 @@ import org.eclipse.swt.widgets.Text;
 import org.joda.time.Period;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.operation.evaporation.IEvaporationCalculator;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.ParameterTypeLabelProvider;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -88,21 +88,18 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class ChooseEvaporationInputFilesPage extends WizardPage
 {
-
   private final CalculateEvaporationData m_data;
 
   private DatabindingWizardPage m_binding;
-
-  private final IStation m_station;
 
   private Text m_labelDateRangeFrom;
 
   private Text m_labelDateRangeTo;
 
-  protected ChooseEvaporationInputFilesPage( final IStation station, final CalculateEvaporationData data )
+  ChooseEvaporationInputFilesPage( final CalculateEvaporationData data )
   {
     super( "ChooseEvaporationInputFilesPage" ); //$NON-NLS-1$
-    m_station = station;
+
     m_data = data;
 
     setTitle( Messages.getString("ChooseEvaporationInputFilesPage_1") ); //$NON-NLS-1$
@@ -116,7 +113,7 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     m_binding = new DatabindingWizardPage( this, null );
 
     final Composite body = new Composite( parent, SWT.NULL );
-    body.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.swtDefaults().applyTo( body );
     setControl( body );
 
     doAddEvaporaqtionTypeControl( body );
@@ -138,28 +135,13 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     viewer.setLabelProvider( new LabelProvider() );
     viewer.setContentProvider( new ArrayContentProvider() );
 
-    final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
-    final IObservableValue model = BeansObservables.observeValue( m_data, CalculateEvaporationData.PROPERTY_EVAPORATION_TYPE );
-    m_binding.bindValue( target, model, new IValidator()
-    {
+    final IEvaporationCalculator[] input = m_data.getAllCalculators();
 
-      @Override
-      public IStatus validate( final Object value )
-      {
-        if( Objects.isNull( value ) )
-        {
-          setErrorMessage( Messages.getString("ChooseEvaporationInputFilesPage_4") ); //$NON-NLS-1$
-          return Status.CANCEL_STATUS;
-        }
-
-        return Status.OK_STATUS;
-      }
-    } );
-
-    final EVAPORATION_TYPE[] input = new EVAPORATION_TYPE[] { EVAPORATION_TYPE.eLandBased, EVAPORATION_TYPE.eWaterBase };
     viewer.setInput( input );
 
-    viewer.setSelection( new StructuredSelection( input[0] ) );
+    final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
+    final IObservableValue model = BeansObservables.observeValue( m_data, CalculateEvaporationData.PROPERTY_CALCULATOR );
+    m_binding.bindValue( target, model );
   }
 
   private void doAddDateRangeControl( final Composite body )
@@ -255,7 +237,8 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
       }
     } );
 
-    final TimeseriesBean[] input = findInputFiles( m_station.getTimeseries(), type );
+    final IStation station = m_data.getStation();
+    final TimeseriesBean[] input = findInputFiles( station.getTimeseries(), type );
     viewer.setInput( input );
 
     if( ArrayUtils.isNotEmpty( input ) )

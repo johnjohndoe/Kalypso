@@ -42,16 +42,16 @@ package org.kalypso.model.hydrology.operation.evaporation;
 
 import java.util.Calendar;
 
-import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
 
 /**
  * @author Dirk Kuch
  */
-public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculator
+public class WendlingLandbasedEvaporationCalculator extends AbstractEvaporationCalculator
 {
-  private double m_latitude = 54.00;
+  private double m_latitude = Double.NaN;
 
   /* Albedo */
   private static final double ALBEDO = 0.23;
@@ -59,20 +59,22 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
   /* Stefan Boltzmann Konstante (DVWK - Formel 5.27) */
   private static final double BOLTZMANN_CONSTANT = 0.49 * Math.pow( 10.0, -6.0 );
 
-  public LandbasedEvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity, final DateRange daterange )
+  @Override
+  public void init( final ICalculateEvaporationData data ) throws SensorException
   {
-    super( humidity, sunshine, temperature, windVelocity, daterange );
+    super.init( data );
+
+    m_latitude = data.getLatitude();
   }
 
   @Override
-  protected Double doCalculate( final double humidity, final double sunshine, final double temperature, final double windVelocity, final Calendar date )
+  public String toString( )
   {
-
-    return doCalculateWendling( humidity, sunshine, temperature, windVelocity, date );
-
+    return Messages.getString( "WendlingLandbasedEvaporationCalculator_0" ); //$NON-NLS-1$
   }
 
-  protected Double doCalculateWendling( final double humidity, final double sunshine, final double temperature, final double windVelocity, final Calendar date )
+  @Override
+  public Double doCalculate( final double humidity, final double sunshine, final double temperature, final double windVelocity, final Calendar date )
   {
     final double es = 6.11 * Math.pow( 10.0, 7.48 * temperature / (237.0 + temperature) );
     final double e = es * (humidity / 100.0);
@@ -85,7 +87,7 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
     final double r0 = 245.0 * (9.9 + 7.08 * rohSinus + 0.18 * (m_latitude - 51.0) * (rohSinus - 1.0));
     final double s0 = 12.3 + rohSinus * (4.3 + (m_latitude - 51.0) / 6.0);
     final double rg = r0 * (0.19 + 0.55 * (sunshine / s0));
-// final double rng = 0.6 * rg;
+    // final double rng = 0.6 * rg;
 
     final double rn = (1.0 - ALBEDO) * rg - BOLTZMANN_CONSTANT * (Math.pow( 237.15 + temperature, 4.0 ) * (0.1 + 0.9 * (sunshine / s0)) * (0.34 - 0.044 * Math.pow( e, 0.5 )));
 
@@ -99,51 +101,9 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
     return 0.0;
   }
 
-  @SuppressWarnings("unused")
-  private Double doCalculateFAO( final double humidity, final double sunshine, final double temperature, final double windVelocity, final Calendar date )
-  {
-    final double es = 6.11 * Math.pow( 10.0, 7.48 * temperature / (237.0 + temperature) );
-    final double e = es * (humidity / 100.0);
-    final double l = 249.8 - 0.242 * temperature;
-    final double s = es * (4284.0 / Math.pow( 243.12 + temperature, 2.0 ));
-
-    final double roh = 0.0172 * date.get( Calendar.DAY_OF_YEAR ) - 1.39;
-    final double rohSinus = Math.sin( roh );
-
-    final double r0 = 245.0 * (9.9 + 7.08 * rohSinus + 0.18 * (m_latitude - 51.0) * (rohSinus - 1.0));
-    final double s0 = 12.3 + rohSinus * (4.3 + (m_latitude - 51.0) / 6.0);
-    final double rg = r0 * (0.19 + 0.55 * (sunshine / s0));
-
-// final double rn = (1.0 - ALBEDO) * rg - BOLTZMANN_CONSTANT * (Math.pow( 237.15 + temperature, 4.0 ) * (0.1 + 0.9 *
-// (sunshine / s0)) * (0.34 - 0.044 * Math.pow( e, 0.5 )));
-
-    final double rng = 0.6 * rg;
-
-    final double etN = s * (rng / l) + 0.655 * (3.75 / (temperature + 273.0)) * windVelocity * (es - e);
-    final double etT = s + 0.655 * (1 + 0.34 * windVelocity);
-
-    final double et0 = etN / etT;
-
-    if( et0 > 0.0 )
-      return et0;
-
-    return 0.0;
-  }
-
-  public double getLatitude( )
-  {
-    return m_latitude;
-  }
-
-  public void setLatitude( final double latitude )
-  {
-    m_latitude = latitude;
-  }
-
   @Override
-  protected String getParameterType( )
+  public String getParameterType( )
   {
     return ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED;
   }
-
 }

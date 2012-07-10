@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TimeZone;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -54,8 +55,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.LocalTime;
+import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -64,10 +68,12 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -82,60 +88,63 @@ import org.kalypso.repository.IDataSourceItem;
  */
 public abstract class AbstractEvaporationCalculator implements IEvaporationCalculator
 {
-  public static final String DATA_SOURCE = IDataSourceItem.SOURCE_PREFIX + Messages.getString("AbstractEvaporationCalculator_0"); //$NON-NLS-1$
+  public static final String DATA_SOURCE = IDataSourceItem.SOURCE_PREFIX + Messages.getString( "AbstractEvaporationCalculator_0" ); //$NON-NLS-1$
 
-  private final ITimeseriesCache m_humidity;
+  private ITimeseriesCache m_humidity;
 
-  private final ITimeseriesCache m_sunshine;
+  private ITimeseriesCache m_sunshine;
 
-  private final ITimeseriesCache m_temperature;
+  private ITimeseriesCache m_temperature;
 
-  private final ITimeseriesCache m_windVelocity;
+  private ITimeseriesCache m_windVelocity;
 
-  private final DateRange m_daterange;
+  private DateRange m_daterange;
 
   private final Map<Date, Double> m_results = new TreeMap<>();
 
-  public AbstractEvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity, final DateRange daterange )
+  private IObservation m_observation;
+
+  @Override
+  public void init( final ICalculateEvaporationData data ) throws SensorException
   {
-    m_humidity = humidity;
-    m_sunshine = sunshine;
-    m_temperature = temperature;
-    m_windVelocity = windVelocity;
-    m_daterange = daterange;
+    m_humidity = data.getHumidityData();
+    m_sunshine = data.getSunshineData();
+    m_temperature = data.getTemperatureData();
+    m_windVelocity = data.getWindVelocityData();
+    m_daterange = data.getDateRange();
   }
 
-  public ITimeseriesCache getHumidity( )
+  private ITimeseriesCache getHumidity( )
   {
     return m_humidity;
   }
 
-  public ITimeseriesCache getSunshine( )
+  private ITimeseriesCache getSunshine( )
   {
     return m_sunshine;
   }
 
-  public ITimeseriesCache getTemperature( )
+  private ITimeseriesCache getTemperature( )
   {
     return m_temperature;
   }
 
-  public ITimeseriesCache getWindVelocity( )
+  private ITimeseriesCache getWindVelocity( )
   {
     return m_windVelocity;
   }
 
-  public DateRange getDateRange( )
+  private DateRange getDateRange( )
   {
     return m_daterange;
   }
 
-  protected void addResult( final Date time, final Double evaporation )
+  private void addResult( final Date time, final Double evaporation )
   {
     m_results.put( time, evaporation );
   }
 
-  protected Double getValue( final TupleModelDataSet dataSet )
+  private Double getValue( final TupleModelDataSet dataSet )
   {
     if( Objects.isNull( dataSet ) )
       return null;
@@ -147,7 +156,7 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
     return ((Number) value).doubleValue();
   }
 
-  protected TupleModelDataSet getDataSet( final ITimeseriesCache humidity, final Calendar ptr, final String type )
+  private TupleModelDataSet getDataSet( final ITimeseriesCache humidity, final Calendar ptr, final String type )
   {
     final TreeMap<Date, TupleModelDataSet[]> valueMap = humidity.getValueMap();
 
@@ -180,18 +189,22 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
     return null;
   }
 
-  @Override
-  public IObservation getObservation( )
+  private IObservation buildObservation( )
   {
     final IAxis dateAxis = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_DATE );
     final IAxis valueAxis = TimeseriesUtils.createDefaultAxis( getParameterType() );
     final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( valueAxis, true );
     final IAxis dataSourceAxis = DataSourceHelper.createSourceAxis( valueAxis, true );
 
+    /* create meta data */
     final MetadataList metadata = new MetadataList();
     final DataSourceHandler sources = new DataSourceHandler( metadata );
     final Integer source = sources.addDataSource( DATA_SOURCE, DATA_SOURCE );
     final Integer status = KalypsoStati.BIT_OK;
+
+    /* Timestep and timstamp are hardcoded into the algorithm: 1 day and 12:00 */
+    MetadataHelper.setTimestep( metadata, Period.days( 1 ) );
+    MetadataHelper.setTimestamp( metadata, getTimeStamp() );
 
     final SimpleTupleModel model = new SimpleTupleModel( new IAxis[] { dateAxis, valueAxis, statusAxis, dataSourceAxis } );
 
@@ -207,12 +220,42 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
     return new SimpleObservation( DATA_SOURCE, DATA_SOURCE, metadata, model );
   }
 
+  private LocalTime getTimeStamp( )
+  {
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+
+    final int rawOffset = timeZone.getRawOffset();
+
+    final Calendar calendar = CalendarUtilities.getCalendar( getDateRange().getFrom(), timeZone );
+    calendar.set( Calendar.HOUR_OF_DAY, 12 );
+    calendar.set( Calendar.MINUTE, 0 );
+    calendar.set( Calendar.SECOND, 0 );
+    calendar.set( Calendar.MILLISECOND, 0 );
+
+    calendar.add( Calendar.MILLISECOND, -rawOffset );
+
+    /* REMARK: The ISO Chronolgy used will have the UTC timezone set. */
+
+    /* We set the timestamp so, that in the local time, it is always 12:00 */
+
+    return new LocalTime( calendar.get( Calendar.HOUR_OF_DAY ), calendar.get( Calendar.MINUTE ) );
+  }
+
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.setTaskName( Messages.getString("AbstractEvaporationCalculator_1") ); //$NON-NLS-1$
+    monitor.setTaskName( Messages.getString( "AbstractEvaporationCalculator_1" ) ); //$NON-NLS-1$
 
-    final StatusCollector stati = new StatusCollector( ModelNA.PLUGIN_ID );
+    final IStatus calcStatus = calculateEvaporation( monitor );
+
+    m_observation = buildObservation();
+
+    return calcStatus;
+  }
+
+  private IStatus calculateEvaporation( final IProgressMonitor monitor )
+  {
+    final IStatusCollector stati = new StatusCollector( ModelNA.PLUGIN_ID );
 
     final Calendar to = CalendarUtilities.getCalendar( getDateRange().getTo(), KalypsoCorePlugin.getDefault().getTimeZone() );
     final Calendar ptr = CalendarUtilities.getCalendar( getDateRange().getFrom(), KalypsoCorePlugin.getDefault().getTimeZone() );
@@ -234,7 +277,7 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
         final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy" ); //$NON-NLS-1$
         sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
-        final String msg = String.format( Messages.getString("AbstractEvaporationCalculator_2"), // //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "AbstractEvaporationCalculator_2" ), // //$NON-NLS-1$
             sdf.format( ptr.getTime() ), //
             Objects.firstNonNull( humidity, Double.NaN ), //
             Objects.firstNonNull( sunshine, Double.NaN ), //
@@ -250,15 +293,19 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
           addResult( ptr.getTime(), evaporation );
       }
 
-      ptr.add( Calendar.HOUR_OF_DAY, 24 );
+      ptr.add( Calendar.DAY_OF_MONTH, 1 );
     }
 
     monitor.done();
 
-    return stati.asMultiStatus( Messages.getString("AbstractEvaporationCalculator_3") ); //$NON-NLS-1$
+    return stati.asMultiStatus( Messages.getString( "AbstractEvaporationCalculator_3" ) ); //$NON-NLS-1$
   }
 
   protected abstract Double doCalculate( double humidity, double sunshine, double temperature, double windVelocity, Calendar ptr );
 
-  protected abstract String getParameterType( );
+  @Override
+  public IObservation getObservation( )
+  {
+    return m_observation;
+  }
 }

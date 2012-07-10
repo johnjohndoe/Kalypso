@@ -38,40 +38,31 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
+package org.kalypso.model.hydrology.operation.evaporation;
 
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.databinding.validation.TypedValidator;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
-import org.kalypso.model.hydrology.operation.evaporation.IEvaporationCalculator;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class TimeSeriesAlreadyExistsValidator extends TypedValidator<String>
+public interface ICalculateEvaporationData
 {
-  private final CalculateEvaporationData m_data;
+  ITimeseriesCache getTemperatureData( ) throws SensorException;
 
-  public TimeSeriesAlreadyExistsValidator( final CalculateEvaporationData data )
-  {
-    super( String.class, IStatus.ERROR, Messages.getString( "TimeSeriesAlreadyExistsValidator_0" ) ); //$NON-NLS-1$
+  ITimeseriesCache getHumidityData( ) throws SensorException;
 
-    m_data = data;
-  }
+  ITimeseriesCache getSunshineData( ) throws SensorException;
 
-  @Override
-  protected IStatus doValidate( final String value ) throws CoreException
-  {
-    final IEvaporationCalculator calculator = m_data.getCalculator();
-    final String parameterType = calculator.getParameterType();
-    final IStation station = m_data.getStation();
+  ITimeseriesCache getWindVelocityData( ) throws SensorException;
 
-    if( station.hasTimeseries( parameterType, value ) )
-      fail();
+  DateRange getDateRange( );
 
-    return ValidationStatus.ok();
-  }
+  double getLatitude( );
+
+  IStation getStation( );
+
+  String getQuality( );
 }

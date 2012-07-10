@@ -99,11 +99,11 @@ public class CalculateEvaporationAction extends Action
       return;
     }
 
-    final CalculateEvaporationData data = new CalculateEvaporationData();
+    final CalculateEvaporationData data = new CalculateEvaporationData( m_station );
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), CalculateEvaporationWizard.class.getName() );
     data.init( settings );
 
-    final CalculateEvaporationWizard wizard = new CalculateEvaporationWizard( m_station, data );
+    final CalculateEvaporationWizard wizard = new CalculateEvaporationWizard( data );
     wizard.setDialogSettings( settings );
     wizard.setWindowTitle( getText() );
 
