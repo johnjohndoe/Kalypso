@@ -13,7 +13,7 @@
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:rainfall#N" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#T" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:volume#V" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:waterlevel#W" />
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:waterlevel#W" />
 
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:humidity#MEAN_HUMIDITY" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:sunshine:hours#H_SUNSHINE" />
