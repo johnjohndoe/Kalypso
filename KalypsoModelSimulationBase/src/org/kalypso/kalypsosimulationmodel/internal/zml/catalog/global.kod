@@ -41,6 +41,15 @@
       
     </Styles>
     <Mappers>
+      <Axis id="date" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Direction>POSITIVE</Direction>
+        <Position>BOTTOM</Position>
+        <PreferredAdjustment before="0" range="100" after="0" />
+        <RendererRef ref="DateAxisRenderer" />
+        <!-- <AxisNumberRangeRestriction minRange="86400000" /> -->
+        <AxisNumberRangeRestriction minRange="1000" />
+      </Axis>
       <Axis id="N" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Niederschlag [mm]</Label>
@@ -48,8 +57,17 @@
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="33" after="67" />
         <RendererRef ref="AutoNumberAxisRenderer" />
-        <AxisNumberRangeRestriction absoluteMinValue="0.0" fixMinValue="true" />
+        <AxisNumberRangeRestriction  />
       </Axis>
+      <Axis id="W" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Wasserstand [cm]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <PreferredAdjustment before="35" range="60" after="5" />
+        <RendererRef ref="AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction  />
+      </Axis>      
     </Mappers>
     <Renderers>
       <AxisRenderer id="AutoNumberAxisRenderer">
