@@ -7,8 +7,10 @@
       </CascadingParameters>
 
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:discharge#Q" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation:old#E" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rainfall#N" />
+      <!-- 
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:common:evaporation:input:old#E" />
+       -->
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:rainfall#N" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#T" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:volume#V" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:waterlevel#W" />
@@ -20,11 +22,11 @@
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_LAND" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_WATER" />
 
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rrm:evaporation:old#HYDROLOGY_INPUT_EVAPORATION" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rrm:evaporation:input#INPUT_E_LAND" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rrm:evaporation:input#INPUT_E_WATER" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rrm:temperature#HYDROLOGY_INPUT_T" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rrm:rainfall#HYDROLOGY_INPUT_RAINFALL" />
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:input:old#HYDROLOGY_INPUT_EVAPORATION" />
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:input#INPUT_E_LAND" />
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:input#INPUT_E_WATER" />
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:temperature:input#HYDROLOGY_INPUT_T" />
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:rainfall:input#HYDROLOGY_INPUT_RAINFALL" />
 
       <!-- Selektionslayer unten drunter -->
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#selectionLayer" />

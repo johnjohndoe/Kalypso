@@ -127,4 +127,8 @@
        </wizard>
     </extension>
 
+ <extension point="org.kalypso.core.catalogContribution">
+    <catalogContribution class="org.kalypso.kalypsosimulationmodel.internal.zml.catalog.ZmlDiagramCatalogContribution" name="urn:org:kalypso:simulation:base:diagramm:common"/>
+  </extension>
+
 </plugin>

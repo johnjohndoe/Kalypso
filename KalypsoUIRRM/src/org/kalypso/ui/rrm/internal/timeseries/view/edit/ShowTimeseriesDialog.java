@@ -44,6 +44,7 @@ import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
@@ -58,7 +59,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTrayDialog;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.ogc.sensor.TIMESERIES_TYPE;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -125,12 +125,12 @@ public class ShowTimeseriesDialog extends EnhancedTrayDialog
     form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
     final Composite leftPane = toolkit.createComposite( form );
-    leftPane.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.swtDefaults().applyTo( leftPane );
 
     final Composite rightPane = toolkit.createComposite( form );
-    rightPane.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.swtDefaults().applyTo( rightPane );
 
-    m_chart = new TimeseriesChartComposite( leftPane, toolkit, m_context, getClass().getResource( "templates/diagram_edit.kod" ) ); //$NON-NLS-1$
+    m_chart = new TimeseriesChartComposite( leftPane, toolkit, m_context, getClass().getResource( "/etc/timeseries/diagram.kod" ) ); //$NON-NLS-1$
     m_chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_chart.setSelection( m_source );
 
@@ -159,9 +159,9 @@ public class ShowTimeseriesDialog extends EnhancedTrayDialog
     switch( type )
     {
       case eSumValue:
-        return getClass().getResource( "templates/table.sum.kot" ); //$NON-NLS-1$
+        return getClass().getResource( "/etc/timeseries/table.sum.kot" ); //$NON-NLS-1$
       default:
-        return getClass().getResource( "templates/table.kot" ); //$NON-NLS-1$
+        return getClass().getResource( "/etc/timeseries/table.kot" ); //$NON-NLS-1$
     }
   }
 

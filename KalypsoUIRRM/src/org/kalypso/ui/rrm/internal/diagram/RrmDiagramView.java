@@ -47,13 +47,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
@@ -104,7 +102,7 @@ public class RrmDiagramView extends ViewPart
   {
     super.init( site );
 
-    m_chartPart = new ZmlDiagramChartPartComposite( this, getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
+    m_chartPart = new ZmlDiagramChartPartComposite( this, getClass().getResource( "/etc/timeseries/diagram.kod" ) ); //$NON-NLS-1$
     m_chartPart.init( site );
   }
 
@@ -127,9 +125,7 @@ public class RrmDiagramView extends ViewPart
     final FormToolkit toolkit = ToolkitUtils.createToolkit( panel );
 
     final Composite base = toolkit.createComposite( panel, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
-    final GridLayout layout = Layouts.createGridLayout();
-    layout.verticalSpacing = 0;
-    base.setLayout( layout );
+    GridLayoutFactory.fillDefaults().applyTo( base );
     base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     m_chartPart.createControl( base );
