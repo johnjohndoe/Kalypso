@@ -45,6 +45,7 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -54,7 +55,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusCompositeValue;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
@@ -132,7 +132,7 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
     header.setText( Messages.getString("TimeseriesComposite.0") ); //$NON-NLS-1$
 
     final Composite body = getToolkit().createComposite( this );
-    body.setLayout( Layouts.createGridLayout( 2 ) );
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( body );
     body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final DateTime start = createPropertyDateTime( body );
