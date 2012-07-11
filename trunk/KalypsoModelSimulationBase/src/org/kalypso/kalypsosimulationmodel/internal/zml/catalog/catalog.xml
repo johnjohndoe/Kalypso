@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn.org.kalypso.simulation.base.diagramm.common" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:global" uri="global.kod" />
+
+  <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:rainfall" uri="rainfall.kod" />
+  <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:evaporation:input:old" uri="inputEvaporation.old.kod" />
+  <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:evaporation:input" uri="inputEvaporation.kod" />
+  <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:temperature:input" uri="inputTemperature.kod" />
+  <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:rainfall:input" uri="inputRainfall.kod" />
+
+</catalog:catalog>
