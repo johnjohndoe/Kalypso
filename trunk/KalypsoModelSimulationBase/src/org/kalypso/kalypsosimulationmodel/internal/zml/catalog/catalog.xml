@@ -4,6 +4,7 @@
   <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:global" uri="global.kod" />
 
   <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:rainfall" uri="rainfall.kod" />
+  <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:waterlevel" uri="waterlevel.kod" />
   <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:evaporation:input:old" uri="inputEvaporation.old.kod" />
   <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:evaporation:input" uri="inputEvaporation.kod" />
   <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:temperature:input" uri="inputTemperature.kod" />
