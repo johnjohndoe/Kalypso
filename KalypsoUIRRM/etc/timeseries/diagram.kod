@@ -18,7 +18,8 @@
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:mean:wind:velocity#MEAN_WIND_VELOCITY" />
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation#E_LAND" />
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation#E_WATER" />
-      <!-- LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:old#E" / -->
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:old#E" />
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:volume#V" />
 
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:input:old#HYDROLOGY_INPUT_EVAPORATION" />
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:input#INPUT_E_LAND" />
