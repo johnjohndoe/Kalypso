@@ -1,98 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
-  <Chart id="waterlevel">
+  <Chart id="global">
     <Styles>
-      <!-- W (blue) styles (line and point) -->
-      <LineStyle role="w_line_0">
+      <!-- Q (greenish) styles (line and point) -->
+      <LineStyle role="q_line_0">
         <Width>2</Width>
-        <LineColor>8FADDF</LineColor>
+        <LineColor>ABB985</LineColor>
       </LineStyle>
-      <PointStyle role="w_singlePoint_0">
+      <PointStyle role="q_singlePoint_0">
         <Width>10</Width>
         <Height>10</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>8FADDF</LineColor>
+          <LineColor>ABB985</LineColor>
         </Stroke>
         <FillColor>
-          <Color>8FADDF</Color>
+          <Color>ABB985</Color>
         </FillColor>
       </PointStyle>
-      <LineStyle role="w_line_1">
+      <LineStyle role="q_line_1">
         <Width>2</Width>
-        <LineColor>3460A9</LineColor>
+        <LineColor>65782F</LineColor>
       </LineStyle>
-      <PointStyle role="w_singlePoint_1">
+      <PointStyle role="q_singlePoint_1">
         <Width>10</Width>
         <Height>10</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>3460A9</LineColor>
+          <LineColor>65782F</LineColor>
         </Stroke>
         <FillColor>
-          <Color>3460A9</Color>
+          <Color>65782F</Color>
         </FillColor>
       </PointStyle>
-      <LineStyle role="w_line_2">
+      <LineStyle role="q_line_2">
         <Width>2</Width>
-        <LineColor>BDD3F6</LineColor>
+        <LineColor>CFDAB2</LineColor>
       </LineStyle>
-      <PointStyle role="w_singlePoint_2">
+      <PointStyle role="q_singlePoint_2">
         <Width>10</Width>
         <Height>10</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>BDD3F6</LineColor>
+          <LineColor>CFDAB2</LineColor>
         </Stroke>
         <FillColor>
-          <Color>BDD3F6</Color>
+          <Color>CFDAB2</Color>
         </FillColor>
       </PointStyle>
-      <LineStyle role="w_line_3">
+      <LineStyle role="q_line_3">
         <Width>2</Width>
-        <LineColor>093689</LineColor>
+        <LineColor>3D5208</LineColor>
       </LineStyle>
-      <PointStyle role="w_singlePoint_3">
+      <PointStyle role="q_singlePoint_3">
         <Width>10</Width>
         <Height>10</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>093689</LineColor>
+          <LineColor>3D5208</LineColor>
         </Stroke>
         <FillColor>
-          <Color>093689</Color>
+          <Color>3D5208</Color>
         </FillColor>
       </PointStyle>
-      <LineStyle role="w_line_4">
+      <LineStyle role="q_line_4">
         <Width>2</Width>
-        <LineColor>6186C3</LineColor>
+        <LineColor>879859</LineColor>
       </LineStyle>
-      <PointStyle role="w_singlePoint_4">
+      <PointStyle role="q_singlePoint_4">
         <Width>10</Width>
         <Height>10</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>6186C3</LineColor>
+          <LineColor>879859</LineColor>
         </Stroke>
         <FillColor>
-          <Color>6186C3</Color>
+          <Color>879859</Color>
         </FillColor>
       </PointStyle>
 
 
     </Styles>
     <Layers>
-      <Layer id="W">
+      <Layer id="Q">
         <Provider epid="">
           <Parameters>
             <Parameter name="content.messwerte" value="true" />
           </Parameters>
         </Provider>
-        <Title>Wasserstand</Title>
+        <Title>Abfluss</Title>
         <Layers>
           <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:waterlevel#Wasserstand"></LayerReference>
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:discharge#Abfluss"></LayerReference>
             <Parameters>
               <Parameter name="content.stuetzstelle" value="true" />
               <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
@@ -102,9 +102,10 @@
             </Styles>
           </DerivedLayer>
 
+
           <DerivedLayer id="Fehlwert" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:waterlevel#Wasserstand"></LayerReference>
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:discharge#Abfluss"></LayerReference>
             <Parameters>
               <Parameter name="content.fehlwert" value="true" />
               <Parameter name="filter" value="org.kalypso.chart.layer.filter.fehlwerte" />
@@ -115,45 +116,47 @@
             </Styles>
           </DerivedLayer>
 
-          <Layer id="Wasserstand" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+          <Layer id="Abfluss" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
               <Parameters>
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Wasserstand</Title>
+            <Title>Abfluss</Title>
             <Description />
             <Styles>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:waterlevel#w_line_0</StyleReference>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:waterlevel#w_singlePoint_0</StyleReference>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:waterlevel#w_line_1</StyleReference>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:waterlevel#w_singlePoint_1</StyleReference>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:waterlevel#w_line_2</StyleReference>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:waterlevel#w_singlePoint_2</StyleReference>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:waterlevel#w_line_3</StyleReference>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:waterlevel#w_singlePoint_3</StyleReference>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:waterlevel#w_line_4</StyleReference>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:waterlevel#w_singlePoint_4</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_line_1</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_1</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_line_2</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_2</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_line_3</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_3</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_line_4</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_4</StyleReference>
             </Styles>
           </Layer>
+
 
           <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:waterlevel#W" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:discharge#Q" />
         </MapperRefs>
       </Layer>
     </Layers>
     <Mappers>
-      <Axis id="W" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="Q" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Wasserstand [cm]</Label>
+        <Label>Abfluss [m³]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <PreferredAdjustment before="5" range="60" after="35" />
+        <PreferredAdjustment before="5" range="85" after="10"  />
         <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
-        <AxisNumberRangeRestriction />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" />
       </Axis>
     </Mappers>
   </Chart>

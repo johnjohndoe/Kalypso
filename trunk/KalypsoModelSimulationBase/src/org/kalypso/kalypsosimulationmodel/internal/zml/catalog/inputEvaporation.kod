@@ -26,11 +26,11 @@
         <Layers>
           <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#Stuetzstellen"></LayerReference>
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Stuetzstellen"></LayerReference>
           </DerivedLayer>
           <DerivedLayer id="Fehlwert" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#Fehlwerte"></LayerReference>
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Fehlwerte"></LayerReference>
           </DerivedLayer>
 
           <Layer id="Evaporation" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -45,11 +45,11 @@
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:evaporation:input#e_area_0</StyleReference>
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+          <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_LAND" />
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:evaporation#E_LAND" />
         </MapperRefs>
       </Layer>
       <Layer id="INPUT_E_WATER">
@@ -62,11 +62,11 @@
         <Layers>
           <DerivedLayer id="StuetzstellenSee" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#Stuetzstellen"></LayerReference>
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Stuetzstellen"></LayerReference>
           </DerivedLayer>
           <DerivedLayer id="FehlwertSee" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#Fehlwerte"></LayerReference>
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Fehlwerte"></LayerReference>
           </DerivedLayer>
 
           <Layer id="EvaporationWater" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -81,11 +81,11 @@
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:evaporation:input#e_area_0</StyleReference>
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+          <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_WATER" />
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:evaporation#E_WATER" />
         </MapperRefs>
       </Layer>
     </Layers>
