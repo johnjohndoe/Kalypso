@@ -175,7 +175,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       monitor.subTask( Messages.getString( "CalcCaseConverter.16" ) ); //$NON-NLS-1$
 
       /* Convert old meta control. */
-      convertMetaControl();
+      final boolean hasSynth = convertMetaControl();
 
       /* Convert old expert control. */
       convertExpertControl();
@@ -184,23 +184,44 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       monitor.worked( 200 );
       monitor.subTask( Messages.getString( "CalcCaseConverter.17" ) ); //$NON-NLS-1$
 
-      /* Load the models. */
+      /* Build the path. */
       final String modelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_MODELL_GML;
-      final String catchmentModelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_CATCHMENT_MODELS_GML;
-      final String timeseriesMappingPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_TIMESERIES_MAPPINGS_GML;
 
+      /* Load the model. */
       final NaModell naModel = m_data.loadModel( modelPath );
-      final ICatchmentModel catchmentModel = m_data.loadModel( catchmentModelPath );
-      final ITimeseriesMappingCollection mappings = m_data.loadModel( timeseriesMappingPath );
 
       /* Fix timeseries link: relative to simulations model folder, and new sub directories */
       fixTimeseriesLinks( naModel, getLog() );
 
-      /* Do the timeseries mappings. */
-      final IStatusCollector mappingLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
-      final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel, catchmentModel, mappingLog );
-      final TimeseriesMappingBuilder timeseriesMappingBuilder = guessTimeseriesMappings( naModel, mappings, mappingLog );
-      getLog().add( mappingLog.asMultiStatus( Messages.getString( "CalcCaseConverter.18" ) ) ); //$NON-NLS-1$
+      /* The catchment model builder and the timeseries mapping builder. */
+      CatchmentModelBuilder catchmentModelBuilder = null;
+      TimeseriesMappingBuilder timeseriesMappingBuilder = null;
+
+      /* If there is design rainfall, do not create the catchment models and the timeseries mappings. */
+      if( !hasSynth )
+      {
+        /* Build the paths. */
+        final String catchmentModelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_CATCHMENT_MODELS_GML;
+        final String timeseriesMappingPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_TIMESERIES_MAPPINGS_GML;
+
+        /* Load the models. */
+        final ICatchmentModel catchmentModel = m_data.loadModel( catchmentModelPath );
+        final ITimeseriesMappingCollection mappings = m_data.loadModel( timeseriesMappingPath );
+
+        /* Do the timeseries mappings. */
+        final IStatusCollector mappingLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+        catchmentModelBuilder = guessCatchmentModel( naModel, catchmentModel, mappingLog );
+        timeseriesMappingBuilder = guessTimeseriesMappings( naModel, mappings, mappingLog );
+        getLog().add( mappingLog.asMultiStatus( Messages.getString( "CalcCaseConverter.18" ) ) ); //$NON-NLS-1$
+
+        /* Save the models. */
+        m_data.saveModel( catchmentModelPath, catchmentModel );
+        m_data.saveModel( timeseriesMappingPath, mappings );
+
+        /* Dispose them, because of the links. */
+        catchmentModel.getWorkspace().dispose();
+        mappings.getWorkspace().dispose();
+      }
 
       /* IMPORTANT: Update the categories before the links have been fixed. */
       naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
@@ -212,15 +233,11 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       /* Empty timeseries links. */
       BasicModelConverter.emptyTimeseriesLinks( naModel, getLog() );
 
-      /* Save the models. */
+      /* Save the model. */
       m_data.saveModel( modelPath, naModel );
-      m_data.saveModel( catchmentModelPath, catchmentModel );
-      m_data.saveModel( timeseriesMappingPath, mappings );
 
       /* Dispose it, because of the links. */
       naModel.getWorkspace().dispose();
-      catchmentModel.getWorkspace().dispose();
-      mappings.getWorkspace().dispose();
 
       /* Monitor. */
       monitor.worked( 100 );
@@ -240,10 +257,14 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       monitor.worked( 100 );
       monitor.subTask( Messages.getString( "CalcCaseConverter.22" ) ); //$NON-NLS-1$
 
-      /* Verify timeseries of the catchment models of the created simulation. */
-      final CatchmentModelVerifier verifier = new CatchmentModelVerifier( m_data, simulation, new File( m_targetScenarioDir, RrmScenario.FOLDER_SIMULATIONEN ) );
-      final IStatus verifierStatus = verifier.execute();
-      getLog().add( verifierStatus );
+      /* If there is design rainfall, do not verify catchment models and the timeseries mappings. */
+      if( !hasSynth )
+      {
+        /* Verify timeseries of the catchment models of the created simulation. */
+        final CatchmentModelVerifier verifier = new CatchmentModelVerifier( m_data, simulation, new File( m_targetScenarioDir, RrmScenario.FOLDER_SIMULATIONEN ) );
+        final IStatus verifierStatus = verifier.execute();
+        getLog().add( verifierStatus );
+      }
 
       /* Monitor. */
       monitor.worked( 200 );
@@ -286,9 +307,13 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyFile( CALC_CASE, modelsPath.append( RrmScenario.FILE_MODELL_GML ).toOSString() );
     final File hydrotope = copyFile( CALC_HYDROTOP, modelsPath.append( RrmScenario.FILE_HYDROTOP_GML ).toOSString() );
     copyFile( CALC_PARAMETER, modelsPath.append( RrmScenario.FILE_PARAMETER_GML ).toOSString() );
+    copyFile( INaCalcCaseConstants.NIEDERSCHLAG_DIR + "/calcSynthN.gml", modelsPath.append( RrmScenario.FILE_SYNTHN_GML ).toOSString() ); //$NON-NLS-1$
     copyFile( INaCalcCaseConstants.EXPERT_CONTROL_FILE, modelsPath.append( RrmScenario.FILE_EXPERT_CONTROL_GML ).toOSString() );
 
-    getLog().add( new ConvertHydrotopesOperation( hydrotope ).execute( new NullProgressMonitor() ) );
+    /* Convert the hydrotopes. */
+    final ConvertHydrotopesOperation convertHydrotopesOperation = new ConvertHydrotopesOperation( hydrotope );
+    final IStatus converteHydrotopesStatus = convertHydrotopesOperation.execute( new NullProgressMonitor() );
+    getLog().add( converteHydrotopesStatus );
 
     /* Copy special directories into the calccases/calccase folder of the scenario. */
     copyDir( INaCalcCaseConstants.ANFANGSWERTE_DIR, m_simulationPath + '/' + RrmSimulation.FOLDER_ANFANGSWERTE, false );
@@ -383,8 +408,10 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   /**
    * This function converts the old meta control to the new meta control. It saves the new meta control to the file of
    * the old meta control.
+   * 
+   * @return True, if this simulation uses design rainfall.
    */
-  private void convertMetaControl( ) throws Exception
+  private boolean convertMetaControl( ) throws Exception
   {
     final String calculationGmlPath = getCaclulationGmlPath();
 
@@ -397,7 +424,13 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     /* Save the new meta control, overwriting the file with the old meta control. */
     m_data.saveModel( calculationGmlPath, newControl );
 
+    /* Has this simulation design rainfall? */
+    final boolean usePrecipitationForm = newControl.isUsePrecipitationForm();
+
+    /* Dispose the workspace. */
     newControl.getWorkspace().dispose();
+
+    return usePrecipitationForm;
   }
 
   /**
@@ -419,15 +452,16 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     newControl.setCreationTime( oldControl.getCalcTime() );
 
     /* Control parameters. */
-    newControl.setSimulationEnd( oldControl.getSimulationEnd() );
     newControl.setSimulationStart( oldControl.getSimulationStart() );
-    newControl.setReturnPeriod( oldControl.getReturnPeriod() );
-    newControl.setExeVersion( oldControl.getExeVersion() );
+    newControl.setSimulationEnd( oldControl.getSimulationEnd() );
     newControl.setMinutesOfTimestep( oldControl.getMinutesOfTimestep() );
+    newControl.setExeVersion( oldControl.getExeVersion() );
+    newControl.setReturnPeriod( oldControl.getReturnPeriod() );
 
     /* Synthetic precipitation. */
-    newControl.setDurationMinutes( oldControl.getDurationMinutes() );
     newControl.setUsePrecipitationForm( oldControl.isUsePrecipitationForm() );
+    newControl.setProperty( NAControl.PROP_XJAH, oldControl.getProperty( org.kalypso.model.hydrology.binding._11_6.NAControl.PROP_XJAH ) );
+    newControl.setDurationMinutes( oldControl.getDurationMinutes() );
     newControl.setPrecipitationForm( oldControl.getPrecipitationForm() );
 
     getLog().add( IStatus.OK, Messages.getString( "CalcCaseConverter.8" ) ); //$NON-NLS-1$

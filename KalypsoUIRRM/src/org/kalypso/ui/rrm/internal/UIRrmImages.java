@@ -94,6 +94,7 @@ public class UIRrmImages
     OPEN_ERROR_GML_ACTION("icons/simulations/openErrorGmlAction.gif"), //$NON-NLS-1$
     OPEN_OUTPUT_ZML_ACTION("icons/simulations/openOutputZipAction.gif"), //$NON-NLS-1$
     OPEN_TEXT_LOG_ACTION("icons/simulations/openTextLogAction.gif"), //$NON-NLS-1$
+    OPEN_STATUS_LOG_ACTION("icons/simulations/openStatusLogAction.gif"), //$NON-NLS-1$
 
     PARAMETER_INPUT_TYPE_EVAPORATION("icons/timeseries/inputParameterType_E.png"), //$NON-NLS-1$
     PARAMETER_INPUT_TYPE_INFLOW("icons/timeseries/inputParameterType_Inflow.png"), //$NON-NLS-1$
