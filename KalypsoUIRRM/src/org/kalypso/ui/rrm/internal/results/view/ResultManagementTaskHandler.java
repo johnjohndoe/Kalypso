@@ -43,7 +43,6 @@ package org.kalypso.ui.rrm.internal.results.view;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IViewPart;
@@ -92,9 +91,8 @@ public class ResultManagementTaskHandler extends AbstractHandler
       rrmDiagramView.setSelectionFilter( managementView.getFilterControl() );
       rrmDiagramView.setSelectionTraverseLevel( 4 );
 
-      // TODO
       final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-      final RrmScenario scenario = new RrmScenario( (IFolder) modelProvider.getScenarioFolder() );
+      final RrmScenario scenario = new RrmScenario( modelProvider.getScenarioFolder() );
 
       managementView.setInput( scenario );
     }
