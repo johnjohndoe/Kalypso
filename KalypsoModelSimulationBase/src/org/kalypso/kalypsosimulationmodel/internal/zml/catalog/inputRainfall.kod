@@ -38,11 +38,11 @@
             </Styles>
           </Layer>
 
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+          <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#N" />
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#N" />
         </MapperRefs>
       </Layer>
     </Layers>

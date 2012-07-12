@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="noDataChart">
+    <Layers>
+      <Layer id="noData" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider">
+          <Parameters>
+            <Parameter name="text" value="Keine Daten vorhanden" />
+            <Parameter name="alignment.horizontal" value="CENTER" />
+            <Parameter name="alignment.vertical" value="CENTER" />
+            <Parameter name="text.anchor.x" value="CENTER" />
+            <Parameter name="text.anchor.y" value="CENTER" />
+          </Parameters>
+        </Provider>
+        <Title>Keine Daten vorhanden</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#screenAxisX" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#screenAxisY" />
+        </MapperRefs>
+        <Styles>
+          <TextStyle role="defaultTextStyle">
+            <Size>16</Size>
+            <TextColor>000000</TextColor>
+            <FontWeight>BOLD</FontWeight>
+            <FontStyle>NORMAL</FontStyle>
+          </TextStyle>
+        </Styles>
+      </Layer>
+    </Layers>
+  </Chart>
+</ChartConfiguration>

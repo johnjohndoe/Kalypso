@@ -41,11 +41,11 @@
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:temperature:input#t_singlePoint_0</StyleReference>
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+          <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:mean:temperature#MEAN_TEMPERATURE" />
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:mean:temperature#MEAN_TEMPERATURE" />
         </MapperRefs>
       </Layer>
     </Layers>

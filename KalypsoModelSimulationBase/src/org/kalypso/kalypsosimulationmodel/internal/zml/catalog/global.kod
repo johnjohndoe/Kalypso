@@ -38,7 +38,6 @@
       <!-- invisible styles -->
       <LineStyle role="invisible_line" isVisible="false" />
       <PointStyle role="invisible_point" isVisible="false" />
-      
     </Styles>
     <Mappers>
       <Axis id="date" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -59,17 +58,36 @@
         <RendererRef ref="AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction  />
       </Axis>
-      <Axis id="W" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <ScreenAxis id="screenAxisX">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Wasserstand [cm]</Label>
-        <Direction>POSITIVE</Direction>
+        <Position>BOTTOM</Position>
+      </ScreenAxis>
+      <ScreenAxis id="screenAxisY">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Position>LEFT</Position>
-        <PreferredAdjustment before="35" range="60" after="5" />
-        <RendererRef ref="AutoNumberAxisRenderer" />
-        <AxisNumberRangeRestriction  />
-      </Axis>      
+      </ScreenAxis>
     </Mappers>
     <Renderers>
+      <AxisRenderer id="DateAxisRenderer">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisRendererProvider">
+          <Parameters>
+            <Parameter name="inset_tick" value="2" />
+            <Parameter name="inset_label" value="2" />
+            <Parameter name="tick_length" value="2" />
+            <Parameter name="min_tick_interval" value="86400000" />
+            <Parameter name="hide_cut" value="false" />
+            <Parameter name="gap" value="0" />
+            <!-- <Parameter name="date-format" value="dd.MM.&#10;HH:mm" /> -->
+            <Parameter name="label_position" value="CENTER" />
+          </Parameters>
+        </Provider>
+        <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLine</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLabel</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#tickLabel</StyleReference>
+        </Styles>
+      </AxisRenderer>
+    
       <AxisRenderer id="AutoNumberAxisRenderer">
         <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
