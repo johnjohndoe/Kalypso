@@ -13,6 +13,7 @@
   <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:waterlevel" uri="waterlevel.kod" />
   <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:evaporation" uri="evaporation.kod" />
   <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:evaporation:old" uri="evaporation.old.kod" />
+  <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:volume" uri="volume.kod" />
   
   <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:mean:humidity" uri="mean_humidity.kod" />
   <catalog:system systemId="urn:org:kalypso:simulation:base:diagramm:mean:temperature" uri="mean_temperature.kod" />

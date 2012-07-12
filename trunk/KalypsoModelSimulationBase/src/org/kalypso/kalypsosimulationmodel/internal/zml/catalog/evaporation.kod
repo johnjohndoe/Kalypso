@@ -124,7 +124,7 @@
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
-        <RendererRef ref="AutoNumberAxisRenderer" />
+        <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" fixMinValue="false" />
       </Axis>
       <Axis id="E_WATER" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -133,27 +133,9 @@
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
-        <RendererRef ref="AutoNumberAxisRenderer" />
+        <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" fixMinValue="false" />
       </Axis>
     </Mappers>
-    <Renderers>
-      <AxisRenderer id="AutoNumberAxisRenderer">
-        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
-          <Parameters>
-            <Parameter name="inset_tick" value="2" />
-            <Parameter name="inset_label" value="2" />
-            <Parameter name="tick_length" value="2" />
-            <Parameter name="hide_cut" value="false" />
-            <Parameter name="gap" value="0" />
-          </Parameters>
-        </Provider>
-        <Styles>
-          <StyleReference>urn:org:kalypso:simulation:base:diagramm:global#axisLine</StyleReference>
-          <StyleReference>urn:org:kalypso:simulation:base:diagramm:global#axisLabel</StyleReference>
-          <StyleReference>urn:org:kalypso:simulation:base:diagramm:global#tickLabel</StyleReference>
-        </Styles>
-      </AxisRenderer>
-    </Renderers>
   </Chart>
 </ChartConfiguration>

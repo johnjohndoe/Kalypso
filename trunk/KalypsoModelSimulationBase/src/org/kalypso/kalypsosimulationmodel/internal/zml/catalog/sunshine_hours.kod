@@ -83,8 +83,8 @@
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
-        <RendererRef ref="AutoNumberAxisRenderer" />
-        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" fixMinValue="false" />
+        <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" fixMinValue="true" />
       </Axis>
     </Mappers>
   </Chart>
