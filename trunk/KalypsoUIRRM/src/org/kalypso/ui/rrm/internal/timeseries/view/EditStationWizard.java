@@ -107,7 +107,6 @@ public class EditStationWizard extends Wizard
       @Override
       protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
       {
-
         return new StationComposite( parent, stationBean, binding, true );
       }
     };

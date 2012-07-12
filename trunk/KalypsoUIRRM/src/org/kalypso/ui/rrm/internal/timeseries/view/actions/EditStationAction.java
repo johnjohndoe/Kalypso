@@ -96,6 +96,9 @@ public class EditStationAction extends Action
 
     final String newGroup = m_station.getGroup();
     if( !ObjectUtils.equals( oldGroup, newGroup ) )
+    {
+      m_context.clear();
       m_context.refreshTree( m_station );
+    }
   }
 }
