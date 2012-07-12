@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for the older version of {org.kalypso.na.control}NAControl.
- *
+ * 
  * @author Gernot Belger
  */
 public class NAControl extends Feature_Impl
@@ -72,7 +72,7 @@ public class NAControl extends Feature_Impl
 
   private static final QName PROP_PNS = new QName( NS_NAMETA, "pns" ); //$NON-NLS-1$
 
-  private static final QName PROP_XJAH = new QName( NS_NAMETA, "xjah" ); //$NON-NLS-1$
+  public static final QName PROP_XJAH = new QName( NS_NAMETA, "xjah" ); //$NON-NLS-1$
 
   private static final QName PROP_XWAHL2 = new QName( NS_NAMETA, "xwahl2" ); //$NON-NLS-1$
 

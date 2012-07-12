@@ -92,7 +92,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
 
   private static final QName PROP_PNS = new QName( NS_CONTROL, "pns" ); //$NON-NLS-1$
 
-  private static final QName PROP_XJAH = new QName( NS_CONTROL, "xjah" ); //$NON-NLS-1$
+  public static final QName PROP_XJAH = new QName( NS_CONTROL, "xjah" ); //$NON-NLS-1$
 
   private static final QName PROP_XWAHL2 = new QName( NS_CONTROL, "xwahl2" ); //$NON-NLS-1$
 

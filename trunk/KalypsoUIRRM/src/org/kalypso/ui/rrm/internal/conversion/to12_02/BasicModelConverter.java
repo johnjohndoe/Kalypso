@@ -140,7 +140,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     copyFile( new Path( INaProjectConstants.GML_MODELL_FILE ), modelsPath.append( RrmScenario.FILE_MODELL_GML ) );
     final File hydrotope = copyFile( new Path( INaProjectConstants.GML_HYDROTOP_FILE ), modelsPath.append( RrmScenario.FILE_HYDROTOP_GML ) );
     copyFile( new Path( INaProjectConstants.GML_PARAMETER_FILE ), modelsPath.append( RrmScenario.FILE_PARAMETER_GML ) );
-    copyFile( new Path( "calcSynthN.gml" ), basisPath.append( RrmScenario.FILE_SYNTHN_GML ) ); //$NON-NLS-1$
+    copyFile( new Path( "calcSynthN.gml" ), modelsPath.append( RrmScenario.FILE_SYNTHN_GML ) ); //$NON-NLS-1$
     final File landuse = copyFile( new Path( INaProjectConstants.GML_LANDUSE_FILE ), modelsPath.append( RrmScenario.FILE_LANDUSE ) );
     final File geology = copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), modelsPath.append( RrmScenario.FILE_GEOLOGIE ) );
     copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), modelsPath.append( RrmScenario.FILE_PEDOLOGIE ) );
@@ -221,7 +221,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     final TimeseriesWalker walker = new TimeseriesWalker( new ParameterTypeIndexVisitor( sourceModelDir ), localLog );
     naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
 
-    final IStatus status = localLog.asMultiStatus( Messages.getString("BasicModelConverter.2") ); //$NON-NLS-1$
+    final IStatus status = localLog.asMultiStatus( Messages.getString( "BasicModelConverter.2" ) ); //$NON-NLS-1$
     log.add( status );
 
     return new ParameterTypeIndexVisitor( sourceModelDir );
@@ -234,7 +234,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     final TimeseriesWalker walker = new TimeseriesWalker( new EmptyTimeseriesVisitor(), localLog );
     naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
 
-    final IStatus status = localLog.asMultiStatus( Messages.getString("BasicModelConverter.9") ); //$NON-NLS-1$
+    final IStatus status = localLog.asMultiStatus( Messages.getString( "BasicModelConverter.9" ) ); //$NON-NLS-1$
     log.add( status );
   }
 
