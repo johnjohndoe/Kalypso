@@ -154,9 +154,9 @@
         <Label>Abfluss [m³]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <PreferredAdjustment before="5" range="85" after="10"  />
+        <PreferredAdjustment before="5" range="80" after="15"  />
         <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
-        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.001" />
       </Axis>
     </Mappers>
   </Chart>

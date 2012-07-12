@@ -49,15 +49,6 @@
         <!-- <AxisNumberRangeRestriction minRange="86400000" /> -->
         <AxisNumberRangeRestriction minRange="1000" />
       </Axis>
-      <Axis id="N" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Niederschlag [mm]</Label>
-        <Direction>NEGATIVE</Direction>
-        <Position>RIGHT</Position>
-        <PreferredAdjustment before="0" range="33" after="67" />
-        <RendererRef ref="AutoNumberAxisRenderer" />
-        <AxisNumberRangeRestriction  />
-      </Axis>
       <ScreenAxis id="screenAxisX">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Position>BOTTOM</Position>

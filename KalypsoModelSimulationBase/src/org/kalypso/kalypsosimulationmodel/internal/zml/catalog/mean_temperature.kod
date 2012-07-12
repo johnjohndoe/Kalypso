@@ -145,7 +145,7 @@
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
-        <RendererRef ref="AutoNumberAxisRenderer" />
+        <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction minRange="0.1" />
       </Axis>
     </Mappers>

@@ -117,9 +117,20 @@
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#N" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:rainfall#N" />
         </MapperRefs>
       </Layer>
     </Layers>
+    <Mappers>
+      <Axis id="N" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Niederschlag [mm]</Label>
+        <Direction>NEGATIVE</Direction>
+        <Position>RIGHT</Position>
+        <PreferredAdjustment before="0" range="33" after="67" />
+        <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction  />
+      </Axis>
+    </Mappers>
   </Chart>
 </ChartConfiguration>

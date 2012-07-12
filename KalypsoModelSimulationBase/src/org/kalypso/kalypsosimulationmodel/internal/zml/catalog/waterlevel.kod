@@ -151,7 +151,7 @@
         <Label>Wasserstand [cm]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <PreferredAdjustment before="5" range="60" after="35" />
+        <PreferredAdjustment before="5" range="80" after="15" />
         <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction />
       </Axis>

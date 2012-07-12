@@ -42,7 +42,7 @@
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#N" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:rainfall#N" />
         </MapperRefs>
       </Layer>
     </Layers>
