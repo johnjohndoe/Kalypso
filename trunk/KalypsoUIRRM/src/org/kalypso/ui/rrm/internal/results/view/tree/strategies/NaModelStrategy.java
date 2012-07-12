@@ -93,7 +93,6 @@ import com.google.common.base.Splitter;
  */
 public class NaModelStrategy implements ITreeNodeStrategy
 {
-
   private final RrmScenario m_scenario;
 
   private final ResultManagementView m_view;
@@ -161,7 +160,6 @@ public class NaModelStrategy implements ITreeNodeStrategy
   private void doAddEmptyNode( final TreeNode root )
   {
     root.addChild( new TreeNode( root, new EmptyTreeNodeUiHandler( Messages.getString( "NaModelStrategy_0" ) ), "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
   }
 
   protected TreeNode buildCalculationCaseNodes( final TreeNode parent, final RrmSimulation simulation )
@@ -201,8 +199,6 @@ public class NaModelStrategy implements ITreeNodeStrategy
 
   private void doAddResultCategories( final Map<String, Set<Feature>> categories, final TreeNode parent, final RrmSimulation simulation, final RrmCalculationResult calculation )
   {
-//    final TreeNode base = new TreeNode( parent, new ResultCategoryUiHandler( simulation, calculation, Messages.getString( "NaModelStrategy_2" ), m_view ), Messages.getString( "NaModelStrategy_3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
     final Map<Pair<Integer, String>, TreeNode> registry = new HashMap<>();
 
     final Set<Entry<String, Set<Feature>>> entries = categories.entrySet();

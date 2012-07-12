@@ -52,6 +52,7 @@ import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatisticsData;
+import org.kalypso.model.hydrology.timeseries.TSResultDescriptor;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -72,7 +73,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts result timeseries of Kalypso-NA.exe to zml's.
- * 
+ *
  * @author Gernot Belger
  */
 public class ResultTimeseriesLoader
@@ -150,35 +151,26 @@ public class ResultTimeseriesLoader
       return;
     }
 
-    final String suffix = descriptor.name();
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-1$//$NON-NLS-2$
+    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), descriptor ) + "\n" ); //$NON-NLS-1$//$NON-NLS-2$
 
-    final String resultPathRelative = generateResultPath( resultFeature, descriptor );
+    final String resultPathRelative = DefaultPathGenerator.generateResultPathFor( resultFeature, descriptor, null );
 
-    final File resultFile = tweakResultPath( m_outputDir, resultPathRelative, resultFeature, suffix );
+    final File resultFile = tweakResultPath( m_outputDir, resultPathRelative, resultFeature, descriptor );
     resultFile.getParentFile().mkdirs();
 
     // create observation object
-    final String titleForObservation = DefaultPathGenerator.generateTitleForObservation( resultFeature, suffix );
+    final String titleForObservation = DefaultPathGenerator.generateTitleForObservation( resultFeature, descriptor );
 
     final MetadataList metadataList = getMetadata( resultFeature );
 
     final IObservation resultObservation = new SimpleObservation( resultPathRelative, titleForObservation, metadataList, qTuppelModel ); //$NON-NLS-1$
     ZmlFactory.writeToFile( resultObservation, resultFile );
 
-    if( TSResultDescriptor.SUFFIX_QGS.equals( suffix ) && resultFeature instanceof Node )
+    if( TSResultDescriptor.qgs == descriptor && resultFeature instanceof Node )
     {
       final NAStatisticsData data = new NAStatisticsData( resultObservation, resultFile );
       m_naStatistics.add( resultFeature, data );
     }
-  }
-
-  // lese ergebnis-link um target fuer zml zu finden
-  private String generateResultPath( final Feature resultFeature, final TSResultDescriptor descriptor )
-  {
-    final String suffix = descriptor.name();
-
-    return DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, null );
   }
 
   /**
@@ -206,7 +198,6 @@ public class ResultTimeseriesLoader
     if( !ts.dataExistsForKey( key ) )
       return null;
 
-    final String suffix = descriptor.name();
     final double resultFactor = descriptor.getResultFactor();
     final String resultType = descriptor.getAxisType();
 
@@ -236,7 +227,7 @@ public class ResultTimeseriesLoader
       pos++;
     }
 
-    final String axisTitle = TSResultDescriptor.getAxisTitleForSuffix( suffix );
+    final String axisTitle = descriptor.getAxisTitle();
     final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.4" ), ITimeseriesConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
     final IAxis qAxis = new DefaultAxis( axisTitle, resultType, TimeseriesUtils.getUnit( resultType ), Double.class, false );
     final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
@@ -244,7 +235,7 @@ public class ResultTimeseriesLoader
     return new SimpleTupleModel( axis, tupelData );
   }
 
-  private File tweakResultPath( final File resultDir, final String resultPathRelative, final Feature resultFeature, final String suffix )
+  private File tweakResultPath( final File resultDir, final String resultPathRelative, final Feature resultFeature, final TSResultDescriptor descriptor )
   {
     final File resultFile = new File( resultDir, resultPathRelative ); //$NON-NLS-1$
     if( !resultFile.exists() )
@@ -254,7 +245,7 @@ public class ResultTimeseriesLoader
     // do such terrible things here!
     m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.136", resultPathRelative ) ); //$NON-NLS-1$
     final String extra = "(ID" + Integer.toString( m_idManager.getAsciiID( resultFeature ) ).trim() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-    final String resultPath = DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, extra ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String resultPath = DefaultPathGenerator.generateResultPathFor( resultFeature, descriptor, extra ); //$NON-NLS-1$ //$NON-NLS-2$
     m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.140", resultPath ) ); //$NON-NLS-1$
 
     return new File( resultDir, resultPath ); //$NON-NLS-1$
