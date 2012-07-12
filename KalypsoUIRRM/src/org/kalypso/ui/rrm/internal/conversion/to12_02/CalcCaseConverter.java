@@ -307,8 +307,12 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyFile( CALC_CASE, modelsPath.append( RrmScenario.FILE_MODELL_GML ).toOSString() );
     final File hydrotope = copyFile( CALC_HYDROTOP, modelsPath.append( RrmScenario.FILE_HYDROTOP_GML ).toOSString() );
     copyFile( CALC_PARAMETER, modelsPath.append( RrmScenario.FILE_PARAMETER_GML ).toOSString() );
-    copyFile( INaCalcCaseConstants.NIEDERSCHLAG_DIR + "/calcSynthN.gml", modelsPath.append( RrmScenario.FILE_SYNTHN_GML ).toOSString() ); //$NON-NLS-1$
     copyFile( INaCalcCaseConstants.EXPERT_CONTROL_FILE, modelsPath.append( RrmScenario.FILE_EXPERT_CONTROL_GML ).toOSString() );
+
+    /* This file may not exist. */
+    final File calcSynthN = new File( m_sourceCalcCaseDir, INaCalcCaseConstants.NIEDERSCHLAG_DIR + "/calcSynthN.gml" );
+    if( calcSynthN.exists() )
+      copyFile( INaCalcCaseConstants.NIEDERSCHLAG_DIR + "/calcSynthN.gml", modelsPath.append( RrmScenario.FILE_SYNTHN_GML ).toOSString() ); //$NON-NLS-1$
 
     /* Convert the hydrotopes. */
     final ConvertHydrotopesOperation convertHydrotopesOperation = new ConvertHydrotopesOperation( hydrotope );
