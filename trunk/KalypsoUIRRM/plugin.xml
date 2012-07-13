@@ -299,10 +299,13 @@
                  name="diagram.view.seperator2"
                  visible="true">
            </separator>
-           <command
-                 commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
-                 label="%command.label.1"
-                 style="push">
+           <command commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog" label="%command.label.1" style="push">
+               <visibleWhen checkEnabled="false">
+                    <!-- Test against undefined 'value' == null means no debug option active -->
+                    <not>
+                        <test property="frameworkPropertyTester.property" args="osgi.debug" />
+                    </not> 
+               </visibleWhen>
            </command>
         </menuContribution>
         <menuContribution
@@ -831,6 +834,7 @@
              visible="true">
        </separator>
     </menuContribution>
+    <!--
     <menuContribution
           allPopups="false"
           locationURI="toolbar:org.kalypso.model.rrm.ui.chart.debug">
@@ -839,6 +843,7 @@
              style="push">
        </command>
     </menuContribution>
+    -->
     <menuContribution
             allPopups="true"
             locationURI="toolbar:org.kalypso.model.rrm.ui.zml.table.menu.toolbar.instantaneous">
