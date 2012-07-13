@@ -41,10 +41,12 @@
 package org.kalypso.model.hydrology.internal.binding.timeseries;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.Period;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.StationUtils;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
@@ -101,12 +103,8 @@ public abstract class Station extends Feature_Impl implements IStation
   @Override
   public String getTimeseriesFoldername( )
   {
-    final String dirtyFoldername = String.format( "%s", getDescription() ); //$NON-NLS-1$
-
-    // don't encode string - use plain folder name!
-    // return URIUtil.fromString( dirtyFoldername ).toASCIIString();
-
-    return dirtyFoldername;
+    // REMARK: delegate to static method, to ensure this logic is only in one place
+    return StationUtils.getTimeseriesFoldername( getDescription() );
   }
 
   @Override
@@ -116,12 +114,12 @@ public abstract class Station extends Feature_Impl implements IStation
   }
 
   @Override
-  public boolean hasTimeseries( final String parameterType, final String quality )
+  public boolean hasTimeseries( final String parameterType, final String quality, final Period timestep )
   {
     final IFeatureBindingCollection<ITimeseries> timeserieses = getTimeseries();
     for( final ITimeseries timeseries : timeserieses )
     {
-      if( parameterType.equals( timeseries.getParameterType() ) )
+      if( parameterType.equals( timeseries.getParameterType() ) && timestep.equals( timeseries.getTimestep() ) )
       {
         if( quality.equalsIgnoreCase( timeseries.getQuality() ) )
           return true;

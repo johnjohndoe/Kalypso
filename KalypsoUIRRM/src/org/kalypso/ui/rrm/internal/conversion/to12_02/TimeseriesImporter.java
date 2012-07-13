@@ -69,6 +69,7 @@ import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.binding.timeseries.StationUtils;
 import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.timeseries.HydrologyTimeseriesImportWorker;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
@@ -100,7 +101,7 @@ import com.google.common.base.Charsets;
 
 /**
  * Helper that imports the timeseries from the old 'Zeitreihen' folder into the new timeseries management.
- * 
+ *
  * @author Gernot Belger
  */
 public class TimeseriesImporter
@@ -422,25 +423,40 @@ public class TimeseriesImporter
       throw new CoreException( status );
     }
 
-    final IStation existingStation = findStation( description, stationType );
-    if( existingStation != null )
-      return existingStation;
+    // REMARK: always create a new station, because we can never have two stations with the same station name
+    int count = 1;
+    while( true )
+    {
+      final String stationName = buildNewStationName( description, count++ );
 
-    return createNewStation( description, group, stationType );
+      /* Search for a station that does not exist */
+      final IStation existingStation = findStation( stationName );
+      if( existingStation == null )
+        return createNewStation( stationName, group, stationType );
+    }
   }
 
-  private IStation findStation( final String description, final QName stationType )
+  private String buildNewStationName( final String description, final int count )
   {
+    String stationName;
+    if( count == 1 )
+      stationName = description;
+    else
+      stationName = String.format( "%s (%s)", description, count );
+    return stationName;
+  }
+
+  private IStation findStation( final String description )
+  {
+    final String foldername = StationUtils.getTimeseriesFoldername( description );
+
     // REMARK: linear search here, we assume we do not have too many stations...
 
     final IFeatureBindingCollection<IStation> stations = m_stations.getStations();
     for( final IStation station : stations )
     {
-      if( station.getFeatureType().getQName().equals( stationType ) )
-      {
-        if( description.equalsIgnoreCase( station.getDescription() ) )
-          return station;
-      }
+      if( foldername.equals( station.getTimeseriesFoldername() ) )
+        return station;
     }
 
     return null;
