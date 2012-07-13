@@ -57,21 +57,21 @@ import org.kalypso.ogc.sensor.DateRange;
  */
 public interface ICatchmentModelInfo
 {
-  public abstract RrmSimulation getSimulation( );
+  RrmSimulation getSimulation( );
 
-  public abstract NAControl getControl( );
+  NAControl getControl( );
 
-  public abstract NaModell getModel( );
+  NaModell getModel( );
 
-  public abstract IRainfallGenerator getGenerator( );
+  IRainfallGenerator getGenerator( );
 
-  public abstract QName getTargetLink( );
+  QName getTargetLink( );
 
-  public abstract String getParameterType( );
+  String getParameterType( );
 
-  public abstract Period getTimestep( );
+  Period getTimestep( );
 
-  public abstract LocalTime getTimestamp( );
+  LocalTime getTimestamp( );
 
-  public abstract DateRange getRange( );
+  DateRange getRange( );
 }
