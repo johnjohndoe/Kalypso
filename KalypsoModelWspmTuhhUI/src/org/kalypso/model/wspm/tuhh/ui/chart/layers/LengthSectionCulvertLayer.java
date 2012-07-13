@@ -14,8 +14,8 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
@@ -45,9 +45,9 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     final IRecord[] record = tupleResult == null ? new IRecord[] {} : tupleResult.toArray( new IRecord[] {} );
     final IComponent[] components = tupleResult == null ? null : tupleResult.getComponents();
     final IComponent component = ProfilUtil.getComponentForID( components, id );
-    final Double min = ProfilUtil.getSectionMinValueFor( record, component );
-    final Double max = ProfilUtil.getSectionMaxValueFor( record, component );
-    return new DataRange<Number>( min, max );
+    final Number min = ProfilUtil.getSectionMinValueFor( record, component );
+    final Number max = ProfilUtil.getSectionMaxValueFor( record, component );
+    return DataRange.create( min, max );
   }
 
   @Override
