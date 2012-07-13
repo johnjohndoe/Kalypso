@@ -133,9 +133,9 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
 
     final String parameterType = (String) m_bean.getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
 
-    if( m_station.hasTimeseries( parameterType, quality ) )
+    if( m_station.hasTimeseries( parameterType, quality, timestep ) )
     {
-      final String message = String.format( "A timeseries with the same quality '%s' already exists.", quality );
+      final String message = String.format( "A timeseries with the same timestep and quality already exists." );
       final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }

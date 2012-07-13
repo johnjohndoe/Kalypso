@@ -53,7 +53,7 @@ public interface ITreeNodeModel
 
   void setSelection( TreeNode... selection );
 
-  void refreshTree( Object treeDataToSelect );
+  void refreshTree( Object... treeDataToSelect );
 
   TreeNode[] getRootElements( );
 

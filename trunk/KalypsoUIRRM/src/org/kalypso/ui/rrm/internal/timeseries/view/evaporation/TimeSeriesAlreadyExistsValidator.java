@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.Period;
 import org.kalypso.commons.databinding.validation.TypedValidator;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.operation.evaporation.IEvaporationCalculator;
@@ -68,8 +69,9 @@ public class TimeSeriesAlreadyExistsValidator extends TypedValidator<String>
     final IEvaporationCalculator calculator = m_data.getCalculator();
     final String parameterType = calculator.getParameterType();
     final IStation station = m_data.getStation();
+    final Period timestep = IEvaporationCalculator.RESULT_TIMESTEP;
 
-    if( station.hasTimeseries( parameterType, value ) )
+    if( station.hasTimeseries( parameterType, value, timestep ) )
       fail();
 
     return ValidationStatus.ok();
