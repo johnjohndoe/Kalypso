@@ -45,6 +45,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
@@ -53,6 +54,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -117,11 +119,12 @@ public class EditStationWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+
     try
     {
       final ICommand command = m_stationBean.applyChanges();
 
-      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
       stationsWorkspace.postCommand( command );
     }
@@ -136,6 +139,16 @@ public class EditStationWizard extends Wizard
     {
       final RenameStationOperation operation = new RenameStationOperation( station, m_oldFolder, folder, m_oldTimeseriesLinks );
       operation.execute( new NullProgressMonitor() );
+
+      try
+      {
+        /* Immediately save model, we cannot revert the operation if the folder changed */
+        dataProvider.saveModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, new NullProgressMonitor() );
+      }
+      catch( final CoreException e )
+      {
+        StatusDialog.open( getShell(), e.getStatus(), getWindowTitle() );
+      }
     }
 
     return true;
