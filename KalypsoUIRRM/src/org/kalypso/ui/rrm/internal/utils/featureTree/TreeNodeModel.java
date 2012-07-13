@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.utils.featureTree;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -110,14 +112,20 @@ public class TreeNodeModel implements ITreeNodeModel
   }
 
   @Override
-  public void refreshTree( final Object treeDataToSelect )
+  public void refreshTree( final Object... treeDataToSelect )
   {
     m_viewer.refresh();
 
     /** set selection */
-    final TreeNode node = findNode( treeDataToSelect );
-    if( Objects.isNotNull( node ) )
-      setSelection( node );
+    final Collection<TreeNode> nodesToSelect = new ArrayList<>();
+    for( final Object treeObject : treeDataToSelect )
+    {
+      final TreeNode node = findNode( treeObject );
+      if( node != null )
+        nodesToSelect.add( node );
+    }
+
+    setSelection( nodesToSelect.toArray( new TreeNode[nodesToSelect.size()] ) );
   }
 
   private TreeNode[] convert( final TreeNode[] others )

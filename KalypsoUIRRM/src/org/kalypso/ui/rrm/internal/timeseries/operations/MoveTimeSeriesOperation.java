@@ -41,72 +41,124 @@
 package org.kalypso.ui.rrm.internal.timeseries.operations;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * moves a timeseries from one station to the given target station
- * 
+ *
  * @author Dirk Kuch
  */
 public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
 {
+  private final Collection<ITimeseries> m_movedTimeseries = new ArrayList<>();
+
   private final IStation m_target;
 
-  private final ITimeseries m_timeseries;
+  private final ITimeseries[] m_timeseries;
 
-  private ITimeseries m_moved;
-
-  public MoveTimeSeriesOperation( final IStation target, final ITimeseries timeseries )
+  public MoveTimeSeriesOperation( final IStation target, final ITimeseries... timeseries )
   {
     m_target = target;
     m_timeseries = timeseries;
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
-    final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    monitor.beginTask( "Move timeseries", m_timeseries.length );
 
-    final ZmlLink oldLink = m_timeseries.getDataLink();
+    final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    for( final ITimeseries timeseries : m_timeseries )
+    {
+      try
+      {
+        final IStatus status = moveTimeseries( timeseries, new SubProgressMonitor( monitor, 1 ) );
+        log.add( status );
+      }
+      catch( final CoreException e )
+      {
+        log.add( e.getStatus() );
+      }
+    }
+
+    /* Save stations workspace, we cannot revert this operation */
+    try
+    {
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+      dataProvider.saveModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, new NullProgressMonitor() );
+    }
+    catch( final CoreException e )
+    {
+      log.add( e.getStatus() );
+    }
+
+    return log.asMultiStatus( "Move timeseries" );
+  }
+
+  private IStatus moveTimeseries( final ITimeseries timeseries, final IProgressMonitor monitor ) throws CoreException
+  {
+    final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final String timeseriesLabel = Timeserieses.getTreeLabel( timeseries );
+
+    if( timeseries.getStation() == m_target )
+    {
+      m_movedTimeseries.add( timeseries );
+      final String message = String.format( "%s is already a timeseries of this station", timeseriesLabel );
+      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), message );
+    }
+
+    final ZmlLink oldLink = timeseries.getDataLink();
     final IObservation observation = oldLink.getObservationFromPool();
-    final ObservationImportOperation importOperation = new ObservationImportOperation( observation, m_timeseries.getParameterType(), m_timeseries.getQuality() );
+    final ObservationImportOperation importOperation = new ObservationImportOperation( observation, timeseries.getParameterType(), timeseries.getQuality() );
     final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_target, importOperation );
     storeOperation.updateDataAfterFinish();
-    stati.add( storeOperation.execute( monitor ) );
+    log.add( storeOperation.execute( monitor ) );
 
-    m_moved = storeOperation.getTimeseries();
-    if( m_moved == null )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "MoveTimeSeriesOperation.0" ) ); //$NON-NLS-1$
+    final ITimeseries moved = storeOperation.getTimeseries();
+    if( moved == null )
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "MoveTimeSeriesOperation.0", timeseriesLabel ) ); //$NON-NLS-1$
 
-    final ZmlLink newLink = m_moved.getDataLink();
+    m_movedTimeseries.add( moved );
+
+    final ZmlLink newLink = moved.getDataLink();
     final IStatus updateStatus = doUpdateTimeseriesLinks( oldLink.getLocation(), newLink.getHref() );
-    stati.add( updateStatus );
+    log.add( updateStatus );
 
     /* Delete the old timeseries and its status. */
-    final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( m_timeseries );
-    stati.add( deleteOperation.execute( monitor ) );
+    final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( timeseries );
+    log.add( deleteOperation.execute( monitor ) );
 
     /* Store the status for the new timeseries. */
-    final IStatus status = stati.asMultiStatusOrOK( String.format( Messages.getString( "MoveTimeSeriesOperation_0" ), m_timeseries.getName() ) ); //$NON-NLS-1$
-    final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_moved, status );
-    stati.add( storeStatusOperation.execute( monitor ) );
+    final IStatus status = log.asMultiStatus( timeseriesLabel ); //$NON-NLS-1$
+
+    final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( moved, status );
+    log.add( storeStatusOperation.execute( monitor ) );
 
     return status;
   }
@@ -118,8 +170,8 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     return updater.execute( new NullProgressMonitor() );
   }
 
-  public ITimeseries getMovedTimeseries( )
+  public ITimeseries[] getMovedTimeseries( )
   {
-    return m_moved;
+    return m_movedTimeseries.toArray( new ITimeseries[m_movedTimeseries.size()] );
   }
 }

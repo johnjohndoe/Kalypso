@@ -41,15 +41,21 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.dnd;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.timeseries.Timeserieses;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.operations.MoveTimeSeriesOperation;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -60,8 +66,6 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
  */
 public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
 {
-  private IStation m_station;
-
   public TimeseriesManagementTreeDropListener( final TreeViewer treeViewer )
   {
     super( treeViewer );
@@ -74,27 +78,62 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
     if( ArrayUtils.isEmpty( timeserieses ) )
       return false;
 
-    final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final DropTargetEvent event = getCurrentEvent();
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+    final String windowTitle = "Zeitreihen verschieben";
+
+    final IStation station = findStation( getCurrentTarget() );
+    if( station == null )
+      return false;
+
+    if( isSameStation( station, timeserieses ) )
+    {
+      // TODO: can't we check this beforehand?
+      final IStatus status = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Verschieben nicht möglich, die Zeitreihen sind bereits in dieser Station." );
+      StatusDialog.open( shell, status, windowTitle );
+      return false;
+    }
+
     final ITreeNodeModel model = getModel();
     if( Objects.isNull( model ) )
       return false;
 
+    final StringBuilder message = new StringBuilder();
+    message.append( String.format( "Folgende Zeitreihen in Station '%s' verschieben:%n", station.getDescription() ) );
     for( final ITimeseries timeseries : timeserieses )
     {
-      try
-      {
-        final MoveTimeSeriesOperation operation = new MoveTimeSeriesOperation( m_station, timeseries );
-        stati.add( operation.execute( new NullProgressMonitor() ) );
-
-        model.refreshTree( operation.getMovedTimeseries() );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
+      message.append( "- " ); //$NON-NLS-1$
+      message.append( TimeseriesUtils.getName( timeseries.getParameterType() ) );
+      message.append( " - " ); //$NON-NLS-1$
+      message.append( Timeserieses.getTreeLabel( timeseries ) );
+      message.append( '\n' );
     }
 
+    if( !MessageDialog.openConfirm( shell, windowTitle, message.toString() ) )
+      return false;
+
+    final MoveTimeSeriesOperation operation = new MoveTimeSeriesOperation( station, timeserieses );
+    final IStatus execute = ProgressUtilities.busyCursorWhile( operation );
+
+    final ITimeseries[] movedTimeseries = operation.getMovedTimeseries();
+    for( final ITimeseries moved : movedTimeseries )
+      model.refreshTree( moved );
+
+    StatusDialog.open( shell, execute, windowTitle );
+
     return false;
+  }
+
+  private boolean isSameStation( final IStation station, final ITimeseries[] timeserieses )
+  {
+    for( final ITimeseries timeseries : timeserieses )
+    {
+      final IStation tsStation = timeseries.getStation();
+      if( tsStation != station )
+        return false;
+    }
+
+    return true;
   }
 
   private ITreeNodeModel getModel( )
@@ -109,22 +148,32 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
   @Override
   public boolean validateDrop( final Object target, final int operation, final TransferData transferType )
   {
-    if( !(target instanceof TreeNode) )
+    final IStation station = findStation( target );
+    if( station == null )
       return false;
+
+    // TODO: does not work, how to we get the current drag data?
+    // final Object data = getCurrentEvent().data;
+    // final ITimeseries[] timeserieses = (ITimeseries[]) data;
+    // if( timeserieses == null )
+    // return false;
+    //
+    // if( isSameStation( station, timeserieses ) )
+    // return false;
+
+    return true;
+  }
+
+  private IStation findStation( final Object target )
+  {
+    if( !(target instanceof TreeNode) )
+      return null;
 
     final TreeNode node = (TreeNode) target;
     final Object objStation = node.getAdapter( IStation.class );
     if( objStation instanceof IStation )
-    {
-      m_station = (IStation) objStation;
+      return (IStation) objStation;
 
-      if( getModel() == null )
-        return false;
-
-      return true;
-    }
-
-    return false;
+    return null;
   }
-
 }
