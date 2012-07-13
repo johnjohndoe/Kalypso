@@ -55,7 +55,6 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.operations.MoveTimeSeriesOperation;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -102,10 +101,8 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
     message.append( String.format( "Folgende Zeitreihen in Station '%s' verschieben:%n", station.getDescription() ) );
     for( final ITimeseries timeseries : timeserieses )
     {
-      message.append( "- " ); //$NON-NLS-1$
-      message.append( TimeseriesUtils.getName( timeseries.getParameterType() ) );
       message.append( " - " ); //$NON-NLS-1$
-      message.append( Timeserieses.getTreeLabel( timeseries ) );
+      message.append( Timeserieses.toLinkLabel( timeseries ) );
       message.append( '\n' );
     }
 
