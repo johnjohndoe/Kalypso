@@ -98,6 +98,13 @@ public interface ITimeseries extends Feature
 
   void setMeasurementEnd( Date date );
 
+  /**
+   * This function returns the measurement date range ({@link #getMeasurementStart()} and {@link #getMeasurementEnd()}).
+   * If the measurement range is not correctly set, it will be determined via the observation and will then be set.
+   * Afterwards it is returned.
+   * 
+   * @return The measurement date range.
+   */
   DateRange getDateRange( );
 
   void deleteDataFile( ) throws CoreException;
