@@ -121,6 +121,9 @@ public class DeleteStationAction extends Action
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
       stationsWorkspace.postCommand( deleteCommand );
+
+      /* Immediately save model, we cannot revert this operation */
+      dataProvider.saveModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, new NullProgressMonitor() );
     }
     catch( final Exception e )
     {

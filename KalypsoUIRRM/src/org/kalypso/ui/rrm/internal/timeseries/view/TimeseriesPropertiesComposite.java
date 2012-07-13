@@ -54,7 +54,6 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
  */
 public class TimeseriesPropertiesComposite extends FeatureBeanComposite<ITimeseries>
 {
-
   private final boolean m_readOnly;
 
   public TimeseriesPropertiesComposite( final IStation station, final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding, final boolean readOnly )

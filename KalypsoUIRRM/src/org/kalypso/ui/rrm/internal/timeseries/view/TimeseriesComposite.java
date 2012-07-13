@@ -76,22 +76,16 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
   @Override
   protected void createContents( )
   {
-    // createPropertyControl( Timeseries.QN_DESCRIPTION );
-    // createPropertyControl( Timeseries.QN_NAME );
     createParameterTypeControl();
     createPropertyTextFieldControl( ITimeseries.PROPERTY_QUALITY );
+    createPropertyTextFieldControl( ITimeseries.QN_DESCRIPTION );
 
     createTimestepControl();
+    // TODO: show timestamp
 
     createDateRangetControl();
 
     createTimeseriesDataValidationControl();
-
-    // TODO: Check consistency (i.e. existence) of data file
-
-    // TODO: show timestep
-    // TODO: utility that changes the timestep
-    // TODO: copy timeseries
   }
 
   private void createParameterTypeControl( )
@@ -123,6 +117,34 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
 
     getBinding().bindValue( binder );
   }
+
+  // TODO: should we give the ITimeseries a timestamp field?
+// /**
+// * This function creates the timestamp control.
+// */
+// private void createPropertyTimestampControl( )
+// {
+// /* Create the property label. */
+// createPropertyLabel( this, ITimeseries.PROPERTY_TIMESTAMP );
+//
+// /* Create the property text field. */
+// final Text field = createPropertyTextField( this );
+//
+// /* Bind the text field. */
+// final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
+// final IObservableValue model = new FeatureBeanObservableValue( getBean(), ITimeseries.PROPERTY_TIMESTAMP );
+//
+// /* Create the data binder. */
+// final DataBinder binder = new DataBinder( target, model );
+// binder.setModelToTargetConverter( new TimestampModelToTargetConverter() );
+// binder.setTargetToModelConverter( new TimestampTargetToModelConverter() );
+//
+// /* Get the data binding. */
+// final IDataBinding binding = getBinding();
+//
+// /* Bind the value. */
+// binding.bindValue( binder );
+// }
 
   private void createDateRangetControl( )
   {
