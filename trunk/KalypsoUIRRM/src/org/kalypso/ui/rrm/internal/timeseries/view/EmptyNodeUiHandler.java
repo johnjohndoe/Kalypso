@@ -69,13 +69,13 @@ class EmptyNodeUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return Messages.getString("EmptyNodeUiHandler_0"); //$NON-NLS-1$
+    return Messages.getString( "EmptyNodeUiHandler_0" ); //$NON-NLS-1$
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return Messages.getString("EmptyNodeUiHandler_1"); //$NON-NLS-1$
+    return Messages.getString( "EmptyNodeUiHandler_1" ); //$NON-NLS-1$
   }
 
   @Override
