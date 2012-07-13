@@ -35,8 +35,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
@@ -256,7 +256,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       min = min.min( value );
     }
 
-    return new ComparableDataRange<Number>( new BigDecimal[] { min, max } );
+    return DataRange.createFromComparable( (Number) min, (Number) max );
   }
 
   public EditInfo getEditInfo( final Point p )

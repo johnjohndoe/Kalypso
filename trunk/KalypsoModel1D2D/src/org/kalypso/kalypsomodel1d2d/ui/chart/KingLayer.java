@@ -47,8 +47,8 @@ import org.eclipse.swt.graphics.Path;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
@@ -117,9 +117,7 @@ public class KingLayer extends AbstractChartLayer
     /* 10% insets */
     widthProfile *= 1.10;
 
-    IDataRange<Number> dr = null;
-    dr = new DataRange<Number>( -widthProfile / 2, widthProfile / 2 );
-    return dr;
+    return DataRange.create( (Number) (-widthProfile / 2), widthProfile / 2 );
 
   }
 

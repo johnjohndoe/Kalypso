@@ -57,8 +57,8 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -201,7 +201,7 @@ public class RoughnessLayer extends AbstractProfilLayer
     if( min == Double.MAX_VALUE || max == -Double.MAX_VALUE )
       return null;
 
-    return new DataRange<Double>( min, max );
+    return DataRange.create( min, max );
   }
 
   @Override
