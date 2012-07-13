@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
 /**
  * Wrapper that holds {@link IHydrotope}.
- * 
+ *
  * @author Gernot Belger
  */
 public class HydrotopeInfo
@@ -91,7 +91,7 @@ public class HydrotopeInfo
     m_landuseClass = calculateLanduseClass();
     m_soilType = calculateSoiltype();
 
-    m_totalSealingRate = calculateTotalSealingFactor();
+    m_totalSealingRate = calculateTotalSealingRate();
 
     validateAttributes();
   }
@@ -351,7 +351,7 @@ public class HydrotopeInfo
     return corrSealing;
   }
 
-  private double calculateTotalSealingFactor( ) throws NAPreprocessorException
+  private double calculateTotalSealingRate( ) throws NAPreprocessorException
   {
     final double landuseSealing = getLanduseSealingRate();
 
