@@ -124,12 +124,12 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
   {
     final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final String timeseriesLabel = Timeserieses.getTreeLabel( timeseries );
+    final String timeseriesLabel = Timeserieses.toLinkLabel( timeseries );
 
     if( timeseries.getStation() == m_target )
     {
       m_movedTimeseries.add( timeseries );
-      final String message = String.format( "%s is already a timeseries of this station", timeseriesLabel );
+      final String message = String.format( "Timeseries '%s' is already a timeseries of this station", timeseriesLabel );
       return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), message );
     }
 
