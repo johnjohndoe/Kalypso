@@ -153,18 +153,18 @@ public final class Timeserieses
       final String label = station.getDescription();
 
       if( StringUtils.isNotEmpty( label ) )
-        buffer.append( String.format( "%s:", label ) ); //$NON-NLS-1$
+        buffer.append( label ).append( ": " ); //$NON-NLS-1$
     }
 
     if( Objects.isNotNull( timestep ) )
     {
       final String dateString = PeriodUtils.formatDefault( timestep );
-      buffer.append( String.format( "%s -", dateString ) ); //$NON-NLS-1$
+      buffer.append( dateString ).append( " - " ); //$NON-NLS-1$
     }
 
     if( StringUtils.isNotEmpty( quality ) )
     {
-      buffer.append( String.format( "%s", quality ) ); //$NON-NLS-1$
+      buffer.append( quality ); //$NON-NLS-1$
     }
 
     if( StringUtils.isNotEmpty( type ) )
