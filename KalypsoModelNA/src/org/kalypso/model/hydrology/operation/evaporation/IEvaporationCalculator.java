@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.evaporation;
 
+import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -49,6 +50,8 @@ import org.kalypso.ogc.sensor.SensorException;
  */
 public interface IEvaporationCalculator extends ICoreRunnableWithProgress
 {
+  Period RESULT_TIMESTEP = Period.days( 1 );
+
   void init( ICalculateEvaporationData data ) throws SensorException;
 
   String getParameterType( );

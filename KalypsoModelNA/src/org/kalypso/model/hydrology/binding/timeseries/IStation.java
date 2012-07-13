@@ -42,6 +42,7 @@ package org.kalypso.model.hydrology.binding.timeseries;
 
 import javax.xml.namespace.QName;
 
+import org.joda.time.Period;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -77,7 +78,7 @@ public interface IStation extends Feature
   GM_Point getStationLocation( );
 
   /**
-   * Checks if a timeseries with same parameter type and quality already exists.
+   * Checks if a timeseries with same parameter type, quality and timestep already exists.
    */
-  boolean hasTimeseries( String parameterType, String quality );
+  boolean hasTimeseries( String parameterType, String quality, Period timestep );
 }

@@ -56,7 +56,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.joda.time.LocalTime;
-import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -203,7 +202,7 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
     final Integer status = KalypsoStati.BIT_OK;
 
     /* Timestep and timstamp are hardcoded into the algorithm: 1 day and 12:00 */
-    MetadataHelper.setTimestep( metadata, Period.days( 1 ) );
+    MetadataHelper.setTimestep( metadata, RESULT_TIMESTEP );
     MetadataHelper.setTimestamp( metadata, getTimeStamp() );
 
     final SimpleTupleModel model = new SimpleTupleModel( new IAxis[] { dateAxis, valueAxis, statusAxis, dataSourceAxis } );
