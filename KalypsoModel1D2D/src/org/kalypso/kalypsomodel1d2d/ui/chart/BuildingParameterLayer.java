@@ -119,7 +119,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
 
     for( final Coordinate[] okLine : m_paintOkLines )

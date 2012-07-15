@@ -2,47 +2,48 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 
 import java.awt.geom.Point2D;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
@@ -333,11 +334,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
     return IWspmOverlayConstants.LAYER_OVERLAY;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.PointsLineLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
 
@@ -444,7 +442,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
   /**
    * checks if the intersection points have been moved and updates them in the data class (also for the neighbour
    * segments).
-   * 
+   *
    * @param oldStartWdith
    *          the width coordinate of the first intersection profile point before user interaction
    * @param oldEndWdith
@@ -551,7 +549,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
   /**
    * updates both intersection points of the corresponding profile of the neighbouring segment.
-   * 
+   *
    * @param prof
    *          profile side of the current segment (up/down)
    * @param currentSegment
@@ -610,7 +608,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
   /**
    * updates one intersection point of the corresponding profile of the neighbouring segment.
-   * 
+   *
    * @param prof
    *          profile side of the current segment (up/down)
    * @param currentSegment
