@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.diagram;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -83,6 +84,8 @@ public class RrmDiagramView extends ViewPart
 
   private IRrmDiagramFilterControl m_selectionFilterControl;
 
+  private IStructuredSelection m_lastSelection;
+
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -110,6 +113,11 @@ public class RrmDiagramView extends ViewPart
   {
     final RrmDiagramSelectionConverter converter = new RrmDiagramSelectionConverter( m_selectionFilterControl, m_minTraverseLevel );
     final IStructuredSelection converted = converter.doConvert( selection );
+
+    if( ObjectUtils.equals( m_lastSelection, converted ) )
+      return;
+
+    m_lastSelection = converted;
 
     final IMultipleZmlSourceElement[] sources = ZmlSelectionBuilder.getSelection( converted );
     m_chartPart.setSelection( sources );

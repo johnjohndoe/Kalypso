@@ -103,6 +103,9 @@ public class TreePropertiesView extends ViewPart
 
   private void setNode( final TreeNode node )
   {
+    if( m_node == node )
+      return;
+
     m_node = node;
 
     updateControl();
