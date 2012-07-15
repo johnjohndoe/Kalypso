@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 import java.awt.geom.Point2D;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -244,7 +245,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
     final IComponent target = getTargetComponent();

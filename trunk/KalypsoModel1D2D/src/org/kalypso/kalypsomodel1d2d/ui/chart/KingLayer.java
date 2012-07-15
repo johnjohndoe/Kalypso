@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 
 import java.math.BigDecimal;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Path;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
@@ -69,7 +70,7 @@ public class KingLayer extends AbstractChartLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     final IAxis domainAxis = getDomainAxis();
     final IAxis valueAxis = getTargetAxis();

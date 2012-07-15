@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import java.math.BigDecimal;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
@@ -83,7 +84,7 @@ public class VerticalLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     final IAxis domainAxis = getDomainAxis();
     final IAxis targetAxis = getTargetAxis();

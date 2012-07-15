@@ -3,6 +3,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
@@ -24,7 +25,7 @@ public class LengthSectionRunOffLayer extends TupleResultLineLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( valueData == null )
