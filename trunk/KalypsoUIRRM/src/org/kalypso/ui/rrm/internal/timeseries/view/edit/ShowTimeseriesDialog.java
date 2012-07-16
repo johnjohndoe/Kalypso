@@ -52,7 +52,6 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -101,7 +100,7 @@ public class ShowTimeseriesDialog extends EnhancedTrayDialog
     getShell().setText( Messages.getString( "EditTimeseriesDialog_0" ) ); //$NON-NLS-1$
 
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
-    base.setLayout( new GridLayout() );
+    GridLayoutFactory.swtDefaults().applyTo( base );
 
     final Point screen = getScreenSize( DIALOG_SCREEN_SIZE );
 
