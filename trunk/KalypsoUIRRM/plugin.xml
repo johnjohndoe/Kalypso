@@ -633,7 +633,7 @@
       <handler class="org.kalypso.ui.rrm.internal.simulations.SimulationManagementTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement"/>
       <handler class="org.kalypso.ui.rrm.internal.results.view.ResultManagementTaskHandler" commandId="org.kalypso.model.rrm.resultView"/>
 
-      <handler class="org.kalypso.ui.rrm.internal.simulations.RefreshSimulationsTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations">
+      <handler class="org.kalypso.ui.rrm.internal.simulations.RefreshSimulationsHandler" commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations">
          <enabledWhen>
          	<and>
 	            <with variable="activeGmlTable">

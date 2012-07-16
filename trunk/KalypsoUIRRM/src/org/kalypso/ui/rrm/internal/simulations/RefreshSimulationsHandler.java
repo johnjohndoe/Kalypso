@@ -75,7 +75,7 @@ import de.renew.workflow.connector.worklist.ITaskExecutor;
  * @author Gernot Belger
  * @author Holger Albert
  */
-public class RefreshSimulationsTaskHandler extends AbstractHandler
+public class RefreshSimulationsHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
