@@ -84,6 +84,8 @@ public class TimeseriesImportWizard extends Wizard
     m_bean = bean;
     m_station = station;
 
+    setNeedsProgressMonitor( true );
+
     final ImportObservationSourcePage importPage = new ImportObservationSourcePage( "sourcePage", data ); //$NON-NLS-1$
     importPage.addListener( new IImportObservationSourceChangedListener()
     {
@@ -145,6 +147,8 @@ public class TimeseriesImportWizard extends Wizard
     final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_timeseries, status );
     stati.add( RunnableContextHelper.execute( getContainer(), true, false, storeStatusOperation ) );
 
+    // TODO: save model
+
     doShowStatusDialog( status );
 
     return !stati.matches( IStatus.ERROR );
@@ -152,9 +156,7 @@ public class TimeseriesImportWizard extends Wizard
 
   private void doShowStatusDialog( final IStatus status )
   {
-
-    final StatusDialog dialog = new StatusDialog( getShell(), status, Messages.getString( "TimeseriesImportWizard_4" ) ); //$NON-NLS-1$
-    dialog.open();
+    StatusDialog.open( getShell(), status, getWindowTitle() );
   }
 
   private void saveSettings( )
