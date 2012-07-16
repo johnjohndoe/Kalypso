@@ -81,6 +81,7 @@ import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.i18n.MessageConstants;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
@@ -97,7 +98,7 @@ import de.renew.workflow.connector.worklist.ITaskExecutor;
 
 /**
  * The simulation calculation feature control.
- * 
+ *
  * @author Holger Albert
  */
 public class SimulationCalculationFeatureControl extends AbstractFeatureControl
@@ -129,7 +130,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
   /**
    * The constructor.
-   * 
+   *
    * @param ftp
    */
   public SimulationCalculationFeatureControl( final IPropertyType ftp )
@@ -145,7 +146,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
   /**
    * The constructor.
-   * 
+   *
    * @param feature
    * @param ftp
    */
@@ -210,11 +211,11 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
       final RrmCalculationResult current = simulation.getCurrentCalculationResult();
 
-      m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.4" ), Messages.getString( "SimulationCalculationFeatureControl.5" ), current.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      m_actions.add( new OpenOutputZipAction( Messages.getString( "SimulationCalculationFeatureControl.6" ), Messages.getString( "SimulationCalculationFeatureControl.7" ), current.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_CALC_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_LOG_TOOLTIP, current.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_actions.add( new OpenOutputZipAction( MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TOOLTIP, current.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
-      m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.8" ), Messages.getString( "SimulationCalculationFeatureControl.9" ), current.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      m_actions.add( new OpenTextLogAction( Messages.getString( "SimulationCalculationFeatureControl.10" ), Messages.getString( "SimulationCalculationFeatureControl.11" ), current.getStatisticsCsv(), "xls" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-1$
+      m_actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_MASS_BALANCE_TEXT, MessageConstants.STR_ACTION_OPEN_MASS_BALANCE_TOOLTIP, current.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_STATISTICS_TEXT, MessageConstants.STR_ACTION_OPEN_STATISTICS_TOOLTIP, current.getStatisticsCsv(), "xls" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-1$
 
       /* Create the image hyperlinks. */
       for( final Action action : m_actions )
