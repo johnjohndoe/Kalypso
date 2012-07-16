@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ui.rrm.internal.i18n.MessageConstants;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 import org.kalypso.ui.rrm.internal.results.view.base.CalculationFeatureBean;
@@ -130,14 +131,19 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
       return;
 
     final List<Action> actions = new ArrayList<Action>();
+
+    // TODL: ugly: implement specific ui handler for this case, does not belong in abstract class
+
     if( getCalculation() != null )
     {
-      actions.add( new OpenStatusLogAction( "Open calculation status", "Displays the calculation status.", getCalculation().getCalculationStatusGml() ) );
-      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_1" ), Messages.getString( "AbstractResultTreeNodeUiHandler_2" ), getCalculation().getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      actions.add( new OpenOutputZipAction( Messages.getString( "AbstractResultTreeNodeUiHandler_3" ), Messages.getString( "AbstractResultTreeNodeUiHandler_4" ), getCalculation().getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      // TODO: would be nice to have different icons for different type of results
+
+      actions.add( new OpenStatusLogAction( MessageConstants.STR_ACTION_OPEN_CALC_STATUS_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_STATUS_TOOLTIP, getCalculation().getCalculationStatusGml() ) );
+      actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_CALC_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_LOG_TOOLTIP, getCalculation().getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      actions.add( new OpenOutputZipAction( MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TOOLTIP, getCalculation().getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.", m_simulation, false ) );
-      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_5" ), Messages.getString( "AbstractResultTreeNodeUiHandler_6" ), getCalculation().getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), getCalculation().getStatisticsCsv(), "xls" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_MASS_BALANCE_TEXT, MessageConstants.STR_ACTION_OPEN_MASS_BALANCE_TOOLTIP, getCalculation().getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_STATISTICS_TEXT, MessageConstants.STR_ACTION_OPEN_STATISTICS_TOOLTIP, getCalculation().getStatisticsCsv(), "xls" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     else
       actions.add( new DeleteRrmCalcualtionsAction( getSimulation(), getView() ) );
