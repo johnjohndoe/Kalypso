@@ -62,8 +62,8 @@ public class EditTimeseriesMappingWizardPage extends WizardPage
 
     m_mapping = mapping;
 
-    setTitle( Messages.getString("EditTimeseriesMappingWizardPage_0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("EditTimeseriesMappingWizardPage_1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "EditTimeseriesMappingWizardPage_0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "EditTimeseriesMappingWizardPage_1" ) ); //$NON-NLS-1$
   }
 
   @Override

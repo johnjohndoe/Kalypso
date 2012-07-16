@@ -46,13 +46,13 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -91,20 +91,8 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
     m_subGenerators = new FeatureBindingCollection<IRainfallGenerator>( this, IRainfallGenerator.class, MEMBER_SUB_GENERATOR, true );
   }
 
-  /**
-   * This function calculates the catchment model.
-   * 
-   * @param catchmentFeatures
-   *          The catchment features.
-   * @param range
-   *          The date range.
-   * @param log
-   *          The log.
-   * @param monitor
-   *          A progress monitor.
-   */
   @Override
-  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, final ILog log, IProgressMonitor monitor )
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final IStringResolver variables, final ILog log, IProgressMonitor monitor )
   {
     /* Monitor. */
     if( monitor == null )
@@ -113,8 +101,8 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
     try
     {
       /* Monitor. */
-      monitor.beginTask( String.format( Messages.getString("MultiGenerator_0"), m_subGenerators.size() ), m_subGenerators.size() * 200 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("MultiGenerator_1") ); //$NON-NLS-1$
+      monitor.beginTask( String.format( Messages.getString( "MultiGenerator_0" ), m_subGenerators.size() ), m_subGenerators.size() * 200 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "MultiGenerator_1" ) ); //$NON-NLS-1$
 
       // TODO Is calculated by the child generators and the results are managed outside.
 

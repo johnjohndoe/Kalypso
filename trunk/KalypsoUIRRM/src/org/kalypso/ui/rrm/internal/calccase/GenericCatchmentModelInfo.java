@@ -186,7 +186,7 @@ public class GenericCatchmentModelInfo implements ICatchmentModelInfo
   }
 
   @Override
-  public DateRange getRange( )
+  public DateRange getSimulationRange( )
   {
     return m_range;
   }

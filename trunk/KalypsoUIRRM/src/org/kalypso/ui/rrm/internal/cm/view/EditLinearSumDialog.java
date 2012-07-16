@@ -44,6 +44,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -81,9 +82,13 @@ import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.timeseries.TimeseriesValidatingOperation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.DescriptionComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.FactorComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.GroupComparator;
@@ -114,10 +119,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  */
 public class EditLinearSumDialog extends TitleAreaDialog
 {
-  /**
-   * A property change listener for the parameter type.
-   */
-  private final PropertyChangeListener m_parameterTypeListener = new PropertyChangeListener()
+  private final PropertyChangeListener m_propertyListener = new PropertyChangeListener()
   {
     @Override
     public void propertyChange( final PropertyChangeEvent evt )
@@ -137,7 +139,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
   /**
    * The bean to edit.
    */
-  private final LinearSumBean m_bean;
+  protected final LinearSumBean m_bean;
 
   /**
    * The main group.
@@ -154,24 +156,26 @@ public class EditLinearSumDialog extends TitleAreaDialog
    */
   private Group m_detailsGroup;
 
+  private StatusComposite m_mainStatusComposite;
+
   /**
    * The catchment viewer.
    */
   protected TableViewer m_catchmentViewer;
-
-  /**
-   * The timeseries viewer.
-   */
-  protected TableViewer m_timeseriesViewer;
 
   protected GroupViewerFilter m_groupViewerFilter;
 
   protected TimestepViewerFilter m_timestepViewerFilter;
 
   /**
-   * The status composite.
+   * The timeseries viewer.
    */
-  protected StatusComposite m_statusComposite;
+  protected TableViewer m_timeseriesViewer;
+
+  /**
+   * The details status composite.
+   */
+  protected StatusComposite m_detailsStatusComposite;
 
   /**
    * The selected catchment.
@@ -213,17 +217,18 @@ public class EditLinearSumDialog extends TitleAreaDialog
     m_mainGroup = null;
     m_secondaryGroup = null;
     m_detailsGroup = null;
+    m_mainStatusComposite = null;
     m_catchmentViewer = null;
-    m_timeseriesViewer = null;
     m_groupViewerFilter = null;
     m_timestepViewerFilter = null;
-    m_statusComposite = null;
+    m_timeseriesViewer = null;
+    m_detailsStatusComposite = null;
     m_catchmentBean = null;
     m_dataBinding = null;
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
     m_ignoreNextChange = false;
 
-    m_bean.addPropertyChangeListener( m_parameterTypeListener );
+    m_bean.addPropertyChangeListener( m_propertyListener );
   }
 
   @Override
@@ -292,6 +297,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
     /* Update the status. */
     updateStatus();
+    validateTimeseriesRanges( m_bean );
   }
 
   @Override
@@ -369,6 +375,10 @@ public class EditLinearSumDialog extends TitleAreaDialog
     final LinearSumNewComposite composite = new LinearSumNewComposite( body, m_bean, m_dataBinding, true );
     composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
+    /* Create the status composite. */
+    m_mainStatusComposite = new StatusComposite( parent, StatusComposite.DETAILS );
+    m_mainStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
     /* Do a reflow and a layout. */
     form.reflow( true );
     form.layout( true, true );
@@ -423,7 +433,6 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
         m_catchmentBean = (CatchmentBean) firstElement;
         updateDetailsGroup();
-        updateStatus();
       }
     } );
   }
@@ -523,8 +532,8 @@ public class EditLinearSumDialog extends TitleAreaDialog
       m_timeseriesViewer.setInput( catchmentBean.getTimeseries() );
 
     /* Create the status composite. */
-    m_statusComposite = new StatusComposite( parent, StatusComposite.DETAILS );
-    m_statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    m_detailsStatusComposite = new StatusComposite( parent, StatusComposite.DETAILS );
+    m_detailsStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Add a listener. */
     m_timeseriesViewer.getColumnViewerEditor().addEditorActivationListener( new ColumnViewerEditorActivationListener()
@@ -544,6 +553,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
       {
         m_catchmentViewer.refresh();
         updateStatus();
+        validateTimeseriesRanges( m_bean );
       }
 
       @Override
@@ -635,11 +645,12 @@ public class EditLinearSumDialog extends TitleAreaDialog
     m_mainGroup = null;
     m_secondaryGroup = null;
     m_detailsGroup = null;
+    m_mainStatusComposite = null;
     m_catchmentViewer = null;
-    m_timeseriesViewer = null;
     m_groupViewerFilter = null;
     m_timestepViewerFilter = null;
-    m_statusComposite = null;
+    m_timeseriesViewer = null;
+    m_detailsStatusComposite = null;
     m_catchmentBean = null;
     m_dataBinding = null;
     /* HINT: Do not discard the dialog settings, will be used to save the dialog bounds . */
@@ -663,6 +674,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
     /* Update the status. */
     updateStatus();
+    validateTimeseriesRanges( m_bean );
   }
 
   /**
@@ -670,16 +682,16 @@ public class EditLinearSumDialog extends TitleAreaDialog
    */
   protected void updateStatus( )
   {
-    if( m_statusComposite == null || m_statusComposite.isDisposed() )
+    if( m_detailsStatusComposite == null || m_detailsStatusComposite.isDisposed() )
       return;
 
     if( m_catchmentBean != null )
     {
       m_catchmentBean.updateStatus();
-      m_statusComposite.setStatus( m_catchmentBean.getStatus() );
+      m_detailsStatusComposite.setStatus( m_catchmentBean.getStatus() );
     }
     else
-      m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "EditLinearSumDialog_6" ) ) ); //$NON-NLS-1$
+      m_detailsStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "EditLinearSumDialog_6" ) ) ); //$NON-NLS-1$
 
     if( m_catchmentViewer != null && !m_catchmentViewer.getTable().isDisposed() )
       m_catchmentViewer.refresh();
@@ -724,6 +736,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     /* Reset the timeseries. */
     m_bean.resetTimeseries();
     updateStatus();
+    validateTimeseriesRanges( m_bean );
 
     /* Update the viewer filter in the timeseries viewer. */
     final String parameterType = (String) evt.getNewValue();
@@ -734,5 +747,22 @@ public class EditLinearSumDialog extends TitleAreaDialog
   protected void handlePropertyChanged( )
   {
     updateStatus();
+    validateTimeseriesRanges( m_bean );
+  }
+
+  protected void validateTimeseriesRanges( final LinearSumBean bean )
+  {
+    if( m_mainStatusComposite == null || m_mainStatusComposite.isDisposed() )
+      return;
+
+    final ITimeseries[] timeseries = LinearSumHelper.collectTimeseries( bean );
+    final DateRange dateRange = LinearSumHelper.createDateRange( bean );
+    if( dateRange == null )
+      return;
+
+    final TimeseriesValidatingOperation operation = new TimeseriesValidatingOperation( timeseries, dateRange );
+    final IStatus status = operation.execute( new NullProgressMonitor() );
+
+    m_mainStatusComposite.setStatus( status );
   }
 }

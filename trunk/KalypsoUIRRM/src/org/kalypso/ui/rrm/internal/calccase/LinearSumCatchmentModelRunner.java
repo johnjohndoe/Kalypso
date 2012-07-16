@@ -122,7 +122,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     /* HINT: The range may be the intersection of the adjusted simulation range and the generators validity range, */
     /* HINT: if executed as part of a multi generator. */
     /* HINT: But in the end, we do not care, because we simple use it. */
-    final DateRange range = info.getRange();
+    final DateRange simulationRange = info.getSimulationRange();
 
     /* Only ILinearSumGenerator's are supported. */
     if( !(generator instanceof ILinearSumGenerator) )
@@ -134,7 +134,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("LinearSumCatchmentModelRunner_0"), 100 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "LinearSumCatchmentModelRunner_0" ), 100 ); //$NON-NLS-1$
       monitor.subTask( TimeseriesUtils.getName( parameterType ) );
 
       /* Compare the catchments of the model and the catchments of the generator. */
@@ -143,11 +143,11 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
         throw new CoreException( status );
 
       /* Create the rainfall generation operation. */
-      final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, linearGenerator, targetLink, range );
+      final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, linearGenerator, targetLink, simulationRange );
 
       /* Initialize the generator. */
       final ILinearSumGenerator clonedGenerator = (ILinearSumGenerator) rainfallModel.getGenerators().get( 0 );
-      initGenerator( clonedGenerator, range, timestep, parameterType );
+      initGenerator( clonedGenerator, simulationRange, timestep, parameterType );
 
       /* Initialize the catchment target links. */
       initTargetLinks( simulation, clonedGenerator, targetLink, parameterType );
@@ -161,7 +161,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     }
     catch( final Exception ex )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("LinearSumCatchmentModelRunner_1"), ex ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "LinearSumCatchmentModelRunner_1" ), ex ) ); //$NON-NLS-1$
     }
     finally
     {

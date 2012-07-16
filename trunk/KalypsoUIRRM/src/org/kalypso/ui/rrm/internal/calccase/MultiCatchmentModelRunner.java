@@ -118,8 +118,8 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("MultiCatchmentModelRunner_0"), subGenerators.size() * 100 + 300 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("MultiCatchmentModelRunner_1") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "MultiCatchmentModelRunner_0" ), subGenerators.size() * 100 + 300 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "MultiCatchmentModelRunner_1" ) ); //$NON-NLS-1$
 
       /* Validate the multi generator. */
       final IStatus validateStatus = CatchmentModelHelper.validateMultiGenerator( multiGenerator, control );
@@ -128,7 +128,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( String.format( Messages.getString("MultiCatchmentModelRunner_2"), subGenerators.size() ) ); //$NON-NLS-1$
+      monitor.subTask( String.format( Messages.getString( "MultiCatchmentModelRunner_2" ), subGenerators.size() ) ); //$NON-NLS-1$
 
       /* Hash for catchment to timeseries links. */
       /* HINT: One catchment can contain more than one timeseries link. */
@@ -141,7 +141,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
         runGenerator( String.format( Locale.PRC, "%d", i ), simulation, control, model, (ILinearSumGenerator) subGenerators.get( i ), targetLink, parameterType, hash, new SubProgressMonitor( monitor, 100 ) ); //$NON-NLS-1$
 
       /* Monitor. */
-      monitor.subTask( Messages.getString("MultiCatchmentModelRunner_4") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "MultiCatchmentModelRunner_4" ) ); //$NON-NLS-1$
 
       /* The timeseries must be merged. */
       final IFolder modelsFolder = simulation.getModelsFolder();
@@ -150,7 +150,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( Messages.getString("MultiCatchmentModelRunner_5") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "MultiCatchmentModelRunner_5" ) ); //$NON-NLS-1$
 
       /* The model.gml links needs to be adjusted. */
       adjustSimulationModelGml( simulation, model, targetLink, parameterType, mergedObservations );
@@ -160,7 +160,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
     }
     catch( final Exception ex )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("MultiCatchmentModelRunner_6"), ex ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "MultiCatchmentModelRunner_6" ), ex ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -199,8 +199,8 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
     try
     {
       /* Monitor. */
-      monitor.beginTask( String.format( Messages.getString("MultiCatchmentModelRunner_7"), generator.getDescription() ), 1000 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("MultiCatchmentModelRunner_8") ); //$NON-NLS-1$
+      monitor.beginTask( String.format( Messages.getString( "MultiCatchmentModelRunner_7" ), generator.getDescription() ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "MultiCatchmentModelRunner_8" ) ); //$NON-NLS-1$
 
       /* This object can calculate some values. */
       final LinearSumCatchmentModelInfo linearInfo = new LinearSumCatchmentModelInfo( simulation, control, model, generator, targetLink, parameterType );
@@ -210,12 +210,20 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
       final LocalTime timestamp = linearInfo.getTimestamp();
 
       /* HINT: The range is the adjusted simulation range. */
-      final DateRange simulationRange = linearInfo.getRange();
+      final DateRange simulationRange = linearInfo.getSimulationRange();
 
       /* Intersect adjusted simulation range with validity range of generator. */
       final Interval simulationInterval = new Interval( new DateTime( simulationRange.getFrom() ), new DateTime( simulationRange.getTo() ) );
-      final Interval valitiyInterval = new Interval( new DateTime( generator.getValidFrom() ), new DateTime( generator.getValidTo() ) );
-      final Interval interval = valitiyInterval.overlap( simulationInterval );
+
+      /* Calculate range of current generator. */
+      final Interval validityInterval = new Interval( new DateTime( generator.getValidFrom() ), new DateTime( generator.getValidTo() ) );
+
+      /* Intersect complete simulation with this generator, only this range will be calculated. */
+      final Interval interval = validityInterval.overlap( simulationInterval );
+
+      // FIXME: The intersected interval does now NOT cover the extended range (3 steps before, 1 step after).
+      // So the complete result does NOT cover the extended range.
+
       final DateRange range = new DateRange( interval.getStart().toDate(), interval.getEnd().toDate() );
 
       /* The catchment model runner should be executed with this generic info. */
@@ -243,7 +251,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
         else if( parameterType.equals( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
           link = catchment.getTemperatureLink();
         else
-          throw new IllegalArgumentException( Messages.getString("MultiCatchmentModelRunner_9") ); //$NON-NLS-1$
+          throw new IllegalArgumentException( Messages.getString( "MultiCatchmentModelRunner_9" ) ); //$NON-NLS-1$
 
         /* Store the timeseries link. */
         hash.put( id, link );

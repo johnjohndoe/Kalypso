@@ -108,10 +108,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  */
 public class EditMultiDialog extends TitleAreaDialog
 {
-  /**
-   * A property change listener for the parameter type.
-   */
-  private final PropertyChangeListener m_changeListener = new PropertyChangeListener()
+  private final PropertyChangeListener m_propertyListener = new PropertyChangeListener()
   {
     @Override
     public void propertyChange( final PropertyChangeEvent evt )
@@ -119,7 +116,7 @@ public class EditMultiDialog extends TitleAreaDialog
       if( evt.getPropertyName().equals( IMultiGenerator.PROPERTY_PARAMETER_TYPE.toString() ) )
         handleParameterTypeChanged( evt );
       else
-        handlePropertyChanged( evt );
+        handlePropertyChanged();
     }
   };
 
@@ -193,7 +190,7 @@ public class EditMultiDialog extends TitleAreaDialog
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
     m_ignoreNextChange = false;
 
-    m_bean.addPropertyChangeListener( m_changeListener );
+    m_bean.addPropertyChangeListener( m_propertyListener );
   }
 
   /**
@@ -588,7 +585,7 @@ public class EditMultiDialog extends TitleAreaDialog
       m_generatorViewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( parameterType ) } );
   }
 
-  protected void handlePropertyChanged( final PropertyChangeEvent evt )
+  protected void handlePropertyChanged( )
   {
     updateStatus();
   }

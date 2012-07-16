@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.simulations.worker;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.xml.namespace.QName;
 
@@ -64,6 +65,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IObservationFilter;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalDefinition;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
@@ -100,11 +102,11 @@ public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
   {
     final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final String monitorTitle = String.format( Messages.getString("TimeseriesMappingRunner_0"), m_mappingType.getLabel() ); //$NON-NLS-1$
+    final String monitorTitle = String.format( Messages.getString( "TimeseriesMappingRunner_0" ), m_mappingType.getLabel() ); //$NON-NLS-1$
 
     final ITimeseriesMapping mapping = getMapping();
     if( mapping == null )
-      log.add( IStatus.OK, Messages.getString("TimeseriesMappingRunner_1") ); //$NON-NLS-1$
+      log.add( IStatus.OK, Messages.getString( "TimeseriesMappingRunner_1" ) ); //$NON-NLS-1$
     else
     {
       monitor.beginTask( monitorTitle, mapping.getMappings().size() );
@@ -157,7 +159,7 @@ public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
     /* Check if link is valid */
     if( !linkedTimeseries.isLinkExisting() )
     {
-      final String message = String.format( Messages.getString("TimeseriesMappingRunner_2"), modelElement.getName(), linkedTimeseries.getHref() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "TimeseriesMappingRunner_2" ), modelElement.getName(), linkedTimeseries.getHref() ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
     }
 
@@ -166,24 +168,32 @@ public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
       /* Copy and filter the timeseries */
       final IObservation timeseries = linkedTimeseries.loadObservation();
 
+      /* Get the unadjusted simulation range. */
+      final Date simulationStart = m_simulation.getSimulationStart();
+      final Date simulationEnd = m_simulation.getSimulationEnd();
+      final DateRange unadjustedSimulationRange = new DateRange( simulationStart, simulationEnd );
+
+      /* Check, if the range of the timeseries covers the date range (normally the simulation range). */
+      final DateRange timeseriesRange = MetadataHelper.getDateRange( timeseries.getMetadataList() );
+      if( !timeseriesRange.containsInclusive( unadjustedSimulationRange ) )
+        throw new SensorException( String.format( "The timeseries '%s' with the range %s is to short for the date range %s...", timeseries.getName(), timeseriesRange.toString(), unadjustedSimulationRange.toString() ) );
+
+      /* Apply filter. */
       final IObservationFilter filteredTimeseries = createTimeseriesFilter();
       filteredTimeseries.initFilter( null, timeseries, null );
-
-      final String targetHref = buildTargetHref( modelElement );
 
       /* Change model link */
       final QName modelLinkProperty = m_mappingType.getModelLinkProperty();
       final TimeseriesLinkType newLinkType = new TimeseriesLinkType();
-      newLinkType.setHref( targetHref );
-
+      newLinkType.setHref( buildTargetHref( modelElement ) );
       modelElement.setProperty( modelLinkProperty, newLinkType );
 
       /* Build request */
       final Integer timestepMinutes = m_simulation.getMinutesOfTimestep();
       final Period timestep = Period.minutes( timestepMinutes ).normalizedStandard();
-      // TODO: check if we need timestamp for sea evaporation
-      final DateRange targetRange = CatchmentModelHelper.getRange( m_simulation, timestep, null );
-      final ObservationRequest request = new ObservationRequest( targetRange );
+      // TODO: Check if we need timestamp for sea evaporation
+      final DateRange simulationRange = CatchmentModelHelper.getRange( m_simulation, timestep, null );
+      final ObservationRequest request = new ObservationRequest( simulationRange );
 
       /* Filter and save to new location */
       final ZmlLink zmlLink = new ZmlLink( modelElement, modelLinkProperty );
@@ -193,7 +203,7 @@ public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
     }
     catch( final SensorException | UnsupportedEncodingException | CoreException e )
     {
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesMappingRunner_3"), e ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "TimeseriesMappingRunner_3" ), e ); //$NON-NLS-1$
     }
   }
 

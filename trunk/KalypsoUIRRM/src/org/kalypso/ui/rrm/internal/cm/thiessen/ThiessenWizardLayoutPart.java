@@ -44,6 +44,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizard;
@@ -64,8 +65,13 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.layoutwizard.part.AbstractLayoutPart;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.timeseries.TimeseriesValidatingOperation;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.view.InitThiessenTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumNewComposite;
@@ -81,7 +87,10 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
     @Override
     public void propertyChange( final PropertyChangeEvent evt )
     {
-      handleParameterTypeChanged( evt );
+      if( evt.getPropertyName().equals( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString() ) )
+        handleParameterTypeChanged( evt );
+      else
+        handlePropertyChanged();
     }
   };
 
@@ -89,12 +98,15 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
 
   private final LinearSumBean m_generator;
 
+  private StatusComposite m_mainStatusComposite;
+
   public ThiessenWizardLayoutPart( final String id, final ILayoutPageContext context )
   {
     super( id, context );
 
     final ThiessenGeneratorWizard wizard = (ThiessenGeneratorWizard) context.getPage().getWizard();
     m_generator = wizard.getGenerator();
+    m_mainStatusComposite = null;
   }
 
   @Override
@@ -120,8 +132,12 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
     /* Create the properties section. */
     createPropertiesSection( toolkit, main, binding );
 
+    /* Create the status composite. */
+    m_mainStatusComposite = new StatusComposite( main, StatusComposite.DETAILS );
+    m_mainStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
     /* Observe change of parameter type */
-    m_generator.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_propertyListener );
+    m_generator.addPropertyChangeListener( m_propertyListener );
 
     return main;
   }
@@ -129,6 +145,7 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
   @Override
   public void dispose( )
   {
+    m_mainStatusComposite = null;
   }
 
   private void createPropertiesSection( final FormToolkit toolkit, final Composite parent, final DatabindingWizardPage binding )
@@ -217,5 +234,26 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
       StatusDialog.open( shell, updateStatus, windowTitle );
       return;
     }
+  }
+
+  protected void handlePropertyChanged( )
+  {
+    validateTimeseriesRanges( m_generator );
+  }
+
+  protected void validateTimeseriesRanges( final LinearSumBean bean )
+  {
+    if( m_mainStatusComposite == null || m_mainStatusComposite.isDisposed() )
+      return;
+
+    final ITimeseries[] timeseries = LinearSumHelper.collectTimeseries( bean );
+    final DateRange dateRange = LinearSumHelper.createDateRange( bean );
+    if( dateRange == null )
+      return;
+
+    final TimeseriesValidatingOperation operation = new TimeseriesValidatingOperation( timeseries, dateRange );
+    final IStatus status = operation.execute( new NullProgressMonitor() );
+
+    m_mainStatusComposite.setStatus( status );
   }
 }

@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.SortedSet;
 
 import org.eclipse.core.resources.IContainer;
@@ -49,11 +52,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IThiessenStationCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
@@ -72,7 +78,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * This class contains functions which are used by the linear sum generator, Thiessen Method and Inverse Distance
  * Weighting Method.
- *
+ * 
  * @author Holger Albert
  */
 public class LinearSumHelper
@@ -86,7 +92,7 @@ public class LinearSumHelper
 
   /**
    * This function creates the linear sum bean for the given parameter type from the current scenario.
-   *
+   * 
    * @param parameterType
    *          The parameter type.
    * @return The linear sum bean.
@@ -115,7 +121,7 @@ public class LinearSumHelper
 
   /**
    * This function loads the stations gml.
-   *
+   * 
    * @return The collection of stations. Each station corresponds to a timeseries. So this is better spoken a list of
    *         timeseries (which may have the same station).
    */
@@ -168,7 +174,7 @@ public class LinearSumHelper
 
   /**
    * This function applys the weights to the catchment.
-   *
+   * 
    * @param catchment
    *          The catchment.
    * @param timeseries
@@ -203,7 +209,7 @@ public class LinearSumHelper
    * <li>Converts the weights to factors (in percent).</li>
    * <li>Makes sure the factors does not exceed the 100%.</li>
    * </ul>
-   *
+   * 
    * @param weights
    *          The weights. The sum of weights must result in 1.0.
    * @return The factors (in percent).
@@ -302,5 +308,40 @@ public class LinearSumHelper
     }
 
     return elements;
+  }
+
+  public static ITimeseries[] collectTimeseries( final LinearSumBean bean )
+  {
+    final List<ITimeseries> timeseries = new ArrayList<ITimeseries>();
+
+    final CatchmentBean[] catchments = bean.getCatchments();
+    for( final CatchmentBean catchment : catchments )
+    {
+      final FactorizedTimeseriesBean[] allTimeseries = catchment.getTimeseries();
+      for( final FactorizedTimeseriesBean oneTimeseries : allTimeseries )
+      {
+        final int factor = oneTimeseries.getFactor();
+        if( factor <= 0 )
+          continue;
+
+        final ITimeseries feature = oneTimeseries.getFeature();
+        timeseries.add( feature );
+      }
+    }
+
+    return timeseries.toArray( new ITimeseries[] {} );
+  }
+
+  public static DateRange createDateRange( final LinearSumBean bean )
+  {
+    final Object validFromCalendar = bean.getProperty( ILinearSumGenerator.PROPERTY_VALID_FROM );
+    final Object validToCalendar = bean.getProperty( ILinearSumGenerator.PROPERTY_VALID_TO );
+    if( validFromCalendar == null || validToCalendar == null )
+      return null;
+
+    final Date validFromDate = DateUtilities.toDate( validFromCalendar );
+    final Date validToDate = DateUtilities.toDate( validToCalendar );
+
+    return new DateRange( validFromDate, validToDate );
   }
 }
