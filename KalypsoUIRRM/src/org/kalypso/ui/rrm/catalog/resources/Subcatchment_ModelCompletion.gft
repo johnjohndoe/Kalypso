@@ -28,7 +28,22 @@
     </validatorlabel>
   </group>
 
-  <group style="SWT.NONE" text="Schnee">
+  <group style="SWT.NONE" text="%catchment.modelCompletion.gft.group.designRainfall">
+    <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
+    <gridLayout numColumns="3" />
+    
+    <label property="rrm:synthZR" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:synthZR" style="SWT.BORDER">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:synthZR" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+  </group>
+
+  <group style="SWT.NONE" text="%catchment.modelCompletion.gft.group.snow">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
     <gridLayout numColumns="3" />
 
@@ -43,7 +58,7 @@
     </validatorlabel>
   </group>
 
-  <group style="SWT.NONE" text="Retention - Translation">
+  <group style="SWT.NONE" text="%catchment.modelCompletion.gft.group.retentionTranslation">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
     <gridLayout numColumns="3" />
 
@@ -125,7 +140,7 @@
 
   </group>
 
-  <group style="SWT.NONE" text="Grundwasser">
+  <group style="SWT.NONE" text="%catchment.modelCompletion.gft.group.groundwater">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
     <gridLayout numColumns="3" />
 
