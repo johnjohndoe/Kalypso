@@ -87,6 +87,11 @@ import org.kalypsodeegree.model.feature.IXLinkedFeature;
 public class CatchmentModelVerifier
 {
   /**
+   * True, if there is design rainfall.
+   */
+  private final boolean m_hasSynth;
+
+  /**
    * The converter data.
    */
   private final ConverterData m_data;
@@ -104,6 +109,8 @@ public class CatchmentModelVerifier
   /**
    * The constructor.
    * 
+   * @param hasSynth
+   *          True, if there is design rainfall.
    * @param data
    *          The converter data.
    * @param simulation
@@ -111,8 +118,9 @@ public class CatchmentModelVerifier
    * @param simulationsFolder
    *          The base folder of the simulations.
    */
-  public CatchmentModelVerifier( final ConverterData data, final NAControl simulation, final File simulationsFolder )
+  public CatchmentModelVerifier( final boolean hasSynth, final ConverterData data, final NAControl simulation, final File simulationsFolder )
   {
+    m_hasSynth = hasSynth;
     m_data = data;
     m_simulation = simulation;
     m_simulationsFolder = simulationsFolder;
@@ -204,8 +212,13 @@ public class CatchmentModelVerifier
    */
   private IStatus checkGenerators( ) throws Exception
   {
-    /* The status collector. */
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    if( m_hasSynth )
+    {
+      collector.add( IStatus.OK, "There is design rainfall. There should be no generators." );
+      return collector.asMultiStatus( Messages.getString( "CatchmentModelVerifier_9" ) ); //$NON-NLS-1$
+    }
 
     final String catchmentModelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_CATCHMENT_MODELS_GML;
 

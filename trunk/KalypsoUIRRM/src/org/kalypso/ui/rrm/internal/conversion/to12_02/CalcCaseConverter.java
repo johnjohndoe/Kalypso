@@ -184,11 +184,15 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       monitor.worked( 200 );
       monitor.subTask( Messages.getString( "CalcCaseConverter.17" ) ); //$NON-NLS-1$
 
-      /* Build the path. */
+      /* Build the paths. */
       final String modelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_MODELL_GML;
+      final String catchmentModelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_CATCHMENT_MODELS_GML;
+      final String timeseriesMappingPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_TIMESERIES_MAPPINGS_GML;
 
-      /* Load the model. */
+      /* Load the models. */
       final NaModell naModel = m_data.loadModel( modelPath );
+      final ICatchmentModel catchmentModel = m_data.loadModel( catchmentModelPath );
+      final ITimeseriesMappingCollection mappings = m_data.loadModel( timeseriesMappingPath );
 
       /* Fix timeseries link: relative to simulations model folder, and new sub directories */
       fixTimeseriesLinks( naModel, getLog() );
@@ -197,31 +201,11 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       CatchmentModelBuilder catchmentModelBuilder = null;
       TimeseriesMappingBuilder timeseriesMappingBuilder = null;
 
-      /* If there is design rainfall, do not create the catchment models and the timeseries mappings. */
-      if( !hasSynth )
-      {
-        /* Build the paths. */
-        final String catchmentModelPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_CATCHMENT_MODELS_GML;
-        final String timeseriesMappingPath = RrmScenario.FOLDER_MODELS + '/' + RrmScenario.FILE_TIMESERIES_MAPPINGS_GML;
-
-        /* Load the models. */
-        final ICatchmentModel catchmentModel = m_data.loadModel( catchmentModelPath );
-        final ITimeseriesMappingCollection mappings = m_data.loadModel( timeseriesMappingPath );
-
-        /* Do the timeseries mappings. */
-        final IStatusCollector mappingLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
-        catchmentModelBuilder = guessCatchmentModel( naModel, catchmentModel, mappingLog );
-        timeseriesMappingBuilder = guessTimeseriesMappings( naModel, mappings, mappingLog );
-        getLog().add( mappingLog.asMultiStatus( Messages.getString( "CalcCaseConverter.18" ) ) ); //$NON-NLS-1$
-
-        /* Save the models. */
-        m_data.saveModel( catchmentModelPath, catchmentModel );
-        m_data.saveModel( timeseriesMappingPath, mappings );
-
-        /* Dispose them, because of the links. */
-        catchmentModel.getWorkspace().dispose();
-        mappings.getWorkspace().dispose();
-      }
+      /* Do the timeseries mappings. */
+      final IStatusCollector mappingLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+      catchmentModelBuilder = guessCatchmentModel( hasSynth, naModel, catchmentModel, mappingLog );
+      timeseriesMappingBuilder = guessTimeseriesMappings( hasSynth, naModel, mappings, mappingLog );
+      getLog().add( mappingLog.asMultiStatus( Messages.getString( "CalcCaseConverter.18" ) ) ); //$NON-NLS-1$
 
       /* IMPORTANT: Update the categories before the links have been fixed. */
       naModel.getNodes().accept( new UpdateResultCategoriesVisitor() );
@@ -233,11 +217,15 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       /* Empty timeseries links. */
       BasicModelConverter.emptyTimeseriesLinks( naModel, getLog() );
 
-      /* Save the model. */
+      /* Save the models. */
       m_data.saveModel( modelPath, naModel );
+      m_data.saveModel( catchmentModelPath, catchmentModel );
+      m_data.saveModel( timeseriesMappingPath, mappings );
 
-      /* Dispose it, because of the links. */
+      /* Dispose them, because of the links. */
       naModel.getWorkspace().dispose();
+      catchmentModel.getWorkspace().dispose();
+      mappings.getWorkspace().dispose();
 
       /* Monitor. */
       monitor.worked( 100 );
@@ -257,14 +245,10 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       monitor.worked( 100 );
       monitor.subTask( Messages.getString( "CalcCaseConverter.22" ) ); //$NON-NLS-1$
 
-      /* If there is design rainfall, do not verify catchment models and the timeseries mappings. */
-      if( !hasSynth )
-      {
-        /* Verify timeseries of the catchment models of the created simulation. */
-        final CatchmentModelVerifier verifier = new CatchmentModelVerifier( m_data, simulation, new File( m_targetScenarioDir, RrmScenario.FOLDER_SIMULATIONEN ) );
-        final IStatus verifierStatus = verifier.execute();
-        getLog().add( verifierStatus );
-      }
+      /* Verify timeseries of the catchment models of the created simulation. */
+      final CatchmentModelVerifier verifier = new CatchmentModelVerifier( hasSynth, m_data, simulation, new File( m_targetScenarioDir, RrmScenario.FOLDER_SIMULATIONEN ) );
+      final IStatus verifierStatus = verifier.execute();
+      getLog().add( verifierStatus );
 
       /* Monitor. */
       monitor.worked( 200 );
@@ -540,16 +524,22 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     return newControl;
   }
 
-  private CatchmentModelBuilder guessCatchmentModel( final NaModell naModel, final ICatchmentModel catchmentModel, final IStatusCollector mappingLog ) throws Exception
+  private CatchmentModelBuilder guessCatchmentModel( final boolean hasSynth, final NaModell naModel, final ICatchmentModel catchmentModel, final IStatusCollector mappingLog ) throws Exception
   {
+    /* If there is no model, return null. */
     if( catchmentModel == null )
       return null;
 
+    /* Create the builder. */
     final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, catchmentModel, new File( m_targetScenarioDir, m_simulationPath ), m_globalData.getTimeseriesIndex() );
 
-    guessCatchmentModel( builder, Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, mappingLog );
-    guessCatchmentModel( builder, Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, mappingLog );
-    guessCatchmentModel( builder, Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, mappingLog );
+    /* If there is no design rainfall, create the catchment models. */
+    if( !hasSynth )
+    {
+      guessCatchmentModel( builder, Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, mappingLog );
+      guessCatchmentModel( builder, Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, mappingLog );
+      guessCatchmentModel( builder, Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, mappingLog );
+    }
 
     return builder;
   }
@@ -560,16 +550,24 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     mappingLog.add( status );
   }
 
-  private TimeseriesMappingBuilder guessTimeseriesMappings( final NaModell naModel, final ITimeseriesMappingCollection mappings, final IStatusCollector mappingLog ) throws Exception
+  private TimeseriesMappingBuilder guessTimeseriesMappings( final boolean hasSynth, final NaModell naModel, final ITimeseriesMappingCollection mappings, final IStatusCollector mappingLog ) throws Exception
   {
+    /* If there is no model, return null. */
     if( mappings == null )
       return null;
 
+    /* Create the builder. */
     final TimeseriesMappingBuilder builder = new TimeseriesMappingBuilder( m_globalData.getSourceDir(), naModel, mappings, new File( m_targetScenarioDir, m_simulationPath ), m_globalData.getTimeseriesIndex(), m_globalData.getConversionMap() );
 
-    guessTimeseriesMapping( builder, TimeseriesMappingType.gaugeMeasurement, mappingLog );
+    /* Always create the node inflow timeseries mapping. */
     guessTimeseriesMapping( builder, TimeseriesMappingType.nodeInflow, mappingLog );
-    guessTimeseriesMapping( builder, TimeseriesMappingType.storageEvaporation, mappingLog );
+
+    /* If there is no design rainfall, create the other timeseries mappings. */
+    if( !hasSynth )
+    {
+      guessTimeseriesMapping( builder, TimeseriesMappingType.gaugeMeasurement, mappingLog );
+      guessTimeseriesMapping( builder, TimeseriesMappingType.storageEvaporation, mappingLog );
+    }
 
     return builder;
   }
