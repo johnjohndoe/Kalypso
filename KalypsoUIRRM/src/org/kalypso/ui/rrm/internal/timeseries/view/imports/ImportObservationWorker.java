@@ -78,7 +78,6 @@ public class ImportObservationWorker implements ICoreRunnableWithProgress
     {
       final TimeZone timezone = m_data.getTimezoneParsed();
       final INativeObservationAdapter nativeAdapter = m_data.getAdapter();
-      nativeAdapter.clear();
 
       final String parameterType = m_data.getParameterType();
 
