@@ -94,6 +94,8 @@ public class ValidateMissingTimestepsOperation implements ICoreRunnableWithProgr
 
       if( !status.isOK() )
       {
+        // FIXME: Arrrgggg, what is this job-nonsense here?!
+
         final RepairMissingTimestepsOperation operation = new RepairMissingTimestepsOperation( observation, m_timestep );
         final RepairObservationJob job = new RepairObservationJob( stati, status, operation );
         job.schedule();
