@@ -92,7 +92,7 @@ public class TimeseriesChartComposite extends Composite
 
     m_context = context;
 
-    GridLayoutFactory.fillDefaults().applyTo( this );
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( this );
 
     init( template );
     draw( toolkit );
