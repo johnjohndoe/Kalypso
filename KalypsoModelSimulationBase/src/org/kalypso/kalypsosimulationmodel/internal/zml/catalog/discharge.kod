@@ -4,7 +4,7 @@
     <Styles>
       <!-- Q (greenish) styles (line and point) -->
       <LineStyle role="q_line_0">
-        <Width>2</Width>
+        <Width>1</Width>
         <LineColor>ABB985</LineColor>
       </LineStyle>
       <PointStyle role="q_singlePoint_0">
@@ -19,7 +19,7 @@
         </FillColor>
       </PointStyle>
       <LineStyle role="q_line_1">
-        <Width>2</Width>
+        <Width>1</Width>
         <LineColor>65782F</LineColor>
       </LineStyle>
       <PointStyle role="q_singlePoint_1">
@@ -34,7 +34,7 @@
         </FillColor>
       </PointStyle>
       <LineStyle role="q_line_2">
-        <Width>2</Width>
+        <Width>1</Width>
         <LineColor>CFDAB2</LineColor>
       </LineStyle>
       <PointStyle role="q_singlePoint_2">
@@ -49,7 +49,7 @@
         </FillColor>
       </PointStyle>
       <LineStyle role="q_line_3">
-        <Width>2</Width>
+        <Width>1</Width>
         <LineColor>3D5208</LineColor>
       </LineStyle>
       <PointStyle role="q_singlePoint_3">
@@ -64,7 +64,7 @@
         </FillColor>
       </PointStyle>
       <LineStyle role="q_line_4">
-        <Width>2</Width>
+        <Width>1</Width>
         <LineColor>879859</LineColor>
       </LineStyle>
       <PointStyle role="q_singlePoint_4">
@@ -78,7 +78,6 @@
           <Color>879859</Color>
         </FillColor>
       </PointStyle>
-
 
     </Styles>
     <Layers>
@@ -138,8 +137,6 @@
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_4</StyleReference>
             </Styles>
           </Layer>
-
-
           <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
@@ -154,7 +151,7 @@
         <Label>Abfluss [m³]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <PreferredAdjustment before="5" range="80" after="15"  />
+        <PreferredAdjustment before="5" range="80" after="15" />
         <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.001" />
       </Axis>
