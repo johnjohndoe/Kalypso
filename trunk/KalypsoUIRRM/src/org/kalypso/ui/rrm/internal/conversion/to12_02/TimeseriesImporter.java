@@ -78,16 +78,12 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.util.Observations;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -319,28 +315,11 @@ public class TimeseriesImporter
     if( forcedParmaterType == null )
       return observation;
 
-    /* Force the parameter type for evaporation and temperature */
-    final ITupleModel tupleModel = observation.getValues( null );
-    final Object[][] rawData = getRawData( tupleModel );
-
-    /* Exchange old value type with forced parameter type */
-    final IAxis[] axes = tupleModel.getAxes();
-    final IAxis[] forcedAxes = new IAxis[axes.length];
-    for( int i = 0; i < forcedAxes.length; i++ )
-      forcedAxes[i] = getForcedParameterAxes( axes[i], forcedParmaterType );
-
-    final SimpleTupleModel newModel = new SimpleTupleModel( forcedAxes, rawData );
-
-    /* Create and return new obs */
-    final String name = observation.getName();
-    final String href = observation.getHref();
-    final MetadataList metadata = MetadataHelper.clone( observation.getMetadataList() );
-    return new SimpleObservation( href, name, metadata, newModel );
+    return ObservationUtilities.forceParameterType( observation, forcedParmaterType );
   }
 
   private String getForcedParameterType( final IObservation observation, final String relativePath )
   {
-
     final String parmeterType = m_parameterIndex.getParameterType( relativePath );
     if( StringUtils.equals( ITimeseriesConstants.TYPE_TEMPERATURE, parmeterType ) )
       return ITimeseriesConstants.TYPE_MEAN_TEMPERATURE;
@@ -359,47 +338,6 @@ public class TimeseriesImporter
     }
 
     return parmeterType;
-  }
-
-  // REMARK: heavy, but necessary as we cannot assume that we always have a simple tuple model
-  // For older models, we often have ZmlTupleModels instead.
-  private Object[][] getRawData( final ITupleModel tupleModel ) throws SensorException
-  {
-    final int size = tupleModel.size();
-    final IAxis[] axes = tupleModel.getAxes();
-
-    final Object[][] rawData = new Object[size][];
-
-    for( int i = 0; i < rawData.length; i++ )
-    {
-      rawData[i] = new Object[axes.length];
-
-      for( int a = 0; a < axes.length; a++ )
-        rawData[i][a] = tupleModel.get( i, axes[a] );
-    }
-
-    return rawData;
-  }
-
-  private IAxis getForcedParameterAxes( final IAxis axis, final String forcedParmaterType )
-  {
-    if( AxisUtils.isValueAxis( axis ) )
-      return TimeseriesUtils.createDefaultAxis( forcedParmaterType );
-
-    if( AxisUtils.isStatusAxis( axis ) )
-    {
-      final IAxis tempAxis = TimeseriesUtils.createDefaultAxis( forcedParmaterType );
-      return KalypsoStatusUtils.createStatusAxisFor( tempAxis, true );
-    }
-
-    if( AxisUtils.isDataSrcAxis( axis ) )
-    {
-      final IAxis tempAxis = TimeseriesUtils.createDefaultAxis( forcedParmaterType );
-      return DataSourceHelper.createSourceAxis( tempAxis );
-    }
-
-    /* Default: do nothing */
-    return axis;
   }
 
   private String findGroupName( final String relativePath )
