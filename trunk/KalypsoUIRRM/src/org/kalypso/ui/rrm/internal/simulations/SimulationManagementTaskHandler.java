@@ -69,14 +69,14 @@ public class SimulationManagementTaskHandler extends AbstractHandler
 
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
-    WorkflowHandlerUtils.setGttInput( page, null, "urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt", null, scenarioFolder ); //$NON-NLS-1$
+    WorkflowHandlerUtils.setGttInput( page, null, "urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt", "Simulation Management", scenarioFolder ); //$NON-NLS-1$
 
     return null;
   }
 
   /**
    * Configure feature view with specialized templates.
-   * 
+   *
    * @param page
    *          The workbench page.
    */
