@@ -49,6 +49,7 @@ import java.util.Set;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -59,7 +60,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -137,7 +137,7 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
       actions.add( new OpenOutputZipAction( Messages.getString( "AbstractResultTreeNodeUiHandler_3" ), Messages.getString( "AbstractResultTreeNodeUiHandler_4" ), getCalculation().getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.", m_simulation, false ) );
       actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_5" ), Messages.getString( "AbstractResultTreeNodeUiHandler_6" ), getCalculation().getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), getCalculation().getStatisticsCsv() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      actions.add( new OpenTextLogAction( Messages.getString( "AbstractResultTreeNodeUiHandler_7" ), Messages.getString( "AbstractResultTreeNodeUiHandler_8" ), getCalculation().getStatisticsCsv(), "xls" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     else
       actions.add( new DeleteRrmCalcualtionsAction( getSimulation(), getView() ) );
@@ -145,7 +145,7 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     Collections.addAll( actions, getAdditionalActions() );
 
     final Composite body = toolkit.createComposite( actionPanel );
-    body.setLayout( Layouts.createGridLayout( 2, true ) );
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( true ).applyTo( body );
     body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     /* Create the image hyperlinks. */
