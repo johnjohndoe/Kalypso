@@ -58,26 +58,26 @@ import org.kalypso.utils.log.GeoStatusLog;
  */
 public class StoreTimeseriesStatusOperation implements ICoreRunnableWithProgress
 {
-  private final IFile m_zmlFile;
-
   private final IStatus m_status;
+
+  private final ITimeseries m_timeseries;
 
   public StoreTimeseriesStatusOperation( final ITimeseries timeseries, final IStatus status )
   {
-    this( timeseries.getDataLink().getFile(), status );
-  }
-
-  public StoreTimeseriesStatusOperation( final IFile zmlFile, final IStatus status )
-  {
-    m_zmlFile = zmlFile;
+    m_timeseries = timeseries;
     m_status = status;
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final IFolder folder = (IFolder) m_zmlFile.getParent();
-    final IFile status = folder.getFile( m_zmlFile.getName() + ".status" ); //$NON-NLS-N$ //$NON-NLS-1$ //$NON-NLS-1$
+    if( m_timeseries == null )
+      return Status.OK_STATUS;
+
+    final IFile zmlFile = m_timeseries.getDataLink().getFile();
+
+    final IFolder folder = (IFolder) zmlFile.getParent();
+    final IFile status = folder.getFile( zmlFile.getName() + ".status" ); //$NON-NLS-N$ //$NON-NLS-1$ //$NON-NLS-1$
 
     final GeoStatusLog log = new GeoStatusLog( status );
     log.log( m_status );
