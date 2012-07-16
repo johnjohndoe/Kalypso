@@ -66,14 +66,13 @@ public class RepairObservationJob extends UIJob
 
   public RepairObservationJob( final StatusCollector stati, final IStatus status, final IRepairObservationWorker worker )
   {
-    super( Messages.getString("RepairObservationJob_0") ); //$NON-NLS-1$
+    super( Messages.getString( "RepairObservationJob_0" ) ); //$NON-NLS-1$
     m_stati = stati;
     m_status = status;
     m_worker = worker;
 
     setSystem( true );
     setUser( false );
-
   }
 
   @Override
@@ -84,14 +83,14 @@ public class RepairObservationJob extends UIJob
     final StatusDialog dialog = new StatusDialog( shell, m_status, m_status.getMessage() );
     dialog.open();
 
-    final boolean repair = MessageDialog.openQuestion( shell, m_worker.getDialogTitle(), m_worker.getDialogMessage() );
+    final boolean repair = MessageDialog.openConfirm( shell, m_worker.getDialogTitle(), m_worker.getDialogMessage() );
 
     if( repair )
     {
       m_stati.add( m_worker.execute( monitor ) );
     }
     else
-      m_stati.add( IStatus.ERROR, Messages.getString("RepairObservationJob_1") ); //$NON-NLS-1$
+      m_stati.add( IStatus.ERROR, Messages.getString( "RepairObservationJob_1" ) ); //$NON-NLS-1$
 
     m_done = true;
 
@@ -102,5 +101,4 @@ public class RepairObservationJob extends UIJob
   {
     return m_done;
   }
-
 }
