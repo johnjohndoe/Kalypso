@@ -170,7 +170,7 @@ public class LinearSumCatchmentModelInfo implements ICatchmentModelInfo
   }
 
   @Override
-  public DateRange getRange( )
+  public DateRange getSimulationRange( )
   {
     final NAControl control = m_control;
     final Period timestep = getTimestep();

@@ -65,6 +65,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalTime;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -78,10 +79,16 @@ import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.util.cm.CatchmentHelper;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
+import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.util.TimestampHelper;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.core.filter.ZmlFilterWorker;
 import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -124,20 +131,12 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   /**
-   * This function calculates the catchment model.
-   * 
    * @param catchmentFeatures
    *          The catchment features will be taken from the generator itself, so they are not needed here. Leave them
    *          <code>null</code>.
-   * @param range
-   *          The date range.
-   * @param log
-   *          The log.
-   * @param monitor
-   *          A progress monitor.
    */
   @Override
-  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, final ILog log, IProgressMonitor monitor ) throws CoreException
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final IStringResolver variables, final ILog log, IProgressMonitor monitor ) throws CoreException
   {
     /* Monitor. */
     if( monitor == null )
@@ -145,6 +144,9 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
     try
     {
+      /* Get the date range. */
+      final DateRange range = getPeriod( variables );
+
       /* Get the catchments. */
       final List<ICatchment> catchments = getCatchments();
 
@@ -152,8 +154,8 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       final IObservation[] results = new IObservation[catchments.size()];
 
       /* Monitor. */
-      monitor.beginTask( String.format( Messages.getString("LinearSumGenerator_0"), catchments.size() ), catchments.size() * 200 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("LinearSumGenerator_1") ); //$NON-NLS-1$
+      monitor.beginTask( String.format( Messages.getString( "LinearSumGenerator_0" ), catchments.size() ), catchments.size() * 200 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "LinearSumGenerator_1" ) ); //$NON-NLS-1$
 
       /* A catchment with the already used hash needs not to be calculated anymore. */
       /* Because the result timeseries would be the same. */
@@ -169,7 +171,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
         final String description = areaLink.getDescription();
 
         /* Generate the message 1. */
-        final String message1 = String.format( Messages.getString("LinearSumGenerator_2"), i + 1, description ); //$NON-NLS-1$
+        final String message1 = String.format( Messages.getString( "LinearSumGenerator_2" ), i + 1, description ); //$NON-NLS-1$
 
         /* Monitor. */
         monitor.subTask( message1 );
@@ -201,8 +203,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
             final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
 
             /* Load the observation. */
-            final IObservation[] readObservations = RainfallGeneratorUtilities.readObservations( new Feature[] { factorizedTimeseries }, linkPath, filters, range );
-            final IObservation observation = readObservations[0];
+            final IObservation observation = readObservation( factorizedTimeseries, linkPath, filters, range );
 
             /* If the factor is valid, add the factor and its observation. */
             if( factor != null && factor.intValue() > 0 && factor.intValue() <= 100 )
@@ -217,7 +218,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
         }
 
         /* Generate the message 2. */
-        final String message2 = String.format( Messages.getString("LinearSumGenerator_3"), i + 1, description, factors.size() ); //$NON-NLS-1$
+        final String message2 = String.format( Messages.getString( "LinearSumGenerator_3" ), i + 1, description, factors.size() ); //$NON-NLS-1$
 
         /* Monitor. */
         monitor.worked( 100 );
@@ -253,6 +254,28 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  private IObservation readObservation( final Feature feature, final GMLXPath linkXPath, final IZmlFilter[] filters, final DateRange dateRange ) throws SensorException
+  {
+    final IRequest request = new ObservationRequest( dateRange );
+
+    final ZmlLink link = new ZmlLink( feature, linkXPath );
+    if( link.isLinkSet() )
+    {
+      final IObservation source = link.loadObservation();
+
+      /* Check, if the range of the timeseries covers the date range (normally the simulation range). */
+      final DateRange timeseriesRange = MetadataHelper.getDateRange( source.getMetadataList() );
+      if( !timeseriesRange.containsInclusive( dateRange ) )
+        throw new SensorException( String.format( "The timeseries '%s' with the range %s is to short for the date range %s...", source.getName(), timeseriesRange.toString(), dateRange.toString() ) );
+
+      final IObservation filteredObservation = ZmlFilterWorker.applyFilters( source, filters );
+      final IObservation resolvedObservation = ObservationHelper.clone( filteredObservation, request );
+      return resolvedObservation;
+    }
+
+    throw new SensorException( "No valid link to an observation..." );
   }
 
   /**

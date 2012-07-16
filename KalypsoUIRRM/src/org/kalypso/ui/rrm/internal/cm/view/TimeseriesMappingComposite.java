@@ -90,7 +90,7 @@ public class TimeseriesMappingComposite extends FeatureBeanComposite<ITimeseries
       final TimeseriesMappingBean bean = (TimeseriesMappingBean) getBean();
       final TimeseriesMappingType mappingType = bean.getMappingType();
 
-      label.setText( String.format( Messages.getString("TimeseriesMappingComposite_0"), mappingType.getLabel() ) ); //$NON-NLS-1$
+      label.setText( String.format( Messages.getString( "TimeseriesMappingComposite_0" ), mappingType.getLabel() ) ); //$NON-NLS-1$
 
       createMappingTable();
     }
