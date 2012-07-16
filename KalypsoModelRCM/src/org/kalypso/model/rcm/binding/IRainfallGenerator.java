@@ -99,10 +99,19 @@ public interface IRainfallGenerator extends Feature
   QName PROPERTY_LAST_MODIFIED = new QName( UrlCatalogRcm.NS_RCM, "lastModified" ); //$NON-NLS-1$
 
   /**
-   * @param sourceFilter
-   *          Enforces source timeseries to have equal properties (length, interval, ...). May be null.
+   * This function calculates the rainfall for the given catchments.
+   * 
+   * @param catchmentFeatures
+   *          The features of the catchments.
+   * @param variables
+   *          If this variables are set, the period will be resolved using this variables. The generator does not know,
+   *          if his stored period needs to be resolved or not.
+   * @param log
+   *          The log.
+   * @param monitor
+   *          A progress monitor.
    */
-  IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, ILog log, final IProgressMonitor monitor ) throws CoreException;
+  IObservation[] createRainfall( final Feature[] catchmentFeatures, IStringResolver variables, ILog log, final IProgressMonitor monitor ) throws CoreException;
 
   /**
    * This function returns the period. This will be the unmodified period from the feature, containing strings, which

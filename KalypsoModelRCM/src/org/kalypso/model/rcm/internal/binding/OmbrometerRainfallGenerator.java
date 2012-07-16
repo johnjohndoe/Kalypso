@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -93,7 +94,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Implementation that generates rainfall from ombrometer stations with Thiessen.
- *
+ * 
  * @author Gernot Belger
  */
 public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
@@ -116,7 +117,7 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
   }
 
   @Override
-  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, final ILog log, IProgressMonitor monitor ) throws CoreException
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final IStringResolver variables, final ILog log, IProgressMonitor monitor ) throws CoreException
   {
     /* Monitor. */
     if( monitor == null )
@@ -165,6 +166,7 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
       /* Read the observations. */
       final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
+      final DateRange range = getPeriod( variables );
       final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerFeatures, linkXPath, filters, range );
 
       /* Apply thiessen, if not yet done. */

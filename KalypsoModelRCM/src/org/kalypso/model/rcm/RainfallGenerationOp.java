@@ -80,7 +80,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * This class does the real generation stuff.
- *
+ * 
  * @author Gernot Belger
  */
 public class RainfallGenerationOp
@@ -174,8 +174,7 @@ public class RainfallGenerationOp
 
   protected void doGeneration( final IRainfallGenerator generator, final String generatorLabel, final IProgressMonitor progress ) throws CoreException, SensorException
   {
-    final DateRange range = generator.getPeriod( m_variables );
-    final IObservation[] obses = generate( generator, range, progress );
+    final IObservation[] obses = generate( generator, progress );
     if( obses == null )
     {
       final String msg = String.format( "Niederschlagserzeugung für Generator '%s' liefert keine Ergebnisse und wird ingoriert", generatorLabel );
@@ -193,6 +192,7 @@ public class RainfallGenerationOp
         final IObservation e = obses[i];
         if( e != null )
         {
+          final DateRange range = generator.getPeriod( m_variables );
           final IObservation resolvedObs = resolveObservation( e, range );
           m_results[i].add( resolvedObs );
         }
@@ -363,19 +363,7 @@ public class RainfallGenerationOp
     }
   }
 
-  /**
-   * @param generatorDesc
-   * @param rcmWorkspace
-   * @param catchmentFeatures
-   * @param from
-   * @param to
-   * @param logger
-   *          To this log, the function will write its messages.
-   * @param log
-   *          If provided, the generators will write messages to this log.
-   * @param monitor
-   */
-  private IObservation[] generate( final IRainfallGenerator rainGen, final DateRange range, final IProgressMonitor monitor ) throws CoreException
+  private IObservation[] generate( final IRainfallGenerator rainGen, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
@@ -384,7 +372,7 @@ public class RainfallGenerationOp
 
     try
     {
-      return rainGen.createRainfall( m_catchments, range, m_log, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
+      return rainGen.createRainfall( m_catchments, m_variables, m_log, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
     }
     finally
     {

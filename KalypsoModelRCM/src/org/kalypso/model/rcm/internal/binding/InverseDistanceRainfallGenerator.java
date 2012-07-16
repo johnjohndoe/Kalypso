@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -112,7 +113,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
   }
 
   @Override
-  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, final ILog log, IProgressMonitor monitor ) throws CoreException
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final IStringResolver variables, final ILog log, IProgressMonitor monitor ) throws CoreException
   {
     /* Monitor. */
     if( monitor == null )
@@ -172,6 +173,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 
       /* Convert to zml observations . */
       final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
+      final DateRange range = getPeriod( variables );
       final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerFeatures, linkXPath, filters, range );
 
       /* Monitor. */
