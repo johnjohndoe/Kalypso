@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.validation.FileNameIsUniqueValidator;
-import org.kalypso.commons.databinding.validation.MultiValidator;
 import org.kalypso.commons.databinding.validation.StringFilenameValidator;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
@@ -66,7 +65,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimeseries>
 {
-
   public EditTimeseriesQualityComposite( final Composite parent, final IStation station, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding, final boolean editable )
   {
     super( parent, featureBean, binding, editable );
@@ -82,16 +80,17 @@ public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimese
 
   protected void doCreateContents( final IStation station )
   {
+    // FIXME: this is rubbish; needs parameter type as well!
     final String[] stationQualities = getQualities( station );
+
     final String[] textCompletionQualities = findQualities( station, stationQualities );
 
     final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, Messages.getString( "EditTimeseriesQualityComposite_0" ) ); //$NON-NLS-1$
     final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( stationQualities, getQuality(), IStatus.ERROR, Messages.getString( "EditTimeseriesQualityComposite_1" ) ); //$NON-NLS-1$
 
-    final MultiValidator validator = new MultiValidator( filenameValidator, uniqueValudator );
+    createPropertyComboTextControl( ITimeseries.PROPERTY_QUALITY, textCompletionQualities, filenameValidator, uniqueValudator );
 
-    createPropertyComboTextControl( ITimeseries.PROPERTY_QUALITY, textCompletionQualities, validator );
-
+    // FIXME: nonse!
     this.layout();
   }
 
