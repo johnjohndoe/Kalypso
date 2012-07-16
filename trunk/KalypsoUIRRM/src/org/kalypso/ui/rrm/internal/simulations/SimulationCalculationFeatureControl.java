@@ -52,13 +52,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -84,8 +84,8 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.i18n.MessageConstants;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
+import org.kalypso.ui.rrm.internal.simulations.actions.OpenStatusLogAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
-import org.kalypso.ui.rrm.internal.simulations.jobs.ReadCalculationStatusJob;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ValidateSimulationJob;
 import org.kalypso.util.command.WaitForFeatureChanges;
 import org.kalypsodeegree.model.feature.Feature;
@@ -104,11 +104,6 @@ import de.renew.workflow.connector.worklist.ITaskExecutor;
 public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 {
   /**
-   * The calculation status composite.
-   */
-  protected StatusComposite m_calculationStatusComposite;
-
-  /**
    * The validation status composite.
    */
   protected StatusComposite m_validationStatusComposite;
@@ -116,125 +111,76 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
   /**
    * The actions for opening a file.
    */
-  private List<Action> m_actions;
-
-  /**
-   * The read calculation job.
-   */
-  private ReadCalculationStatusJob m_calculationJob;
+  private final List<IAction> m_actions = new ArrayList<>();
 
   /**
    * The validate simulation job.
    */
   private ValidateSimulationJob m_validationJob;
 
-  /**
-   * The constructor.
-   *
-   * @param ftp
-   */
+  private OpenStatusLogAction m_simulationAction;
+
   public SimulationCalculationFeatureControl( final IPropertyType ftp )
   {
     super( ftp );
-
-    m_calculationStatusComposite = null;
-    m_validationStatusComposite = null;
-    m_actions = null;
-    m_calculationJob = null;
-    m_validationJob = null;
   }
 
-  /**
-   * The constructor.
-   *
-   * @param feature
-   * @param ftp
-   */
   public SimulationCalculationFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
-
-    m_calculationStatusComposite = null;
-    m_validationStatusComposite = null;
-    m_actions = null;
-    m_calculationJob = null;
-    m_validationJob = null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#createControl(org.eclipse.swt.widgets.Composite,
-   *      int)
-   */
   @Override
   protected Control createControl( final Composite parent, final int style )
   {
     /* Create the main composite. */
     final Composite main = new Composite( parent, style );
-    main.setLayout( new GridLayout( 1, false ) );
+    GridLayoutFactory.swtDefaults().applyTo( main );
 
     try
     {
-      /* Create a label. */
-      final Label desciptionLabel = new Label( main, SWT.WRAP );
-      desciptionLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      desciptionLabel.setText( Messages.getString( "SimulationCalculationFeatureControl.0" ) ); //$NON-NLS-1$
+      /* Validation group */
+      final Group validationGroup = new Group( main, SWT.NONE );
+      GridLayoutFactory.swtDefaults().applyTo( validationGroup );
+      validationGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      validationGroup.setText( "Validierung" );
 
-      /* Create a status composite. */
-      m_calculationStatusComposite = new StatusComposite( main, StatusComposite.DETAILS );
-      m_calculationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      m_calculationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "SimulationCalculationFeatureControl.1" ) ) ); //$NON-NLS-1$
-
-      /* Create a empty label. */
-      final Label emptyLabel1 = new Label( main, SWT.NONE );
-      emptyLabel1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      /* Calculation validation status */
+      m_validationStatusComposite = new StatusComposite( validationGroup, StatusComposite.DETAILS );
+      m_validationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      m_validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "SimulationCalculationFeatureControl.3" ) ) ); //$NON-NLS-1$
 
       /* Create a group. */
       final Group resultsGroup = new Group( main, SWT.NONE );
-      resultsGroup.setLayout( new GridLayout( 1, false ) );
+      GridLayoutFactory.swtDefaults().applyTo( resultsGroup );
       resultsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       resultsGroup.setText( Messages.getString( "SimulationCalculationFeatureControl.2" ) ); //$NON-NLS-1$
 
-      /* Create a status composite. */
-      m_validationStatusComposite = new StatusComposite( resultsGroup, StatusComposite.DETAILS );
-      m_validationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      m_validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "SimulationCalculationFeatureControl.3" ) ) ); //$NON-NLS-1$
+      /* Get the current simulation. */
+      final RrmSimulation simulation = getSimulation();
+
+      final RrmCalculationResult current = simulation.getCurrentCalculationResult();
+
+      m_simulationAction = new OpenStatusLogAction( MessageConstants.STR_ACTION_OPEN_CALC_STATUS_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_STATUS_TOOLTIP, current.getCalculationStatusGml() );
+      addAction( resultsGroup, m_simulationAction );
 
       /* Create a empty label. */
       final Label emptyLabel2 = new Label( resultsGroup, SWT.NONE );
       emptyLabel2.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-      /* Get the current simulation. */
-      final RrmSimulation simulation = getSimulation();
+      addAction( resultsGroup, new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_CALC_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_LOG_TOOLTIP, current.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      addAction( resultsGroup, new OpenOutputZipAction( MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TOOLTIP, current.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      // addAction( resultsGroup, new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.",
+      // simulation, false ) );
+      addAction( resultsGroup, new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_MASS_BALANCE_TEXT, MessageConstants.STR_ACTION_OPEN_MASS_BALANCE_TOOLTIP, current.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      addAction( resultsGroup, new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_STATISTICS_TEXT, MessageConstants.STR_ACTION_OPEN_STATISTICS_TOOLTIP, current.getStatisticsCsv(), "xls" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-1$
 
-      /* Create the actions. */
-      m_actions = new ArrayList<Action>();
-
-      final RrmCalculationResult current = simulation.getCurrentCalculationResult();
-
-      m_actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_CALC_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_LOG_TOOLTIP, current.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      m_actions.add( new OpenOutputZipAction( MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TOOLTIP, current.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      // m_actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
-      m_actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_MASS_BALANCE_TEXT, MessageConstants.STR_ACTION_OPEN_MASS_BALANCE_TOOLTIP, current.getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      m_actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_STATISTICS_TEXT, MessageConstants.STR_ACTION_OPEN_STATISTICS_TOOLTIP, current.getStatisticsCsv(), "xls" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-1$
-
-      /* Create the image hyperlinks. */
-      for( final Action action : m_actions )
-      {
-        final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, resultsGroup, SWT.NONE, action );
-        imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-        imageHyperlink.setText( action.getText() );
-
-        if( action instanceof IUpdateable )
-          ((IUpdateable) action).update();
-      }
-
-      /* Create a empty label. */
-      final Label emptyLabel3 = new Label( resultsGroup, SWT.NONE );
+      /* Calculation button */
+      final Label emptyLabel3 = new Label( main, SWT.NONE );
       emptyLabel3.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-      /* Create a button. */
-      final Button calculationButton = new Button( resultsGroup, SWT.PUSH );
-      calculationButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
+      final Button calculationButton = new Button( main, SWT.PUSH );
+      calculationButton.setLayoutData( new GridData( SWT.END, SWT.END, true, false ) );
       calculationButton.setText( Messages.getString( "SimulationCalculationFeatureControl.12" ) ); //$NON-NLS-1$
       calculationButton.setImage( KalypsoUIRRMPlugin.getDefault().getImageProvider().getImage( UIRrmImages.DESCRIPTORS.SIMULATION ) );
       calculationButton.addSelectionListener( new SelectionAdapter()
@@ -246,8 +192,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
         }
       } );
 
-      /* Initialize. */
-      initialize( simulation );
+      updateData();
     }
     catch( final Exception ex )
     {
@@ -261,26 +206,33 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     return main;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
-   */
+  private void addAction( final Composite parent, final IAction action )
+  {
+    m_actions.add( action );
+
+    final ImageHyperlink imageHyperlink = ActionHyperlink.createHyperlink( null, parent, SWT.NONE, action );
+    imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    imageHyperlink.setText( action.getText() );
+  }
+
   @Override
   public void updateControl( )
+  {
+  }
+
+  public void updateData( )
   {
     /* Update the controls. */
     initialize( getSimulation() );
 
     /* Update the actions. */
-    for( final Action action : m_actions )
+    for( final IAction action : m_actions )
     {
       if( action instanceof IUpdateable )
         ((IUpdateable) action).update();
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
-   */
   @Override
   public boolean isValid( )
   {
@@ -304,33 +256,10 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
   private void initialize( final RrmSimulation simulation )
   {
-    if( m_calculationJob != null || m_validationJob != null )
+    if( m_validationJob != null )
       return;
 
-    m_calculationJob = new ReadCalculationStatusJob( simulation );
-    m_calculationJob.setUser( false );
-    m_calculationJob.addJobChangeListener( new JobChangeAdapter()
-    {
-      @Override
-      public void done( final IJobChangeEvent event )
-      {
-        final Job job = event.getJob();
-        if( !(job instanceof ReadCalculationStatusJob) )
-          return;
-
-        final IStatus result = job.getResult();
-        if( !result.isOK() )
-        {
-          setCalculationStatus( result );
-          return;
-        }
-
-        final ReadCalculationStatusJob task = (ReadCalculationStatusJob) job;
-        final IStatus calculationStatus = task.getCalculationStatus();
-
-        setCalculationStatus( calculationStatus );
-      }
-    } );
+    m_simulationAction.updateStatus();
 
     m_validationJob = new ValidateSimulationJob( simulation, (NAControl) getFeature() );
     m_validationJob.setUser( false );
@@ -357,7 +286,6 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     } );
 
     /* Schedule the jobs. */
-    m_calculationJob.schedule();
     m_validationJob.schedule();
   }
 
@@ -377,11 +305,11 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
   protected void handleCalculatePressed( )
   {
-    if( m_calculationStatusComposite == null || m_calculationStatusComposite.isDisposed() )
+    if( m_validationStatusComposite == null || m_validationStatusComposite.isDisposed() )
       return;
 
     /* Get the shell and the title. */
-    final Shell shell = m_calculationStatusComposite.getShell();
+    final Shell shell = m_validationStatusComposite.getShell();
     final String title = Messages.getString( "SimulationCalculationFeatureControl.13" ); //$NON-NLS-1$
 
     /* Get the na control. */
@@ -425,32 +353,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     handler.calculateSimulation( shell, simulations );
 
     /* Update the control. */
-    updateControl();
-  }
-
-  protected void setCalculationStatus( final IStatus calculationStatus )
-  {
-    if( m_calculationStatusComposite == null || m_calculationStatusComposite.isDisposed() )
-      return;
-
-    m_calculationStatusComposite.getDisplay().asyncExec( new Runnable()
-    {
-      @Override
-      public void run( )
-      {
-        IStatus statusToSet = calculationStatus;
-        if( calculationStatus.isMultiStatus() )
-        {
-          final IStatus[] children = calculationStatus.getChildren();
-          if( children.length == 1 )
-            statusToSet = children[0];
-        }
-
-        m_calculationStatusComposite.setStatus( statusToSet );
-      }
-    } );
-
-    m_calculationJob = null;
+    updateData();
   }
 
   protected void setValidationStatus( final IStatus validationStatus )
