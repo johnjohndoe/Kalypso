@@ -327,13 +327,9 @@
     </group>
   </composite>
 
-  <group text="%control.gft.calculation" style="SWT.NONE">
+  <extensioncontrol style="SWT.NONE" property="rrm:versionKalypsoNA" extension-id="simulationCalculationFeatureControl">
     <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
-    <gridLayout numColumns="1" />
-    <extensioncontrol style="SWT.NONE" property="rrm:versionKalypsoNA" extension-id="simulationCalculationFeatureControl">
-      <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
-    </extensioncontrol>
-  </group>
+  </extensioncontrol>
 
   <translator id="commons.msgGetString">
     <class>org.kalypso.model.rrm.ui:org.kalypso.ui.rrm.catalog.TemplateMessages</class>
