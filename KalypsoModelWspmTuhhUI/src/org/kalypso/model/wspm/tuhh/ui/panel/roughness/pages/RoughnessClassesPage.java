@@ -106,6 +106,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     group.setText( Messages.getString( "RoughnessClassesPage.1" ) ); //$NON-NLS-1$
     toolkit.adapt( group );
 
+    // FIXME: databinding not intended to be used like this!
     setBinding( new AbstractDatabinding( toolkit )
     {
     } );
