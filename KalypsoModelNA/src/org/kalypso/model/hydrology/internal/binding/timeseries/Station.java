@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.binding.timeseries;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Period;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -127,5 +130,28 @@ public abstract class Station extends Feature_Impl implements IStation
     }
 
     return false;
+  }
+
+  @Override
+  public String[] getQualities( final String parameterType )
+  {
+    final Set<String> qualities = new LinkedHashSet<>();
+
+    final IFeatureBindingCollection<ITimeseries> timeserieses = getTimeseries();
+    for( final ITimeseries ts : timeserieses )
+    {
+      final String quality = ts.getQuality();
+      final String tsType = ts.getParameterType();
+
+      if( parameterType == null || tsType.equals( parameterType ) )
+      {
+        if( quality != null )
+          qualities.add( quality );
+        else
+          qualities.add( StringUtils.EMPTY );
+      }
+    }
+
+    return qualities.toArray( new String[] {} );
   }
 }

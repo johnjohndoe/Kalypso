@@ -81,4 +81,6 @@ public interface IStation extends Feature
    * Checks if a timeseries with same parameter type, quality and timestep already exists.
    */
   boolean hasTimeseries( String parameterType, String quality, Period timestep );
+
+  String[] getQualities( String parameterType );
 }
