@@ -62,7 +62,6 @@ import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
  */
 public class EditTimeseriesDialog extends ShowTimeseriesDialog
 {
-
   private final FeatureBean<ITimeseries> m_timeseries;
 
   private final IDataBinding m_binding;

@@ -92,7 +92,6 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
     final ITimeseries timeseries = showWizard( shell, data );
     if( timeseries != null )
       m_model.refreshTree( timeseries );
-
   }
 
   private ImportObservationData prepareData( )
@@ -100,8 +99,7 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
     final ITimeseries timeseries = m_timeseries.getFeature();
     m_parameterType = timeseries.getParameterType();
 
-    final ImportObservationData data = new ImportObservationData( m_parameterType );
-    return data;
+    return new ImportObservationData( m_parameterType );
   }
 
   private ITimeseries showWizard( final Shell shell, final ImportObservationData data )
