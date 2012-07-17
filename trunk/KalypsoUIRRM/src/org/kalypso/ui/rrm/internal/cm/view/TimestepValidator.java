@@ -85,9 +85,9 @@ public class TimestepValidator implements IValidator
       /* The case that the timestamp format is wrong is covered in the above if. */
       final String timestamp = (String) m_featureBean.getProperty( ILinearSumGenerator.PROPERTY_TIMESTAMP );
       if( timestamp == null || timestamp.length() == 0 )
-        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("TimestepValidator_0") ); //$NON-NLS-1$
+        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "TimestepValidator_0" ) ); //$NON-NLS-1$
     }
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("TimestepValidator_1") ); //$NON-NLS-1$
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "TimestepValidator_1" ) ); //$NON-NLS-1$
   }
 }
