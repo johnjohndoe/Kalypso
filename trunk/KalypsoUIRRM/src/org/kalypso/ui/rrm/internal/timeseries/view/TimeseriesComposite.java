@@ -79,12 +79,9 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
     createParameterTypeControl();
     createPropertyTextFieldControl( ITimeseries.PROPERTY_QUALITY );
     createPropertyTextFieldControl( ITimeseries.QN_DESCRIPTION );
-
     createTimestepControl();
     // TODO: show timestamp
-
-    createDateRangetControl();
-
+    createDateRangeControl();
     createTimeseriesDataValidationControl();
   }
 
@@ -146,12 +143,12 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
 // binding.bindValue( binder );
 // }
 
-  private void createDateRangetControl( )
+  private void createDateRangeControl( )
   {
 
     final Label header = new Label( this, SWT.NULL );
     header.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    header.setText( Messages.getString("TimeseriesComposite.0") ); //$NON-NLS-1$
+    header.setText( Messages.getString( "TimeseriesComposite.0" ) ); //$NON-NLS-1$
 
     final Composite body = getToolkit().createComposite( this );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( body );

@@ -64,7 +64,6 @@ import org.kalypso.zml.ui.imports.ImportObservationData;
  */
 public abstract class AbstractOverwriteTimeseriesAction extends Action
 {
-
   private final ITreeNodeModel m_model;
 
   private final FeatureBean<ITimeseries> m_timeseries;
