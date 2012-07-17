@@ -46,6 +46,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -74,6 +76,8 @@ public class TimeseriesValidatingOperation implements ICoreRunnableWithProgress
     if( monitor == null )
       monitor = new NullProgressMonitor();
 
+    final IStatusCollector collector = new StatusCollector( ModelNA.PLUGIN_ID );
+
     try
     {
       monitor.beginTask( "Validating timeseries", m_timeseries.length * 100 );
@@ -83,25 +87,28 @@ public class TimeseriesValidatingOperation implements ICoreRunnableWithProgress
         final Date from = m_dateRange.getFrom();
         final Date to = m_dateRange.getTo();
         if( from.after( to ) )
-          return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "The to date of the validity range must be after the from date." );
+        {
+          collector.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "The to date of the validity range must be after the from date." ) );
+          return collector.asMultiStatus( "Validity range error" );
+        }
 
         for( final ITimeseries timeseries : m_timeseries )
         {
           monitor.subTask( String.format( "Validating timeseries '%s'...", timeseries.getName() ) );
 
           final IStatus status = validateTimeseries( timeseries, m_dateRange );
-          if( !status.isOK() )
-            return status;
+          collector.add( status );
         }
       }
 
       monitor.worked( 100 );
 
-      return new Status( IStatus.OK, ModelNA.PLUGIN_ID, "Timeseries are OK." );
+      return collector.asMultiStatusOrOK( "Timeseries error", "Timeseries are OK" );
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, ex.getLocalizedMessage(), ex );
+      collector.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, ex.getLocalizedMessage(), ex ) );
+      return collector.asMultiStatus( "Validation error" );
     }
     finally
     {

@@ -44,6 +44,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -315,12 +316,23 @@ public class EditLinearSumDialog extends TitleAreaDialog
   @Override
   protected void okPressed( )
   {
+    /* Check the status of the timeseries. */
+    final IStatus timeseriesStatus = validateTimeseriesRanges( m_bean );
+    if( !timeseriesStatus.isOK() )
+    {
+      final MultiStatus status = new MultiStatus( KalypsoUIRRMPlugin.getID(), IStatus.ERROR, new IStatus[] { timeseriesStatus }, Messages.getString( "EditLinearSumDialog.0" ), null ); //$NON-NLS-1$
+      final StatusDialog statusDialog = new StatusDialog( getShell(), status, getShell().getText() );
+      statusDialog.open();
+      return;
+    }
+
     /* Check the status of the data binding. */
     final IStatus bindingStatus = ValidationStatusUtilities.getFirstNonOkStatus( m_dataBinding );
     if( !bindingStatus.isOK() )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "EditLinearSumDialog.0" ), bindingStatus.getMessage() ), bindingStatus.getException() ); //$NON-NLS-1$
-      StatusDialog.open( getShell(), status, getShell().getText() );
+      final MultiStatus status = new MultiStatus( KalypsoUIRRMPlugin.getID(), IStatus.ERROR, new IStatus[] { bindingStatus }, Messages.getString( "EditLinearSumDialog.0" ), null ); //$NON-NLS-1$
+      final StatusDialog statusDialog = new StatusDialog( getShell(), status, getShell().getText() );
+      statusDialog.open();
       return;
     }
 
@@ -750,10 +762,10 @@ public class EditLinearSumDialog extends TitleAreaDialog
     validateTimeseriesRanges( m_bean );
   }
 
-  protected void validateTimeseriesRanges( final LinearSumBean bean )
+  protected IStatus validateTimeseriesRanges( final LinearSumBean bean )
   {
     if( m_mainStatusComposite == null || m_mainStatusComposite.isDisposed() )
-      return;
+      return null;
 
     final ITimeseries[] timeseries = LinearSumHelper.collectTimeseries( bean );
     final DateRange dateRange = LinearSumHelper.createDateRange( bean );
@@ -762,5 +774,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     final IStatus status = operation.execute( new NullProgressMonitor() );
 
     m_mainStatusComposite.setStatus( status );
+
+    return status;
   }
 }
