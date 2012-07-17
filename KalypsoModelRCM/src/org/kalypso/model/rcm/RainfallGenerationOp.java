@@ -147,10 +147,12 @@ public class RainfallGenerationOp
       }
       catch( final Exception e )
       {
-        final String msg = String.format( "Niederschlagserzeugung für Generator '%s' fehlgeschlagen", generator.getName() );
-        final IStatus status = m_generatorStati.add( IStatus.WARNING, msg, e );
+        final String msg = String.format( "Niederschlagserzeugung für Generator '%s' mit der Meldung '%s' fehlgeschlagen.", generator.getName(), e.getLocalizedMessage() );
+        final IStatus status = m_generatorStati.add( IStatus.ERROR, msg, e );
         if( m_log != null )
           m_log.log( status );
+
+        throw new CoreException( status );
       }
     }
 

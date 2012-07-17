@@ -143,13 +143,10 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
       final IRainfallGenerator[] generators = rcm.getGenerators().toArray( new IRainfallGenerator[0] );
 
       final RainfallGenerationOp operation = new RainfallGenerationOp( catchments, generators, metadata, m_variables, log );
-
-      final SubMonitor subMon = progress.newChild( 90, SubMonitor.SUPPRESS_NONE );
-      final IStatus status = operation.execute( subMon );
-
-      final IObservation[] observations = operation.getResult();
+      final IStatus status = operation.execute( progress.newChild( 90, SubMonitor.SUPPRESS_NONE ) );
 
       /* Find target links right now, to avoid long waiting time if anything fails here. */
+      final IObservation[] observations = operation.getResult();
       final TimeseriesLinkType[] targetLinks = findCatchmentLinks( targetDefinition, catchments );
       writeObservations( targetDefinition, observations, targetLinks, catchments );
 
