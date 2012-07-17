@@ -74,4 +74,6 @@ public interface ICatchmentModelInfo
   LocalTime getTimestamp( );
 
   DateRange getSimulationRange( );
+
+  DateRange getUnadjustedSimulationRange( );
 }

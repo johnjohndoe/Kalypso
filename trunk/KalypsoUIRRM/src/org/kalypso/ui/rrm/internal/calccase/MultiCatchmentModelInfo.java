@@ -167,4 +167,10 @@ public class MultiCatchmentModelInfo implements ICatchmentModelInfo
   {
     return null;
   }
+
+  @Override
+  public DateRange getUnadjustedSimulationRange( )
+  {
+    return null;
+  }
 }

@@ -110,6 +110,11 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   private final IFeatureBindingCollection<ICatchment> m_catchments;
 
   /**
+   * The validity range is used to check the length of the timeseries against.
+   */
+  private DateRange m_validityRange;
+
+  /**
    * The constructor.
    * 
    * @param parent
@@ -128,6 +133,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     super( parent, parentRelation, ft, id, propValues );
 
     m_catchments = new FeatureBindingCollection<ICatchment>( this, ICatchment.class, MEMBER_CATCHMENT );
+    m_validityRange = null;
   }
 
   /**
@@ -145,7 +151,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     try
     {
       /* Get the date range. */
-      final DateRange range = getPeriod( variables );
+      final DateRange dateRange = getPeriod( variables );
 
       /* Get the catchments. */
       final List<ICatchment> catchments = getCatchments();
@@ -203,7 +209,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
             final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
 
             /* Load the observation. */
-            final IObservation observation = readObservation( factorizedTimeseries, linkPath, filters, range );
+            final IObservation observation = readObservation( factorizedTimeseries, linkPath, filters, dateRange );
 
             /* If the factor is valid, add the factor and its observation. */
             if( factor != null && factor.intValue() > 0 && factor.intValue() <= 100 )
@@ -265,10 +271,11 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     {
       final IObservation source = link.loadObservation();
 
-      /* Check, if the range of the timeseries covers the date range (normally the simulation range). */
+      /* Check, if the range of the timeseries covers the validity range. */
       final DateRange timeseriesRange = MetadataHelper.getDateRange( source.getMetadataList() );
-      if( !timeseriesRange.containsInclusive( dateRange ) )
-        throw new SensorException( String.format( "The timeseries '%s' with the range %s is to short for the date range %s...", source.getName(), timeseriesRange.toString(), dateRange.toString() ) );
+      final DateRange validityRange = getValidityRange( dateRange );
+      if( !timeseriesRange.containsInclusive( validityRange ) )
+        throw new SensorException( String.format( "The timeseries '%s' with the range %s is to short for the date range %s...", source.getName(), timeseriesRange.toString(), validityRange.toString() ) );
 
       final IObservation filteredObservation = ZmlFilterWorker.applyFilters( source, filters );
       final IObservation resolvedObservation = ObservationHelper.clone( filteredObservation, request );
@@ -276,6 +283,19 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     }
 
     throw new SensorException( "No valid link to an observation..." );
+  }
+
+  private DateRange getValidityRange( final DateRange defaultRange )
+  {
+    if( m_validityRange == null )
+      return defaultRange;
+
+    return m_validityRange;
+  }
+
+  public void setValidityRange( final DateRange validityRange )
+  {
+    m_validityRange = validityRange;
   }
 
   /**
@@ -531,10 +551,9 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   {
     try
     {
-      /* Get the .models folder of the current scenario. */
+      /* Get the current rrm scenario. */
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IContainer scenarioFolder = dataProvider.getScenarioFolder();
-
       final RrmScenario rrmScenario = new RrmScenario( scenarioFolder );
 
       /* This is the last modified timestamp of the modell.gml. */

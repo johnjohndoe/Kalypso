@@ -98,9 +98,14 @@ public class GenericCatchmentModelInfo implements ICatchmentModelInfo
   private final LocalTime m_timestamp;
 
   /**
-   * The range.
+   * The simulation range.
    */
-  private final DateRange m_range;
+  private final DateRange m_simulationRange;
+
+  /**
+   * The unadjusted simulation range.
+   */
+  private final DateRange m_unadjustedSimulationRange;
 
   /**
    * The constructor.
@@ -121,10 +126,12 @@ public class GenericCatchmentModelInfo implements ICatchmentModelInfo
    *          The timestep.
    * @param timestamp
    *          The timestamp.
-   * @param range
-   *          The range.
+   * @param simulationRange
+   *          The simulation range.
+   * @param unadjustedSimulationRange
+   *          The unadjusted simulation range.
    */
-  public GenericCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final Period timestep, final LocalTime timestamp, final DateRange range )
+  public GenericCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final Period timestep, final LocalTime timestamp, final DateRange simulationRange, final DateRange unadjustedSimulationRange )
   {
     m_simulation = simulation;
     m_control = control;
@@ -134,7 +141,8 @@ public class GenericCatchmentModelInfo implements ICatchmentModelInfo
     m_parameterType = parameterType;
     m_timestep = timestep;
     m_timestamp = timestamp;
-    m_range = range;
+    m_simulationRange = simulationRange;
+    m_unadjustedSimulationRange = unadjustedSimulationRange;
   }
 
   @Override
@@ -188,6 +196,12 @@ public class GenericCatchmentModelInfo implements ICatchmentModelInfo
   @Override
   public DateRange getSimulationRange( )
   {
-    return m_range;
+    return m_simulationRange;
+  }
+
+  @Override
+  public DateRange getUnadjustedSimulationRange( )
+  {
+    return m_unadjustedSimulationRange;
   }
 }

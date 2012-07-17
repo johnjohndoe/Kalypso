@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
+import java.util.Date;
+
 import javax.xml.namespace.QName;
 
 import org.joda.time.LocalTime;
@@ -177,5 +179,15 @@ public class LinearSumCatchmentModelInfo implements ICatchmentModelInfo
     final LocalTime timestamp = getTimestamp();
 
     return CatchmentModelHelper.getRange( control, timestep, timestamp );
+  }
+
+  @Override
+  public DateRange getUnadjustedSimulationRange( )
+  {
+    final Date simulationStart = m_control.getSimulationStart();
+    final Date simulationEnd = m_control.getSimulationEnd();
+    final DateRange unadjustedSimulationRange = new DateRange( simulationStart, simulationEnd );
+
+    return unadjustedSimulationRange;
   }
 }

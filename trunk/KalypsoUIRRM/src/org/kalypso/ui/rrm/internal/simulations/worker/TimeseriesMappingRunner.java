@@ -173,7 +173,7 @@ public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
       final Date simulationEnd = m_simulation.getSimulationEnd();
       final DateRange unadjustedSimulationRange = new DateRange( simulationStart, simulationEnd );
 
-      /* Check, if the range of the timeseries covers the date range (normally the simulation range). */
+      /* Check, if the range of the timeseries covers the unadjusted simulation range. */
       final DateRange timeseriesRange = MetadataHelper.getDateRange( timeseries.getMetadataList() );
       if( !timeseriesRange.containsInclusive( unadjustedSimulationRange ) )
         throw new SensorException( String.format( "The timeseries '%s' with the range %s is to short for the date range %s...", timeseries.getName(), timeseriesRange.toString(), unadjustedSimulationRange.toString() ) );

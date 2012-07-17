@@ -136,6 +136,12 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
     m_mainStatusComposite = new StatusComposite( main, StatusComposite.DETAILS );
     m_mainStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
+    /* Adapt. */
+    toolkit.adapt( m_mainStatusComposite );
+
+    /* Validate the timeseries ranges. */
+    validateTimeseriesRanges( m_generator );
+
     /* Observe change of parameter type */
     m_generator.addPropertyChangeListener( m_propertyListener );
 
@@ -193,7 +199,7 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
 
   protected void handleParameterTypeChanged( final PropertyChangeEvent evt )
   {
-    // Avoid loop, if we cancel the change
+    /* Avoid loop, if we cancel the change. */
     if( m_ignoreNextChange == true )
     {
       m_ignoreNextChange = false;
@@ -204,7 +210,6 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
     final Shell shell = context.getShell();
     final IWizard wizard = context.getPage().getWizard();
     final String windowTitle = wizard.getWindowTitle();
-
     final String message = Messages.getString( "ThiessenWizardLayoutPart_2" ); //$NON-NLS-1$
 
     if( !MessageDialog.openConfirm( shell, windowTitle, message ) )
@@ -225,19 +230,20 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
       return;
     }
 
-    /* update timeseries gml file */
+    /* Update timeseries gml file. */
     final IWizardContainer container = wizard.getContainer();
     final ICoreRunnableWithProgress operation = new InitThiessenTimeseriesOperation( m_generator );
     final IStatus updateStatus = RunnableContextHelper.execute( container, true, false, operation );
     if( !updateStatus.isOK() )
-    {
       StatusDialog.open( shell, updateStatus, windowTitle );
-      return;
-    }
+
+    /* Validate the timeseries ranges. */
+    validateTimeseriesRanges( m_generator );
   }
 
   protected void handlePropertyChanged( )
   {
+    /* Validate the timeseries ranges. */
     validateTimeseriesRanges( m_generator );
   }
 
@@ -248,8 +254,6 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
 
     final ITimeseries[] timeseries = LinearSumHelper.collectTimeseries( bean );
     final DateRange dateRange = LinearSumHelper.createDateRange( bean );
-    if( dateRange == null )
-      return;
 
     final TimeseriesValidatingOperation operation = new TimeseriesValidatingOperation( timeseries, dateRange );
     final IStatus status = operation.execute( new NullProgressMonitor() );
