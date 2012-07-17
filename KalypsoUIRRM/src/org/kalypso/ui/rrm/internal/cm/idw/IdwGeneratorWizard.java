@@ -45,6 +45,7 @@ import java.util.Locale;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -56,8 +57,12 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.timeseries.TimeseriesValidatingOperation;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ui.layoutwizard.LayoutWizardPage;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
@@ -116,6 +121,19 @@ public class IdwGeneratorWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
+    /* Check the validity range. */
+    final ITimeseries[] timeseries = LinearSumHelper.collectTimeseries( m_bean );
+    final DateRange dateRange = LinearSumHelper.createDateRange( m_bean );
+    final TimeseriesValidatingOperation timeseriesOperation = new TimeseriesValidatingOperation( timeseries, dateRange );
+    final IStatus timeseriesStatus = timeseriesOperation.execute( new NullProgressMonitor() );
+    if( !timeseriesStatus.isOK() )
+    {
+      final MultiStatus status = new MultiStatus( KalypsoUIRRMPlugin.getID(), IStatus.ERROR, new IStatus[] { timeseriesStatus }, Messages.getString( "EditLinearSumDialog.0" ), null ); //$NON-NLS-1$
+      final StatusDialog statusDialog = new StatusDialog( getShell(), status, getShell().getText() );
+      statusDialog.open();
+      return false;
+    }
+
     /* Set the comment. */
     final Integer maxNumberStations = getMaxNumberStations();
     m_bean.setProperty( ILinearSumGenerator.PROPERTY_COMMENT, String.format( Locale.PRC, Messages.getString( "IdwFactorsOperation_0" ), maxNumberStations ) ); //$NON-NLS-1$
