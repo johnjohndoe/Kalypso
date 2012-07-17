@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -56,13 +57,13 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -126,18 +127,29 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
 
     final String timeseriesLabel = Timeserieses.toLinkLabel( timeseries );
 
+    /* If already in same station, inform use but do nothing */
     if( timeseries.getStation() == m_target )
     {
       m_movedTimeseries.add( timeseries );
-      final String message = String.format( "Timeseries '%s' is already a timeseries of this station", timeseriesLabel );
+      final String message = String.format( "'%s': already an element of this station", timeseriesLabel );
+      return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), message );
+    }
+
+    /* If target station is not allowed to holde the parameter type, inform use but do nothing */
+    final String parameterType = timeseries.getParameterType();
+    final String[] allowedTypes = StationClassesCatalog.findAllowedParameterTypes( m_target );
+    if( !ArrayUtils.contains( allowedTypes, parameterType ) )
+    {
+      m_movedTimeseries.add( timeseries );
+      final String message = String.format( "'%s': station '%s' cannot contain timeseries of type '%s'", timeseriesLabel, m_target.getDescription(), parameterType );
       return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), message );
     }
 
     final ZmlLink oldLink = timeseries.getDataLink();
     final IObservation observation = oldLink.getObservationFromPool();
-    final ObservationImportOperation importOperation = new ObservationImportOperation( observation, timeseries.getParameterType(), timeseries.getQuality() );
-    final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_target, importOperation );
-    storeOperation.updateDataAfterFinish();
+    final ObservationImportOperation importOperation = new ObservationImportOperation( observation, parameterType, timeseries.getQuality(), timeseries.getDescription() );
+
+    final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( m_target, importOperation );
     log.add( storeOperation.execute( monitor ) );
 
     final ITimeseries moved = storeOperation.getTimeseries();
