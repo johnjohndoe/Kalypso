@@ -50,6 +50,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.cm.ICatchment;
 import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
@@ -83,6 +84,8 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     super( ILinearSumGenerator.FEATURE_LINEAR_SUM_GENERATOR );
 
     m_catchments = new CatchmentBean[] {};
+
+    initValidities();
   }
 
   /**
@@ -96,6 +99,8 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     super( generator );
 
     m_catchments = initCatchments();
+
+    initValidities();
   }
 
   public CatchmentBean[] getCatchments( )
@@ -201,6 +206,19 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
       results.add( new CatchmentBean( catchment ) );
 
     return results.toArray( new CatchmentBean[] {} );
+  }
+
+  private void initValidities( )
+  {
+    final Date currentDate = new Date();
+
+    final Object validFrom = getProperty( ILinearSumGenerator.PROPERTY_VALID_FROM );
+    if( validFrom == null )
+      setProperty( ILinearSumGenerator.PROPERTY_VALID_FROM, DateUtilities.toXMLGregorianCalendar( currentDate ) );
+
+    final Object validTo = getProperty( ILinearSumGenerator.PROPERTY_VALID_TO );
+    if( validTo == null )
+      setProperty( ILinearSumGenerator.PROPERTY_VALID_TO, DateUtilities.toXMLGregorianCalendar( currentDate ) );
   }
 
   /**

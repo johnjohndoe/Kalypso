@@ -227,7 +227,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
       final DateRange range = new DateRange( interval.getStart().toDate(), interval.getEnd().toDate() );
 
       /* The catchment model runner should be executed with this generic info. */
-      final ICatchmentModelInfo genericInfo = new GenericCatchmentModelInfo( simulation, control, model, generator, targetLink, parameterType, timestep, timestamp, range );
+      final ICatchmentModelInfo genericInfo = new GenericCatchmentModelInfo( simulation, control, model, generator, targetLink, parameterType, timestep, timestamp, range, range );
 
       /* Create the linear sum catchment model runner. */
       final LinearSumCatchmentModelRunner runner = new LinearSumCatchmentModelRunner( prefix );

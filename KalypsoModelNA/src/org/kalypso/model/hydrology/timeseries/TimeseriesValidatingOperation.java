@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.timeseries;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -78,7 +80,10 @@ public class TimeseriesValidatingOperation implements ICoreRunnableWithProgress
 
       if( m_timeseries != null && m_dateRange != null )
       {
-        // FIXME Check the daterange, if it is from <= to...
+        final Date from = m_dateRange.getFrom();
+        final Date to = m_dateRange.getTo();
+        if( from.after( to ) )
+          return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "The to date of the validity range must be after the from date." );
 
         for( final ITimeseries timeseries : m_timeseries )
         {
@@ -92,7 +97,7 @@ public class TimeseriesValidatingOperation implements ICoreRunnableWithProgress
 
       monitor.worked( 100 );
 
-      return new Status( IStatus.OK, ModelNA.PLUGIN_ID, "Timeseries are OK" );
+      return new Status( IStatus.OK, ModelNA.PLUGIN_ID, "Timeseries are OK." );
     }
     catch( final Exception ex )
     {
@@ -111,6 +116,6 @@ public class TimeseriesValidatingOperation implements ICoreRunnableWithProgress
     if( !measurementRange.containsInclusive( dateRange ) )
       return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, String.format( "The measurement range (%s) of timeseries '%s' does not cover the validity range.", measurementRange.toString(), linkLabel ) );
 
-    return new Status( IStatus.OK, ModelNA.PLUGIN_ID, "Timeseries is OK" );
+    return new Status( IStatus.OK, ModelNA.PLUGIN_ID, "Timeseries is OK." );
   }
 }

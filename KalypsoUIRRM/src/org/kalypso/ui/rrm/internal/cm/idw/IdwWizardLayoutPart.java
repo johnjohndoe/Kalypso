@@ -134,6 +134,12 @@ public class IdwWizardLayoutPart extends AbstractLayoutPart
     m_mainStatusComposite = new StatusComposite( main, StatusComposite.DETAILS );
     m_mainStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
+    /* Adapt. */
+    toolkit.adapt( m_mainStatusComposite );
+
+    /* Validate the timeseries ranges. */
+    validateTimeseriesRanges( m_generator );
+
     /* Observe change of parameter type. */
     m_generator.addPropertyChangeListener( m_propertyListener );
 
@@ -227,14 +233,15 @@ public class IdwWizardLayoutPart extends AbstractLayoutPart
     final ICoreRunnableWithProgress operation = new InitThiessenTimeseriesOperation( m_generator );
     final IStatus updateStatus = RunnableContextHelper.execute( container, true, false, operation );
     if( !updateStatus.isOK() )
-    {
       StatusDialog.open( shell, updateStatus, windowTitle );
-      return;
-    }
+
+    /* Validate the timeseries ranges. */
+    validateTimeseriesRanges( m_generator );
   }
 
   protected void handlePropertyChanged( )
   {
+    /* Validate the timeseries ranges. */
     validateTimeseriesRanges( m_generator );
   }
 
@@ -245,8 +252,6 @@ public class IdwWizardLayoutPart extends AbstractLayoutPart
 
     final ITimeseries[] timeseries = LinearSumHelper.collectTimeseries( bean );
     final DateRange dateRange = LinearSumHelper.createDateRange( bean );
-    if( dateRange == null )
-      return;
 
     final TimeseriesValidatingOperation operation = new TimeseriesValidatingOperation( timeseries, dateRange );
     final IStatus status = operation.execute( new NullProgressMonitor() );

@@ -757,8 +757,6 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
     final ITimeseries[] timeseries = LinearSumHelper.collectTimeseries( bean );
     final DateRange dateRange = LinearSumHelper.createDateRange( bean );
-    if( dateRange == null )
-      return;
 
     final TimeseriesValidatingOperation operation = new TimeseriesValidatingOperation( timeseries, dateRange );
     final IStatus status = operation.execute( new NullProgressMonitor() );

@@ -61,6 +61,7 @@ import org.kalypso.model.hydrology.binding.cm.ICatchment;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.internal.binding.cm.LinearSumGenerator;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.hydrology.util.cm.CatchmentHelper;
 import org.kalypso.model.rcm.IRainfallModelProvider;
@@ -124,6 +125,9 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     /* HINT: But in the end, we do not care, because we simple use it. */
     final DateRange simulationRange = info.getSimulationRange();
 
+    /* Get the unadjusted simulation range. */
+    final DateRange unadjustedSimulationRange = info.getUnadjustedSimulationRange();
+
     /* Only ILinearSumGenerator's are supported. */
     if( !(generator instanceof ILinearSumGenerator) )
       throw new NotImplementedException( "Only ILinearSumGenerator's are supported..." ); //$NON-NLS-1$
@@ -147,7 +151,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* Initialize the generator. */
       final ILinearSumGenerator clonedGenerator = (ILinearSumGenerator) rainfallModel.getGenerators().get( 0 );
-      initGenerator( clonedGenerator, simulationRange, timestep, parameterType );
+      initGenerator( (LinearSumGenerator) clonedGenerator, simulationRange, unadjustedSimulationRange, timestep, parameterType );
 
       /* Initialize the catchment target links. */
       initTargetLinks( simulation, clonedGenerator, targetLink, parameterType );
@@ -161,7 +165,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     }
     catch( final Exception ex )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "LinearSumCatchmentModelRunner_1" ), ex ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "LinearSumCatchmentModelRunner_1", ex.getLocalizedMessage() ), ex ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -173,10 +177,11 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     }
   }
 
-  private void initGenerator( final ILinearSumGenerator generator, final DateRange range, final Period timestep, final String parameterType )
+  private void initGenerator( final LinearSumGenerator generator, final DateRange simulationRange, final DateRange unadjustedSimulationRange, final Period timestep, final String parameterType )
   {
     /* Set the period. */
-    generator.setPeriod( range );
+    generator.setPeriod( simulationRange );
+    generator.setValidityRange( unadjustedSimulationRange );
 
     /* Get the calendar field and the amount. */
     final String calendarField = PeriodUtils.findCalendarField( timestep ).name();
