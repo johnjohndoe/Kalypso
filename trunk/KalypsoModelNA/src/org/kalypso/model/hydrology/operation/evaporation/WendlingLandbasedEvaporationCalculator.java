@@ -68,7 +68,7 @@ public class WendlingLandbasedEvaporationCalculator extends AbstractEvaporationC
   }
 
   @Override
-  public String toString( )
+  public String getLabel( )
   {
     return Messages.getString( "WendlingLandbasedEvaporationCalculator_0" ); //$NON-NLS-1$
   }

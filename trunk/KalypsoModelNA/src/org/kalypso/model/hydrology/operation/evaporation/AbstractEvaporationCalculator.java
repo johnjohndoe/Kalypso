@@ -113,6 +113,16 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
     m_daterange = data.getDateRange();
   }
 
+  @Override
+  public final String toString( )
+  {
+    final String paramerLabel = TimeseriesUtils.getName( getParameterType() );
+
+    return String.format( "%s: %s", paramerLabel, getLabel() );
+  }
+
+  protected abstract String getLabel( );
+
   private ITimeseriesCache getHumidity( )
   {
     return m_humidity;

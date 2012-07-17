@@ -73,7 +73,7 @@ public class WaterbasedEvaporationCalculator extends AbstractEvaporationCalculat
   }
 
   @Override
-  public String toString( )
+  public String getLabel( )
   {
     return Messages.getString( "WaterbasedEvaporationCalculator_0" ); //$NON-NLS-1$
   }
