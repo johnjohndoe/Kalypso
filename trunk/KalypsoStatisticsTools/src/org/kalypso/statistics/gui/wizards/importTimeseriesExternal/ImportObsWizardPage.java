@@ -52,6 +52,7 @@ import org.kalypso.statistics.project.SessionDataProvider;
 import org.kalypso.statistics.types.data.NodeProfile;
 import org.kalypso.zml.ui.imports.ObservationImportSelection;
 
+// FIXME: Aaaarg! Why is this a complete copy/paste of old stuff! Bad, bad, bad!
 public class ImportObsWizardPage extends WizardPage implements /*
 																 * FocusListener,
 																 */ISelectionProvider, ISelectionChangedListener {
@@ -84,6 +85,7 @@ public class ImportObsWizardPage extends WizardPage implements /*
 	}
 
 	// FIXME: move into spearate extension class
+  // FIXME: especially bad: this nativeObsAdapter is not used any more!
 	private List<INativeObservationAdapter> createNativeAdapters() {
 		final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
 
@@ -238,8 +240,8 @@ public class ImportObsWizardPage extends WizardPage implements /*
 	}
 
 	public NodeProfile getParentNode() {
-		StructuredSelection selection = (StructuredSelection) m_parentNodeSelectionViewer.getSelection();
-		Object object = selection.getFirstElement();
+		final StructuredSelection selection = (StructuredSelection) m_parentNodeSelectionViewer.getSelection();
+		final Object object = selection.getFirstElement();
 		if (object instanceof NodeProfile) {
 			return (NodeProfile) object;
 		}
