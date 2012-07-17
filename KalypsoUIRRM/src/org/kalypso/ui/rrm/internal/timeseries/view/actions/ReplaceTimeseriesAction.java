@@ -44,9 +44,8 @@ import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.timeseries.operations.ReplaceTimeseriesObservation;
+import org.kalypso.ui.rrm.internal.timeseries.operations.ReplaceTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -54,7 +53,7 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
  */
 public class ReplaceTimeseriesAction extends AbstractOverwriteTimeseriesAction
 {
-  public ReplaceTimeseriesAction( final ITreeNodeModel model, final FeatureBean<ITimeseries> timeseries )
+  public ReplaceTimeseriesAction( final ITreeNodeModel model, final ITimeseries timeseries )
   {
     super( model, timeseries );
 
@@ -67,6 +66,6 @@ public class ReplaceTimeseriesAction extends AbstractOverwriteTimeseriesAction
   @Override
   protected IMergeTimeseriesOperation getMergeOperation( )
   {
-    return new ReplaceTimeseriesObservation( getTimeseries() );
+    return new ReplaceTimeseriesOperation( getTimeseries() );
   }
 }

@@ -47,15 +47,12 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.TimeseriesImportWizard;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.TimeseriesUpdateWizard;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
@@ -66,17 +63,15 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
 {
   private final ITreeNodeModel m_model;
 
-  private final FeatureBean<ITimeseries> m_timeseries;
+  private final ITimeseries m_timeseries;
 
-  private String m_parameterType;
-
-  public AbstractOverwriteTimeseriesAction( final ITreeNodeModel model, final FeatureBean<ITimeseries> timeseries )
+  public AbstractOverwriteTimeseriesAction( final ITreeNodeModel model, final ITimeseries timeseries )
   {
     m_model = model;
     m_timeseries = timeseries;
   }
 
-  protected FeatureBean<ITimeseries> getTimeseries( )
+  protected ITimeseries getTimeseries( )
   {
     return m_timeseries;
   }
@@ -87,7 +82,8 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     /* Prepare data */
-    final ImportObservationData data = prepareData();
+    final String parameterType = m_timeseries.getParameterType();
+    final ImportObservationData data = new ImportObservationData( parameterType );
     final ITimeseries timeseries = showWizard( shell, data );
     if( timeseries != null )
     {
@@ -98,35 +94,24 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
     }
   }
 
-  private ImportObservationData prepareData( )
-  {
-    final ITimeseries timeseries = m_timeseries.getFeature();
-    m_parameterType = timeseries.getParameterType();
-
-    return new ImportObservationData( m_parameterType );
-  }
-
   private ITimeseries showWizard( final Shell shell, final ImportObservationData data )
   {
-    final TimeseriesBean bean = new TimeseriesBean();
-    if( m_parameterType != null )
-      data.setParameterType( m_parameterType );
-
     final ImportTimeseriesOperation importOperation = new ImportTimeseriesOperation( data, null );
 
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), TimeseriesImportWizard.class.getName() );
     data.init( settings );
-    data.setParameterType( m_parameterType );
 
-    final IStation station = (IStation) m_timeseries.getFeature().getOwner();
+    data.setParameterType( m_timeseries.getParameterType() );
+    importOperation.setDescription( m_timeseries.getDescription() );
+    importOperation.setQuality( m_timeseries.getQuality() );
 
-    final TimeseriesUpdateWizard wizard = new TimeseriesUpdateWizard( station, importOperation, getMergeOperation(), data, bean );
+    final TimeseriesUpdateWizard wizard = new TimeseriesUpdateWizard( m_timeseries, importOperation, getMergeOperation(), data );
     wizard.setDialogSettings( settings );
     wizard.setWindowTitle( getText() );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     if( dialog.open() == Window.OK )
-      return m_timeseries.getFeature();
+      return m_timeseries;
 
     return null;
   }

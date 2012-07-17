@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -53,6 +54,7 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.QualityUniqueValidator;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
@@ -93,7 +95,10 @@ public class EditTimeseriesDialog extends ShowTimeseriesDialog
     final ITimeseries timeseries = m_timeseries.getFeature();
     final IStation station = (IStation) timeseries.getOwner();
 
-    final TimeseriesPropertiesComposite properties = new TimeseriesPropertiesComposite( station, controlSection, m_timeseries, m_binding, false );
+    final String currentQuality = timeseries.getQuality();
+    final IValidator qualityValidator = new QualityUniqueValidator( station, currentQuality, timeseries );
+
+    final TimeseriesPropertiesComposite properties = new TimeseriesPropertiesComposite( station, controlSection, m_timeseries, m_binding, false, qualityValidator );
     properties.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     controlSection.setClient( properties );

@@ -80,7 +80,6 @@ import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IImportTimeseriesOperation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
@@ -99,23 +98,10 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
 
   private final IImportTimeseriesOperation m_operation;
 
-  private final TimeseriesBean m_bean;
-
-  public StoreTimeseriesOperation( final TimeseriesBean bean, final IStation station, final IImportTimeseriesOperation importOperation )
+  public StoreTimeseriesOperation( final IStation station, final IImportTimeseriesOperation importOperation )
   {
-    m_bean = bean;
     m_station = station;
     m_operation = importOperation;
-  }
-
-  /**
-   * Updates some of the bean data before the execute method is called in another thread.<br/>
-   * This is needed, because the bean stuff is not allowed to be called outside the swt thread.
-   */
-  public void updateDataAfterFinish( )
-  {
-    m_bean.setProperty( ITimeseries.PROPERTY_PARAMETER_TYPE, m_operation.getData().getParameterType() );
-    m_bean.setProperty( ITimeseries.PROPERTY_QUALITY, m_operation.getQuality() );
   }
 
   @Override
@@ -129,26 +115,26 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "StoreTimeseriesOperation.2" ) ); //$NON-NLS-1$
 
     final DateRange daterange = m_operation.getDateRange();
-    final String quality = Objects.firstNonNull( m_operation.getQuality(), "" ); //$NON-NLS-1$
 
-    final String parameterType = (String) m_bean.getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
-
+    final String description = m_operation.getDescription();
+    final String quality = m_operation.getQuality();
+    final String parameterType = m_operation.getData().getParameterType();
     if( m_station.hasTimeseries( parameterType, quality, timestep ) )
     {
-      final String message = String.format( "A timeseries with the same timestep and quality already exists." );
+      final String message = Messages.getString( "TargetTimeseriesValidator_0" );
       final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
 
-    final IFile targetFile = createDataFile( m_bean, timestep, stati );
-    m_timeseries = createTimeseries( timestep, targetFile, daterange, quality );
+    final IFile targetFile = createDataFile( quality, parameterType, timestep, stati );
+    m_timeseries = createTimeseries( timestep, targetFile, daterange, parameterType, quality, description );
 
     writeResult( targetFile, observation, daterange );
 
     return stati.asMultiStatus( Messages.getString( "StoreTimeseriesOperation.0" ) ); //$NON-NLS-1$
   }
 
-  private ITimeseries createTimeseries( final Period timestep, final IFile targetFile, final DateRange daterange, final String quality ) throws CoreException
+  private ITimeseries createTimeseries( final Period timestep, final IFile targetFile, final DateRange daterange, final String parameterType, final String quality, final String description ) throws CoreException
   {
     try
     {
@@ -169,13 +155,15 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
       final TimeseriesLinkType dataLink = new TimeseriesLinkType();
       dataLink.setHref( projectPath );
 
-      final Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
+      final Map<QName, Object> properties = new HashMap<>();
+      properties.put( ITimeseries.QN_DESCRIPTION, description );
       properties.put( ITimeseries.PROPERTY_TIMESTEP_AMOUNT, timestepAmount );
       properties.put( ITimeseries.PROPERTY_TIMESTEP_FIELD, timestepField.name() );
       properties.put( ITimeseries.PROPERTY_DATA, dataLink );
       properties.put( ITimeseries.PROPERTY_MEASUREMENT_START, DateUtilities.toXMLGregorianCalendar( daterange.getFrom() ) );
       properties.put( ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( daterange.getTo() ) );
       properties.put( ITimeseries.PROPERTY_QUALITY, quality );
+      properties.put( ITimeseries.PROPERTY_PARAMETER_TYPE, parameterType );
 
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
@@ -219,11 +207,8 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private IFile createDataFile( final TimeseriesBean timeseries, final Period timestep, final IStatusCollector stati )
+  private IFile createDataFile( final String quality, final String parameterType, final Period timestep, final IStatusCollector stati )
   {
-    final String parameterType = (String) timeseries.getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
-    final String quality = (String) timeseries.getProperty( ITimeseries.PROPERTY_QUALITY );
-
     final String stationFoldername = m_station.getTimeseriesFoldername();
     final String timeseriesFilename = Timeserieses.formatTimeseriesFilename( parameterType, quality, timestep );
 

@@ -52,7 +52,6 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ObservationImportOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesStatusOperation;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 
 /**
  * @author Dirk Kuch
@@ -97,9 +96,10 @@ public class CalculateEvaporationWizard extends Wizard
 
       final String quality = m_data.getQuality();
       final IStation station = m_data.getStation();
+      final String parameterType = calculator.getParameterType();
+      final String description = String.format( "Berechnet in Kalypso mit: %s", calculator.toString() );
 
-      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), station, new ObservationImportOperation( observation, null, quality ) );
-      storeOperation.updateDataAfterFinish();
+      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( station, new ObservationImportOperation( observation, parameterType, quality, description ) );
 
       final IStatus storeObservationStatus = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );
       if( !storeObservationStatus.isOK() )

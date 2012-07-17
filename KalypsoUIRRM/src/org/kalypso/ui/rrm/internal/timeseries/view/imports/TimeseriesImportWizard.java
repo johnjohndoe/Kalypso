@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
 import java.io.File;
 
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -55,11 +56,13 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.hydrology.binding.timeseries.IParameterTypeProvider;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.QualityUniqueValidator;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesStatusOperation;
@@ -85,13 +88,24 @@ public class TimeseriesImportWizard extends Wizard
 
   private ITimeseries m_timeseries;
 
-  public TimeseriesImportWizard( final ImportTimeseriesOperation importOperation, final ImportObservationData data, final TimeseriesBean bean, final IStation station )
+  public TimeseriesImportWizard( final ImportTimeseriesOperation importOperation, final TimeseriesBean bean, final IStation station )
   {
     m_importOperation = importOperation;
     m_bean = bean;
     m_station = station;
 
     setNeedsProgressMonitor( true );
+
+    final ImportObservationData data = m_importOperation.getData();
+
+    final IParameterTypeProvider parameterTypeProvider = new IParameterTypeProvider()
+    {
+      @Override
+      public String getParameterType( )
+      {
+        return data.getParameterType();
+      }
+    };
 
     final ImportObservationSourcePage importPage = new ImportObservationSourcePage( "sourcePage", data ); //$NON-NLS-1$
     importPage.addListener( new IImportObservationSourceChangedListener()
@@ -116,7 +130,12 @@ public class TimeseriesImportWizard extends Wizard
       @Override
       protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
       {
-        return new TimeseriesPropertiesComposite( m_station, parent, bean, binding, false );
+        // REMARK: do not check current quality, we are creating a new timeseries
+        final String currentQuality = null;
+
+        final IValidator qualityValidator = new QualityUniqueValidator( station, currentQuality, parameterTypeProvider );
+
+        return new TimeseriesPropertiesComposite( m_station, parent, bean, binding, false, qualityValidator );
       }
     } );
 
@@ -149,8 +168,10 @@ public class TimeseriesImportWizard extends Wizard
     }
 
     /* Store the timeseries. */
-    final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( m_bean, m_station, m_importOperation );
-    storeOperation.updateDataAfterFinish();
+    m_importOperation.setQuality( (String) m_bean.getProperty( ITimeseries.PROPERTY_QUALITY ) );
+    m_importOperation.setDescription( (String) m_bean.getProperty( ITimeseries.QN_DESCRIPTION ) );
+
+    final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( m_station, m_importOperation );
     final IStatus storeTimeseriesStatus = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );
     stati.add( storeTimeseriesStatus );
 

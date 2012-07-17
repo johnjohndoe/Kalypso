@@ -52,12 +52,13 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
+import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesComposite;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 import org.kalypso.zml.ui.imports.ImportObservationSourcePage;
@@ -73,7 +74,7 @@ public class TimeseriesUpdateWizard extends Wizard
 
   private final IMergeTimeseriesOperation m_mergeOperation;
 
-  public TimeseriesUpdateWizard( final IStation station, final ImportTimeseriesOperation importOperation, final IMergeTimeseriesOperation mergeOperation, final ImportObservationData data, final TimeseriesBean bean )
+  public TimeseriesUpdateWizard( final ITimeseries timeseries, final ImportTimeseriesOperation importOperation, final IMergeTimeseriesOperation mergeOperation, final ImportObservationData data )
   {
     m_importOperation = importOperation;
     m_mergeOperation = mergeOperation;
@@ -85,7 +86,10 @@ public class TimeseriesUpdateWizard extends Wizard
       @Override
       protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
       {
-        return new TimeseriesPropertiesComposite( station, parent, bean, binding, true );
+        final IStation station = timeseries.getStation();
+
+        final FeatureBean<ITimeseries> bean = new FeatureBean<ITimeseries>( timeseries );
+        return new TimeseriesPropertiesComposite( station, parent, bean, binding, true, null );
       }
     } );
   }

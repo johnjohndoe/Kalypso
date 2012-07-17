@@ -55,8 +55,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.StringFilenameValidator;
-import org.kalypso.commons.databinding.validation.StringIsAsciiPrintableValidator;
+import org.kalypso.model.hydrology.binding.timeseries.IParameterTypeProvider;
+import org.kalypso.model.hydrology.binding.timeseries.IStation;
+import org.kalypso.model.hydrology.operation.evaporation.IEvaporationCalculator;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.QualityUniqueValidator;
 
 /**
  * @author Dirk Kuch
@@ -129,10 +132,26 @@ public class EvaporationParameterPage extends WizardPage
     final ISWTObservableValue target = SWTObservables.observeText( text, new int[] { SWT.Modify } );
     final IObservableValue model = BeansObservables.observeValue( m_data, CalculateEvaporationData.PROPERTY_QUALITY );
 
-    final StringIsAsciiPrintableValidator ascii = new StringIsAsciiPrintableValidator( IStatus.ERROR, Messages.getString( "EvaporationParameterPage_11" ) ); //$NON-NLS-1$
     final StringFilenameValidator filename = new StringFilenameValidator( IStatus.ERROR, Messages.getString( "EvaporationParameterPage_11" ) ); //$NON-NLS-1$
-    final TimeSeriesAlreadyExistsValidator exists = new TimeSeriesAlreadyExistsValidator( m_data );
 
-    m_binding.bindValue( target, model, ascii, filename, exists );
+    // REMARK: chosen calculator and hence produced parameter type varies during wizard live-cycle
+    final CalculateEvaporationData data = m_data;
+    final IParameterTypeProvider parameterTypeProvider = new IParameterTypeProvider()
+    {
+      @Override
+      public String getParameterType( )
+      {
+        final IEvaporationCalculator calculator = data.getCalculator();
+        if( calculator == null )
+          return null;
+
+        return calculator.getParameterType();
+      }
+    };
+
+    final IStation station = m_data.getStation();
+    final QualityUniqueValidator exists = new QualityUniqueValidator( station, null, parameterTypeProvider );
+
+    m_binding.bindValue( target, model, filename, exists );
   }
 }

@@ -81,6 +81,10 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
 
   private DateRange m_daterange;
 
+  private String m_quality;
+
+  private String m_description;
+
   public ImportTimeseriesOperation( final ImportObservationData data, final IImportTimeseriesOperationValidator validator )
   {
     m_data = data;
@@ -206,6 +210,22 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
   @Override
   public String getQuality( )
   {
-    return null;
+    return m_quality;
+  }
+
+  public void setQuality( final String quality )
+  {
+    m_quality = quality;
+  }
+
+  @Override
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  public void setDescription( final String description )
+  {
+    m_description = description;
   }
 }

@@ -40,17 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
-import java.util.LinkedHashSet;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 
-import org.apache.commons.io.IOCase;
-import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.commons.databinding.validation.FileNameIsUniqueValidator;
 import org.kalypso.commons.databinding.validation.StringFilenameValidator;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
@@ -65,9 +63,13 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimeseries>
 {
-  public EditTimeseriesQualityComposite( final Composite parent, final IStation station, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding, final boolean editable )
+  private final IValidator m_uniquenessValidator;
+
+  public EditTimeseriesQualityComposite( final Composite parent, final IStation station, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding, final boolean editable, final IValidator uniquenessValidator )
   {
     super( parent, featureBean, binding, editable );
+
+    m_uniquenessValidator = uniquenessValidator;
 
     doCreateContents( station );
   }
@@ -80,82 +82,44 @@ public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimese
 
   protected void doCreateContents( final IStation station )
   {
-    // FIXME: this is rubbish; needs parameter type as well!
-    final String[] stationQualities = getQualities( station );
-
-    final String[] textCompletionQualities = findQualities( station, stationQualities );
+    final String[] textCompletionQualities = findAllQualities( station );
 
     final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, Messages.getString( "EditTimeseriesQualityComposite_0" ) ); //$NON-NLS-1$
-    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( stationQualities, getQuality(), IStatus.ERROR, Messages.getString( "EditTimeseriesQualityComposite_1" ) ); //$NON-NLS-1$
 
-    createPropertyComboTextControl( ITimeseries.PROPERTY_QUALITY, textCompletionQualities, filenameValidator, uniqueValudator );
-
-    // FIXME: nonse!
-    this.layout();
-  }
-
-  private String getQuality( )
-  {
-    final FeatureBean<ITimeseries> bean = getBean();
-    final ITimeseries timeseries = bean.getFeature();
-    if( Objects.isNull( timeseries ) )
-      return StringUtils.EMPTY;
-
-    return timeseries.getQuality();
+    createPropertyComboTextControl( ITimeseries.PROPERTY_QUALITY, textCompletionQualities, filenameValidator, m_uniquenessValidator );
   }
 
   /**
    * @return possible existing qualities used for editing text completion
    */
-  private String[] findQualities( final IStation current, final String[] stationQualities )
+  private static String[] findAllQualities( final IStation current )
   {
     final Feature parent = current.getOwner();
     if( !(parent instanceof IStationCollection) )
       return new String[] {};
 
-    final Set<String> found = new LinkedHashSet<>();
+    final Comparator<String> stationComparator = new Comparator<String>()
+    {
+      @Override
+      public int compare( final String o1, final String o2 )
+      {
+        return o1.compareToIgnoreCase( o2 );
+      }
+    };
+
+    final Set<String> found = new TreeSet<>( stationComparator );
 
     final IStationCollection collection = (IStationCollection) parent;
     final IFeatureBindingCollection<IStation> stations = collection.getStations();
     for( final IStation station : stations )
     {
-      if( Objects.equal( station, current ) )
-        continue;
-
-      final String[] qualities = getQualities( station );
+      final String[] qualities = station.getQualities( null );
       for( final String quality : qualities )
       {
-        if( notExists( stationQualities, quality ) )
-          found.add( quality );
+        found.add( quality );
       }
     }
 
     return found.toArray( new String[] {} );
-  }
-
-  private boolean notExists( final String[] existing, final String quality )
-  {
-    for( final String exists : existing )
-    {
-      if( IOCase.SYSTEM.checkEquals( exists, quality ) )
-        return false;
-    }
-
-    return true;
-  }
-
-  private String[] getQualities( final IStation station )
-  {
-    final Set<String> qualities = new LinkedHashSet<>();
-
-    final IFeatureBindingCollection<ITimeseries> timeserieses = station.getTimeseries();
-    for( final ITimeseries ts : timeserieses )
-    {
-      final String quality = ts.getQuality();
-      if( StringUtils.isNotEmpty( quality ) )
-        qualities.add( quality );
-    }
-
-    return qualities.toArray( new String[] {} );
   }
 }
