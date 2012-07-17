@@ -90,7 +90,12 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
     final ImportObservationData data = prepareData();
     final ITimeseries timeseries = showWizard( shell, data );
     if( timeseries != null )
+    {
+      /* HACK: Reset the selection and set it again. */
+      /* Like this the timeseries composite will be refreshed. */
+      m_model.refreshTree( (ITimeseries) null );
       m_model.refreshTree( timeseries );
+    }
   }
 
   private ImportObservationData prepareData( )
