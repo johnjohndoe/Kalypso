@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
@@ -391,6 +392,9 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     {
       if( rrmSimulation == null || simulationData == null )
         return;
+
+      final IFolder modelsFolder = rrmSimulation.getModelsFolder();
+      FolderUtilities.mkdirs( modelsFolder );
 
       final NaModell naModel = simulationData.getNaModel();
       if( naModel != null )
