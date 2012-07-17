@@ -214,7 +214,11 @@ public class CalculateEvaporationData extends AbstractModelObject implements ICa
 
   public void setQuality( final String quality )
   {
+    final String oldQuality = m_quality;
+
     m_quality = quality;
+
+    firePropertyChange( PROPERTY_QUALITY, oldQuality, m_quality );
   }
 
   public IEvaporationCalculator getCalculator( )
@@ -224,7 +228,17 @@ public class CalculateEvaporationData extends AbstractModelObject implements ICa
 
   public void setCalculator( final IEvaporationCalculator evaporationCalculator )
   {
+    final IEvaporationCalculator oldCalculator = getCalculator();
+
     m_calculator = evaporationCalculator;
+
+    firePropertyChange( PROPERTY_CALCULATOR, oldCalculator, evaporationCalculator );
+
+    // REMARK: fire a change here, so quality validators are reevaluated
+    final String oldQuality = getQuality();
+
+    setQuality( oldQuality + "oncechangedinordertowork" ); //$NON-NLS-1$
+    setQuality( oldQuality );
   }
 
   @Override

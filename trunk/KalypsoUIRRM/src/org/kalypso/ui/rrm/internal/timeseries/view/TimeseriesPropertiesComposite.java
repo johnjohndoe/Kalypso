@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.IDataBinding;
@@ -56,17 +57,22 @@ public class TimeseriesPropertiesComposite extends FeatureBeanComposite<ITimeser
 {
   private final boolean m_readOnly;
 
-  public TimeseriesPropertiesComposite( final IStation station, final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding, final boolean readOnly )
+  private final IValidator m_qualityValidator;
+
+  public TimeseriesPropertiesComposite( final IStation station, final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding, final boolean readOnly, final IValidator qualityValidator )
   {
     super( parent, featureBean, binding, true );
+
     m_readOnly = readOnly;
+
+    m_qualityValidator = qualityValidator;
 
     doCreateContents( station );
   }
 
   private void doCreateContents( final IStation station )
   {
-    final EditTimeseriesQualityComposite quality = new EditTimeseriesQualityComposite( this, station, getBean(), getBinding(), !m_readOnly );
+    final EditTimeseriesQualityComposite quality = new EditTimeseriesQualityComposite( this, station, getBean(), getBinding(), !m_readOnly, m_qualityValidator );
     quality.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 1 ) );
 
     createPropertyTextFieldControl( ITimeseries.QN_DESCRIPTION );

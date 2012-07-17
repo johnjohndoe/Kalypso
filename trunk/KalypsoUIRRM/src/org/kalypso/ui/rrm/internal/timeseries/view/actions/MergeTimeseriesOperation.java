@@ -53,6 +53,8 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -72,7 +74,6 @@ import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -81,13 +82,13 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  */
 public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
 {
-  private final FeatureBean<ITimeseries> m_timeseries;
+  private final ITimeseries m_timeseries;
 
   private final boolean m_overwrite;
 
   private IObservation m_imported;
 
-  public MergeTimeseriesOperation( final FeatureBean<ITimeseries> timeseries, final boolean overwrite )
+  public MergeTimeseriesOperation( final ITimeseries timeseries, final boolean overwrite )
   {
     m_timeseries = timeseries;
     m_overwrite = overwrite;
@@ -98,8 +99,7 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
   {
     final IStatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final ITimeseries timeseries = m_timeseries.getFeature();
-    final ZmlLink link = timeseries.getDataLink();
+    final ZmlLink link = m_timeseries.getDataLink();
 
     try
     {
@@ -146,10 +146,12 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
       final IFile targetFile = link.getFile();
       ZmlFactory.writeToFile( observation, targetFile );
 
-      m_timeseries.setProperty( ITimeseries.PROPERTY_MEASUREMENT_START, DateUtilities.toXMLGregorianCalendar( dateRange.getFrom() ) );
-      m_timeseries.setProperty( ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( dateRange.getTo() ) );
+      final FeatureChange changeStart = new FeatureChange( m_timeseries, ITimeseries.PROPERTY_MEASUREMENT_START, DateUtilities.toXMLGregorianCalendar( dateRange.getFrom() ) );
+      final FeatureChange changeEnd = new FeatureChange( m_timeseries, ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( dateRange.getTo() ) );
 
-      final ICommand command = m_timeseries.applyChanges();
+      final FeatureChange[] changes = new FeatureChange[] { changeStart, changeEnd };
+
+      final ICommand command = new ChangeFeaturesCommand( m_timeseries.getWorkspace(), changes );
 
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace stationsWorkspace = dataProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );

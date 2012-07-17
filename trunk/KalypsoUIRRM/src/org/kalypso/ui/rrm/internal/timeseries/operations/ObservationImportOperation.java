@@ -63,16 +63,14 @@ public class ObservationImportOperation implements IImportTimeseriesOperation
 
   private final String m_quality;
 
-  public ObservationImportOperation( final IObservation observation )
-  {
-    this( observation, null, null );
-  }
+  private final String m_description;
 
-  public ObservationImportOperation( final IObservation observation, final String parameterType, final String quality )
+  public ObservationImportOperation( final IObservation observation, final String parameterType, final String quality, final String description )
   {
     m_observation = observation;
     m_parameterType = parameterType;
     m_quality = quality;
+    m_description = description;
   }
 
   @Override
@@ -129,5 +127,11 @@ public class ObservationImportOperation implements IImportTimeseriesOperation
   public String getQuality( )
   {
     return m_quality;
+  }
+
+  @Override
+  public String getDescription( )
+  {
+    return m_description;
   }
 }

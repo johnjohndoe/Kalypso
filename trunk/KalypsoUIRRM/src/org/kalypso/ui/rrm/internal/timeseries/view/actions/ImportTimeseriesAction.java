@@ -114,7 +114,7 @@ public class ImportTimeseriesAction extends Action
 
     final ImportTimeseriesOperation operation = new ImportTimeseriesOperation( data, new TargetTimeseriesValidator( m_station, data, bean ) );
 
-    final TimeseriesImportWizard wizard = new TimeseriesImportWizard( operation, data, bean, m_station );
+    final TimeseriesImportWizard wizard = new TimeseriesImportWizard( operation, bean, m_station );
 
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), TimeseriesImportWizard.class.getName() );
     data.init( settings );

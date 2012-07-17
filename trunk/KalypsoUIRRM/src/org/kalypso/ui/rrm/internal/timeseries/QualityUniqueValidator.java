@@ -38,41 +38,54 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
+package org.kalypso.ui.rrm.internal.timeseries;
 
+import org.apache.commons.io.IOCase;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.joda.time.Period;
 import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.model.hydrology.binding.timeseries.IParameterTypeProvider;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
-import org.kalypso.model.hydrology.operation.evaporation.IEvaporationCalculator;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
+ * Fails if a {@link String} isn't unique.
+ *
  * @author Dirk Kuch
  */
-public class TimeSeriesAlreadyExistsValidator extends TypedValidator<String>
+public class QualityUniqueValidator extends TypedValidator<String>
 {
-  private final CalculateEvaporationData m_data;
+  private final String m_current;
 
-  public TimeSeriesAlreadyExistsValidator( final CalculateEvaporationData data )
+  private final IParameterTypeProvider m_parameterTypeProvider;
+
+  private final IStation m_station;
+
+  public QualityUniqueValidator( final IStation station, final String current, final IParameterTypeProvider parameterTypeProvider )
   {
-    super( String.class, IStatus.ERROR, Messages.getString( "TimeSeriesAlreadyExistsValidator_0" ) ); //$NON-NLS-1$
+    super( String.class, IStatus.ERROR, Messages.getString( "EditTimeseriesQualityComposite_1" ) ); //$NON-NLS-1$
 
-    m_data = data;
+    m_station = station;
+
+    m_current = current;
+    m_parameterTypeProvider = parameterTypeProvider;
   }
 
   @Override
   protected IStatus doValidate( final String value ) throws CoreException
   {
-    final IEvaporationCalculator calculator = m_data.getCalculator();
-    final String parameterType = calculator.getParameterType();
-    final IStation station = m_data.getStation();
-    final Period timestep = IEvaporationCalculator.RESULT_TIMESTEP;
+    final String parameterType = m_parameterTypeProvider.getParameterType();
+    final String[] existingQualities = m_station.getQualities( parameterType );
 
-    if( station.hasTimeseries( parameterType, value, timestep ) )
-      fail();
+    for( final String quality : existingQualities )
+    {
+      if( m_current != null && IOCase.SYSTEM.checkEquals( m_current, quality ) )
+        continue;
+
+      if( IOCase.SYSTEM.checkEquals( quality, value ) )
+        fail();
+    }
 
     return ValidationStatus.ok();
   }

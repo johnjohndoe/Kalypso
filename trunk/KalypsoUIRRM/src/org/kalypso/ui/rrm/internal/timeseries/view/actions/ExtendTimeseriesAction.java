@@ -45,7 +45,6 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -53,7 +52,7 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
  */
 public class ExtendTimeseriesAction extends AbstractOverwriteTimeseriesAction
 {
-  public ExtendTimeseriesAction( final ITreeNodeModel model, final FeatureBean<ITimeseries> timeseries )
+  public ExtendTimeseriesAction( final ITreeNodeModel model, final ITimeseries timeseries )
   {
     super( model, timeseries );
 
