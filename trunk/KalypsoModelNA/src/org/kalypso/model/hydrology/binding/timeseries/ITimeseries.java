@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public interface ITimeseries extends Feature
+public interface ITimeseries extends Feature, IParameterTypeProvider
 {
   QName FEATURE_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "Timeseries" ); //$NON-NLS-1$
 
@@ -76,8 +76,6 @@ public interface ITimeseries extends Feature
 
   void setQuality( String quality );
 
-  String getParameterType( );
-
   void setParameterType( String parameterType );
 
   Period getTimestep( );
@@ -85,8 +83,6 @@ public interface ITimeseries extends Feature
   void setTimestep( Period period );
 
   ZmlLink getDataLink( );
-
-// void setDataLink( String href );
 
   IStation getStation( );
 
@@ -102,7 +98,7 @@ public interface ITimeseries extends Feature
    * This function returns the measurement date range ({@link #getMeasurementStart()} and {@link #getMeasurementEnd()}).
    * If the measurement range is not correctly set, it will be determined via the observation and will then be set.
    * Afterwards it is returned.
-   * 
+   *
    * @return The measurement date range.
    */
   DateRange getDateRange( );
