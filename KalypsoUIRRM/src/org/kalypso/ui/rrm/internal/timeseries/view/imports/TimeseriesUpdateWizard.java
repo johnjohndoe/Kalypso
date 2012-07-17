@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -48,6 +50,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
@@ -74,13 +77,17 @@ public class TimeseriesUpdateWizard extends Wizard
 
   private final IMergeTimeseriesOperation m_mergeOperation;
 
+  private FeatureBean<ITimeseries> m_bean;
+
   public TimeseriesUpdateWizard( final ITimeseries timeseries, final ImportTimeseriesOperation importOperation, final IMergeTimeseriesOperation mergeOperation, final ImportObservationData data )
   {
     m_importOperation = importOperation;
     m_mergeOperation = mergeOperation;
+    m_bean = new FeatureBean<ITimeseries>( timeseries );
 
     addPage( new ImportObservationSourcePage( "sourcePage", data, true ) ); //$NON-NLS-1$
 
+    final FeatureBean<ITimeseries> bean = m_bean;
     addPage( new FeatureBeanWizardPage( "beanPage" ) //$NON-NLS-1$
     {
       @Override
@@ -88,7 +95,6 @@ public class TimeseriesUpdateWizard extends Wizard
       {
         final IStation station = timeseries.getStation();
 
-        final FeatureBean<ITimeseries> bean = new FeatureBean<ITimeseries>( timeseries );
         return new TimeseriesPropertiesComposite( station, parent, bean, binding, true, null );
       }
     } );
@@ -117,6 +123,10 @@ public class TimeseriesUpdateWizard extends Wizard
     }
 
     /* Get the imported timeseries. */
+
+    // FIXME: wrong place -> interpolation of missing values etc should take place after the merge, else we get holes in
+    // the new timeseries
+
     final IObservation observation = m_importOperation.getObservation();
     m_mergeOperation.setObservation( observation );
 
@@ -128,8 +138,8 @@ public class TimeseriesUpdateWizard extends Wizard
       return false;
     }
 
-    /* Save the workspace of the stations. */
-    final IStatus status3 = saveStations();
+    /* Change timeseries and save workspace  */
+    final IStatus status3 = changeTimeseries(  );
     if( !status3.isOK() )
     {
       StatusDialog.open( getShell(), status3, getWindowTitle() );
@@ -145,11 +155,15 @@ public class TimeseriesUpdateWizard extends Wizard
     m_importOperation.getData().storeSettings( getDialogSettings() );
   }
 
-  private IStatus saveStations( )
+  private IStatus changeTimeseries( )
   {
     try
     {
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+
+      final ICommand changes = m_bean.applyChanges();
+      dataProvider.postCommand( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, changes );
+
       dataProvider.saveModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, new NullProgressMonitor() );
       return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Saved the stations." );
     }
@@ -157,6 +171,13 @@ public class TimeseriesUpdateWizard extends Wizard
     {
       ex.printStackTrace();
       return ex.getStatus();
+    }
+    catch( final InvocationTargetException e )
+    {
+      final Throwable targetException = e.getTargetException();
+      targetException.printStackTrace();
+
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to update timeseries properties", e ); //$NON-NLS-1$
     }
   }
 }
