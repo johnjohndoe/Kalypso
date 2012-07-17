@@ -62,7 +62,7 @@ public class FAOLandbasedEvaporationCalculator extends AbstractEvaporationCalcul
   }
 
   @Override
-  public String toString( )
+  public String getLabel( )
   {
     return Messages.getString( "FAOLandbasedEvaporationCalculator_0" ); //$NON-NLS-1$
   }
