@@ -147,7 +147,7 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
       ZmlFactory.writeToFile( observation, targetFile );
 
       m_timeseries.setProperty( ITimeseries.PROPERTY_MEASUREMENT_START, DateUtilities.toXMLGregorianCalendar( dateRange.getFrom() ) );
-      m_timeseries.setProperty( ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( dateRange.getFrom() ) );
+      m_timeseries.setProperty( ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( dateRange.getTo() ) );
 
       final ICommand command = m_timeseries.applyChanges();
 
@@ -187,5 +187,4 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
   {
     m_imported = observation;
   }
-
 }
