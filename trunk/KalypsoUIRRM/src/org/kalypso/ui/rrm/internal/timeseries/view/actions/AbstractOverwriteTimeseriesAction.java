@@ -127,5 +127,5 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
     return null;
   }
 
-  abstract protected IMergeTimeseriesOperation getMergeOperation( );
+  protected abstract IMergeTimeseriesOperation getMergeOperation( );
 }

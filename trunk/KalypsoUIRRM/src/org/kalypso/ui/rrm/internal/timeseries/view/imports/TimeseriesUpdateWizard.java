@@ -40,21 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 import org.kalypso.zml.ui.imports.ImportObservationSourcePage;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dirk Kuch
@@ -93,29 +101,58 @@ public class TimeseriesUpdateWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
+    /* Save the settings. */
     saveSettings();
 
+    /* Import the timeseries. */
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, m_importOperation );
     if( !status.isOK() )
     {
       StatusDialog.open( getShell(), status, getWindowTitle() );
-      return true;
+      return false;
     }
 
+    /* Get the imported timeseries. */
     final IObservation observation = m_importOperation.getObservation();
     m_mergeOperation.setObservation( observation );
 
+    /* Merge the imported and existing timeseries. */
     final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, false, m_mergeOperation );
     if( !status2.isOK() )
+    {
       StatusDialog.open( getShell(), status2, getWindowTitle() );
-    else
-      StatusDialog.open( getShell(), status, getWindowTitle() );
+      return false;
+    }
 
+    /* Save the workspace of the stations. */
+    final IStatus status3 = saveStations();
+    if( !status3.isOK() )
+    {
+      StatusDialog.open( getShell(), status3, getWindowTitle() );
+      return false;
+    }
+
+    StatusDialog.open( getShell(), status, getWindowTitle() );
     return true;
   }
 
   private void saveSettings( )
   {
     m_importOperation.getData().storeSettings( getDialogSettings() );
+  }
+
+  private IStatus saveStations( )
+  {
+    try
+    {
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+      dataProvider.saveModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, new NullProgressMonitor() );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Saved the stations." );
+    }
+    catch( final CoreException ex )
+    {
+      ex.printStackTrace();
+      return ex.getStatus();
+    }
   }
 }

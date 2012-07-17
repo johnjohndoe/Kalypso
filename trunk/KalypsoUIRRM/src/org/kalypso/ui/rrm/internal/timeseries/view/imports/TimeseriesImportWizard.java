@@ -42,10 +42,14 @@ package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -53,6 +57,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
@@ -64,6 +69,8 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
 import org.kalypso.zml.ui.imports.IImportObservationSourceChangedListener;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 import org.kalypso.zml.ui.imports.ImportObservationSourcePage;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -126,30 +133,41 @@ public class TimeseriesImportWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    /* Save the settings. */
     saveSettings();
 
-    stati.add( RunnableContextHelper.execute( getContainer(), true, false, m_importOperation ) );
+    /* The status collector. */
+    final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    /* Import the timeseries. */
+    final IStatus importTimeseriesStatus = RunnableContextHelper.execute( getContainer(), true, false, m_importOperation );
+    stati.add( importTimeseriesStatus );
     if( stati.matches( IStatus.ERROR ) )
     {
       doShowStatusDialog( stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ) ); //$NON-NLS-1$
       return false;
     }
 
+    /* Store the timeseries. */
     final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( m_bean, m_station, m_importOperation );
     storeOperation.updateDataAfterFinish();
+    final IStatus storeTimeseriesStatus = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );
+    stati.add( storeTimeseriesStatus );
 
-    stati.add( RunnableContextHelper.execute( getContainer(), true, false, storeOperation ) );
+    /* Get the timeseries. */
     m_timeseries = storeOperation.getTimeseries();
 
-    final IStatus status = stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ); //$NON-NLS-1$
+    /* Store the timeseries status. */
+    final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_timeseries, stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ) );
+    final IStatus storeStatusStatus = RunnableContextHelper.execute( getContainer(), true, false, storeStatusOperation );
+    stati.add( storeStatusStatus );
 
-    final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_timeseries, status );
-    stati.add( RunnableContextHelper.execute( getContainer(), true, false, storeStatusOperation ) );
+    /* Save the workspace of the stations. */
+    final IStatus saveStationsStatus = saveStations();
+    stati.add( saveStationsStatus );
 
-    // TODO: save model
-
-    doShowStatusDialog( status );
+    /* Show the status dialog. */
+    doShowStatusDialog( stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ) );
 
     return !stati.matches( IStatus.ERROR );
   }
@@ -162,6 +180,21 @@ public class TimeseriesImportWizard extends Wizard
   private void saveSettings( )
   {
     m_importOperation.getData().storeSettings( getDialogSettings() );
+  }
+
+  private IStatus saveStations( )
+  {
+    try
+    {
+      final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+      dataProvider.saveModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, new NullProgressMonitor() );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Saved the stations." );
+    }
+    catch( final CoreException ex )
+    {
+      ex.printStackTrace();
+      return ex.getStatus();
+    }
   }
 
   public ITimeseries getTimeseries( )
