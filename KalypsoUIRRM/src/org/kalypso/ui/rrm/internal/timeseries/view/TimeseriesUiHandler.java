@@ -101,11 +101,11 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
   {
     m_binding = binding;
     final FeatureBean<ITimeseries> timeseriesBean = new TimeseriesBean( m_timeseries );
-// final String stationLabel = m_timeseries.getOwner().getDescription();
-//    final String deleteMessage = String.format( Messages.getString( "TimeseriesUiHandler_1" ), getTreeLabel(), stationLabel ); //$NON-NLS-1$
-//
-// sectionToolbar.add( new EditTimeseriesAction( timeseriesBean, binding ) );
-// sectionToolbar.add( new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries ) );
+    // final String stationLabel = m_timeseries.getOwner().getDescription();
+    // final String deleteMessage = String.format( Messages.getString( "TimeseriesUiHandler_1" ), getTreeLabel(), stationLabel ); //$NON-NLS-1$
+    //
+    // sectionToolbar.add( new EditTimeseriesAction( timeseriesBean, binding ) );
+    // sectionToolbar.add( new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries ) );
 
     return new TimeseriesComposite( parent, timeseriesBean, binding, false );
   }
