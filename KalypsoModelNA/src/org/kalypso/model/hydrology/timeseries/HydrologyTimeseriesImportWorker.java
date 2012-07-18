@@ -69,7 +69,7 @@ import org.kalypso.ogc.sensor.util.Observations;
 
 /**
  * Apply some base meta data values for KalypsoHydrology.
- * 
+ *
  * @author Gernot Belger
  */
 public class HydrologyTimeseriesImportWorker
@@ -172,12 +172,12 @@ public class HydrologyTimeseriesImportWorker
         // FIXME: add new constants here
       case ITimeseriesConstants.TYPE_RAINFALL:
       case ITimeseriesConstants.TYPE_EVAPORATION:
-        observation.accept( new SetMissingValuesTo0Visior(), null, 1 );
+        observation.accept( new SetMissingValuesTo0Visitor( 0.0, Double.NaN ), null, 1 );
         return observation;
 
       case ITimeseriesConstants.TYPE_TEMPERATURE:
-        // FIXME: is 0 good for temperature?! maybe not necessary, because later we will inteprolate missing values
-        observation.accept( new SetMissingValuesTo0Visior(), null, 1 );
+        // FIXME: is 0 good for temperature?! maybe not necessary, because later we will interpolate missing values
+        observation.accept( new SetMissingValuesTo0Visitor( -273.15, 99 ), null, 1 );
         return observation;
 
       default:
