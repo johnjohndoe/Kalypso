@@ -22,7 +22,7 @@
             <Parameter name="content.evaporation" value="true" />
           </Parameters>
         </Provider>
-        <Title>Grasverdunstung</Title>
+        <Title>Grasverdunstung (Eingangsdaten)</Title>
         <Layers>
           <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
             <Description />
@@ -39,7 +39,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Grasverdunstung</Title>
+            <Title>Grasverdunstung (Eingangsdaten)</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:evaporation:input#e_area_0</StyleReference>
@@ -58,7 +58,7 @@
             <Parameter name="content.evaporation" value="true" />
           </Parameters>
         </Provider>
-        <Title>Seeverdunstung</Title>
+        <Title>Seeverdunstung (Eingangsdaten)</Title>
         <Layers>
           <DerivedLayer id="StuetzstellenSee" legend="false" visible="false">
             <Description />
@@ -75,7 +75,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Seeverdunstung</Title>
+            <Title>Seeverdunstung (Eingangsdaten)</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:evaporation:input#e_area_0</StyleReference>

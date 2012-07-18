@@ -47,8 +47,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.net.UrlUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
@@ -60,10 +58,10 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT_TYPE;
 import org.kalypso.zml.core.base.IZmlSourceElement;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -118,23 +116,13 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     m_calculationInput = false;
   }
 
-  public HydrologyResultReference( final RrmSimulation simulation, final RrmCalculationResult calculation, final URL context, final Feature parent, final TimeseriesLinkType link, final RRM_RESULT type ) throws MalformedURLException
+  public HydrologyResultReference( final RrmSimulation simulation, final RrmCalculationResult calculation, final Feature parent, final ZmlLink lonk, final RRM_RESULT type )
   {
     m_simulation = simulation;
     m_calculation = calculation;
     m_parent = parent;
 
-    final String href = link == null ? null : link.getHref();
-
-    if( !StringUtils.isBlank( href ) )
-    {
-      // FIXME: use ZmlLink instead of TimeseriesLinkType
-      final URL url = UrlResolverSingleton.resolveUrl( context, href );
-
-      m_file = ResourceUtilities.findFileFromURL( url );
-    }
-    else
-      m_file = null;
+    m_file = lonk.getFile();
 
     m_type = type;
     m_calculationInput = true;
@@ -174,7 +162,6 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
 
     try
     {
-
       return UrlUtilities.checkIsAccessible( getUrl() );
     }
     catch( final MalformedURLException e )
@@ -261,23 +248,13 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
     return String.format( "%s: %s\r\n%s", simulation, parent, label ); //$NON-NLS-1$
   }
 
-// private String getFeatureTypeName( )
-// {
-// if( m_parent instanceof Node )
-// return "Knoten";
-// else if( m_parent instanceof IStorageChannel )
-// return "Speicherstrang";
-// else if( m_parent instanceof ICatchment )
-// return "Einzugsgebiet";
-// return "";
-// }
-
   @Override
   public String getIdentifier( )
   {
     if( StringUtils.isNotBlank( m_identifier ) )
       return m_identifier;
 
+    // FIXME: move information into the enum type
     final RRM_RESULT type = getType();
     switch( type )
     {
@@ -306,7 +283,7 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
       case inputEvaporation:
         return "INPUT_E_LAND"; //$NON-NLS-1$
       case inputInflow:
-        return ITimeseriesConstants.TYPE_DISCHARGE;
+        return "HYDROLOGY_INPUT_INFLOW"; //$NON-NLS-1$
       case inputTemperature:
         return "HYDROLOGY_INPUT_T"; //$NON-NLS-1$
       case inputRainfall:
@@ -319,7 +296,10 @@ public class HydrologyResultReference implements IHydrologyResultReference, IZml
         return ITimeseriesConstants.TYPE_VOLUME;
       case storageSpeicherUeberlauf:
         return ITimeseriesConstants.TYPE_DISCHARGE;
-
+      case storageEvaporation:
+        return ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED;
+      case inputGauge:
+        return "HYDROLOGY_INPUT_GAUGE"; //$NON-NLS-1$
     }
 
     return m_identifier;

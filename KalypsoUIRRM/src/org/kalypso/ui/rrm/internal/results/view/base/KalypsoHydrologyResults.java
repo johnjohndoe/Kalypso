@@ -52,7 +52,6 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
  */
 public class KalypsoHydrologyResults
 {
-
   public enum RRM_RESULT_TYPE
   {
     eNode,
@@ -102,6 +101,7 @@ public class KalypsoHydrologyResults
         Messages.getString( "KalypsoHydrologyResults_14" ), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_EVAPORATION, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_EVAPORATION, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-1$
     inputInflow(
         Messages.getString( "KalypsoHydrologyResults_15" ), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_INFLOW, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_INFLOW, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-1$
+    inputGauge("Gauge (input)", UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_GAUGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_GAUGE, null, RRM_RESULT_TYPE.eInputTimeseries),
     inputRainfall(
         Messages.getString( "KalypsoHydrologyResults_16" ), UIRrmImages.DESCRIPTORS.PARAMETER_INPUT_TYPE_RAINFALL, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_INPUT_TYPE_RAINFALL, null, RRM_RESULT_TYPE.eInputTimeseries), //$NON-NLS-1$
     inputSeaEvaporation(
