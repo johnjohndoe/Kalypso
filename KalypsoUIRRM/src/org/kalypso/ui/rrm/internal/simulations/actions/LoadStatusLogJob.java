@@ -51,6 +51,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
@@ -67,7 +68,7 @@ public class LoadStatusLogJob extends Job
 
   public LoadStatusLogJob( final IFile statusLogFile )
   {
-    super( String.format( "Loading log file '%s'", statusLogFile.getName() ) );
+    super( String.format( Messages.getString("LoadStatusLogJob.0"), statusLogFile.getName() ) ); //$NON-NLS-1$
 
     m_statusLogFile = statusLogFile;
 
@@ -98,7 +99,7 @@ public class LoadStatusLogJob extends Job
 
       /* Check if the status log file exists. */
       if( !statusLogFile.exists() )
-        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The status log file '%s' does not exist...", statusLogFile.getName() ) );
+        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("LoadStatusLogJob.1"), statusLogFile.getName() ) ); //$NON-NLS-1$
 
       /* Read the status log. */
       final IStatus statusLog = readStatusLog();
@@ -115,7 +116,7 @@ public class LoadStatusLogJob extends Job
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to read the status log.", ex );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("LoadStatusLogJob.2"), ex ); //$NON-NLS-1$
     }
   }
 
@@ -134,7 +135,7 @@ public class LoadStatusLogJob extends Job
     for( final IGeoStatus geoStatus : statusCollection.getStati() )
       results.add( geoStatus );
 
-    return results.asMultiStatus( "Status log" );
+    return results.asMultiStatus( Messages.getString("LoadStatusLogJob.3") ); //$NON-NLS-1$
   }
 
   public IFile getStatusLogFile( )

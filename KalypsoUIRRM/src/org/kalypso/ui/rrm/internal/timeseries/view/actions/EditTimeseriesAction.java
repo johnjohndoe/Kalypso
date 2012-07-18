@@ -144,11 +144,11 @@ public class EditTimeseriesAction extends Action
 
           /* Move the status file, too. */
           final IContainer oldParent = oldFile.getParent();
-          final IFile oldStatusFile = oldParent.getFile( new Path( oldFile.getName() + ".status" ) );
+          final IFile oldStatusFile = oldParent.getFile( new Path( oldFile.getName() + ".status" ) ); //$NON-NLS-1$
           if( oldStatusFile.exists() )
           {
             final IContainer newParent = newFile.getParent();
-            final IFile newStatusFile = newParent.getFile( new Path( newFile.getName() + ".status" ) );
+            final IFile newStatusFile = newParent.getFile( new Path( newFile.getName() + ".status" ) ); //$NON-NLS-1$
             oldStatusFile.move( newStatusFile.getFullPath(), false, new NullProgressMonitor() );
           }
         }

@@ -47,6 +47,7 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.timeseries.TSResultDescriptor;
 import org.kalypsodeegree.model.feature.Feature;
@@ -82,7 +83,7 @@ public class DefaultPathGenerator
     if( Catchment.FEATURE_CATCHMENT.equals( qName ) )
       return RrmCalculationResult.FOLDER_CATCHMENT;
 
-    throw new IllegalArgumentException( String.format( "Illegal result feature type: %s", qName ) );
+    throw new IllegalArgumentException( String.format( Messages.getString("DefaultPathGenerator.0"), qName ) ); //$NON-NLS-1$
   }
 
   private static String getObservationTitle( final Feature feature )

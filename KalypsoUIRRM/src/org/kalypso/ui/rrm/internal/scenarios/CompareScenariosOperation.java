@@ -238,9 +238,9 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     final long selectedLength = selectedFileInfo.getLength();
 
     if( referenceLength != selectedLength )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The file size has changed." );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("CompareScenariosOperation.0") ); //$NON-NLS-1$
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The file size has not changed." );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CompareScenariosOperation.1") ); //$NON-NLS-1$
   }
 
   private IStatus compareModel( final IFile referenceFile, final CompareData compareData ) throws Exception
@@ -277,10 +277,10 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
 
     /* Return with 'Changed' message. */
     if( !collector.isOK() )
-      return collector.asMultiStatus( "The model has changed." );
+      return collector.asMultiStatus( Messages.getString("CompareScenariosOperation.2") ); //$NON-NLS-1$
 
     /* Return with 'Not changed' message. */
-    return collector.asMultiStatus( "The model has not changed." );
+    return collector.asMultiStatus( Messages.getString("CompareScenariosOperation.3") ); //$NON-NLS-1$
   }
 
   private IStatus compareList( final Feature referenceFeature, final Feature selectedFeature, final GMLXPath listPath, final QName uniqueProperty ) throws Exception

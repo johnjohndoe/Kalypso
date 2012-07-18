@@ -294,7 +294,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyFile( INaCalcCaseConstants.EXPERT_CONTROL_FILE, modelsPath.append( RrmScenario.FILE_EXPERT_CONTROL_GML ).toOSString() );
 
     /* This file may not exist. */
-    final File calcSynthN = new File( m_sourceCalcCaseDir, INaCalcCaseConstants.NIEDERSCHLAG_DIR + "/calcSynthN.gml" );
+    final File calcSynthN = new File( m_sourceCalcCaseDir, INaCalcCaseConstants.NIEDERSCHLAG_DIR + "/calcSynthN.gml" ); //$NON-NLS-1$
     if( calcSynthN.exists() )
       copyFile( INaCalcCaseConstants.NIEDERSCHLAG_DIR + "/calcSynthN.gml", modelsPath.append( RrmScenario.FILE_SYNTHN_GML ).toOSString() ); //$NON-NLS-1$
 

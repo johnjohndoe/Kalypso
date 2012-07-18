@@ -234,11 +234,11 @@ public class NAControlConverter
     writer.append( getBoolean( controlFE.doGenerateSUP() ) + "       Speicherueberlauf          .sup\n" ); //$NON-NLS-1$
 
     // IMPORTANT: number of lines is important and mut not be changed; we need to write dummy entries for old suds stuff
-    writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" );
-    writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" );
-    writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" );
-    writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" );
-    writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" );
+    writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" ); //$NON-NLS-1$
+    writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" ); //$NON-NLS-1$
+    writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" ); //$NON-NLS-1$
+    writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" ); //$NON-NLS-1$
+    writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" ); //$NON-NLS-1$
   }
 
   private static void writeResultInformation( final NaModell naModel, final Node rootNode, final IDManager idManager, final PrintWriter writer )

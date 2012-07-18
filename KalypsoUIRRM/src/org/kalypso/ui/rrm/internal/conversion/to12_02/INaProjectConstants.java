@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
-
 /**
  * Constants relevant for the OLD (prior to version 12.7) project structure of an na model.<br/>
  * Most pathes are relative to the project root.
@@ -55,7 +54,7 @@ interface INaProjectConstants
 
   String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
 
-  String PATH_OBSERVATION_CONF = FOLDER_MODEL + "/" + "observationConf"; //$NON-NLS-1$ //$NON-NLS-1$
+  String PATH_OBSERVATION_CONF = FOLDER_MODEL + "/" + "observationConf"; //$NON-NLS-1$ //$NON-NLS-2$
 
   String GML_MODELL_FILE = "modell.gml"; //$NON-NLS-1$
 

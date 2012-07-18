@@ -108,7 +108,7 @@ public class ParameterHash
       final String landuseName = landuseClass.getName();
 
       if( StringUtils.isBlank( landuseName ) )
-        throw new NAPreprocessorException( "Found landuse class with empty name." );
+        throw new NAPreprocessorException( Messages.getString("ParameterHash.0") ); //$NON-NLS-1$
 
       if( m_landuseClassMap.containsKey( landuseName ) )
         m_logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.0", landuseName ) ); //$NON-NLS-1$

@@ -52,6 +52,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 /**
@@ -69,7 +70,7 @@ public class SimulationManagementTaskHandler extends AbstractHandler
 
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
-    WorkflowHandlerUtils.setGttInput( page, null, "urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt", "Simulation Management", scenarioFolder ); //$NON-NLS-1$
+    WorkflowHandlerUtils.setGttInput( page, null, "urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt", Messages.getString("SimulationManagementTaskHandler.0"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }

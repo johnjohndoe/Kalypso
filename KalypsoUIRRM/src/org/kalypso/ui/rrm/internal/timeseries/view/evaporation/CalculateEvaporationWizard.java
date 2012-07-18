@@ -49,6 +49,7 @@ import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.operation.evaporation.IEvaporationCalculator;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ObservationImportOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesStatusOperation;
@@ -97,7 +98,7 @@ public class CalculateEvaporationWizard extends Wizard
       final String quality = m_data.getQuality();
       final IStation station = m_data.getStation();
       final String parameterType = calculator.getParameterType();
-      final String description = String.format( "Berechnet in Kalypso mit: %s", calculator.toString() );
+      final String description = String.format( Messages.getString("CalculateEvaporationWizard.0"), calculator.toString() ); //$NON-NLS-1$
 
       final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( station, new ObservationImportOperation( observation, parameterType, quality, description ) );
 

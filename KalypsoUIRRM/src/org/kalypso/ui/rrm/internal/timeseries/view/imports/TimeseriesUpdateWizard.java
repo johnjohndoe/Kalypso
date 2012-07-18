@@ -59,6 +59,7 @@ import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -165,7 +166,7 @@ public class TimeseriesUpdateWizard extends Wizard
       dataProvider.postCommand( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, changes );
 
       dataProvider.saveModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, new NullProgressMonitor() );
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Saved the stations." );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesUpdateWizard.0") ); //$NON-NLS-1$
     }
     catch( final CoreException ex )
     {

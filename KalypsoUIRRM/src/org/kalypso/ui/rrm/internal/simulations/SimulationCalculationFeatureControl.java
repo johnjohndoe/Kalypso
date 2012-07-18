@@ -143,7 +143,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       final Group validationGroup = new Group( main, SWT.NONE );
       GridLayoutFactory.swtDefaults().applyTo( validationGroup );
       validationGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      validationGroup.setText( "Validierung" );
+      validationGroup.setText( Messages.getString("SimulationCalculationFeatureControl.14") ); //$NON-NLS-1$
 
       /* Calculation validation status */
       m_validationStatusComposite = new StatusComposite( validationGroup, StatusComposite.DETAILS );

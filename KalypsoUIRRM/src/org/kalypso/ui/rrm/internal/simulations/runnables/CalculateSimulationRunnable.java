@@ -148,7 +148,7 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      final SubMonitor moni = SubMonitor.convert( monitor, Messages.getString( "CalculateSimulationRunnable_1" ), m_simulations.length );
+      final SubMonitor moni = SubMonitor.convert( monitor, Messages.getString( "CalculateSimulationRunnable_1" ), m_simulations.length ); //$NON-NLS-1$
       moni.subTask( Messages.getString( "CalculateSimulationRunnable_2" ) ); //$NON-NLS-1$
 
       /* Sort the simulations. */

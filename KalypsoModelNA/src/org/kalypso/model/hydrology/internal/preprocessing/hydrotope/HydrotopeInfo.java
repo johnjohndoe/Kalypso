@@ -144,7 +144,7 @@ public class HydrotopeInfo
       final IXLinkedFeature landuseClassLink = linkedLanduse.getLanduse();
       if( landuseClassLink == null )
       {
-        final String msg = String.format( "Landuse class not set in landuse for hydrotope: '%s'.", getName() );
+        final String msg = String.format( Messages.getString("HydrotopeInfo.3"), getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( msg );
       }
 
@@ -157,7 +157,7 @@ public class HydrotopeInfo
     if( landuseClass != null )
       return landuseClass;
 
-    final String msg = String.format( "Missing landuse class with name '%s' for hydrotope: '%s'.", landuseName, getName() );
+    final String msg = String.format( Messages.getString("HydrotopeInfo.4"), landuseName, getName() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
   }
 
@@ -167,7 +167,7 @@ public class HydrotopeInfo
     if( landuseSealing == null )
     {
       final String landuseName = m_landuseClass.getName();
-      final String msg = String.format( "Missing sealing rate in landuse '%s' for hydrotope '%s'.", landuseName, getName() );
+      final String msg = String.format( Messages.getString("HydrotopeInfo.5"), landuseName, getName() ); //$NON-NLS-1$
       throw new NAPreprocessorException( msg );
     }
 
@@ -195,7 +195,7 @@ public class HydrotopeInfo
 
       if( maxPercolationRate == null )
       {
-        final String msg = String.format( "Max. percolation rate not set in geology for hydrotope: '%s'.", getName() );
+        final String msg = String.format( Messages.getString("HydrotopeInfo.6"), getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( msg );
       }
 
@@ -206,7 +206,7 @@ public class HydrotopeInfo
     if( maxPercolationRate != null )
       return maxPercolationRate * maxPercCorrection;
 
-    final String msg = String.format( "Max. percolation rate not set for hydrotope: '%s'.", getName() );
+    final String msg = String.format( Messages.getString("HydrotopeInfo.7"), getName() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
   }
 
@@ -239,7 +239,7 @@ public class HydrotopeInfo
 
       if( gwFactor == null )
       {
-        final String msg = String.format( "Groundwater inflwo rate not set in geology for hydrotope: '%s'.", getName() );
+        final String msg = String.format( Messages.getString("HydrotopeInfo.8"), getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( msg );
       }
 
@@ -250,7 +250,7 @@ public class HydrotopeInfo
     if( gwFactor != null )
       return gwFactor * gwInflowCorrection;
 
-    final String msg = String.format( "Groundwater inflwo rate not set for hydrotope: '%s'.", getName() );
+    final String msg = String.format( Messages.getString("HydrotopeInfo.9"), getName() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
   }
 
@@ -282,7 +282,7 @@ public class HydrotopeInfo
       if( soilTypeLink != null )
         return (Soiltype) soilTypeLink.getFeature();
 
-      final String msg = String.format( "Soil type not set in pedology for hydrotope: '%s'.", getName() );
+      final String msg = String.format( Messages.getString("HydrotopeInfo.10"), getName() ); //$NON-NLS-1$
       throw new NAPreprocessorException( msg );
     }
 
@@ -321,7 +321,7 @@ public class HydrotopeInfo
       /* If we have overlays we must have landuse references */
       if( linkedLanduse == null )
       {
-        final String message = String.format( "Landuse link missing for hydrotope '%s'.", getName() );
+        final String message = String.format( Messages.getString("HydrotopeInfo.11"), getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( message );
       }
 
@@ -464,13 +464,13 @@ public class HydrotopeInfo
   {
     if( m_gwFactor < 0.0 || m_gwFactor > 1.0 )
     {
-      final String message = String.format( "Total groundwater inflow rate %.2f (including catchment correction factor) outside valid range (0.0 - 1.0) for hydrotope %s.", m_gwFactor, getName() );
+      final String message = String.format( Messages.getString("HydrotopeInfo.12"), m_gwFactor, getName() ); //$NON-NLS-1$
       throw new NAPreprocessorException( message );
     }
 
     if( m_maxPerc < 0.0 )
     {
-      final String message = String.format( "Maximal percolation %.2f (including catchment correction factor) outside valid range (0.0 - infinity) for hydrotope %s.", m_maxPerc, getName() );
+      final String message = String.format( Messages.getString("HydrotopeInfo.13"), m_maxPerc, getName() ); //$NON-NLS-1$
       throw new NAPreprocessorException( message );
     }
 

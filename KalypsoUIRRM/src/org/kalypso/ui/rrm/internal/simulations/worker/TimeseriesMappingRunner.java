@@ -176,7 +176,7 @@ public class TimeseriesMappingRunner implements ICoreRunnableWithProgress
       /* Check, if the range of the timeseries covers the unadjusted simulation range. */
       final DateRange timeseriesRange = MetadataHelper.getDateRange( timeseries.getMetadataList() );
       if( !timeseriesRange.containsInclusive( unadjustedSimulationRange ) )
-        throw new SensorException( String.format( "The timeseries '%s' with the range %s is to short for the date range %s...", timeseries.getName(), timeseriesRange.toString(), unadjustedSimulationRange.toString() ) );
+        throw new SensorException( String.format( Messages.getString("TimeseriesMappingRunner.0"), timeseries.getName(), timeseriesRange.toString(), unadjustedSimulationRange.toString() ) ); //$NON-NLS-1$
 
       /* Apply filter. */
       final IObservationFilter filteredTimeseries = createTimeseriesFilter();

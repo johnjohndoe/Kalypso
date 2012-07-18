@@ -51,6 +51,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 
 /**
@@ -80,7 +81,7 @@ public class TimeseriesValidatingOperation implements ICoreRunnableWithProgress
 
     try
     {
-      monitor.beginTask( "Validating timeseries", m_timeseries.length * 100 );
+      monitor.beginTask( Messages.getString("TimeseriesValidatingOperation.0"), m_timeseries.length * 100 ); //$NON-NLS-1$
 
       if( m_timeseries != null && m_dateRange != null )
       {
@@ -88,13 +89,13 @@ public class TimeseriesValidatingOperation implements ICoreRunnableWithProgress
         final Date to = m_dateRange.getTo();
         if( from.after( to ) )
         {
-          collector.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "The to date of the validity range must be after the from date." ) );
-          return collector.asMultiStatus( "Validity range error" );
+          collector.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("TimeseriesValidatingOperation.1") ) ); //$NON-NLS-1$
+          return collector.asMultiStatus( Messages.getString("TimeseriesValidatingOperation.2") ); //$NON-NLS-1$
         }
 
         for( final ITimeseries timeseries : m_timeseries )
         {
-          monitor.subTask( String.format( "Validating timeseries '%s'...", timeseries.getName() ) );
+          monitor.subTask( String.format( Messages.getString("TimeseriesValidatingOperation.3"), timeseries.getName() ) ); //$NON-NLS-1$
 
           final IStatus status = validateTimeseries( timeseries, m_dateRange );
           collector.add( status );
@@ -103,12 +104,12 @@ public class TimeseriesValidatingOperation implements ICoreRunnableWithProgress
 
       monitor.worked( 100 );
 
-      return collector.asMultiStatusOrOK( "Timeseries error", "Timeseries are OK" );
+      return collector.asMultiStatusOrOK( Messages.getString("TimeseriesValidatingOperation.4"), Messages.getString("TimeseriesValidatingOperation.5") ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Exception ex )
     {
       collector.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( "Validation error" );
+      return collector.asMultiStatus( Messages.getString("TimeseriesValidatingOperation.6") ); //$NON-NLS-1$
     }
     finally
     {
@@ -121,8 +122,8 @@ public class TimeseriesValidatingOperation implements ICoreRunnableWithProgress
     final String linkLabel = Timeserieses.toLinkLabel( timeseries );
     final DateRange measurementRange = timeseries.getDateRange();
     if( !measurementRange.containsInclusive( dateRange ) )
-      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, String.format( "The measurement range (%s) of timeseries '%s' does not cover the validity range.", measurementRange.toString(), linkLabel ) );
+      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, String.format( Messages.getString("TimeseriesValidatingOperation.7"), measurementRange.toString(), linkLabel ) ); //$NON-NLS-1$
 
-    return new Status( IStatus.OK, ModelNA.PLUGIN_ID, "Timeseries is OK." );
+    return new Status( IStatus.OK, ModelNA.PLUGIN_ID, Messages.getString("TimeseriesValidatingOperation.8") ); //$NON-NLS-1$
   }
 }

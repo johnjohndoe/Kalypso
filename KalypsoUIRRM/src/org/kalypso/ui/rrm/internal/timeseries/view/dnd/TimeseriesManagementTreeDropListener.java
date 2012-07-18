@@ -56,6 +56,7 @@ import org.kalypso.model.hydrology.binding.timeseries.IStation;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.operations.MoveTimeSeriesOperation;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
@@ -79,7 +80,7 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
 
     final DropTargetEvent event = getCurrentEvent();
     final Shell shell = event.widget.getDisplay().getActiveShell();
-    final String windowTitle = "Zeitreihen verschieben";
+    final String windowTitle = Messages.getString("TimeseriesManagementTreeDropListener.0"); //$NON-NLS-1$
 
     final IStation station = findStation( getCurrentTarget() );
     if( station == null )
@@ -88,7 +89,7 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
     if( isSameStation( station, timeserieses ) )
     {
       // TODO: can't we check this beforehand?
-      final IStatus status = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Verschieben nicht möglich, die Zeitreihen sind bereits in dieser Station." );
+      final IStatus status = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesManagementTreeDropListener.1") ); //$NON-NLS-1$
       StatusDialog.open( shell, status, windowTitle );
       return false;
     }
@@ -98,7 +99,7 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
       return false;
 
     final StringBuilder message = new StringBuilder();
-    message.append( String.format( "Folgende Zeitreihen in Station '%s' verschieben:%n", station.getDescription() ) );
+    message.append( String.format( Messages.getString("TimeseriesManagementTreeDropListener.2"), station.getDescription() ) ); //$NON-NLS-1$
     for( final ITimeseries timeseries : timeserieses )
     {
       message.append( " - " ); //$NON-NLS-1$

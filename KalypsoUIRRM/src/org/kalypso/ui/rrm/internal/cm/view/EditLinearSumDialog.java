@@ -487,7 +487,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     /* Create a text field. */
     final Text groupText = new Text( parent, SWT.BORDER );
     groupText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    groupText.setMessage( "< Gruppenfilter >" );
+    groupText.setMessage( Messages.getString("EditLinearSumDialog.2") ); //$NON-NLS-1$
     groupText.addModifyListener( new ModifyListener()
     {
       @Override
@@ -505,7 +505,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     /* Create a text field. */
     final Text timestepText = new Text( parent, SWT.BORDER );
     timestepText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    timestepText.setMessage( "< Zeitschrittfilter >" );
+    timestepText.setMessage( Messages.getString("EditLinearSumDialog.3") ); //$NON-NLS-1$
     timestepText.addModifyListener( new ModifyListener()
     {
       @Override
