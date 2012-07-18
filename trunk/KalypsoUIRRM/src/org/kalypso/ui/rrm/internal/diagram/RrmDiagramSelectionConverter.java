@@ -83,7 +83,12 @@ public class RrmDiagramSelectionConverter
       final Object ptr = iterator.next();
       if( ptr instanceof TreeNode )
       {
-        Collections.addAll( items, doConvert( (TreeNode) ptr ) );
+        final Object[] tsObject = doConvert( (TreeNode) ptr );
+        for( final Object object : tsObject )
+        {
+          if( object != null )
+            items.add( object );
+        }
       }
     }
 
