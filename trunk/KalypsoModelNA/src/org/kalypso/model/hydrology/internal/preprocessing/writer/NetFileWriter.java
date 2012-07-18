@@ -290,6 +290,9 @@ public class NetFileWriter extends AbstractCoreFileWriter
           final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeseriesConstants.TYPE_DATE );
           final long simulationStartDateMillis = ((Date) values.get( 0, dateAxis )).getTime();
           final long simulationEndDateMillis = ((Date) values.get( values.size() - 1, dateAxis )).getTime();
+
+          // FIXME: this will not work correctly with timezones
+
           final Date simulationStartDate = new Date( 100, 0, 1 );
           final Date simulationEndDate = new Date( simulationStartDate.getTime() + simulationEndDateMillis - simulationStartDateMillis );
 
