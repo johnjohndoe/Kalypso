@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -95,7 +96,7 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final IStatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
@@ -103,22 +104,27 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
 
     try
     {
+      /* Reade base data. */
       final IObservation base = link.getObservationFromPool();
       final ITupleModel baseModel = base.getValues( null );
-
       final CacheTimeSeriesVisitor baseVisitor = new CacheTimeSeriesVisitor( base.getMetadataList() );
       baseModel.accept( baseVisitor, 0 );
+      final Map<Date, TupleModelDataSet[]> baseValues = baseVisitor.getValueMap();
 
-      final DateRange baseRange = baseVisitor.getDateRange();
-
+      /* Read freshly imported data. */
       final ITupleModel importModel = m_imported.getValues( null );
       final CacheTimeSeriesVisitor importVisitor = new CacheTimeSeriesVisitor( base.getMetadataList() );
       importModel.accept( importVisitor, 0 );
+      final DatedDataSets[] importValues = importVisitor.getValues();
 
-      final Map<Date, TupleModelDataSet[]> values = baseVisitor.getValueMap();
-      doMerge( stati, values, importVisitor.getValues(), baseRange );
+      /* Validate timeseries. */
+      final DateRange baseRange = baseVisitor.getDateRange();
+      final DateRange importRange = importVisitor.getDateRange();
+      validateTimeseries( baseRange, importRange );
 
-      doStoreObservation( stati, link, base, values );
+      /* Merge and store the timeseries. */
+      doMerge( stati, baseValues, importValues, baseRange );
+      doStoreObservation( stati, link, base, baseValues );
     }
     catch( final SensorException e )
     {
@@ -126,6 +132,11 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
     }
 
     return stati.asMultiStatus( Messages.getString( "MergeTimeseriesOperation_1" ) ); //$NON-NLS-1$
+  }
+
+  private void validateTimeseries( final DateRange baseRange, final DateRange importRange ) throws CoreException
+  {
+    // TODO
   }
 
   private void doStoreObservation( final IStatusCollector stati, final ZmlLink link, final IObservation base, final Map<Date, TupleModelDataSet[]> values )
