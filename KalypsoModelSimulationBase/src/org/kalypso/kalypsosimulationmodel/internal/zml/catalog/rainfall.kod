@@ -129,7 +129,7 @@
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="33" after="67" />
         <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
-        <AxisNumberRangeRestriction  />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" fixMinValue="true" minRange="0.0"/>
       </Axis>
     </Mappers>
   </Chart>
