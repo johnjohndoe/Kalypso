@@ -73,9 +73,9 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -163,11 +163,11 @@ public class TsFileWriter
       if( !targetFileN.exists() )
         writeNFile( targetFileN, catchment );
 
-      final TimeseriesLinkType linkT = catchment.getTemperatureLink();
+      final ZmlLink linkT = catchment.getTemperatureLink();
       final File targetFileT = m_tsFileManager.getTemperaturEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
       writeExtTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, "1.0", simulationRange ); //$NON-NLS-1$
 
-      final TimeseriesLinkType linkV = catchment.getEvaporationLink();
+      final ZmlLink linkV = catchment.getEvaporationLink();
       final File targetFileV = m_tsFileManager.getVerdunstungEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
       writeExtTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, "0.5", simulationRange ); //$NON-NLS-1$
     }
@@ -175,7 +175,7 @@ public class TsFileWriter
 
   private void writeNFile( final File targetFileN, final Catchment catchment ) throws SensorException, IOException
   {
-    final TimeseriesLinkType linkN = catchment.getPrecipitationLink();
+    final ZmlLink linkN = catchment.getPrecipitationLink();
 
     final IObservation observation = loadObservationWithFilter( linkN, m_zmlContext, null );
     if( observation == null )
@@ -227,7 +227,7 @@ public class TsFileWriter
     return new RangeFactor( forecastRange, forcastFactorN );
   }
 
-  public static final void writeGrapTimeseries( final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String filter ) throws SensorException, IOException
+  public static final void writeGrapTimeseries( final File targetFile, final ZmlLink link, final URL zmlContext, final String valueAxisType, final String filter ) throws SensorException, IOException
   {
     if( targetFile.exists() )
       return;
@@ -242,7 +242,7 @@ public class TsFileWriter
     FileUtils.writeStringToFile( targetFile, writer.toString() );
   }
 
-  public static final void writeExtTimeseries( final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String defaultValue, final DateRange simulationRange ) throws SensorException, IOException
+  public static final void writeExtTimeseries( final File targetFile, final ZmlLink link, final URL zmlContext, final String valueAxisType, final String defaultValue, final DateRange simulationRange ) throws SensorException, IOException
   {
     if( targetFile.exists() )
       return;
@@ -256,7 +256,7 @@ public class TsFileWriter
     writer.write( targetFile, simulationRange );
   }
 
-  private static IObservation loadObservationWithFilter( final TimeseriesLinkType link, final URL zmlContext, final String filter ) throws MalformedURLException, SensorException
+  private static IObservation loadObservationWithFilter( final ZmlLink link, final URL zmlContext, final String filter ) throws MalformedURLException, SensorException
   {
     if( link == null )
       return null;
@@ -267,8 +267,7 @@ public class TsFileWriter
 
     final URL location = UrlResolverSingleton.getDefault().resolveURL( zmlContext, hrefWithFilter );
 
-    final IObservation observation = ZmlFactory.parseXML( location ); //$NON-NLS-1$
-    return observation;
+    return ZmlFactory.parseXML( location );
   }
 
   // FIXME: does not belong here -> move into own writer

@@ -61,7 +61,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}Node.
- * 
+ *
  * @author Gernot Belger
  */
 public class Node extends AbstractNaModelElement implements INode
@@ -155,9 +155,9 @@ public class Node extends AbstractNaModelElement implements INode
   }
 
   @Override
-  public TimeseriesLinkType getZuflussLink( )
+  public ZmlLink getZuflussLink( )
   {
-    return getProperty( PROPERTY_ZUFLUSS_ZR, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROPERTY_ZUFLUSS_ZR );
   }
 
   @Override

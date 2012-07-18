@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.strategies.builders;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
@@ -60,7 +57,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
  */
 public class Channel2TreeNodeBuilder implements IFeatureBindingCollectionVisitor<Channel>
 {
-
   private final RrmSimulation m_simulation;
 
   private final RrmCalculationResult m_calculation;
@@ -88,17 +84,9 @@ public class Channel2TreeNodeBuilder implements IFeatureBindingCollectionVisitor
       builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, channel, RRM_RESULT.storageFuellvolumen ), m_view );
       builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, channel, RRM_RESULT.storageSpeicherUeberlauf ), m_view );
 
-      try
-      {
-        final StorageChannel storage = (StorageChannel) channel;
-        final URL context = storage.getWorkspace().getContext();
+      final StorageChannel storage = (StorageChannel) channel;
 
-        builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, storage, storage.getSeaEvaporationTimeseriesLink(), RRM_RESULT.inputEvaporation ), m_view );
-      }
-      catch( final MalformedURLException e )
-      {
-        e.printStackTrace();
-      }
+      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, storage, storage.getSeaEvaporationTimeseriesLink(), RRM_RESULT.inputEvaporation ), m_view );
     }
   }
 }

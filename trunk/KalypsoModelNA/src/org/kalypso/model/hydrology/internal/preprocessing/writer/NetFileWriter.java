@@ -77,14 +77,14 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Writes the collected net elements etc. into the .ntz file.
- * 
+ *
  * @author doemming
  */
 public class NetFileWriter extends AbstractCoreFileWriter
@@ -256,14 +256,14 @@ public class NetFileWriter extends AbstractCoreFileWriter
     if( branching != null )
       return appendBranching( branching );
 
-    final TimeseriesLinkType zuflussLink = node.getZuflussLink();
-    if( zuflussLink != null )
+    final ZmlLink zuflussLink = node.getZuflussLink();
+    if( zuflussLink.isLinkSet() )
       return appendZuflussLink( node, zuflussLink );
 
     return new ZuflussBean( 0, 0, 0, 0, 0, Double.NaN, null );
   }
 
-  private ZuflussBean appendZuflussLink( final Node node, final TimeseriesLinkType zuflussLink ) throws SensorException, IOException
+  private ZuflussBean appendZuflussLink( final Node node, final ZmlLink zuflussLink ) throws SensorException, IOException
   {
     final ZuflussBean bean = new ZuflussBean( 0, 0, 0, 5, 0, Double.NaN, null );
 

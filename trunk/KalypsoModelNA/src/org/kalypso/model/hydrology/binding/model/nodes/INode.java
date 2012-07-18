@@ -119,7 +119,7 @@ public interface INode extends INaModelFeature
   @Deprecated
   ZmlLink getResultLink( );
 
-  TimeseriesLinkType getZuflussLink( );
+  ZmlLink getZuflussLink( );
 
   boolean isGenerateResults( );
 

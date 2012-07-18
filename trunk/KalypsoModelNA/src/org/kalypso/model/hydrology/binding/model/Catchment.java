@@ -48,7 +48,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}Catchment.
- * 
+ *
  * @author Gernot Belger
  */
 public class Catchment extends AbstractNaModelElement
@@ -353,19 +353,19 @@ public class Catchment extends AbstractNaModelElement
     setProperty( PROP_GENERATE_RESULT, value );
   }
 
-  public TimeseriesLinkType getPrecipitationLink( )
+  public ZmlLink getPrecipitationLink( )
   {
-    return getProperty( PROP_PRECIPITATION_LINK, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROP_PRECIPITATION_LINK );
   }
 
-  public TimeseriesLinkType getTemperatureLink( )
+  public ZmlLink getTemperatureLink( )
   {
-    return getProperty( PROP_TEMPERATURE_LINK, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROP_TEMPERATURE_LINK );
   }
 
-  public TimeseriesLinkType getEvaporationLink( )
+  public ZmlLink getEvaporationLink( )
   {
-    return getProperty( PROP_EVAPORATION_LINK, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROP_EVAPORATION_LINK );
   }
 
   public String getSynthZR( )

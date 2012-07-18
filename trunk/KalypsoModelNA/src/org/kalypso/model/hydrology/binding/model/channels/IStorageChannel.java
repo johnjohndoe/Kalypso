@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 
 /**
  * @author Dirk Kuch
@@ -89,7 +89,7 @@ public interface IStorageChannel extends IChannel
 
   double getSeaEvaporationFactor( );
 
-  TimeseriesLinkType getSeaEvaporationTimeseriesLink( );
+  ZmlLink getSeaEvaporationTimeseriesLink( );
 
   double getVolumeMax( );
 
