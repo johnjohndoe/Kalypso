@@ -68,6 +68,8 @@
     </validatorlabel>  
   </group>
 
+  <!-- 
+  TODO: commented out, because functionality is buggy and dangerous. Internal functionality is also deactivated
   <group style="SWT.NONE" text="%modelConstruction.gft.group.timeseries">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
     <gridLayout numColumns="3"/>
@@ -80,6 +82,7 @@
       <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </validatorlabel>
   </group>
+   -->
 
   <group style="SWT.NONE" text="%modelConstruction.gft.group.net">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />

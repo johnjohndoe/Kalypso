@@ -108,6 +108,11 @@ public class GrapWriter
     }
   }
 
+  /**
+   * Forces m_obseration into the given range by a linear transformation of the date's. This is most probably not was
+   * intended.
+   */
+  @Deprecated
   public void writeSyntheticFile( final StringBuffer writer, final Date simulationStart, final Date simulationEnd, final int minutesOfTimeStep ) throws SensorException
   {
     if( simulationStart.after( simulationEnd ) )
@@ -117,7 +122,11 @@ public class GrapWriter
     final IAxis[] axis = m_observation.getAxes();
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axis, m_valueAxisType );
 
-    /* Hash dates/valus into map and shift to 'simulationStart' */
+    /* Hash dates/values into map and shift to 'simulationStart' */
+
+    // REMARK: stretches/squeezes the input timeseries into the simulation range
+    // FIXME: this is nonsense! this only makes sense if length and timestep of input and output ranges are the same
+
     final ITupleModel values = m_observation.getValues( null );
     final SortedMap<Date, Double> valuesMap = new TreeMap<Date, Double>();
 
@@ -131,6 +140,7 @@ public class GrapWriter
       valuesMap.put( date, value );
     }
 
+    /* Interpolate onto the raster of the output timeseries */
     final Interpolator interpolator = new Interpolator( valuesMap );
     final long syntheticTimeseriesStep = minutesOfTimeStep * 60000; // milliseconds
 

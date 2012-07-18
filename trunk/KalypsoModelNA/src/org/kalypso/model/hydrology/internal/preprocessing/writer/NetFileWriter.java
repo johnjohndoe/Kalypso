@@ -277,8 +277,9 @@ public class NetFileWriter extends AbstractCoreFileWriter
       final StringBuffer writer = new StringBuffer();
       final IObservation observation = ZmlFactory.parseXML( linkURL ); //$NON-NLS-1$
 
-      final Boolean isSynteticZufluss = node.isSynteticZufluss();
-
+      // FIXME: this functionality is currently deactivated, because it is wrongly implemented.
+      final Boolean isSynteticZufluss = false;
+      // node.isSynteticZufluss();
       if( isSynteticZufluss != null && isSynteticZufluss )
       {
         final Integer minutesOfTimestep = m_metaControl.getMinutesOfTimestep();
