@@ -61,6 +61,7 @@ import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -86,7 +87,7 @@ public class SimulationDescriptionAction extends Action
     final Feature feature = m_control.getFeature();
     final String initialDescription = feature.getDescription();
 
-    final InputDialog dialog = new InputDialog( shell, getText(), "Bitte geben Sie einen Namen ein", initialDescription, new SimulationDescriptionValidator( (NAControl) feature ) );
+    final InputDialog dialog = new InputDialog( shell, getText(), Messages.getString("SimulationDescriptionAction.0"), initialDescription, new SimulationDescriptionValidator( (NAControl) feature ) ); //$NON-NLS-1$
     final int open = dialog.open();
     if( open != Window.OK )
       return;
@@ -99,7 +100,7 @@ public class SimulationDescriptionAction extends Action
   @Override
   public String getText( )
   {
-    return "Rename";
+    return Messages.getString("SimulationDescriptionAction.1"); //$NON-NLS-1$
   }
 
   private void changeDescription( final Shell shell, final Feature feature, final String initialDescription, final String newDescription )
@@ -138,7 +139,7 @@ public class SimulationDescriptionAction extends Action
     catch( final CoreException ex )
     {
       /* Show an error. */
-      ErrorDialog.openError( shell, getText(), "Could not rename the simulation folder...", new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
+      ErrorDialog.openError( shell, getText(), Messages.getString("SimulationDescriptionAction.2"), new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) ); //$NON-NLS-1$
     }
   }
 }

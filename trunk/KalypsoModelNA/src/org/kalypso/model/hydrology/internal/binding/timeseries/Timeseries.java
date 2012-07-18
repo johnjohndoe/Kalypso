@@ -187,7 +187,7 @@ public class Timeseries extends Feature_Impl implements ITimeseries
 
       /* ZML import status file? so delete it, too. */
       final IContainer parent = file.getParent();
-      final IFile statusFile = parent.getFile( new Path( file.getName() + ".status" ) );
+      final IFile statusFile = parent.getFile( new Path( file.getName() + ".status" ) ); //$NON-NLS-1$
       if( statusFile.exists() )
         statusFile.delete( false, new NullProgressMonitor() );
     }

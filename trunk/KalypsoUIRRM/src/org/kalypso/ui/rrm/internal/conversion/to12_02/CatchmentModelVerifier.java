@@ -216,7 +216,7 @@ public class CatchmentModelVerifier
 
     if( m_hasSynth )
     {
-      collector.add( IStatus.OK, "There is design rainfall. There should be no generators." );
+      collector.add( IStatus.OK, Messages.getString("CatchmentModelVerifier.0") ); //$NON-NLS-1$
       return collector.asMultiStatus( Messages.getString( "CatchmentModelVerifier_9" ) ); //$NON-NLS-1$
     }
 

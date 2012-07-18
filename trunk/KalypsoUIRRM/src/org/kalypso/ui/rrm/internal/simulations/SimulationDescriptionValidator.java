@@ -47,6 +47,7 @@ import org.eclipse.jface.dialogs.IInputValidator;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -65,16 +66,16 @@ public class SimulationDescriptionValidator implements IInputValidator
   public String isValid( final String newText )
   {
     if( newText == null || newText.length() == 0 )
-      return "Please enter a description...";
+      return Messages.getString("SimulationDescriptionValidator.0"); //$NON-NLS-1$
 
     final NAControl[] allSimulations = getAllSimulations();
     final String duplicate = findDuplicates( allSimulations, newText );
     if( duplicate != null )
-      return String.format( "There is already a simulation with the description '%s'...", newText );
+      return String.format( Messages.getString("SimulationDescriptionValidator.1"), newText ); //$NON-NLS-1$
 
-    final String validatedText = FileUtilities.validateName( newText, "_" );
+    final String validatedText = FileUtilities.validateName( newText, "_" ); //$NON-NLS-1$
     if( !newText.equals( validatedText ) )
-      return String.format( "The new description '%s' contains invalid characters...", newText );
+      return String.format( Messages.getString("SimulationDescriptionValidator.3"), newText ); //$NON-NLS-1$
 
     return null;
   }

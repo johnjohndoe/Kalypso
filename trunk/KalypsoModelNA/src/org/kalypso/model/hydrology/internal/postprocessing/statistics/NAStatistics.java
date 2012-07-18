@@ -231,17 +231,17 @@ public class NAStatistics implements INaStatistics
     try (PrintWriter pw = new PrintWriter( reportFileCSV ))
     {
       /* Header */
-      pw.print( "Knoten" );
+      pw.print( Messages.getString("NAStatistics.1") ); //$NON-NLS-1$
       pw.print( SEPARATOR_CSV );
-      pw.print( "Beschreibung" );
+      pw.print( Messages.getString("NAStatistics.2") ); //$NON-NLS-1$
       pw.print( SEPARATOR_CSV );
-      pw.format( "Zeitpunkt maximaler Wert (%s)", timezoneName );
+      pw.format( Messages.getString("NAStatistics.3"), timezoneName ); //$NON-NLS-1$
       pw.print( SEPARATOR_CSV );
-      pw.print( "maximaler Wert [m³/s)" );
+      pw.print( Messages.getString("NAStatistics.4") ); //$NON-NLS-1$
       pw.print( SEPARATOR_CSV );
-      pw.print( "Datendatei" );
+      pw.print( Messages.getString("NAStatistics.5") ); //$NON-NLS-1$
       pw.print( SEPARATOR_CSV );
-      pw.println( "Gesamtvolumen [m³]" );
+      pw.println( Messages.getString("NAStatistics.6") ); //$NON-NLS-1$
 
       // REMARK/BUGFIX: using the default charset here, because this file is usually intended to be opened with excel
       // Excel automatically assumes the default charset of the platform

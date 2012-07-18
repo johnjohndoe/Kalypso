@@ -295,7 +295,7 @@ public class CatchmentModelHelper
       final Date validTo = generator.getValidTo();
       if( validFrom == null || validTo == null )
       {
-        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The validity range of the generator '%s' is not correctly set. ", generator.getDescription() ) ) );
+        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString("CatchmentModelHelper.0"), generator.getDescription() ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -790,7 +790,7 @@ public class CatchmentModelHelper
 
       /* If there is no link in the old model, create a warning. */
       if( !(link.isLinkSet() && link.isLinkExisting()) )
-        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "There is no timeseries in the imported results, to compare the new timeseries against." );
+        return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentModelHelper.1") ); //$NON-NLS-1$
 
       /* Load the timeseries. */
       /* The time zone may be different to that of the newly generated timeseries. */

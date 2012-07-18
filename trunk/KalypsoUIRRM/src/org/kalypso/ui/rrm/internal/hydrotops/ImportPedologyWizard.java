@@ -72,7 +72,7 @@ public class ImportPedologyWizard extends AbstractHydrotopeDataImportWizard
 
   public ImportPedologyWizard( )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.0" ) ); //$NON-NLS-1$
   }
 
   @Override

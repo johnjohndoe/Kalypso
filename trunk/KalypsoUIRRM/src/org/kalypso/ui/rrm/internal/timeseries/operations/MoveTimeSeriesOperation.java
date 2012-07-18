@@ -90,7 +90,7 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Move timeseries", m_timeseries.length );
+    monitor.beginTask( Messages.getString("MoveTimeSeriesOperation.1"), m_timeseries.length ); //$NON-NLS-1$
 
     final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
@@ -118,7 +118,7 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
       log.add( e.getStatus() );
     }
 
-    return log.asMultiStatus( "Move timeseries" );
+    return log.asMultiStatus( Messages.getString("MoveTimeSeriesOperation.1") ); //$NON-NLS-1$
   }
 
   private IStatus moveTimeseries( final ITimeseries timeseries, final IProgressMonitor monitor ) throws CoreException
@@ -131,7 +131,7 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     if( timeseries.getStation() == m_target )
     {
       m_movedTimeseries.add( timeseries );
-      final String message = String.format( "'%s': already an element of this station", timeseriesLabel );
+      final String message = String.format( Messages.getString("MoveTimeSeriesOperation.3"), timeseriesLabel ); //$NON-NLS-1$
       return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), message );
     }
 
@@ -141,7 +141,7 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     if( !ArrayUtils.contains( allowedTypes, parameterType ) )
     {
       m_movedTimeseries.add( timeseries );
-      final String message = String.format( "'%s': station '%s' cannot contain timeseries of type '%s'", timeseriesLabel, m_target.getDescription(), parameterType );
+      final String message = String.format( Messages.getString("MoveTimeSeriesOperation.4"), timeseriesLabel, m_target.getDescription(), parameterType ); //$NON-NLS-1$
       return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), message );
     }
 

@@ -87,7 +87,7 @@ import org.kalypso.repository.IDataSourceItem;
  */
 public abstract class AbstractEvaporationCalculator implements IEvaporationCalculator
 {
-  public static final String DATA_SOURCE = IDataSourceItem.SOURCE_PREFIX + Messages.getString( "AbstractEvaporationCalculator_0" ); //$NON-NLS-1$
+  public static final String DATA_SOURCE = IDataSourceItem.SOURCE_PREFIX + "evaporation.calculation"; //$NON-NLS-1$
 
   private ITimeseriesCache m_humidity;
 
@@ -118,7 +118,7 @@ public abstract class AbstractEvaporationCalculator implements IEvaporationCalcu
   {
     final String paramerLabel = TimeseriesUtils.getName( getParameterType() );
 
-    return String.format( "%s: %s", paramerLabel, getLabel() );
+    return String.format( "%s: %s", paramerLabel, getLabel() ); //$NON-NLS-1$
   }
 
   protected abstract String getLabel( );

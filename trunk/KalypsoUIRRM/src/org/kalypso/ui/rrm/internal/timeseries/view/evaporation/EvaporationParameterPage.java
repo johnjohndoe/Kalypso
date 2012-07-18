@@ -96,7 +96,7 @@ public class EvaporationParameterPage extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     group.setText( Messages.getString( "EvaporationParameterPage_6" ) ); //$NON-NLS-1$
 
-    createTextControl( group, Messages.getString( "EvaporationParameterPage_7" ), CalculateEvaporationData.PROPERTY_LATITUDE );
+    createTextControl( group, Messages.getString( "EvaporationParameterPage_7" ), CalculateEvaporationData.PROPERTY_LATITUDE ); //$NON-NLS-1$
 
     createTimeseriesGroup( panel );
   }
@@ -121,7 +121,7 @@ public class EvaporationParameterPage extends WizardPage
     final Group group = new Group( page, SWT.NULL );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( group );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Timeseries" );
+    group.setText( Messages.getString("EvaporationParameterPage.1") ); //$NON-NLS-1$
 
     final Label lab = new Label( group, SWT.NULL );
     lab.setText( Messages.getString( "EvaporationParameterPage_10" ) ); //$NON-NLS-1$

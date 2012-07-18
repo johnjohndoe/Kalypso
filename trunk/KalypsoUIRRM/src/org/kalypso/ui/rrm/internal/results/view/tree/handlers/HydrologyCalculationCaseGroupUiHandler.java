@@ -51,6 +51,7 @@ import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 import org.kalypso.ui.rrm.internal.simulations.actions.DeleteRrmCalcualtionAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.RenameRrmCalcualtionAction;
@@ -77,7 +78,7 @@ public class HydrologyCalculationCaseGroupUiHandler extends AbstractResultTreeNo
     if( Objects.isNotNull( calculation ) )
     {
       if( calculation.isCurrent() )
-        return "letzte Rechnung";
+        return Messages.getString("HydrologyCalculationCaseGroupUiHandler.0"); //$NON-NLS-1$
 
       return calculation.getName();
     }

@@ -121,7 +121,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final String parameterType = m_operation.getData().getParameterType();
     if( m_station.hasTimeseries( parameterType, quality, timestep ) )
     {
-      final String message = Messages.getString( "TargetTimeseriesValidator_0" );
+      final String message = Messages.getString( "TargetTimeseriesValidator_0" ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }

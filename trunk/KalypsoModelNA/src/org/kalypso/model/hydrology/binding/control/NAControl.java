@@ -62,6 +62,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.cm.IMultiGenerator;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMapping;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
@@ -147,7 +148,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
     final IFeatureBindingCollection<NAControl> allSimulations = owner.getSimulations();
 
     /* Find the new description. */
-    final String newDescription = findUniqueValue( allSimulations.toArray( new NAControl[] {} ), NAControl.QN_DESCRIPTION, "New simulation", null );
+    final String newDescription = findUniqueValue( allSimulations.toArray( new NAControl[] {} ), NAControl.QN_DESCRIPTION, Messages.getString("NAControl.0"), null ); //$NON-NLS-1$
 
     /* Set the new description. */
     setDescription( newDescription );
@@ -486,7 +487,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
     final IFeatureBindingCollection<NAControl> allSimulations = owner.getSimulations();
 
     /* Find the new description. */
-    final String newDescription = findUniqueValue( allSimulations.toArray( new NAControl[] {} ), NAControl.QN_DESCRIPTION, previousDescription, "Copy" );
+    final String newDescription = findUniqueValue( allSimulations.toArray( new NAControl[] {} ), NAControl.QN_DESCRIPTION, previousDescription, Messages.getString("NAControl.1") ); //$NON-NLS-1$
 
     /* Set the new description. */
     final IPropertyType pt = getFeatureType().getProperty( NAControl.QN_DESCRIPTION );
@@ -517,7 +518,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
       existingValues.add( (String) feature.getProperty( property ) );
 
     /* The new value. */
-    String newValue = detail != null ? String.format( "%s (%s)", value, detail ) : String.format( "%s", value );
+    String newValue = detail != null ? String.format( "%s (%s)", value, detail ) : String.format( "%s", value ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Find the new value. */
     int cnt = 1;
@@ -528,7 +529,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
         return newValue;
 
       /* The new value. */
-      newValue = detail != null ? String.format( "%s (%s %d)", value, detail, cnt++ ) : String.format( "%s %d", value, cnt++ );
+      newValue = detail != null ? String.format( "%s (%s %d)", value, detail, cnt++ ) : String.format( "%s %d", value, cnt++ ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }

@@ -53,6 +53,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.utils.NewFilenameValidator;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
 
 /**
@@ -67,7 +68,7 @@ public class RenameRrmCalcualtionAction extends Action implements IUpdateable
 
   public RenameRrmCalcualtionAction( final ResultManagementView view, final RrmCalculationResult calculation )
   {
-    super( "Rename Calculation" );
+    super( Messages.getString("RenameRrmCalcualtionAction.0") ); //$NON-NLS-1$
 
     m_view = view;
 
@@ -86,7 +87,7 @@ public class RenameRrmCalcualtionAction extends Action implements IUpdateable
   {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
-    final String msg = String.format( "New calculation name for calculation '%s'?", m_calculation.getName() );
+    final String msg = String.format( Messages.getString("RenameRrmCalcualtionAction.1"), m_calculation.getName() ); //$NON-NLS-1$
 
     final IFolder srcFolder = m_calculation.getFolder();
     final InputDialog inputDialog = new InputDialog( shell, getText(), msg, m_calculation.getName(), new NewFilenameValidator( srcFolder, true ) );

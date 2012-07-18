@@ -45,23 +45,23 @@ package org.kalypso.ui.rrm.internal.i18n;
  */
 public interface MessageConstants
 {
-  String STR_ACTION_OPEN_CALC_STATUS_TEXT = "Calculation Status";
+  String STR_ACTION_OPEN_CALC_STATUS_TEXT = "Calculation Status"; //$NON-NLS-1$
 
-  String STR_ACTION_OPEN_CALC_STATUS_TOOLTIP = "Displays the status of the last calculation";
+  String STR_ACTION_OPEN_CALC_STATUS_TOOLTIP = "Displays the status of the last calculation"; //$NON-NLS-1$
 
-  String STR_ACTION_OPEN_CALC_LOG_TEXT = Messages.getString( "SimulationCalculationFeatureControl.4" );
+  String STR_ACTION_OPEN_CALC_LOG_TEXT = Messages.getString( "SimulationCalculationFeatureControl.4" ); //$NON-NLS-1$
 
-  String STR_ACTION_OPEN_CALC_LOG_TOOLTIP = Messages.getString( "SimulationCalculationFeatureControl.5" );
+  String STR_ACTION_OPEN_CALC_LOG_TOOLTIP = Messages.getString( "SimulationCalculationFeatureControl.5" ); //$NON-NLS-1$
 
-  String STR_ACTION_OPEN_ERROR_LOG_TEXT = Messages.getString( "SimulationCalculationFeatureControl.6" );
+  String STR_ACTION_OPEN_ERROR_LOG_TEXT = Messages.getString( "SimulationCalculationFeatureControl.6" ); //$NON-NLS-1$
 
-  String STR_ACTION_OPEN_ERROR_LOG_TOOLTIP = Messages.getString( "SimulationCalculationFeatureControl.7" );
+  String STR_ACTION_OPEN_ERROR_LOG_TOOLTIP = Messages.getString( "SimulationCalculationFeatureControl.7" ); //$NON-NLS-1$
 
-  String STR_ACTION_OPEN_MASS_BALANCE_TEXT = Messages.getString( "SimulationCalculationFeatureControl.8" );
+  String STR_ACTION_OPEN_MASS_BALANCE_TEXT = Messages.getString( "SimulationCalculationFeatureControl.8" ); //$NON-NLS-1$
 
-  String STR_ACTION_OPEN_MASS_BALANCE_TOOLTIP = Messages.getString( "SimulationCalculationFeatureControl.9" );
+  String STR_ACTION_OPEN_MASS_BALANCE_TOOLTIP = Messages.getString( "SimulationCalculationFeatureControl.9" ); //$NON-NLS-1$
 
-  String STR_ACTION_OPEN_STATISTICS_TEXT = Messages.getString( "SimulationCalculationFeatureControl.10" );
+  String STR_ACTION_OPEN_STATISTICS_TEXT = Messages.getString( "SimulationCalculationFeatureControl.10" ); //$NON-NLS-1$
 
-  String STR_ACTION_OPEN_STATISTICS_TOOLTIP = Messages.getString( "SimulationCalculationFeatureControl.11" );
+  String STR_ACTION_OPEN_STATISTICS_TOOLTIP = Messages.getString( "SimulationCalculationFeatureControl.11" ); //$NON-NLS-1$
 }

@@ -179,13 +179,13 @@ public class ScenarioCompareStatus
   private String getLabel( final String key )
   {
     if( KEY_MODEL.equals( key ) )
-      return "Model";
+      return Messages.getString("ScenarioCompareStatus.0"); //$NON-NLS-1$
 
     if( KEY_PARAMETER.equals( key ) )
-      return "Parameter";
+      return Messages.getString("ScenarioCompareStatus.1"); //$NON-NLS-1$
 
     if( KEY_HYDROTOPES.equals( key ) )
-      return "Hydrotopes";
+      return Messages.getString("ScenarioCompareStatus.2"); //$NON-NLS-1$
 
     return key;
   }

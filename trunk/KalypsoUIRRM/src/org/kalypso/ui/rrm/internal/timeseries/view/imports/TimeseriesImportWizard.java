@@ -179,7 +179,7 @@ public class TimeseriesImportWizard extends Wizard
     m_timeseries = storeOperation.getTimeseries();
 
     /* Store the timeseries status. */
-    final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_timeseries, stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ) );
+    final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_timeseries, stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ) ); //$NON-NLS-1$
     final IStatus storeStatusStatus = RunnableContextHelper.execute( getContainer(), true, false, storeStatusOperation );
     stati.add( storeStatusStatus );
 
@@ -188,7 +188,7 @@ public class TimeseriesImportWizard extends Wizard
     stati.add( saveStationsStatus );
 
     /* Show the status dialog. */
-    doShowStatusDialog( stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ) );
+    doShowStatusDialog( stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ) ); //$NON-NLS-1$
 
     return !stati.matches( IStatus.ERROR );
   }
@@ -209,7 +209,7 @@ public class TimeseriesImportWizard extends Wizard
     {
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       dataProvider.saveModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, new NullProgressMonitor() );
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Saved the stations." );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesImportWizard.2") ); //$NON-NLS-1$
     }
     catch( final CoreException ex )
     {

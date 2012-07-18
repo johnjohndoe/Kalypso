@@ -380,7 +380,7 @@ public class TimeseriesImporter
     if( count == 1 )
       stationName = description;
     else
-      stationName = String.format( "%s (%s)", description, count );
+      stationName = String.format( "%s (%s)", description, count ); //$NON-NLS-1$
     return stationName;
   }
 

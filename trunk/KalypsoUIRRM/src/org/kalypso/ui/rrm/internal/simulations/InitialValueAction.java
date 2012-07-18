@@ -57,13 +57,14 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Holger Albert
  */
 public class InitialValueAction extends Action
 {
-  private static final String RESET_CONSTANT = "< No start conditions >";
+  private static final String RESET_CONSTANT = Messages.getString("InitialValueAction.0"); //$NON-NLS-1$
 
   private final InitialValueFeatureControl m_control;
 
@@ -83,7 +84,7 @@ public class InitialValueAction extends Action
     final NAControl simulation = (NAControl) m_control.getFeature();
     if( SimulationUtilities.isLongterm( simulation ) )
     {
-      MessageDialog.open( MessageDialog.INFORMATION, shell, getText(), "Longterm simulations may not have start conditions.", SWT.NONE );
+      MessageDialog.open( MessageDialog.INFORMATION, shell, getText(), Messages.getString("InitialValueAction.1"), SWT.NONE ); //$NON-NLS-1$
       return;
     }
 
@@ -93,7 +94,7 @@ public class InitialValueAction extends Action
     /* Create the dialog. */
     final ListDialog dialog = new ListDialog( shell );
     dialog.setTitle( getText() );
-    dialog.setMessage( "Select longterm simulation" );
+    dialog.setMessage( Messages.getString("InitialValueAction.2") ); //$NON-NLS-1$
     dialog.setLabelProvider( new LabelProvider() );
     dialog.setContentProvider( new ArrayContentProvider() );
 
@@ -130,7 +131,7 @@ public class InitialValueAction extends Action
 
     /* HINT: It may be a the reset constant. */
     if( RESET_CONSTANT.equals( newInitialValue ) )
-      newInitialValue = "";
+      newInitialValue = ""; //$NON-NLS-1$
 
     /* Only change, if the old initial value is different from the new initial value. */
     if( !ObjectUtils.equals( oldInitialValue, newInitialValue ) )
@@ -143,6 +144,6 @@ public class InitialValueAction extends Action
   @Override
   public String getText( )
   {
-    return "Select";
+    return Messages.getString("InitialValueAction.4"); //$NON-NLS-1$
   }
 }

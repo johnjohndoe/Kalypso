@@ -275,14 +275,14 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       final DateRange timeseriesRange = MetadataHelper.getDateRange( source.getMetadataList() );
       final DateRange validityRange = getValidityRange( dateRange );
       if( !timeseriesRange.containsInclusive( validityRange ) )
-        throw new SensorException( String.format( "The timeseries '%s' with the range %s is to short for the date range %s...", source.getName(), timeseriesRange.toString(), validityRange.toString() ) );
+        throw new SensorException( String.format( Messages.getString("LinearSumGenerator.0"), source.getName(), timeseriesRange.toString(), validityRange.toString() ) ); //$NON-NLS-1$
 
       final IObservation filteredObservation = ZmlFilterWorker.applyFilters( source, filters );
       final IObservation resolvedObservation = ObservationHelper.clone( filteredObservation, request );
       return resolvedObservation;
     }
 
-    throw new SensorException( "No valid link to an observation..." );
+    throw new SensorException( Messages.getString("LinearSumGenerator.1") ); //$NON-NLS-1$
   }
 
   private DateRange getValidityRange( final DateRange defaultRange )

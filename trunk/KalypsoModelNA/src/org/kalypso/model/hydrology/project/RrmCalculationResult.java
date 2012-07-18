@@ -69,11 +69,11 @@ public class RrmCalculationResult
 
   private static final String FILE_ERROR_GML = "error.gml"; //$NON-NLS-1$
 
-  public static final String FOLDER_CATCHMENT = "SubCatchment";
+  public static final String FOLDER_CATCHMENT = "SubCatchment"; //$NON-NLS-1$
 
-  public static final String FOLDER_NODE = "Node";
+  public static final String FOLDER_NODE = "Node"; //$NON-NLS-1$
 
-  public static final String FOLDER_STROAGE_CHANNEL = "StorageChannel";
+  public static final String FOLDER_STROAGE_CHANNEL = "StorageChannel"; //$NON-NLS-1$
 
   private final IFolder m_folder;
 

@@ -77,7 +77,7 @@ public class StoreTimeseriesStatusOperation implements ICoreRunnableWithProgress
     final IFile zmlFile = m_timeseries.getDataLink().getFile();
 
     final IFolder folder = (IFolder) zmlFile.getParent();
-    final IFile status = folder.getFile( zmlFile.getName() + ".status" ); //$NON-NLS-N$ //$NON-NLS-1$ //$NON-NLS-1$
+    final IFile status = folder.getFile( zmlFile.getName() + ".status" ); //$NON-NLS-1$
 
     final GeoStatusLog log = new GeoStatusLog( status );
     log.log( m_status );

@@ -163,7 +163,7 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
             else
             {
               final String referencingLabel = referencingSimulation.getDescription();
-              collector.add( IStatus.WARNING, "Start of simulation '%s' outside range of longterm simulation", null, referencingLabel );
+              collector.add( IStatus.WARNING, Messages.getString("PrepareLongtermSimulationWorker.0"), null, referencingLabel ); //$NON-NLS-1$
             }
           }
         }
