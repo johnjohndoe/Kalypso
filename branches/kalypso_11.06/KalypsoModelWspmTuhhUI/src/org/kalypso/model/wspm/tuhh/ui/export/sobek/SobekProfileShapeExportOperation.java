@@ -111,9 +111,6 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
     m_shapePoint.closeQuiet();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekExportOperation#writeProfile(org.kalypso.model.wspm.core.gml.IProfileFeature)
-   */
   @Override
   protected void writeProfile( final IProfileFeature profileFeature ) throws IOException, DBaseException, SHPException, ShapeDataException
   {
@@ -125,6 +122,9 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
 
     final IComponent heightComponent = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IRecord minPoint = ProfilUtil.getMinPoint( profil, heightComponent );
+
+    if( minPoint == null )
+      return;
 
     final String srs = profileFeature.getSrsName();
 
