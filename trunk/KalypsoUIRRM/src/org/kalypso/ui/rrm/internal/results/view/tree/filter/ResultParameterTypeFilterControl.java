@@ -51,6 +51,7 @@ import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -61,7 +62,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.base.KalypsoHydrologyResults.RRM_RESULT;
@@ -98,7 +98,7 @@ public class ResultParameterTypeFilterControl extends Composite
     m_parameterTypes.add( StringUtils.EMPTY );
     Collections.addAll( m_parameterTypes, RRM_RESULT.values() );
 
-    setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.swtDefaults().applyTo( this );
     createContents( this );
   }
 
