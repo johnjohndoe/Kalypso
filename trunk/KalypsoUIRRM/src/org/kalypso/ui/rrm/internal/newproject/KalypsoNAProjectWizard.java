@@ -72,11 +72,13 @@ import org.kalypso.model.hydrology.binding.model.channels.IChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.project.RrmScenario;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.rrm.KalypsoModuleRRM;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.welcome.KalypsoRrmNewProjectHandler;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -168,9 +170,8 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     final int kmChannelNo = m_preferencePage.getKMChannelNo();
 
     final ImportRrmInitialDataOperation importHandler = new ImportRrmInitialDataOperation( baseScenario, soilLayerNo, kmChannelNo, m_catchmentMapping, m_channelMapping, m_nodeMapping, m_hydrotopeMapping );
-    final IStatus result = importHandler.execute( new NullProgressMonitor() );
 
-    return result;
+    return importHandler.execute( new NullProgressMonitor() );
   }
 
   private IValuePropertyType[] getAllValueProperties( final IFeatureType targetFT )
@@ -188,12 +189,40 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
       {
         final IValuePropertyType targetPT = (IValuePropertyType) ftp;
 
-        if( Feature.QN_NAME.equals( qName ) || (!targetPT.isVirtual() && !targetPT.isList() && !targetPT.isGeometry()) )
+        final boolean isValid = isSuitableImportProperty( targetPT );
+
+        if( isValid )
           result.add( targetPT );
       }
     }
 
     return result.toArray( new IValuePropertyType[result.size()] );
+  }
+
+  private boolean isSuitableImportProperty( final IValuePropertyType targetPT )
+  {
+    final QName qName = targetPT.getQName();
+
+    if( Feature.QN_NAME.equals( qName ) )
+      return true;
+
+    if( targetPT.isVirtual() )
+      return false;
+
+    if( targetPT.isList() )
+      return false;
+
+    if( targetPT.isGeometry() )
+      return false;
+
+    final Class< ? > valueClass = targetPT.getValueClass();
+    if( TimeseriesLinkType.class == valueClass )
+      return false;
+
+    if( IObservation.class == valueClass )
+      return false;
+
+    return true;
   }
 
   private KalypsoNAMappingData getCatchmentTargetData( )
