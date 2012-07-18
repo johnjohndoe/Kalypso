@@ -113,6 +113,12 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
       /* Set the timestep. */
       m_timestep = opTimeStep.getTimestep();
       m_daterange = opTimeStep.getDateRange();
+
+      /* Set the timestamp. */
+      final FindTimestampOperation opTimestamp = new FindTimestampOperation( m_observation, m_timestep );
+      doExecute( opTimestamp, stati, monitor, Messages.getString( "ImportTimeseriesOperation_3" ) );//$NON-NLS-1$
+      m_timestamp = opTimestamp.getTimestamp();
+
       updateMetadata( m_observation );
 
       if( m_validator != null ) // only in case of time series import
@@ -120,11 +126,6 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
         m_validator.setTimestep( m_timestep );
         doExecute( m_validator, stati, monitor, Messages.getString( "ImportTimeseriesOperation_0" ) );//$NON-NLS-1$
       }
-
-      /* Set the timestamp. */
-      final FindTimestampOperation opTimestamp = new FindTimestampOperation( m_observation, m_timestep );
-      doExecute( opTimestamp, stati, monitor, Messages.getString( "ImportTimeseriesOperation_3" ) );//$NON-NLS-1$
-      m_timestamp = opTimestamp.getTimestamp();
 
       /* Check timestamp of "Tageszeitreihen" */
       final ValidateTageszeitreihenOperation opTageszeitreihe = new ValidateTageszeitreihenOperation( m_observation, m_timestep, m_timestamp );
@@ -161,10 +162,13 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
       if( IStatus.ERROR == status.getSeverity() )
         throw new CancelProcessingException( errorMessage );
     }
+    catch( final CancelProcessingException e )
+    {
+      throw e;
+    }
     catch( final Exception ex )
     {
-      if( ex instanceof CancelProcessingException )
-        throw (CancelProcessingException) ex;
+      // FIXME: really, really ugly: CoreException etc. catched like that: all information is lost!
 
       throw new CancelProcessingException( ex.getMessage() );
     }
@@ -176,6 +180,9 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     final MetadataList metadataList = observation.getMetadataList();
     MetadataHelper.setTimestep( metadataList, m_timestep );
     MetadataHelper.setTargetDateRange( metadataList, getDateRange() );
+
+    if( m_timestamp != null )
+      MetadataHelper.setTimestamp( metadataList, m_timestamp );
   }
 
   @Override

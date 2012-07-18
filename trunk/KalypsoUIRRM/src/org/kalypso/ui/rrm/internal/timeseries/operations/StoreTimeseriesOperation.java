@@ -245,5 +245,4 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
   {
     return m_timeseries;
   }
-
 }
