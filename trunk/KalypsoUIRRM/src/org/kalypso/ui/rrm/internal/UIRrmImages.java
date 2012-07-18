@@ -101,6 +101,9 @@ public class UIRrmImages
     PARAMETER_INPUT_TYPE_TEMPERATURE("icons/timeseries/inputParameterType_T.png"), //$NON-NLS-1$
     PARAMETER_INPUT_TYPE_RAINFALL("icons/timeseries/inputParameterType_N.png"), //$NON-NLS-1$
     PARAMETER_INPUT_TYPE_SEA_EVAPORATION("icons/timeseries/inputParameterType_E.png"), //$NON-NLS-1$
+    // TODO: check using discharge icons for now
+    PARAMETER_INPUT_TYPE_GAUGE("icons/timeseries/parameterType_Q.png"), //$NON-NLS-1$
+    MISSING_PARAMETER_INPUT_TYPE_GAUGE("icons/timeseries/missingParameterType_Q.png"), //$NON-NLS-1$
 
     PARAMETER_TYPE_BASE("icons/timeseries/parameterType"), //$NON-NLS-1$
     PARAMETER_TYPE_DISCHARGE("icons/timeseries/parameterType_Q.png"), //$NON-NLS-1$

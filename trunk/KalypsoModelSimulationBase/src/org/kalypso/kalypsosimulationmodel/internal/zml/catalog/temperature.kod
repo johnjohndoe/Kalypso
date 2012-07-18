@@ -77,10 +77,8 @@
           <Color>930030</Color>
         </FillColor>
       </PointStyle>
-
-
-
     </Styles>
+    
     <Layers>
       <Layer id="T">
         <Title>Temperatur</Title>
@@ -97,7 +95,6 @@
             </Styles>
           </DerivedLayer>
 
-
           <DerivedLayer id="Fehlwert" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:simulation:base:diagramm:temperature#Temperatur"></LayerReference>
@@ -110,7 +107,6 @@
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#fehlwert_point_0</StyleReference>
             </Styles>
           </DerivedLayer>
-
 
           <Layer id="Temperatur" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">

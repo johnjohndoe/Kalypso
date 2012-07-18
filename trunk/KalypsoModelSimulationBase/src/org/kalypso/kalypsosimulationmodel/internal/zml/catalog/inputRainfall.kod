@@ -23,7 +23,7 @@
             <Parameter name="content.niederschlag" value="true" />
           </Parameters>
         </Provider>
-        <Title>Messwerte: Niederschlag</Title>
+        <Title>Niederschlag (Eingangsdaten)</Title>
         <Layers>
           <Layer id="Niederschlag" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
@@ -31,7 +31,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Messwerte: Niederschlag</Title>
+            <Title>Niederschlag (Eingangsdaten)</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:rainfall:input#n_area_0</StyleReference>

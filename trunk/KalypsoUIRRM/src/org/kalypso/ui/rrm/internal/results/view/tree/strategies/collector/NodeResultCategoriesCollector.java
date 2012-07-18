@@ -53,7 +53,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
  */
 public class NodeResultCategoriesCollector extends AbstractResultCategoriesCollector implements IFeatureBindingCollectionVisitor<Node>
 {
-
   public NodeResultCategoriesCollector( final Map<String, Set<Feature>> categories )
   {
     super( categories );
@@ -66,5 +65,4 @@ public class NodeResultCategoriesCollector extends AbstractResultCategoriesColle
     if( StringUtils.isNotBlank( category ) )
       doAdd( category, node );
   }
-
 }

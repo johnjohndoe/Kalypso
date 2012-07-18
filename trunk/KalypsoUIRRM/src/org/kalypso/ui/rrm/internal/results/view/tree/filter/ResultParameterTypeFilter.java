@@ -87,8 +87,6 @@ public class ResultParameterTypeFilter extends AbstractResultViewerFilter
 
   private boolean doSelectNode( final TreeNode node, final Object type )
   {
-    // TODO remove level
-
     if( type instanceof RRM_RESULT )
       return doSelecType( node, (RRM_RESULT) type );
 

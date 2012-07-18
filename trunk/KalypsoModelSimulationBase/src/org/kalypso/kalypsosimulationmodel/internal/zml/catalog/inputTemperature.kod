@@ -26,7 +26,7 @@
     </Styles>
     <Layers>
       <Layer id="HYDROLOGY_INPUT_T">
-        <Title>Messwerte: Temperatur</Title>
+        <Title>Temperatur (Eingangsdaten)</Title>
         <Layers>
           <Layer id="Temperatur" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
@@ -34,7 +34,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Messwerte: Temperatur</Title>
+            <Title>Temperatur (Eingangsdaten)</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:temperature:input#t_line_0</StyleReference>

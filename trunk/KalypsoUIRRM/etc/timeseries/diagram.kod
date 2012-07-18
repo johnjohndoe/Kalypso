@@ -21,6 +21,8 @@
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:old#E" />
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:volume#V" />
 
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:discharge:input#HYDROLOGY_INPUT_GAUGE" />
+      <LayerReference url="urn:org:kalypso:simulation:base:diagramm:discharge:input#HYDROLOGY_INPUT_INFLOW" />
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:input:old#HYDROLOGY_INPUT_EVAPORATION" />
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:input#INPUT_E_LAND" />
       <LayerReference url="urn:org:kalypso:simulation:base:diagramm:evaporation:input#INPUT_E_WATER" />

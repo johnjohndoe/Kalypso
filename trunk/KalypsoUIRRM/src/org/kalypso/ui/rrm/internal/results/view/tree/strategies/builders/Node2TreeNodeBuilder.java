@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.strategies.builders;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
@@ -83,16 +80,7 @@ public class Node2TreeNodeBuilder implements IFeatureBindingCollectionVisitor<No
     builder.init( m_parent, UIRrmImages.DESCRIPTORS.NA_NODE, UIRrmImages.DESCRIPTORS.INVALID_MODEL_ELEMENT, UIRrmImages.DESCRIPTORS.EMPTY_NA_NODE, m_view );
 
     builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, node, RRM_RESULT.nodeGesamtknotenAbfluss ), m_view );
-
-    try
-    {
-      final URL context = node.getWorkspace().getContext();
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, node, node.getZuflussLink(), RRM_RESULT.inputInflow ), m_view );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, node, node.getZuflussLink(), RRM_RESULT.inputGauge ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, node, node.getPegelLink(), RRM_RESULT.inputInflow ), m_view );
   }
-
 }
