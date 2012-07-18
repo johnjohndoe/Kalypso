@@ -45,7 +45,6 @@ package org.kalypso.ui.rrm.internal.timeseries.operations;
  */
 public class CancelProcessingException extends Exception
 {
-
   private final String m_message;
 
   public CancelProcessingException( final String message )
