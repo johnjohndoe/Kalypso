@@ -126,6 +126,13 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
 
     final IComponent heightComponent = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IRecord minPoint = ProfilUtil.getMinPoint( profil, heightComponent );
+
+    if( minPoint == null )
+    {
+      // empty profile, ignore
+      return;
+    }
+
     final String srs = profileFeature.getSrsName();
     final GM_Point lowPoint = WspmGeometryUtilities.createLocation( profil, minPoint, srs );
 
