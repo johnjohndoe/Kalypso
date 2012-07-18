@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.strategies.builders;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.project.RrmCalculationResult;
 import org.kalypso.model.hydrology.project.RrmSimulation;
@@ -59,7 +56,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
  */
 public class Catchment2TreeNodeBuilder implements IFeatureBindingCollectionVisitor<Catchment>
 {
-
   private final RrmSimulation m_simulation;
 
   private final RrmCalculationResult m_calculation;
@@ -94,18 +90,8 @@ public class Catchment2TreeNodeBuilder implements IFeatureBindingCollectionVisit
     builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentGrundwasserstand ), m_view );
     builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, RRM_RESULT.catchmentEvapotranspiration ), m_view );
 
-    try
-    {
-      final URL context = catchment.getWorkspace().getContext();
-
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, catchment, catchment.getEvaporationLink(), RRM_RESULT.inputEvaporation ), m_view );
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, catchment, catchment.getPrecipitationLink(), RRM_RESULT.inputRainfall ), m_view );
-      builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, context, catchment, catchment.getTemperatureLink(), RRM_RESULT.inputTemperature ), m_view );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
-
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, catchment.getEvaporationLink(), RRM_RESULT.inputEvaporation ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, catchment.getPrecipitationLink(), RRM_RESULT.inputRainfall ), m_view );
+    builder.doAddNode( new HydrologyResultReference( m_simulation, m_calculation, catchment, catchment.getTemperatureLink(), RRM_RESULT.inputTemperature ), m_view );
   }
 }

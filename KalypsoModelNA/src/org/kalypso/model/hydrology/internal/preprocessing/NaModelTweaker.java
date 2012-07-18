@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing;
 
@@ -51,12 +51,11 @@ import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Before any ascii files are written, the modell.gml (calcCase.gml) gets tweaked by this class.<br/>
- * 
+ *
  * @author Gernot Belger
  */
 public class NaModelTweaker
@@ -73,7 +72,7 @@ public class NaModelTweaker
 
   /**
    * update workspace and do some tricks in order to fix some things the fortran-kernel can not handle for now
-   * 
+   *
    * @param workspace
    * @throws Exception
    */
@@ -89,19 +88,19 @@ public class NaModelTweaker
    * Updates workspace, so that interflow and channelflow dependencies gets optimized <br>
    * Groundwater flow can now run in opposite direction to channel flow.<br>
    * before: <code>
-   * 
+   *
    *     -C-o (existing channel c with catchment T and downstream node o)
    *      ^
    *      T
-   * 
+   *
    * </code> after: <code>
-   * 
-   *     -C-o 
+   *
+   *     -C-o
    *        |
    *        V<T  (new virtual channel with existing catchment T, downstream node o and no upstream node)
-   * 
+   *
    * </code>
-   * 
+   *
    * @param workspace
    */
   private void updateGWNet( )
@@ -127,19 +126,19 @@ public class NaModelTweaker
   /**
    * before: <br>
    * <code>
-   * 
+   *
    * Node1 O <---  O Node2
-   * 
+   *
    * </code> after: <br>
    * <code>
-   * 
+   *
    * Node1 O <--- newVChannel <-- newNode O <-- newVChannel
    *                                      A
    *                                      |
    *                                      O-- Node2
-   * 
+   *
    * </code>
-   * 
+   *
    * @param workspace
    * @throws Exception
    */
@@ -192,7 +191,7 @@ public class NaModelTweaker
    * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)|
    *                                          A- Q(constant)<br>
    * </code>
-   * 
+   *
    * @param workspace
    * @throws Exception
    */
@@ -202,14 +201,14 @@ public class NaModelTweaker
     final Node[] nodeArray = nodes.toArray( new Node[nodes.size()] );
     for( final Node node : nodeArray )
     {
-      final TimeseriesLinkType zuflussLink = node.getZuflussLink();
-      if( zuflussLink != null )
+      final ZmlLink zuflussLink = node.getZuflussLink();
+      if( zuflussLink.isLinkSet() )
       {
         final Node newNode = buildVChannelNet( node );
 
         // move zufluss-property to new node
         node.setZuflussLink( null );
-        newNode.setZuflussLink( zuflussLink );
+        newNode.setZuflussLink( zuflussLink.getTimeseriesLink() );
 
         final Boolean synteticZufluss = node.isSynteticZufluss();
         newNode.setIsSynteticZufluss( synteticZufluss );
@@ -230,7 +229,7 @@ public class NaModelTweaker
   /**
    * if results exists (from a former simulation) for a node, use this results as input, later the upstream nodes will
    * be ignored for calculation
-   * 
+   *
    * @param workspace
    * @throws Exception
    */
@@ -263,11 +262,11 @@ public class NaModelTweaker
 
   /**
    * before: <code>
-   * 
+   *
    *     o(existing)
-   * 
+   *
    * </code> after: <code>
-   * 
+   *
    *  |new Channel3|
    *     |
    *     V
@@ -278,7 +277,7 @@ public class NaModelTweaker
    *     |
    *     V
    *     o(existing)
-   * 
+   *
    * </code>
    */
   private Node buildVChannelNet( final Node existingNode ) throws Exception

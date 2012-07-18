@@ -45,12 +45,12 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}StorageChannel.
- * 
+ *
  * @author Gernot Belger
  */
 public class StorageChannel extends Channel implements IStorageChannel
@@ -97,9 +97,9 @@ public class StorageChannel extends Channel implements IStorageChannel
   }
 
   @Override
-  public TimeseriesLinkType getSeaEvaporationTimeseriesLink( )
+  public ZmlLink getSeaEvaporationTimeseriesLink( )
   {
-    return getProperty( PROPERTY_SEA_EVAPORATION_ZMLLINK, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROPERTY_SEA_EVAPORATION_ZMLLINK );
   }
 
   @Override

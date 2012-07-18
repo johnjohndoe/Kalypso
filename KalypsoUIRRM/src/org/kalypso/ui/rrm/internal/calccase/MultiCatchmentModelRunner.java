@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
@@ -70,15 +70,15 @@ import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * This class executes a catchment model with a multi generator.
- * 
+ *
  * @author Holger Albert
  */
 public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
@@ -174,7 +174,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
   /**
    * This function runs the linear sum generator.
-   * 
+   *
    * @param prefix
    *          This prefix is used when writing the timeseries.
    * @param simulation
@@ -243,7 +243,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
         final String id = catchment.getId();
 
         /* Get the link of the timeseries. */
-        TimeseriesLinkType link = null;
+        ZmlLink link = null;
         if( parameterType.equals( ITimeseriesConstants.TYPE_RAINFALL ) )
           link = catchment.getPrecipitationLink();
         else if( parameterType.equals( ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED ) )
@@ -254,7 +254,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
           throw new IllegalArgumentException( Messages.getString( "MultiCatchmentModelRunner_9" ) ); //$NON-NLS-1$
 
         /* Store the timeseries link. */
-        hash.put( id, link );
+        hash.put( id, link.getTimeseriesLink() );
       }
 
       /* Monitor. */
@@ -271,7 +271,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
    * This function saves the observations and adjusts the model.gml. For each catchment in the simulation.gml there must
    * be an observation in the observation hash. If for several catchments an equal observation exists, it will only be
    * saved for the first catchment and the created link will be set in all other catchments.
-   * 
+   *
    * @param simulation
    *          The simulation.
    * @param targetLink
