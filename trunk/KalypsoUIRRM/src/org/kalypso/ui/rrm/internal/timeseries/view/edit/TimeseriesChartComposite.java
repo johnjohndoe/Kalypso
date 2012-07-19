@@ -42,6 +42,10 @@ package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -58,15 +62,12 @@ import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler.DIRECTION;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
-import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
 import org.kalypso.zml.ui.chart.layer.selection.ZmlChartSelectionChangedHandler;
 import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
 import org.kalypso.zml.ui.chart.view.DiagramCompositeSelection;
 import org.kalypso.zml.ui.chart.view.HideUnusedLayersVisitor;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 
-import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
-import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
@@ -78,40 +79,51 @@ public class TimeseriesChartComposite extends Composite
 {
   private static final RGB CHART_BACKGROUND = new RGB( 255, 255, 255 );
 
-  protected ChartModel m_model = new ChartModel();
-
-  private ChartImageComposite m_chartComposite;
+  private final FormToolkit m_toolkit;
 
   private final IServiceLocator m_context;
 
+  private final URL m_template;
+
+  private final ChartModel m_model;
+
+  private ChartImageComposite m_chartComposite;
+
   private ChartSourceProvider m_chartSourceProvider;
+
+  /**
+   * The initialize job.
+   */
+  private Job m_initializeJob;
+
+  /**
+   * True, if the chart was initialized.
+   */
+  private boolean m_initialized;
+
+  /**
+   * This source is set, after the chart is initialized.
+   */
+  private IMultipleZmlSourceElement m_initializeSource;
 
   public TimeseriesChartComposite( final Composite parent, final FormToolkit toolkit, final IServiceLocator context, final URL template )
   {
     super( parent, SWT.NULL );
 
+    m_toolkit = toolkit;
     m_context = context;
+    m_template = template;
+    m_model = new ChartModel();
+    m_chartComposite = null;
+    m_chartSourceProvider = null;
+    m_initializeJob = null;
+    m_initialized = false;
+    m_initializeSource = null;
 
     GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( this );
-
-    init( template );
-    draw( toolkit );
-
+    // init();
+    draw();
     toolkit.adapt( this );
-  }
-
-  private void init( final URL template )
-  {
-    try
-    {
-      final ChartTypeHandler handler = new ChartTypeHandler( template );
-      ChartFactory.doConfiguration( m_model, handler.getReferenceResolver(), handler.getChartType(), ChartExtensionLoader.getInstance(), handler.getContext() );
-
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
   }
 
   public void deactivate( )
@@ -119,9 +131,75 @@ public class TimeseriesChartComposite extends Composite
     m_chartSourceProvider.dispose();
   }
 
-  private void draw( final FormToolkit toolkit )
+  public synchronized void setSelection( final IMultipleZmlSourceElement source )
   {
-    createToolbar( toolkit );
+    /* In this case, the chart is already initialized. */
+    if( m_initialized )
+    {
+      /* Only set the selection. */
+      setSelectionInternal( source );
+      return;
+    }
+
+    /* Store the selection, so that it can be set later. */
+    /* Case 1: Initialize job will be started, selection is set after it has finished. */
+    /* Case 2: Initialize job is already running, old selection is discarded and new one stored. */
+    m_initializeSource = source;
+
+    /* In this case, the chart is initializing. */
+    if( m_initializeJob != null )
+      return;
+
+    /* In this case, the chart must be initialized. */
+    m_initializeJob = new TimeseriesChartJob( m_template, m_model );
+    m_initializeJob.setUser( true );
+    m_initializeJob.addJobChangeListener( new JobChangeAdapter()
+    {
+      @Override
+      public void done( final IJobChangeEvent event )
+      {
+        initialized( event );
+      }
+    } );
+
+    /* Schedule the initialize job. */
+    m_initializeJob.schedule();
+  }
+
+  protected synchronized void initialized( final IJobChangeEvent event )
+  {
+    final Job job = event.getJob();
+    if( job != m_initializeJob )
+      return;
+
+    final IStatus result = job.getResult();
+    if( !result.isOK() )
+    {
+      System.out.println( "Could not initialize the chart: " + result.getMessage() );
+      return;
+    }
+
+    setSelectionInternal( m_initializeSource );
+
+    m_initializeJob = null;
+    m_initialized = true;
+    m_initializeSource = null;
+  }
+
+  private void setSelectionInternal( final IMultipleZmlSourceElement source )
+  {
+    DiagramCompositeSelection.doApply( m_model, source );
+
+    final ILayerManager layerManager = m_model.getLayerManager();
+    layerManager.accept( new HideUnusedLayersVisitor() );
+    layerManager.accept( new SingleGridVisibilityVisitor() );
+
+    m_model.autoscale();
+  }
+
+  private void draw( )
+  {
+    createToolbar();
 
     m_chartComposite = new ChartImageComposite( this, SWT.BORDER, m_model, CHART_BACKGROUND );
     m_chartComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -135,7 +213,7 @@ public class TimeseriesChartComposite extends Composite
     m_chartComposite.getPlotHandler().activatePlotHandler( handler );
   }
 
-  private void createToolbar( final FormToolkit toolkit )
+  private void createToolbar( )
   {
     final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
     final ToolBar control = manager.createControl( this );
@@ -149,17 +227,6 @@ public class TimeseriesChartComposite extends Composite
     }
 
     manager.update( true );
-    toolkit.adapt( control );
-  }
-
-  public void setSelection( final IMultipleZmlSourceElement source )
-  {
-    DiagramCompositeSelection.doApply( m_model, source );
-
-    final ILayerManager layerManager = m_model.getLayerManager();
-    layerManager.accept( new HideUnusedLayersVisitor() );
-    layerManager.accept( new SingleGridVisibilityVisitor() );
-
-    m_model.autoscale();
+    m_toolkit.adapt( control );
   }
 }
