@@ -46,7 +46,6 @@
         <Position>BOTTOM</Position>
         <PreferredAdjustment before="0" range="100" after="0" />
         <RendererRef ref="DateAxisRenderer" />
-        <!-- <AxisNumberRangeRestriction minRange="86400000" /> -->
         <AxisNumberRangeRestriction minRange="1000" />
       </Axis>
       <ScreenAxis id="screenAxisX">
@@ -55,6 +54,11 @@
       </ScreenAxis>
       <ScreenAxis id="screenAxisY">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Position>LEFT</Position>
+      </ScreenAxis>
+      <ScreenAxis id="screenAxisYinverted">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Direction>NEGATIVE</Direction>
         <Position>LEFT</Position>
       </ScreenAxis>
     </Mappers>

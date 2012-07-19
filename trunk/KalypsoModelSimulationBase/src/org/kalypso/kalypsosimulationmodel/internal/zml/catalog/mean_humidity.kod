@@ -43,14 +43,9 @@
       <Layer id="MEAN_HUMIDITY">
         <Title>Mittlere Luftfeuchte [%]</Title>
         <Layers>
-           <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
+          <DerivedLayer id="quality.humidity" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Stuetzstellen"></LayerReference>
-          </DerivedLayer>
-          
-          <DerivedLayer id="Fehlwert" legend="false" visible="false">
-            <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Fehlwerte"></LayerReference>
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#quality.barlayer"></LayerReference>
           </DerivedLayer>
 
           <Layer id="Luftfeuchte" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">

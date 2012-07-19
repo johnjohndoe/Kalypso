@@ -24,6 +24,7 @@
         </Provider>
         <Title>Grasverdunstung (Eingangsdaten)</Title>
         <Layers>
+          <!-- doesnt make sense for input data 
           <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Stuetzstellen"></LayerReference>
@@ -32,6 +33,7 @@
             <Description />
             <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Fehlwerte"></LayerReference>
           </DerivedLayer>
+          -->
 
           <Layer id="Evaporation" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
@@ -60,6 +62,8 @@
         </Provider>
         <Title>Seeverdunstung (Eingangsdaten)</Title>
         <Layers>
+        
+          <!-- doesnt make sense for input data
           <DerivedLayer id="StuetzstellenSee" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Stuetzstellen"></LayerReference>
@@ -68,6 +72,7 @@
             <Description />
             <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Fehlwerte"></LayerReference>
           </DerivedLayer>
+          -->
 
           <Layer id="EvaporationWater" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
