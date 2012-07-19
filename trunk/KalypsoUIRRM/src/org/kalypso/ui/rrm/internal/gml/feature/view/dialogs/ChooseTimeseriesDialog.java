@@ -131,7 +131,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
   @Override
   protected void createButtonsForButtonBar( final Composite parent )
   {
-    createButton( parent, BUTTON_RESET_ID, Messages.getString("ChooseTimeseriesDialog.0"), false ); //$NON-NLS-1$
+    createButton( parent, BUTTON_RESET_ID, Messages.getString( "ChooseTimeseriesDialog.0" ), false ); //$NON-NLS-1$
 
     createButton( parent, 5010, "", false ).setVisible( false ); //$NON-NLS-1$
 
@@ -213,7 +213,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
   private Control createDiagramView( final Composite body, final FormToolkit toolkit )
   {
     final IWorkbench context = PlatformUI.getWorkbench();
-    m_chart = new TimeseriesChartComposite( body, toolkit, context, TimeseriesChartComposite.class.getResource( "templates/diagram_view.kod" ) ); //$NON-NLS-1$
+    m_chart = new TimeseriesChartComposite( body, toolkit, context, TimeseriesChartComposite.class.getResource( "/etc/timeseries/diagram.kod" ) ); //$NON-NLS-1$
 
     if( Objects.isNotNull( m_selection ) )
     {
