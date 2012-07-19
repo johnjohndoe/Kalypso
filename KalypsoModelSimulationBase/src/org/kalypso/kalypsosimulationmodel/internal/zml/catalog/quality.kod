@@ -2,22 +2,22 @@
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="missing">
     <Styles>
-      <!-- N (bluish) styles (area) -->
-      <AreaStyle role="fehlwert_area_0">
-        <Alpha>99</Alpha>
+
+      <AreaStyle role="fehlwert_area">
+        <Alpha>FF</Alpha>
         <Fill>
           <ColorFill>
-            <Color>FF4911</Color>
+            <Color>FF2014</Color>
           </ColorFill>
         </Fill>
         <Stroke isVisible="false">
           <Width>0</Width>
-          <LineColor>093689</LineColor>
+          <LineColor>FF2014</LineColor>
         </Stroke>
       </AreaStyle>
 
-      <AreaStyle role="stuetzstelle_area_0">
-        <Alpha>99</Alpha>
+      <AreaStyle role="stuetzstelle_area">
+        <Alpha>FF</Alpha>
         <Fill>
           <ColorFill>
             <Color>5BFF74</Color>
@@ -37,7 +37,7 @@
           <LineColor>000000</LineColor>
         </Stroke>
         <FillColor>
-          <Color>DAFF6D</Color>
+          <Color>5BFF74</Color>
         </FillColor>
       </PointStyle>
 
@@ -49,7 +49,7 @@
           <LineColor>000000</LineColor>
         </Stroke>
         <FillColor>
-          <Color>DAFF6D</Color>
+          <Color>5BFF74</Color>
         </FillColor>
       </PointStyle>
 
@@ -76,41 +76,29 @@
           <Color>FFFFFF</Color>
         </FillColor>
       </PointStyle>
-
     </Styles>
 
     <Layers>
-      <Layer id="Fehlwerte" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.bar.value.quaility.layer">
+      <Layer id="quality.barlayer" visible="false" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
           <Parameters>
-            <Parameter name="content.fehlwert" value="true" />
-          </Parameters>
-        </Provider>
-        <Title>Fehlwerte</Title>
-        <Description />
-        <MapperRefs>
-          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#screenAxisY" />
-        </MapperRefs>
-        <Styles>
-          <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#fehlwert_area_0</StyleReference>
-        </Styles>
-      </Layer>
+            <Parameter name="fixedHeight" value="10" />
 
-      <Layer id="Stuetzstellen" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.bar.value.quaility.layer">
-          <Parameters>
-            <Parameter name="content.stuetzstelle" value="true" />
+            <Parameter name="content.quality" value="true" />
+
+            <Parameter name="styleFilter.fehlwert_area" value="org.kalypso.chart.layer.filter.stuetzstelle" />
+            <Parameter name="styleFilter.stuetzstelle_area" value="org.kalypso.chart.layer.filter.fehlwerte" />
           </Parameters>
         </Provider>
         <Title>Fehlwerte</Title>
         <Description />
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#screenAxisY" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#screenAxisYinverted" />
         </MapperRefs>
         <Styles>
-          <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#stuetzstelle_area_0</StyleReference>
+          <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#fehlwert_area</StyleReference>
+          <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#stuetzstelle_area</StyleReference>
         </Styles>
       </Layer>
     </Layers>

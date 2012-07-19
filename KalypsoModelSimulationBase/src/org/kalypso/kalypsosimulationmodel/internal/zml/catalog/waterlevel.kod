@@ -90,18 +90,6 @@
         </Provider>
         <Title>Wasserstand</Title>
         <Layers>
-          <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
-            <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:waterlevel#Wasserstand"></LayerReference>
-            <Parameters>
-              <Parameter name="content.stuetzstelle" value="true" />
-              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
-            </Parameters>
-            <Styles>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#stuetzstelle_point_0</StyleReference>
-            </Styles>
-          </DerivedLayer>
-
           <DerivedLayer id="Fehlwert" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:simulation:base:diagramm:waterlevel#Wasserstand"></LayerReference>
@@ -112,6 +100,18 @@
             <Styles>
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#fehlwert_singlepoint_0</StyleReference>
               <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#fehlwert_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
+          <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:waterlevel#Wasserstand"></LayerReference>
+            <Parameters>
+              <Parameter name="content.stuetzstelle" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#stuetzstelle_point_0</StyleReference>
             </Styles>
           </DerivedLayer>
 

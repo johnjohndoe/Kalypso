@@ -43,16 +43,11 @@
       <Layer id="H_SUNSHINE">
         <Title>Sonnenscheindauer [h/d]</Title>
         <Layers>
-          <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
+          <DerivedLayer id="quality.sunshine" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Stuetzstellen"></LayerReference>
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#quality.barlayer"></LayerReference>
           </DerivedLayer>
-
-          <DerivedLayer id="Fehlwert" legend="false" visible="false">
-            <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Fehlwerte"></LayerReference>
-          </DerivedLayer>
-
+        
           <Layer id="Sunshine" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
               <Parameters>

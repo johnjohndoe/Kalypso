@@ -48,13 +48,9 @@
         </Provider>
         <Title>Grasverdunstung</Title>
         <Layers>
-          <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
+          <DerivedLayer id="quality.e_land" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Stuetzstellen"></LayerReference>
-          </DerivedLayer>
-          <DerivedLayer id="Fehlwert" legend="false" visible="false">
-            <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Fehlwerte"></LayerReference>
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#quality.barlayer"></LayerReference>
           </DerivedLayer>
 
           <Layer id="Evaporation" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -86,13 +82,9 @@
         </Provider>
         <Title>Seeverdunstung</Title>
         <Layers>
-          <DerivedLayer id="StuetzstellenSee" legend="false" visible="false">
+          <DerivedLayer id="quality.e_water" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Stuetzstellen"></LayerReference>
-          </DerivedLayer>
-          <DerivedLayer id="FehlwertSee" legend="false" visible="false">
-            <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#Fehlwerte"></LayerReference>
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#quality.barlayer"></LayerReference>
           </DerivedLayer>
 
           <Layer id="EvaporationWater" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">

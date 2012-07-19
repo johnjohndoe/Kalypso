@@ -82,18 +82,6 @@
       <Layer id="MEAN_TEMPERATURE">
         <Title>Mittlere Temperature</Title>
         <Layers>
-            <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
-            <Description />
-            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:mean:temperature#temperature"></LayerReference>
-            <Parameters>
-              <Parameter name="content.stuetzstelle" value="true" />
-              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
-            </Parameters>
-            <Styles>
-              <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#stuetzstelle_point_0</StyleReference>
-            </Styles>
-          </DerivedLayer>
-
           <DerivedLayer id="Fehlwert" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:simulation:base:diagramm:mean:temperature#temperature"></LayerReference>
@@ -107,6 +95,17 @@
             </Styles>
           </DerivedLayer>
 
+          <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:mean:temperature#temperature"></LayerReference>
+            <Parameters>
+              <Parameter name="content.stuetzstelle" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#stuetzstelle_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
 
           <Layer id="temperature" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">

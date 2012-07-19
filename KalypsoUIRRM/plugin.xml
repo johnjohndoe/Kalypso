@@ -271,14 +271,14 @@
                  label="%command.label"
                  style="toggle"
                  tooltip="%command.tooltip">
-          <parameter
-                name="layer.parameter"
-                value="content.stuetzstelle">
-          </parameter>
-          <parameter
-                name="layer.filter"
-                value="org.kalypso.chart.layer.filter.stuetzstelle">
-          </parameter>
+              <parameter
+                    name="layer.parameter"
+                    value="content.stuetzstelle">
+              </parameter>
+              <parameter
+                    name="layer.filter"
+                    value="org.kalypso.chart.layer.filter.stuetzstelle">
+              </parameter>
           </command>
           <command
              commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
@@ -286,14 +286,26 @@
              label="%command.label.0"
              style="toggle"
              tooltip="%command.tooltip.0">
-          <parameter
-                name="layer.parameter"
-                value="content.fehlwert">
-          </parameter>
-          <parameter
-                name="layer.filter"
-                value="org.kalypso.chart.layer.filter.fehlwerte">
-          </parameter>
+              <parameter
+                    name="layer.parameter"
+                    value="content.fehlwert">
+              </parameter>
+              <parameter
+                    name="layer.filter"
+                    value="org.kalypso.chart.layer.filter.fehlwerte">
+              </parameter>
+          </command>
+
+          <command
+             commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
+             icon="icons/chart/quality.barLayer.png"
+             label="%org.kalypso.zml.ui.chart.layer.commands.change.visibility.label"
+             style="toggle"
+             tooltip="%org.kalypso.zml.ui.chart.layer.commands.change.visibility.tooltip">
+              <parameter
+                    name="layer.parameter"
+                    value="content.quality">
+              </parameter>
           </command>
            <separator
                  name="diagram.view.seperator2"
