@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -96,7 +97,8 @@ public class EditTimeseriesDialog extends ShowTimeseriesDialog
     final IStation station = (IStation) timeseries.getOwner();
 
     final String currentQuality = timeseries.getQuality();
-    final IValidator qualityValidator = new QualityUniqueValidator( station, currentQuality, timeseries );
+    final String ignoreQuality = currentQuality == null ? StringUtils.EMPTY : currentQuality;
+    final IValidator qualityValidator = new QualityUniqueValidator( station, ignoreQuality, timeseries );
 
     final TimeseriesPropertiesComposite properties = new TimeseriesPropertiesComposite( station, controlSection, m_timeseries, m_binding, false, qualityValidator );
     properties.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
