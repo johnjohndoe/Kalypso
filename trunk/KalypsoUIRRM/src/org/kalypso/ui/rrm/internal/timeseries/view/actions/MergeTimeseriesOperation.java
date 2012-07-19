@@ -48,6 +48,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.Minutes;
+import org.joda.time.Period;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -120,7 +125,9 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
       /* Validate timeseries. */
       final DateRange baseRange = baseVisitor.getDateRange();
       final DateRange importRange = importVisitor.getDateRange();
-      validateTimeseries( baseRange, importRange );
+      final Period baseTimestep = MetadataHelper.getTimestep( base.getMetadataList() );
+      final Period importTimestep = MetadataHelper.getTimestep( m_imported.getMetadataList() );
+      validateTimeseries( baseRange, baseTimestep, importRange, importTimestep );
 
       /* Merge and store the timeseries. */
       doMerge( stati, baseValues, importValues, baseRange );
@@ -134,14 +141,49 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
     return stati.asMultiStatus( Messages.getString( "MergeTimeseriesOperation_1" ) ); //$NON-NLS-1$
   }
 
-  private void validateTimeseries( final DateRange baseRange, final DateRange importRange ) throws CoreException
+  private void validateTimeseries( final DateRange baseRange, final Period baseTimestep, final DateRange importRange, final Period importTimestep ) throws CoreException
   {
-    // TODO
+    /* The timesteps must be equal. */
+    final Minutes baseMinutes = baseTimestep.toStandardMinutes();
+    final Minutes importMinutes = importTimestep.toStandardMinutes();
+    if( baseMinutes.getMinutes() != importMinutes.getMinutes() )
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "MergeTimeseriesOperation.0" ), baseTimestep.toString(), importTimestep.toString() ) ) ); //$NON-NLS-1$
+
+    /* Create the intervals. */
+    final Interval baseInterval = new Interval( new DateTime( baseRange.getFrom() ), new DateTime( baseRange.getTo() ) );
+    final Interval importInterval = new Interval( new DateTime( importRange.getFrom() ), new DateTime( importRange.getTo() ) );
+
+    /* Is the base range before the import range? */
+    /* Only a gap with one timestep is allowed. */
+    if( baseInterval.isBefore( importInterval ) )
+    {
+      final DateTime baseEnd = baseInterval.getEnd();
+      final DateTime importStart = importInterval.getStart();
+
+      final Period gap = new Period( baseEnd, importStart );
+      final Minutes gapMinutes = gap.toStandardMinutes();
+      if( gapMinutes.getMinutes() > 0 && baseMinutes.getMinutes() != gapMinutes.getMinutes() )
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "MergeTimeseriesOperation.1" ), baseMinutes.toString(), gapMinutes.toString() ) ) ); //$NON-NLS-1$
+    }
+
+    /* Is the base range after the import range? */
+    /* Only a gap with one timestep is allowed. */
+    if( baseInterval.isAfter( importInterval ) )
+    {
+      final DateTime importEnd = importInterval.getEnd();
+      final DateTime baseStart = baseInterval.getStart();
+
+      final Period gap = new Period( importEnd, baseStart );
+      final Minutes gapMinutes = gap.toStandardMinutes();
+      if( gapMinutes.getMinutes() > 0 && baseMinutes.getMinutes() != gapMinutes.getMinutes() )
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Messages.getString( "MergeTimeseriesOperation.1" ), baseMinutes.toString(), gapMinutes.toString() ) ) ); //$NON-NLS-1$
+    }
+
+    /* Here the intervals touch or overlap. */
   }
 
   private void doStoreObservation( final IStatusCollector stati, final ZmlLink link, final IObservation base, final Map<Date, TupleModelDataSet[]> values )
   {
-
     final MetadataList metadata = base.getMetadataList();
     final DataSetTupleModelBuilder builder = new DataSetTupleModelBuilder( metadata, values );
     stati.add( builder.execute( new NullProgressMonitor() ) );
