@@ -69,6 +69,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
@@ -181,10 +182,6 @@ public class ProfilOverlayLayer extends PointsLineLayer
     return new EditInfo( this, null, hoverFigure, dragStartData.getData(), getTooltipInfo( snapPoint ), curserPos );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.PointsLineLayer#executeDrop(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
@@ -211,7 +208,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     if( Math.abs( point.x - fePointScreen.x ) < 5 )
     {
       // force repaint
-      getEventHandler().fireLayerContentChanged( this );
+      getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
       return;
     }
     /**
@@ -300,7 +297,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     if( breiteComponent != null )
       getProfil().getResult().setSortComponents( new IComponent[] { breiteComponent } );
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   @Override

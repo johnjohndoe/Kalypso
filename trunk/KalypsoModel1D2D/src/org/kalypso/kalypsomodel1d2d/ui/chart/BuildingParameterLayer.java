@@ -37,6 +37,7 @@ import com.vividsolutions.jts.geom.LineString;
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
@@ -119,7 +120,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
 
     for( final Coordinate[] okLine : m_paintOkLines )
@@ -277,7 +278,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     m_tooltipPoint = point;
     m_tooltipRenderer.setTooltip( text );
 
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   public void delete( final EditInfo info )
@@ -289,7 +290,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     m_result.remove( record );
 
     updatePaintData();
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   private void updatePaintData( )
@@ -411,10 +412,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     return true;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IEditableChartLayer#edit(org.eclipse.swt.graphics.Point,
-   *      org.kalypso.chart.framework.model.layer.EditInfo)
-   */
   public EditInfo edit( final Point point, final EditInfo info )
   {
     // find real point from point
@@ -430,7 +427,8 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     record.setValue( m_valueComponent, yValue );
 
     updatePaintData();
-    getEventHandler().fireLayerContentChanged( this );
+
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
 
     return info;
   }
