@@ -121,7 +121,6 @@ public class TimeseriesChartComposite extends Composite
     m_initializeSource = null;
 
     GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( this );
-    // init();
     draw();
     toolkit.adapt( this );
   }
