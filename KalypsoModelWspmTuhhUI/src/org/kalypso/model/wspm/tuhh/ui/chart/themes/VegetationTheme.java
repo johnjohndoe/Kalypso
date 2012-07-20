@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -92,7 +93,7 @@ public class VegetationTheme extends AbstractProfilTheme
   {
     if( hint.isSelectionChanged() || hint.isPointValuesChanged() )
     {
-      fireLayerContentChanged();
+      fireLayerContentChanged( ContentChangeType.value );
     }
   }
 

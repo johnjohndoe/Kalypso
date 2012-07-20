@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.observation.result.IComponent;
 
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
@@ -92,7 +93,7 @@ public class RoughnessTheme extends AbstractProfilTheme
   {
     if( hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {
-      fireLayerContentChanged();
+      fireLayerContentChanged( ContentChangeType.value );
     }
   }
 

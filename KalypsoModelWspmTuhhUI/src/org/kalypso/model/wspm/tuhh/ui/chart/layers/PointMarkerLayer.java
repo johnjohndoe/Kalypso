@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -240,12 +241,12 @@ public class PointMarkerLayer extends AbstractProfilLayer
   {
     if( hint.isPointPropertiesChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
     {
-      getEventHandler().fireLayerContentChanged( this );
+      getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
     }
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
     final IComponent target = getTargetComponent();
