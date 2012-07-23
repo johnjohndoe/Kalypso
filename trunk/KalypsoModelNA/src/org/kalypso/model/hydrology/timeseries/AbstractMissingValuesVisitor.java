@@ -80,14 +80,17 @@ public abstract class AbstractMissingValuesVisitor
     final String dataSourceIdentifier = handler.getDataSourceIdentifier( sourceIndex.intValue() );
     if( dataSourceIdentifier.contains( AbstractObservationImporter.MISSING_VALUE_POSTFIX ) )
       return sourceIndex.intValue();
-    else if( dataSourceIdentifier.startsWith( "source://native.observation." ) ) //$NON-NLS-1$
+
+    if( dataSourceIdentifier.startsWith( "source://native.observation." ) ) //$NON-NLS-1$
     {
       final String missing = dataSourceIdentifier + AbstractObservationImporter.MISSING_VALUE_POSTFIX;
 
       return handler.addDataSource( missing, missing );
     }
 
-    return handler.addDataSource( IDataSourceItem.SOURCE_MANUAL_CHANGED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+    final String unknownAndMissing = IDataSourceItem.SOURCE_MISSING + AbstractObservationImporter.MISSING_VALUE_POSTFIX;
+
+    return handler.addDataSource( unknownAndMissing, unknownAndMissing );
   }
 
   protected boolean isMissingValue( final IObservationValueContainer container ) throws SensorException
