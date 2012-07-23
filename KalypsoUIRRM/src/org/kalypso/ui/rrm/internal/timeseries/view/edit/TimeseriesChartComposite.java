@@ -63,13 +63,11 @@ import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler.DIRECTION
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.ui.chart.layer.selection.ZmlChartSelectionChangedHandler;
-import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
 import org.kalypso.zml.ui.chart.view.DiagramCompositeSelection;
-import org.kalypso.zml.ui.chart.view.HideUnusedLayersVisitor;
+import org.kalypso.zml.ui.chart.view.ZmlDiagramLayerListener;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
@@ -106,6 +104,8 @@ public class TimeseriesChartComposite extends Composite
    */
   private IMultipleZmlSourceElement m_initializeSource;
 
+  private final ZmlDiagramLayerListener m_layerManagerListener;
+
   public TimeseriesChartComposite( final Composite parent, final FormToolkit toolkit, final IServiceLocator context, final URL template )
   {
     super( parent, SWT.NULL );
@@ -120,6 +120,8 @@ public class TimeseriesChartComposite extends Composite
     m_initialized = false;
     m_initializeSource = null;
 
+    m_layerManagerListener = new ZmlDiagramLayerListener( m_model );
+
     GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( this );
     draw();
     toolkit.adapt( this );
@@ -127,6 +129,8 @@ public class TimeseriesChartComposite extends Composite
 
   public void deactivate( )
   {
+    m_model.getLayerManager().getEventHandler().removeListener( m_layerManagerListener );
+
     m_chartSourceProvider.dispose();
   }
 
@@ -189,11 +193,8 @@ public class TimeseriesChartComposite extends Composite
   {
     DiagramCompositeSelection.doApply( m_model, source );
 
-    final ILayerManager layerManager = m_model.getLayerManager();
-    layerManager.accept( new HideUnusedLayersVisitor() );
-    layerManager.accept( new SingleGridVisibilityVisitor() );
-
-    m_model.autoscale();
+    /* initially update noData layer once */
+    m_layerManagerListener.reschedule();
   }
 
   private void draw( )
