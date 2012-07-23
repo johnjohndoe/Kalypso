@@ -113,10 +113,6 @@ public class WspmTuhhCalcJob implements ISimulation
     m_calcOutConsumer = calcOutConsumer;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
-   */
   @Override
   public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {

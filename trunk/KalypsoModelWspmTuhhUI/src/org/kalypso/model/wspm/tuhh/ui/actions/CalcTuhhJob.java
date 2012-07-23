@@ -66,12 +66,12 @@ public class CalcTuhhJob extends Job
   /**
    * The calculation.
    */
-  private TuhhCalculation m_calculation;
+  private final TuhhCalculation m_calculation;
 
   /**
    * The gml file.
    */
-  private IFile m_gmlFile;
+  private final IFile m_gmlFile;
 
   /**
    * The constructor.
@@ -81,7 +81,7 @@ public class CalcTuhhJob extends Job
    * @param gmlFile
    *          The gml file.
    */
-  public CalcTuhhJob( String name, TuhhCalculation calculation, IFile gmlFile )
+  public CalcTuhhJob( final String name, final TuhhCalculation calculation, final IFile gmlFile )
   {
     super( name );
 
@@ -89,11 +89,8 @@ public class CalcTuhhJob extends Job
     m_gmlFile = gmlFile;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  protected IStatus run( IProgressMonitor monitor )
+  protected IStatus run( final IProgressMonitor monitor )
   {
     try
     {
