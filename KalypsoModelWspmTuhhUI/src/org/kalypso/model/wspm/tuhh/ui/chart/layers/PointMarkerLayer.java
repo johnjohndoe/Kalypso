@@ -73,7 +73,8 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author kimwerner
@@ -91,7 +92,6 @@ public class PointMarkerLayer extends AbstractProfilLayer
     m_offset = offset;
 
     m_close = close;
-
   }
 
   @Override
@@ -99,11 +99,12 @@ public class PointMarkerLayer extends AbstractProfilLayer
   {
     final IProfil profil = getProfil();
     final IProfileRecord point = ProfileVisitors.findNearestPoint( profil, toNumeric( newPos ).getX() );
-    final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) );
+
+    final Rectangle hoverRect = getHoverRect( point );
 
     final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
     hoverFigure.setStyle( getLineStyleHover() );
-    hoverFigure.setRectangle( new Rectangle( x - 5, m_offset, 10, getTargetAxis().getScreenHeight() ) );
+    hoverFigure.setRectangle( hoverRect );
 
     return new EditInfo( this, null, hoverFigure, dragStartData.getData(), getTooltipInfo( point ), dragStartData.getPosition() );
   }
@@ -152,22 +153,28 @@ public class PointMarkerLayer extends AbstractProfilLayer
     {
       final IProfileRecord point = devider.getPoint();
       final Rectangle hoverRect = getHoverRect( point );
-      if( hoverRect == null )
+
+      if( hoverRect != null && hoverRect.contains( pos ) )
       {
-        continue;
+        final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
+        hoverFigure.setStyle( getLineStyleHover() );
+        hoverFigure.setRectangle( hoverRect );
+
+        return new EditInfo( this, hoverFigure, null, point.getIndex(), getTooltipInfo( point ), pos );
       }
-      if( hoverRect.contains( pos ) )
-        return new EditInfo( this, null, null, point.getIndex(), getTooltipInfo( point ), pos );
     }
+
     return null;
   }
 
   @Override
   public Rectangle getHoverRect( final IProfileRecord profilPoint )
   {
-    final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() );
-    final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() ) + m_offset;
+    final int bottom = getBottom() + 2;
+    final int top = getTop() - 2;
+
     final Double breite = ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoint );
+
     final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
     return new Rectangle( screenX - 5, top, 10, bottom - top );
   }
@@ -196,7 +203,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    return null;// new DataRange<Number>( 0, 1 );
+    return null;
   }
 
   @Override
@@ -255,15 +262,19 @@ public class PointMarkerLayer extends AbstractProfilLayer
       return;
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( target.getId() );
     final int len = deviders.length;
-    final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() );
-    final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() ) + m_offset;
+
+
+    final int bottom = getBottom();
+    final int top = getTop();
+
+    final IAxis domainAxis = getDomainAxis();
 
     final PolylineFigure pf = new PolylineFigure();
     pf.setStyle( getLineStyle() );
     for( int i = 0; i < len; i++ )
     {
       final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, deviders[i].getPoint() );
-      final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
+      final int screenX = domainAxis.numericToScreen( breite );
       final Point p1 = new Point( screenX, bottom );
       final Point p2 = new Point( screenX, top );
 
@@ -273,12 +284,29 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
     if( m_close && len > 1 )
     {
-      final int screenX1 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
-      final int screenX2 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[len - 1].getPoint() ) );
+      final int screenX1 = domainAxis.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
+      final int screenX2 = domainAxis.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[len - 1].getPoint() ) );
 
       pf.setPoints( new Point[] { new Point( screenX1, top ), new Point( screenX2, top ) } );
       pf.paint( gc );
     }
   }
 
+  private int getTop( )
+  {
+    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
+
+    final IAxis targetAxis = coordinateMapper.getTargetAxis();
+
+    return targetAxis.numericToScreen( 0 ) + m_offset;
+  }
+
+  private int getBottom( )
+  {
+    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
+
+    final IAxis targetAxis = coordinateMapper.getTargetAxis();
+
+    return targetAxis.numericToScreen( targetAxis.getScreenHeight() );
+  }
 }
