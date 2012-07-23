@@ -83,7 +83,6 @@ public class ValidateMissingTimestepsOperation implements ICoreRunnableWithProgr
 
   private final IObservation doValidate( final IObservation observation, final StatusCollector stati )
   {
-
     try
     {
       final ValidateTimestepsVisitor visitor = new ValidateTimestepsVisitor( m_timestep );
