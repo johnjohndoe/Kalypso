@@ -42,9 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.featureview;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -55,7 +53,6 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -84,12 +81,10 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
     public ChangeCheckstateAction( final String text, final boolean checkState )
     {
       super( text );
+
       m_checkState = checkState;
     }
 
-    /**
-     * @see org.eclipse.jface.action.Action#run()
-     */
     @Override
     public void run( )
     {
@@ -98,49 +93,36 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
     }
   }
 
-  private final Set<ModifyListener> m_listeners = new HashSet<ModifyListener>();
-
-  private CheckboxTableViewer m_viewer;
+  private CheckboxTableViewer m_linkChecklist;
 
   public ReachSegmentFeatureControl( final Feature feature, final IPropertyType pt )
   {
     super( feature, pt );
   }
 
-  public StructuredViewer getViewer( )
+  protected StructuredViewer getViewer( )
   {
-    return m_viewer;
+    return m_linkChecklist;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
+   * @return Always <code>true</code>
    */
   @Override
-  public void addModifyListener( final ModifyListener l )
+  public boolean isValid( )
   {
-    m_listeners.add( l );
+    // can never be invalid
+    return true;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void removeModifyListener( final ModifyListener l )
-  {
-    m_listeners.remove( l );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
-    m_viewer = CheckboxTableViewer.newCheckList( parent, style | SWT.CHECK | SWT.MULTI );
-    m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_viewer.setLabelProvider( new GMLLabelProvider() );
+    m_linkChecklist = CheckboxTableViewer.newCheckList( parent, style | SWT.MULTI );
+    m_linkChecklist.setContentProvider( new ArrayContentProvider() );
+    m_linkChecklist.setLabelProvider( new GMLLabelProvider() );
 
-    m_viewer.addCheckStateListener( new ICheckStateListener()
+    m_linkChecklist.addCheckStateListener( new ICheckStateListener()
     {
       @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
@@ -151,11 +133,12 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
       }
     } );
 
+    /* Configure context menu */
     final MenuManager manager = new MenuManager();
     manager.add( new ChangeCheckstateAction( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentFeatureControl.0" ), true ) ); //$NON-NLS-1$
     manager.add( new ChangeCheckstateAction( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentFeatureControl.1" ), false ) ); //$NON-NLS-1$
 
-    final Table table = m_viewer.getTable();
+    final Table table = m_linkChecklist.getTable();
     table.setMenu( manager.createContextMenu( table ) );
 
     updateControl();
@@ -165,11 +148,11 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
 
   protected void changeCheckState( final Object[] objects, final boolean check )
   {
-    final Collection<IProfileFeature> toToggle = new ArrayList<IProfileFeature>();
+    final Collection<IProfileFeature> toToggle = new ArrayList<>();
 
     for( final Object object : objects )
     {
-      final boolean checked = m_viewer.getChecked( object );
+      final boolean checked = m_linkChecklist.getChecked( object );
       if( checked != check )
       {
         toToggle.add( (IProfileFeature) object );
@@ -183,41 +166,29 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
-   */
-  @Override
-  public boolean isValid( )
-  {
-    return true;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
-   */
   @Override
   public void updateControl( )
   {
     final Feature feature = getFeature();
     if( !(feature instanceof TuhhReach) )
     {
-      m_viewer.setInput( null );
-      m_viewer.setCheckStateProvider( null );
+      m_linkChecklist.setInput( null );
+      m_linkChecklist.setCheckStateProvider( null );
     }
     else
     {
       final TuhhReach reach = (TuhhReach) feature;
-      m_viewer.setCheckStateProvider( new ReachSegmentCheckStateProvider( reach ) );
+      m_linkChecklist.setCheckStateProvider( new ReachSegmentCheckStateProvider( reach ) );
 
       final WspmWaterBody waterBody = reach.getWaterBody();
       if( waterBody == null )
       {
-        m_viewer.setInput( new Object[] {} );
+        m_linkChecklist.setInput( new Object[] {} );
       }
       else
       {
         final List< ? > profiles = (List< ? >) waterBody.getProperty( WspmWaterBody.MEMBER_PROFILE );
-        m_viewer.setInput( profiles );
+        m_linkChecklist.setInput( profiles );
       }
     }
   }
