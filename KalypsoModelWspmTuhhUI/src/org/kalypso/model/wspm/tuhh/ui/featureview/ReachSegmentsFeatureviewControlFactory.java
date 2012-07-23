@@ -53,10 +53,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ReachSegmentsFeatureviewControlFactory implements IExtensionsFeatureControlFactory2
 {
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2#createFeatureControl(org.eclipse.ui.forms.widgets.FormToolkit,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.util.Properties)
-   */
   @Override
   public IFeatureControl createFeatureControl( final FormToolkit toolkit, final Feature feature, final IPropertyType pt, final Properties arguments )
   {

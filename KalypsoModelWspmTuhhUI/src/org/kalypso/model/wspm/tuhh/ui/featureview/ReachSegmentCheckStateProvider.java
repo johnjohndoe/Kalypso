@@ -75,9 +75,6 @@ public class ReachSegmentCheckStateProvider implements ICheckStateProvider
     }
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
-   */
   @Override
   public boolean isChecked( final Object element )
   {
@@ -90,9 +87,6 @@ public class ReachSegmentCheckStateProvider implements ICheckStateProvider
     return m_profileHash.contains( profile );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
-   */
   @Override
   public boolean isGrayed( final Object element )
   {
