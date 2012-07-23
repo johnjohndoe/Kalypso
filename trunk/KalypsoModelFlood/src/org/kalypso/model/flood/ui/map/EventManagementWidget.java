@@ -667,9 +667,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     final Action addEventAction = new Action( "AddEvent", addEventID ) //$NON-NLS-1$
     {
-      /**
-       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-       */
       @Override
       public void runWithEvent( final Event event )
       {

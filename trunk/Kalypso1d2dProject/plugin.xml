@@ -120,27 +120,110 @@
    </extension>
    
    <extension point="org.eclipse.ui.commands">
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__WindDataLoad" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ProfileImport" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_showWinds" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultProcessHydropgrahs" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RCDef" name=""/>
-        <command id="workflow1d2d_ResultDataManager" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultMap" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultLengthSectionView" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultLengthSectionView" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__GenerateDifferenceResultView" name=""/>
-        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ManageResultHydrograph" name=""/>
-        
+        <category id="org.kalypso.model.1d2d.workflow" name="1D2D Workflow Commands"/>
+        <command id="org.kalypso.model.1d2d.workflow.Preprocessing" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Preprocessing.name" description="%org.kalypso.model.1d2d.workflow.Preprocessing.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.DataLoad" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.DataLoad.name" description="%org.kalypso.model.1d2d.workflow.DataLoad.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ElevLoad" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ElevLoad.name" description="%org.kalypso.model.1d2d.workflow.ElevLoad.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.WindDataLoad" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.WindDataLoad.name" description="%org.kalypso.model.1d2d.workflow.WindDataLoad.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.RoughLoad" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.RoughLoad.name" description="%org.kalypso.model.1d2d.workflow.RoughLoad.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.TimeSerLoad" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.TimeSerLoad.name" description="%org.kalypso.model.1d2d.workflow.TimeSerLoad.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ProfileImport" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ProfileImport.name" description="%org.kalypso.model.1d2d.workflow.ProfileImport.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.NetCstr" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.NetCstr.name" description="%org.kalypso.model.1d2d.workflow.NetCstr.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.Net1DRivGroup" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Net1DRivGroup.name" description="%org.kalypso.model.1d2d.workflow.Net1DRivGroup.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.Net1DImport" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Net1DImport.name" description="%org.kalypso.model.1d2d.workflow.Net1DImport.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.Net1DImportWspm" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Net1DImportWspm.name" description="%org.kalypso.model.1d2d.workflow.Net1DImportWspm.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap.name" description="%org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.Edit1DNet" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Edit1DNet.name" description="%org.kalypso.model.1d2d.workflow.Edit1DNet.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Edit1DNetParameters.name" description="%org.kalypso.model.1d2d.workflow.Edit1DNetParameters.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.Net2DGroup" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Net2DGroup.name" description="%org.kalypso.model.1d2d.workflow.Net2DGroup.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.Net2DImport" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Net2DImport.name" description="%org.kalypso.model.1d2d.workflow.Net2DImport.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.EditNet2D" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.EditNet2D.name" description="%org.kalypso.model.1d2d.workflow.EditNet2D.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.EditFlowRelations2D.name" description="%org.kalypso.model.1d2d.workflow.EditFlowRelations2D.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.Chan2DGen" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Chan2DGen.name" description="%org.kalypso.model.1d2d.workflow.Chan2DGen.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.BandGen" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.BandGen.name" description="%org.kalypso.model.1d2d.workflow.BandGen.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.AssignElevs" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.AssignElevs.name" description="%org.kalypso.model.1d2d.workflow.AssignElevs.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ShowWindData" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ShowWindData.name" description="%org.kalypso.model.1d2d.workflow.ShowWindData.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.TransGroup" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.TransGroup.name" description="%org.kalypso.model.1d2d.workflow.TransGroup.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ContilineGen" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ContilineGen.name" description="%org.kalypso.model.1d2d.workflow.ContilineGen.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.BCDef" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.BCDef.name" description="%org.kalypso.model.1d2d.workflow.BCDef.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.SetEltLineJunction" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.SetEltLineJunction.name" description="%org.kalypso.model.1d2d.workflow.SetEltLineJunction.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.SetEltLineTrans" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.SetEltLineTrans.name" description="%org.kalypso.model.1d2d.workflow.SetEltLineTrans.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.CalculationUnit" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.CalculationUnit.name" description="%org.kalypso.model.1d2d.workflow.CalculationUnit.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.RoughMod" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.RoughMod.name" description="%org.kalypso.model.1d2d.workflow.RoughMod.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ClassDefGroup" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ClassDefGroup.name" description="%org.kalypso.model.1d2d.workflow.ClassDefGroup.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.RCDef" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.RCDef.name" description="%org.kalypso.model.1d2d.workflow.RCDef.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.DataExport" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.DataExport.name" description="%org.kalypso.model.1d2d.workflow.DataExport.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.NetExport" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.NetExport.name" description="%org.kalypso.model.1d2d.workflow.NetExport.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.Processing" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Processing.name" description="%org.kalypso.model.1d2d.workflow.Processing.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.CalcSet" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.CalcSet.name" description="%org.kalypso.model.1d2d.workflow.CalcSet.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.StartCalculationWithProblemsView" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.StartCalculationWithProblemsView.name" description="%org.kalypso.model.1d2d.workflow.StartCalculationWithProblemsView.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.Postprocessing" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Postprocessing.name" description="%org.kalypso.model.1d2d.workflow.Postprocessing.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ResultDataManager" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ResultDataManager.name" description="%org.kalypso.model.1d2d.workflow.ResultDataManager.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ResultMapGroup" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ResultMapGroup.name" description="%org.kalypso.model.1d2d.workflow.ResultMapGroup.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ConfigureResultMap" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ConfigureResultMap.name" description="%org.kalypso.model.1d2d.workflow.ConfigureResultMap.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ShowResultMap" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ShowResultMap.name" description="%org.kalypso.model.1d2d.workflow.ShowResultMap.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ManageResultHydrograph" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ManageResultHydrograph.name" description="%org.kalypso.model.1d2d.workflow.ManageResultHydrograph.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ResultLengthSectionViewGroup" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ResultLengthSectionViewGroup.name" description="%org.kalypso.model.1d2d.workflow.ResultLengthSectionViewGroup.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ConfigureResultLengthSectionView" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ConfigureResultLengthSectionView.name" description="%org.kalypso.model.1d2d.workflow.ConfigureResultLengthSectionView.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView.name" description="%org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.DifferenceResultViewGroup" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.DifferenceResultViewGroup.name" description="%org.kalypso.model.1d2d.workflow.DifferenceResultViewGroup.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.GenerateDifferenceResultView" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.GenerateDifferenceResultView.name" description="%org.kalypso.model.1d2d.workflow.GenerateDifferenceResultView.description"/>
+   </extension>
+   
+   <extension point="org.eclipse.ui.commandImages">
+        <!--
+        <image commandId="org.kalypso.model.1d2d.workflow.Preprocessing" icon="icons/workflow/"/>
+        -->
+        <image commandId="org.kalypso.model.1d2d.workflow.DataLoad" icon="icons/workflow/DataLoad.gif"/>
+        <!--
+        <image commandId="org.kalypso.model.1d2d.workflow.ElevLoad" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.WindDataLoad" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.RoughLoad" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.TimeSerLoad" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ProfileImport" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.NetCstr" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Net1DRivGroup" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Net1DImport" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Net1DImportWspm" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Edit1DNet" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Net2DGroup" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Net2DImport" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.EditNet2D" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Chan2DGen" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.BandGen" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.AssignElevs" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ShowWindData" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.TransGroup" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ContilineGen" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.BCDef" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.SetEltLineJunction" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.SetEltLineTrans" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.CalculationUnit" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.RoughMod" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ClassDefGroup" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.RCDef" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.DataExport" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.NetExport" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Processing" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.CalcSet" icon="icons/workflow/"/>
+        -->
+        <image commandId="org.kalypso.model.1d2d.workflow.StartCalculationWithProblemsView" icon="icons/workflow/StartCalculationWithProblemsView.gif"/>
+        <!--
+        <image commandId="org.kalypso.model.1d2d.workflow.Postprocessing" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ResultDataManager" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ResultMapGroup" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ConfigureResultMap" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ShowResultMap" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ManageResultHydrograph" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ResultLengthSectionViewGroup" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ConfigureResultLengthSectionView" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.DifferenceResultViewGroup" icon="icons/workflow/"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.GenerateDifferenceResultView" icon="icons/workflow/"/>
+        -->
    </extension>
 
      <extension point="org.eclipse.ui.handlers">
@@ -149,29 +232,29 @@
  	 <!--*** import handlers ***-->
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad"/>
+	           commandId="org.kalypso.model.1d2d.workflow.ElevLoad"/>
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWindDataHandler"
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__WindDataLoad"/>
+	           commandId="org.kalypso.model.1d2d.workflow.WindDataLoad"/>
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler"
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ProfileImport"/>
+	           commandId="org.kalypso.model.1d2d.workflow.ProfileImport"/>
 
  	 <!--*** general net editing handler ***-->
 
  	 <!--*** 1D-editing handlers ***-->
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler"
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm"/>
+	           commandId="org.kalypso.model.1d2d.workflow.Net1DImportWspm"/>
 	     <handler
                class="org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler"
-               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap"/>
+               commandId="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap"/>
 
  	 <!--*** 2D-editing handlers ***-->
  	      <!-- FIXME: remove for now -->
  	      <!--
 	     <handler
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net2DImport">
+	           commandId="org.kalypso.model.1d2d.workflow.Net2DImport">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -184,7 +267,7 @@
 	     -->
 
 	     <handler
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
+	           commandId="org.kalypso.model.1d2d.workflow.Chan2DGen">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -195,7 +278,7 @@
            </class>
 	     </handler>
 	     <handler
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen">
+	           commandId="org.kalypso.model.1d2d.workflow.BandGen">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -207,7 +290,7 @@
 	     </handler>
 
 	     <handler
-	     	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
+	     	   commandId="org.kalypso.model.1d2d.workflow.AssignElevs">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -219,7 +302,7 @@
 	     </handler>
 	     
 	     <handler
-	     	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_showWinds">
+	     	   commandId="org.kalypso.model.1d2d.workflow.ShowWindData">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -232,7 +315,7 @@
 
 		<!-- // Handler for "Berechnungseinheiten Modellieren"-->
 	     <handler
-	       	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
+	       	   commandId="org.kalypso.model.1d2d.workflow.CalculationUnit">
                <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -245,7 +328,7 @@
 
 	     <!-- // Handler for "Start Calculation Widget"-->
 	     <handler
-	       	  commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView">
+	       	  commandId="org.kalypso.model.1d2d.workflow.StartCalculationWithProblemsView">
                <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -256,35 +339,31 @@
            </class>
 	     </handler>
        <handler
-             class="org.kalypso.kalypso1d2d.pjt.actions.ResultProcessHydrographsHandler"
-             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultProcessHydropgrahs">
-       </handler>
-       <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler"
-             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RCDef">
+             commandId="org.kalypso.model.1d2d.workflow.RCDef">
        </handler>
        <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler"
-             commandId="workflow1d2d_ResultDataManager">
+             commandId="org.kalypso.model.1d2d.workflow.ResultDataManager">
        </handler>
        <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultMapHandler"
-             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultMap">
+             commandId="org.kalypso.model.1d2d.workflow.ConfigureResultMap">
        </handler>
        <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler"
-             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultLengthSectionView">
+             commandId="org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView">
        </handler>
        <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler"
-             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultLengthSectionView">
+             commandId="org.kalypso.model.1d2d.workflow.ConfigureResultLengthSectionView">
        </handler>
        <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler"
-             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__GenerateDifferenceResultView">
+             commandId="org.kalypso.model.1d2d.workflow.GenerateDifferenceResultView">
        </handler>
        <handler
-             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ManageResultHydrograph">
+             commandId="org.kalypso.model.1d2d.workflow.ManageResultHydrograph">
           <class
                 class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
              <parameter
