@@ -841,6 +841,17 @@
                 value="org.kalypso.chart.layer.filter.fehlwerte">
           </parameter>
        </command>
+      <command
+         commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
+         icon="icons/chart/quality.barLayer.png"
+         label="%org.kalypso.zml.ui.chart.layer.commands.change.visibility.label"
+         style="toggle"
+         tooltip="%org.kalypso.zml.ui.chart.layer.commands.change.visibility.tooltip">
+          <parameter
+                name="layer.parameter"
+                value="content.quality">
+          </parameter>
+      </command>
        <separator
              name="rrm.chart.seperator.2"
              visible="true">
