@@ -46,7 +46,8 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.AddLinkCommand;
-import org.kalypso.ogc.gml.command.RemoveLinkCommand;
+import org.kalypso.ogc.gml.command.FeatureLinkUtils;
+import org.kalypso.ogc.gml.command.RemoveMemberCommand;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -136,7 +137,9 @@ public class LightRelationType implements IEditRelationType
   @Override
   public ICommand getRemoveCommand( final Feature sourceFeature, final Feature targetFeature )
   {
-    return new RemoveLinkCommand( sourceFeature, getLink(), targetFeature );
+    final Object member = FeatureLinkUtils.findMember( sourceFeature, getLink(), targetFeature );
+
+    return new RemoveMemberCommand( sourceFeature, getLink(), member );
   }
 
   @Override
