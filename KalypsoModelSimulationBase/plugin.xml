@@ -102,14 +102,6 @@
       </feature>
    </extension>
 
-    <extension point="org.eclipse.ui.newWizards">
-            <wizard
-            class="org.kalypso.kalypsosimulationmodel.internal.ui.map.ImportBaseMapWizard"
-            icon="icons/kalypso_gmt.gif"
-            id="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
-            name="BaseMap"
-            project="false"/>
-    </extension>
     <extension point="org.kalypso.ui.addLayerWizard">
        <wizard
              class="org.kalypso.kalypsosimulationmodel.internal.ui.map.ImportShapeWorkflowWizard"
