@@ -42,7 +42,6 @@ package org.kalypso.ui.rrm.internal.map.editRelation;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.command.FeatureLinkUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -68,7 +67,7 @@ public class RemoveHeavyRelationCommand implements ICommand
 
   private final IRelationType m_linkName2;
 
-  private final int m_pos1;
+  private final int m_pos;
 
   public RemoveHeavyRelationCommand( final GMLWorkspace workspace, final Feature srcFE, final IRelationType linkName1, final Feature bodyFE, final IRelationType linkName2, final Feature destFE )
   {
@@ -79,7 +78,16 @@ public class RemoveHeavyRelationCommand implements ICommand
     m_linkName1 = linkName1;
     m_linkName2 = linkName2;
 
-    m_pos1 = FeatureLinkUtils.indexOfLink( srcFE, linkName1, bodyFE );
+    m_pos = indexOfMember( srcFE, linkName1, bodyFE );
+  }
+
+  private int indexOfMember( final Feature srcFE, final IRelationType linkRelation, final Feature inlineElement )
+  {
+    if( !linkRelation.isList() )
+      return -1;
+
+    final IFeatureBindingCollection<Feature> memberList = srcFE.getMemberList( linkRelation );
+    return memberList.indexOf( inlineElement );
   }
 
   @Override
@@ -119,7 +127,7 @@ public class RemoveHeavyRelationCommand implements ICommand
     if( m_linkName1.isList() )
     {
       final IFeatureBindingCollection<Feature> memberList = m_srcFE.getMemberList( m_linkName1 );
-      memberList.add( m_pos1, m_bodyFE );
+      memberList.add( m_pos, m_bodyFE );
     }
     else
       m_srcFE.setProperty( m_linkName1, m_bodyFE );

@@ -62,7 +62,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This function property creates 'arrows' from links beetween features.
- * 
+ *
  * @author Andreas von Dömming
  * @author Gernot Belger
  */
@@ -131,8 +131,11 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
       /* Could be another workspace */
       final GMLWorkspace targetWorkspace = feature.getWorkspace();
       final IRelationType link2 = (IRelationType) bodyFeature.getFeatureType().getProperty( m_link2Name );
-      final Feature[] target2Features = targetWorkspace.resolveLinks( bodyFeature, link2 );
-      result.addAll( Arrays.asList( target2Features ) );
+      if( link2 != null )
+      {
+        final Feature[] target2Features = targetWorkspace.resolveLinks( bodyFeature, link2 );
+        result.addAll( Arrays.asList( target2Features ) );
+      }
     }
     return result.toArray( new Feature[result.size()] );
   }
