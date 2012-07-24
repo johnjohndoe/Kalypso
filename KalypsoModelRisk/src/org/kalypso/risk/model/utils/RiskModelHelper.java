@@ -144,7 +144,7 @@ public class RiskModelHelper
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param sldFile
@@ -232,7 +232,7 @@ public class RiskModelHelper
 
   /**
    * creates a map layer for the grid collection
-   * 
+   *
    * @param parentKalypsoTheme
    *          {@link AbstractCascadingLayerTheme} in which we add the new theme layer
    * @param coverageCollection
@@ -281,9 +281,9 @@ public class RiskModelHelper
   }
 
   /**
-   * 
+   *
    * creates the land use raster files. The grid cells get the ordinal number of the the land use class.
-   * 
+   *
    * @param scenarioFolder
    *          relative path needed for the output file path to append on
    * @param inputCoverages
@@ -376,7 +376,7 @@ public class RiskModelHelper
 
   /**
    * get the water depth raster with the greatest annuality
-   * 
+   *
    * @param waterDepthCoverageCollection
    *          raster collection
    * @return {@link IAnnualCoverageCollection} with greatest return period value
@@ -398,7 +398,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layer, add the new one and modifies the style according to the max values
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -427,7 +427,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layers and adds the new ones
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -585,7 +585,6 @@ public class RiskModelHelper
     final List<Style> styleList = layer.getStyle();
     final Style style = new Style();
     style.setLinktype( "sld" ); //$NON-NLS-1$
-    style.setStyle( "Kalypso style" ); //$NON-NLS-1$
     style.setActuate( "onRequest" ); //$NON-NLS-1$
     style.setHref( "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
     style.setType( "simple" ); //$NON-NLS-1$
@@ -596,9 +595,9 @@ public class RiskModelHelper
 
   /**
    * Import new events into the risk model.<br>
-   * 
-   * The parameters 'names', 'returnPeriods', 'grids' must eb of the same size.
-   * 
+   *
+   * The parameters 'names', 'returnPeriods', 'grids' must be of the same size.
+   *
    * @param names
    *          The names of the events to import
    * @param descriptions
@@ -705,7 +704,7 @@ public class RiskModelHelper
 
   /**
    * Finds and activates the event theme if present.
-   * 
+   *
    * @return <code>true</code>, if the theme was successfully activated.
    */
   public static boolean activateEventTheme( final IMapPanel mapPanel )
