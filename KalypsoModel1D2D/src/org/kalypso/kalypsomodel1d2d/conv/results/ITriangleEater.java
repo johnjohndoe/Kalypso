@@ -47,7 +47,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 
 /**
  * @author Thomas Jung
- * 
  */
 public interface ITriangleEater
 {

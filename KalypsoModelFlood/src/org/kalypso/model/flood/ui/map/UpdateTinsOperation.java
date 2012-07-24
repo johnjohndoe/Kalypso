@@ -164,6 +164,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     String desc;
     String crs;
     GM_TriangulatedSurface gmSurface = null;
+    // FIXME: bad dependency to 1d2d needs refaktoring!
     TriangulatedSurfaceTriangleEater eater;
     GMLWorkspace sourceWorkspace = null;
 
