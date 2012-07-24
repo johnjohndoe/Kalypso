@@ -93,7 +93,7 @@ public class KalypsoHydrologyResults
     storageEvaporation("Verdunstung", UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_EVAPORATION, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_EVAPORATION, TSResultDescriptor.spv, RRM_RESULT_TYPE.eStorage), //$NON-NLS-1$
     // missing: sph
     storageSpeicherUeberlauf(
-        Messages.getString( "KalypsoHydrologyResults_13" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, TSResultDescriptor.sub, RRM_RESULT_TYPE.eStorage), //$NON-NLS-1$
+        Messages.getString( "KalypsoHydrologyResults_13" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_DISCHARGE, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_DISCHARGE, TSResultDescriptor.sup, RRM_RESULT_TYPE.eStorage), //$NON-NLS-1$
     storageFuellvolumen(
         Messages.getString( "KalypsoHydrologyResults_12" ), UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_VOLUME, UIRrmImages.DESCRIPTORS.MISSING_PARAMETER_TYPE_VOLUME, TSResultDescriptor.spi, RRM_RESULT_TYPE.eStorage), //$NON-NLS-1$
 

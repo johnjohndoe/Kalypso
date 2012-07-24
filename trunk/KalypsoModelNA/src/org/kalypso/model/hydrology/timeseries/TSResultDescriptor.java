@@ -90,7 +90,7 @@ public enum TSResultDescriptor
   // REMARK: nicht in Oberfläche, wird lt. Niloufar nicht gebraucht
   sph(StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_NORMNULL, 1.0d, "Wasserspiegelhoehe", Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.20" )), //$NON-NLS-1$ //$NON-NLS-2$
 
-  sub(StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_RUNOFF, 1.0d, "Speicherueberlauf", Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.25" )), //$NON-NLS-1$ //$NON-NLS-2$
+  sup(StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_RUNOFF, 1.0d, "Speicherueberlauf", Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.25" )), //$NON-NLS-1$ //$NON-NLS-2$
   spi(StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_VOLUME, 1000000.0d, "Fuellvolumen", Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.19" )); //$NON-NLS-1$ //$NON-NLS-2$
 
   /*
