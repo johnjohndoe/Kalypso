@@ -58,6 +58,8 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   private final URL m_sldContent;
 
+  private IRunoffEvent m_newEvent;
+
   public AddEventOperation( final String eventName, final IFloodModel model, final IFolder eventsFolder, final IKalypsoCascadingTheme wspThemes, final IScenarioDataProvider provider, final URL sldContent )
   {
     m_eventName = eventName;
@@ -99,9 +101,9 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       final IFeatureType featureType = parentRelation.getTargetFeatureType();
       final Feature newEventFeature = workspace.createFeature( parentFeature, parentRelation, featureType, 1 );
 
-      final IRunoffEvent newEvent = (IRunoffEvent) newEventFeature.getAdapter( IRunoffEvent.class );
-      newEvent.setName( m_eventName );
-      newEvent.setDataPath( dataPath );
+      m_newEvent = (IRunoffEvent) newEventFeature.getAdapter( IRunoffEvent.class );
+      m_newEvent.setName( m_eventName );
+      m_newEvent.setDataPath( dataPath );
 
       /* Create new folder and fill with defaults */
       final IFolder newEventFolder = m_eventsFolder.getFolder( dataPath );
@@ -113,8 +115,8 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
       // - check if theme is already there
       // - add theme to map
-      checkSLDFile( newEvent, newEventFolder, m_sldContent );
-      addEventThemes( m_wspThemes, newEvent );
+      checkSLDFile( m_newEvent, newEventFolder, m_sldContent );
+      addEventThemes( m_wspThemes, m_newEvent );
 
       final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, newEventFeature, null, true );
       workspace.postCommand( command );
@@ -279,4 +281,8 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     return "../events/" + event.getDataPath().toPortableString() + "/wsp.sld"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
+  public IRunoffEvent getNewEvent( )
+  {
+    return m_newEvent;
+  }
 }

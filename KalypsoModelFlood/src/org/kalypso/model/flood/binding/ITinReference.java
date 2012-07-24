@@ -63,9 +63,6 @@ public interface ITinReference extends Feature
   {
     gml
     {
-      /**
-       * @see java.lang.Enum#toString()
-       */
       @Override
       public String toString( )
       {
@@ -74,9 +71,6 @@ public interface ITinReference extends Feature
     },
     hmo
     {
-      /**
-       * @see java.lang.Enum#toString()
-       */
       @Override
       public String toString( )
       {
@@ -85,9 +79,6 @@ public interface ITinReference extends Feature
     },
     shape
     {
-      /**
-       * @see java.lang.Enum#toString()
-       */
       @Override
       public String toString( )
       {

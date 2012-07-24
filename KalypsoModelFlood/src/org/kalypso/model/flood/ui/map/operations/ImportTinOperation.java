@@ -84,6 +84,8 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
 
   private final IMapPanel m_mapPanel;
 
+  private ITinReference[] m_tinRefs;
+
   /**
    * @param mapPanel
    *            After importing, the exctent of this mapPanel will be set to the bounding box of the imported tins. May
@@ -96,18 +98,12 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
     m_mapPanel = mapPanel;
   }
 
-  /**
-   * @see org.kalypso.core.gml.provider.IGmlSourceRunnableWithProgress#setGmlSource(org.kalypso.core.gml.provider.IGmlSource[])
-   */
   @Override
   public void setGmlSource( final IGmlSource[] sources )
   {
     m_sources = sources;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
@@ -115,7 +111,7 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
 
     /* Add sources as new tin references */
     progress.subTask( Messages.getString("org.kalypso.model.flood.ui.map.operations.ImportTinOperation.1") ); //$NON-NLS-1$
-    final ITinReference[] tinRefs = new ITinReference[m_sources.length];
+    m_tinRefs = new ITinReference[m_sources.length];
     final Feature[] changedFeatures = new Feature[m_sources.length];
 
     for( int i = 0; i < m_sources.length; i++ )
@@ -129,7 +125,7 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
       tinRef.setSourceFeaturePath( source.getPath() );
       tinRef.setSourceType( typeForSource( source ) );
 
-      tinRefs[i] = tinRef;
+      m_tinRefs[i] = tinRef;
       changedFeatures[i] = tinRef;
     }
     ProgressUtilities.worked( progress, 20 );
@@ -144,7 +140,7 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
     // m_provider.saveModel( IFloodModel.class, progress.newChild( 20 ) );
     /* update tins */
     progress.subTask( Messages.getString("org.kalypso.model.flood.ui.map.operations.ImportTinOperation.2") ); //$NON-NLS-1$
-    final UpdateTinsOperation updateOp = new UpdateTinsOperation( tinRefs, m_provider );
+    final UpdateTinsOperation updateOp = new UpdateTinsOperation( m_tinRefs, m_provider );
     updateOp.execute( progress.newChild( 60 ) );
 
     /* Jump to imported tins */
@@ -172,10 +168,6 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
     return SOURCETYPE.gml;
   }
 
-  /**
-   * @see org.kalypso.core.gml.provider.IGmlSourceRunnableWithProgress#handleResult(org.eclipse.swt.widgets.Shell,
-   *      org.eclipse.core.runtime.IStatus)
-   */
   @Override
   public boolean handleResult( final Shell shell, final IStatus resultStatus )
   {
@@ -183,5 +175,10 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
       KalypsoCorePlugin.getDefault().getLog().log( resultStatus );
     ErrorDialog.openError( shell, Messages.getString("org.kalypso.model.flood.ui.map.operations.ImportTinOperation.6"), Messages.getString("org.kalypso.model.flood.ui.map.operations.ImportTinOperation.7"), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
     return resultStatus.isOK();
+  }
+
+  public ITinReference[] getNewTinRefs( )
+  {
+    return m_tinRefs;
   }
 }
