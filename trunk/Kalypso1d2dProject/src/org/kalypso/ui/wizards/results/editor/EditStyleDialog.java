@@ -105,13 +105,12 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
 import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
-import org.kalypsodeegree_impl.graphics.sld.PolygonColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class EditStyleDialog extends TitleAreaDialog
 {
@@ -363,8 +362,8 @@ public class EditStyleDialog extends TitleAreaDialog
             }
             final BigDecimal width = m_maxValue.subtract( m_minValue ).divide( new BigDecimal( 4 ), BigDecimal.ROUND_HALF_UP ).setScale( 3, BigDecimal.ROUND_HALF_UP );
 
-            final PolygonColorMapEntry_Impl fromEntry = StyleFactory.createPolygonColorMapEntry( fromColor, fromColor, m_minValue, m_minValue.add( width ) );
-            final PolygonColorMapEntry_Impl toEntry = StyleFactory.createPolygonColorMapEntry( toColor, toColor, m_maxValue.subtract( width ), m_maxValue );
+            final PolygonColorMapEntry fromEntry = StyleFactory.createPolygonColorMapEntry( fromColor, fromColor, m_minValue, m_minValue.add( width ) );
+            final PolygonColorMapEntry toEntry = StyleFactory.createPolygonColorMapEntry( toColor, toColor, m_maxValue.subtract( width ), m_maxValue );
             final NodeStyleEditorComposite comp = new NodeStyleEditorComposite( commonComposite, SWT.NONE, fromEntry, toEntry, m_minValue, m_maxValue, amountOfClasses.intValue() )
             {
               private Map<Integer, Color> m_mapActualColorsCache;
@@ -653,7 +652,7 @@ public class EditStyleDialog extends TitleAreaDialog
 
   /**
    * checks the user typed string for the step width value
-   * 
+   *
    * @param comp
    *          composite of the text field
    * @param text
