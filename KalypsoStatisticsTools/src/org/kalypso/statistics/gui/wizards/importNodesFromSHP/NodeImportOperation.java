@@ -42,7 +42,6 @@ package org.kalypso.statistics.gui.wizards.importNodesFromSHP;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.model.hydrology.operation.hydrotope.AbstractImportOperation;
 import org.kalypso.statistics.project.SessionDataProvider;
 import org.kalypso.statistics.types.ENodeProfileType;
 import org.kalypso.statistics.types.data.NodeProfile;
@@ -52,6 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author Gernot Belger, Dejan Antanaskovic
  */
+// FIXME:bad dependenc to KalypsoHydrology only for shape import. Needs some refaktoring...
 public class NodeImportOperation extends AbstractImportOperation<GM_Point>
 {
   public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_Point>
