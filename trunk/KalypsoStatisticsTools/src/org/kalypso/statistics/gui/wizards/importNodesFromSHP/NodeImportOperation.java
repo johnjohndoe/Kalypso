@@ -42,6 +42,7 @@ package org.kalypso.statistics.gui.wizards.importNodesFromSHP;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.model.hydrology.operation.hydrotope.AbstractImportOperation;
 import org.kalypso.statistics.project.SessionDataProvider;
 import org.kalypso.statistics.types.ENodeProfileType;
 import org.kalypso.statistics.types.data.NodeProfile;
