@@ -50,11 +50,7 @@
       <image commandId="org.kalypso.model.flood.ManageDTMData" icon="icons/workflow/ManageDTMData.gif"/>
       <image commandId="org.kalypso.model.flood.PolygonEditing" icon="icons/workflow/PolygonEditing.gif"/>
       <image commandId="org.kalypso.model.flood.ProcessFloodModel" icon="icons/workflow/ProcessFloodModel.gif"/>
-      
-      <!--
-      <image commandId="org.kalypso.model.flood.Postprocessing" icon=""/>
-      -->
-      
+      <image commandId="org.kalypso.model.flood.Postprocessing" icon="icons/workflow/Postprocessing.png"/>
       <image commandId="org.kalypso.model.flood.VisualizeDepthData" icon="icons/workflow/VisualizeDepthData.gif"/>
       <image commandId="org.kalypso.model.flood.GenerateRiskModel" icon="icons/workflow/GenerateRiskModel.gif"/>
    </extension>

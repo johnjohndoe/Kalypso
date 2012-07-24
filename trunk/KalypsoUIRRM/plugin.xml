@@ -565,7 +565,6 @@
    <extension point="org.eclipse.ui.commandImages">
             <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
 
-
             <image commandId="org.kalypso.model.rrm.parameterDefinition" icon="icons/parameters/parameters.gif"/>
             <image commandId="org.kalypso.model.rrm.snowDefinition" icon="icons/parameters/snow.png"/>
             <image commandId="org.kalypso.model.rrm.soilDefinition" icon="icons/parameters/soil.png"/>
@@ -573,18 +572,9 @@
             <image commandId="org.kalypso.model.rrm.drwbmDefinition" icon="icons/parameters/drwbmDefinition.png"/>
             <image commandId="org.kalypso.model.rrm.designRainfallDefinition" icon="icons/parameters/designRainfall.png"/>
 
-            <image
-                  commandId="org.kalypso.model.rrm.modelConstruction"
-                  icon="icons/model/1334146824_package_graphics.png">
-            </image>
-            <image
-                  commandId="org.kalypso.model.rrm.editNetElements"
-                  icon="icons/model/network_elements.png">
-            </image>
-            <image
-                  commandId="org.kalypso.model.rrm.editNetRelations"
-                  icon="icons/model/1334146981_Internet_link_02.png">
-            </image>
+            <image commandId="org.kalypso.model.rrm.modelConstruction" icon="icons/model/1334146824_package_graphics.png"/>
+            <image commandId="org.kalypso.model.rrm.editNetElements" icon="icons/model/network_elements.png"/>
+            <image commandId="org.kalypso.model.rrm.editNetRelations" icon="icons/model/1334146981_Internet_link_02.png"/>
 
             <image commandId="org.kalypso.model.rrm.hydrotopes" icon="icons/hydrotope/hydrotope.png"/>
             <image commandId="org.kalypso.model.rrm.completeNetElements" icon="icons/parameters/parameters.gif"/>
@@ -598,30 +588,15 @@
             <image commandId="org.kalypso.model.rrm.simulationManagement" icon="icons/simulations/simulation.gif"/>
 
             <image commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" icon="icons/simulations/refreshSimulations.gif"/>
-            <image
-                  commandId="org.kalypso.model.rrm.resultView"
-                  icon="icons/resultview/resultView.png">
-            </image>
-            <image
-                  commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items"
-                  icon="icons/timeseries/expandall.gif">
-            </image>
-            <image
-                  commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items"
-                  icon="icons/timeseries/collapseall.gif">
-            </image>
-            <image
-                  commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items"
-                  icon="icons/timeseries/expandall.gif">
-            </image>
-            <image
-                  commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items"
-                  icon="icons/timeseries/collapseall.gif">
-            </image>
-            <image
-                  commandId="org.kalypso.ui.rrm.internal.view.clear.selection.stack"
-                  icon="icons/resultview/resetSelectionStack.png">
-            </image>
+            <image commandId="org.kalypso.model.rrm.resultView" icon="icons/resultview/resultView.png"/>
+            
+            
+            
+            <image commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items" icon="icons/timeseries/expandall.gif"/>
+            <image commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items" icon="icons/timeseries/collapseall.gif"/>
+            <image commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items" icon="icons/timeseries/expandall.gif"/>
+            <image commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items" icon="icons/timeseries/collapseall.gif"/>
+            <image commandId="org.kalypso.ui.rrm.internal.view.clear.selection.stack" icon="icons/resultview/resetSelectionStack.png"/>
    </extension>
 
    <extension point="org.eclipse.ui.handlers">

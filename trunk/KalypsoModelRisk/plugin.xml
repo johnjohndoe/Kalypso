@@ -180,9 +180,7 @@
     <image commandId="org.kalypso.risk.model.workflow.RiskZonesCalculationHandler" icon="icons/workflow/RiskZonesCalculationHandler."/>
     -->
     <image commandId="org.kalypso.risk.model.workflow.StatisticsCalculationHandler" icon="icons/workflow/StatisticsCalculationHandler.png"/>
-    <!--
-    <image commandId="org.kalypso.risk.model.workflow.Postprocessing" icon="icons/workflow/Postprocessing."/>
-    -->
+    <image commandId="org.kalypso.risk.model.workflow.Postprocessing" icon="icons/workflow/Postprocessing.png"/>
     <image commandId="org.kalypso.risk.model.workflow.RiskShowResultStatisticHandler" icon="icons/workflow/RiskShowResultStatisticHandler.png"/>
     <image commandId="org.kalypso.risk.model.workflow.ExportSpecificDamageCoveragesWidgetHandler" icon="icons/workflow/ExportSpecificDamageCoveragesWidgetHandler.gif"/>
     <image commandId="org.kalypso.risk.model.workflow.ExportRiskZoneCoveragesWidgetHandler" icon="icons/workflow/ExportRiskZoneCoveragesWidgetHandler.gif"/>

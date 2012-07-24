@@ -211,8 +211,8 @@
         <image commandId="org.kalypso.model.1d2d.workflow.CalcSet" icon="icons/workflow/"/>
         -->
         <image commandId="org.kalypso.model.1d2d.workflow.StartCalculationWithProblemsView" icon="icons/workflow/StartCalculationWithProblemsView.gif"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Postprocessing" icon="icons/workflow/Postprocessing.png"/>
         <!--
-        <image commandId="org.kalypso.model.1d2d.workflow.Postprocessing" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ResultDataManager" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ResultMapGroup" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ConfigureResultMap" icon="icons/workflow/"/>
