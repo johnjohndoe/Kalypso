@@ -45,6 +45,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +61,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -76,15 +78,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -94,6 +93,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -135,8 +135,8 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
-import org.kalypso.ogc.gml.widgets.IDeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -159,7 +159,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  *
  * @author Thomas Jung
  */
-public class HydrographManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class HydrographManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private IHydrographCollection m_hydrographs;
 
@@ -216,10 +216,6 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
   private final IMapModellListener m_mapModelListener = new MapModellAdapter()
   {
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
@@ -227,21 +223,10 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
       refreshControl();
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
-     */
-    @SuppressWarnings("synthetic-access")
     @Override
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
-      /* check if the current theme has been removed */
-      if( theme.equals( m_theme ) )
-      {
-        setHydrographs( null, null );
-      }
-      refreshThemeCombo();
-      refreshControl();
+      handleThemeRemoved( theme );
     }
   };
 
@@ -251,11 +236,21 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
   private Button m_processHydrographCollectionButton;
 
-  private IDeprecatedMouseWidget m_delegateWidget;
+  private IWidget m_delegateWidget;
 
   public HydrographManagementWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.3" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  protected void handleThemeRemoved( final IKalypsoTheme theme )
+  {
+    /* check if the current theme has been removed */
+    if( theme.equals( m_theme ) )
+      setHydrographs( null, null );
+
+    refreshThemeCombo();
+    refreshControl();
   }
 
   protected void refreshControl( )
@@ -263,10 +258,6 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     ViewerUtilities.refresh( m_hydrographViewer, true );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -281,13 +272,21 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     m_infoWidget.activate( commandPoster, mapPanel );
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
+    final ToolBarManager toolbarManager = new ToolBarManager( SWT.VERTICAL );
+    initalizeHydrographActions( toolbarManager );
+
+    parent.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        toolbarManager.dispose();
+      }
+    } );
+
     final ScrolledComposite sc = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.H_SCROLL );
     sc.setMinWidth( 200 );
     sc.setExpandVertical( true );
@@ -297,19 +296,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     panel.setLayout( new GridLayout() );
 
     sc.setContent( panel );
-    parent.addControlListener( new ControlAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-       */
-      @Override
-      public void controlResized( final ControlEvent e )
-      {
-        // final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-        // panel.setSize( size );
-        // sc.setMinHeight( size.y );
-      }
-    } );
+
     // Basic Layout
 
     /* Theme selection combo + add / remove calc unit hydrograph theme buttons */
@@ -345,11 +332,9 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     m_hydrographViewer.getControl().setLayoutData( hydrographViewerData );
     toolkit.adapt( m_hydrographViewer.getControl(), true, false );
 
-    final Composite hydrographButtonPanel = toolkit.createComposite( hydrographPanel );
-    final FillLayout hydrographButtonPanelLayout = new FillLayout( SWT.VERTICAL );
-    hydrographButtonPanelLayout.spacing = 4;
-    hydrographButtonPanel.setLayout( hydrographButtonPanelLayout );
-    hydrographButtonPanel.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
+    final ToolBar hydrographToolbar = toolbarManager.createControl( hydrographPanel );
+    toolkit.adapt( hydrographToolbar );
+    hydrographToolbar.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
 
     /* Info view */
     final Group hydrographInfoGroup = new Group( panel, SWT.H_SCROLL );
@@ -382,7 +367,6 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
     // Fill contents
     initalizeHydrographViewer( m_hydrographViewer );
-    initalizeHydrographActions( toolkit, hydrographButtonPanel );
 
     /* Hook Events */
     m_hydrographViewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -703,21 +687,21 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
   }
 
-  private void initalizeHydrographActions( final FormToolkit toolkit, final Composite parent )
+  private void initalizeHydrographActions( final ToolBarManager manager )
   {
+    // FIXME: create classes for all actions
+
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
 
     final ImageDescriptor addID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.ADD );
     final ImageDescriptor importID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_IMPORT );
     final ImageDescriptor removeID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_REMOVE );
+    final ImageDescriptor selectID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_SELECT );
     final ImageDescriptor jumptoID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_JUMP_TO );
     final ImageDescriptor exportID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_EXPORT );
 
     final Action addAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.22" ), addID ) //$NON-NLS-1$
     {
-      /**
-       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-       */
       @Override
       public void runWithEvent( final Event event )
       {
@@ -728,9 +712,6 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
     final Action removeAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.26" ), removeID ) //$NON-NLS-1$
     {
-      /**
-       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-       */
       @Override
       public void runWithEvent( final Event event )
       {
@@ -739,28 +720,28 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     };
     removeAction.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.27" ) ); //$NON-NLS-1$
 
-    final Action importAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.24" ), importID ) //$NON-NLS-1$
+    final Action selectAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.24" ), selectID ) //$NON-NLS-1$
     {
-      /**
-       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-       */
+      @Override
+      public void runWithEvent( final Event event )
+      {
+        handleHydrographSelected( event );
+      }
+    };
+    selectAction.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.25" ) ); //$NON-NLS-1$
+
+    final Action importAction = new Action( "Import Hydrographs", importID )
+    {
       @Override
       public void runWithEvent( final Event event )
       {
         handleHydrographImport( event );
       }
     };
-    importAction.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.25" ) ); //$NON-NLS-1$
-
-    createButton( toolkit, parent, addAction );
-    createButton( toolkit, parent, removeAction );
-    createButton( toolkit, parent, importAction );
+    importAction.setDescription( Messages.getString( "Import Hydrographs" ) );
 
     final Action exportAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.28" ), exportID ) //$NON-NLS-1$
     {
-      /**
-       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-       */
       @Override
       public void runWithEvent( final Event event )
       {
@@ -771,9 +752,6 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
     final Action jumpToAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.30" ), jumptoID ) //$NON-NLS-1$
     {
-      /**
-       * @see org.eclipse.jface.action.Action#run()
-       */
       @Override
       public void run( )
       {
@@ -782,9 +760,13 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     };
     jumpToAction.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.31" ) ); //$NON-NLS-1$
 
-    createButton( toolkit, parent, exportAction );
-    createButton( toolkit, parent, jumpToAction );
-
+    manager.add( addAction );
+    manager.add( selectAction );
+    manager.add( jumpToAction );
+    manager.add( removeAction );
+    manager.add( new Separator() );
+    manager.add( importAction );
+    manager.add( exportAction );
   }
 
   protected void handleHydrographExport( @SuppressWarnings("unused") final Event event )
@@ -886,46 +868,11 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     }
   }
 
-  private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action )
-  {
-    final Button button = toolkit.createButton( parent, null, SWT.PUSH );
-    final Image image = action.getImageDescriptor().createImage( true );
-    button.setImage( image );
-    button.setToolTipText( action.getDescription() );
-    button.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        final Event event = new Event();
-        event.display = e.display;
-        // ...
-
-        action.runWithEvent( event );
-      }
-    } );
-
-    button.addDisposeListener( new DisposeListener()
-    {
-      @Override
-      public void widgetDisposed( final DisposeEvent e )
-      {
-        image.dispose();
-      }
-    } );
-  }
-
   private void initalizeHydrographViewer( final ListViewer viewer )
   {
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
@@ -933,9 +880,9 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
         return hydrograph.getName();
       }
     } );
+
     if( m_hydrographs != null )
       viewer.setInput( m_hydrographs.getHydrographs() );
-
   }
 
   /**
@@ -1012,37 +959,28 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
-  public void moved( final java.awt.Point p )
+  public void mouseMoved( final MouseEvent e )
   {
     if( m_delegateWidget != null )
-      m_delegateWidget.moved( p );
+      m_delegateWidget.mouseMoved( e );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
   @Override
-  public void dragged( final java.awt.Point p )
+  public void mouseDragged( final MouseEvent e )
   {
     if( m_delegateWidget != null )
-      m_delegateWidget.dragged( p );
+      m_delegateWidget.mouseDragged( e );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
   @Override
-  public void leftClicked( final java.awt.Point p )
+  public void mouseClicked( final MouseEvent e )
   {
     if( m_delegateWidget != null )
-      m_delegateWidget.leftClicked( p );
+      m_delegateWidget.mouseClicked( e );
   }
 
-  private void setDelegate( final IDeprecatedMouseWidget delegateWidget )
+  private void setDelegate( final IWidget delegateWidget )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.finish();

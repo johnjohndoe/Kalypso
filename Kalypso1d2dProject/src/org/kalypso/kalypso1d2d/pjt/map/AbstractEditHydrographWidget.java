@@ -2,46 +2,47 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.map;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -62,7 +63,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.util.MapUtils;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -74,9 +75,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
-public abstract class AbstractEditHydrographWidget extends DeprecatedMouseWidget
+public abstract class AbstractEditHydrographWidget extends AbstractWidget
 {
   private final int m_grabRadius = 20;
 
@@ -100,10 +101,6 @@ public abstract class AbstractEditHydrographWidget extends DeprecatedMouseWidget
     m_theme = theme;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.IMapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -112,22 +109,18 @@ public abstract class AbstractEditHydrographWidget extends DeprecatedMouseWidget
     reinit();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
     MapUtils.paintRect( g, getMapPanel(), m_foundFeature, m_geomQName, m_rectangleSelector, m_grabRadius );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
-   */
-  @SuppressWarnings("unchecked")
   @Override
-  public void leftReleased( final Point p )
+  public void mouseReleased( final MouseEvent e )
   {
+    if( e.getButton() != MouseEvent.BUTTON1 )
+      return;
+
     /* If we have a drag rect handle that first */
     if( m_rectangleSelector != null )
     {
@@ -188,36 +181,35 @@ public abstract class AbstractEditHydrographWidget extends DeprecatedMouseWidget
     m_featureList = m_theme.getFeatureList();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
   @Override
-  public void dragged( final Point p )
+  public void mouseDragged( final MouseEvent e )
   {
     if( m_rectangleSelector != null )
     {
-      m_rectangleSelector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
+      final Point point = e.getPoint();
+      m_rectangleSelector.setEndPoint( new org.eclipse.swt.graphics.Point( point.x, point.y ) );
 
       repaintMap();
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftPressed(java.awt.Point)
-   */
   @Override
-  public void leftPressed( final Point p )
+  public void mousePressed( final MouseEvent e )
   {
     if( m_allowMultipleSelection && m_featureList != null )
+    {
+      final Point p = e.getPoint();
+
       m_rectangleSelector = new RectangleSelector( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
+    }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
-   */
   @Override
-  public void leftClicked( final Point p )
+  public void mouseClicked( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+
     final String problemMessage;
     if( m_foundFeature == null )
       problemMessage = Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.AbstractEditHydrographWidget.1" ); //$NON-NLS-1$
@@ -265,15 +257,12 @@ public abstract class AbstractEditHydrographWidget extends DeprecatedMouseWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
-  public void moved( final Point p )
+  public void mouseMoved( final MouseEvent e )
   {
     m_foundFeature = null;
 
-    final GM_Point currentPos = MapUtilities.transform( getMapPanel(), p );
+    final GM_Point currentPos = MapUtilities.transform( getMapPanel(), e.getPoint() );
 
     /* Grab next feature */
     if( m_featureList == null )

@@ -54,22 +54,21 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class EditHydrographWidget extends AbstractEditHydrographWidget
 {
-
   private final HydrographManagementWidget m_widget;
 
-  public EditHydrographWidget( final String name, final String toolTip, final boolean allowMultipleSelection, QName geomQName, final IKalypsoFeatureTheme theme, final HydrographManagementWidget hydrographWidget )
+  public EditHydrographWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName geomQName, final IKalypsoFeatureTheme theme, final HydrographManagementWidget hydrographWidget )
   {
     super( name, toolTip, allowMultipleSelection, geomQName, theme );
     m_widget = hydrographWidget;
   }
 
   @Override
-  protected void featureGrabbed( CommandableWorkspace workspace, Feature[] selectedFeatures ) throws Exception
+  protected void featureGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
   {
     if( selectedFeatures == null )
       return;
 
-    IHydrograph selectedHydrograph = (IHydrograph) selectedFeatures[0].getAdapter( IHydrograph.class );
+    final IHydrograph selectedHydrograph = (IHydrograph) selectedFeatures[0].getAdapter( IHydrograph.class );
 
     if( selectedHydrograph != null )
       m_widget.setHydrographViewerSelection( new StructuredSelection( selectedHydrograph ) );
