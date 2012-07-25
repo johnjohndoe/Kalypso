@@ -61,7 +61,6 @@ import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
  */
 public class SimpleElevationColorModel implements IElevationColorModel
 {
-
   private final List<ColorMapConverterData> m_lister = new LinkedList<ColorMapConverterData>();
 
   public static final double DEEPEST_POINT_ON_EARTH = -10924;
@@ -84,7 +83,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
   private final int m_transparency;
 
-  private boolean m_goDarkerFromMinToMax;
+  private final boolean m_goDarkerFromMinToMax;
 
   private final Color m_minColor;
 
@@ -136,7 +135,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     {
       fillColorList();
     }
-    catch( FilterEvaluationException e )
+    catch( final FilterEvaluationException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -176,7 +175,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     m_lister.add( createPainterEntry( m_numOfClasses, rgbColor ) );
   }
 
-  private ColorMapConverterData createPainterEntry( final int i, Color rgbColor ) throws FilterEvaluationException
+  private ColorMapConverterData createPainterEntry( final int i, final Color rgbColor ) throws FilterEvaluationException
   {
     final int alpha = rgbColor.getAlpha();
     final double opacity = alpha / 255.0;
@@ -294,7 +293,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     {
       fillColorList();
     }
-    catch( FilterEvaluationException e )
+    catch( final FilterEvaluationException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -361,7 +360,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
    * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getFrom(int)
    */
   @Override
-  public double getFrom( int currentClass )
+  public double getFrom( final int currentClass )
   {
     return m_minElevation + currentClass * getDiscretisationInterval();
   }
@@ -370,7 +369,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
    * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getTo(int)
    */
   @Override
-  public double getTo( int currentClass )
+  public double getTo( final int currentClass )
   {
     return m_minElevation + (currentClass + 1) * getDiscretisationInterval();
   }
@@ -379,7 +378,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
    * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getFillPolygonPainter(int)
    */
   @Override
-  public FillPainter getFillPolygonPainter( int currentClass )
+  public FillPainter getFillPolygonPainter( final int currentClass )
   {
     return m_lister.get( currentClass ).getPolygonPainter();
   }
@@ -388,7 +387,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
    * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getLinePainter(int)
    */
   @Override
-  public StrokePainter getLinePainter( int currentClass )
+  public StrokePainter getLinePainter( final int currentClass )
   {
     return m_lister.get( currentClass ).getLinePainter();
   }
@@ -397,7 +396,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
    * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#setProjection(org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
   @Override
-  public void setProjection( GeoTransform projection )
+  public void setProjection( final GeoTransform projection )
   {
     m_projection = projection;
     try
@@ -407,7 +406,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
       fillColorList();
     }
-    catch( FilterEvaluationException e )
+    catch( final FilterEvaluationException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
