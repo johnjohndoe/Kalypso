@@ -44,10 +44,14 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.NAOptimize;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.util.optimize.NAOptimizingJob;
 import org.kalypso.simulation.core.ISimulation;
@@ -55,6 +59,7 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.utils.log.StatusLogUtilities;
 
 /**
  * @author doemming
@@ -74,9 +79,12 @@ public class NaModelCalcJob implements ISimulation
     INaSimulationData data = null;
     INaSimulationRunnable runnable = null;
 
+    final IStatusCollector log = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
+
     try
     {
       monitor.setMessage( "Loading simulation data..." );
+      log.add( IStatus.OK, "Lade Daten der Simulation..." );
       data = NaSimulationDataFactory.load( dataProvider );
 
       runnable = createRunnable( data, tmpdir );
@@ -95,6 +103,8 @@ public class NaModelCalcJob implements ISimulation
     }
     finally
     {
+      StatusLogUtilities.writeStatusLogQuietly( log, new File( runnable.getResultDir(), "Protokoll.log" ) );
+
       if( data != null )
         data.dispose();
     }
@@ -106,12 +116,12 @@ public class NaModelCalcJob implements ISimulation
       return;
 
     final File resultDir = runnable.getResultDir();
-    final File optimizeResult = runnable.getOptimizeResult();
-
     if( !resultDir.exists() )
       throw new SimulationException( "Fehler bei der Optimierung, Optimierungsergebnis nicht vorhanden." );
 
     resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
+
+    final File optimizeResult = runnable.getOptimizeResult();
     if( optimizeResult != null )
     {
       resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, optimizeResult );
