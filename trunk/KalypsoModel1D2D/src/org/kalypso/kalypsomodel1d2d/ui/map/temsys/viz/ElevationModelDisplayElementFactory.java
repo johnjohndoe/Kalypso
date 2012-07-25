@@ -62,7 +62,6 @@ import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDis
  */
 public class ElevationModelDisplayElementFactory
 {
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static final SurfacePatchVisitableDisplayElement createDisplayElement( final Feature feature )
   {
     if( feature == null )
