@@ -42,6 +42,7 @@ package org.kalypso.kalypso1d2d.pjt.map;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 
 import javax.xml.namespace.QName;
 
@@ -64,7 +65,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -76,7 +77,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Thomas Jung
  */
-public abstract class AbstractCreateHydrographWidget extends DeprecatedMouseWidget
+public abstract class AbstractCreateHydrographWidget extends AbstractWidget
 {
   private final int m_grabRadius = 10;
 
@@ -101,10 +102,6 @@ public abstract class AbstractCreateHydrographWidget extends DeprecatedMouseWidg
     m_hydroTheme = hydroTheme;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.IMapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -132,17 +129,14 @@ public abstract class AbstractCreateHydrographWidget extends DeprecatedMouseWidg
     m_hydrographCollection = (IHydrographCollection) parentFeature.getAdapter( IHydrographCollection.class );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
-  public void moved( final Point p )
+  public void mouseMoved( final MouseEvent e )
   {
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
-    final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
+    final GM_Point currentPos = MapUtilities.transform( mapPanel, e.getPoint() );
 
     /* Grab next node */
     if( m_discModel == null )
@@ -171,9 +165,6 @@ public abstract class AbstractCreateHydrographWidget extends DeprecatedMouseWidg
     mapPanel.repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -199,15 +190,15 @@ public abstract class AbstractCreateHydrographWidget extends DeprecatedMouseWidg
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
   @Override
-  public void leftClicked( final Point p )
+  public void mouseClicked( final MouseEvent e )
   {
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
     if( m_modelElement == null || m_hydrographCollection == null || m_existingHydrograph != null )
+      return;
+
+    if( e.getButton() != MouseEvent.BUTTON1 )
       return;
 
     final CommandableWorkspace workspace = m_hydroTheme.getWorkspace();
@@ -217,14 +208,14 @@ public abstract class AbstractCreateHydrographWidget extends DeprecatedMouseWidg
 
     hydroPositionFromElement = HydrographUtils.getHydroPositionFromElement( m_modelElement );
 
+    final Feature parentFeature = m_hydrographCollection;
+
     /* Create hydrograph at position */
     display.asyncExec( new Runnable()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
       public void run( )
       {
-        final Feature parentFeature = m_hydrographCollection;
         final IRelationType parentRelation = (IRelationType) parentFeature.getFeatureType().getProperty( IHydrographCollection.QNAME_PROP_HYDROGRAPH_MEMBER );
         final IHydrograph hydro = createNewFeature( workspace, parentFeature, parentRelation, m_modelElement );
 
@@ -247,6 +238,7 @@ public abstract class AbstractCreateHydrographWidget extends DeprecatedMouseWidg
         catch( final Throwable e )
         {
           final IStatus status = StatusUtilities.statusFromThrowable( e );
+          // FIXME: we ARE already in the display thread!
           display.asyncExec( new Runnable()
           {
             @Override
@@ -261,9 +253,6 @@ public abstract class AbstractCreateHydrographWidget extends DeprecatedMouseWidg
     } );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {
@@ -276,7 +265,7 @@ public abstract class AbstractCreateHydrographWidget extends DeprecatedMouseWidg
 
   /**
    * Really create the new object.
-   * 
+   *
    * @return The new object, if null, nothing happens..
    */
   protected abstract IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement );

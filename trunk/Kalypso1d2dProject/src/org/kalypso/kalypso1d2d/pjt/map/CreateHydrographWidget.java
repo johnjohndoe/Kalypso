@@ -57,7 +57,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class CreateHydrographWidget extends AbstractCreateHydrographWidget
 {
-
   public CreateHydrographWidget( final String name, final String tooltip, final QName qnameToCreate, final IKalypsoFeatureTheme hydroTheme )
   {
     super( name, tooltip, qnameToCreate, hydroTheme );
@@ -66,26 +65,9 @@ public class CreateHydrographWidget extends AbstractCreateHydrographWidget
   @Override
   protected IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
   {
-    /*
-     *moved to HydrographUtils
-     *
-    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IHydrograph.QNAME );
-    final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
-
-    HydrographUtils.setHydrographComponents( newFeature );
-
-    final IHydrograph hydrograph = (IHydrograph) newFeature.getAdapter( IHydrograph.class );
-    hydrograph.setName( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.0" ) ); //$NON-NLS-1$
-    hydrograph.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.1" ) ); //$NON-NLS-1$
-    */
-    
     return HydrographUtils.createNewHydrographFeature( workspace, parentFeature, parentRelation, Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.1" ) );
   }
 
-
-  /**
-   * @see org.kalypso.kalypso1d2d.pjt.map.AbstractCreateHydrographWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d, org.kalypsodeegree.model.geometry.GM_Point, double)
-   */
   @Override
   protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
@@ -96,5 +78,4 @@ public class CreateHydrographWidget extends AbstractCreateHydrographWidget
   {
     return discModel.findNode( currentPos, grabDistance );
   }
-
 }
