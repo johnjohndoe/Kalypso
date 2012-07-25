@@ -53,10 +53,8 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public abstract class TerrainElevationModel extends Feature_Impl implements ITerrainElevationModel
 {
-
-  public TerrainElevationModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public TerrainElevationModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
-
 }
