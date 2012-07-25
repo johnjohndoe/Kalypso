@@ -165,7 +165,7 @@ public class UIRrmImages
 
   public static final ImageDescriptor id( final String location )
   {
-    return UIRrmImages.id( KalypsoUIRRMPlugin.getID(), location ); //$NON-NLS-1$
+    return UIRrmImages.id( KalypsoUIRRMPlugin.getID(), location );
   }
 
   public static final ImageDescriptor id( final String pluginID, final String location )
