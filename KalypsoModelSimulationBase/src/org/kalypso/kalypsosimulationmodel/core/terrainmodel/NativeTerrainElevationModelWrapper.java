@@ -59,10 +59,10 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * Provide the implementation of {@link ITerrainElevationModel} for simBase:NativeTerrainElevationModelWrapper model.
  * This class collaborates with ...
- * 
+ *
  * @author Madanagopal
  * @author Patrice Congo
- * 
+ *
  */
 public class NativeTerrainElevationModelWrapper extends TerrainElevationModel implements INativeTerrainElevationModelWrapper
 {
@@ -74,7 +74,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
 
   private IElevationProvider m_elevationProvider;
 
-  public NativeTerrainElevationModelWrapper( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public NativeTerrainElevationModelWrapper( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -113,54 +113,36 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
     return null;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public double getElevation( final GM_Point location )
   {
     return getElevationProvider().getElevation( location );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
-   */
   @Override
   public GM_Envelope getBoundingBox( )
   {
     return getElevationProvider().getBoundingBox();
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
-   */
   @Override
   public String getCoordinateSystem( )
   {
     return getElevationProvider().getCoordinateSystem();
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
-   */
   @Override
   public double getMaxElevation( )
   {
     return getElevationProvider().getMaxElevation();
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
-   */
   @Override
   public double getMinElevation( )
   {
     return getElevationProvider().getMinElevation();
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper#getSourceFile()
-   */
   @Override
   public IFile getSourceFile( )
   {
@@ -173,14 +155,11 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
     return file;
   }
 
-  public void setFile( String filename )
+  public void setFile( final String filename )
   {
     setProperty( SIM_BASE_PROP_FILE_NAME, filename );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
-   */
   @Override
   public void setCoordinateSystem( final String coordinateSystem )
   {
