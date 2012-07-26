@@ -166,7 +166,7 @@ public class DeleteFeElementsHelper
       changedFeatureList.addAll( (deleteCmd1dElement).getChangedFeatureList() );
 
       final Feature[] deletedFeatures = changedFeatureList.toArray( new Feature[changedFeatureList.size()] );
-      final GMLWorkspace discWorkspace = discretisationModel.getOwner().getWorkspace();
+      final GMLWorkspace discWorkspace = discretisationModel.getWorkspace();
       final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( discWorkspace, discretisationModel, deletedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
       discWorkspace.fireModellEvent( event );
     }
