@@ -49,7 +49,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionParameters;
+import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandlerParameters;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -67,35 +67,31 @@ public class ConfigureLengthSectionWizard extends Wizard
 {
   private final static String PAGE_SELECT_RESULTS_NAME = "selectResults"; //$NON-NLS-1$
 
-  private final static String PAGE_GENERATE_LENGTH_SECTION_NAME = "generateLengthSection"; //$NON-NLS-1$
-
   private final IScenarioResultMeta m_resultModel;
 
   final IFolder m_scenarioFolder;
 
   private IFile m_selectedResultFile;
 
-  private final IMapPanel m_mapPanel;
-
-  ConfigureLengthSectionWizardPage m_lengthSectionPage;
+  private final CreateLengthSectionData m_data;
 
   public ConfigureLengthSectionWizard( final IFolder scenarioFolder, final IScenarioResultMeta resultModel, final IMapPanel mapPanel )
   {
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;
-    m_mapPanel = mapPanel;
+
+    m_data = new CreateLengthSectionData( mapPanel );
+
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.Title" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
-    m_lengthSectionPage = new ConfigureLengthSectionWizardPage( PAGE_GENERATE_LENGTH_SECTION_NAME, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.3" ), null, m_mapPanel ); //$NON-NLS-1$
+    final ConfigureLengthSectionWizardPage lengthSectionPage = new ConfigureLengthSectionWizardPage( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.3" ), m_data ); //$NON-NLS-1$
+
     // select time step page
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
@@ -104,21 +100,17 @@ public class ConfigureLengthSectionWizard extends Wizard
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
-    addPage( m_lengthSectionPage );
+    addPage( lengthSectionPage );
     addPage( selectResultWizardPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
-    final ConfigureLengthSectionWizardPage parameterPage = (ConfigureLengthSectionWizardPage) getPage( PAGE_GENERATE_LENGTH_SECTION_NAME );
-    final LengthSectionParameters lengthSectionParameters = parameterPage.getLengthSectionParameters();
     final SelectResultWizardPage resultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
     final IResultMeta[] results = resultPage.getSelectedResults();
 
+    // TODO: should not be able to finish wizard without results
     if( results.length == 0 )
     {
       MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.5" ), Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -126,7 +118,9 @@ public class ConfigureLengthSectionWizard extends Wizard
     }
 
     /* Start */
-    final ICoreRunnableWithProgress op = new Generate2dSectionRunnable( results, lengthSectionParameters,parameterPage.isKmValues(), m_scenarioFolder  );
+    final LengthSectionHandlerParameters parameters = m_data.getParameters();
+
+    final ICoreRunnableWithProgress op = new Generate2dSectionRunnable( results, parameters, m_scenarioFolder );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
@@ -137,12 +131,10 @@ public class ConfigureLengthSectionWizard extends Wizard
       return false;
     else
       return true;
-
   }
 
   public IFile getSelection( )
   {
     return m_selectedResultFile;
-
   }
 }

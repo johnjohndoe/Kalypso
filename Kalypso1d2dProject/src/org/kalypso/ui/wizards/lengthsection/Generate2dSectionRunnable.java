@@ -20,7 +20,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d;
-import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionParameters;
+import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandlerParameters;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
@@ -41,23 +41,20 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
 {
   private final IResultMeta[] m_results;
 
-  private final LengthSectionParameters m_lengthSectionParameters;
-
-  private final boolean m_isKmValues;
-
   private final IFolder m_scenarioFolder;
 
-  Generate2dSectionRunnable( final IResultMeta[] results, final LengthSectionParameters lengthSectionParameters, final boolean isKmValues, final IFolder scenarioFolder )
+  private final LengthSectionHandlerParameters m_parameters;
+
+  Generate2dSectionRunnable( final IResultMeta[] results, final LengthSectionHandlerParameters parameters, final IFolder scenarioFolder )
   {
     m_results = results;
-    m_lengthSectionParameters = lengthSectionParameters;
-    m_isKmValues = isKmValues;
+    m_parameters = parameters;
     m_scenarioFolder = scenarioFolder;
   }
 
@@ -69,7 +66,9 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
     try
     {
       monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.8" ) ); //$NON-NLS-1$
-      final BigDecimal[] stationList = m_lengthSectionParameters.getStationList();
+
+      final LineSampler sampler = new LineSampler( m_parameters );
+      final BigDecimal[] stationList = sampler.calculateStations();
 
       // TODO: go on
       // if( stationList == null )
@@ -107,7 +106,7 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
               monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.11" ) ); //$NON-NLS-1$
               surface = getSurface( docResult );
               if( surface != null )
-                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues, monitor );
+                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_parameters, stationList, documentType, monitor );
               else
                 return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.12" ) ); //$NON-NLS-1$
               monitor.worked( 4 );
@@ -117,7 +116,7 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
               monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.13" ) ); //$NON-NLS-1$
               surface = getSurface( docResult );
               if( surface != null )
-                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues, monitor );
+                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_parameters, stationList, documentType, monitor );
               else
                 return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.14" ) ); //$NON-NLS-1$
               monitor.worked( 4 );
@@ -146,7 +145,7 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
                 surface = getSurface( docResult );
                 if( surface != null )
                 {
-                  LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues, monitor );
+                  LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_parameters, stationList, documentType, monitor );
                 }
                 else
                   return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.16" ) ); //$NON-NLS-1$
@@ -168,7 +167,7 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
 
           // allow multiple lengthsections
           // how to delete them?
-          final String riverName = m_lengthSectionParameters.getSelectedRiverName();
+          final String riverName = m_parameters.getSelectedRiverName();
           final String lengthSecionFileName = "section_" + riverName + ".gml";
           final String sectionName = riverName;
 
