@@ -136,7 +136,7 @@ public class AddProfileToMapHandler extends AbstractHandler
       addNewTheme( mapView, mapModell, network, profilesPath, relativeTerrainPath );
 
       /* Zoom to new profiles in fe-map? */
-      final GM_Envelope envelope = network.getEnvelope();
+      final GM_Envelope envelope = network.getBoundedBy();
       if( envelope != null )
         mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
 
@@ -260,7 +260,7 @@ public class AddProfileToMapHandler extends AbstractHandler
       }
     } );
 
-    dialog.setInput( riverProfileNetworkCollection );
+    dialog.setInput( collection );
 
     if( collection.size() > 0 )
       dialog.setInitialSelections( new Object[] { collection.get( 0 ) } );
