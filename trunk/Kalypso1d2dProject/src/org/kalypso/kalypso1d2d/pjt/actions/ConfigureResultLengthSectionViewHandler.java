@@ -110,7 +110,6 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
       {
         ((ICommandPoster) modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
         modelProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
-        //        modelProvider.saveModel( IScenarioResultMeta.class, new NullProgressMonitor() );
 
         return Status.OK_STATUS;
       }

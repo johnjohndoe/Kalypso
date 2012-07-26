@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class LengthSectionHandler2dTest extends TestCase
 {
@@ -84,6 +84,7 @@ public class LengthSectionHandler2dTest extends TestCase
 
       final Feature fRoot = shapeWorkspace.getRootFeature();
       final FeatureList lstMembers = (FeatureList) fRoot.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+      final Feature[] features = lstMembers.toFeatures();
 
       final BigDecimal max = new BigDecimal( 62000 );
       final BigDecimal min = new BigDecimal( 58000 );
@@ -126,7 +127,10 @@ public class LengthSectionHandler2dTest extends TestCase
       {
         surface = (GM_TriangulatedSurface) geometryProperty;
       }
-      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, false, new NullProgressMonitor() );
+
+      final LengthSectionHandlerParameters data = new LengthSectionHandlerParameters( features, null, null, null, new BigDecimal( 100 ), false );
+
+      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, data, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new NullProgressMonitor() );
 
       final URL resource2 = getClass().getResource( "resources/tin_WATERLEVEL.gml" ); //$NON-NLS-1$
       w = GmlSerializer.createGMLWorkspace( resource2, null );
@@ -138,10 +142,9 @@ public class LengthSectionHandler2dTest extends TestCase
       if( geometryProperty instanceof GM_TriangulatedSurface )
       {
         surface = (GM_TriangulatedSurface) geometryProperty;
-
       }
 
-      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinWsp, false, new NullProgressMonitor() );
+      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, data, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new NullProgressMonitor() );
 
       if( lsObs.getResult().size() > 0 )
       {

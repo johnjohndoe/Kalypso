@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
@@ -56,11 +56,8 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.util.TupleResultIndex;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -73,75 +70,39 @@ import com.vividsolutions.jts.geom.Point;
  * Handles the creation of a length section obs from several ({@link GM_TriangulatedSurface) data files and a river line (DAV format).
  *
  * @author Thomas Jung
- *
  */
 public class LengthSectionHandler2d
 {
-  public static void handle2DLenghtsection( final IObservation<TupleResult> lsObs, final GM_TriangulatedSurface surface, final LengthSectionParameters lengthSectionParameters, final BigDecimal[] stationList, final DOCUMENTTYPE documentType, final boolean isKmValues, final IProgressMonitor monitor )
+  public static void handle2DLenghtsection( final IObservation<TupleResult> lsObs, final GM_TriangulatedSurface surface, final LengthSectionHandlerParameters data, final BigDecimal[] stationList, final DOCUMENTTYPE documentType, final IProgressMonitor monitor )
   {
-    final FeatureList riverFeatures = lengthSectionParameters.getRiverFeatures();
-    final IPropertyType riverNamePropertyType = lengthSectionParameters.getRiverNamePropertyType();
-    final String selectedRiverName = lengthSectionParameters.getSelectedRiverName();
+    final Map<BigDecimal, GM_Point> pointList = getPointList( data, stationList );
 
-    final IPropertyType fromStationPropertyType = lengthSectionParameters.getFromStationPropertyType();
-    final IPropertyType toStationPropertyType = lengthSectionParameters.getToStationPropertyType();
-
-    handle2DLenghtsection( lsObs, surface, riverFeatures, riverNamePropertyType, fromStationPropertyType, toStationPropertyType, selectedRiverName, stationList, documentType, isKmValues, monitor );
+    final boolean useKmValues = data.getUseKmValues();
+    generateLengthSection( pointList, surface, lsObs, documentType, useKmValues, monitor );
   }
 
-  public static void handle2DLenghtsection( final IObservation<TupleResult> lsObs, final GM_TriangulatedSurface surface, final FeatureList riverFeatures, final IPropertyType riverNamePropertyType, final IPropertyType fromStationPropertyType, final IPropertyType toStationPropertyType, final String riverName, final BigDecimal[] stationList, final DOCUMENTTYPE documenttype, final boolean iskmValue, final IProgressMonitor monitor )
-  {
-    final Map<BigDecimal, GM_Point> pointList = getPointList( riverFeatures, stationList, riverNamePropertyType, fromStationPropertyType, toStationPropertyType, riverName, monitor );
-
-    generateLengthSection( pointList, surface, lsObs, documenttype, iskmValue, monitor );
-  }
-
-  private static Map<BigDecimal, GM_Point> getPointList( final FeatureList riverFeatures, final BigDecimal[] stationList, final IPropertyType riverNamePropertyType, final IPropertyType fromStationPropertyType, final IPropertyType toStationPropertyType, final String riverName, final IProgressMonitor monitor )
+  private static Map<BigDecimal, GM_Point> getPointList( final LengthSectionHandlerParameters data, final BigDecimal[] stationList )
   {
     // TODO: better monitoring
 
     final Map<BigDecimal, GM_Point> pointList = new HashMap<BigDecimal, GM_Point>();
 
-    for( final Object object : riverFeatures )
+    final Feature[] riverFeatures = data.getSelectedRivers();
+    final IValuePropertyType fromStationPropertyType = data.getStationFromProperty();
+    final IValuePropertyType toStationPropertyType = data.getStationToProperty();
+
+
+    for( final Feature feature : riverFeatures )
     {
-      final Feature feature = (Feature) object;
-
-      if( riverNamePropertyType != null )
-      {
-        final Object prop = feature.getProperty( riverNamePropertyType );
-
-        if( !(prop instanceof String) )
-          return pointList;
-
-        final String featureRiverName = (String) prop;
-        if( !featureRiverName.equals( riverName ) )
-          continue;
-      }
+      final GM_Curve curve = data.getGeometry( feature );
+      if( curve == null )
+        continue;
 
       // get "from" and "to" values for each segment
-      BigDecimal from = getNumericProperty( feature, fromStationPropertyType );
-      BigDecimal to = getNumericProperty( feature, toStationPropertyType );
+      final BigDecimal from = data.getNumberProperty( feature, fromStationPropertyType, 0.0 );
+      final BigDecimal to = data.getNumberProperty( feature, toStationPropertyType, curve.getLength() );
 
-      final GM_Object defaultGeometryProperty = feature.getDefaultGeometryPropertyValue();
-      final GM_MultiCurve multiCurve = (GM_MultiCurve) defaultGeometryProperty;
-
-      if( multiCurve == null )
-        continue;
-
-      final GM_Curve[] allCurves = multiCurve.getAllCurves();
-
-      if( allCurves.length > 1 )
-        continue;
-
-      final GM_Curve curve = allCurves[0];
-
-      // jetzt hamma d Kurv :-)
       // Anhand Stationswerten Punkte auf Liniensegmenten abgreifen / erzeugen.
-
-      if( from == null )
-        from = new BigDecimal( 0 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-      if( to == null )
-        to = new BigDecimal( curve.getLength() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
       final BigDecimal definedCurveLength = to.subtract( from );
 
@@ -150,7 +111,6 @@ public class LengthSectionHandler2d
 
       for( final BigDecimal currentStation : stationList )
       {
-
         // calculate correction factor
         final double currentStationDouble = currentStation.doubleValue();
 
@@ -181,22 +141,6 @@ public class LengthSectionHandler2d
     }
 
     return pointList;
-  }
-
-  private static BigDecimal getNumericProperty( final Feature feature, final IPropertyType propertyType )
-  {
-    final Object property = feature.getProperty( propertyType );
-
-    if( property instanceof BigDecimal )
-      return (BigDecimal) property;
-
-    if( property instanceof Number )
-    {
-      final double value = ((Number) property).doubleValue();
-      return new BigDecimal( value );
-    }
-
-    return null;
   }
 
   private static void generateLengthSection( final Map<BigDecimal, GM_Point> pointList, final GM_TriangulatedSurface surface, final IObservation<TupleResult> lsObs, final DOCUMENTTYPE documenttype, final boolean iskmValue, final IProgressMonitor monitor )
