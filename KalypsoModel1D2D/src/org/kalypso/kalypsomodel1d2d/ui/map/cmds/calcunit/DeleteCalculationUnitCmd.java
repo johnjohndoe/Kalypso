@@ -67,7 +67,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -80,11 +80,11 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Command to delete calculation unit
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
-public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
+public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
 {
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
@@ -124,7 +124,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
   /**
    * Deletes the calculation unit
-   * 
+   *
    * @param cuFeatureQName
    *          the q-name of the calculation unit to create
    * @param model1d2d
@@ -142,9 +142,6 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     m_calcUnitToDelete = calcUnit;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
-   */
   @Override
   public Feature[] getChangedFeature( )
   {
@@ -154,27 +151,12 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       return new Feature[] {};
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
-   */
-  @Override
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
-  {
-    return m_model1d2d;
-  }
-
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return "Command for deleting calculation unit"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
@@ -205,7 +187,6 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   {
     try
     {
-
       // cache state for undo
       cacheState();
 
@@ -342,7 +323,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   }
 
   /**
-   * 
+   *
    * @param calculationUnit
    *          the added or removed calculation unit
    * @param added
@@ -402,5 +383,4 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     final Feature[] changedFeatureArray = getChangedFeatureArray();
     fireProcessChanges( changedFeatureArray, true );
   }
-
 }

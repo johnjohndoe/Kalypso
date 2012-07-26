@@ -57,45 +57,36 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Command for deleting one element. The change event has to fired from outside!
- * 
+ *
  * @author Patrice Congo
  */
-public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
+public class DeletePolyElementCmd implements IFeatureChangeCommand
 {
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
-  private List< Feature > m_changedFeatureList;
-  
-  private Set< Feature > m_setFeaturesToRemove = null;
+  private List<Feature> m_changedFeatureList;
+
+  private Set<Feature> m_setFeaturesToRemove = null;
 
   public DeletePolyElementCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature pFeature )
   {
     m_model1d2d = model1d2d;
-    m_setFeaturesToRemove = new HashSet< Feature >();
+    m_setFeaturesToRemove = new HashSet<Feature>();
     addElementToRemove( pFeature );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd.0" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   @SuppressWarnings("unchecked")
   public void process( ) throws Exception
@@ -104,7 +95,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     final RemoveEdgeWithoutContainerOrInvCmd remEdgeCmd = new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, null );
     for( final Feature lFeature : m_setFeaturesToRemove )
     {
-      IPolyElement lElement = (IPolyElement) lFeature.getAdapter( IPolyElement.class );
+      final IPolyElement lElement = (IPolyElement) lFeature.getAdapter( IPolyElement.class );
       final String elementID = lElement.getId();
 
       // delete link to complex elements
@@ -121,25 +112,28 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
       for( final IFE1D2DEdge edge : edges )
       {
         final FeatureList containers = edge.getContainers().getFeatureList();
-        final List< IPolyElement > lListContainers = edge.getContainers();
+        final List<IPolyElement> lListContainers = edge.getContainers();
         boolean lBoolContainsAll = true;
-        for( final IPolyElement lFeatureAct: lListContainers ){
-          if( !m_setFeaturesToRemove.contains( lFeatureAct ) ){
+        for( final IPolyElement lFeatureAct : lListContainers )
+        {
+          if( !m_setFeaturesToRemove.contains( lFeatureAct ) )
+          {
             lBoolContainsAll = false;
             break;
           }
         }
-        if( lBoolContainsAll ){
+        if( lBoolContainsAll )
+        {
           remEdgeCmd.addEdgeToRemove( edge );
         }
         containers.remove( elementID );
         m_changedFeatureList.add( edge );
 
         final IFeatureBindingCollection nodes = edge.getNodes();
-        for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
+        for( final Iterator iterator = nodes.iterator(); iterator.hasNext(); )
         {
-          Feature featureWrapper = (Feature) iterator.next();
-          Feature wrappedFeature = featureWrapper;
+          final Feature featureWrapper = (Feature) iterator.next();
+          final Feature wrappedFeature = featureWrapper;
           m_changedFeatureList.add( wrappedFeature );
         }
       }
@@ -149,58 +143,32 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     m_model1d2d.getElements().removeAll( m_setFeaturesToRemove );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
 
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
 
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
-   */
   @Override
   public Feature[] getChangedFeature( )
   {
     return null;
-//    Feature[] lFeaturesChanged = new Feature[ m_setFeatureToRemove.size() ];
-//    int i = 0;
-//    for( final IPolyElement lElement: m_setFeatureToRemove ){
-//      lFeaturesChanged[ i++ ] = (Feature) lElement;
-//    }
-//    return lFeaturesChanged;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
-   */
-  @Override
-  @Deprecated
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
-  {
-    return m_model1d2d;
   }
 
   public List<Feature> getChangedFeatureList( )
   {
     return m_changedFeatureList;
   }
-  
-  public void addElementToRemove( Feature pFeature ){
+
+  public void addElementToRemove( final Feature pFeature )
+  {
     if( pFeature != null )
       m_setFeaturesToRemove.add( pFeature );
   }
-
-
 }

@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Provides mechanism to create delete command
- * 
+ *
  * @author Patrice Congo
  * @author Thomas Jung
  */
@@ -64,7 +64,7 @@ public class DeleteCmdFactory
    * <li>Element1DFeature
    * <li>JunctionFeature
    */
-  public static final IDiscrModel1d2dChangeCommand createDeleteCmd( final Feature feature, final IFEDiscretisationModel1d2d model1d2d )
+  public static final IFeatureChangeCommand createDeleteCmd( final Feature feature, final IFEDiscretisationModel1d2d model1d2d )
   {
     Assert.throwIAEOnNullParam( feature, "feature" ); //$NON-NLS-1$
     if( TypeInfo.isPolyElementFeature( feature ) )
@@ -98,7 +98,7 @@ public class DeleteCmdFactory
         final Feature feature = easyFeatureWrapper.getFeature();
         if( feature != null )
         {
-          final IDiscrModel1d2dChangeCommand delCmd = createDeleteCmd( feature, model1d2d );
+          final IFeatureChangeCommand delCmd = createDeleteCmd( feature, model1d2d );
           if( delCmd != null )
           {
             modelChangeCmd.addCommand( delCmd );
@@ -121,7 +121,7 @@ public class DeleteCmdFactory
    * <ul>
    * <li>PolyElementFeature
    */
-  public static final IDiscrModel1d2dChangeCommand createDeleteCmdPoly(  final IFEDiscretisationModel1d2d model1d2d )
+  public static final IFeatureChangeCommand createDeleteCmdPoly( final IFEDiscretisationModel1d2d model1d2d )
   {
     return new DeletePolyElementCmd( model1d2d, null );
   }
@@ -130,7 +130,7 @@ public class DeleteCmdFactory
    * <ul>
    * <li>Element1DFeature
    */
-  public static final IDiscrModel1d2dChangeCommand createDeleteCmd1dElement( final IFEDiscretisationModel1d2d model1d2d )
+  public static final IFeatureChangeCommand createDeleteCmd1dElement( final IFEDiscretisationModel1d2d model1d2d )
   {
     return new DeleteElement1DCmd( model1d2d, null );
   }

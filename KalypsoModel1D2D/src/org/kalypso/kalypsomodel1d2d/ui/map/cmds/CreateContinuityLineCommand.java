@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
-public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
+public class CreateContinuityLineCommand implements IFeatureChangeCommand
 {
   private boolean m_processed = false;
 
@@ -74,27 +74,18 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
     m_lineElementQName = lineElementQName;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateContinuityLineCommand.0"); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
@@ -117,9 +108,6 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
     m_processed = true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
@@ -129,9 +117,6 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
     }
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
@@ -141,21 +126,9 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
     }
   }
 
-  /**
-   * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
-   */
   @Override
   public Feature[] getChangedFeature( )
   {
     return new Feature[] { m_line };
-  }
-
-  /**
-   * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
-   */
-  @Override
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
-  {
-    return m_model;
   }
 }

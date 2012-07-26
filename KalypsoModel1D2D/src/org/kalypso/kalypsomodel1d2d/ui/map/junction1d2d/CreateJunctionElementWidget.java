@@ -94,9 +94,6 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -163,9 +160,6 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
     mapPanel.repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {

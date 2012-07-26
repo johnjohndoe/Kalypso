@@ -275,9 +275,6 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     {
       final RemoveBoundaryLineFromCalculationUnitCmd cmd = new RemoveBoundaryLineFromCalculationUnitCmd( calUnit, bLine, model1d2d )
       {
-        /**
-         * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryLineToCalculationUnit#process()
-         */
         @SuppressWarnings("synthetic-access")
         @Override
         public void process( ) throws Exception

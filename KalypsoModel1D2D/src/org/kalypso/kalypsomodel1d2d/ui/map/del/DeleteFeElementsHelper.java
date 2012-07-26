@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.del;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -88,9 +87,7 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -129,16 +126,15 @@ public class DeleteFeElementsHelper
         return contiStatus;
       // make a list of all the nodes contained by all the continuity lines
 
-      final IKalypsoFeatureTheme featureTheme = UtilMap.findEditableTheme( mapPanel, IFE1D2DElement.QNAME );
+      final IKalypsoFeatureTheme onedTheme = UtilMap.findEditableTheme( mapPanel, IFE1D2DElement.QNAME );
       final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( mapPanel, IFlowRelationship.QNAME );
 
       /* Find all elements that should be deleted */
       final DeleteElement1DCmd deleteCmd1dElement = (DeleteElement1DCmd) DeleteCmdFactory.createDeleteCmd1dElement( discretisationModel );
       final DeletePolyElementCmd deleteCmdPolyElement = (DeletePolyElementCmd) DeleteCmdFactory.createDeleteCmdPoly( discretisationModel );
 
-      final FeatureList lFeatureList = lFlowTheme.getFeatureList();
-      final Feature lParentFeature = lFeatureList.getOwner();
-      final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) lParentFeature.getAdapter( IFlowRelationshipModel.class );
+      final FeatureList flowRelationsList = lFlowTheme.getFeatureList();
+      final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) flowRelationsList.getOwner();
 
       final List<IFE1D2DElement> element1DtoRemove = new ArrayList<IFE1D2DElement>();
       for( final EasyFeatureWrapper easyFeatureWrapper : selected )
@@ -149,26 +145,29 @@ public class DeleteFeElementsHelper
         else if( TypeInfo.isElement1DFeature( feature ) )
         {
           deleteCmd1dElement.addElementToRemove( feature );
-          element1DtoRemove.add( (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class ) );
+          element1DtoRemove.add( (IFE1D2DElement) feature );
         }
       }
 
       /* Delete all parameters that should be deleted */
+      // FIXME: what about 2d parameters?
       deleteParameters( mapPanel, selected, lFlowTheme, lFlowRelCollection, element1DtoRemove, discretisationModel );
 
       /* Execute the delete commands */
-      final CommandableWorkspace workspace = featureTheme.getWorkspace();
+      final CommandableWorkspace workspace = onedTheme.getWorkspace();
       workspace.postCommand( deleteCmdPolyElement );
       workspace.postCommand( deleteCmd1dElement );
 
-      final Set<Feature> changedFeatureList = new HashSet<Feature>();
-      changedFeatureList.addAll( (deleteCmdPolyElement).getChangedFeatureList() );
-      changedFeatureList.addAll( (deleteCmd1dElement).getChangedFeatureList() );
-
-      final Feature[] deletedFeatures = changedFeatureList.toArray( new Feature[changedFeatureList.size()] );
-      final GMLWorkspace discWorkspace = discretisationModel.getWorkspace();
-      final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( discWorkspace, discretisationModel, deletedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
-      discWorkspace.fireModellEvent( event );
+      // FIXME: should have been sent by commands!
+      // final Set<Feature> changedFeatureList = new HashSet<Feature>();
+      // changedFeatureList.addAll( (deleteCmdPolyElement).getChangedFeatureList() );
+      // changedFeatureList.addAll( (deleteCmd1dElement).getChangedFeatureList() );
+      //
+      // final Feature[] deletedFeatures = changedFeatureList.toArray( new Feature[changedFeatureList.size()] );
+      // final GMLWorkspace discWorkspace = discretisationModel.getWorkspace();
+      // final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( discWorkspace,
+      // discretisationModel, deletedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+      // discWorkspace.fireModellEvent( event );
     }
     catch( final Exception e )
     {
@@ -216,8 +215,10 @@ public class DeleteFeElementsHelper
         }
         lFlowTheme.getWorkspace().postCommand( compositeCommand );
 
-        final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( lFlowTheme.getWorkspace(), buildingElement.getOwner(), buildingElement, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
-        lFlowTheme.getWorkspace().fireModellEvent( event );
+        // final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent(
+        // lFlowTheme.getWorkspace(), buildingElement.getOwner(), buildingElement,
+        // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+        // lFlowTheme.getWorkspace().fireModellEvent( event );
       }
     }
   }

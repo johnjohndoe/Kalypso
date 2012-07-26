@@ -56,11 +56,10 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Undoable command to change the position of a node. the change can be specified as a point or a change elevation
- * 
- * 
+ *
  * @author Patrice Congo
  */
-public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
+public class ChangeNodePositionCommand implements IFeatureChangeCommand
 {
   private final IFE1D2DNode m_node;
 
@@ -99,36 +98,24 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
     m_fireEventsForDependendElements = fireEventsForDependendElements;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.0" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
     process( m_newPosition );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   public void process( final GM_Point position ) throws Exception
   {
     m_node.setPoint( position );
@@ -159,46 +146,24 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
     workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, changedFeatures.toArray( new Feature[changedFeatures.size()] ) ) );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     process( m_newPosition );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
     process( m_oldPosition );
   }
 
-  /**
-   * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
-   */
   @Override
   public Feature[] getChangedFeature( )
   {
     return new Feature[] { m_node };
   }
 
-  /**
-   * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
-   */
-  @Override
-  @Deprecated
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
-  {
-    return m_discretisationModel;
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
