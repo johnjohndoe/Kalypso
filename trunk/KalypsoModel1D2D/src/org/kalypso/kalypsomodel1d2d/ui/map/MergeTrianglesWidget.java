@@ -54,7 +54,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -84,7 +84,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * This widget allows to delete the edge of to adjacent triangles and thus combining them into a single quad-element.
- * 
+ *
  * @author Gernot Belger
  */
 public class MergeTrianglesWidget extends DeprecatedMouseWidget
@@ -175,7 +175,7 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
       // add remove element command
       for( final IFE1D2DElement element : elements2remove )
       {
-        final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( element, m_model1d2d );
+        final IFeatureChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( element, m_model1d2d );
         workspace.postCommand( deleteCmd );
       }
 
@@ -194,7 +194,6 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
    * Creates the new element from the two adjacent triangles.<br>
    * We just make the geometric union, that should do it.
    */
-  @SuppressWarnings("unchecked")
   private GM_Surface<GM_SurfacePatch> createNewElement( final IPolyElement element1, final IPolyElement element2 ) throws GM_Exception
   {
     final GM_Surface<GM_SurfacePatch> geom1 = element1.getGeometry();
@@ -210,7 +209,6 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
     return (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( buffer );
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {
@@ -240,9 +238,6 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
     repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {

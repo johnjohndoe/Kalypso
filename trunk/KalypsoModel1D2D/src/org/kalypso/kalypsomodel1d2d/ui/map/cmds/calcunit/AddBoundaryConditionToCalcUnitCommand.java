@@ -45,9 +45,8 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -55,16 +54,14 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author madanago
- *
  */
-@SuppressWarnings({ "unchecked" })//$NON-NLS-1$ //$NON-NLS-2$
-public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dChangeCommand
+public class AddBoundaryConditionToCalcUnitCommand implements IFeatureChangeCommand
 {
   private final IBoundaryCondition m_boundaryConditionToAdd;
 
   private final ICalculationUnit m_calculationUnit;
 
-  private final boolean done = false;
+  private final boolean m_done = false;
 
   public AddBoundaryConditionToCalcUnitCommand( final ICalculationUnit calculationUnit, final IBoundaryCondition boundaryConditionToAdd )
   {
@@ -75,54 +72,33 @@ public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dCha
     m_boundaryConditionToAdd = boundaryConditionToAdd;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
-   */
   @Override
   public Feature[] getChangedFeature( )
   {
-    if( done )
+    if( m_done )
       return new Feature[] { m_calculationUnit, m_boundaryConditionToAdd };
     else
       return new Feature[] {};
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
-   */
-  @Override
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return false;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
     try
     {
-      if( !done )
+      if( !m_done )
       {
         final List calculationUnitID = (List) m_boundaryConditionToAdd.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
         calculationUnitID.add( m_calculationUnit.getId() );
@@ -153,22 +129,15 @@ public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dCha
     bcWorkspace.fireModellEvent( bcEvent );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
 
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
 
   }
-
 }

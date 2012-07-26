@@ -71,9 +71,9 @@ public class ChangeDiscretiationModelCommand implements ICommand
 
   private final GMLWorkspace m_commandableWorkspace;
 
-  private final List<IDiscrModel1d2dChangeCommand> m_commands = new ArrayList<IDiscrModel1d2dChangeCommand>();
+  private final List<IFeatureChangeCommand> m_commands = new ArrayList<>();
 
-  private final List<IDiscrModel1d2dChangeCommand> m_nodeCommands = new ArrayList<IDiscrModel1d2dChangeCommand>();
+  private final List<IFeatureChangeCommand> m_nodeCommands = new ArrayList<>();
 
   private boolean m_isUndoable = true;
 
@@ -118,7 +118,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
     final List<Feature> changedFeatures = new ArrayList<Feature>();
 
     // build nodes with geo indexing
-    for( final IDiscrModel1d2dChangeCommand command : m_nodeCommands )
+    for( final IFeatureChangeCommand command : m_nodeCommands )
     {
       try
       {
@@ -147,7 +147,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
     GeometryCalcControl.setDoCalcElement( false );
     try
     {
-      for( final IDiscrModel1d2dChangeCommand command : m_commands )
+      for( final IFeatureChangeCommand command : m_commands )
       {
         try
         {
@@ -194,13 +194,10 @@ public class ChangeDiscretiationModelCommand implements ICommand
     m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d, changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
-    for( final IDiscrModel1d2dChangeCommand command : m_commands )
+    for( final IFeatureChangeCommand command : m_commands )
     {
       try
       {
@@ -219,9 +216,8 @@ public class ChangeDiscretiationModelCommand implements ICommand
   @Override
   public void undo( ) throws Exception
   {
-
     // reverse order is taken because of eventual dependencies
-    IDiscrModel1d2dChangeCommand command;
+    IFeatureChangeCommand command;
     for( int index = m_commands.size() - 1; index >= 0; index-- )
     {
       command = m_commands.get( index );
@@ -237,7 +233,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
 
   }
 
-  public void addCommand( final IDiscrModel1d2dChangeCommand command )
+  public void addCommand( final IFeatureChangeCommand command )
   {
     Assert.throwIAEOnNullParam( command, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand.3" ) ); //$NON-NLS-1$
     if( m_commands instanceof AddNodeCommand )
@@ -251,6 +247,5 @@ public class ChangeDiscretiationModelCommand implements ICommand
     }
 
     m_isUndoable = m_isUndoable && command.isUndoable();
-
   }
 }

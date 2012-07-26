@@ -59,7 +59,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollec
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -76,11 +76,11 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Command to create new calculation unit
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
-public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
+public class CreateCalculationUnitCmd implements IFeatureChangeCommand
 {
   /**
    * QName of the calculation unit to create
@@ -116,7 +116,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
   /**
    * Creates a Calculation unit of the given q-name
-   * 
+   *
    * @param cuFeatureQName
    *          the q-name of the calculation unit to create
    * @param model1d2d
@@ -138,7 +138,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
   /**
    * Creates a Calculation unit of the given q-name
-   * 
+   *
    * @param cuFeatureQName
    *          the q-name of the calculation unit to create
    * @param model1d2d
@@ -183,12 +183,6 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   }
 
   @Override
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
-  {
-    return m_model1d2d;
-  }
-
-  @Override
   public String getDescription( )
   {
     return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd.0" ); //$NON-NLS-1$
@@ -205,16 +199,6 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   {
     try
     {
-      // final IFeatureBindingCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
-      // m_calculationUnit = ce.addNew( m_calcUnitFeatureQName, ICalculationUnit.class );
-      // if( m_calcUnitName != null )
-      // m_calculationUnit.setName( m_calcUnitName );
-      // if( m_calcUnitDescription != null )
-      // m_calculationUnit.setDescription( m_calcUnitDescription );
-      // m_calculationUnit.getElements().clear();
-      // createControlModel();
-      // fireProcessChanges( m_calculationUnit, true );
-
       if( m_calculationUnitOrig != null )
       {
         if( m_calculationUnitOrig instanceof ICalculationUnit1D2D )
@@ -222,14 +206,6 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           final Feature calcUnitFeature = FeatureHelper.cloneFeature( m_calculationUnitOrig.getOwner(), m_calculationUnitOrig.getParentRelation(), m_calculationUnitOrig );
           m_calculationUnit = (ICalculationUnit) calcUnitFeature.getAdapter( ICalculationUnit.class );
         }
-        // the clone of basic calculation unit was specified as not needed, so it will not be cloned also
-        // the clone button is not enabled for basic calculation units in widget face
-        // else
-        // {
-        // final IFeatureWrapperCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
-        // m_calculationUnit = ce.addNew( m_calcUnitFeatureQName, ICalculationUnit.class );
-        // FeatureHelper.copySimpleProperties( m_calculationUnitOrig.getFeature(), m_calculationUnit.getFeature() );
-        // }
       }
       else
       {
@@ -302,7 +278,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   }
 
   /**
-   * 
+   *
    * @param calculationUnit
    *          the added or removed calculation unit
    * @param added
@@ -320,9 +296,6 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     workspace.fireModellEvent( event );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
@@ -332,9 +305,6 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     }
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
@@ -403,9 +373,9 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           /**
            * <om:observedProperty xmlns:om="http://www.opengis.net/om"
            * xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-           * 
-           * 
-           * 
+           *
+           *
+           *
            * IPhenomenon phenomenon = new DictionaryPhenomenon(
            * "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", "", "");
            * obs.setPhenomenon( phenomenon );

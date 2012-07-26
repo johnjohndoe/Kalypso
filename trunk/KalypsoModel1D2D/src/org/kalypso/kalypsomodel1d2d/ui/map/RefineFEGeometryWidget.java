@@ -70,7 +70,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -116,7 +116,7 @@ import org.kalypsodeegree_impl.tools.refinement.Refinement;
  * <li>resulting elements with 5 corners are getting split into triangles by simple polygon triangulation
  * <li>arcs cannot be split twice
  * </ul>
- * 
+ *
  * @author Thomas Jung
  */
 public class RefineFEGeometryWidget extends DeprecatedMouseWidget
@@ -390,7 +390,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
       final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) workspace.getRootFeature();
 
       // add remove element command
-      final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( discModel );
+      final IFeatureChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( discModel );
       final List<Feature> elementsToRemove = new ArrayList<Feature>();
       for( final Feature feature : refineList )
       {

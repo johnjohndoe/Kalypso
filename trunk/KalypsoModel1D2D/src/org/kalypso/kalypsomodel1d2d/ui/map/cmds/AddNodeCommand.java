@@ -52,19 +52,17 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  *
  * @author Patrice Congo
  */
-public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
+public class AddNodeCommand implements IFeatureChangeCommand
 {
-  private IFE1D2DNode addedNode;
+  private IFE1D2DNode m_addedNode;
 
   private GM_Point m_nodePoint;
 
-  private final IFEDiscretisationModel1d2d discretisationModel;
+  private final IFEDiscretisationModel1d2d m_discretisationModel;
 
-  private final boolean notCreated[] = new boolean[1];
+  private final boolean m_notCreated[] = new boolean[1];
 
   private final double m_searchRectWidth;
-
-  //private final boolean ignoreZCoordinate;
 
   /**
    * Adds a node at the given point if there is no node within the specified rectangle
@@ -105,7 +103,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
   public AddNodeCommand( final IFEDiscretisationModel1d2d model, final GM_Point nodePoint, final double searchRectWidth, final boolean ignoreZCoordinate )
   {
     // this.ignoreZCoordinate = ignoreZCoordinate;
-    discretisationModel = model;
+    m_discretisationModel = model;
     m_searchRectWidth = searchRectWidth;
     if( ignoreZCoordinate )
     {
@@ -123,80 +121,62 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
       }
     }
     // PERFORMANCE-BUGFIX: first search for all nodes, then add it
-    addedNode = model.findNode( nodePoint, searchRectWidth );
-    if( addedNode != null )
+    m_addedNode = model.findNode( nodePoint, searchRectWidth );
+    if( m_addedNode != null )
     {
-      notCreated[0] = true;
+      m_notCreated[0] = true;
     }
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.0"); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  // public static boolean[] dummyNotCreated = new boolean[1];
-
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
-    if( addedNode == null )
+    if( m_addedNode == null )
     {
-      addedNode = discretisationModel.createNode( m_nodePoint, -1, notCreated );
-      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.1") + addedNode + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.2") + notCreated[0] ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_addedNode = m_discretisationModel.createNode( m_nodePoint, -1, m_notCreated );
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.1" ) + m_addedNode + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.2" ) + m_notCreated[0] ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
-    if( addedNode == null )
+    if( m_addedNode == null )
     {
       process();
     }
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
-    if( notCreated[0] )
+    if( m_notCreated[0] )
     {
       return;
     }
     else
     {
       // TODO check broken links issue
-      discretisationModel.getNodes().remove( addedNode.getId() );
-      addedNode = null;
+      m_discretisationModel.getNodes().remove( m_addedNode.getId() );
+      m_addedNode = null;
     }
-
   }
 
   public IFE1D2DNode getAddedNode( )
   {
-    return addedNode;
+    return m_addedNode;
   }
 
   public GM_Point getNodePoint( )
@@ -209,27 +189,12 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
     return m_searchRectWidth;
   }
 
-  /**
-   * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
-   */
   @Override
   public Feature[] getChangedFeature( )
   {
-    return new Feature[] { addedNode };
+    return new Feature[] { m_addedNode };
   }
 
-  /**
-   * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
-   */
-  @Override
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
-  {
-    return discretisationModel;
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

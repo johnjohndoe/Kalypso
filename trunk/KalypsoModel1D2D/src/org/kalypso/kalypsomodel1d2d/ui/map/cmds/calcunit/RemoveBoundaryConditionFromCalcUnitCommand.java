@@ -47,18 +47,15 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author madanagopal
- *
  */
-@SuppressWarnings({})
-//$NON-NLS-1$ //$NON-NLS-2$
-public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d2dChangeCommand
+public class RemoveBoundaryConditionFromCalcUnitCommand implements IFeatureChangeCommand
 {
   private final ICalculationUnit m_calculationUnit;
 
@@ -84,28 +81,12 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
     return null;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
-   */
-  @Override
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
-  {
-
-    return m_model1d2d;
-  }
-
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return "remove boundary condition from calculation unit"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
@@ -119,7 +100,7 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
     {
       if( !m_done )
       {
-        final List parentCalcUnits = (List) m_boundaryCondition.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
+        final List< ? > parentCalcUnits = (List< ? >) m_boundaryCondition.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
         m_done = parentCalcUnits.remove( m_calculationUnit.getId() );
         fireProcessChanges();
       }
@@ -148,22 +129,13 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
     bcWorkspace.fireModellEvent( bcEvent );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
-
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
-
   }
-
 }

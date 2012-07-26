@@ -56,26 +56,25 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Command for deleting one 1D element. The change event has to fired from outside!
- * 
+ *
  * @author Patrice Congo
  * @author ig, barbarins
  */
-@SuppressWarnings("unchecked")
-public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
+public class DeleteElement1DCmd implements IFeatureChangeCommand
 {
   private List<IFE1D2DComplexElement> complexElements;
 
-  private List<Feature> m_listAffectedFeatures;
+  private final List<Feature> m_listAffectedFeatures;
 
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
-  private Set< Feature > m_setFeatureToRemove = null;
-  
+  private Set<Feature> m_setFeatureToRemove = null;
+
   public DeleteElement1DCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature pFeature )
   {
     m_model1d2d = model1d2d;
-    m_listAffectedFeatures = new ArrayList< Feature >();
-    m_setFeatureToRemove = new HashSet< Feature >();
+    m_listAffectedFeatures = new ArrayList<Feature>();
+    m_setFeatureToRemove = new HashSet<Feature>();
     addElementToRemove( pFeature );
   }
 
@@ -85,7 +84,7 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.0" ); //$NON-NLS-1$
   }
 
   /**
@@ -100,45 +99,45 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
   @Override
   public void process( ) throws Exception
   {
-    Set< Feature > lSetEdges = new HashSet< Feature >();
-    Set< Feature > lSet1DElements = new HashSet< Feature >();
-    
+    final Set<Feature> lSetEdges = new HashSet<Feature>();
+    final Set<Feature> lSet1DElements = new HashSet<Feature>();
+
     final RemoveEdgeWithoutContainerOrInvCmd lCmdEdgeRemove = new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, null );
 
-    for( final Feature lFeature: m_setFeatureToRemove )
+    for( final Feature lFeature : m_setFeatureToRemove )
     {
-      IElement1D lElement = (IElement1D) lFeature.getAdapter( IElement1D.class );
+      final IElement1D lElement = (IElement1D) lFeature.getAdapter( IElement1D.class );
       final String elementID = lElement.getId();
       lSet1DElements.add( lFeature );
       m_listAffectedFeatures.add( lFeature );
       complexElements = lElement.getContainers();
       for( final IFE1D2DComplexElement complexElement : complexElements )
-      { 
+      {
         complexElement.getElements().remove( elementID );
         m_listAffectedFeatures.add( complexElement );
       }
-      
+
       final IFE1D2DEdge edge = lElement.getEdge();
 
       final IFeatureBindingCollection containers = edge.getContainers();
-      boolean isRemoved = containers.remove( elementID );
+      final boolean isRemoved = containers.remove( elementID );
 
       final IFeatureBindingCollection nodes = edge.getNodes();
-      for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
+      for( final Iterator iterator = nodes.iterator(); iterator.hasNext(); )
       {
-        Feature featureWrapper = (Feature) iterator.next();
-        Feature wrappedFeature = featureWrapper;
+        final Feature featureWrapper = (Feature) iterator.next();
+        final Feature wrappedFeature = featureWrapper;
         m_listAffectedFeatures.add( wrappedFeature );
       }
-      
+
       if( !isRemoved )
       {
-        throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.1") ); //$NON-NLS-1$
+        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.1" ) ); //$NON-NLS-1$
       }
       lSetEdges.add( edge );
-     
+
       m_listAffectedFeatures.add( edge );
-      
+
       lCmdEdgeRemove.addEdgeToRemove( edge );
     }
     lCmdEdgeRemove.process();
@@ -162,21 +161,16 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
   public Feature[] getChangedFeature( )
   {
     return null;
-//    return new Feature[] { m_element1D };
-  }
-
-  @Override
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
-  {
-    return m_model1d2d;
+    // return new Feature[] { m_element1D };
   }
 
   public List<Feature> getChangedFeatureList( )
   {
     return m_listAffectedFeatures;
   }
-  
-  public void addElementToRemove( Feature pFeature ){
+
+  public void addElementToRemove( final Feature pFeature )
+  {
     if( pFeature != null )
       m_setFeatureToRemove.add( pFeature );
   }
