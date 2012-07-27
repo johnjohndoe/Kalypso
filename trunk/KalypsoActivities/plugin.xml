@@ -75,15 +75,36 @@
             pattern="org\.eclipse\.pde/PluginNature">
       </activityPatternBinding>
        
+      <!-- Team-UI: we want CaompareWith Each Other (2 files), but nothing else from team -->
       <activityPatternBinding
             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
-            pattern="org\.eclipse\.team\.ui/org.*">
-      </activityPatternBinding> 
-       <activityPatternBinding
-             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
-             isEqualityPattern="false"
-             pattern="org\.eclipse\.team\.ui/.*">
-       </activityPatternBinding>
+            pattern="org\.eclipse\.team\.ui/.*Preferences">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*ConfigureProject">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*ProjectSet.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*Patch.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*GenericHistory.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*Sync.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*ProjectSet.*">
+      </activityPatternBinding>
+       
        <activityPatternBinding
              activityId="org.kalypso.activities.activities.KalypsoModelProduct"
              isEqualityPattern="false"
@@ -104,7 +125,7 @@
              isEqualityPattern="false"
              pattern="org\.eclipse\.compare/compareWithPatch">
        </activityPatternBinding>
-       
+
  	   <activityPatternBinding
             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
             isEqualityPattern="true"
@@ -120,7 +141,6 @@
              isEqualityPattern="true"
              pattern="org.eclipse.ui.ide.application/org.eclipse.update.ui.updateMenu">
        </activityPatternBinding>
-       
     </extension>
     
 </plugin>
