@@ -119,7 +119,7 @@ public class CreateTransitionElementCommand implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     return new Feature[] { m_transitionElement };
   }

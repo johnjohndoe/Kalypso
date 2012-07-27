@@ -73,7 +73,7 @@ public class AddBoundaryConditionToCalcUnitCommand implements IFeatureChangeComm
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     if( m_done )
       return new Feature[] { m_calculationUnit, m_boundaryConditionToAdd };

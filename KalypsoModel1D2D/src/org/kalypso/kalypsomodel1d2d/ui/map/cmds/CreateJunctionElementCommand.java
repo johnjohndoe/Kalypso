@@ -112,7 +112,7 @@ public class CreateJunctionElementCommand implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     return new Feature[] { m_junctionElement };
   }

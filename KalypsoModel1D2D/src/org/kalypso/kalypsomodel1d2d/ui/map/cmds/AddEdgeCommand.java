@@ -112,7 +112,7 @@ public class AddEdgeCommand implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     return new Feature[] { addedEdge };
   }

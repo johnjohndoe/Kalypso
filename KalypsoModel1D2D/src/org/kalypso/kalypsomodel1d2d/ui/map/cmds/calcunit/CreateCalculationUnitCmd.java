@@ -174,7 +174,7 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     if( m_calculationUnit != null )
       return new Feature[] { m_model1d2d, m_calculationUnit };

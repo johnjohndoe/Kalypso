@@ -142,7 +142,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
         if( command instanceof DeleteNativeTerrainElevationWrapper ){
           m_toDelete = true;
         }
-        final Feature[] changedFeatures2 = command.getChangedFeature();
+        final Feature[] changedFeatures2 = command.getChangedFeatures();
         if( changedFeatures2 != null )
         {
           for( final Feature changedFeature : changedFeatures2 )

@@ -79,7 +79,7 @@ public class RemoveElementFromCalculationUnitCmd implements IFeatureChangeComman
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     return null;
   }

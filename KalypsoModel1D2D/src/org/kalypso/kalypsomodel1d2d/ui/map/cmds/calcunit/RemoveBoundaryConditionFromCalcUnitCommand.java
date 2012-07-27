@@ -76,7 +76,7 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IFeatureChang
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     return null;
   }

@@ -40,17 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -62,87 +63,89 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class DeleteElement1DCmd implements IFeatureChangeCommand
 {
-  private List<IFE1D2DComplexElement> complexElements;
+  private final Collection<Feature> m_changedFeatures = new HashSet<>();
 
-  private final List<Feature> m_listAffectedFeatures;
+  private final Set<IElement1D> m_elementsToRemove = new HashSet<>();
 
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
-  private Set<Feature> m_setFeatureToRemove = null;
+  public DeleteElement1DCmd( final IFEDiscretisationModel1d2d model1d2d )
+  {
+    this( model1d2d, null );
+  }
 
-  public DeleteElement1DCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature pFeature )
+  public DeleteElement1DCmd( final IFEDiscretisationModel1d2d model1d2d, final IElement1D pFeature )
   {
     m_model1d2d = model1d2d;
-    m_listAffectedFeatures = new ArrayList<Feature>();
-    m_setFeatureToRemove = new HashSet<Feature>();
+
     addElementToRemove( pFeature );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.0" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
-    return true;
+    return false;
   }
 
   @Override
   public void process( ) throws Exception
   {
-    final Set<Feature> lSetEdges = new HashSet<Feature>();
-    final Set<Feature> lSet1DElements = new HashSet<Feature>();
+    final Set<Feature> lSetEdges = new HashSet<>();
+    final Set<Feature> elementsToRemove = new HashSet<>();
 
     final RemoveEdgeWithoutContainerOrInvCmd lCmdEdgeRemove = new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, null );
 
-    for( final Feature lFeature : m_setFeatureToRemove )
+    for( final IElement1D element1d : m_elementsToRemove )
     {
-      final IElement1D lElement = (IElement1D) lFeature.getAdapter( IElement1D.class );
-      final String elementID = lElement.getId();
-      lSet1DElements.add( lFeature );
-      m_listAffectedFeatures.add( lFeature );
-      complexElements = lElement.getContainers();
-      for( final IFE1D2DComplexElement complexElement : complexElements )
+      elementsToRemove.add( element1d );
+
+      m_changedFeatures.add( element1d );
+
+      final List<IFE1D2DComplexElement> elementConmtainers = element1d.getContainers();
+
+      /* Remove element from itsa containers */
+      for( final IFE1D2DComplexElement elementContainer : elementConmtainers )
       {
-        complexElement.getElements().remove( elementID );
-        m_listAffectedFeatures.add( complexElement );
+        final IFeatureBindingCollection<IFENetItem> elements = elementContainer.getElements();
+        elements.getFeatureList().removeLink( element1d );
+
+        m_changedFeatures.add( elementContainer );
       }
 
-      final IFE1D2DEdge edge = lElement.getEdge();
+      /* Remove corresponding edge */
+      final IFE1D2DEdge edge = element1d.getEdge();
 
-      final IFeatureBindingCollection containers = edge.getContainers();
-      final boolean isRemoved = containers.remove( elementID );
+      /* Remove edge from its containers */
 
-      final IFeatureBindingCollection nodes = edge.getNodes();
-      for( final Iterator iterator = nodes.iterator(); iterator.hasNext(); )
-      {
-        final Feature featureWrapper = (Feature) iterator.next();
-        final Feature wrappedFeature = featureWrapper;
-        m_listAffectedFeatures.add( wrappedFeature );
-      }
-
+      // TODO: why is this necessary? The edge is removed, so are its container list
+      final IFeatureBindingCollection edgeContainers = edge.getContainers();
+      final boolean isRemoved = edgeContainers.getFeatureList().removeLink( element1d );
       if( !isRemoved )
-      {
         throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.1" ) ); //$NON-NLS-1$
-      }
+
+      final IFeatureBindingCollection<IFE1D2DNode> nodes = edge.getNodes();
+      m_changedFeatures.addAll( nodes );
+
       lSetEdges.add( edge );
 
-      m_listAffectedFeatures.add( edge );
+      m_changedFeatures.add( edge );
 
       lCmdEdgeRemove.addEdgeToRemove( edge );
     }
+
     lCmdEdgeRemove.process();
+
+    // FIXME: did not the edge command remove the edges?
+    // FIXME: makes no sense: elements list never contains edges at all!
     m_model1d2d.getElements().removeAll( lSetEdges );
-    m_model1d2d.getElements().removeAll( lSet1DElements );
+
+    m_model1d2d.getElements().removeAll( elementsToRemove );
   }
 
   @Override
@@ -158,20 +161,14 @@ public class DeleteElement1DCmd implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
-    return null;
-    // return new Feature[] { m_element1D };
+    return m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
   }
 
-  public List<Feature> getChangedFeatureList( )
+  public void addElementToRemove( final IElement1D element )
   {
-    return m_listAffectedFeatures;
-  }
-
-  public void addElementToRemove( final Feature pFeature )
-  {
-    if( pFeature != null )
-      m_setFeatureToRemove.add( pFeature );
+    if( element != null )
+      m_elementsToRemove.add( element );
   }
 }

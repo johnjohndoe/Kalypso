@@ -143,7 +143,7 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     if( m_calcUnitDeleted )
       return new Feature[] { m_model1d2d };
