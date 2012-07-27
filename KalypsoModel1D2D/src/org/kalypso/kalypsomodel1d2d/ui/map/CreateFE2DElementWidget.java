@@ -16,15 +16,14 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -52,10 +51,6 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.m_toolTipRenderer.setBackgroundColor( new Color(
-   *      1f, 1f, 0.6f, 0.70f ) );kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -76,9 +71,6 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
     reinit();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {
@@ -96,9 +88,6 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
       m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -142,9 +131,6 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
 
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
@@ -152,9 +138,6 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
       m_pointSnapper.activate( false );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyReleased( final KeyEvent e )
   {
@@ -162,9 +145,6 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
       m_pointSnapper.activate( true );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyTyped( final KeyEvent e )
   {
@@ -181,9 +161,6 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final Point p )
   {
@@ -201,9 +178,6 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
     repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
   @Override
   public void leftPressed( final Point p )
   {
@@ -214,18 +188,17 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
 
     try
     {
-      final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-      Feature lNewParentFeature = null;
+      final Create2dElementCommand command;
       if( newNode instanceof GM_Point )
       {
-        lNewParentFeature = m_builder.addNode( (GM_Point) newNode, command );
+        command = m_builder.addNode( (GM_Point) newNode );
       }
       else
       {
-        lNewParentFeature = m_builder.addNode( ((IFE1D2DNode< ? >) newNode).getPoint(), command );
+        command = m_builder.addNode( ((IFE1D2DNode< ? >) newNode).getPoint() );
       }
 
-      if( command != null && lNewParentFeature != null )
+      if( command != null )
       {
         m_nodeTheme.getWorkspace().postCommand( command );
         reinit();
@@ -242,12 +215,6 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
     }
   }
 
-  /**
-   * TODO: change to right-clicked: BUT!: at the moment the context menu is opened, so the framework must know whether
-   * this widget is editing something at the moment or not
-   * 
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
-   */
   @Override
   public void doubleClickedLeft( final Point p )
   {
@@ -259,10 +226,11 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
       return;
     try
     {
-      final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-      final Feature lNewParentFeature = m_builder.finish( command );
-      if( command != null && lNewParentFeature != null )
+      final Create2dElementCommand command = m_builder.finish();
+      if( command != null )
+      {
         m_nodeTheme.getWorkspace().postCommand( command );
+      }
     }
     catch( final Exception e )
     {

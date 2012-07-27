@@ -73,6 +73,7 @@ public class Add1DElementFromNodeCmd implements IFeatureChangeCommand
   {
     Assert.throwIAEOnNullParam( model, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.0") ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( elementNodeCmds, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.1") ); //$NON-NLS-1$
+
     for( final IFeatureChangeCommand cmd : elementNodeCmds )
     {
       if( cmd == null )

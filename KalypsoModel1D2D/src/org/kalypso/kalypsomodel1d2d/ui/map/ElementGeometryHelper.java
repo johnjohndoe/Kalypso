@@ -48,30 +48,17 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand;
-import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -84,7 +71,6 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class ElementGeometryHelper
 {
-
   /**
    * distance for searching of already existing {@link IFE1D2DNode}s TODO: should be specified in kalypso preferences
    * page
@@ -94,173 +80,35 @@ public class ElementGeometryHelper
   private static final DateFormat m_DF = new SimpleDateFormat( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.0" ) ); //$NON-NLS-1$
 
   /**
-   * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
-   * The new {@link IFE1D2DElement} is specified by its geometry.
+   * Creates new {@link IFE1D2DNode}s specified by their geometry {@link GM_Point} <br/>
+   * Via a given search distance it is checked, if there are already existing {@link IFE1D2DNode}s in the neighborhood.
+   * If this is the case,no new nodes will be generated.
    *
-   * @param command
-   *          the {@link CompositeCommand} to be filled
-   * @param workspace
-   * @param parentFeature
-   * @param parentNodeProperty
-   * @param parentEdgeProperty
-   * @param parentElementProperty
-   * @param nodeContainerPT
-   * @param edgeContainerPT
    * @param discModel
-   *          the discretisation model
-   * @param points
-   *          the {@link GM_Point} list
-   */
-  public static Feature createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
-  {
-    final IFeatureType nodeFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-
-    final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
-
-    final IFeatureType edgeFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( IFE1D2DEdge.QNAME );
-    final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
-
-    final Feature parentFeature = discModel;
-    final IFeatureType parentType = parentFeature.getFeatureType();
-
-    final IRelationType parentNodeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
-    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
-    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
-
-    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
-
-    /* Build new nodes */
-    final IFE1D2DNode< ? >[] nodes1 = buildNewNodes( points, command, workspace, parentFeature, parentNodeProperty, discModel, SEARCH_DISTANCE );
-    final IFE1D2DNode< ? >[] nodes = makeCCW( nodes1 );
-
-    /* Build new edges */
-    final IFE1D2DEdge< ? , ? >[] edges = buildNewEdges( points.size(), command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
-
-    /* Build new element */
-    final IFE1D2DElement< ? , ? > newElement = PolyElement.createPolyElement( discModel );
-    ((PolyElement) newElement).setEdges( edges );
-
-    final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement, null, true );
-    command.addCommand( addElementCommand );
-
-    addEdgeContainerCommand( edges, edgeContainerPT, newElement, changes );
-
-    command.addCommand( new ListPropertyChangeCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) ) );
-
-    return newElement;
-  }
-
-  /**
-   * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
-   * The new {@link IFE1D2DElement} is specified by its geometry.
-   *
-   * @param command
-   *          the {@link CompositeCommand} to be filled
-   * @param workspace
-   * @param parentFeature
-   * @param nodeContainerPT
-   * @param discModel
-   *          the discretisation model
-   * @param points
-   *          the {@link GM_Point} list
-   */
-  @SuppressWarnings("unchecked")
-  public static void createAdd1dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
-  {
-    final IFeatureType nodeFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
-
-    final IFeatureType parentType = parentFeature.getFeatureType();
-
-    final IRelationType parentNodeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
-    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
-    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
-
-    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
-
-    /* Build new nodes */
-    final IFE1D2DNode< ? >[] nodes = buildNewNodes( points, command, workspace, parentFeature, parentNodeProperty, discModel, SEARCH_DISTANCE );
-
-    /* Build one new edge for the 1d element */
-    final IFE1D2DEdge[] edges = buildNewEdges( 1, command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
-
-    /* Build new element */
-    final IFeatureType parentFT = parentFeature.getFeatureType();
-    final IFeatureType lElement1DType = parentFT.getGMLSchema().getFeatureType( IElement1D.QNAME );
-
-    final Feature eleFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentElementProperty, lElement1DType );
-
-    final IElement1D newElement = (IElement1D) eleFeature;
-    newElement.setEdge( edges[0] );
-    // final IElement1D newElement = ModelOps.createElement1d( discModel, edges[0] );
-
-    final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement, null, true );
-    command.addCommand( addElementCommand );
-
-    command.addCommand( new ListPropertyChangeCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) ) );
-  }
-
-  public static final void addNodeContainerCommand( final IFE1D2DNode< ? > node0, final IFE1D2DNode< ? > node1, final IPropertyType propertyType, final IFE1D2DEdge edge, final List<FeatureChange> changes )
-  {
-    final Feature edgeFeature = edge;
-    final Feature node0Feature = node0;
-    final Feature node1Feature = node1;
-    final String edgeID = edgeFeature.getId();
-    final FeatureChange change0 = new FeatureChange( node0Feature, propertyType, edgeID );
-    changes.add( change0 );
-    final FeatureChange change1 = new FeatureChange( node1Feature, propertyType, edgeID );
-    changes.add( change1 );
-  }
-
-  public static final void addEdgeContainerCommand( final IFE1D2DEdge[] edges, final IPropertyType propertyType, final IFE1D2DElement element, final List<FeatureChange> changes )
-  {
-    final Feature elementFeature = element;
-    final String elementID = elementFeature.getId();
-
-    // FeatureChange changes[]= new FeatureChange[edges.length];
-
-    for( final IFE1D2DEdge element2 : edges )
-    {
-      changes.add( new FeatureChange( element2, propertyType, elementID ) );
-    }
-  }
-
-  /**
-   * Creates new {@link IFE1D2DNode}s specified by their geometry ( {@link GM_Point} list) and fills a given
-   * {@link CompositeCommand} with the {@link AddFeatureCommand}s for the new nodes. Via a given search distance it is
-   * checked, if there are already existing {@link IFE1D2DNode}s in the neighborhood. If this is the case,no new nodes
-   * will be generated.
-   *
    * @param points
    *          the points
-   * @param command
-   * @param workspace
-   * @param parentFeature
-   * @param parentNodeProperty
-   * @param discModel
-   * @param searchDistance
    */
-  public static IFE1D2DNode[] buildNewNodes( final List<GM_Point> points, final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentNodeProperty, final IFEDiscretisationModel1d2d discModel, final double searchDistance )
+  public static IFE1D2DNode[] buildNewNodes( final IFEDiscretisationModel1d2d discModel, final GM_Point... points )
   {
     /* Build new nodes */
-    final IFE1D2DNode[] nodes = new IFE1D2DNode[points.size()];
-    for( int i = 0; i < points.size(); i++ )
+    final IFE1D2DNode[] nodes = new IFE1D2DNode[points.length];
+    for( int i = 0; i < points.length; i++ )
     {
-      final GM_Point point = points.get( i );
+      final GM_Point point = points[i];
 
       // check, if there is already a node at that position
-      final IFE1D2DNode foundNode = discModel.findNode( point, searchDistance );
+      // FIXME: use search distance depending on current scale in pixels
+      final IFE1D2DNode foundNode = discModel.findNode( point, SEARCH_DISTANCE );
 
       if( foundNode == null )
       {
         // create new node
-        final IFE1D2DNode newNode = FE1D2DNode.createNode( discModel );
+        final IFE1D2DNode newNode = discModel.getNodes().addNew( IFE1D2DNode.QNAME );
+
         newNode.setPoint( point );
-        newNode.setName( "" ); //$NON-NLS-1$
-        //        newNode.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
+        newNode.setName( StringUtils.EMPTY );
         newNode.setDescription( m_DF.format( new Date() ) ); //$NON-NLS-1$
-        final AddFeatureCommand addNodeCommand = new AddFeatureCommand( workspace, parentFeature, parentNodeProperty, -1, newNode, null, false );
-        command.addCommand( addNodeCommand );// TODO: why not put into changes?
+
         nodes[i] = newNode;
       }
       else
@@ -287,7 +135,7 @@ public class ElementGeometryHelper
     return nodes;
   }
 
-  public static IFE1D2DEdge[] buildNewEdges( final int numOfEdges, final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentEdgeProperty, final IPropertyType nodeContainerPT, final IFEDiscretisationModel1d2d discModel, final List<FeatureChange> changes, final IFE1D2DNode[] nodes )
+  public static IFE1D2DEdge[] buildNewEdges( final IFEDiscretisationModel1d2d discModel, final IFE1D2DNode[] nodes, final int numOfEdges )
   {
     /* Build new edges */
     final IFE1D2DEdge[] edges = new IFE1D2DEdge[numOfEdges];
@@ -300,13 +148,13 @@ public class ElementGeometryHelper
       final IFE1D2DEdge edge = discModel.findEdge( node0, node1 );
       if( edge == null )
       {
-        final FE1D2DEdge newEdge = (FE1D2DEdge) FE1D2DEdge.createEdge( discModel );
+        final FE1D2DEdge newEdge = discModel.getEdges().addNew( IFE1D2DEdge.QNAME, FE1D2DEdge.class );
+
         newEdge.setNodes( node0, node1 );
         edges[i] = newEdge;
-        final AddFeatureCommand addEdgeCommand = new AddFeatureCommand( workspace, parentFeature, parentEdgeProperty, -1, newEdge, null, false );
-        command.addCommand( addEdgeCommand );
 
-        ElementGeometryHelper.addNodeContainerCommand( node0, node1, nodeContainerPT, newEdge, changes );
+        node0.getContainers().addRef( newEdge );
+        node1.getContainers().addRef( newEdge );
       }
       else
         edges[i] = edge;
@@ -409,30 +257,19 @@ public class ElementGeometryHelper
     }
   }
 
-  public static void createFE1D2DfromRing( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Ring ring ) throws Exception
-  {
-    final GM_Position[] poses = ring.getPositions();
-    final String crs = ring.getCoordinateSystem();
-    createFE1D2DfromPositions( workspace, discModel, poses, crs );
-  }
-
   public static void createFE1D2DfromPositions( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Position[] poses, final String crs ) throws Exception
   {
-    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-
     // create the nodes
-    final List<GM_Point> nodes = new ArrayList<GM_Point>();
+    final GM_Point[] nodes = new GM_Point[poses.length - 1];
 
     // TODO: handle snapping on neighboring nodes => quadrangles to triangles
     for( int i = 0; i < poses.length - 1; i++ )
-      nodes.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], crs ) );
+      nodes[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], crs );
 
     // create the new elements
-    if( nodes.size() == 3 || nodes.size() == 4 )
+    if( nodes.length == 3 || nodes.length == 4 )
     {
-      createAdd2dElement( command, workspace, discModel, nodes );
-
-      // inside the loop because we want to avoid duplicates
+      final Create2dElementCommand command = new Create2dElementCommand( discModel, nodes );
       workspace.postCommand( command );
     }
   }

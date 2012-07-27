@@ -395,8 +395,6 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
    * @param grabDistance
    *          The grab distance in world (=geo) coordinates.
    */
-  // protected abstract Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final
-  // GM_Point currentPos, final double grabDistance );
   protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     final Feature lFoundElement = discModel.find1DElement( currentPos, grabDistance );

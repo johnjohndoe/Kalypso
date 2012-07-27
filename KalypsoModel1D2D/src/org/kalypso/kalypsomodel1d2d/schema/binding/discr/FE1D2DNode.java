@@ -44,14 +44,6 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
     setProperty( IFE1D2DNode.WB1D2D_PROP_POINT, point );
   }
 
-  public static IFE1D2DNode createNode( final IFEDiscretisationModel1d2d discModel )
-  {
-    return discModel.getNodes().addNew( IFE1D2DNode.QNAME );
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFENode#getContainers()
-   */
   @Override
   public IFeatureBindingCollection<IFENetItem> getContainers( )
   {

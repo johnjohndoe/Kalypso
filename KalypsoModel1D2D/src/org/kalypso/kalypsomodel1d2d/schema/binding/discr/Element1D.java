@@ -46,7 +46,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -65,9 +64,6 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#getEdge()
-   */
   @Override
   public ET getEdge( )
   {
@@ -79,19 +75,16 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
     return (ET) edgeFeature;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#setEdge(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge)
-   */
   @Override
   public void setEdge( final IFE1D2DEdge edge )
   {
     final IFE1D2DEdge oldEdge = getEdge();
-    final String gmlID = getId();
     if( oldEdge != null )
     {
-      for( ; oldEdge.getContainers().remove( gmlID ); )
+      // Remove ALL references to this element
+      for( ; oldEdge.getContainers().getFeatureList().removeLink( this ); )
       {
-        // removing all links
+
       }
     }
 
@@ -105,25 +98,25 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
       setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, linkToEdge );
 
       final IFeatureBindingCollection containers = edge.getContainers();
-      final FeatureList wrappedList = containers.getFeatureList();
+
       // TODO: only add if not already present.
       // May the containers contain me twice?
 
-      // TODO: this is a potential performance problem, because this is a linear list search
-      if( !wrappedList.contains( gmlID ) )
+      // Remove ALL references to the new element in order to avoid duplicates -> can only happen if we have a bug
+      // elsewhere
+      for( ; containers.getFeatureList().removeLink( this ); )
       {
-        wrappedList.add( gmlID );
+
       }
+
+      containers.addRef( this );
     }
+
     // Setting the edge causes the envelope to become invalid
-    this.setEnvelopesUpdated();
+    setEnvelopesUpdated();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#getNodes()
-   */
   @Override
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public List<IFE1D2DNode> getNodes( )
   {
     final IFE1D2DEdge edge = getEdge();
@@ -169,9 +162,6 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
     return GeometryFactory.createGM_Curve( positions, crs );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessClsID()
-   */
   @Override
   public String getRoughnessClsID( )
   {
@@ -181,85 +171,57 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
     return property.toString();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionAxAy()
-   */
   @Override
   public Double getRoughnessCorrectionAxAy( )
   {
     return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionDP()
-   */
   @Override
   public Double getRoughnessCorrectionDP( )
   {
     return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionKS()
-   */
   @Override
   public Double getRoughnessCorrectionKS( )
   {
     return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessStyle()
-   */
   @Override
   public String getRoughnessStyle( )
   {
     return getProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE ).toString();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessClsID(java.lang.String)
-   */
   @Override
   public void setRoughnessClsID( final String value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionAxAy(java.lang.String)
-   */
   @Override
   public void setRoughnessCorrectionAxAy( final Double value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionDP(java.lang.String)
-   */
   @Override
   public void setRoughnessCorrectionDP( final Double value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionKS(java.lang.String)
-   */
   @Override
   public void setRoughnessCorrectionKS( final Double value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessStyle(java.lang.String)
-   */
   @Override
   public void setRoughnessStyle( final String value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );
   }
-
 }

@@ -51,16 +51,14 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   @SuppressWarnings("unchecked")
   public void setEdges( final IFE1D2DEdge[] edges )
   {
-    final FeatureList edgeList = (FeatureList) this.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
+    final IFeatureBindingCollection<IFE1D2DEdge> myEdges = getEdges();
 
-    edgeList.clear();
+    myEdges.clear();
 
     for( final IFE1D2DEdge edge : edges )
-    {
-      edgeList.add( edge.getId() );
-    }
+      myEdges.addRef( edge );
 
-    edgeList.invalidate();
+    myEdges.getFeatureList().invalidate();
     setEnvelopesUpdated();
   }
 
@@ -89,24 +87,12 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     return ModelGeometryBuilder.createSurfaceFromNode( getNodes() );
   }
 
-  public static IPolyElement createPolyElement( final IFEDiscretisationModel1d2d discModel )
-  {
-    final IPolyElement eleFeature = (IPolyElement) discModel.getElements().addNew( IPolyElement.QNAME );
-    return eleFeature;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getEdges()
-   */
   @Override
   public IFeatureBindingCollection<IFE1D2DEdge> getEdges( )
   {
     return m_edges;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#getNodes()
-   */
   @Override
   public List<IFE1D2DNode> getNodes( )
   {
