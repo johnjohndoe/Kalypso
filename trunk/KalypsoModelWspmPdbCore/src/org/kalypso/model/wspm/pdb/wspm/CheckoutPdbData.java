@@ -63,9 +63,9 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -111,7 +111,7 @@ public class CheckoutPdbData extends AbstractModelObject
 
   private IPdbConnection m_connection;
 
-  private Coefficients m_coefficients;
+  private ICoefficients m_coefficients;
 
   private GafCodes m_codes;
 
@@ -144,7 +144,7 @@ public class CheckoutPdbData extends AbstractModelObject
     }
   }
 
-  private Coefficients loadCoefficients( final IPdbConnection connection ) throws InvocationTargetException
+  private ICoefficients loadCoefficients( final IPdbConnection connection ) throws InvocationTargetException
   {
     final GetCoefficients operation = new GetCoefficients( IGafConstants.POINT_KIND_GAF );
     new ExecutorRunnable( connection, operation ).execute( new NullProgressMonitor() );
@@ -240,7 +240,7 @@ public class CheckoutPdbData extends AbstractModelObject
       PdbUtils.closeQuietly( m_connection );
   }
 
-  public Coefficients getCoefficients( )
+  public ICoefficients getCoefficients( )
   {
     return m_coefficients;
   }

@@ -62,11 +62,10 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
-import org.kalypso.model.wspm.pdb.internal.wspm.CheckinStatePdbOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
@@ -106,7 +105,7 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
       final WaterBody[] waterBodies = m_data.getExistingWaterBodies();
       final State state = m_data.getState();
       final String dbSrs = m_data.getDatabaseSrs();
-      final Coefficients coefficients = m_data.getCoefficients();
+      final ICoefficients coefficients = m_data.getCoefficients();
       state.setEditingUser( connection.getSettings().getUsername() );
       final URI documentBase = m_data.getDocumentBase();
 

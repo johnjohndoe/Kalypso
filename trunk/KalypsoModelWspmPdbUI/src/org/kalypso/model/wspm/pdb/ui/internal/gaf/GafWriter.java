@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,44 +36,63 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
+package org.kalypso.model.wspm.pdb.ui.internal.gaf;
 
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
-import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
+import java.io.File;
+import java.util.Set;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
- * @author Gernot Belger
+ * This writer serializes profile data into the gaf format.
+ * 
+ * @author Holger Albert
  */
-public class GetCoefficients implements IPdbOperation
+public class GafWriter
 {
-  private final String m_kind;
-
-  private ICoefficients m_coefficients;
-
-  public GetCoefficients( final String kind )
+  /**
+   * The constructor.
+   */
+  public GafWriter( )
   {
-    m_kind = kind;
   }
 
-  @Override
-  public String getLabel( )
+  /**
+   * This function writes the cross sections to the file.
+   * 
+   * @param crossSections
+   *          The cross sections.
+   * @param file
+   *          The file.
+   * @param monitor
+   *          A progress monitor.
+   * @return A status, indicating the result of the operation.
+   */
+  public IStatus write( final Set<CrossSection> crossSections, final File file, IProgressMonitor monitor )
   {
-    return Messages.getString("GetCoefficients_0"); //$NON-NLS-1$
-  }
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
 
-  public ICoefficients getCoefficients( )
-  {
-    return m_coefficients;
-  }
+    try
+    {
+      // TODO
 
-  @Override
-  public void execute( final Session session )
-  {
-    m_coefficients = new Coefficients( session, m_kind );
+      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "OK" );
+    }
+    catch( final Exception ex )
+    {
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, ex.getLocalizedMessage(), ex );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 }

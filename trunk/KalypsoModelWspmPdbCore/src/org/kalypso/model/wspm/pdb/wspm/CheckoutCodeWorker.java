@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.wspm;
 import org.kalypso.model.wspm.core.gml.classifications.ICodeClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**

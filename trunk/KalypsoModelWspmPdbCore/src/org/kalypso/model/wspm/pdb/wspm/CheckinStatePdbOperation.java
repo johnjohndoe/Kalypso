@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.internal.wspm;
+package org.kalypso.model.wspm.pdb.wspm;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -68,13 +68,18 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
-import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperation;
+import org.kalypso.model.wspm.pdb.internal.wspm.CheckinPartOperation;
+import org.kalypso.model.wspm.pdb.internal.wspm.ClassChecker;
+import org.kalypso.model.wspm.pdb.internal.wspm.IPartBuilder;
+import org.kalypso.model.wspm.pdb.internal.wspm.OKPartBuilder;
+import org.kalypso.model.wspm.pdb.internal.wspm.PPPartBuilder;
+import org.kalypso.model.wspm.pdb.internal.wspm.UKPartBuilder;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -96,7 +101,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public class CheckinStatePdbOperation implements IPdbOperation
 {
-  static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "CheckinStatePdbOperation.0" ); //$NON-NLS-1$
+  public static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "CheckinStatePdbOperation.0" ); //$NON-NLS-1$
 
   private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
@@ -112,7 +117,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final IGeoTransformer m_transformer;
 
-  private final Coefficients m_coefficients;
+  private final ICoefficients m_coefficients;
 
   private final GafCodes m_gafCodes;
 
@@ -126,7 +131,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
    * @param dbSrs
    *          The coordinate system of the database
    */
-  public CheckinStatePdbOperation( final GafCodes gafCodes, final Coefficients coefficients, final WaterBody[] waterBodies, final State state, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final IProgressMonitor monitor )
+  public CheckinStatePdbOperation( final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody[] waterBodies, final State state, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final IProgressMonitor monitor )
   {
     m_gafCodes = gafCodes;
     m_coefficients = coefficients;
@@ -180,7 +185,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   public IStatus getStatus( )
   {
-    return m_stati.asMultiStatusOrOK( Messages.getString("CheckinStatePdbOperation.7") ); //$NON-NLS-1$
+    return m_stati.asMultiStatusOrOK( Messages.getString( "CheckinStatePdbOperation.7" ) ); //$NON-NLS-1$
   }
 
   private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException
@@ -339,22 +344,22 @@ public class CheckinStatePdbOperation implements IPdbOperation
     return new CrossSectionPart[0];
   }
 
-  Coefficients getCoefficients( )
+  public ICoefficients getCoefficients( )
   {
     return m_coefficients;
   }
 
-  GafCodes getGafCodes( )
+  public GafCodes getGafCodes( )
   {
     return m_gafCodes;
   }
 
-  GeometryFactory getGeometryFactory( )
+  public GeometryFactory getGeometryFactory( )
   {
     return m_geometryFactory;
   }
 
-  IGeoTransformer getTransformer( )
+  public IGeoTransformer getTransformer( )
   {
     return m_transformer;
   }

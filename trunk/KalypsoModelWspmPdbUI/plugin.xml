@@ -146,6 +146,16 @@
            name="%org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport.name">
            <description>%org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport.description</description>
      </wizard>
+     <wizard
+           category="exportWizards/profileExportWizards"
+           class="org.kalypso.model.wspm.pdb.ui.internal.gaf.GafExportProfilesWizard"
+           icon="icons/export.gif"
+           id="org.kalypso.model.wspm.pdb.ui.internal.gaf.GafExportProfilesWizard"
+           name="%org.kalypso.model.wspm.pdb.ui.internal.gaf.GafExportProfilesWizard.name">
+        <description>
+           %org.kalypso.model.wspm.pdb.ui.internal.gaf.GafExportProfilesWizard.description
+        </description>
+     </wizard>
       <wizard
           id="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard"
           class="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard"
