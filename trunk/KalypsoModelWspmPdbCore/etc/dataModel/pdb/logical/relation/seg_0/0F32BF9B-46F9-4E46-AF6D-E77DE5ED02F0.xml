@@ -2,8 +2,8 @@
 <Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Water_Body__CS" id="0F32BF9B-46F9-4E46-AF6D-E77DE5ED02F0" directorySegmentName="seg_0">
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-18 07:33:55 UTC</createdTime>
-   <changedBy>thuel2</changedBy>
-   <changedTime>2011-05-26 09:26:58 UTC</changedTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2012-07-27 08:18:44 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <identifying>false</identifying>
    <optionalSource>false</optionalSource>
