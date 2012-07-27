@@ -63,7 +63,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.transformation.transformer.JTSTransformer;
@@ -104,7 +103,7 @@ public class ImportGafData extends AbstractModelObject
 
   private final IPdbConnection m_connection;
 
-  private Coefficients m_coefficients;
+  private ICoefficients m_coefficients;
 
   private PdbInfo m_info;
 
@@ -158,7 +157,7 @@ public class ImportGafData extends AbstractModelObject
     }
 
     final GafCodes gafCodes = new GafCodes();
-    final Coefficients coefficients = getCoefficients();
+    final ICoefficients coefficients = getCoefficients();
     m_pointChecker = new GafPointCheck( gafCodes, coefficients );
   }
 
@@ -293,7 +292,7 @@ public class ImportGafData extends AbstractModelObject
     return m_connection;
   }
 
-  public Coefficients getCoefficients( )
+  public ICoefficients getCoefficients( )
   {
     return m_coefficients;
   }

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,44 +36,35 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
+package org.kalypso.model.wspm.pdb.gaf;
 
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
-import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
+import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 
 /**
- * @author Gernot Belger
+ * @author Holger Albert
  */
-public class GetCoefficients implements IPdbOperation
+public interface ICoefficients
 {
-  private final String m_kind;
+  public static final String UNKNOWN_ROUGHNESS = "-1"; //$NON-NLS-1$
 
-  private ICoefficients m_coefficients;
+  public static final String UNKNOWN_VEGETATION = "-1"; //$NON-NLS-1$
 
-  public GetCoefficients( final String kind )
-  {
-    m_kind = kind;
-  }
+  public Roughness getRoughness( final String roughnessClass );
 
-  @Override
-  public String getLabel( )
-  {
-    return Messages.getString("GetCoefficients_0"); //$NON-NLS-1$
-  }
+  public Vegetation getVegetation( final String vegetationClass );
 
-  public ICoefficients getCoefficients( )
-  {
-    return m_coefficients;
-  }
+  public Roughness getRoughnessOrUnknown( final String roughnessClass );
 
-  @Override
-  public void execute( final Session session )
-  {
-    m_coefficients = new Coefficients( session, m_kind );
-  }
+  public Vegetation getVegetationOrUnknown( final String vegetationClass );
+
+  public Roughness[] getAllRoughness( );
+
+  public Vegetation[] getAllVegetation( );
+
+  public Vegetation getUnknownVegetation( );
+
+  public Roughness getUnknownRoughness( );
 }

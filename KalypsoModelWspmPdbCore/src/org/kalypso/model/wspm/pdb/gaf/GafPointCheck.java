@@ -50,8 +50,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
 
 /**
@@ -79,9 +77,9 @@ public class GafPointCheck
 
   private final GafCodes m_codes;
 
-  private final Coefficients m_coefficients;
+  private final ICoefficients m_coefficients;
 
-  public GafPointCheck( final GafCodes codes, final Coefficients coefficients )
+  public GafPointCheck( final GafCodes codes, final ICoefficients coefficients )
   {
     m_codes = codes;
     m_coefficients = coefficients;

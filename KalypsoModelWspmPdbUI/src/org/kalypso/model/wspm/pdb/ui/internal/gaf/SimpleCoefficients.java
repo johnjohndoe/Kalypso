@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,43 +36,41 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.internal.gaf;
+package org.kalypso.model.wspm.pdb.ui.internal.gaf;
 
-import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
+import org.kalypso.model.wspm.pdb.db.mapping.RoughnessId;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
+import org.kalypso.model.wspm.pdb.db.mapping.VegetationId;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 
 /**
- * Helper class that allows to access {@link org.kalypso.model.wspm.pdb.db.mapping.Roughness} and
- * {@link org.kalypso.model.wspm.pdb.db.mapping.Vegetation}.
- * 
- * @author Gernot Belger
+ * @author Holger Albert
  */
-public class Coefficients implements ICoefficients
+public class SimpleCoefficients implements ICoefficients
 {
-  private final RoughnessInfo m_roughnessInfo;
-
-  private final VegetationInfo m_vegetationInfo;
-
-  public Coefficients( final Session session, final String kind )
+  public SimpleCoefficients( )
   {
-    m_roughnessInfo = new RoughnessInfo( session, kind );
-    m_vegetationInfo = new VegetationInfo( session, kind );
   }
 
   @Override
   public Roughness getRoughness( final String roughnessClass )
   {
-    return m_roughnessInfo.getCoefficient( roughnessClass );
+    final Roughness roughness = new Roughness();
+    roughness.setId( new RoughnessId( null, roughnessClass ) );
+
+    return roughness;
   }
 
   @Override
   public Vegetation getVegetation( final String vegetationClass )
   {
-    return m_vegetationInfo.getCoefficient( vegetationClass );
+    final Vegetation vegetation = new Vegetation();
+    vegetation.setId( new VegetationId( null, vegetationClass ) );
+
+    return vegetation;
   }
 
   @Override
@@ -81,6 +79,7 @@ public class Coefficients implements ICoefficients
     final Roughness roughness = getRoughness( roughnessClass );
     if( roughness == null )
       return getRoughness( UNKNOWN_ROUGHNESS );
+
     return roughness;
   }
 
@@ -90,19 +89,20 @@ public class Coefficients implements ICoefficients
     final Vegetation vegetation = getVegetation( vegetationClass );
     if( vegetation == null )
       return getVegetation( UNKNOWN_VEGETATION );
+
     return vegetation;
   }
 
   @Override
   public Roughness[] getAllRoughness( )
   {
-    return m_roughnessInfo.getAllCoefficients();
+    return null;
   }
 
   @Override
   public Vegetation[] getAllVegetation( )
   {
-    return m_vegetationInfo.getAllCoefficients();
+    return null;
   }
 
   @Override

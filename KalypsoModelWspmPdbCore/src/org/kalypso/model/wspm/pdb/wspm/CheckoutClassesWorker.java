@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.pdb.wspm;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 
 /**
@@ -51,13 +51,13 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
  */
 public class CheckoutClassesWorker
 {
-  private final Coefficients m_coefficients;
+  private final ICoefficients m_coefficients;
 
   private final CheckoutDataMapping m_mapping;
 
   private final GafCodes m_codes;
 
-  public CheckoutClassesWorker( final GafCodes codes, final Coefficients coefficients, final CheckoutDataMapping mapping )
+  public CheckoutClassesWorker( final GafCodes codes, final ICoefficients coefficients, final CheckoutDataMapping mapping )
   {
     m_codes = codes;
     m_coefficients = coefficients;

@@ -72,7 +72,7 @@ import com.vividsolutions.jts.linearref.LocationIndexedLine;
 
 /**
  * Writes a gaf profile into the database.
- *
+ * 
  * @author Gernot Belger
  */
 public class Gaf2Db implements IPdbOperation
@@ -139,7 +139,9 @@ public class Gaf2Db implements IPdbOperation
     final Date now = new Date();
     state.setCreationDate( now );
     state.setEditingDate( now );
-    session.save( state );
+
+    if( session != null )
+      session.save( state );
   }
 
   private void commitProfile( final Session session, final String dbType, final GafProfile profile ) throws Exception
@@ -195,7 +197,8 @@ public class Gaf2Db implements IPdbOperation
     final Geometry line = profile.createLine( dbType );
     crossSection.setLine( line );
 
-    session.save( crossSection );
+    if( session != null )
+      session.save( crossSection );
 
     return crossSection;
   }
@@ -218,7 +221,10 @@ public class Gaf2Db implements IPdbOperation
 // return null;
 
     csPart.setCrossSection( crossSection );
-    session.save( csPart );
+
+    if( session != null )
+      session.save( csPart );
+
     return csPart;
   }
 
@@ -268,7 +274,8 @@ public class Gaf2Db implements IPdbOperation
     // point.setVegetationAy( vegetation.getAy() );
     // point.setVegetationDp( vegetation.getDp() );
 
-    session.save( point );
+    if( session != null )
+      session.save( point );
   }
 
   /**
@@ -346,7 +353,8 @@ public class Gaf2Db implements IPdbOperation
 
       m_waterlevelEvent.getWaterlevelFixations().add( fixation );
 
-      session.save( fixation );
+      if( session != null )
+        session.save( fixation );
     }
   }
 
@@ -361,7 +369,8 @@ public class Gaf2Db implements IPdbOperation
 
       m_waterlevelEvent.setWaterBody( m_waterBody );
 
-      session.save( m_waterlevelEvent );
+      if( session != null )
+        session.save( m_waterlevelEvent );
     }
   }
 }

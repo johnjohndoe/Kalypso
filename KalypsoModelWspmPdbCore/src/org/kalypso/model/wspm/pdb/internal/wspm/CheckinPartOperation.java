@@ -58,11 +58,12 @@ import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
+import org.kalypso.model.wspm.pdb.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStatePdbOperation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -92,7 +93,7 @@ public class CheckinPartOperation
 
   private final String m_profilSRS;
 
-  private final Coefficients m_coefficients;
+  private final ICoefficients m_coefficients;
 
   private final GafCodes m_gafCodes;
 

@@ -52,9 +52,9 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.model.wspm.pdb.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutCrossSectionsWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutRemoveWorker;
@@ -83,7 +83,7 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 
     final URI documentBase = m_data.getDocumentBase();
     final CheckoutDataMapping mapping = m_data.getMapping();
-    final Coefficients coefficients = m_data.getCoefficients();
+    final ICoefficients coefficients = m_data.getCoefficients();
     final GafCodes codes = m_data.getCodes();
 
     final CheckoutRemoveWorker removeWorker = new CheckoutRemoveWorker( m_data );

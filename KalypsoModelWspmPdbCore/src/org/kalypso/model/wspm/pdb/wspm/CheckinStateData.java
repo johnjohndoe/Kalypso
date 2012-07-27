@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
@@ -75,7 +76,7 @@ public class CheckinStateData
 
   private String m_dbSrs;
 
-  private Coefficients m_coefficients;
+  private ICoefficients m_coefficients;
 
   private final TuhhReach m_reach;
 
@@ -152,7 +153,7 @@ public class CheckinStateData
     return m_dbSrs;
   }
 
-  public Coefficients getCoefficients( )
+  public ICoefficients getCoefficients( )
   {
     return m_coefficients;
   }
