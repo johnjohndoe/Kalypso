@@ -77,6 +77,8 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
+ * FIXME: this is rubbuish -> rather reuse code of Create2DElementWidget instead...
+ * 
  * @author Gernot Belger
  * @author Thomas Jung
  * @author ig
@@ -103,14 +105,9 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
   public CreateFE2DWeirWidget( )
   {
-    //    super( "CreateFE2DWeirWidget (Constructor): " + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     super( "CreateFE2DWeirWidget (Constructor): " + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1" ), IWeirFlowRelation2D.QNAME ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.m_toolTipRenderer.setBackgroundColor( new Color(
-   *      1f, 1f, 0.6f, 0.70f ) );kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -126,9 +123,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     reinit();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {
@@ -146,7 +140,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     {
       m_builder = new ElementGeometryBuilder( 0, m_nodeTheme );
       initMembers();
-      // m_builder.setName( getName() );
     }
   }
 
@@ -187,9 +180,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -230,12 +220,8 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
         getMapPanel().setMessage( format );
       }
     }
-
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
@@ -243,9 +229,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       m_pointSnapper.activate( false );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyReleased( final KeyEvent e )
   {
@@ -253,9 +236,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       m_pointSnapper.activate( true );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyTyped( final KeyEvent e )
   {
@@ -272,9 +252,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final Point p )
   {
@@ -319,7 +296,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       else
         command = m_builder.addNode( ((IFE1D2DNode) newNode).getPoint() );
 
-      if( command != null && m_newParentFeature != null )
+      if( command != null )
       {
         m_nodeTheme.getWorkspace().postCommand( command );
 
@@ -340,11 +317,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     {
       repaintMap();
     }
-  }
-
-  public final Feature getNewParentFeature( )
-  {
-    return m_newParentFeature;
   }
 
   /**
@@ -430,11 +402,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     return null;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#createNewFeature(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.relation.IRelationType,
-   *      org.kalypsodeegree.model.feature.binding.Feature)
-   */
   @Override
   protected IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
   {
@@ -445,5 +412,4 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     weirRelation.getBuildingObservation();
     return weirRelation;
   }
-
 }

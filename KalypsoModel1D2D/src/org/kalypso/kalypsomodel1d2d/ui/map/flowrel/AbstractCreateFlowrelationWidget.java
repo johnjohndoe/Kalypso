@@ -123,10 +123,6 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
     m_qnameToCreate = qnameToCreate;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -165,9 +161,6 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
     m_flowRelCollection = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final Point p )
   {
@@ -204,9 +197,6 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
     mapPanel.repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -273,9 +263,6 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
   @Override
   public void leftClicked( final Point p )
   {
@@ -371,9 +358,6 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
     } );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {
@@ -430,5 +414,4 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
 
     return null;
   }
-
 }
