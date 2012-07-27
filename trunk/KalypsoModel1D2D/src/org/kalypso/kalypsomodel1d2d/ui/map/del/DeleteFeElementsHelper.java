@@ -96,7 +96,6 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * @author Thomas Jung
  */
-@SuppressWarnings("rawtypes")
 public class DeleteFeElementsHelper
 {
   public static IStatus deleteSelectedFeElements( final IMapPanel mapPanel )
