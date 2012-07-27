@@ -1,0 +1,2 @@
+﻿ -- SELECT postgis_full_version(); -- Ergebnis: "POSTGIS="1.5.4" GEOS="3.3.3-CAPI-1.7.4" PROJ="Rel. 4.8.0, 6 March 2012" LIBXML="2.7.6" USE_STATS (procs from 1.5 r5976 need upgrade)"
+ SELECT postgis_version(); -- Ergebnis: "1.5 USE_GEOS=1 USE_PROJ=1 USE_STATS=1"
