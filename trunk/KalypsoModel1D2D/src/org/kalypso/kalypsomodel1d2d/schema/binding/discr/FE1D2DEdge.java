@@ -96,11 +96,6 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
     return ModelGeometryBuilder.computeEgdeGeometry( this );
   }
 
-  public static IFE1D2DEdge createEdge( final IFEDiscretisationModel1d2d discModel )
-  {
-    return discModel.getEdges().addNew( IFE1D2DEdge.QNAME );
-  }
-
   @SuppressWarnings("unchecked")
   public void setNodes( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {

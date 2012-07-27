@@ -509,6 +509,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       elementDeleteCmd.process();
 
       /* create new edge between neighbor nodes */
+      // FIXME: use Create1dElementCommand instead?
       final ChangeDiscretiationModelCommand elementAddCmd = new ChangeDiscretiationModelCommand( workspace, model1d2d );
       final AddNodeCommand addNode0 = new AddNodeCommand( model1d2d, neighbour0.getPoint(), 0.0 );
       final AddNodeCommand addNode1 = new AddNodeCommand( model1d2d, neighbour1.getPoint(), 0.0 );

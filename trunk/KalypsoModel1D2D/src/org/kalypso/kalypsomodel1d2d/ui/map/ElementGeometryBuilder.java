@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
@@ -54,19 +54,21 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -79,7 +81,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * TODO: separate (again) geometry building from 1d2d element building! This class is used to build new 1D2D Elements
- * 
+ *
  * @author Gernot Belger
  */
 public class ElementGeometryBuilder
@@ -101,7 +103,7 @@ public class ElementGeometryBuilder
 
   /**
    * The constructor.
-   * 
+   *
    * @param cnt_points
    *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
    *          count of the points will apply.
@@ -121,14 +123,14 @@ public class ElementGeometryBuilder
    * Adds a node or a would-be node (i.e. a GM_Point) to this builder.<br>
    * REMARK: No validity check is done here. Call {@link #checkNewNode(Object)} before a new node is added.
    */
-  //  public ICommand addNode( final GM_Point node ) throws Exception
-  public final Feature addNode( final GM_Point node, final CompositeCommand command  ) throws Exception
+  public final Create2dElementCommand addNode( final GM_Point node ) throws Exception
   {
     m_nodes.add( node );
     removeDuplicates( m_nodes );
 
-    if( m_nodes.size() == m_cnt_points && m_cnt_points != 0 ){
-      return finish( command );
+    if( m_nodes.size() == m_cnt_points && m_cnt_points != 0 )
+    {
+      return finish();
     }
 
     return null;
@@ -136,25 +138,19 @@ public class ElementGeometryBuilder
 
   /**
    * REMARK: No validity check is done here. Call {@link #checkNewNode(Object)} before a new node is added.
-   * 
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
-  public final Feature finish( final CompositeCommand command ) throws Exception
+  public final Create2dElementCommand finish( ) throws Exception
   {
-    final CommandableWorkspace workspace = m_nodeTheme.getWorkspace();
     final FeatureList featureList = m_nodeTheme.getFeatureList();
     final Feature parentFeature = featureList.getOwner();
 
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature;
 
-    return ElementGeometryHelper.createAdd2dElement( command, workspace, discModel, m_nodes );
+    final GM_Point[] nodes = m_nodes.toArray( new GM_Point[m_nodes.size()] );
+    return new Create2dElementCommand( discModel, nodes );
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
     // IMPORTANT: we remember GM_Points (not Point's) and re-transform them for painting
@@ -210,9 +206,11 @@ public class ElementGeometryBuilder
     }
   }
 
-  public IStatus checkNewNode( final GM_Point newNode ){
+  public IStatus checkNewNode( final GM_Point newNode )
+  {
     return checkNewNode( newNode, true );
   }
+
   /**
    * Checks, if the resulting element would be valid, if the given new node would be inserted at the given position.
    */
@@ -220,7 +218,9 @@ public class ElementGeometryBuilder
   {
     final List<GM_Point> list = new ArrayList<GM_Point>( m_nodes );
     list.add( newNode );
+
     removeDuplicates( list );
+
     final IStatus status = checkNewElement( list.toArray( new GM_Point[list.size()] ), pBoolFinalPoint );
 
     if( status == Status.OK_STATUS )
@@ -233,7 +233,7 @@ public class ElementGeometryBuilder
 
   // REMARK: some optimization is done here, in order to enhance performance.
   // We assume, that the same checks has been done for every newly added node, so we check only
-  // Criteria, which could go wring for the new node (i.e. the last one in the array).
+  // Criteria, which could go wrong for the new node (i.e. the last one in the array).
   private IStatus checkNewElement( final GM_Point[] allNodes, final boolean pBoolFinalPont )
   {
     try
@@ -257,6 +257,22 @@ public class ElementGeometryBuilder
           final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
           if( surface.contains( newPoint ) )
             return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.6" ) ); //$NON-NLS-1$
+        }
+      }
+
+      // 1a) Node lies on 1d node
+      final IFE1D2DNode< ? > node = discModel.findNode( newPoint, SEARCH_DISTANCE );
+      if( node != null )
+      {
+        final IFeatureBindingCollection<IFE1D2DEdge> nodeEdges = (IFeatureBindingCollection<IFE1D2DEdge>) node.getContainers();
+        for( final IFE1D2DEdge nodeEdge : nodeEdges )
+        {
+          final IFeatureBindingCollection< ? > containers = nodeEdge.getContainers();
+          for( final Feature edgeContainer : containers )
+          {
+            if( edgeContainer instanceof IElement1D )
+              return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "2D-Element cannot have a common vertice with an 1D-Element" );
+          }
         }
       }
 
@@ -299,8 +315,8 @@ public class ElementGeometryBuilder
             }
           }
         }
-
       }
+
       // 3) New edge links two non-adjacent points
 
       if( allNodes.length < 3 )
@@ -328,7 +344,7 @@ public class ElementGeometryBuilder
           if( eleGeom.intersects( newSurface ) && pBoolFinalPont )
           {
             final GM_Object intersection = eleGeom.intersection( newSurface );
-            if( intersection instanceof GM_Surface  )
+            if( intersection instanceof GM_Surface )
               return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.5" ) ); //$NON-NLS-1$
           }
         }
@@ -362,7 +378,5 @@ public class ElementGeometryBuilder
   {
     if( m_nodes != null && m_nodes.size() > 0 )
       m_nodes.remove( m_nodes.size() - 1 );
-
   }
-
 }

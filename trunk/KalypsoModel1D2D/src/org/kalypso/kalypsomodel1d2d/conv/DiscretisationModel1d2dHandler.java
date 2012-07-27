@@ -80,8 +80,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
-import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
@@ -89,8 +89,6 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
-import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -172,16 +170,12 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final RoughnessHandler m_roughnessHandler;
 
-  private final IScenarioDataProvider m_szenarioDataProvider;
-
   private boolean m_importRoughness;
 
   private final String m_crs;
 
   public DiscretisationModel1d2dHandler( final IScenarioDataProvider szenarioDataProvider, final IPositionProvider positionProvider ) throws CoreException
   {
-    m_szenarioDataProvider = szenarioDataProvider;
-
     m_model = szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
     m_workspace = m_model.getWorkspace();
 
@@ -397,16 +391,16 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       e.printStackTrace();
     }
 
-    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.4" ) ); //$NON-NLS-1$
 
-    IPolyElement< ? , ? > lNewPoly = lPoly;
+    final IPolyElement< ? , ? > lNewPoly = lPoly;
     if( pListElementsIdsRma.size() > 1 )
     {
       try
       {
         // FIXME: using a command here is really ugly!
-        final CommandableWorkspace cmdWorkspace2d = m_szenarioDataProvider.getCommandableWorkSpace( IFEDiscretisationModel1d2d.class.getName() );
-        lNewPoly = (IPolyElement) ElementGeometryHelper.createAdd2dElement( command, cmdWorkspace2d, m_model, lListRes );
+        final GM_Point[] points = lListRes.toArray( new GM_Point[lListRes.size()] );
+
+        final Create2dElementCommand command = new Create2dElementCommand( m_model, points );
         command.process();
       }
       catch( final Exception e )

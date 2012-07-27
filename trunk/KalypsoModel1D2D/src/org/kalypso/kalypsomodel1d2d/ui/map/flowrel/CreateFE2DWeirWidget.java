@@ -62,12 +62,12 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder;
+import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -97,7 +97,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
   private IMapPanel m_mapPanel;
 
-  Feature m_newParentFeature = null;
+  private Feature m_newParentFeature = null;
 
   private boolean m_warning;
 
@@ -295,9 +295,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
   /**
    * Return one 2D-Element.
-   *
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
-   *      org.kalypsodeegree.model.geometry.GM_Point, double)
    */
   @Override
   protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
@@ -306,9 +303,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     // return discModel.find2DElement( currentPos, grabDistance );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
   @Override
   public void leftClicked( final Point p )
   {
@@ -319,15 +313,18 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
     try
     {
-      final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
+      Create2dElementCommand command;
       if( newNode instanceof GM_Point )
-        m_newParentFeature = m_builder.addNode( (GM_Point) newNode, command );
+        command = m_builder.addNode( (GM_Point) newNode );
       else
-        m_newParentFeature = m_builder.addNode( ((IFE1D2DNode) newNode).getPoint(), command );
+        command = m_builder.addNode( ((IFE1D2DNode) newNode).getPoint() );
 
       if( command != null && m_newParentFeature != null )
       {
         m_nodeTheme.getWorkspace().postCommand( command );
+
+        m_newParentFeature = command.getNewElement();
+
         setModelElement( m_newParentFeature );
         repaintMap();
         super.leftClicked( p );
@@ -371,11 +368,11 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
     try
     {
-      final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-      m_newParentFeature = m_builder.finish( command );
+      final Create2dElementCommand command = m_builder.finish();
       if( command != null && m_newParentFeature != null )
       {
         m_nodeTheme.getWorkspace().postCommand( command );
+        m_newParentFeature = command.getNewElement();
         setModelElement( m_newParentFeature );
         super.leftClicked( p );
       }
