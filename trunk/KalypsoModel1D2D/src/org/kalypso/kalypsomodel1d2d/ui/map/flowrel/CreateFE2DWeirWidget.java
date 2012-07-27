@@ -77,7 +77,10 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * FIXME: this is rubbuish -> rather reuse code of Create2DElementWidget instead...
+ * FIXME: this is rubbish -> rather reuse code of Create2DElementWidget instead...<br/>
+ * FIXME: makes no sense at all:why create a new 2d element at all? just put the 2d relation on an exisint one and thats
+ * it..!
+ *
  * 
  * @author Gernot Belger
  * @author Thomas Jung
@@ -290,6 +293,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
     try
     {
+      // FIXME: will never happen, because builder point count is set to 0
       Create2dElementCommand command;
       if( newNode instanceof GM_Point )
         command = m_builder.addNode( (GM_Point) newNode );
@@ -302,10 +306,13 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
         m_newParentFeature = command.getNewElement();
 
-        setModelElement( m_newParentFeature );
-        repaintMap();
-        super.leftClicked( p );
-        reinit();
+        if( m_newParentFeature != null )
+        {
+          setModelElement( m_newParentFeature );
+          repaintMap();
+          super.leftClicked( p );
+          reinit();
+        }
       }
     }
     catch( final Exception e )
@@ -341,14 +348,17 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     try
     {
       final Create2dElementCommand command = m_builder.finish();
-      if( command != null && m_newParentFeature != null )
+      if( command != null )
       {
         m_nodeTheme.getWorkspace().postCommand( command );
         m_newParentFeature = command.getNewElement();
-        setModelElement( m_newParentFeature );
-        super.leftClicked( p );
-      }
 
+        if( m_newParentFeature != null )
+        {
+          setModelElement( m_newParentFeature );
+          super.leftClicked( p );
+        }
+      }
     }
     catch( final Exception e )
     {

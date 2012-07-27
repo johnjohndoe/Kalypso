@@ -334,6 +334,7 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
         catch( final Throwable e )
         {
           final IStatus status = StatusUtilities.statusFromThrowable( e );
+          // FIXME: nonsense! we already are in the display thread!
           display.asyncExec( new Runnable()
           {
             @Override
@@ -370,7 +371,7 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
 
   /**
    * Really create the new object.
-   * 
+   *
    * @return The new object, if null, nothing happens..
    */
   protected abstract IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement );
