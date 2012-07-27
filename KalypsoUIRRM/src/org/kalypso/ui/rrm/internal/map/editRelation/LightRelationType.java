@@ -46,10 +46,10 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.AddLinkCommand;
-import org.kalypso.ogc.gml.command.FeatureLinkUtils;
 import org.kalypso.ogc.gml.command.RemoveMemberCommand;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureLinkUtils;
 
 /**
  * @author doemming
