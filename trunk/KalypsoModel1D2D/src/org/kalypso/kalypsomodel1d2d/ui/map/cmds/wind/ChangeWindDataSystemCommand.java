@@ -133,7 +133,7 @@ public class ChangeWindDataSystemCommand implements ICommand
       try
       {
         command.process();
-        final Feature[] changedFeatures2 = command.getChangedFeature();
+        final Feature[] changedFeatures2 = command.getChangedFeatures();
         if( changedFeatures2 != null )
         {
           for( final Feature changedFeature : changedFeatures2 )

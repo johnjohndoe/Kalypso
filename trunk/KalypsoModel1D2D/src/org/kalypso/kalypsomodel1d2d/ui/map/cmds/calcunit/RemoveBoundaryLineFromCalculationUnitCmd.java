@@ -80,7 +80,7 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IFeatureChangeC
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     if( m_done )
     {

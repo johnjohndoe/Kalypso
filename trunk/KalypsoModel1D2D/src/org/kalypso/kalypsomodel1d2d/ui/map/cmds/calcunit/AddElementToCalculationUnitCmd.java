@@ -86,7 +86,7 @@ public class AddElementToCalculationUnitCmd implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     if( added )
     {

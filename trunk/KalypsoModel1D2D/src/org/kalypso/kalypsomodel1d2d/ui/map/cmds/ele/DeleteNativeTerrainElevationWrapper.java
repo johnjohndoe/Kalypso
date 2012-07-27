@@ -73,7 +73,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     if( m_done )
     {

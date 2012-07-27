@@ -127,7 +127,7 @@ public class CreateContinuityLineCommand implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     return new Feature[] { m_line };
   }

@@ -159,7 +159,7 @@ public class ChangeNodePositionCommand implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     return new Feature[] { m_node };
   }

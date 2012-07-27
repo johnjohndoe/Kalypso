@@ -79,7 +79,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IFeatureChangeComman
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     if( m_commandProcessed )
       return new Feature[] { m_calculationUnit, m_feLine };

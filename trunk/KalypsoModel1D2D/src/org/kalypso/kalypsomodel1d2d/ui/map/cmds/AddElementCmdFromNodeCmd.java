@@ -152,7 +152,7 @@ public class AddElementCmdFromNodeCmd implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     return new Feature[] { m_addedElement };
   }

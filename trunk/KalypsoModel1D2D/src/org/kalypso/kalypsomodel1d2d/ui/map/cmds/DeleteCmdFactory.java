@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -71,9 +72,9 @@ public class DeleteCmdFactory
     {
       return new DeletePolyElementCmd( model1d2d, feature );
     }
-    else if( TypeInfo.isElement1DFeature( feature ) )
+    else if( feature instanceof IElement1D )
     {
-      return new DeleteElement1DCmd( model1d2d, feature );
+      return new DeleteElement1DCmd( model1d2d, (IElement1D) feature );
     }
     else
     {
@@ -114,24 +115,5 @@ public class DeleteCmdFactory
         th.printStackTrace();
       }
     }
-  }
-
-  /**
-   * Creates a delete command. <BR>
-   * <ul>
-   * <li>PolyElementFeature
-   */
-  public static final IFeatureChangeCommand createDeleteCmdPoly( final IFEDiscretisationModel1d2d model1d2d )
-  {
-    return new DeletePolyElementCmd( model1d2d, null );
-  }
-  /**
-   * Creates a delete command. <BR>
-   * <ul>
-   * <li>Element1DFeature
-   */
-  public static final IFeatureChangeCommand createDeleteCmd1dElement( final IFEDiscretisationModel1d2d model1d2d )
-  {
-    return new DeleteElement1DCmd( model1d2d, null );
   }
 }

@@ -111,7 +111,7 @@ public class AddElementCommand implements IFeatureChangeCommand
       IFE1D2DEdge curEdge;
       for( final IFeatureChangeCommand edgeCmd : m_elementEdgeCmds )
       {
-        curEdge = (IFE1D2DEdge) edgeCmd.getChangedFeature()[0];
+        curEdge = (IFE1D2DEdge) edgeCmd.getChangedFeatures()[0];
         if( curEdge != null )
         {
           edges.add( curEdge );
@@ -142,7 +142,7 @@ public class AddElementCommand implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     return new Feature[] { m_addedElement };
   }

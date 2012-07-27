@@ -88,7 +88,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IFeatureChangeCommand
   }
 
   @Override
-  public Feature[] getChangedFeature( )
+  public Feature[] getChangedFeatures( )
   {
     if( changed )
     {

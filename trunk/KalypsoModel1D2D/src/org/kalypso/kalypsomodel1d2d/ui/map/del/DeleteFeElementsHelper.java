@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.del;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -72,7 +73,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitite
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -87,7 +87,9 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -130,8 +132,8 @@ public class DeleteFeElementsHelper
       final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( mapPanel, IFlowRelationship.QNAME );
 
       /* Find all elements that should be deleted */
-      final DeleteElement1DCmd deleteCmd1dElement = (DeleteElement1DCmd) DeleteCmdFactory.createDeleteCmd1dElement( discretisationModel );
-      final DeletePolyElementCmd deleteCmdPolyElement = (DeletePolyElementCmd) DeleteCmdFactory.createDeleteCmdPoly( discretisationModel );
+      final DeleteElement1DCmd deleteCmd1dElement = new DeleteElement1DCmd( discretisationModel );
+      final DeletePolyElementCmd deleteCmdPolyElement = new DeletePolyElementCmd( discretisationModel );
 
       final FeatureList flowRelationsList = lFlowTheme.getFeatureList();
       final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) flowRelationsList.getOwner();
@@ -142,9 +144,9 @@ public class DeleteFeElementsHelper
         final Feature feature = easyFeatureWrapper.getFeature();
         if( TypeInfo.isPolyElementFeature( feature ) )
           deleteCmdPolyElement.addElementToRemove( feature );
-        else if( TypeInfo.isElement1DFeature( feature ) )
+        else if( feature instanceof IElement1D )
         {
-          deleteCmd1dElement.addElementToRemove( feature );
+          deleteCmd1dElement.addElementToRemove( (IElement1D) feature );
           element1DtoRemove.add( (IFE1D2DElement) feature );
         }
       }
@@ -159,15 +161,14 @@ public class DeleteFeElementsHelper
       workspace.postCommand( deleteCmd1dElement );
 
       // FIXME: should have been sent by commands!
-      // final Set<Feature> changedFeatureList = new HashSet<Feature>();
-      // changedFeatureList.addAll( (deleteCmdPolyElement).getChangedFeatureList() );
-      // changedFeatureList.addAll( (deleteCmd1dElement).getChangedFeatureList() );
-      //
-      // final Feature[] deletedFeatures = changedFeatureList.toArray( new Feature[changedFeatureList.size()] );
-      // final GMLWorkspace discWorkspace = discretisationModel.getWorkspace();
-      // final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( discWorkspace,
-      // discretisationModel, deletedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
-      // discWorkspace.fireModellEvent( event );
+      final Set<Feature> changedFeatureList = new HashSet<>();
+      changedFeatureList.addAll( Arrays.asList( deleteCmdPolyElement.getChangedFeatures() ) );
+      changedFeatureList.addAll( Arrays.asList( deleteCmd1dElement.getChangedFeatures() ) );
+
+      final Feature[] deletedFeatures = changedFeatureList.toArray( new Feature[changedFeatureList.size()] );
+      final GMLWorkspace discWorkspace = discretisationModel.getWorkspace();
+      final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( discWorkspace, discretisationModel, deletedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+      discWorkspace.fireModellEvent( event );
     }
     catch( final Exception e )
     {

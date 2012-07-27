@@ -91,27 +91,18 @@ public class ChangeDiscretiationModelCommand implements ICommand
     m_commandableWorkspace = commandableWorkspace;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return m_description;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return m_isUndoable;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
@@ -123,7 +114,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
       try
       {
         command.process();
-        for( final Feature changedFeature : command.getChangedFeature() )
+        for( final Feature changedFeature : command.getChangedFeatures() )
         {
           if( changedFeature != null )
           {
@@ -131,7 +122,6 @@ public class ChangeDiscretiationModelCommand implements ICommand
             if( wrappedFeature != null )
             {
               changedFeatures.add( wrappedFeature );
-              // wrappedFeature.invalidEnvelope();
             }
           }
         }
@@ -152,7 +142,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
         try
         {
           command.process();
-          for( final Feature changedFeature : command.getChangedFeature() )
+          for( final Feature changedFeature : command.getChangedFeatures() )
           {
             if( changedFeature != null )
             {
@@ -210,9 +200,6 @@ public class ChangeDiscretiationModelCommand implements ICommand
     }
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
@@ -230,7 +217,6 @@ public class ChangeDiscretiationModelCommand implements ICommand
         e.printStackTrace();
       }
     }
-
   }
 
   public void addCommand( final IFeatureChangeCommand command )
