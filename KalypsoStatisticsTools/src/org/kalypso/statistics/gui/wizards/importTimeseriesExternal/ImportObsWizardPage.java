@@ -8,12 +8,6 @@ import java.util.TimeZone;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -44,6 +38,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.statistics.gui.NodeLabelProvider;
@@ -54,330 +49,335 @@ import org.kalypso.zml.ui.imports.ObservationImportSelection;
 
 // FIXME: Aaaarg! Why is this a complete copy/paste of old stuff! Bad, bad, bad!
 public class ImportObsWizardPage extends WizardPage implements /*
-																 * FocusListener,
-																 */ISelectionProvider, ISelectionChangedListener {
-	private final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
+                                                                * FocusListener,
+                                                                */ISelectionProvider, ISelectionChangedListener
+{
+  private final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
 
-	private final List<INativeObservationAdapter> m_adapter;
+  private final INativeObservationAdapter[] m_adapter;
 
-	private ComboViewer m_formatCombo;
+  private ComboViewer m_formatCombo;
 
-	private boolean m_controlFinished = false;
+  private boolean m_controlFinished = false;
 
-	private TimeZone m_timezone;
+  private TimeZone m_timezone;
 
-	private String m_sourcePath;
+  private String m_sourcePath;
 
-	private ComboViewer m_parentNodeSelectionViewer;
+  private ComboViewer m_parentNodeSelectionViewer;
 
-	public ImportObsWizardPage(final String pageName) {
-		this(pageName, null, null);
-		m_timezone = KalypsoCorePlugin.getDefault().getTimeZone();
-	}
+  public ImportObsWizardPage( final String pageName )
+  {
+    this( pageName, null, null );
+    m_timezone = KalypsoCorePlugin.getDefault().getTimeZone();
+  }
 
-	public ImportObsWizardPage(final String pageName, final String title, final ImageDescriptor titleImage) {
-		super(pageName, title, titleImage);
-		setTitle("Timeseries import");
-		setDescription("Import timeseries data from different formats");
-		setPageComplete(false);
+  public ImportObsWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
+  {
+    super( pageName, title, titleImage );
+    setTitle( "Timeseries import" );
+    setDescription( "Import timeseries data from different formats" );
+    setPageComplete( false );
 
-		m_adapter = createNativeAdapters();
-	}
+    m_adapter = KalypsoCoreExtensions.createNativeAdaptersOldStyle();
+  }
 
-	// FIXME: move into spearate extension class
-  // FIXME: especially bad: this nativeObsAdapter is not used any more!
-	private List<INativeObservationAdapter> createNativeAdapters() {
-		final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
+  /**
+   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  public void createControl( final Composite parent )
+  {
+    initializeDialogUnits( parent );
+    final Composite topLevel = new Composite( parent, SWT.NONE );
+    topLevel.setLayout( new GridLayout() );
+    setControl( topLevel );
+    createControlSource( topLevel );
+    m_controlFinished = true;
+  }
 
-		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+  public void createControlSource( final Composite parent )
+  {
+    final Group group = new Group( parent, SWT.NONE );
+    group.setLayout( new GridLayout( 3, false ) );
+    group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    group.setText( "Source" );
 
-		final IExtensionPoint extensionPoint = registry.getExtensionPoint("org.kalypso.core.nativeObsAdapter"); //$NON-NLS-1$
+    // line 1
+    final Label label = new Label( group, SWT.NONE );
+    label.setText( "File" );
 
-		if (extensionPoint == null)
-			return adapters;
+    final Text textFileSource = new Text( group, SWT.BORDER );
+    textFileSource.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    textFileSource.setText( StringUtils.EMPTY );
+    textFileSource.addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        handleSourcePathModified( textFileSource.getText() );
+      }
+    } );
 
-		final IExtension[] extensions = extensionPoint.getExtensions();
-		for (final IExtension extension : extensions) {
-			final IConfigurationElement[] elements = extension.getConfigurationElements();
+    final Button button = new Button( group, SWT.PUSH );
+    button.setText( "..." ); //$NON-NLS-1$
+    button.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
 
-			for (final IConfigurationElement element : elements) {
-				try {
-					final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension("class"); //$NON-NLS-1$
-					adapters.add(adapter);
-				} catch (final CoreException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+    button.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        chooseSourceFile( textFileSource );
+      }
+    } );
 
-		return adapters;
-	}
+    // line 2
+    final Label formatLabel = new Label( group, SWT.NONE );
+    formatLabel.setText( "Format" );
 
-	/**
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createControl(final Composite parent) {
-		initializeDialogUnits(parent);
-		final Composite topLevel = new Composite(parent, SWT.NONE);
-		topLevel.setLayout(new GridLayout());
-		setControl(topLevel);
-		createControlSource(topLevel);
-		m_controlFinished = true;
-	}
+    m_formatCombo = new ComboViewer( group, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_formatCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_formatCombo.setContentProvider( new ArrayContentProvider() );
+    m_formatCombo.setLabelProvider( new LabelProvider() );
+    m_formatCombo.setInput( m_adapter );
 
-	public void createControlSource(final Composite parent) {
-		final Group group = new Group(parent, SWT.NONE);
-		group.setLayout(new GridLayout(3, false));
-		group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		group.setText("Source");
+    m_formatCombo.addSelectionChangedListener( this );
 
-		// line 1
-		final Label label = new Label(group, SWT.NONE);
-		label.setText("File");
+    if( m_adapter.length > 0 )
+      m_formatCombo.setSelection( new StructuredSelection( m_adapter[0] ) );
 
-		final Text textFileSource = new Text(group, SWT.BORDER);
-		textFileSource.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		textFileSource.setText(StringUtils.EMPTY);
-		textFileSource.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(final ModifyEvent e) {
-				handleSourcePathModified(textFileSource.getText());
-			}
-		});
+    new Label( group, SWT.NONE );
 
-		final Button button = new Button(group, SWT.PUSH);
-		button.setText("..."); //$NON-NLS-1$
-		button.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
+    // TimeZone
+    /* time zone selection */
+    final Label timezoneLabel = new Label( group, SWT.NONE );
+    timezoneLabel.setText( "Time Zone" );
 
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				chooseSourceFile(textFileSource);
-			}
-		});
+    final String[] tz = TimeZone.getAvailableIDs();
+    Arrays.sort( tz );
 
-		// line 2
-		final Label formatLabel = new Label(group, SWT.NONE);
-		formatLabel.setText("Format");
+    final ComboViewer comboTimeZones = new ComboViewer( group, SWT.BORDER | SWT.SINGLE );
+    comboTimeZones.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-		m_formatCombo = new ComboViewer(group, SWT.DROP_DOWN | SWT.READ_ONLY);
-		m_formatCombo.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		m_formatCombo.setContentProvider(new ArrayContentProvider());
-		m_formatCombo.setLabelProvider(new LabelProvider());
-		m_formatCombo.setInput(m_adapter);
+    comboTimeZones.setContentProvider( new ArrayContentProvider() );
+    comboTimeZones.setLabelProvider( new LabelProvider() );
+    comboTimeZones.setInput( tz );
 
-		m_formatCombo.addSelectionChangedListener(this);
+    comboTimeZones.addFilter( new ViewerFilter()
+    {
+      @Override
+      public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+      {
+        if( element instanceof String )
+        {
+          final String name = (String) element;
+          return !name.toLowerCase().startsWith( "etc/" ); //$NON-NLS-1$
+        }
 
-		if (m_adapter.size() > 0)
-			m_formatCombo.setSelection(new StructuredSelection(m_adapter.get(0)));
+        return true;
+      }
+    } );
 
-		new Label(group, SWT.NONE);
+    comboTimeZones.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) comboTimeZones.getSelection();
+        updateTimeZone( (String) selection.getFirstElement() );
+      }
+    } );
 
-		// TimeZone
-		/* time zone selection */
-		final Label timezoneLabel = new Label(group, SWT.NONE);
-		timezoneLabel.setText("Time Zone");
+    comboTimeZones.getCombo().addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        updateTimeZone( comboTimeZones.getCombo().getText() );
+      }
+    } );
 
-		final String[] tz = TimeZone.getAvailableIDs();
-		Arrays.sort(tz);
+    if( m_timezone != null )
+    {
+      final String id = m_timezone.getID();
+      if( ArrayUtils.contains( tz, id ) )
+        comboTimeZones.setSelection( new StructuredSelection( id ) );
+      else
+        comboTimeZones.getCombo().setText( id );
+    }
+    new Label( group, SWT.NONE );
 
-		final ComboViewer comboTimeZones = new ComboViewer(group, SWT.BORDER | SWT.SINGLE);
-		comboTimeZones.getControl().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
+    // node selection
+    new Label( group, SWT.NONE ).setText( "Node / Station" );
+    m_parentNodeSelectionViewer = new ComboViewer( group, SWT.BORDER | SWT.READ_ONLY );
+    m_parentNodeSelectionViewer.setContentProvider( new NodesContentProvider() );
+    m_parentNodeSelectionViewer.setLabelProvider( new NodeLabelProvider() );
+    m_parentNodeSelectionViewer.setSorter( new ViewerSorter() );
+    m_parentNodeSelectionViewer.setInput( SessionDataProvider.getInstance().getDataProvider().getNodes() );
+    m_parentNodeSelectionViewer.setSelection( new StructuredSelection( SessionDataProvider.getInstance().getDataProvider().getNodes().get( 0 ) ) );
+    final Control control = m_parentNodeSelectionViewer.getControl();
+    control.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    m_parentNodeSelectionViewer.getControl().setEnabled( true );
 
-		comboTimeZones.setContentProvider(new ArrayContentProvider());
-		comboTimeZones.setLabelProvider(new LabelProvider());
-		comboTimeZones.setInput(tz);
+  }
 
-		comboTimeZones.addFilter(new ViewerFilter() {
-			@Override
-			public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-				if (element instanceof String) {
-					final String name = (String) element;
-					return !name.toLowerCase().startsWith("etc/"); //$NON-NLS-1$
-				}
+  public NodeProfile getParentNode( )
+  {
+    final StructuredSelection selection = (StructuredSelection) m_parentNodeSelectionViewer.getSelection();
+    final Object object = selection.getFirstElement();
+    if( object instanceof NodeProfile )
+    {
+      return (NodeProfile) object;
+    }
+    return null;
+  }
 
-				return true;
-			}
-		});
+  protected void handleSourcePathModified( final String sourcePath )
+  {
+    m_sourcePath = sourcePath;
 
-		comboTimeZones.addSelectionChangedListener(new ISelectionChangedListener() {
-			@Override
-			public void selectionChanged(final SelectionChangedEvent event) {
-				final IStructuredSelection selection = (IStructuredSelection) comboTimeZones.getSelection();
-				updateTimeZone((String) selection.getFirstElement());
-			}
-		});
+    validate();
+  }
 
-		comboTimeZones.getCombo().addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(final ModifyEvent e) {
-				updateTimeZone(comboTimeZones.getCombo().getText());
-			}
-		});
+  protected void chooseSourceFile( final Text textFileSource )
+  {
+    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
 
-		if (m_timezone != null) {
-			final String id = m_timezone.getID();
-			if (ArrayUtils.contains(tz, id))
-				comboTimeZones.setSelection(new StructuredSelection(id));
-			else
-				comboTimeZones.getCombo().setText(id);
-		}
-		new Label(group, SWT.NONE);
+    final File sourceFile = getSourceFile();
+    if( sourceFile != null )
+    {
+      dialog.setFileName( sourceFile.getName() );
+      dialog.setFilterPath( sourceFile.getParent() );
+    }
 
-		// node selection
-		new Label(group, SWT.NONE).setText("Node / Station");
-		m_parentNodeSelectionViewer = new ComboViewer(group, SWT.BORDER | SWT.READ_ONLY);
-		m_parentNodeSelectionViewer.setContentProvider(new NodesContentProvider());
-		m_parentNodeSelectionViewer.setLabelProvider(new NodeLabelProvider());
-		m_parentNodeSelectionViewer.setSorter(new ViewerSorter());
-		m_parentNodeSelectionViewer.setInput(SessionDataProvider.getInstance().getDataProvider().getNodes());
-		m_parentNodeSelectionViewer.setSelection(new StructuredSelection(SessionDataProvider.getInstance().getDataProvider().getNodes().get(0)));
-		final Control control = m_parentNodeSelectionViewer.getControl();
-		control.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		m_parentNodeSelectionViewer.getControl().setEnabled(true);
+    if( dialog.open() == null )
+      return;
 
-	}
+    final String fileName = dialog.getFileName();
+    final String filterPath = dialog.getFilterPath();
+    final File newSourceFile = new File( filterPath, fileName );
+    textFileSource.setText( newSourceFile.getAbsolutePath() );
+  }
 
-	public NodeProfile getParentNode() {
-		final StructuredSelection selection = (StructuredSelection) m_parentNodeSelectionViewer.getSelection();
-		final Object object = selection.getFirstElement();
-		if (object instanceof NodeProfile) {
-			return (NodeProfile) object;
-		}
-		return null;
-	}
+  private File getSourceFile( )
+  {
+    if( StringUtils.isBlank( m_sourcePath ) )
+      return null;
 
-	protected void handleSourcePathModified(final String sourcePath) {
-		m_sourcePath = sourcePath;
+    return new File( m_sourcePath );
+  }
 
-		validate();
-	}
+  /**
+   * validates the page
+   */
+  void validate( )
+  {
+    // Do not validate until page was created
+    if( !m_controlFinished )
+      return;
 
-	protected void chooseSourceFile(final Text textFileSource) {
-		final FileDialog dialog = new FileDialog(getShell(), SWT.SINGLE);
+    final IMessageProvider message = doValidate();
+    if( message == null )
+      setMessage( null );
+    else
+      setMessage( message.getMessage(), message.getMessageType() );
+    setPageComplete( message == null );
+    fireSelectionChanged();
+  }
 
-		final File sourceFile = getSourceFile();
-		if (sourceFile != null) {
-			dialog.setFileName(sourceFile.getName());
-			dialog.setFilterPath(sourceFile.getParent());
-		}
+  private IMessageProvider doValidate( )
+  {
+    final File sourceFile = getSourceFile();
+    if( sourceFile == null )
+      return new MessageProvider( "Source not selected", ERROR );
+    if( !sourceFile.isFile() )
+      return new MessageProvider( "Source is not a valid file", ERROR ); //$NON-NLS-1$
+    if( m_timezone == null )
+      return new MessageProvider( "Please select a valid time zone", ERROR ); //$NON-NLS-1$
+    return null;
+  }
 
-		if (dialog.open() == null)
-			return;
+  private void fireSelectionChanged( )
+  {
+    for( final Object element : m_selectionListener )
+      ((ISelectionChangedListener) element).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
+  }
 
-		final String fileName = dialog.getFileName();
-		final String filterPath = dialog.getFilterPath();
-		final File newSourceFile = new File(filterPath, fileName);
-		textFileSource.setText(newSourceFile.getAbsolutePath());
-	}
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  @Override
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
+  {
+    m_selectionListener.add( listener );
+  }
 
-	private File getSourceFile() {
-		if (StringUtils.isBlank(m_sourcePath))
-			return null;
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+   */
+  @Override
+  public ISelection getSelection( )
+  {
+    final IStructuredSelection formatSelection = (IStructuredSelection) m_formatCombo.getSelection();
+    if( !m_controlFinished )
+      return StructuredSelection.EMPTY;
 
-		return new File(m_sourcePath);
-	}
+    final File sourceFile = getSourceFile();
+    return new ObservationImportSelection( sourceFile, null, (INativeObservationAdapter) formatSelection.getFirstElement(), false, false, m_timezone );
+  }
 
-	/**
-	 * validates the page
-	 */
-	void validate() {
-		// Do not validate until page was created
-		if (!m_controlFinished)
-			return;
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  @Override
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
+  {
+    m_selectionListener.remove( listener );
+  }
 
-		final IMessageProvider message = doValidate();
-		if (message == null)
-			setMessage(null);
-		else
-			setMessage(message.getMessage(), message.getMessageType());
-		setPageComplete(message == null);
-		fireSelectionChanged();
-	}
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void setSelection( final ISelection selection )
+  {
+    if( selection instanceof ObservationImportSelection )
+    {
+      final ObservationImportSelection s = (ObservationImportSelection) selection;
+      if( m_formatCombo != null )
+        m_formatCombo.setSelection( new StructuredSelection( s.getNativeAdapter() ) );
 
-	private IMessageProvider doValidate() {
-		final File sourceFile = getSourceFile();
-		if (sourceFile == null)
-			return new MessageProvider("Source not selected", ERROR);
-		if (!sourceFile.isFile())
-			return new MessageProvider("Source is not a valid file", ERROR); //$NON-NLS-1$
-		if (m_timezone == null)
-			return new MessageProvider("Please select a valid time zone", ERROR); //$NON-NLS-1$
-		return null;
-	}
+      final File sourceFile = s.getFileSource();
+      if( sourceFile == null )
+        m_sourcePath = null;
+      else
+        m_sourcePath = sourceFile.getAbsolutePath();
+    }
+  }
 
-	private void fireSelectionChanged() {
-		for (final Object element : m_selectionListener)
-			((ISelectionChangedListener) element).selectionChanged(new SelectionChangedEvent(this, getSelection()));
-	}
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  @Override
+  public void selectionChanged( final SelectionChangedEvent event )
+  {
+    fireSelectionChanged();
+  }
 
-	/**
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-	 */
-	@Override
-	public void addSelectionChangedListener(final ISelectionChangedListener listener) {
-		m_selectionListener.add(listener);
-	}
+  protected void updateTimeZone( final String timeZoneID )
+  {
+    m_timezone = null;
 
-	/**
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-	 */
-	@Override
-	public ISelection getSelection() {
-		final IStructuredSelection formatSelection = (IStructuredSelection) m_formatCombo.getSelection();
-		if (!m_controlFinished)
-			return StructuredSelection.EMPTY;
+    if( timeZoneID != null )
+    {
+      final TimeZone timeZone = TimeZone.getTimeZone( timeZoneID.toUpperCase() );
+      // Only set, if timezone could be parsed
+      if( !timeZone.getID().equals( "GMT" ) || timeZoneID.toUpperCase().equals( "GMT" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+        m_timezone = timeZone;
+    }
 
-		final File sourceFile = getSourceFile();
-		return new ObservationImportSelection(sourceFile, null, (INativeObservationAdapter) formatSelection.getFirstElement(), false, false, m_timezone);
-	}
-
-	/**
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-	 */
-	@Override
-	public void removeSelectionChangedListener(final ISelectionChangedListener listener) {
-		m_selectionListener.remove(listener);
-	}
-
-	/**
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-	 */
-	@Override
-	public void setSelection(final ISelection selection) {
-		if (selection instanceof ObservationImportSelection) {
-			final ObservationImportSelection s = (ObservationImportSelection) selection;
-			if (m_formatCombo != null)
-				m_formatCombo.setSelection(new StructuredSelection(s.getNativeAdapter()));
-
-			final File sourceFile = s.getFileSource();
-			if (sourceFile == null)
-				m_sourcePath = null;
-			else
-				m_sourcePath = sourceFile.getAbsolutePath();
-		}
-	}
-
-	/**
-	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-	 */
-	@Override
-	public void selectionChanged(final SelectionChangedEvent event) {
-		fireSelectionChanged();
-	}
-
-	protected void updateTimeZone(final String timeZoneID) {
-		m_timezone = null;
-
-		if (timeZoneID != null) {
-			final TimeZone timeZone = TimeZone.getTimeZone(timeZoneID.toUpperCase());
-			// Only set, if timezone could be parsed
-			if (!timeZone.getID().equals("GMT") || timeZoneID.toUpperCase().equals("GMT")) //$NON-NLS-1$ //$NON-NLS-2$
-				m_timezone = timeZone;
-		}
-
-		validate();
-	}
+    validate();
+  }
 
 }

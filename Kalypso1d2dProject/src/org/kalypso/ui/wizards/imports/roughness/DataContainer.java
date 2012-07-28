@@ -264,27 +264,19 @@ public class DataContainer
   {
     if( m_roughnessLayer != null )
       return m_roughnessLayer;
+
     final IFeatureBindingCollection<IRoughnessLayer> roughnessLayerCollection = getRoughnessLayerCollection();
     for( final IRoughnessLayer roughnessLayer : roughnessLayerCollection )
+    {
       if( roughnessLayer.isBasicLayer() == m_isBasicLayer )
         return m_roughnessLayer = roughnessLayer;
-    return m_roughnessLayer;
+    }
 
-    //    
-    // m_roughnessLayer = roughnessLayerCollection.addNew( IRoughnessLayer.QNAME, IRoughnessLayer.class );
-    // m_roughnessLayer.setName( getLayerName() );
-    // m_roughnessLayer.setEditable( m_isLayerEditable );
-    // roughnessLayerCollection.add( m_roughnessLayer );
-    // return m_roughnessLayer;
+    return m_roughnessLayer;
   }
 
   public void deleteCreatedGMLLayer( )
   {
     return;
-    // if( m_roughnessLayer != null )
-    // {
-    // final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
-    // roughnessLayerCollection.remove( m_roughnessLayer );
-    // }
   }
 }
