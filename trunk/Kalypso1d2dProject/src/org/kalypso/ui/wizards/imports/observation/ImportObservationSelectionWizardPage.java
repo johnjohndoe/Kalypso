@@ -91,7 +91,7 @@ import org.kalypso.zml.ui.imports.TimezoneEtcFilter;
 /**
  * FIXME: this is a stupid copy/paste from the original ImportObservationSelectionWizardPage, however it does almost the
  * same thing -> we need to combine the two pages again!
- * 
+ *
  * @author doemming
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
@@ -136,7 +136,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.Title" ) ); //$NON-NLS-1$
     setPageComplete( false );
 
-    m_adapter = KalypsoCoreExtensions.getObservationImporters();
+    m_adapter = KalypsoCoreExtensions.createNativeAdaptersOldStyle();
   }
 
   @Override
@@ -147,8 +147,6 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     final Composite topLevel = new Composite( parent, SWT.NONE );
     topLevel.setLayout( new GridLayout( 1, false ) );
     setControl( topLevel );
-
-    // topLevel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     createControlSource( topLevel );
     createControlTarget( topLevel );

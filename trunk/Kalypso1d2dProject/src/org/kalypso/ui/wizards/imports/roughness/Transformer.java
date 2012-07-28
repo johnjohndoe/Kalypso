@@ -1,7 +1,5 @@
 package org.kalypso.ui.wizards.imports.roughness;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -71,13 +69,11 @@ public class Transformer implements ICoreRunnableWithProgress
       }
       catch( final ClassCastException e )
       {
+        // FIXME: show error to user!
         return new Status( Status.ERROR, KalypsoCorePlugin.getID(), Status.CANCEL, e.getMessage(), e );
-        // monitor.setCanceled(true);
-        // return Status.CANCEL_STATUS;
       }
       if( hasMonitor )
         monitor.done();
-      // m_data.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( final Exception e )
     {
@@ -92,17 +88,9 @@ public class Transformer implements ICoreRunnableWithProgress
     if( resetMap )
     {
       m_data.getRoughnessShapeStaticRelationMap().clear();
-      // m_data.getRoughnessPolygonCollection().clear();
     }
 
     final ShapeCollection shapeCollection = ShapeSerializer.deserialize( FileUtilities.nameWithoutExtension( m_data.getInputFile() ), m_data.getCoordinateSystem( true ) );
-
-    final GMLWorkspace shapeWorkspace = shapeCollection.getWorkspace();
-    final String customNamespace = shapeWorkspace.getGMLSchema().getTargetNamespace();
-    final QName shpCustomPropertyName = new QName( customNamespace, m_data.getShapeProperty() );
-    // final Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
-    // final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty(
-    // ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     final IFeatureBindingCollection<AbstractShape> shapes = shapeCollection.getShapes();
 
@@ -112,7 +100,7 @@ public class Transformer implements ICoreRunnableWithProgress
     for( int i = 0; i < shapes.size(); i++ )
     {
       final AbstractShape shapeFeature = shapes.get( i );
-      final String propertyValue = shapeFeature.getProperty( shpCustomPropertyName ).toString();
+      final String propertyValue = shapeFeature.getProperty( m_data.getShapeProperty() ).toString();
       final GM_Object gm_Whatever = shapeFeature.getGeometry();
 
       if( gm_Whatever instanceof GM_MultiSurface )
@@ -127,17 +115,11 @@ public class Transformer implements ICoreRunnableWithProgress
           m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getId(), propertyValue );
         }
       }
-      else if( gm_Whatever instanceof GM_Surface )
-      {
-        // FIXME: this will never happen
-
-        final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
-        m_NumberOfEntriesAdded++;
-        roughnessPolygon.setSurface( (GM_Surface< ? >) gm_Whatever );
-        m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getId(), propertyValue );
-      }
       else
+      {
+        // FIXME: mega ugly: instead, the wizard should prevent non-polygon shapes to be loaded
         throw new ClassCastException( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.Transformer.2" ) + gm_Whatever.getClass().getName() ); //$NON-NLS-1$
+      }
     }
 
     m_isDataPrepared = true;
@@ -174,12 +156,10 @@ public class Transformer implements ICoreRunnableWithProgress
     {
       caseDataProvider.postCommand( ITerrainModel.class.getName(), new AddRoughnessPolygonsCmd() );
     }
-
   }
 
   private void serialize( )
   {
-
     final IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
     final FeatureList wrappedList = roughnessPolygonCollection.getFeatureList();
     final Feature parentFeature = wrappedList.getOwner();
@@ -187,13 +167,6 @@ public class Transformer implements ICoreRunnableWithProgress
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, (Feature) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     // fire event for roughness changes
-    // TODO Patrice check it
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature.getOwner(), parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    // TODO: also post the adds as commands to the dataProvider
-
-    //
-    // GisTemplateMapModell model = GisTemplateHelper.loadGisMapView( new File(absPath) );
-    // new AddThemeCommand();
-    // m_data.getProjectBaseFolder();
   }
 }
