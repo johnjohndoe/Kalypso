@@ -43,21 +43,32 @@ package org.kalypso.model.wspm.pdb.db.constants;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
- * @author Gernot Belger
+ * @author Monika Thuel
  */
-public interface EventConstants
+public interface CategoryConstants
 {
-  enum TYPE
+
+  enum CATEGORY
   {
     /**
      * Default
      */
-    Measurement(Messages.getString( "EventConstants.0" )), //$NON-NLS-1$
-    Simulation(Messages.getString( "EventConstants.1" )); //$NON-NLS-1$
+    // TODO i18n?
+    P(Messages.getString( "CategoryConstants.0" )), //$NON-NLS-1$
+    S(Messages.getString( "CategoryConstants.1" )), //$NON-NLS-1$
+    W(Messages.getString( "CategoryConstants.2" )), //$NON-NLS-1$
+    A(Messages.getString( "CategoryConstants.3" )), //$NON-NLS-1$
+    Uk(Messages.getString( "CategoryConstants.4" )), //$NON-NLS-1$
+    K(Messages.getString( "CategoryConstants.5" )), //$NON-NLS-1$
+    Ei(Messages.getString( "CategoryConstants.6" )), //$NON-NLS-1$
+    Ma(Messages.getString( "CategoryConstants.7" )), //$NON-NLS-1$
+    Ar(Messages.getString( "CategoryConstants.8" )), //$NON-NLS-1$
+    Ha(Messages.getString( "CategoryConstants.9" )), //$NON-NLS-1$
+    Ok(Messages.getString( "CategoryConstants.10" )); //$NON-NLS-1$
 
     private final String m_label;
 
-    TYPE( final String label )
+    CATEGORY( final String label )
     {
       m_label = label;
     }
@@ -68,50 +79,5 @@ public interface EventConstants
       return m_label;
     }
   }
-
-  enum WL_TYPE
-  {
-    /**
-     * Default
-     */
-    // TODO will it work? naming the enumeration element 1D didn't work
-    // translation?!?
-    Wl_1d(Messages.getString( "EventConstants.2" )), //$NON-NLS-1$
-    Wl_2d(Messages.getString( "EventConstants.3" )); //$NON-NLS-1$
-
-    private final String m_label;
-
-    WL_TYPE( final String label )
-    {
-      m_label = label;
-    }
-
-    @Override
-    public String toString( )
-    {
-      return m_label;
-    }
-  }
-
-  // FIXME
-  int DESCRIPTION_LIMIT = 256;
-
-  String PROPERTY_NAME = "name"; //$NON-NLS-1$
-
-  String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
-
-  String PROPERTY_SOURCE = "source"; //$NON-NLS-1$
-
-  String PROPERTY_TYPE = "type"; //$NON-NLS-1$
-
-  String PROPERTY_WL_TYPE = "wlType"; //$NON-NLS-1$
-
-  String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
-
-  String PROPERTY_WATER_BODY = "waterBody"; //$NON-NLS-1$
-
-  String PROPERTY_STATE = "state"; //$NON-NLS-1$
-
-  String PROPERTY_STYLE_ARRAY = "styleArray"; //$NON-NLS-1$
 
 }

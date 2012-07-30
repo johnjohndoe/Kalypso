@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -51,9 +52,15 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
 
   private TYPE m_type = TYPE.Measurement;
 
+  private WL_TYPE m_wlType = WL_TYPE.Wl_1d;
+
   private String m_description;
 
   private Set<WaterlevelFixation> m_waterlevelFixations = new HashSet<WaterlevelFixation>( 0 );
+
+  private State m_state;
+
+  private StyleArray m_styleArray;
 
   public Event( )
   {
@@ -211,6 +218,20 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     firePropertyChange( PROPERTY_TYPE, oldValue, type );
   }
 
+  @Column(name = "wl_type", length = 25)
+  @Enumerated(EnumType.STRING)
+  public WL_TYPE getWlType( )
+  {
+    return m_wlType;
+  }
+
+  public void setType( final WL_TYPE wlType )
+  {
+
+    m_wlType = wlType;
+
+  }
+
   @Column(name = "description")
   public String getDescription( )
   {
@@ -231,5 +252,29 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   public void setWaterlevelFixations( final Set<WaterlevelFixation> waterlevelFixations )
   {
     m_waterlevelFixations = waterlevelFixations;
+  }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "state_id")
+  public State getState( )
+  {
+    return m_state;
+  }
+
+  public void setState( final State state )
+  {
+    m_state = state;
+  }
+
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "style_array_id")
+  public StyleArray getStyleArray( )
+  {
+    return m_styleArray;
+  }
+
+  public void setStyleArray( final StyleArray styleArray )
+  {
+    m_styleArray = styleArray;
   }
 }
