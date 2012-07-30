@@ -72,13 +72,15 @@ public class PdbInfo
 {
   public static final int UNKNOWN_SRID = -1;
 
-  public static final Version CURRENT_VERSION = new Version( "0.0.4" ); //$NON-NLS-1$
+  public static final Version CURRENT_VERSION = new Version( "0.0.5" ); //$NON-NLS-1$
 
   public final static String PROPERTY_VERSION = "Version"; //$NON-NLS-1$
 
   public final static String PROPERTY_SRID = "SRID"; //$NON-NLS-1$
 
   public final static String PROPERTY_DOCUMENT_SERVER = "DocumentServer"; //$NON-NLS-1$
+
+  public final static String PROPERTY_DHM_SERVER = "DHMServer"; //$NON-NLS-1$
 
   public final static String PROPERTY_SRS_MIN_X = "srsMinX"; //$NON-NLS-1$
 

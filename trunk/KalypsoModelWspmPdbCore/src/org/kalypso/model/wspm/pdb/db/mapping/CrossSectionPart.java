@@ -1,11 +1,14 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +20,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants;
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
@@ -25,7 +30,7 @@ import com.vividsolutions.jts.geom.LineString;
  */
 @Entity
 @Table(name = "cross_section_part", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = { "name", "cross_section" }))
-public class CrossSectionPart implements java.io.Serializable
+public class CrossSectionPart implements Serializable, CategoryConstants
 {
   private BigDecimal m_id;
 
@@ -35,17 +40,19 @@ public class CrossSectionPart implements java.io.Serializable
 
   private Geometry m_line;
 
-  private String m_category;
+  private CATEGORY m_category;
 
   private String m_description;
 
   private Set<Point> m_points = new HashSet<Point>( 0 );
 
+  private Event m_event;
+
   public CrossSectionPart( )
   {
   }
 
-  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final String category )
+  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final CATEGORY category )
   {
     m_id = id;
     m_crossSection = crossSection;
@@ -53,7 +60,7 @@ public class CrossSectionPart implements java.io.Serializable
     m_category = category;
   }
 
-  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final LineString line, final String category, final String description, final Set<Point> points )
+  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final LineString line, final CATEGORY category, final String description, final Set<Point> points )
   {
     m_id = id;
     m_crossSection = crossSection;
@@ -62,6 +69,18 @@ public class CrossSectionPart implements java.io.Serializable
     m_category = category;
     m_description = description;
     m_points = points;
+  }
+
+  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final LineString line, final CATEGORY category, final String description, final Set<Point> points, final Event event )
+  {
+    m_id = id;
+    m_crossSection = crossSection;
+    m_name = name;
+    m_line = line;
+    m_category = category;
+    m_description = description;
+    m_points = points;
+    m_event = event;
   }
 
   @Id
@@ -125,13 +144,15 @@ public class CrossSectionPart implements java.io.Serializable
 // throw new IllegalArgumentException( "'line' must be a LineString or Empty GeometryCollection" );
   }
 
-  @Column(name = "category", nullable = false, length = 50)
-  public String getCategory( )
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category", nullable = false)
+  @Enumerated(EnumType.STRING)
+  public CATEGORY getCategory( )
   {
     return m_category;
   }
 
-  public void setCategory( final String category )
+  public void setCategory( final CATEGORY category )
   {
     m_category = category;
   }
@@ -156,5 +177,17 @@ public class CrossSectionPart implements java.io.Serializable
   public void setPoints( final Set<Point> points )
   {
     m_points = points;
+  }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "event")
+  public Event getEvent( )
+  {
+    return m_event;
+  }
+
+  public void setEvent( final Event event )
+  {
+    m_event = event;
   }
 }
