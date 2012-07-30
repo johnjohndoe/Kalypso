@@ -3,7 +3,7 @@
    <createdBy>thuel</createdBy>
    <createdTime>2012-07-26 09:23:08 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2012-07-27 08:59:31 UTC</changedTime>
+   <changedTime>2012-07-30 08:05:16 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Style_Parameter PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -126,32 +126,17 @@
          <dataTypePrecision>20</dataTypePrecision>
          <dataTypeScale>0</dataTypeScale>
       </Attribute>
-      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Style_Style_Array_ID" id="19752B94-9573-392A-2112-F38B0831ECE1">
-         <createdBy>thuel</createdBy>
-         <createdTime>2012-07-27 08:59:31 UTC</createdTime>
-         <changedBy>thuel</changedBy>
-         <changedTime>2012-07-27 08:59:31 UTC</changedTime>
-         <generatorID>D37F595D-8C46-5E57-AFDA-C7BFDC55A0A9</generatorID>
-         <ownerDesignName>pdb</ownerDesignName>
-         <referedAttribute>01B7C7A6-F8DA-0194-32C7-222033D3B65B</referedAttribute>
-         <use>1</use>
-         <logicalDatatype>LOGDT019</logicalDatatype>
-         <dataTypePrecision>20</dataTypePrecision>
-         <dataTypeScale>0</dataTypeScale>
-      </Attribute>
    </attributes>
    <identifiers>
       <identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="2EA0D4C3-EEA2-ED2E-9127-16171801B046" name="Style_Parameter PK">
          <createdBy>thuel</createdBy>
          <createdTime>2012-07-26 10:13:25 UTC</createdTime>
          <changedBy>thuel</changedBy>
-         <changedTime>2012-07-27 08:59:31 UTC</changedTime>
+         <changedTime>2012-07-30 08:05:16 UTC</changedTime>
          <ownerDesignName>pdb</ownerDesignName>
          <pk>true</pk>
          <usedAttributes>
             <attributeRef>EC894F55-A349-C5AB-6B05-5C7A054E53E1</attributeRef>
-            <attributeRef>BD6948CE-BB58-04BB-5BC3-4CFE52F7A651</attributeRef>
-            <attributeRef>19752B94-9573-392A-2112-F38B0831ECE1</attributeRef>
          </usedAttributes>
       </identifier>
    </identifiers>

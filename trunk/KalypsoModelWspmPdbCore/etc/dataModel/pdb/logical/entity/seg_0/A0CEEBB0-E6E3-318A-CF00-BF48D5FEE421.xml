@@ -3,7 +3,7 @@
    <createdBy>thuel</createdBy>
    <createdTime>2012-07-26 09:22:55 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2012-07-27 11:55:03 UTC</changedTime>
+   <changedTime>2012-07-30 08:03:25 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Style PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -163,12 +163,11 @@
          <createdBy>thuel</createdBy>
          <createdTime>2012-07-26 10:11:12 UTC</createdTime>
          <changedBy>thuel</changedBy>
-         <changedTime>2012-07-27 08:59:31 UTC</changedTime>
+         <changedTime>2012-07-30 08:03:24 UTC</changedTime>
          <ownerDesignName>pdb</ownerDesignName>
          <pk>true</pk>
          <usedAttributes>
             <attributeRef>5263A62A-E0AE-4276-0AF9-2DFDAA9320D9</attributeRef>
-            <attributeRef>01B7C7A6-F8DA-0194-32C7-222033D3B65B</attributeRef>
          </usedAttributes>
       </identifier>
    </identifiers>
