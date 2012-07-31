@@ -53,7 +53,7 @@ public class UKPartBuilder implements IPartBuilder
   @Override
   public CATEGORY getCategory( )
   {
-    return CATEGORY.Uk;
+    return CATEGORY.UK;
     // return IGafConstants.KZ_CATEGORY_UK;
   }
 

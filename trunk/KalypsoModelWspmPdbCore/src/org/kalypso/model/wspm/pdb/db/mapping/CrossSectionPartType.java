@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -48,14 +50,16 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
+import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants;
 
 /**
  * @author Monika Thuel
  */
-public class CrossSectionPartType implements Serializable, CategoryConstants
+public class CrossSectionPartType extends AbstractModelObject implements Serializable, CategoryConstants
 {
   private CATEGORY m_category;
 
@@ -63,15 +67,18 @@ public class CrossSectionPartType implements Serializable, CategoryConstants
 
   private StyleArray m_styleArray;
 
+  private Set<CrossSectionPart> m_crossSectionParts = new HashSet<CrossSectionPart>( 0 );
+
   public CrossSectionPartType( )
   {
   }
 
-  public CrossSectionPartType( final CATEGORY category, final String description, final StyleArray styleArray )
+  public CrossSectionPartType( final CATEGORY category, final String description, final StyleArray styleArray, final Set<CrossSectionPart> crossSectionParts )
   {
     m_category = category;
     m_description = description;
     m_styleArray = styleArray;
+    m_crossSectionParts = crossSectionParts;
   }
 
   @Id
@@ -84,7 +91,11 @@ public class CrossSectionPartType implements Serializable, CategoryConstants
 
   public void setCategory( final CATEGORY category )
   {
+    final Object oldValue = m_category;
+
     m_category = category;
+
+    firePropertyChange( PROPERTY_CATEGORY, oldValue, category );
   }
 
   @Column(name = "description", length = 255)
@@ -98,7 +109,7 @@ public class CrossSectionPartType implements Serializable, CategoryConstants
     m_description = description;
   }
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "style_array_id", nullable = false)
   public StyleArray getStyleArray( )
   {
@@ -108,5 +119,16 @@ public class CrossSectionPartType implements Serializable, CategoryConstants
   public void setStyleArray( final StyleArray styleArray )
   {
     m_styleArray = styleArray;
+  }
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSectionPartType")
+  public Set<CrossSectionPart> getCrossSectionParts( )
+  {
+    return m_crossSectionParts;
+  }
+
+  public void setCrossSectionParts( final Set<CrossSectionPart> crossSectionParts )
+  {
+    m_crossSectionParts = crossSectionParts;
   }
 }

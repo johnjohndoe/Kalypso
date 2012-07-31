@@ -48,6 +48,8 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 public interface CategoryConstants
 {
 
+  String PROPERTY_CATEGORY = "category"; //$NON-NLS-1$
+
   enum CATEGORY
   {
     // TODO i18n?
@@ -56,14 +58,14 @@ public interface CategoryConstants
     S(Messages.getString( "CategoryConstants.1" )), //$NON-NLS-1$
     W(Messages.getString( "CategoryConstants.2" )), //$NON-NLS-1$
     A(Messages.getString( "CategoryConstants.3" )), //$NON-NLS-1$
-    Uk(Messages.getString( "CategoryConstants.4" )), //$NON-NLS-1$
+    UK(Messages.getString( "CategoryConstants.4" )), //$NON-NLS-1$
     K(Messages.getString( "CategoryConstants.5" )), //$NON-NLS-1$
-    Ei(Messages.getString( "CategoryConstants.6" )), //$NON-NLS-1$
-    Ma(Messages.getString( "CategoryConstants.7" )), //$NON-NLS-1$
-    Ar(Messages.getString( "CategoryConstants.8" )), //$NON-NLS-1$
-    Ha(Messages.getString( "CategoryConstants.9" )), //$NON-NLS-1$
-    Ok(Messages.getString( "CategoryConstants.10" )), //$NON-NLS-1$
-    None(Messages.getString( "CategoryConstants.11" )); //$NON-NLS-1$
+    EI(Messages.getString( "CategoryConstants.6" )), //$NON-NLS-1$
+    MA(Messages.getString( "CategoryConstants.7" )), //$NON-NLS-1$
+    AR(Messages.getString( "CategoryConstants.8" )), //$NON-NLS-1$
+    HA(Messages.getString( "CategoryConstants.9" )), //$NON-NLS-1$
+    OK(Messages.getString( "CategoryConstants.10" )), //$NON-NLS-1$
+    NONE(Messages.getString( "CategoryConstants.11" )); //$NON-NLS-1$
 
     private final String m_label;
 

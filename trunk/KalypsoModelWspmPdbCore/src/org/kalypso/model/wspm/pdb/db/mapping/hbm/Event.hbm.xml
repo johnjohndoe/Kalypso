@@ -43,5 +43,9 @@
             </key>
             <one-to-many class="WaterlevelFixation" />
         </set>
+        
+         <many-to-one name="styleArray" class="StyleArray" fetch="select" lazy=true>
+            <column name="STYLE_ARRAY_ID" precision="20" scale="0" />
+        </many-to-one>
     </class>
 </hibernate-mapping>

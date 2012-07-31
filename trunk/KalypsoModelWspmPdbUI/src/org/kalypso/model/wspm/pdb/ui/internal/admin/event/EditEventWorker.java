@@ -79,13 +79,13 @@ public class EditEventWorker implements IEditWorker
   @Override
   public String getWindowTitle( )
   {
-    return Messages.getString("EditEventWorker_0"); //$NON-NLS-1$
+    return Messages.getString( "EditEventWorker_0" ); //$NON-NLS-1$
   }
 
   @Override
   public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
   {
-    monitor.subTask( Messages.getString("EditEventWorker_1") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "EditEventWorker_1" ) ); //$NON-NLS-1$
     final Event[] existingEvents = GetPdbList.getArray( session, Event.class );
     m_eventToEdit = EventUtils.findEventByName( existingEvents, m_selectedItem.getName() );
     m_clone = cloneForEdit( m_selectedItem );
@@ -123,7 +123,7 @@ public class EditEventWorker implements IEditWorker
 
   private Event cloneForEdit( final Event other )
   {
-    return new Event( other.getId(), other.getWaterBody(), other.getName(), other.getCreationDate(), other.getEditingDate(), other.getEditingUser(), other.getMeasurementDate(), other.getSource(), other.getType(), other.getDescription(), other.getWaterlevelFixations() );
+    return new Event( other.getId(), other.getWaterBody(), other.getName(), other.getCreationDate(), other.getEditingDate(), other.getEditingUser(), other.getMeasurementDate(), other.getSource(), other.getType(), other.getWlType(), other.getDescription(), other.getWaterlevelFixations() );
   }
 
   /**

@@ -20,6 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -30,7 +31,7 @@ import com.vividsolutions.jts.geom.LineString;
  */
 @Entity
 @Table(name = "cross_section_part", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = { "name", "cross_section" }))
-public class CrossSectionPart implements Serializable, CategoryConstants
+public class CrossSectionPart extends AbstractModelObject implements Serializable, CategoryConstants
 {
   private BigDecimal m_id;
 
@@ -40,13 +41,15 @@ public class CrossSectionPart implements Serializable, CategoryConstants
 
   private Geometry m_line;
 
-  private CATEGORY m_category;
+  private CATEGORY m_category = CATEGORY.NONE;
 
   private String m_description;
 
   private Set<Point> m_points = new HashSet<Point>( 0 );
 
   private Event m_event;
+
+  private Set<CrossSectionPartParameter> m_crossSectionPartParameters = new HashSet<CrossSectionPartParameter>( 0 );
 
   public CrossSectionPart( )
   {
@@ -71,7 +74,7 @@ public class CrossSectionPart implements Serializable, CategoryConstants
     m_points = points;
   }
 
-  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final LineString line, final CATEGORY category, final String description, final Set<Point> points, final Event event )
+  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final LineString line, final CATEGORY category, final String description, final Set<Point> points, final Event event, final Set<CrossSectionPartParameter> crossSectionPartParameters )
   {
     m_id = id;
     m_crossSection = crossSection;
@@ -81,6 +84,7 @@ public class CrossSectionPart implements Serializable, CategoryConstants
     m_description = description;
     m_points = points;
     m_event = event;
+    m_crossSectionPartParameters = crossSectionPartParameters;
   }
 
   @Id
@@ -144,7 +148,7 @@ public class CrossSectionPart implements Serializable, CategoryConstants
 // throw new IllegalArgumentException( "'line' must be a LineString or Empty GeometryCollection" );
   }
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, targetEntity = CrossSectionPart.class)
   @JoinColumn(name = "category", nullable = false)
   @Enumerated(EnumType.STRING)
   public CATEGORY getCategory( )
@@ -154,7 +158,11 @@ public class CrossSectionPart implements Serializable, CategoryConstants
 
   public void setCategory( final CATEGORY category )
   {
+    final Object oldValue = m_category;
+
     m_category = category;
+
+    firePropertyChange( PROPERTY_CATEGORY, oldValue, category );
   }
 
   @Column(name = "description")
@@ -189,5 +197,16 @@ public class CrossSectionPart implements Serializable, CategoryConstants
   public void setEvent( final Event event )
   {
     m_event = event;
+  }
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSectionPart")
+  public Set<CrossSectionPartParameter> getCrossSectionPartParameters( )
+  {
+    return m_crossSectionPartParameters;
+  }
+
+  public void setCrossSectionPartParameters( final Set<CrossSectionPartParameter> crossSectionPartParameters )
+  {
+    m_crossSectionPartParameters = crossSectionPartParameters;
   }
 }

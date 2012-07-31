@@ -59,7 +59,7 @@ public class OKPartBuilder implements IPartBuilder
   @Override
   public CATEGORY getCategory( )
   {
-    return CATEGORY.Ok;
+    return CATEGORY.OK;
     // return IGafConstants.KZ_CATEGORY_OK;
   }
 

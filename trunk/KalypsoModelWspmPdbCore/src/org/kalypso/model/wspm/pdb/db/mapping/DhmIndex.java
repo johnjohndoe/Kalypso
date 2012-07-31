@@ -117,8 +117,8 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
 
   @Id
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_id_seq")
-  @SequenceGenerator(name = "document_id_seq", sequenceName = "pdb.seq_pdb")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dhmindex_id_seq")
+  @SequenceGenerator(name = "dhmindex_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
     return m_id;
@@ -262,7 +262,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     m_editor = editor;
   }
 
-  @Column(name = "measurementAccuracy", length = 50)
+  @Column(name = "measurement_accuracy", length = 50)
   public String getMeasurementAccuracy( )
   {
     return m_measurementAccuracy;
