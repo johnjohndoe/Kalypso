@@ -197,8 +197,7 @@ public class Gaf2Db implements IPdbOperation
     final Geometry line = profile.createLine( dbType );
     crossSection.setLine( line );
 
-    if( session != null )
-      session.save( crossSection );
+    session.save( crossSection );
 
     return crossSection;
   }
@@ -221,10 +220,7 @@ public class Gaf2Db implements IPdbOperation
 // return null;
 
     csPart.setCrossSection( crossSection );
-
-    if( session != null )
-      session.save( csPart );
-
+    session.save( csPart );
     return csPart;
   }
 
@@ -274,8 +270,7 @@ public class Gaf2Db implements IPdbOperation
     // point.setVegetationAy( vegetation.getAy() );
     // point.setVegetationDp( vegetation.getDp() );
 
-    if( session != null )
-      session.save( point );
+    session.save( point );
   }
 
   /**
@@ -353,8 +348,7 @@ public class Gaf2Db implements IPdbOperation
 
       m_waterlevelEvent.getWaterlevelFixations().add( fixation );
 
-      if( session != null )
-        session.save( fixation );
+      session.save( fixation );
     }
   }
 
@@ -369,8 +363,7 @@ public class Gaf2Db implements IPdbOperation
 
       m_waterlevelEvent.setWaterBody( m_waterBody );
 
-      if( session != null )
-        session.save( m_waterlevelEvent );
+      session.save( m_waterlevelEvent );
     }
   }
 }

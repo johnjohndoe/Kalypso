@@ -141,9 +141,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     m_documentBase = documentBase;
 
     for( final WaterBody waterBody : waterBodies )
-    {
       m_waterBodies.put( waterBody.getName(), waterBody );
-    }
 
     m_monitor = monitor;
 
@@ -229,6 +227,13 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private void saveSection( final Session session, final CrossSection section )
   {
+    if( session == null )
+    {
+      /* HINT: We use the state as object to store only the cross sections, if no session is available. */
+      m_state.getCrossSections().add( section );
+      return;
+    }
+
     session.save( section );
 
     final Set<CrossSectionPart> parts = section.getCrossSectionParts();
@@ -392,7 +397,8 @@ public class CheckinStatePdbOperation implements IPdbOperation
       document.setState( null );
       document.setWaterBody( null );
 
-      session.save( document );
+      if( session != null )
+        session.save( document );
     }
   }
 

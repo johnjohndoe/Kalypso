@@ -70,7 +70,7 @@ public class GafCodes
 
   public GafCodes( ) throws IOException
   {
-    final Properties properties = PropertiesUtilities.load( getClass().getResource( "kz.properties" ) ); //$NON-NLS-1$
+    final Properties properties = PropertiesUtilities.load( getClass().getResource( "../internal/gaf/kz.properties" ) ); //$NON-NLS-1$
     for( final String key : properties.stringPropertyNames() )
     {
       final String value = properties.getProperty( key );
