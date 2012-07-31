@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" id="06A05C21-FD35-8CB7-DA01-53495774C639" directorySegmentName="seg_0" name="WB_Document">
+   <createdBy>thuel</createdBy>
+   <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+   <generatorID>F4DBF7B7-F817-D2DB-A9EC-247FAB515183</generatorID>
+   <ownerDesignName>pdb_V0.0.5</ownerDesignName>
+   <containerWithKeyObject>FA66E340-C08F-AD85-AB07-29F5F9F7592F</containerWithKeyObject>
+   <deleteRule>RESTRICT</deleteRule>
+   <localFKIndex>32BC0FF9-5B6A-D45B-1CD8-0CF50942A4BA</localFKIndex>
+   <keyObject>54AD89C5-5DD8-A3BB-181A-A7575F328C95</keyObject>
+   <mandatory>true</mandatory>
+   <transferable>true</transferable>
+</FKIndexAssociation>

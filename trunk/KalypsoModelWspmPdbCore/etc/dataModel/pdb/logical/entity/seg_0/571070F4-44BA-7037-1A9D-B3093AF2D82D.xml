@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-18 15:16:40 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2012-07-27 13:50:06 UTC</changedTime>
+   <changedTime>2012-07-31 07:01:14 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Cross_Section_Parts PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -139,7 +139,7 @@
          <createdBy>thuel2</createdBy>
          <createdTime>2011-05-18 15:17:05 UTC</createdTime>
          <changedBy>thuel</changedBy>
-         <changedTime>2012-07-27 13:50:06 UTC</changedTime>
+         <changedTime>2012-07-31 07:01:14 UTC</changedTime>
          <ownerDesignName>pdb</ownerDesignName>
          <pk>true</pk>
          <usedAttributes>
