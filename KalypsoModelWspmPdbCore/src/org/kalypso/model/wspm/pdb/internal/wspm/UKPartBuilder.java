@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
@@ -50,9 +51,10 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 public class UKPartBuilder implements IPartBuilder
 {
   @Override
-  public String getCategory( )
+  public CATEGORY getCategory( )
   {
-    return IGafConstants.KZ_CATEGORY_UK;
+    return CATEGORY.Uk;
+    // return IGafConstants.KZ_CATEGORY_UK;
   }
 
   @Override

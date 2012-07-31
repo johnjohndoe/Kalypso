@@ -41,11 +41,11 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 
 /**
  * @author Gernot Belger
- *
  */
 public class OKPartBuilder implements IPartBuilder
 {
@@ -57,9 +57,10 @@ public class OKPartBuilder implements IPartBuilder
   }
 
   @Override
-  public String getCategory( )
+  public CATEGORY getCategory( )
   {
-    return IGafConstants.KZ_CATEGORY_OK;
+    return CATEGORY.Ok;
+    // return IGafConstants.KZ_CATEGORY_OK;
   }
 
   @Override

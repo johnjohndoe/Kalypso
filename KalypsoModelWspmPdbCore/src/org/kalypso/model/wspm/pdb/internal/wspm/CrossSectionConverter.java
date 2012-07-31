@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
+import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
@@ -114,7 +115,7 @@ public class CrossSectionConverter
 
   private void convertP( )
   {
-    final CrossSectionPart part = m_section.findPartByCategory( IGafConstants.KZ_CATEGORY_PROFILE );
+    final CrossSectionPart part = m_section.findPartByCategory( CATEGORY.P );
     if( part == null )
       return;
 
@@ -171,8 +172,8 @@ public class CrossSectionConverter
 
   private void convertBuilding( )
   {
-    final CrossSectionPart ukPart = m_section.findPartByCategory( IGafConstants.KZ_CATEGORY_UK );
-    final CrossSectionPart okPart = m_section.findPartByCategory( IGafConstants.KZ_CATEGORY_OK );
+    final CrossSectionPart ukPart = m_section.findPartByCategory( CATEGORY.Uk );
+    final CrossSectionPart okPart = m_section.findPartByCategory( CATEGORY.Ok );
 
     /* Can we do anything with a OK without UK? Maybe this is always a weir? */
     if( ukPart == null && okPart == null )

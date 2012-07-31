@@ -20,6 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
@@ -242,7 +244,7 @@ public class CrossSection implements java.io.Serializable
 
   // Helper accessors
 
-  public CrossSectionPart findPartByCategory( final String category )
+  public CrossSectionPart findPartByCategory( final CATEGORY category )
   {
     final Set<CrossSectionPart> parts = getCrossSectionParts();
     for( final CrossSectionPart part : parts )

@@ -50,10 +50,8 @@ public interface CategoryConstants
 
   enum CATEGORY
   {
-    /**
-     * Default
-     */
     // TODO i18n?
+    // HACK: introduced Category.None, do not insert none into DB
     P(Messages.getString( "CategoryConstants.0" )), //$NON-NLS-1$
     S(Messages.getString( "CategoryConstants.1" )), //$NON-NLS-1$
     W(Messages.getString( "CategoryConstants.2" )), //$NON-NLS-1$
@@ -64,7 +62,8 @@ public interface CategoryConstants
     Ma(Messages.getString( "CategoryConstants.7" )), //$NON-NLS-1$
     Ar(Messages.getString( "CategoryConstants.8" )), //$NON-NLS-1$
     Ha(Messages.getString( "CategoryConstants.9" )), //$NON-NLS-1$
-    Ok(Messages.getString( "CategoryConstants.10" )); //$NON-NLS-1$
+    Ok(Messages.getString( "CategoryConstants.10" )), //$NON-NLS-1$
+    None(Messages.getString( "CategoryConstants.11" )); //$NON-NLS-1$
 
     private final String m_label;
 
