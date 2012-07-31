@@ -1,0 +1,237 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="1152955F-37A0-664D-ADA3-4E2AA83426A9" directorySegmentName="seg_0" name="Waterlevel_Fixation">
+   <createdBy>thuel</createdBy>
+   <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+   <generatorID>B4965682-C105-A211-FEFA-970E12F1D1C8</generatorID>
+   <ownerDesignName>pdb</ownerDesignName>
+   <pkName>Waterlevel_Fixation PK</pkName>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Column</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <columns>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="22CBC042-DCDF-675D-EDF1-B92A7968599D">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <generatorID>761F87D0-BC4E-335C-6C7A-27B54F2F0A64</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>1</use>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>20</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Station" id="EAEA97A4-08D0-49F3-B568-A9B9A7119A0E">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
+         <generatorID>375EF51E-E187-6BA0-9B17-33ABF49A0FE2</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>72F78EA1-BFF2-06C3-B23C-A9FCA41237A5</distinctType>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>11</dataTypePrecision>
+         <dataTypeScale>3</dataTypeScale>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Location" id="B63021F8-09B0-3194-1279-24132B99A1F6">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <generatorID>EE89BA54-E83C-50A1-568B-48E48E06F408</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <structuredType>47E390DE-0671-C4B1-8428-0F45CBEE18F8</structuredType>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>3</use>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Creation_Date" id="86E4A5B9-9DD5-EC0A-88DB-20B876D1AC4C">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <generatorID>14E7C75A-D257-395C-B1EA-80B03C5946C0</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>1</use>
+         <logicalDatatype>LOGDT015</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Editing_Date" id="DBEFF36D-8875-7385-4DE4-506471978AB0">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <generatorID>826F1853-F484-37C4-D069-153BBEBF9387</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>1</use>
+         <logicalDatatype>LOGDT015</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Editing_User" id="713E2C55-DFA9-71AE-841D-DD48E790E7A7">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <generatorID>93C6FAAA-B935-7000-478A-D31E6912ED67</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>35D7D61C-E71A-566D-F228-AA52140297FC</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Measurement_Date" id="CF3D2247-2A96-0420-6919-04E5199BF498">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <generatorID>EE980B5E-6C07-E435-9877-EB6D84977187</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>1</use>
+         <logicalDatatype>LOGDT015</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Waterlevel" id="93595B85-C1CA-1713-7A28-E8CF53C80D08">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <comment>[m NN]</comment>
+         <commentInRDBMS>[m NN]</commentInRDBMS>
+         <generatorID>230B2308-2682-29D9-FD93-500B7FE88849</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>AEFEDAF5-E7EA-7380-BB59-646A04A3C033</distinctType>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>8</dataTypePrecision>
+         <dataTypeScale>3</dataTypeScale>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Discharge" id="A570BCF2-6A92-F4AC-348A-D7FDC439E6B9">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <comment>[m³/s]</comment>
+         <commentInRDBMS>[m³/s]</commentInRDBMS>
+         <generatorID>CA7EA41D-1182-EFCA-705B-5941EB80F02A</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>06BBC0AF-44E8-E1D3-844F-E68A8A8BE333</distinctType>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>8</dataTypePrecision>
+         <dataTypeScale>3</dataTypeScale>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Description" id="60CF20E1-F95F-5FAF-B509-C8F212AC90F0">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <generatorID>8CD5AED1-AB5D-C443-B315-9B442A38B82D</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>B3BBFFC0-261E-2785-8C3A-A260662720FD</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>255</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Event" id="3A0B2FE5-FA9E-9568-D45D-C9AC79DADF0A">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <generatorID>90BFA33C-709D-ED86-B403-5C062767C0E2</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>1</use>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>20</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+         <delegate>07E84278-4561-6F20-FB1F-FBDD722DF20B</delegate>
+         <previousColumn>false</previousColumn>
+         <associations>
+            <colAssociation fkAssociation="AF809845-72C5-4B43-A3CF-BF7B7A214FEB" referredColumn="07E84278-4561-6F20-FB1F-FBDD722DF20B"/>
+         </associations>
+      </Column>
+   </columns>
+   <indexes>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="327A904D-D54B-AA82-0261-958F5E690630" name="Waterlevel_Fixation PK">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <generatorID>1EB6EF35-E268-EB15-8B21-2AE9E00C2F33</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <pk>true</pk>
+         <indexState>Primary Constraint</indexState>
+         <indexColumnUsage>
+            <colUsage columnID="22CBC042-DCDF-675D-EDF1-B92A7968599D"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="5A4C156F-9179-6EE5-163F-9FA5407F3E25" name="Event__Waterlevel_Fixation">
+         <createdBy>thuel</createdBy>
+         <createdTime>2012-07-31 07:01:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-07-31 07:01:32 UTC</changedTime>
+         <generatorID>7F6B8DEE-781A-A999-DCF2-8ED9E0302F5B</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <indexColumnUsage>
+            <colUsage columnID="3A0B2FE5-FA9E-9568-D45D-C9AC79DADF0A"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+   </indexes>
+</Table>

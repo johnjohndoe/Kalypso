@@ -3,7 +3,7 @@
    <createdBy>thuel</createdBy>
    <createdTime>2012-07-26 07:30:11 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2012-07-27 09:17:29 UTC</changedTime>
+   <changedTime>2012-07-31 06:37:00 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>CS_Part_Parameter PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -132,12 +132,11 @@
          <createdBy>thuel</createdBy>
          <createdTime>2012-07-26 11:53:53 UTC</createdTime>
          <changedBy>thuel</changedBy>
-         <changedTime>2012-07-27 09:17:29 UTC</changedTime>
+         <changedTime>2012-07-31 06:37:00 UTC</changedTime>
          <ownerDesignName>pdb</ownerDesignName>
          <pk>true</pk>
          <usedAttributes>
             <attributeRef>2210BBC1-0AB6-47A4-349D-BCD6EB20EBE5</attributeRef>
-            <attributeRef>E8529F90-2F52-9995-295E-663B9AA1FC37</attributeRef>
          </usedAttributes>
       </identifier>
       <identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="5DAAE958-7985-1994-84DA-FCA2FA328BF6" name="CS_Part_Parameter UK">

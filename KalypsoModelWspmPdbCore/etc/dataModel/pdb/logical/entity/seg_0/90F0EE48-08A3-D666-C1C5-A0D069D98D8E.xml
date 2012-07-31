@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-18 11:53:28 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2012-07-27 13:47:55 UTC</changedTime>
+   <changedTime>2012-07-31 06:58:45 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Events PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -240,7 +240,7 @@
          <createdBy>thuel2</createdBy>
          <createdTime>2011-05-18 11:56:27 UTC</createdTime>
          <changedBy>thuel</changedBy>
-         <changedTime>2012-07-27 13:47:55 UTC</changedTime>
+         <changedTime>2012-07-31 06:58:45 UTC</changedTime>
          <ownerDesignName>pdb</ownerDesignName>
          <pk>true</pk>
          <usedAttributes>
