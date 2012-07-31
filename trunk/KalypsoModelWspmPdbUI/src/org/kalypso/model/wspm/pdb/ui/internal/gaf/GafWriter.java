@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
+import org.kalypso.model.wspm.pdb.db.utils.ByCategoryComparator;
 import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
 import org.kalypso.model.wspm.pdb.db.utils.ConsecutiveNumComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -136,8 +137,12 @@ public class GafWriter
     /* Get the cross section parts. */
     final Set<CrossSectionPart> parts = crossSection.getCrossSectionParts();
 
+    /* Sort the cross sections. */
+    final CrossSectionPart[] sortedParts = parts.toArray( new CrossSectionPart[] {} );
+    Arrays.sort( sortedParts, new ByCategoryComparator() );
+
     /* Loop the cross section parts. */
-    for( final CrossSectionPart part : parts )
+    for( final CrossSectionPart part : sortedParts )
     {
       /* Write the cross section part. */
       writeCrossSectionPart( part, writer );
