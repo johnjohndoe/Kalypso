@@ -59,7 +59,10 @@ import javax.persistence.UniqueConstraint;
  * @author Monika Thuel
  */
 @Entity
-@Table(name = "style", schema = "pdb", uniqueConstraints = { @UniqueConstraint(columnNames = "name"), @UniqueConstraint(columnNames = "consecutive_num, style_array_id") })
+// TODO add second uniqueConstraint to annotation
+// @Table(name = "style", schema = "pdb", uniqueConstraints = { @UniqueConstraint(columnNames = "name"),
+// @UniqueConstraint(columnNames = "consecutive_num, style_array_id") })
+@Table(name = "style", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Style implements Serializable
 {
   private BigDecimal m_id;
@@ -132,7 +135,7 @@ public class Style implements Serializable
     m_description = description;
   }
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, targetEntity = StyleArray.class)
   @JoinColumn(name = "style_array_id", nullable = false)
   public StyleArray getStyleArray( )
   {

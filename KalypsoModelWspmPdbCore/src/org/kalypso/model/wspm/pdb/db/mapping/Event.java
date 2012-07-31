@@ -51,7 +51,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
 
   private TYPE m_type = TYPE.Measurement;
 
-  private WL_TYPE m_wlType = WL_TYPE.Wl_1d;
+  private WL_TYPE m_wlType = WL_TYPE.WL_1D;
 
   private String m_description;
 
@@ -75,7 +75,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     m_editingUser = editingUser;
   }
 
-  public Event( final BigDecimal id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final TYPE type, final String description, final Set<WaterlevelFixation> waterlevelFixations )
+  public Event( final BigDecimal id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final TYPE type, final WL_TYPE wl_type, final String description, final Set<WaterlevelFixation> waterlevelFixations )
   {
     m_id = id;
     m_waterBody = waterBody;
@@ -86,6 +86,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     m_measurementDate = measurementDate;
     m_source = source;
     m_type = type;
+    m_wlType = wl_type;
     m_description = description;
     m_waterlevelFixations = waterlevelFixations;
   }
@@ -224,11 +225,13 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     return m_wlType;
   }
 
-  public void setType( final WL_TYPE wlType )
+  public void setWlType( final WL_TYPE wlType )
   {
+    final Object oldValue = m_wlType;
 
     m_wlType = wlType;
 
+    firePropertyChange( PROPERTY_WL_TYPE, oldValue, wlType );
   }
 
   @Column(name = "description")
@@ -266,7 +269,8 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "style_array_id")
+  // targetEntity = StyleArray.class
+  @JoinColumn(name = "style_array_id", nullable = true)
   public StyleArray getStyleArray( )
   {
     return m_styleArray;

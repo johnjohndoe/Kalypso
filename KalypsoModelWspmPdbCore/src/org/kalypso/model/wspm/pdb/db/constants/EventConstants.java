@@ -71,13 +71,10 @@ public interface EventConstants
 
   enum WL_TYPE
   {
-    /**
-     * Default
-     */
-    // TODO will it work? naming the enumeration element 1D didn't work
+    // TODO will it work? naming the enumeration element '1D' didn't work
     // translation?!?
-    Wl_1d(Messages.getString( "EventConstants.2" )), //$NON-NLS-1$
-    Wl_2d(Messages.getString( "EventConstants.3" )); //$NON-NLS-1$
+    WL_1D(Messages.getString( "EventConstants.2" )), //$NON-NLS-1$
+    WL_2D(Messages.getString( "EventConstants.3" )); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -91,6 +88,7 @@ public interface EventConstants
     {
       return m_label;
     }
+
   }
 
   // FIXME

@@ -53,13 +53,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 /**
  * @author Monika Thuel
  */
 @Entity
-@Table(name = "cs_part_parameter", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = "key, cross_section_part_id"))
+// TODO add uniqueconstraint
+// @Table(name = "cs_part_parameter", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames =
+// "key, cross_section_part_id"))
+@Table(name = "cs_part_parameter", schema = "pdb")
 public class CrossSectionPartParameter implements Serializable
 {
 
@@ -119,7 +121,7 @@ public class CrossSectionPartParameter implements Serializable
     m_value = value;
   }
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, targetEntity = CrossSectionPart.class)
   @JoinColumn(name = "cross_section_part_id", nullable = false)
   public CrossSectionPart getCrossSectionPart( )
   {

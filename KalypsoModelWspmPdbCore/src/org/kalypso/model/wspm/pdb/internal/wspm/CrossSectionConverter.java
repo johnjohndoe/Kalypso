@@ -172,8 +172,8 @@ public class CrossSectionConverter
 
   private void convertBuilding( )
   {
-    final CrossSectionPart ukPart = m_section.findPartByCategory( CATEGORY.Uk );
-    final CrossSectionPart okPart = m_section.findPartByCategory( CATEGORY.Ok );
+    final CrossSectionPart ukPart = m_section.findPartByCategory( CATEGORY.UK );
+    final CrossSectionPart okPart = m_section.findPartByCategory( CATEGORY.OK );
 
     /* Can we do anything with a OK without UK? Maybe this is always a weir? */
     if( ukPart == null && okPart == null )

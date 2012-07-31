@@ -56,6 +56,9 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartParameter;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
+import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
@@ -64,6 +67,9 @@ import org.kalypso.model.wspm.pdb.db.mapping.PointKind;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.RoughnessId;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.Style;
+import org.kalypso.model.wspm.pdb.db.mapping.StyleArray;
+import org.kalypso.model.wspm.pdb.db.mapping.StyleParameter;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.mapping.VegetationId;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -183,6 +189,11 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     configuration.addAnnotatedClass( State.class );
     configuration.addAnnotatedClass( Event.class );
     configuration.addAnnotatedClass( CrossSection.class );
+    configuration.addAnnotatedClass( CrossSectionPartParameter.class );
+    configuration.addAnnotatedClass( StyleArray.class );
+    configuration.addAnnotatedClass( Style.class );
+    configuration.addAnnotatedClass( StyleParameter.class );
+    configuration.addAnnotatedClass( CrossSectionPartType.class );
     configuration.addAnnotatedClass( CrossSectionPart.class );
     configuration.addAnnotatedClass( Point.class );
     configuration.addAnnotatedClass( PointKind.class );
@@ -192,6 +203,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     configuration.addAnnotatedClass( VegetationId.class );
     configuration.addAnnotatedClass( WaterlevelFixation.class );
     configuration.addAnnotatedClass( Document.class );
+    configuration.addAnnotatedClass( DhmIndex.class );
   }
 
   @Override

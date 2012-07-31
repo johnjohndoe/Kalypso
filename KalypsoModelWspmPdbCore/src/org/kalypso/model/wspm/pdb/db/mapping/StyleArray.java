@@ -97,4 +97,16 @@ public class StyleArray implements Serializable
     m_name = name;
   }
 
+// @OneToOne(fetch = FetchType.LAZY)
+// @JoinColumn(name = "id", nullable = false)
+// public CrossSectionPartType getCrossSectionPartType( )
+// {
+// return m_crossSectionPartType;
+// }
+//
+// public void setCrossSectionPartTyp( final CrossSectionPartType crossSectionPartTyp )
+// {
+// m_crossSectionPartType = crossSectionPartTyp;
+// }
+
 }
