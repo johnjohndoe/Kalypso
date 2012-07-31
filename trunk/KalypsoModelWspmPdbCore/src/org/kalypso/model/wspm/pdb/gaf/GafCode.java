@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.gaf;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
+import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 
 /**
  * Represents the 'Kennziffer' (KZ) of a gaf file.
@@ -59,7 +60,7 @@ public class GafCode implements Comparable<GafCode>
 
   private final String m_hyk;
 
-  private final String m_kind;
+  private final CATEGORY m_kind;
 
   private final int m_number;
 
@@ -76,12 +77,12 @@ public class GafCode implements Comparable<GafCode>
     m_dbCode = StringUtils.trim( tokens[1] );
     m_description = StringUtils.trim( tokens[2] );
     m_hyk = StringUtils.trim( tokens[3] );
-    m_kind = StringUtils.trim( tokens[4] );
+    m_kind = CATEGORY.valueOf( StringUtils.trim( tokens[4] ) );
     m_color = ColorUtilities.toRGBFromHTML( StringUtils.trim( tokens[5] ) );
     m_isDefault = Boolean.valueOf( tokens[6] );
   }
 
-  public GafCode( final int number, final String key, final String dbCode, final String description, final String hyk, final String kind, final RGB color, final boolean isDefault )
+  public GafCode( final int number, final String key, final String dbCode, final String description, final String hyk, final CATEGORY kind, final RGB color, final boolean isDefault )
   {
     m_number = number;
     m_key = key;
@@ -130,7 +131,7 @@ public class GafCode implements Comparable<GafCode>
   /**
    * Classifies the point in different kinds of points; each kind representing one cross section part.
    */
-  public String getKind( )
+  public CATEGORY getKind( )
   {
     return m_kind;
   }

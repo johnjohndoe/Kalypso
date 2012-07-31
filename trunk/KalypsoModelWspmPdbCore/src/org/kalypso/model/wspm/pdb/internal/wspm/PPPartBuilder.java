@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
@@ -66,15 +67,16 @@ public class PPPartBuilder implements IPartBuilder
   }
 
   @Override
-  public String getCategory( )
+  public CATEGORY getCategory( )
   {
-    return IGafConstants.KZ_CATEGORY_PROFILE;
+    return CATEGORY.P;
+    // return IGafConstants.KZ_CATEGORY_PROFILE;
   }
 
   @Override
   public String getHeightComponent( )
   {
-    return IWspmConstants.POINT_PROPERTY_HOEHE;
+    return IWspmPointProperties.POINT_PROPERTY_HOEHE;
   }
 
   @Override

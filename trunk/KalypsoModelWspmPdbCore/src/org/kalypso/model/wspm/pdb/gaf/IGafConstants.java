@@ -47,15 +47,15 @@ public interface IGafConstants
 {
   String POINT_KIND_GAF = "GAF"; //$NON-NLS-1$
 
-  /* CATEGORIES */
+  /* CATEGORIES, replaced by CategoryConstants.CATEGORY */
 
-  String KZ_CATEGORY_PROFILE = "P"; //$NON-NLS-1$
-
-  String KZ_CATEGORY_WATERLEVEL = "W"; //$NON-NLS-1$
-
-  String KZ_CATEGORY_UK = "UK"; //$NON-NLS-1$
-
-  String KZ_CATEGORY_OK = "OK"; //$NON-NLS-1$
+//  String KZ_CATEGORY_PROFILE = "P"; //$NON-NLS-1$
+//
+//  String KZ_CATEGORY_WATERLEVEL = "W"; //$NON-NLS-1$
+//
+//  String KZ_CATEGORY_UK = "UK"; //$NON-NLS-1$
+//
+//  String KZ_CATEGORY_OK = "OK"; //$NON-NLS-1$
 
   /* CODES */
   String CODE_PP = "PP"; //$NON-NLS-1$

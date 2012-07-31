@@ -49,6 +49,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
+import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
@@ -58,14 +59,14 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
  */
 public class GafCodes
 {
-  public static final GafCode NULL_HYK = new GafCode( -1, Messages.getString( "GafCodes.0" ), StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, null, false ); //$NON-NLS-1$
+  public static final GafCode NULL_HYK = new GafCode( -1, Messages.getString( "GafCodes.0" ), StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, CATEGORY.None, null, false ); //$NON-NLS-1$
 
   private final Map<String, GafCode> m_codes = new LinkedHashMap<String, GafCode>();
 
   private final Map<String, GafCode> m_hykCodes = new LinkedHashMap<String, GafCode>();
 
   /* Category -> default code */
-  private final Map<String, GafCode> m_defaultCodes = new HashMap<String, GafCode>();
+  private final Map<CATEGORY, GafCode> m_defaultCodes = new HashMap<CATEGORY, GafCode>();
 
   public GafCodes( ) throws IOException
   {

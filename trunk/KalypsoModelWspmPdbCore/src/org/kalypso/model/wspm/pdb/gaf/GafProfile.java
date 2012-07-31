@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafPart;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
@@ -60,7 +61,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Represent point of a gaf file with the same station.
- *
+ * 
  * @author Gernot Belger
  */
 public class GafProfile implements IGafConstants
@@ -68,11 +69,11 @@ public class GafProfile implements IGafConstants
   private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
   /** Linked in order to preserve original order from graf file */
-  private final Map<String, GafPart> m_parts = new LinkedHashMap<String, GafPart>();
+  private final Map<CATEGORY, GafPart> m_parts = new LinkedHashMap<CATEGORY, GafPart>();
 
   private final BigDecimal m_station;
 
-  private String m_lastKind = null;
+  private CATEGORY m_lastKind = null;
 
   private final GeometryFactory m_geometryFactory;
 
@@ -95,7 +96,7 @@ public class GafProfile implements IGafConstants
 
     Assert.isTrue( station.equals( m_station ) );
 
-    final String kind = code.getKind();
+    final CATEGORY kind = code.getKind();
 
     checkDiscontinuosPart( kind );
 
@@ -107,14 +108,14 @@ public class GafProfile implements IGafConstants
   }
 
   /* Check, if we have discontinues parts */
-  private void checkDiscontinuosPart( final String kind )
+  private void checkDiscontinuosPart( final CATEGORY kind )
   {
     if( !kind.equals( m_lastKind ) )
     {
       if( m_parts.containsKey( kind ) )
       {
         /* Ignore water levels can occur anywhere, thats normal */
-        if( KZ_CATEGORY_WATERLEVEL.equals( m_lastKind ) || kind.equals( KZ_CATEGORY_WATERLEVEL ) )
+        if( CATEGORY.W.equals( m_lastKind ) || kind.equals( CATEGORY.W ) )
           return;
 
         final String message = String.format( Messages.getString( "GafProfile.0" ), kind ); //$NON-NLS-1$
@@ -123,7 +124,7 @@ public class GafProfile implements IGafConstants
     }
   }
 
-  private GafPart getOrCreatePart( final String kind )
+  private GafPart getOrCreatePart( final CATEGORY kind )
   {
     /* Make sure this kind of parts exists */
     if( !m_parts.containsKey( kind ) )
@@ -135,7 +136,7 @@ public class GafProfile implements IGafConstants
   public Geometry createLine( final String dbType ) throws Exception
   {
     /* Normally, the line of the cross section is the line of the profile */
-    final GafPart profilePart = findPart( KZ_CATEGORY_PROFILE );
+    final GafPart profilePart = findPart( CATEGORY.P );
     if( profilePart != null )
       return profilePart.getLine( dbType );
 
@@ -147,7 +148,7 @@ public class GafProfile implements IGafConstants
     return null;
   }
 
-  public GafPart findPart( final String category )
+  public GafPart findPart( final CATEGORY category )
   {
     return m_parts.get( category );
   }
@@ -192,7 +193,7 @@ public class GafProfile implements IGafConstants
     }
 
     /* Check if PP part intersects with riverline */
-    final GafPart ppPart = m_parts.get( IGafConstants.KZ_CATEGORY_PROFILE );
+    final GafPart ppPart = m_parts.get( CATEGORY.P );
     if( ppPart == null )
     {
       m_stati.add( IStatus.ERROR, Messages.getString( "GafProfile.4" ) ); //$NON-NLS-1$
@@ -225,7 +226,7 @@ public class GafProfile implements IGafConstants
 
   public boolean hasWaterlevel( )
   {
-    final GafPart gafPart = m_parts.get( IGafConstants.KZ_CATEGORY_WATERLEVEL );
+    final GafPart gafPart = m_parts.get( CATEGORY.W );
     return gafPart != null && gafPart.getPoints().length > 0;
   }
 }

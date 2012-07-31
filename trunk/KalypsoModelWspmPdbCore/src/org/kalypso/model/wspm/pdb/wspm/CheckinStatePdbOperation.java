@@ -310,7 +310,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     for( final CrossSectionPart part : parts )
     {
       /* Instead of preserving the existing part name, we recreate it by the same system as when importing gaf */
-      final String uniquePartName = partNameGenerator.createUniqueName( part.getCategory() );
+      final String uniquePartName = partNameGenerator.createUniqueName( part.getCategory().toString() );
       part.setName( uniquePartName );
       part.setCrossSection( section );
       section.getCrossSectionParts().add( part );
