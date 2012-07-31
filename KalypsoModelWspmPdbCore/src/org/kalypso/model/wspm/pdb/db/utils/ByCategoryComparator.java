@@ -64,10 +64,10 @@ public class ByCategoryComparator implements Comparator<CrossSectionPart>
       return 0;
 
     if( c1 == CATEGORY.P )
-      return 1;
+      return -1;
 
     if( c2 == CATEGORY.P )
-      return -1;
+      return 1;
 
     return 0;
   }
