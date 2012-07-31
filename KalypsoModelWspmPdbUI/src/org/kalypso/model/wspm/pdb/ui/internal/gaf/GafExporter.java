@@ -81,7 +81,7 @@ public class GafExporter
 
     try
     {
-      monitor.beginTask( "Exporting profiles into the GAF Exchange Format...", 1000 );
+      monitor.beginTask( "Exporting profiles into the GAF Exchange Format", 1000 );
       monitor.subTask( "Converting profiles..." );
 
       final Set<CrossSection> crossSections = getCrossSections( profiles, new SubProgressMonitor( monitor, 500 ) );

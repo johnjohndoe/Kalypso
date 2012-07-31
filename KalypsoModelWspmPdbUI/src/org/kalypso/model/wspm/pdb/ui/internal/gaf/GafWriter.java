@@ -41,13 +41,21 @@
 package org.kalypso.model.wspm.pdb.ui.internal.gaf;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.Point;
+import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
+import org.kalypso.model.wspm.pdb.db.utils.ConsecutiveNumComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
@@ -77,14 +85,37 @@ public class GafWriter
    */
   public IStatus write( final Set<CrossSection> crossSections, final File file, IProgressMonitor monitor )
   {
+    /* Monitor. */
     if( monitor == null )
       monitor = new NullProgressMonitor();
 
+    /* The writer. */
+    PrintWriter writer = null;
+
     try
     {
-      // TODO
+      /* Monitor. */
+      monitor.beginTask( "Exporting profiles to GAF file", 100 * crossSections.size() );
+      monitor.subTask( "Writing profiles..." );
 
-      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "OK" );
+      /* Create the writer. */
+      writer = new PrintWriter( file, "UTF-8" );
+
+      /* Sort the cross sections. */
+      final CrossSection[] sortedCrossSections = crossSections.toArray( new CrossSection[] {} );
+      Arrays.sort( sortedCrossSections, new ByStationComparator() );
+
+      /* Loop the cross sections. */
+      for( final CrossSection crossSection : sortedCrossSections )
+      {
+        /* Write the cross section. */
+        writeCrossSection( crossSection, writer );
+
+        /* Monitor. */
+        monitor.worked( 100 );
+      }
+
+      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "The export was successfull." );
     }
     catch( final Exception ex )
     {
@@ -92,7 +123,74 @@ public class GafWriter
     }
     finally
     {
+      /* Close the writer. */
+      IOUtils.closeQuietly( writer );
+
+      /* Monitor. */
       monitor.done();
     }
+  }
+
+  private void writeCrossSection( final CrossSection crossSection, final PrintWriter writer )
+  {
+    /* Get the cross section parts. */
+    final Set<CrossSectionPart> parts = crossSection.getCrossSectionParts();
+
+    /* Loop the cross section parts. */
+    for( final CrossSectionPart part : parts )
+    {
+      /* Write the cross section part. */
+      writeCrossSectionPart( part, writer );
+    }
+  }
+
+  private void writeCrossSectionPart( final CrossSectionPart part, final PrintWriter writer )
+  {
+    /* Get the points. */
+    final Set<Point> points = part.getPoints();
+
+    /* Sort the points. */
+    final Point[] sortedPoints = points.toArray( new Point[] {} );
+    Arrays.sort( sortedPoints, new ConsecutiveNumComparator() );
+
+    /* Loop the points. */
+    for( final Point point : sortedPoints )
+    {
+      /* Write the point. */
+      writePoint( point, writer );
+    }
+  }
+
+  private void writePoint( final Point point, final PrintWriter writer )
+  {
+    /* Create the line. */
+    final StringBuilder builder = new StringBuilder();
+    builder.append( "%.3f\t" );
+    builder.append( "%s\t" );
+    builder.append( "%.3f\t" );
+    builder.append( "%.3f\t" );
+    builder.append( "%s\t" );
+    builder.append( "%d\t" );
+    builder.append( "%d\t" );
+    builder.append( "%.4f\t" );
+    builder.append( "%.4f\t" );
+    builder.append( "%s" );
+
+    /* Get the data to write. */
+    final CrossSection crossSection = point.getCrossSectionPart().getCrossSection();
+    final double station = crossSection.getStation().doubleValue();
+    final String id = point.getName();
+    final double y = point.getWidth().doubleValue();
+    final double z = point.getHeight().doubleValue();
+    final String kz = point.getCode();
+    final int rk = Integer.parseInt( point.getRoughness().getId().getName() );
+    final int bk = Integer.parseInt( point.getVegetation().getId().getName() );
+    final double hw = point.getLocation().getY();
+    final double rw = point.getLocation().getX();
+    final String hyk = point.getHyk() == null ? "x" : point.getHyk();
+
+    /* Write the line. */
+    writer.format( Locale.PRC, builder.toString(), station, id, y, z, kz, rk, bk, hw, rw, hyk );
+    writer.println();
   }
 }
