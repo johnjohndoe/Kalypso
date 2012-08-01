@@ -116,11 +116,11 @@ public class GafWriter
         monitor.worked( 100 );
       }
 
-      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "The export was successfull." );
+      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "The GAF export was successfull." );
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, ex.getLocalizedMessage(), ex );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( "The GAF export has failed: %s", ex.getLocalizedMessage() ), ex );
     }
     finally
     {
