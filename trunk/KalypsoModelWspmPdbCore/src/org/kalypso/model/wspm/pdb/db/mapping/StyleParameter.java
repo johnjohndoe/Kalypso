@@ -117,7 +117,7 @@ public class StyleParameter implements Serializable
     m_value = value;
   }
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, targetEntity = Style.class)
   @JoinColumn(name = "style_id", nullable = false)
   public Style getStyle( )
   {

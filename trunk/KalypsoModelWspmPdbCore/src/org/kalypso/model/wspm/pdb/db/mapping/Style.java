@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.pdb.db.mapping;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,6 +53,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -74,6 +77,8 @@ public class Style implements Serializable
   private String m_description;
 
   private StyleArray m_styleArray;
+
+  private Set<StyleParameter> m_styleParameters = new HashSet<StyleParameter>( 0 );
 
   public Style( )
   {
@@ -146,4 +151,16 @@ public class Style implements Serializable
   {
     m_styleArray = styleArray;
   }
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "style")
+  public Set<StyleParameter> getStyleParameters( )
+  {
+    return m_styleParameters;
+  }
+
+  public void setStyleParameters( final Set<StyleParameter> styleParameters )
+  {
+    m_styleParameters = styleParameters;
+  }
+
 }
