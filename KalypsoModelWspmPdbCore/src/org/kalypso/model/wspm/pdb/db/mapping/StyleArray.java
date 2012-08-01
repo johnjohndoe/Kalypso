@@ -42,12 +42,16 @@ package org.kalypso.model.wspm.pdb.db.mapping;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -61,6 +65,10 @@ public class StyleArray implements Serializable
   private BigDecimal m_id;
 
   private String m_name;
+
+  private Set<CrossSectionPartType> m_crossSectionPartTypes = new HashSet<CrossSectionPartType>( 0 );
+
+  private Set<Style> m_styles = new HashSet<Style>( 0 );
 
   public StyleArray( )
   {
@@ -108,5 +116,27 @@ public class StyleArray implements Serializable
 // {
 // m_crossSectionPartType = crossSectionPartTyp;
 // }
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "styleArray")
+  public Set<CrossSectionPartType> getCrossSectionPartTypes( )
+  {
+    return m_crossSectionPartTypes;
+  }
+
+  public void setCrossSectionPartTypes( final Set<CrossSectionPartType> crossSectionPartTypes )
+  {
+    m_crossSectionPartTypes = crossSectionPartTypes;
+  }
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "styleArray")
+  public Set<Style> getStyles( )
+  {
+    return m_styles;
+  }
+
+  public void setStyles( final Set<Style> styles )
+  {
+    m_styles = styles;
+  }
 
 }

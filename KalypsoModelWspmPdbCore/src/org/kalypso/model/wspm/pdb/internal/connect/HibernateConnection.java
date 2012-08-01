@@ -189,12 +189,12 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     configuration.addAnnotatedClass( State.class );
     configuration.addAnnotatedClass( Event.class );
     configuration.addAnnotatedClass( CrossSection.class );
-    configuration.addAnnotatedClass( CrossSectionPartParameter.class );
     configuration.addAnnotatedClass( StyleArray.class );
     configuration.addAnnotatedClass( Style.class );
     configuration.addAnnotatedClass( StyleParameter.class );
     configuration.addAnnotatedClass( CrossSectionPartType.class );
     configuration.addAnnotatedClass( CrossSectionPart.class );
+    configuration.addAnnotatedClass( CrossSectionPartParameter.class );
     configuration.addAnnotatedClass( Point.class );
     configuration.addAnnotatedClass( PointKind.class );
     configuration.addAnnotatedClass( Roughness.class );

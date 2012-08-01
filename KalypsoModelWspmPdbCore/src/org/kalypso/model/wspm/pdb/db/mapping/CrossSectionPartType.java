@@ -45,13 +45,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants;
@@ -59,6 +60,9 @@ import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants;
 /**
  * @author Monika Thuel
  */
+
+@Entity
+@Table(name = "cs_part_type", schema = "pdb")
 public class CrossSectionPartType extends AbstractModelObject implements Serializable, CategoryConstants
 {
   private CATEGORY m_category;
@@ -82,7 +86,7 @@ public class CrossSectionPartType extends AbstractModelObject implements Seriali
   }
 
   @Id
-  @Column(name = "category", unique = true, nullable = false, length = 50)
+  @Column(name = "id", unique = true, nullable = false, length = 50)
   @Enumerated(EnumType.STRING)
   public CATEGORY getCategory( )
   {
@@ -121,14 +125,16 @@ public class CrossSectionPartType extends AbstractModelObject implements Seriali
     m_styleArray = styleArray;
   }
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSectionPartType")
-  public Set<CrossSectionPart> getCrossSectionParts( )
-  {
-    return m_crossSectionParts;
-  }
+  // TODO
 
-  public void setCrossSectionParts( final Set<CrossSectionPart> crossSectionParts )
-  {
-    m_crossSectionParts = crossSectionParts;
-  }
+// @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSectionPartType")
+// public Set<CrossSectionPart> getCrossSectionParts( )
+// {
+// return m_crossSectionParts;
+// }
+//
+// public void setCrossSectionParts( final Set<CrossSectionPart> crossSectionParts )
+// {
+// m_crossSectionParts = crossSectionParts;
+// }
 }

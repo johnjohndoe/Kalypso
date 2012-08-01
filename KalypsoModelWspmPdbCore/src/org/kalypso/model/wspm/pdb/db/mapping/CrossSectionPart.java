@@ -51,6 +51,8 @@ public class CrossSectionPart extends AbstractModelObject implements Serializabl
 
   private Set<CrossSectionPartParameter> m_crossSectionPartParameters = new HashSet<CrossSectionPartParameter>( 0 );
 
+  private CrossSectionPartType m_crossSectionPartType;
+
   public CrossSectionPart( )
   {
   }
@@ -74,7 +76,7 @@ public class CrossSectionPart extends AbstractModelObject implements Serializabl
     m_points = points;
   }
 
-  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final LineString line, final CATEGORY category, final String description, final Set<Point> points, final Event event, final Set<CrossSectionPartParameter> crossSectionPartParameters )
+  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final LineString line, final CATEGORY category, final String description, final Event event, final Set<Point> points, final Set<CrossSectionPartParameter> crossSectionPartParameters )
   {
     m_id = id;
     m_crossSection = crossSection;
@@ -82,8 +84,8 @@ public class CrossSectionPart extends AbstractModelObject implements Serializabl
     m_line = line;
     m_category = category;
     m_description = description;
-    m_points = points;
     m_event = event;
+    m_points = points;
     m_crossSectionPartParameters = crossSectionPartParameters;
   }
 
@@ -148,8 +150,7 @@ public class CrossSectionPart extends AbstractModelObject implements Serializabl
 // throw new IllegalArgumentException( "'line' must be a LineString or Empty GeometryCollection" );
   }
 
-  @ManyToOne(fetch = FetchType.LAZY, targetEntity = CrossSectionPart.class)
-  @JoinColumn(name = "category", nullable = false)
+  @Column(name = "category")
   @Enumerated(EnumType.STRING)
   public CATEGORY getCategory( )
   {
@@ -164,6 +165,20 @@ public class CrossSectionPart extends AbstractModelObject implements Serializabl
 
     firePropertyChange( PROPERTY_CATEGORY, oldValue, category );
   }
+
+// TODO
+// @ManyToOne(fetch = FetchType.LAZY, targetEntity = CrossSectionPartType.class)
+// // @ManyToOne(fetch = FetchType.LAZY)
+// @JoinColumn(name = "category", nullable = false)
+// public CrossSectionPartType getCrossSectionPartType( )
+// {
+// return m_crossSectionPartType;
+// }
+//
+// public void setCrossSectionPartType( final CrossSectionPartType crossSectionPartType )
+// {
+// m_crossSectionPartType = crossSectionPartType;
+// }
 
   @Column(name = "description")
   public String getDescription( )
@@ -188,7 +203,7 @@ public class CrossSectionPart extends AbstractModelObject implements Serializabl
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "event")
+  @JoinColumn(name = "event_id")
   public Event getEvent( )
   {
     return m_event;
@@ -209,4 +224,5 @@ public class CrossSectionPart extends AbstractModelObject implements Serializabl
   {
     m_crossSectionPartParameters = crossSectionPartParameters;
   }
+
 }

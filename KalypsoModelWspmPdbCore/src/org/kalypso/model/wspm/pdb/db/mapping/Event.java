@@ -61,6 +61,8 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
 
   private StyleArray m_styleArray;
 
+  private Set<CrossSectionPart> m_crossSectionParts = new HashSet<CrossSectionPart>( 0 );
+
   public Event( )
   {
   }
@@ -280,4 +282,16 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   {
     m_styleArray = styleArray;
   }
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
+  public Set<CrossSectionPart> getCrossSectionParts( )
+  {
+    return m_crossSectionParts;
+  }
+
+  public void setCrossSectionParts( final Set<CrossSectionPart> crossSectionParts )
+  {
+    m_crossSectionParts = crossSectionParts;
+  }
+
 }
