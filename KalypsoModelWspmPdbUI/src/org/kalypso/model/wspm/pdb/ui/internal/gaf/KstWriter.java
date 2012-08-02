@@ -87,7 +87,6 @@ public class KstWriter
 
       /* Write the header line. */
       writer.println( "KENN\tm\tm^.33/s\t\"Oberflächenstruktur\"" );
-      writer.println();
 
       /* Loop the roughness classes. */
       for( final IRoughnessClass roughnessClass : roughnessClasses )
