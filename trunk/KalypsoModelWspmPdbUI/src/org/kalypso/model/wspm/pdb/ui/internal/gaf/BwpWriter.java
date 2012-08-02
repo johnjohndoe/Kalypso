@@ -87,7 +87,6 @@ public class BwpWriter
 
       /* Write the header line. */
       writer.println( "KENN\tdp\tax\tay\t\"Bewuchsdefinition\"" );
-      writer.println();
 
       /* Loop the vegetation classes. */
       for( final IVegetationClass vegetationClass : vegetationClasses )
@@ -136,12 +135,12 @@ public class BwpWriter
     String ax = "-1";
     final BigDecimal ax1 = vegetationClass.getAx();
     if( ax1 != null )
-      ax = String.format( Locale.PRC, "%.2f", ax1.doubleValue() );
+      ax = String.format( Locale.PRC, "%.3f", ax1.doubleValue() );
 
     String ay = "-1";
     final BigDecimal ay1 = vegetationClass.getAy();
     if( ay1 != null )
-      ay = String.format( Locale.PRC, "%.2f", ay1.doubleValue() );
+      ay = String.format( Locale.PRC, "%.3f", ay1.doubleValue() );
 
     String comment = "";
     final String comment1 = vegetationClass.getComment();

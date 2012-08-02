@@ -172,8 +172,8 @@ public class GafWriter
     final StringBuilder builder = new StringBuilder();
     builder.append( "%.3f\t" );
     builder.append( "%s\t" );
-    builder.append( "%.3f\t" );
-    builder.append( "%.3f\t" );
+    builder.append( "%.4f\t" );
+    builder.append( "%.4f\t" );
     builder.append( "%s\t" );
     builder.append( "%d\t" );
     builder.append( "%d\t" );
