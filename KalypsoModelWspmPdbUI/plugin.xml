@@ -36,6 +36,10 @@
              </command>
              <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles" style="radio" label="" 
                       tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles.tooltip"/>
+       <command
+             commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand"
+             style="radio">
+       </command>
         <command
               commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile"
               style="radio">
