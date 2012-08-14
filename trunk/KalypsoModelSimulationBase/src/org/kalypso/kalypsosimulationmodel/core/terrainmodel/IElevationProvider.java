@@ -69,15 +69,15 @@ public interface IElevationProvider
   GM_Envelope getBoundingBox( );
 
   /**
-   * To get the minimal elavation in this elevation provider
-   *
+   * To get the minimal elevation in this elevation provider
+   * 
    * @return the minimal elevation of this provider as double
    */
   double getMinElevation( );
 
   /**
-   * To get the maximal elavation in this elevation provider
-   *
+   * To get the maximal elevation in this elevation provider
+   * 
    * @return the maximal elevation of this provider as double
    */
   double getMaxElevation( );
