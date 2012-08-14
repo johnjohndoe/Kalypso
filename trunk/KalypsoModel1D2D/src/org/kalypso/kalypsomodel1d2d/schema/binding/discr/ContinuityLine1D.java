@@ -64,18 +64,18 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FELine#createFullNodesList(java.util.List)
-   */
   @Override
-  public List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
+  public IFeatureBindingCollection<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
   {
     if( nodes.size() != 1 )
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.0" ) ) ); //$NON-NLS-1$
+
     final IFE1D2DNode continuityLineNode = nodes.get( 0 );
-    final FeatureList nodeList = (FeatureList) getProperty( IFELine.PROP_NODES );
+
+    final FeatureList nodeList = getNodes().getFeatureList();
     nodeList.clear();
     nodeList.add( continuityLineNode.getId() );
+
     IFE1D2DNode neighbour1 = null;
     IFE1D2DNode neighbour2 = null;
     final IFeatureBindingCollection<Feature> containers = continuityLineNode.getContainers();
@@ -95,6 +95,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
         }
       }
     }
+
     try
     {
       recalculateGeometry( continuityLineNode, neighbour1, neighbour2 );
@@ -103,7 +104,9 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     {
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
-    nodeList.invalidate();
+
+    // nodeList.invalidate();
+
     setEnvelopesUpdated();
     return m_nodes;
   }

@@ -170,10 +170,11 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
     }
     else{
       fireStructureChange( changedFeatures );
-      // why is this needed
-      m_model1d2d.getEdges().getFeatureList().invalidate();
-      m_model1d2d.getElements().getFeatureList().invalidate();
-      m_model1d2d.getNodes().getFeatureList().invalidate();
+
+      // why is this needed??
+      // m_model1d2d.getEdges().getFeatureList().invalidate();
+      // m_model1d2d.getElements().getFeatureList().invalidate();
+      // m_model1d2d.getNodes().getFeatureList().invalidate();
     }
   }
 

@@ -216,7 +216,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       m_dirtyModels.add( IFlowRelationshipModel.class.getName() );
     }
 
-    m_flowModel.getFlowRelationsShips().getFeatureList().invalidate();
+    // m_flowModel.getFlowRelationsShips().getFeatureList().invalidate();
 
     final Feature[] lElementsToRemove = getElementsWithoutGeometry();
     final Set<Feature> lMidleNodesToRemove = getMidleNodeFeaturesToRemove();
@@ -254,9 +254,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       m_dirtyModels.add( IRoughnessClsCollection.class.getName() );
     m_stati.add( m_roughnessHandler.getStatus() );
 
-    m_model.getNodes().getFeatureList().invalidate();
-    m_model.getEdges().getFeatureList().invalidate();
-    m_model.getElements().getFeatureList().invalidate();
+    // m_model.getNodes().getFeatureList().invalidate();
+    // m_model.getEdges().getFeatureList().invalidate();
+    // m_model.getElements().getFeatureList().invalidate();
   }
 
   private void removeMiddleNodes( final Set<Feature> lMidleNodesToRemove )

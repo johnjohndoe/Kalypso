@@ -103,7 +103,6 @@ public class GenerateDifferenceResultTinWizard extends Wizard
   @Override
   public void addPages( )
   {
-
     // select master document page
     final NonTinDocumentResultViewerFilter resultFilter = new NonTinDocumentResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();

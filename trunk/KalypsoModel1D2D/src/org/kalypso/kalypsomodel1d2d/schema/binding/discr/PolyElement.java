@@ -38,9 +38,6 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D#getGeometry()
-   */
   @Override
   public GM_Surface<GM_SurfacePatch> getGeometry( )
   {
@@ -58,13 +55,10 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     for( final IFE1D2DEdge edge : edges )
       myEdges.addRef( edge );
 
-    myEdges.getFeatureList().invalidate();
+    // myEdges.getFeatureList().invalidate();
     setEnvelopesUpdated();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#addEdge(java.lang.String)
-   */
   @Override
   public void addEdge( final String edgeID )
   {
@@ -74,7 +68,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     if( edgeFeatureList.contains( edgeID ) )
       return;
     edgeFeatureList.add( edgeID );
-    edgeFeatureList.invalidate();
+    // edgeFeatureList.invalidate();
     setEnvelopesUpdated();
   }
 
