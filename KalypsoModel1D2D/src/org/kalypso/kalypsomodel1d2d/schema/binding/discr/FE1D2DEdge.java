@@ -103,7 +103,9 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
     nodeList.clear();
     nodeList.add( node0.getId() );
     nodeList.add( node1.getId() );
-    nodeList.invalidate();
+
+    // nodeList.invalidate();
+
     setEnvelopesUpdated();
   }
 
@@ -134,32 +136,24 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getNode(int)
-   */
   @Override
   public IFE1D2DNode getNode( final int index ) throws IndexOutOfBoundsException
   {
     return m_nodes.get( index );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addNode(java.lang.String)
-   */
   @Override
   public void addNode( final String nodeID )
   {
-    final FeatureList wrappedList = m_nodes.getFeatureList();
-    wrappedList.add( nodeID );
+    final FeatureList nodeList = m_nodes.getFeatureList();
+    nodeList.add( nodeID );
 
-    // changeing the nodes invalidates my geometry
-    wrappedList.invalidate();
+    // // changeing the nodes invalidates my geometry
+    // nodeList.invalidate();
+
     setEnvelopesUpdated();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

@@ -171,9 +171,11 @@ public class ChangeDiscretiationModelCommand implements ICommand
     {
       edge.setEnvelopesUpdated();
     }
-    m_model1d2d.getEdges().getFeatureList().invalidate();
-    m_model1d2d.getElements().getFeatureList().invalidate();
+
+    // m_model1d2d.getEdges().getFeatureList().invalidate();
+    // m_model1d2d.getElements().getFeatureList().invalidate();
     // model1d2d.getNodes().getFeatureList().invalidate();
+
     fireStructureChange( changedFeatures );
   }
 

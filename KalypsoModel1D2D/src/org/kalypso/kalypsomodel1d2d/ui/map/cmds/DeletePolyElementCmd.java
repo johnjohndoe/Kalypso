@@ -104,7 +104,7 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
       final List<IFE1D2DComplexElement> parentComplexElements = lElement.getContainers();
       for( final IFE1D2DComplexElement complexElement : parentComplexElements )
       {
-        complexElement.getElements().remove( elementID );
+        complexElement.getElements().getFeatureList().removeLink( lElement );
         m_changedFeatures.add( complexElement );
       }
       m_changedFeatures.add( lElement );

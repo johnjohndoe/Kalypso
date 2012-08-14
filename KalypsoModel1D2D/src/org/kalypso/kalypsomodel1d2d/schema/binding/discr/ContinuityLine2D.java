@@ -53,6 +53,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -60,17 +61,17 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class ContinuityLine2D extends FELine implements IContinuityLine2D
 {
-
   public ContinuityLine2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
   @Override
-  public List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
+  public IFeatureBindingCollection<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
   {
     if( nodes.size() < 2 )
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.0" ) ) ); //$NON-NLS-1$
+
     final List<IFE1D2DNode> fullNodeList;
     try
     {
@@ -80,11 +81,14 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     {
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
-    final FeatureList nodeList = (FeatureList) getProperty( IFELine.PROP_NODES );
+
+    final FeatureList nodeList = getNodes().getFeatureList();
     nodeList.clear();
+
     for( final IFE1D2DNode node : fullNodeList )
       nodeList.add( node.getId() );
-    nodeList.invalidate();
+
+    // nodeList.invalidate();
     setEnvelopesUpdated();
     return m_nodes;
   }

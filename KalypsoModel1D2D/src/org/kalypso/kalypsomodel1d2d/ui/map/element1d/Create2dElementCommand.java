@@ -123,9 +123,11 @@ public class Create2dElementCommand implements ICommand
       edge.getContainers().addRef( newElement );
 
     m_newElement = newElement;
-    /* fire workspace events */
 
+    /* fire workspace events */
     final GMLWorkspace discWorkspace = m_discModel.getWorkspace();
+
+    // FIXME: fill hashsets with changed elements to improve events
 
     final Feature[] changedNodes = m_changedNodes.toArray( new Feature[m_changedNodes.size()] );
     discWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( discWorkspace, m_discModel, changedNodes, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
