@@ -49,7 +49,6 @@ import java.awt.Color;
  */
 public class LinePointCollectorConfig
 {
-
   private String m_name;
 
   private Color m_color;
@@ -58,7 +57,7 @@ public class LinePointCollectorConfig
 
   private LinePointCollector m_configLinePointCollector;
 
-  public LinePointCollectorConfig( String name, Color color, LinePointCollector linePointCollector )
+  public LinePointCollectorConfig( final String name, final Color color, final LinePointCollector linePointCollector )
   {
     m_name = name;
     m_configLinePointCollector = linePointCollector;
@@ -70,7 +69,7 @@ public class LinePointCollectorConfig
     return m_color;
   }
 
-  public void setColor( Color color )
+  public void setColor( final Color color )
   {
     m_color = color;
   }
@@ -80,7 +79,7 @@ public class LinePointCollectorConfig
     return m_configLinePointCollector;
   }
 
-  public void setConfigLinePointCollector( LinePointCollector configLinePointCollector )
+  public void setConfigLinePointCollector( final LinePointCollector configLinePointCollector )
   {
     m_configLinePointCollector = configLinePointCollector;
   }
@@ -90,7 +89,7 @@ public class LinePointCollectorConfig
     return m_name;
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     m_name = name;
   }
@@ -100,7 +99,7 @@ public class LinePointCollectorConfig
     return m_pointRectSize;
   }
 
-  public void setPointRectSize( int pointRectSize )
+  public void setPointRectSize( final int pointRectSize )
   {
     m_pointRectSize = pointRectSize;
   }
