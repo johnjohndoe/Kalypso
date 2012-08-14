@@ -44,16 +44,20 @@ import org.eclipse.core.resources.IFile;
 
 /**
  * Interface to be implemented by class representing a simBase:NativeTerrainElevationWrapper
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
 public interface INativeTerrainElevationModelWrapper extends ITerrainElevationModel
 {
   /**
    * To get the resource of the native terrain elevation model
-   * 
+   *
    * @return the resource of the native terrain elevation model
    */
-  public IFile getSourceFile( );
+  IFile getSourceFile( );
+
+  void setCoordinateSystem( final String coordinateSystem );
+
+  void setSourceFile( String path );
 }

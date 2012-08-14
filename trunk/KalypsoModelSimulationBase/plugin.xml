@@ -62,10 +62,6 @@
             qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}NativeTerrainElevationModelWrapper">
       </feature>
       <feature
-            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.GridCoverageElevationModelWrapper"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}GridCoverageElevationModelWrapper">
-      </feature>
-      <feature
             class="org.kalypso.kalypsosimulationmodel.core.wind.WindModel"
             qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}WindModel">
       </feature>

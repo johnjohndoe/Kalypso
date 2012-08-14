@@ -62,6 +62,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
@@ -194,9 +195,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             {
               nativeTEMRelPath = getUTF_DecodedFile( dstFileTif ).toString();
             }
-            // final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-            final NativeTerrainElevationModelWrapper tem = (NativeTerrainElevationModelWrapper) temSys.getTerrainElevationModels().addNew( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
-            tem.setFile( nativeTEMRelPath );
+
+            final INativeTerrainElevationModelWrapper tem = (INativeTerrainElevationModelWrapper) temSys.getTerrainElevationModels().addNew( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
+            tem.setSourceFile( nativeTEMRelPath );
 
             // TODO introduce in the first page a name imput field and gets the
             // name from there
@@ -238,8 +239,6 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               ProgressUtilities.worked( progress, 100 );
               progress.done();
             }
-
-            // pool.saveObject( workspace, new SubProgressMonitor( monitor, 1 ) );
           }
 
           catch( final Exception e )
@@ -262,17 +261,8 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
 
   String getNewFileName( final File folder, final File srcFileTif )
   {
-    // int i = 1;
-    // if (!fileNumbersMap.containsKey(srcFileTif.getName()))
-    // fileNumbersMap.put( srcFileTif.getName(),i+"");
-    // else
-    // {
-    // i = Integer.valueOf( fileNumbersMap.get( srcFileTif.getName() ) ).intValue();
-    // fileNumbersMap.put( srcFileTif.getName(), (i++)+"");
-    // }
     final Random generator = new Random( 126545 );
     final int key = (int) ((new Date()).getTime() + generator.nextInt());
-    //    System.out.println( "key :" + key ); //$NON-NLS-1$
 
     if( new File( folder, getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif ).toString() ).exists() ) //$NON-NLS-1$ //$NON-NLS-2$
       getNewFileName( folder, srcFileTif );

@@ -98,6 +98,8 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
    */
   private GM_Envelope maxEnvelope;
 
+  // FIXME: this is nonsense, we should use the crs configured at our containing NativeTerrainModelWrapper and transform
+  // our data into that crs
   private final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   /**
@@ -193,7 +195,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
   {
     final GM_Position posMin = GeometryFactory.createGM_Position( xllcorner, yllcorner );
     final GM_Position posMax = GeometryFactory.createGM_Position( xllcorner + cellSize * N_COLS, yllcorner + cellSize * N_ROWS );
-    return GeometryFactory.createGM_Envelope( posMin, posMax, getCoordinateSystem() );
+    return GeometryFactory.createGM_Envelope( posMin, posMax, crs );
   }
 
   /**
@@ -319,9 +321,6 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
     return;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
-   */
   @Override
   public GM_Envelope getBoundingBox( )
   {
@@ -333,41 +332,15 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
     return cellSize;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
-   */
-  @Override
-  public String getCoordinateSystem( )
-  {
-    return this.crs;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
-   * @returns a valid Maximum Elevation value or Double.NaN and not the default -Double.MAX_VALUE
-   */
   @Override
   public double getMaxElevation( )
   {
     return (maxElevation == -Double.MAX_VALUE) ? Double.NaN : maxElevation;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
-   * @returns a valid Minimum Elevation value or Double.NaN and not the default Double.MAX_VALUE
-   */
   @Override
   public double getMinElevation( )
   {
     return (minElevation == Double.MAX_VALUE) ? Double.NaN : minElevation;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
-   */
-  @Override
-  public void setCoordinateSystem( final String coordinateSystem )
-  {
-
   }
 }

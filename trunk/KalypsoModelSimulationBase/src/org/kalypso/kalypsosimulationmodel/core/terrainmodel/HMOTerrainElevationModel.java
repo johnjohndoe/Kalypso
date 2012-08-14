@@ -89,6 +89,8 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
 
   private Quadtree triangles;
 
+  // FIXME: this is nonsense, we should use the crs configured at our containing NativeTerrainModelWrapper and transform
+  // our data into that crs
   private final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   public HMOTerrainElevationModel( final URL hmoFileURL ) throws IOException, ParseException
@@ -132,9 +134,6 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
-   */
   @Override
   public GM_Envelope getBoundingBox( )
   {
@@ -145,7 +144,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
       union.getMinY(),// miny,
       union.getMaxX(),// maxx,
       union.getMaxY(),// maxy
-      getCoordinateSystem() );
+          crs );
     }
     catch( final Throwable th )
     {
@@ -154,18 +153,6 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
-   */
-  @Override
-  public String getCoordinateSystem( )
-  {
-    return crs;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public double getElevation( final GM_Point location )
   {
@@ -194,10 +181,6 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor )
   {
@@ -221,32 +204,15 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
-   * @returns a valid Maximum Elevation value or Double.NaN and not the default -Double.MAX_VALUE
-   */
   @Override
   public double getMaxElevation( )
   {
     return maxElevation == -Double.MAX_VALUE ? Double.NaN : maxElevation;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
-   * @returns either a valid Minimum Elevation value or Double.NaN and not the default Double.MAX_VALUE
-   */
   @Override
   public double getMinElevation( )
   {
     return minElevation == Double.MAX_VALUE ? Double.NaN : minElevation;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
-   */
-  @Override
-  public void setCoordinateSystem( final String coordinateSystem )
-  {
-    // TODO
   }
 }
