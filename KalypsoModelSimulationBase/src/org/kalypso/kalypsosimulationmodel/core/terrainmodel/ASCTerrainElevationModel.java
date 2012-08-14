@@ -75,7 +75,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
   private static final int MIN_FINE = 4;
 
   /**
-   * The envelop if the region of interest
+   * The envelope of the region of interest
    */
   private double cellSize;
 
