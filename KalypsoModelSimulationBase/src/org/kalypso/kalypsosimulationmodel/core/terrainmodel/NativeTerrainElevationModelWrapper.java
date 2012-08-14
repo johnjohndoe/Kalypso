@@ -53,6 +53,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -128,7 +129,16 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   @Override
   public String getCoordinateSystem( )
   {
-    return getElevationProvider().getCoordinateSystem();
+    // FIXME: makes no sense: the elevation provioder does not know its crs, we know it (its a member of my feature)
+    // return getElevationProvider().getCoordinateSystem();
+
+    // TODO: we for now return the same what the elevationProvider returned: always Kalypso crs (which is wrong)
+    // so behavior should be like it was before.
+    return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    // TODO: instead: give our srs tro elevationProviedrer on construction -> they should transform their data into the
+    // Kalypso srs
+    // TODO: make sure where this crs is used at all
   }
 
   @Override
@@ -150,12 +160,11 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
 
     // why using urls and file? We live in an eclipse workspace! Use IRources
     final URL sourceURL = makeSourceURL( sourceName, this.getWorkspace().getContext() );
-    final IFile file = ResourceUtilities.findFileFromURL( sourceURL );
-
-    return file;
+    return ResourceUtilities.findFileFromURL( sourceURL );
   }
 
-  public void setFile( final String filename )
+  @Override
+  public void setSourceFile( final String filename )
   {
     setProperty( SIM_BASE_PROP_FILE_NAME, filename );
   }
@@ -163,7 +172,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   @Override
   public void setCoordinateSystem( final String coordinateSystem )
   {
-    // TODO
+    // TODO: set crs into my property
 
   }
 }

@@ -93,14 +93,7 @@ public class NativeTerrainElevationModelFactory
     {
       return (IElevationProvider) cachedEleModel;
     }
-    if( filePath.endsWith( ".asc" ) ) //$NON-NLS-1$
-    {
-      final ASCTerrainElevationModel terrainElevationModel = new ASCTerrainElevationModel( ascFile.toURL() );
-      cache.addObject( filePath, terrainElevationModel );
-      return terrainElevationModel;
-    }
-    // It is the same as asc!!!
-    else if( filePath.endsWith( ".asg" ) ) //$NON-NLS-1$
+    if( filePath.endsWith( ".asc" ) || filePath.endsWith( ".asg" ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       final ASCTerrainElevationModel terrainElevationModel = new ASCTerrainElevationModel( ascFile.toURL() );
       cache.addObject( filePath, terrainElevationModel );

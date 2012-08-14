@@ -48,14 +48,12 @@ import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Default {@link AbstractFeatureBinder} based implementation of {@link ITerrainElevationModelSystem}
- * 
+ *
  * @author Patrice Congo
  * @author Madanagopal
  */
@@ -65,29 +63,23 @@ public class TerrainElevationModelSystem extends Feature_Impl implements ITerrai
 
   public static final QName SIM_BASE_PROP_TERRAIN_ELE_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "terrainElevationModel" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<ITerrainElevationModel> terrainElevationModels = new FeatureBindingCollection<ITerrainElevationModel>( this, ITerrainElevationModel.class, SIM_BASE_PROP_TERRAIN_ELE_MODEL );
+  private final IFeatureBindingCollection<ITerrainElevationModel> m_terrainElevationModels = new FeatureBindingCollection<ITerrainElevationModel>( this, ITerrainElevationModel.class, SIM_BASE_PROP_TERRAIN_ELE_MODEL );
 
-  public TerrainElevationModelSystem( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public TerrainElevationModelSystem( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem#getTerrainElevationModels()
-   */
   @Override
   public IFeatureBindingCollection<ITerrainElevationModel> getTerrainElevationModels( )
   {
-    return terrainElevationModels;
+    return m_terrainElevationModels;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public double getElevation( final GM_Point location )
   {
-    for( final ITerrainElevationModel terrainElevationModel : terrainElevationModels )
+    for( final ITerrainElevationModel terrainElevationModel : m_terrainElevationModels )
     {
       try
       {
@@ -97,7 +89,7 @@ public class TerrainElevationModelSystem extends Feature_Impl implements ITerrai
           return elevation;
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -105,108 +97,48 @@ public class TerrainElevationModelSystem extends Feature_Impl implements ITerrai
     return Double.NaN;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
-   */
   @Override
   public GM_Envelope getBoundingBox( )
   {
     GM_Envelope env = null;
-    int i = terrainElevationModels.size() - 1;
 
-    // find the first non null envelop and init the merged env
-    firstNonNullEnv: for( ; i >= 0; i-- )
+    for( final ITerrainElevationModel tem : m_terrainElevationModels )
     {
-      final GM_Envelope boundingBox = terrainElevationModels.get( i ).getBoundingBox();
-      if( boundingBox != null )
-      {
-        final GM_Position min = boundingBox.getMin();
-        final GM_Position max = boundingBox.getMax();
-        env = GeometryFactory.createGM_Envelope( min.getX(), min.getY(), max.getX(), max.getY(), boundingBox.getCoordinateSystem() );
-        break firstNonNullEnv;
-      }
-    }
+      final GM_Envelope temEnv = tem.getBoundingBox();
 
-    // merge other env
-    for( ; i >= 0; i-- )
-    {
-      final GM_Envelope boundingBox = terrainElevationModels.get( i ).getBoundingBox();
-      if( boundingBox != null )
-      {
-        env = env.getMerged( boundingBox );
-      }
+      if( env == null )
+        env = temEnv;
+      else if( temEnv != null )
+        env = env.getMerged( temEnv );
     }
 
     return env;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
-   */
-  @Override
-  public String getCoordinateSystem( )
-  {
-    // TODO Patrice check whether the elevation do have the same system and return it
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
-   */
   @Override
   public double getMaxElevation( )
   {
-    if( terrainElevationModels.isEmpty() )
-    {
-      return Double.NaN;
-    }
-
     double maxEle = -Double.MAX_VALUE;
-    double curMaxEle;
-    for( final ITerrainElevationModel eleModel : terrainElevationModels )
+    for( final ITerrainElevationModel eleModel : m_terrainElevationModels )
     {
-      curMaxEle = eleModel.getMaxElevation();
-      if( maxEle < curMaxEle )
-      {
-        maxEle = curMaxEle;
-      }
+      final double curMaxEle = eleModel.getMaxElevation();
+
+      maxEle = Math.max( maxEle, curMaxEle );
     }
 
     return maxEle == -Double.MAX_VALUE ? Double.NaN : maxEle;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
-   */
   @Override
   public double getMinElevation( )
   {
-    if( terrainElevationModels.isEmpty() )
-    {
-      return Double.NaN;
-    }
-
     double minEle = Double.MAX_VALUE;
-    double curMinEle;
-    for( final ITerrainElevationModel eleModel : terrainElevationModels )
+    for( final ITerrainElevationModel eleModel : m_terrainElevationModels )
     {
-      curMinEle = eleModel.getMinElevation();
-      if( minEle > curMinEle )
-      {
-        minEle = curMinEle;
-      }
+      final double curMinEle = eleModel.getMinElevation();
+      minEle = Math.min( minEle, curMinEle );
     }
 
     return minEle == Double.MAX_VALUE ? Double.NaN : minEle;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
-   */
-  @Override
-  public void setCoordinateSystem( final String coordinateSystem )
-  {
-    // TODO
-
   }
 }
