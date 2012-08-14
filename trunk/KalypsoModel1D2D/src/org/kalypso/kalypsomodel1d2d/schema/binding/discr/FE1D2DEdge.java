@@ -158,7 +158,7 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
   public String toString( )
   {
     final StringBuffer buf = new StringBuffer( 256 );
-    buf.append( this );
+    buf.append( this.getClass().getSimpleName() );
     buf.append( '[' );
     for( final IFE1D2DNode node : m_nodes )
     {
@@ -169,9 +169,6 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
     return buf.toString();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getMiddleNodePoint()
-   */
   @Override
   public GM_Point getMiddleNodePoint( )
   {
