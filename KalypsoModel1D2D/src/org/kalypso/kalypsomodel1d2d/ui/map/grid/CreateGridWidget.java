@@ -44,9 +44,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private final GridWidgetFace m_gridWidgetFace = new GridWidgetFace( this );
-
   private final GridPointCollector m_gridPointCollector = new GridPointCollector();
+
+  private final GridWidgetFace m_gridWidgetFace = new GridWidgetFace( this, m_gridPointCollector );
 
   private final ToolTipRenderer m_warningRenderer = new ToolTipRenderer();
 
@@ -316,9 +316,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    final Control control = m_gridWidgetFace.createControl( parent, toolkit, this );
-    m_gridWidgetFace.setInput( m_gridPointCollector );
-    return control;
+    return m_gridWidgetFace.createControl( parent, toolkit );
   }
 
   @Override
