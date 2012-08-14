@@ -43,13 +43,6 @@
          	 <command commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection" style="toggle" />
     		 <separator name="seperator.profile.commands" visible="true"/>
        </menuContribution>
-       
-       <menuContribution allPopups="false" locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline" >
-            <command commandId="org.kalypso.ui.command.import" style="push"/>
-            <command commandId="org.kalypso.gml.ui.toolWizards" style="push"/>
-            <separator name="theme"/>
-            <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push"/>
-       </menuContribution>
     </extension>
 
    <extension

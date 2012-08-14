@@ -432,6 +432,7 @@
         </visibleWhen>
      </command>
     </menuContribution>
+    
     <menuContribution locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
        <command commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" style="push">
           <visibleWhen checkEnabled="false">
@@ -671,14 +672,15 @@
              <command commandId="org.kalypso.ogc.gml.map.ExportPdfCommand" style="push"/>
           </menuContribution>
 
-        <menuContribution
-              allPopups="false"
-              locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
+        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
             <separator name="outline" visible="false"/>
+            <command commandId="org.kalypso.ui.map.outline.command.ExpandOutline" style="push"/>
             <command commandId="org.kalypso.ui.map.outline.command.CollapseOutline" style="push"/>
 
             <separator name="theme" visible="true"/>
-            <command commandId="org.kalypso.ui.map.outline.command.OpenWmsWizardCommand" style="push"/>
+            <command commandId="org.kalypso.ui.map.outline.command.AddTheme" style="push">
+               <parameter name="wizardSelectioinId" value="wizardselectionWspmLight"/>
+            </command>
             <command commandId="org.kalypso.ui.map.outline.command.RemoveTheme" style="push"/>
             <command commandId="org.kalypso.ui.map.outline.command.MoveThemeDown" style="push"/>
             <command commandId="org.kalypso.ui.map.outline.command.MoveThemeUp" style="push"/>
@@ -692,12 +694,15 @@
             <separator name="additions" visible="true"/>
         </menuContribution>
 
-        <menuContribution
-              allPopups="false"
-              locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
+        <menuContribution allPopups="false" locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
+            <command commandId="org.kalypso.ui.command.import" style="push"/>
             <command commandId="org.kalypso.ui.command.export" style="push"/>
+            <command commandId="org.kalypso.gml.ui.toolWizards" style="push"/>
+            <separator name="theme"/>
+            <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push"/>
             <separator name="additions" visible="false"/>
         </menuContribution>
+        
     </extension>
 
      <extension point="org.eclipse.ui.menus">
@@ -717,11 +722,7 @@
      </extension>
      <extension
            point="org.kalypso.ui.exportWizards">
-        <category
-              id="profileExportWizards"
-              name="%category.name.2"
-              parentCategory="exportWizards">
-        </category>
+        <category id="profileExportWizards" name="%category.name.2" parentCategory="exportWizards"/>
         <wizard
               category="exportWizards/shapeExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard"
@@ -1040,5 +1041,23 @@
               name="%KalypsoModelWspmTuhhUIPreferencePage.name">
         </page>
      </extension>
+
+   <extension point="org.kalypso.ui.addLayerWizard">
+      <wizardSelection description="Add layer wizard selection for the tuhh light map." id="wizardselectionWspmLight">
+         <wizardRef wizardId="org.kalypso.ui.wizard.wms"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.wfs"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.LegendThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.CascadingThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.ScaleThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.ImageThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.TextThemeWizard"/>
+         <!-- removed until tlug pays for it -->
+         <!--
+         <wizardRef wizardId="shapeImportWorkflow"/>
+         <wizardRef wizardId="imageImportWorkflow"/>
+         -->
+      </wizardSelection>
+   </extension>
+
 
 </plugin>
