@@ -58,6 +58,7 @@
                class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageExtent">
          </page>
       </script>
+      <!-- FIXME: why is the 005 create script in the 004 folder ? -->
       <script
             comment="Postgis - Create DB"
             location="etc/scripts/create/V0.0.4/postgis.sql"
