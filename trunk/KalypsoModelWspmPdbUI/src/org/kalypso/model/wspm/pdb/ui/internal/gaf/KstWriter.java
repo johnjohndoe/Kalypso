@@ -83,7 +83,7 @@ public class KstWriter
       monitor.subTask( "Writing roughness classes..." );
 
       /* Create the writer. */
-      writer = new PrintWriter( file, "UTF-8" );
+      writer = new PrintWriter( file );
 
       /* Write the header line. */
       writer.println( "KENN\tm\tm^.33/s\t\"Oberflächenstruktur\"" );
