@@ -100,7 +100,7 @@ public class GafWriter
       monitor.subTask( "Writing profiles..." );
 
       /* Create the writer. */
-      writer = new PrintWriter( file, "UTF-8" );
+      writer = new PrintWriter( file );
 
       /* Sort the cross sections. */
       final CrossSection[] sortedCrossSections = crossSections.toArray( new CrossSection[] {} );

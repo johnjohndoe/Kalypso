@@ -83,7 +83,7 @@ public class BwpWriter
       monitor.subTask( "Writing vegetation classes..." );
 
       /* Create the writer. */
-      writer = new PrintWriter( file, "UTF-8" );
+      writer = new PrintWriter( file );
 
       /* Write the header line. */
       writer.println( "KENN\tdp\tax\tay\t\"Bewuchsdefinition\"" );
