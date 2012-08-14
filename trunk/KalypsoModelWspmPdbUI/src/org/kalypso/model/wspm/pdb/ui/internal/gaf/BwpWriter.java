@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.gaf;
 import java.io.File;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
@@ -51,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
+import org.kalypso.model.wspm.pdb.gaf.VegetationClassComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
@@ -89,6 +91,7 @@ public class BwpWriter
       writer.println( "KENN\tdp\tax\tay\t\"Bewuchsdefinition\"" );
 
       /* Loop the vegetation classes. */
+      Arrays.sort( vegetationClasses, new VegetationClassComparator() );
       for( final IVegetationClass vegetationClass : vegetationClasses )
       {
         /* Write the vegetation class. */

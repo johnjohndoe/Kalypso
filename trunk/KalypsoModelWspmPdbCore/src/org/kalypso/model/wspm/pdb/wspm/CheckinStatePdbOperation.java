@@ -125,13 +125,15 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final URI m_documentBase;
 
+  private final boolean m_checkSectionNames;
+
   private final ClassChecker m_classChecker;
 
   /**
    * @param dbSrs
    *          The coordinate system of the database
    */
-  public CheckinStatePdbOperation( final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody[] waterBodies, final State state, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final IProgressMonitor monitor )
+  public CheckinStatePdbOperation( final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody[] waterBodies, final State state, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final boolean checkSectionNames, final IProgressMonitor monitor )
   {
     m_gafCodes = gafCodes;
     m_coefficients = coefficients;
@@ -139,6 +141,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     m_state = state;
     m_profiles = profiles;
     m_documentBase = documentBase;
+    m_checkSectionNames = checkSectionNames;
 
     for( final WaterBody waterBody : waterBodies )
       m_waterBodies.put( waterBody.getName(), waterBody );
@@ -208,7 +211,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     final String name = CheckinStateOperation.createCrossSectionName( profil.getName(), station );
 
     /* Check for uniqueness of profile name */
-    if( !m_sectionNames.addUniqueName( name ) )
+    if( m_checkSectionNames && !m_sectionNames.addUniqueName( name ) )
     {
       final String message = String.format( Messages.getString( "CheckinStatePdbOperation.6" ), station, name ); //$NON-NLS-1$
       throw new PdbConnectException( message );

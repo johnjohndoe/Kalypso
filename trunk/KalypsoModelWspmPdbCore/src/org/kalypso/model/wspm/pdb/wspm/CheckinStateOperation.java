@@ -109,7 +109,7 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
       state.setEditingUser( connection.getSettings().getUsername() );
       final URI documentBase = m_data.getDocumentBase();
 
-      final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, dbSrs, documentBase, new SubProgressMonitor( monitor, 90 ) );
+      final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, dbSrs, documentBase, true, new SubProgressMonitor( monitor, 90 ) );
       new Executor( session, operation ).execute();
       final IStatus status = operation.getStatus();
 

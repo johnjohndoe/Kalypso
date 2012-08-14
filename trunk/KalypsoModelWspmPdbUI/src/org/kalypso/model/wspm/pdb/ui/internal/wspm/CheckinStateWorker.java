@@ -105,7 +105,7 @@ public class CheckinStateWorker implements ICheckInWorker
     final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
     if( reachProfileSegments.length == 0 )
     {
-      final String message = Messages.getString("CheckinStateWorker.2"); //$NON-NLS-1$
+      final String message = Messages.getString( "CheckinStateWorker.2" ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
     }
 

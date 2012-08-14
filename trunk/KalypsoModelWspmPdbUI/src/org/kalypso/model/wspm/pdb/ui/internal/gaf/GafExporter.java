@@ -175,28 +175,18 @@ public class GafExporter
     }
   }
 
-  private Set<CrossSection> getCrossSections( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws IOException
+  private Set<CrossSection> getCrossSections( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws IOException, PdbConnectException
   {
-    try
-    {
-      final GafCodes gafCodes = new GafCodes();
-      final ICoefficients coefficients = new SimpleCoefficients();
-      final WaterBody[] waterBodies = getWaterBodies( profiles );
-      final State state = new State();
-      final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final GafCodes gafCodes = new GafCodes();
+    final ICoefficients coefficients = new SimpleCoefficients();
+    final WaterBody[] waterBodies = getWaterBodies( profiles );
+    final State state = new State();
+    final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-      final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, coordinateSystem, null, monitor );
-      operation.execute( null );
+    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, coordinateSystem, null, false, monitor );
+    operation.execute( null );
 
-      return state.getCrossSections();
-    }
-    catch( final PdbConnectException ex )
-    {
-      /* HINT: This one should not occure, because we do not connect to the PDB here. */
-      ex.printStackTrace();
-
-      return null;
-    }
+    return state.getCrossSections();
   }
 
   private WaterBody[] getWaterBodies( final IProfileFeature[] profiles )
