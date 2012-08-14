@@ -195,8 +195,8 @@
         <image commandId="org.kalypso.model.1d2d.workflow.EditNet2D" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.Chan2DGen" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.BandGen" icon="icons/workflow/"/>
         -->
+        <image commandId="org.kalypso.model.1d2d.workflow.BandGen" icon="icons/workflow/BandGen.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.AssignElevs" icon="icons/workflow/AssignElevs.gif"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ShowWindData" icon="icons/workflow/ShowWindData.png"/>
         <!--
