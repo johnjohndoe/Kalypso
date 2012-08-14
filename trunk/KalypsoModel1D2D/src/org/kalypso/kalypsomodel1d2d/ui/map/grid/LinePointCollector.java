@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,18 +143,13 @@ public class LinePointCollector
 
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
-  public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint, final int pointRectSize )
+  public void paint( final Graphics g, final GeoTransform projection, final GM_Point currentPoint, final int pointRectSize )
   {
     // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
     if( !m_points.isEmpty() )
     {
-
       if( m_isSelected )
       {
         final int[][] points = getPointArrays( projection, null );
@@ -209,7 +203,7 @@ public class LinePointCollector
     }
   }
 
-  private int[][] getPointArrays( final GeoTransform projection, final Point currentPoint )
+  private int[][] getPointArrays( final GeoTransform projection, final GM_Point currentPoint )
   {
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
@@ -227,8 +221,11 @@ public class LinePointCollector
 
     if( currentPoint != null )
     {
-      xArray.add( currentPoint.x );
-      yArray.add( currentPoint.y );
+      final int x = (int) projection.getDestX( currentPoint.getX() );
+      final int y = (int) projection.getDestY( currentPoint.getY() );
+
+      xArray.add( new Integer( x ) );
+      yArray.add( new Integer( y ) );
     }
 
     final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[xArray.size()] ) );
@@ -294,7 +291,6 @@ public class LinePointCollector
 
     if( index > 0 )
     {
-
       m_points.remove( index );
     }
     else if( index == 0 )

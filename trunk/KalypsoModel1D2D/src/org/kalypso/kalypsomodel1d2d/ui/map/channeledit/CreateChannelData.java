@@ -72,7 +72,6 @@ import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -384,7 +383,6 @@ public class CreateChannelData
     importingGridPoints = convertToGMPoints( m_meshCoords );
 
     final IMapPanel mapPanel = m_widget.getPanel();
-    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapPanel );
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final CommandableWorkspace workspace = theme.getWorkspace();
 
@@ -392,7 +390,7 @@ public class CreateChannelData
     tempGrid.importMesh( importingGridPoints );
     tempGrid.setCoodinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     final double searchDistance = 0.1;
-    tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, searchDistance );
+    tempGrid.getAddToModelCommand( workspace, searchDistance );
 
     try
     {

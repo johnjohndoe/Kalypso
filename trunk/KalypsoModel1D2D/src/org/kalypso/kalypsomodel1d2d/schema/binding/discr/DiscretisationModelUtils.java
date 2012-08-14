@@ -138,8 +138,10 @@ public class DiscretisationModelUtils
   public static IFEDiscretisationModel1d2d modelForTheme( final IKalypsoFeatureTheme theme )
   {
     final FeatureList featureList = theme.getFeatureList();
+    if( featureList == null )
+      return null;
+
     final Feature parentFeature = featureList.getOwner();
     return (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
   }
-
 }
