@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -68,7 +67,6 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -302,10 +300,11 @@ public class TempGrid
     return points2D;
   }
 
+  // FIXME: move everything into operation
   /**
    * To get an {@link ICommand} that can be use to hat the temp grid to the model
    */
-  public IStatus getAddToModelCommand( final IMapPanel panel, final IFEDiscretisationModel1d2d model, final CommandableWorkspace commandableWorkspace, final double searchRectWidth )
+  public IStatus getAddToModelCommand( final CommandableWorkspace commandableWorkspace, final double searchRectWidth )
   {
     m_searchRectWidth = searchRectWidth;
 
@@ -315,32 +314,28 @@ public class TempGrid
       return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.1" ) ); //$NON-NLS-1$
 
     // we must have the node theme. First node theme gets it
-    final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( panel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    if( nodeTheme != null && model != null && commandableWorkspace != null )
+    try
     {
-      try
-      {
-        addElements( commandableWorkspace, model );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-        return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.2" ) ); //$NON-NLS-1$
-      }
+      addElements( commandableWorkspace );
     }
-    else
-      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.3" ) ); //$NON-NLS-1$
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.2" ) ); //$NON-NLS-1$
+    }
 
     return Status.OK_STATUS;
   }
 
-  private void addElements( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel ) throws Exception
+  private void addElements( final CommandableWorkspace workspace ) throws Exception
   {
     /* Initialize elements needed for edges and elements */
-    // final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
     final List<GM_Ring> elements = getRingsFromPoses();
     m_nodesNameConversionMap.clear();
     m_setNotInsertedNodes.clear();
+
+    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) workspace.getRootFeature();
+
     try
     {
       m_gmExistingEnvelope = discModel.getNodes().getBoundingBox();
@@ -353,7 +348,6 @@ public class TempGrid
     for( final GM_Ring ring : elements )
     {
       lListAdded.addAll( createElementsFromRing( discModel, ring ) );
-      // ElementGeometryHelper.createFE1D2DfromRing( workspace, discModel, ring );
     }
     Logger.getLogger( TempGrid.class.getName() ).log( Level.INFO, "new elements created: " + lListAdded ); //$NON-NLS-1$
 

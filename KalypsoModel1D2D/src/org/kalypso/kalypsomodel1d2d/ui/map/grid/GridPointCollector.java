@@ -42,19 +42,15 @@ package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -72,8 +68,6 @@ public class GridPointCollector
   public static final int SIDE_LEFT = 1;
 
   public static final int SIDE_RIGHT = 3;
-
-  private static final double DISTANCE_DEF = 0.01;
 
   private int actualSideKey;
 
@@ -132,13 +126,13 @@ public class GridPointCollector
 
     Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.3" ) ); //$NON-NLS-1$
 
-    final GM_Point previousAdded = (GM_Point) m_sides[actualSideKey].getLastPoint();
+    final GM_Point previousAdded = m_sides[actualSideKey].getLastPoint();
     if( previousAdded != null )
     {
       if( previousAdded.getX() == p.getX() && previousAdded.getY() == p.getY() )
         return previousAdded;
     }
-    
+
     final GM_Point lastAdded = (GM_Point) m_sides[actualSideKey].addPoint( p );
 
     final GM_Point autocompleted = autoComplete();
@@ -149,13 +143,12 @@ public class GridPointCollector
       fireStateChanged();
       return lastAdded;
     }
-
   }
 
   /**
    * Auto complete this line collector and returns the completing point if done. Auto completion is only done for the
    * last side because
-   * 
+   *
    * @return the auto completion point
    */
   public GM_Point autoComplete( )
@@ -186,7 +179,7 @@ public class GridPointCollector
     }
   }
 
-  public GM_Point getLastPoint( ) throws Exception
+  public GM_Point getLastPoint( )
   {
     if( actualSideKey >= SIDE_MAX_NUM )
       return null;
@@ -255,11 +248,7 @@ public class GridPointCollector
       return 0;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.awt.Point)
-   */
-  public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
+  public void paint( final Graphics g, final GeoTransform projection, final GM_Point currentPoint )
   {
     LinePointCollector builder = null;
     if( actualSideKey < SIDE_MAX_NUM )
@@ -273,20 +262,18 @@ public class GridPointCollector
 
     final Color curColor = g.getColor();
 
-    int i = 0;
-    for( final LinePointCollector b : m_sides )
+    for( int i = 0; i < m_sides.length; i++ )
     {
-      if( b == null )
+      final LinePointCollector lpc = m_sides[i];
+      if( lpc == null )
         continue;
 
       g.setColor( m_lpcConfigs[i].getColor() );
       final int pointRectSize = m_lpcConfigs[i].getPointRectSize();
-      if( b != builder )
-        b.paint( g, projection, null, pointRectSize );
+      if( lpc != builder )
+        lpc.paint( g, projection, null, pointRectSize );
       else
-        b.paint( g, projection, currentPoint, pointRectSize );
-
-      i++;
+        lpc.paint( g, projection, currentPoint, pointRectSize );
     }
 
     /* draw temp grid */
@@ -297,9 +284,9 @@ public class GridPointCollector
     {
       builder = m_sides[actualSideKey];
       builder.paintLine( g, projection, 1, m_lpcConfigs[actualSideKey].getColor() );
-      g.setColor( curColor );
     }
 
+    g.setColor( curColor );
   }
 
   public void clearCurrent( )
@@ -410,11 +397,6 @@ public class GridPointCollector
     return m_hasAllSides;
   }
 
-  public IStatus getAddToModelCommand( final IMapPanel mapPanel, final IFEDiscretisationModel1d2d model, final CommandableWorkspace commandableWorkspace )
-  {
-    return m_tempGrid.getAddToModelCommand( mapPanel, model, commandableWorkspace, DISTANCE_DEF );
-  }
-
   public LinePointCollectorConfig[] getSideconfigsAsArray( )
   {
     final LinePointCollectorConfig[] cloneCollectorConfigs = m_lpcConfigs.clone();
@@ -432,7 +414,7 @@ public class GridPointCollector
   /**
    * To get the with for the square that are drawn to show point. if ther is an active {@link LinePointCollectorConfig}
    * its actual point rect size is resturn otherwise the point square size of the first {@link LinePointCollectorConfig}
-   * 
+   *
    * @return Returns the with for the square that are drawn to show point
    */
   public int getPointRectSize( )
@@ -485,5 +467,10 @@ public class GridPointCollector
   public IStatus isValid( )
   {
     return m_tempGrid.isValid();
+  }
+
+  public TempGrid getTempGrid( )
+  {
+    return m_tempGrid;
   }
 }
