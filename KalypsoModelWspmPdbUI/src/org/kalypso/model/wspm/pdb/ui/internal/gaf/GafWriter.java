@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.gaf;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Set;
@@ -172,8 +173,8 @@ public class GafWriter
     final StringBuilder builder = new StringBuilder();
     builder.append( "%.3f\t" );
     builder.append( "%s\t" );
-    builder.append( "%.4f\t" );
-    builder.append( "%.4f\t" );
+    builder.append( "%s\t" );
+    builder.append( "%s\t" );
     builder.append( "%s\t" );
     builder.append( "%d\t" );
     builder.append( "%d\t" );
@@ -185,8 +186,17 @@ public class GafWriter
     final CrossSection crossSection = point.getCrossSectionPart().getCrossSection();
     final double station = crossSection.getStation().doubleValue();
     final String id = point.getName();
-    final double y = point.getWidth().doubleValue();
-    final double z = point.getHeight().doubleValue();
+
+    String y = "-1";
+    final BigDecimal width = point.getWidth();
+    if( width != null )
+      y = String.format( "%.4f\t", width.doubleValue() );
+
+    String z = "-1";
+    final BigDecimal height = point.getHeight();
+    if( height != null )
+      z = String.format( "%.4f\t", height.doubleValue() );
+
     final String kz = point.getCode();
     final int rk = Integer.parseInt( point.getRoughness().getId().getName() );
     final int bk = Integer.parseInt( point.getVegetation().getId().getName() );
