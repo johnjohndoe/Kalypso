@@ -62,7 +62,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.gml.ui.map.CoverageManagementHelper;
+import org.kalypso.gml.ui.coverage.CoverageManagementHelper;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.grid.parallel.SequentialBinaryGeoGridReader;

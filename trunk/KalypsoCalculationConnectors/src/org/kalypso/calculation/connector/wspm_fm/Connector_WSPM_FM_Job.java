@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.Path;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_WSPM_FM;
 import org.kalypso.calculation.connector.utils.Connectors;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.gml.ui.map.CoverageManagementHelper;
+import org.kalypso.gml.ui.coverage.CoverageManagementHelper;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;

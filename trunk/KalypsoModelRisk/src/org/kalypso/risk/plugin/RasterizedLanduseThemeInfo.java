@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.kalypso.gml.ui.map.CoverageThemeInfo;
+import org.kalypso.gml.ui.coverage.CoverageThemeInfo;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Position;
