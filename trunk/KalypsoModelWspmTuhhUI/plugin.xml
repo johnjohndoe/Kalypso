@@ -275,6 +275,8 @@
 			</and>
 		</visibleWhen>
      </command>
+     <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio"/>
+     <separator name="profiles" visible="true"/>
      <command
            commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile"
            style="radio">
@@ -359,6 +361,8 @@
 			</and>
 		</visibleWhen>
      </command>
+     <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio"/>
+     <separator name="profiles" visible="true"/>
      <command
            commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile"
            style="radio">
@@ -636,7 +640,16 @@
         <menuContribution
               allPopups="false"
               locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart">
-             <separator name="widgets" visible="false"/>
+             
+             <separator name="widgets" visible="false"/> 
+             <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio"/>
+             <separator name="profiles" visible="true"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile" style="radio"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point" style="radio" />
+             <command commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point" style="radio" />
+             <command commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection" style="toggle" />
+
+             <separator name="mapActions" visible="true"/>
              <command commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" style="radio"/>
              <command commandId="org.kalypso.ogc.gml.map.PanToCommand" style="radio"/>
              <command commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" style="radio" />

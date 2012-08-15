@@ -36,12 +36,6 @@
              </command>
              <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles" style="radio" label="" 
                       tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles.tooltip"/>
-             <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio"/>
-             <command commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile" style="radio"/>
-             <command commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point" style="radio" />
-    		 <command commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point" style="radio" />
-         	 <command commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection" style="toggle" />
-    		 <separator name="seperator.profile.commands" visible="true"/>
        </menuContribution>
     </extension>
 
