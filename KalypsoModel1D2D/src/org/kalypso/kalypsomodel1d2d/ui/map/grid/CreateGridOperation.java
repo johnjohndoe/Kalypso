@@ -67,6 +67,7 @@ class CreateGridOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
+    // TODO: movre code from TempGrid into this operation
     final IStatus status = m_tempGrid.getAddToModelCommand( m_workspace, DISTANCE_DEF );
 
     try

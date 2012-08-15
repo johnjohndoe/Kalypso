@@ -38,8 +38,12 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * Provides the mechanism to create automatically fem element within a grid
+ * TODO/FIXME: we should separate editing the four lines and editing the grid afterwards. Interaction between those two
+ * is too buggy anyways. So we should split up into two widgets, one for entering the four lines; afterwards one for
+ * editing the grid.
  *
+ * Provides the mechanism to create automatically fem element within a grid
+ * 
  * @author Patrice Congo
  */
 public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
@@ -130,7 +134,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     {
       final IMapPanel mapPanel = getMapPanel();
       final GM_Point point = MapUtilities.transform( mapPanel, p );
-      m_gridPointCollector.selectPoint( point, MapUtilities.calculateWorldDistance( mapPanel, point, m_radius ) );
+      final double screenRadius = MapUtilities.calculateWorldDistance( mapPanel, point, m_radius );
+      m_gridPointCollector.selectPoint( point, screenRadius );
     }
 
     repaintMap();
@@ -148,7 +153,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       /* double click */
       if( m_gridPointCollector.getHasAllSides() )
       {
-        /* nothing to do, grid is fisnished */
+        /* nothing to do, grid is finished */
       }
       else if( event.getClickCount() > 1 )
       {
@@ -158,15 +163,14 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       {
         final boolean snappingActive = !event.isShiftDown();
 
-        final GM_Point currentPoint = snapToNode( event.getPoint(), snappingActive );
-        m_currentPoint = currentPoint;
+        m_currentPoint = snapToNode( event.getPoint(), snappingActive );
 
-        if( currentPoint == null )
+        if( snapToNode( event.getPoint(), snappingActive ) == null )
           panel.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
         else
           panel.setCursor( Cursor.getDefaultCursor() );
 
-        m_gridPointCollector.addPoint( currentPoint );
+        m_gridPointCollector.addPoint( snapToNode( event.getPoint(), snappingActive ) );
       }
     }
     else if( (event.getButton() == MouseEvent.BUTTON3) )
@@ -197,16 +201,15 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     final boolean snappingActive = !event.isShiftDown();
 
-    final GM_Point currentPoint = snapToNode( event.getPoint(), snappingActive );
-    final Point currentPos = MapUtilities.retransform( panel, currentPoint );
-    m_currentPoint = currentPoint;
+    m_currentPoint = snapToNode( event.getPoint(), snappingActive );
+    final Point currentPos = MapUtilities.retransform( panel, snapToNode( event.getPoint(), snappingActive ) );
 
     if( m_gridPointCollector.getHasAllSides() )
     {
       final GM_Point oldSelectedPoint = m_gridPointCollector.getSelectedPoint();
-      if( !isSamePoint( currentPos, oldSelectedPoint, m_radius * 2, getMapPanel().getProjection() ) )
+      if( !isSamePoint( currentPos, oldSelectedPoint, m_radius, getMapPanel().getProjection() ) )
       {
-        m_gridPointCollector.changeSelectedPoint( currentPoint );
+        m_gridPointCollector.changeSelectedPoint( snapToNode( event.getPoint(), snappingActive ) );
       }
     }
     else
@@ -234,7 +237,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       m_warningRenderer.setTooltip( status.getMessage() );
   }
 
-  private static final boolean isSamePoint( final Point ref, final GM_Point toCompare, final int m_radius, final GeoTransform transform )
+  private static final boolean isSamePoint( final Point ref, final GM_Point toCompare, final int radius, final GeoTransform transform )
   {
     Assert.throwIAEOnNull( transform, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget.6" ) ); //$NON-NLS-1$
 
@@ -244,7 +247,11 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     {
       final int x = (int) transform.getDestX( toCompare.getX() );
       final int y = (int) transform.getDestY( toCompare.getY() );
-      return x > ref.getX() - m_radius && x > ref.getY() - m_radius && y < ref.getX() + m_radius && y < ref.getY() + m_radius;
+
+      final double distX = Math.abs( x - ref.getX() );
+      final double distY = Math.abs( y - ref.getY() );
+
+      return distX < radius && distY < radius;
     }
   }
 

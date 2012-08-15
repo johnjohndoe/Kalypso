@@ -44,6 +44,7 @@ import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ColorSelector;
@@ -135,6 +136,8 @@ class GridWidgetFace
 
   private ScrolledForm m_scrolledForm;
 
+  private Button m_buttonConvertToModel;
+
   public GridWidgetFace( final CreateGridWidget widget, final GridPointCollector gridPointCollector )
   {
     m_widget = widget;
@@ -173,13 +176,18 @@ class GridWidgetFace
     final Composite compConversion = toolkit.createComposite( body, SWT.FILL );
     compConversion.setLayout( new GridLayout( 2, false ) );
 
-    final Button buttonConvertToModel = toolkit.createButton( compConversion, StringUtils.EMPTY, SWT.PUSH | SWT.FLAT ); //$NON-NLS-1$
-    buttonConvertToModel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
+    m_buttonConvertToModel = toolkit.createButton( compConversion, StringUtils.EMPTY, SWT.PUSH | SWT.FLAT );
+    m_buttonConvertToModel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+
+    final String buttonLabel = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridWidgetFace.9" ); //$NON-NLS-1$
+
+    m_buttonConvertToModel.setText( buttonLabel );
+    m_buttonConvertToModel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
-    buttonConvertToModel.setImage( imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.OK ) );
+    m_buttonConvertToModel.setImage( imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.OK ) );
 
-    buttonConvertToModel.addSelectionListener( new SelectionAdapter()
+    m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
@@ -187,7 +195,7 @@ class GridWidgetFace
         handleConvertButtonSelected();
       }
     } );
-    toolkit.createLabel( compConversion, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridWidgetFace.9" ), SWT.NULL ); //$NON-NLS-1$
+    // toolkit.createLabel( compConversion, buttonLabel, SWT.NULL );
 
     /* Config */
     final Section configSection = toolkit.createSection( body, Section.TITLE_BAR );
@@ -200,6 +208,8 @@ class GridWidgetFace
     helpSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridWidgetFace.7" ) ); //$NON-NLS-1$
     helpSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createHelp( toolkit, helpSection );
+
+    updateTable();
 
     m_scrolledForm.reflow( true );
 
@@ -240,8 +250,6 @@ class GridWidgetFace
     m_tableViewer.setInput( m_gridPointCollector );
 
     table.pack();
-
-    updateTable();
   }
 
   protected void updateTable( )
@@ -253,14 +261,22 @@ class GridWidgetFace
     {
       m_tableViewer.setSelection( new StructuredSelection( currentLPCConfig ) );
     }
+
+    final IStatus valid = m_gridPointCollector.getTempGrid().isValid();
+    final boolean hasAllSides = m_gridPointCollector.getHasAllSides();
+    final boolean canFinish = valid.isOK() && hasAllSides;
+    m_buttonConvertToModel.setEnabled( canFinish );
   }
 
   public void disposeControl( )
   {
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
 
-    handleWidth.setPropertyChangeListener( null );
-    handleWidth.store();
+    if( handleWidth != null )
+    {
+      handleWidth.setPropertyChangeListener( null );
+      handleWidth.store();
+    }
   }
 
   private void initStoreDefaults( )

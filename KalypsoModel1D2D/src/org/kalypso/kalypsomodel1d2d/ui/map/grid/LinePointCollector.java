@@ -256,9 +256,7 @@ public class LinePointCollector
         g.drawRect( x[i] - halfRectWidth, y[i] - halfRectWidth, pointRectWidth, pointRectWidth );
       }
       // is is now selection
-      g.drawOval( x[i] - pointRectWidth,// halfRectWidth,
-      y[i] - pointRectWidth,// halfRectWidth,
-      pointRectWidth + pointRectWidth, pointRectWidth + pointRectWidth );
+      g.drawOval( x[i] - pointRectWidth, y[i] - pointRectWidth, pointRectWidth + pointRectWidth, pointRectWidth + pointRectWidth );
       i++;
       for( ; i < y.length; i++ )
       {

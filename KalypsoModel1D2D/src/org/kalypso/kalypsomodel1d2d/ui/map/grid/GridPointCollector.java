@@ -69,7 +69,7 @@ public class GridPointCollector
 
   public static final int SIDE_RIGHT = 3;
 
-  private int actualSideKey;
+  private int m_actualSideKey;
 
   private boolean m_hasAllSides = false;
 
@@ -108,41 +108,39 @@ public class GridPointCollector
       else
         b = new LinePointCollector( 0, targetCrs );
     }
-    actualSideKey = 0;
+    m_actualSideKey = 0;
     m_hasAllSides = false;
     m_tempGrid.resetTempGrid( targetCrs );
-    if( m_sides[actualSideKey] == null )
+    if( m_sides[m_actualSideKey] == null )
     {
-      m_sides[actualSideKey] = new LinePointCollector( 0, targetCrs );
-      m_lpcConfigs[actualSideKey].setConfigLinePointCollector( m_sides[actualSideKey] );
+      m_sides[m_actualSideKey] = new LinePointCollector( 0, targetCrs );
+      m_lpcConfigs[m_actualSideKey].setConfigLinePointCollector( m_sides[m_actualSideKey] );
     }
     fireStateChanged();
   }
 
   public GM_Object addPoint( final GM_Point p )
   {
-    if( m_hasAllSides || actualSideKey >= SIDE_MAX_NUM )
+    if( m_hasAllSides || m_actualSideKey >= SIDE_MAX_NUM )
       return null;
 
-    Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.3" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( m_sides[m_actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.3" ) ); //$NON-NLS-1$
 
-    final GM_Point previousAdded = m_sides[actualSideKey].getLastPoint();
+    final GM_Point previousAdded = m_sides[m_actualSideKey].getLastPoint();
     if( previousAdded != null )
     {
       if( previousAdded.getX() == p.getX() && previousAdded.getY() == p.getY() )
         return previousAdded;
     }
 
-    final GM_Point lastAdded = (GM_Point) m_sides[actualSideKey].addPoint( p );
+    final GM_Point lastAdded = (GM_Point) m_sides[m_actualSideKey].addPoint( p );
 
     final GM_Point autocompleted = autoComplete();
     if( autocompleted != null )
       return finishSide();
-    else
-    {
-      fireStateChanged();
-      return lastAdded;
-    }
+
+    fireStateChanged();
+    return lastAdded;
   }
 
   /**
@@ -153,15 +151,14 @@ public class GridPointCollector
    */
   public GM_Point autoComplete( )
   {
-    if( actualSideKey == 3 )
+    if( m_actualSideKey == 3 )
     {
-      System.out.println( "Autocompleting:" ); //$NON-NLS-1$
-      if( m_sides[actualSideKey].getRemainingPointCnt() == 1 )
+      if( m_sides[m_actualSideKey].getRemainingPointCnt() == 1 )
       {
         final GM_Point point = m_sides[0].getFirstPoint();
         if( point instanceof MutableGMPoint )
         {
-          m_sides[actualSideKey].addPoint( point );
+          m_sides[m_actualSideKey].addPoint( point );
           return point;
         }
         else
@@ -172,8 +169,8 @@ public class GridPointCollector
     }
     else
     {
-      if( m_sides[actualSideKey].getRemainingPointCnt() == 0 )
-        return (GM_Point) m_sides[actualSideKey].finish();// getLastPoint();
+      if( m_sides[m_actualSideKey].getRemainingPointCnt() == 0 )
+        return (GM_Point) m_sides[m_actualSideKey].finish();// getLastPoint();
       else
         return null;
     }
@@ -181,37 +178,37 @@ public class GridPointCollector
 
   public GM_Point getLastPoint( )
   {
-    if( actualSideKey >= SIDE_MAX_NUM )
+    if( m_actualSideKey >= SIDE_MAX_NUM )
       return null;
 
-    Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.6" ) ); //$NON-NLS-1$
-    return m_sides[actualSideKey].getLastPoint();
+    Assert.throwIAEOnNull( m_sides[m_actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.6" ) ); //$NON-NLS-1$
+    return m_sides[m_actualSideKey].getLastPoint();
   }
 
   public GM_Object finishSide( )
   {
-    Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.7" ) ); //$NON-NLS-1$
-    if( actualSideKey >= SIDE_MAX_NUM )
+    Assert.throwIAEOnNull( m_sides[m_actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.7" ) ); //$NON-NLS-1$
+    if( m_actualSideKey >= SIDE_MAX_NUM )
     {
       return null;
     }
-    final LinePointCollector oldBuilder = m_sides[actualSideKey];
-    final GM_Object gmObject = m_sides[actualSideKey].finish();
+    final LinePointCollector oldBuilder = m_sides[m_actualSideKey];
+    final GM_Object gmObject = m_sides[m_actualSideKey].finish();
     if( gmObject == null )
     {
       // not finish
       return null;
     }
-    actualSideKey++;
-    if( actualSideKey < SIDE_MAX_NUM )
+    m_actualSideKey++;
+    if( m_actualSideKey < SIDE_MAX_NUM )
     {
       // actualSideKey++;
-      LinePointCollector newSide = m_sides[actualSideKey];
+      LinePointCollector newSide = m_sides[m_actualSideKey];
       if( newSide == null )
       {
         newSide = oldBuilder.getNewBuilder();
-        m_sides[actualSideKey] = newSide;
-        m_lpcConfigs[actualSideKey].setConfigLinePointCollector( newSide );
+        m_sides[m_actualSideKey] = newSide;
+        m_lpcConfigs[m_actualSideKey].setConfigLinePointCollector( newSide );
       }
 
       final GM_Point lastP = oldBuilder.getLastPoint();
@@ -238,11 +235,11 @@ public class GridPointCollector
 
   private final int computeSize( )
   {
-    if( actualSideKey == 0 || actualSideKey == 1 )
+    if( m_actualSideKey == 0 || m_actualSideKey == 1 )
       return 0;
-    else if( actualSideKey == 2 )
+    else if( m_actualSideKey == 2 )
       return m_sides[0].getCurrentPointCnt();
-    else if( actualSideKey == 3 )
+    else if( m_actualSideKey == 3 )
       return m_sides[1].getCurrentPointCnt();
     else
       return 0;
@@ -251,12 +248,12 @@ public class GridPointCollector
   public void paint( final Graphics g, final GeoTransform projection, final GM_Point currentPoint )
   {
     LinePointCollector builder = null;
-    if( actualSideKey < SIDE_MAX_NUM )
+    if( m_actualSideKey < SIDE_MAX_NUM )
     {
-      if( m_sides[actualSideKey] == null )
+      if( m_sides[m_actualSideKey] == null )
         return;
 
-      builder = m_sides[actualSideKey];
+      builder = m_sides[m_actualSideKey];
       Assert.throwIAEOnNull( builder, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.9" ) ); //$NON-NLS-1$
     }
 
@@ -280,10 +277,10 @@ public class GridPointCollector
     m_tempGrid.paint( g, projection );
 
     /* draw selected line */
-    if( actualSideKey < SIDE_MAX_NUM )
+    if( m_actualSideKey < SIDE_MAX_NUM )
     {
-      builder = m_sides[actualSideKey];
-      builder.paintLine( g, projection, 1, m_lpcConfigs[actualSideKey].getColor() );
+      builder = m_sides[m_actualSideKey];
+      builder.paintLine( g, projection, 1, m_lpcConfigs[m_actualSideKey].getColor() );
     }
 
     g.setColor( curColor );
@@ -291,14 +288,14 @@ public class GridPointCollector
 
   public void clearCurrent( )
   {
-    if( actualSideKey >= SIDE_MAX_NUM )
+    if( m_actualSideKey >= SIDE_MAX_NUM )
       return;
 
-    final LinePointCollector builder = m_sides[actualSideKey];
+    final LinePointCollector builder = m_sides[m_actualSideKey];
     builder.clear();
-    if( actualSideKey > 0 )
+    if( m_actualSideKey > 0 )
     {
-      final LinePointCollector previousBuilder = m_sides[actualSideKey - 1];
+      final LinePointCollector previousBuilder = m_sides[m_actualSideKey - 1];
       if( previousBuilder != null )
       {
         final GM_Point point = previousBuilder.getLastPoint();
@@ -313,22 +310,22 @@ public class GridPointCollector
   public void gotoPreviousSide( )
   {
     LinePointCollector curBuilder;
-    if( actualSideKey >= SIDE_MAX_NUM )
+    if( m_actualSideKey >= SIDE_MAX_NUM )
     {
       // empty
     }
     else
     {
-      curBuilder = m_sides[actualSideKey];
+      curBuilder = m_sides[m_actualSideKey];
       if( curBuilder != null )
         curBuilder.clear();
     }
-    if( actualSideKey > 0 )
+    if( m_actualSideKey > 0 )
     {
-      actualSideKey--;
-      m_sides[actualSideKey].removeLastPoint( false );
-      if( actualSideKey < 2 )
-        m_sides[actualSideKey].removeMaxNum();
+      m_actualSideKey--;
+      m_sides[m_actualSideKey].removeLastPoint( false );
+      if( m_actualSideKey < 2 )
+        m_sides[m_actualSideKey].removeMaxNum();
     }
 
     fireStateChanged();
@@ -336,58 +333,61 @@ public class GridPointCollector
 
   public void removeLastPoint( )
   {
-    if( actualSideKey >= SIDE_MAX_NUM )
+    if( m_actualSideKey >= SIDE_MAX_NUM )
     {
       // goto to the last line builder
-      actualSideKey = SIDE_MAX_NUM - 1;
+      m_actualSideKey = SIDE_MAX_NUM - 1;
     }
 
-    final LinePointCollector builder = m_sides[actualSideKey];
+    final LinePointCollector builder = m_sides[m_actualSideKey];
 
-    builder.removeLastPoint( actualSideKey == 0 );
+    builder.removeLastPoint( m_actualSideKey == 0 );
     fireStateChanged();
   }
 
   public void replaceLastPoint( final GM_Point point )
   {
-    if( actualSideKey >= SIDE_MAX_NUM )
+    if( m_actualSideKey >= SIDE_MAX_NUM )
       return;
 
     // TODO check going to previous side
-    final LinePointCollector builder = m_sides[actualSideKey];
+    final LinePointCollector builder = m_sides[m_actualSideKey];
 
     builder.replaceLastPoint( point );
   }
 
   public void selectNext( )
   {
-    if( actualSideKey < SIDE_MAX_NUM )
-      m_sides[actualSideKey].setSelected( false );
+    if( !getHasAllSides() )
+      return;
 
-    actualSideKey = (actualSideKey + 1) % SIDE_MAX_NUM;
-    m_sides[actualSideKey].setSelected( true );
+    if( m_actualSideKey < SIDE_MAX_NUM )
+      m_sides[m_actualSideKey].setSelected( false );
+
+    m_actualSideKey = (m_actualSideKey + 1) % SIDE_MAX_NUM;
+    m_sides[m_actualSideKey].setSelected( true );
     fireStateChanged();
   }
 
   public void selectPoint( final GM_Point squareCenter, final double squareWidth )
   {
-    if( actualSideKey < SIDE_MAX_NUM )
-      m_sides[actualSideKey].selectPoint( squareCenter, squareWidth );
+    if( m_actualSideKey < SIDE_MAX_NUM )
+      m_sides[m_actualSideKey].selectPoint( squareCenter, squareWidth );
   }
 
   public void changeSelectedPoint( final GM_Point newPosition )
   {
-    if( actualSideKey < SIDE_MAX_NUM )
+    if( m_actualSideKey < SIDE_MAX_NUM )
     {
-      m_sides[actualSideKey].changeSelected( newPosition );
+      m_sides[m_actualSideKey].changeSelected( newPosition );
       updateTempGrid();
     }
   }
 
   public GM_Point getSelectedPoint( )
   {
-    if( actualSideKey < SIDE_MAX_NUM )
-      return m_sides[actualSideKey].getSelectedPoint();
+    if( m_actualSideKey < SIDE_MAX_NUM )
+      return m_sides[m_actualSideKey].getSelectedPoint();
 
     return null;
   }
@@ -405,8 +405,8 @@ public class GridPointCollector
 
   public LinePointCollectorConfig getCurrentLPCConfig( )
   {
-    if( actualSideKey < SIDE_MAX_NUM )
-      return m_lpcConfigs[actualSideKey];
+    if( m_actualSideKey < SIDE_MAX_NUM )
+      return m_lpcConfigs[m_actualSideKey];
 
     return null;
   }
@@ -419,8 +419,8 @@ public class GridPointCollector
    */
   public int getPointRectSize( )
   {
-    if( actualSideKey < SIDE_MAX_NUM )
-      return m_lpcConfigs[actualSideKey].getPointRectSize();
+    if( m_actualSideKey < SIDE_MAX_NUM )
+      return m_lpcConfigs[m_actualSideKey].getPointRectSize();
     else
       return m_lpcConfigs[0].getPointRectSize();
   }
