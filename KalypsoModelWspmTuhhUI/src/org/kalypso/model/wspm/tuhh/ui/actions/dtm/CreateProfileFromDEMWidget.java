@@ -11,7 +11,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.java.util.Arrays;
-import org.kalypso.gml.ui.map.CoverageManagementWidget;
+import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;

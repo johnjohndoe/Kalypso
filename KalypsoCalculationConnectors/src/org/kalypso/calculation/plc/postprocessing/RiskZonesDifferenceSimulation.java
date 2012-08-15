@@ -49,7 +49,7 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.gml.ui.map.CoverageManagementHelper;
+import org.kalypso.gml.ui.coverage.CoverageManagementHelper;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;

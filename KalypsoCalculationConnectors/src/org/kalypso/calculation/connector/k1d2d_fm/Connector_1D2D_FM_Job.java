@@ -9,7 +9,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Path;
 import org.kalypso.calculation.connector.utils.Connectors;
-import org.kalypso.gml.ui.map.CoverageManagementHelper;
+import org.kalypso.gml.ui.coverage.CoverageManagementHelper;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IFloodPolygon;

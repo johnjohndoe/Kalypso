@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.gml.ui.map.CoverageManagementWidget;
+import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;

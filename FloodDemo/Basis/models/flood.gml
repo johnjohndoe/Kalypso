@@ -5030,7 +5030,7 @@ Datum: 29.05.2008 15:32</gml:description>
          <gml:high>1362 2078</gml:high>
         </gml:GridEnvelope>
        </gml:limits>
-       <gml:origin>
+       <gml:origin>  
         <gml:Point srsName="EPSG:31467">
          <gml:pos>3928742.313 777886.875</gml:pos>
         </gml:Point>
