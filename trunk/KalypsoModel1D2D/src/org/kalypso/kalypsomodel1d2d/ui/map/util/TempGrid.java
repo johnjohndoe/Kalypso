@@ -45,9 +45,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -57,10 +54,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -74,10 +68,7 @@ import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -104,8 +95,6 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class TempGrid
 {
-  private static final double SNAP_DISTANCE = 0.02;
-
   /**
    * The target coordinate reference system for the created grid point
    */
@@ -119,14 +108,6 @@ public class TempGrid
   private double m_searchRectWidth = 0.1;
 
   private IKalypsoFeatureTheme m_nodeTheme;
-
-  private final List<GM_Position> m_setNotInsertedNodes = new ArrayList<GM_Position>();
-
-  private final Map<GM_Position, IFE1D2DNode< ? >> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode< ? >>();
-
-  private GM_Envelope m_gmExistingEnvelope;
-
-  private static boolean[] NOT_CREATED = new boolean[1];
 
   /**
    * Set the target {@link CS_CoordinateSystem}. All points this grid is coping with are required to reside in that
@@ -331,190 +312,9 @@ public class TempGrid
   {
     /* Initialize elements needed for edges and elements */
     final List<GM_Ring> elements = getRingsFromPoses();
-    m_nodesNameConversionMap.clear();
-    m_setNotInsertedNodes.clear();
 
-    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) workspace.getRootFeature();
-
-    try
-    {
-      m_gmExistingEnvelope = discModel.getNodes().getBoundingBox();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    final List<Feature> lListAdded = new ArrayList<Feature>();
-    for( final GM_Ring ring : elements )
-    {
-      lListAdded.addAll( createElementsFromRing( discModel, ring ) );
-    }
-    Logger.getLogger( TempGrid.class.getName() ).log( Level.INFO, "new elements created: " + lListAdded ); //$NON-NLS-1$
-
-    if( lListAdded.size() > 0 )
-    {
-      final FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel, lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
-      workspace.fireModellEvent( changeEvent );
-      Logger.getLogger( TempGrid.class.getName() ).log( Level.INFO, "Model event fired: " + changeEvent ); //$NON-NLS-1$
-    }
-  }
-
-  private List<Feature> createElementsFromRing( final IFEDiscretisationModel1d2d discModel, final GM_Ring ring )
-  {
-    final List<Feature> lListRes = new ArrayList<Feature>();
-    final List<IFE1D2DEdge< ? , ? >> lListEdges = new ArrayList<IFE1D2DEdge< ? , ? >>();
-    final List<GM_Point> lListPoses = new ArrayList<GM_Point>();
-
-    checkPosesForCreationOfElement( discModel, ring, lListPoses );
-
-    if( lListPoses.size() < 3 )
-      return lListRes;
-
-    if( !lListPoses.get( 0 ).equals( lListPoses.get( lListPoses.size() - 1 ) ) )
-    {
-      lListPoses.add( lListPoses.get( 0 ) );
-    }
-
-    IPolyElement< ? , ? > element2d = discModel.find2DElement( GeometryUtilities.centroidFromRing( ring.getPositions(), ring.getCoordinateSystem() ), SNAP_DISTANCE );
-
-    if( element2d != null )
-    {
-      return new ArrayList<Feature>();
-    }
-    GM_Surface< ? extends GM_SurfacePatch> newSurface = null;
-    List<IFE1D2DElement> lListFoundPolyElements = null;
-    try
-    {
-      newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), null, ring.getCoordinateSystem() );
-      lListFoundPolyElements = discModel.getElements().query( newSurface, IFE1D2DElement.PROP_GEOMETRY, false );
-    }
-    catch( final GM_Exception e )
-    {
-      // FIXME:
-      e.printStackTrace();
-    }
-
-    if( lListFoundPolyElements != null && lListFoundPolyElements.size() > 0 )
-    {
-      for( final IFE1D2DElement< ? , ? > lEle : lListFoundPolyElements )
-      {
-        if( lEle instanceof IPolyElement )
-        {
-          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement< ? , ? >) lEle).getGeometry();
-          if( eleGeom.intersects( newSurface ) )
-          {
-            try
-            {
-              final GM_Object intersection = eleGeom.intersection( newSurface );
-              System.out.println( "intersection: " + intersection ); //$NON-NLS-1$
-              if( intersection instanceof GM_Surface )
-                return new ArrayList<Feature>();
-            }
-            catch( final Exception e )
-            {
-            }
-          }
-        }
-      }
-    }
-
-    lListRes.addAll( createNodesAndEdges( discModel, lListEdges, lListPoses ) );
-
-    element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
-    lListRes.add( element2d );
-    for( final IFE1D2DEdge< ? , ? > lEdge : lListEdges )
-    {
-      // add edge to element and element to edge
-      final String elementId = element2d.getId();
-      element2d.addEdge( lEdge.getId() );
-      lEdge.addContainer( elementId );
-    }
-
-    return lListRes;
-  }
-
-  private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge< ? , ? >> lListEdges, final List<GM_Point> lListPoses )
-  {
-    final List<Feature> lListRes = new ArrayList<Feature>();
-    final Map<GM_Position, IFE1D2DNode< ? >> lNodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode< ? >>();
-    /* Create nodes */
-    final List<IFE1D2DNode< ? >> nodes = new ArrayList<IFE1D2DNode< ? >>();
-    for( int i = 0; i < lListPoses.size() - 1; i++ )
-    {
-      final GM_Point lPoint = lListPoses.get( i );
-
-      IFE1D2DNode< ? > actNode = m_nodesNameConversionMap.get( lPoint.getPosition() );
-      if( actNode == null )
-      {
-        actNode = lNodesNameConversionMap.get( lPoint.getPosition() );
-      }
-      if( actNode == null )
-      {
-        actNode = discModel.createNode( lPoint, -1, NOT_CREATED );
-        if( actNode == null )
-          return new ArrayList<Feature>();
-
-        lNodesNameConversionMap.put( lPoint.getPosition(), actNode );
-        lListRes.add( actNode );
-      }
-
-      nodes.add( actNode );
-    }
-
-    /* Create edges */
-    for( int i = 0; i < nodes.size(); i++ )
-    {
-      final IFE1D2DNode< ? > node1 = nodes.get( i );
-      final IFE1D2DNode< ? > node2 = nodes.get( (i + 1) % nodes.size() );
-
-      final IFE1D2DEdge< ? , ? > existingEdge = discModel.findEdge( node1, node2 );
-      final IFE1D2DEdge< ? , ? > edge;
-      if( existingEdge == null )
-      {
-        edge = FE1D2DEdge.createFromModel( discModel, node1, node2 );
-        lListRes.add( edge );
-      }
-      else
-        edge = existingEdge;
-      lListEdges.add( edge );
-    }
-
-    return lListRes;
-  }
-
-  private void checkPosesForCreationOfElement( final IFEDiscretisationModel1d2d discModel, final GM_Ring ring, final List<GM_Point> lListPoses )
-  {
-    for( final GM_Position lPosition : ring.getPositions() )
-    {
-      final GM_Point nodeLocation = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( lPosition, ring.getCoordinateSystem() );
-      final IFE1D2DNode node = discModel.findNode( nodeLocation, SNAP_DISTANCE );
-      if( node == null )
-      {
-        if( m_gmExistingEnvelope != null && m_gmExistingEnvelope.contains( lPosition ) )
-        {
-          final IPolyElement lFoundElement = discModel.find2DElement( nodeLocation, SNAP_DISTANCE );
-          if( lFoundElement != null )
-          {
-            // do not insert nodes that are placed on existing model(overlapped elements)
-            m_setNotInsertedNodes.add( lPosition );
-            Logger.getLogger( TempGrid.class.getName() ).log( Level.WARNING, "removed node ", nodeLocation.toString() ); //$NON-NLS-1$
-          }
-          else
-          {
-            lListPoses.add( nodeLocation );
-          }
-        }
-        else
-        {
-          lListPoses.add( nodeLocation );
-        }
-      }
-      else
-      {
-        lListPoses.add( nodeLocation );
-        m_nodesNameConversionMap.put( lPosition, node );
-      }
-    }
+    final Add2DElementsCommand command = new Add2DElementsCommand( workspace, elements );
+    workspace.postCommand( command );
   }
 
   private IStatus checkElements( )
