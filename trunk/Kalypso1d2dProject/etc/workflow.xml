@@ -16,24 +16,24 @@
           <Task context="Context1dElementTheme" URI="org.kalypso.model.1d2d.workflow.Net1DImportWspm" />
           <Task context="FenetMapWithProfileView" URI="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" />
         </TaskGroup>
-        <Task type="ASYNCHRONOUS" context="Context1dElementTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNet" />
-        <Task type="ASYNCHRONOUS" context="FlowRelationshipTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" />
+        <Task type="SYNCHRONOUS" context="Context1dElementTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNet" />
+        <Task type="SYNCHRONOUS" context="FlowRelationshipTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" />
       </TaskGroup>
       <TaskGroup URI="org.kalypso.model.1d2d.workflow.Net2DGroup" context="FenetMap">
         <Task context="Import2dNet" URI="org.kalypso.model.1d2d.workflow.Net2DImport" />
-        <Task type="ASYNCHRONOUS" context="Context2dElementTheme" URI="org.kalypso.model.1d2d.workflow.EditNet2D" />
-        <Task type="ASYNCHRONOUS" context="FlowRelationshipTheme2D" URI="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" />
-        <Task type="ASYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.Chan2DGen" />
-        <Task type="ASYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.BandGen" />
-        <Task type="ASYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.AssignElevs" />
-        <Task type="ASYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.ShowWindData" />
+        <Task type="SYNCHRONOUS" context="Context2dElementTheme" URI="org.kalypso.model.1d2d.workflow.EditNet2D" />
+        <Task type="SYNCHRONOUS" context="FlowRelationshipTheme2D" URI="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.Chan2DGen" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.BandGen" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.AssignElevs" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.ShowWindData" />
       </TaskGroup>
       <TaskGroup URI="org.kalypso.model.1d2d.workflow.TransGroup" context="FenetMap">
-        <Task type="ASYNCHRONOUS" context="ContLineTheme" URI="org.kalypso.model.1d2d.workflow.ContilineGen" />
-        <Task type="ASYNCHRONOUS" context="BoundaryConditionTheme" URI="org.kalypso.model.1d2d.workflow.BCDef" />
-        <Task type="ASYNCHRONOUS" context="JunctionElementContextTheme" URI="org.kalypso.model.1d2d.workflow.SetEltLineJunction" />
-        <Task type="ASYNCHRONOUS" context="TransitionElementContextTheme" URI="org.kalypso.model.1d2d.workflow.SetEltLineTrans" />
-        <Task type="ASYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.CalculationUnit" />
+        <Task type="SYNCHRONOUS" context="ContLineTheme" URI="org.kalypso.model.1d2d.workflow.ContilineGen" />
+        <Task type="SYNCHRONOUS" context="BoundaryConditionTheme" URI="org.kalypso.model.1d2d.workflow.BCDef" />
+        <Task type="SYNCHRONOUS" context="JunctionElementContextTheme" URI="org.kalypso.model.1d2d.workflow.SetEltLineJunction" />
+        <Task type="SYNCHRONOUS" context="TransitionElementContextTheme" URI="org.kalypso.model.1d2d.workflow.SetEltLineTrans" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.CalculationUnit" />
       </TaskGroup>
     </TaskGroup>
     <TaskGroup URI="org.kalypso.model.1d2d.workflow.RoughMod" context="FenetMap">
@@ -45,8 +45,8 @@
     </TaskGroup>
   </TaskGroup>
   <TaskGroup URI="org.kalypso.model.1d2d.workflow.Processing" context="FenetMap">
-    <Task type="ASYNCHRONOUS" context="CalcParams" URI="org.kalypso.model.1d2d.workflow.CalcSet" />
-    <Task type="ASYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.StartCalculationWithProblemsView" />
+    <Task type="SYNCHRONOUS" context="CalcParams" URI="org.kalypso.model.1d2d.workflow.CalcSet" />
+    <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.StartCalculationWithProblemsView" />
   </TaskGroup>
 
   <TaskGroup URI="org.kalypso.model.1d2d.workflow.Postprocessing" context="ResultMap">
@@ -54,7 +54,7 @@
     <TaskGroup URI="org.kalypso.model.1d2d.workflow.ResultMapGroup" context="ResultMap">
       <Task context="ResultMap" URI="org.kalypso.model.1d2d.workflow.ConfigureResultMap" />
       <Task context="ResultMap" URI="org.kalypso.model.1d2d.workflow.ShowResultMap" />
-      <Task type="ASYNCHRONOUS" context="ResultMap" URI="org.kalypso.model.1d2d.workflow.ManageResultHydrograph" />
+      <Task type="SYNCHRONOUS" context="ResultMap" URI="org.kalypso.model.1d2d.workflow.ManageResultHydrograph" />
     </TaskGroup>
 
     <TaskGroup URI="org.kalypso.model.1d2d.workflow.ResultLengthSectionViewGroup">
