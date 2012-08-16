@@ -43,7 +43,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * editing the grid.
  *
  * Provides the mechanism to create automatically fem element within a grid
- * 
+ *
  * @author Patrice Congo
  */
 public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
@@ -304,6 +304,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
       case 't':
       case 'T':
+      case KeyEvent.VK_ENTER:
         convertToModell();
         break;
 

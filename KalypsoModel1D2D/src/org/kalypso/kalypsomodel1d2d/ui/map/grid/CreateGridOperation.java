@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -67,18 +66,6 @@ class CreateGridOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    // TODO: movre code from TempGrid into this operation
-    final IStatus status = m_tempGrid.getAddToModelCommand( m_workspace, DISTANCE_DEF );
-
-    try
-    {
-      m_workspace.postCommand( new EmptyCommand( "set dirty command ", false ) ); //$NON-NLS-1$
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    return status;
+    return m_tempGrid.getAddToModelCommand( m_workspace, DISTANCE_DEF );
   }
 }

@@ -432,6 +432,8 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
         final FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel, lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
         workspace.fireModellEvent( changeEvent );
         Logger.getLogger( RefineFEGeometryWidget.class.getName() ).log( Level.INFO, "Model event fired: " + changeEvent ); //$NON-NLS-1$
+
+        // FIXME: not enough! there must be a command in order to make the workspace dirty!
       }
       reinit();
     }
@@ -442,6 +444,9 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     }
   }
 
+  // FIXME: who the HELL does such a thing?! This is just copy paste from other widget implementations! Is this really
+  // SO hard to understand why this is really bad?!
+  // FIXME: use the Add2DElementsCommand instead
   @SuppressWarnings("rawtypes")
   private List<Feature> createPolyElement( final GM_Surface<GM_SurfacePatch> surface, final IFEDiscretisationModel1d2d discModel )
   {

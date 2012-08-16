@@ -61,7 +61,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -391,15 +390,6 @@ public class CreateChannelData
     tempGrid.setCoodinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     final double searchDistance = 0.1;
     tempGrid.getAddToModelCommand( workspace, searchDistance );
-
-    try
-    {
-      workspace.postCommand( new EmptyCommand( "set dirty command ", false ) ); //$NON-NLS-1$
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
   }
 
   /**
