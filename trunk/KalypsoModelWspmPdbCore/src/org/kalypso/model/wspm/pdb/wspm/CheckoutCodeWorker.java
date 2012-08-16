@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
+import java.util.Arrays;
+
 import org.kalypso.model.wspm.core.gml.classifications.ICodeClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
@@ -69,6 +71,13 @@ public class CheckoutCodeWorker
     final IFeatureBindingCollection<ICodeClass> codeClassCollection = m_classification.getCodeClassCollection();
 
     final GafCode[] codes = m_codes.getAllCodes();
+
+    /*
+     * Sort by natual order of GAFCodes, i.e. by its number -> so codes will be written into WSPM classification in that
+     * order.
+     */
+    Arrays.sort( codes );
+
     for( final GafCode code : codes )
     {
       final String name = code.getCode();
