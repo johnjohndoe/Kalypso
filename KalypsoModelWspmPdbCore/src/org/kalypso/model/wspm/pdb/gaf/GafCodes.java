@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.pdb.gaf;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -61,9 +60,9 @@ public class GafCodes
 {
   public static final GafCode NULL_HYK = new GafCode( -1, Messages.getString( "GafCodes.0" ), StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, CATEGORY.NONE, null, false ); //$NON-NLS-1$
 
-  private final Map<String, GafCode> m_codes = new LinkedHashMap<String, GafCode>();
+  private final Map<String, GafCode> m_codes = new HashMap<String, GafCode>();
 
-  private final Map<String, GafCode> m_hykCodes = new LinkedHashMap<String, GafCode>();
+  private final Map<String, GafCode> m_hykCodes = new HashMap<String, GafCode>();
 
   /* Category -> default code */
   private final Map<CATEGORY, GafCode> m_defaultCodes = new HashMap<CATEGORY, GafCode>();
