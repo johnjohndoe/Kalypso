@@ -52,8 +52,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
-import org.kalypso.model.wspm.pdb.gaf.VegetationClassComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.ui.view.table.handler.VegetationClassComparator;
 
 /**
  * Writes the vegetation classes to a file.
