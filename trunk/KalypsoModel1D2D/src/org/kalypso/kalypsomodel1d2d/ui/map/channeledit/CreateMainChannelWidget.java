@@ -86,9 +86,6 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
@@ -96,9 +93,6 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
     return m_composite;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
-   */
   @Override
   public void disposeControl( )
   {

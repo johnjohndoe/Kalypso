@@ -80,7 +80,10 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.CssParameter;
@@ -207,23 +210,32 @@ public class CreateChannelData
     if( mapModell == null )
       return new IKalypsoFeatureTheme[0];
 
-    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-
-    final List<IKalypsoFeatureTheme> goodThemes = new ArrayList<IKalypsoFeatureTheme>();
-
-    for( final IKalypsoTheme theme : allThemes )
+    final IKalypsoThemePredicate profileThemePredicate = new IKalypsoThemePredicate()
     {
-      if( theme instanceof IKalypsoFeatureTheme )
+      @Override
+      public boolean decide( final IKalypsoTheme theme )
       {
-        final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
-        final IFeatureType featureType = fTheme.getFeatureType();
+        if( theme instanceof IKalypsoFeatureTheme )
+        {
+          final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
+          final IFeatureType featureType = fTheme.getFeatureType();
 
-        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, IProfileFeature.FEATURE_PROFILE ) )
-          goodThemes.add( fTheme );
+          if( featureType != null && GMLSchemaUtilities.substitutes( featureType, IProfileFeature.FEATURE_PROFILE ) )
+            return true;
+        }
+
+        return false;
       }
-    }
+    };
+    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( profileThemePredicate );
 
-    return goodThemes.toArray( new IKalypsoFeatureTheme[goodThemes.size()] );
+    mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+
+    final IKalypsoTheme[] foundThemes = visitor.getFoundThemes();
+    final IKalypsoFeatureTheme[] goodThemes = new IKalypsoFeatureTheme[foundThemes.length];
+    System.arraycopy( foundThemes, 0, goodThemes, 0, foundThemes.length );
+
+    return goodThemes;
   }
 
   /* --------------------- selection handling ---------------------------------- */
