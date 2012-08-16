@@ -192,6 +192,13 @@
               </and>
            </enablement>
         </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.gaf.GafExportProfilesWizard">
+               <enablement>
+                  <reference
+                        definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                  </reference>
+               </enablement>
+        </wizardEnablement>
   </extension>
   <extension
         point="org.eclipse.core.expressions.propertyTesters">
@@ -305,11 +312,9 @@
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
-           <enablement>
-              <reference
-                    definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-              </reference>
-           </enablement>
+       <enablement>
+              <reference definitionId="isPdbAdminAndPdbViewVisible"/>
+       </enablement>
     </wizardEnablement>
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard">
        <enablement>
