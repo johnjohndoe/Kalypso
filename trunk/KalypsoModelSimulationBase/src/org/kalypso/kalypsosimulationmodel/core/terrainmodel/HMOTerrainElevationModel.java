@@ -81,13 +81,13 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
 
   public static final GM_Position[][] NO_INTERIOR_POS = {};
 
-  private double minElevation;
+  private double m_minElevation;
 
-  private double maxElevation;
+  private double m_maxElevation;
 
-  private Envelope union;
+  private Envelope m_union;
 
-  private Quadtree triangles;
+  private Quadtree m_triangles;
 
   // FIXME: this is nonsense, we should use the crs configured at our containing NativeTerrainModelWrapper and transform
   // our data into that crs
@@ -104,33 +104,34 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     final Reader r = new InputStreamReader( hmoFileURL.openStream() );
     final LinearRing[] rings = hmoReader.read( r );
 
-    this.triangles = new Quadtree();
+    this.m_triangles = new Quadtree();
 
-    TriangleData triangleData;
-    minElevation = Double.MAX_VALUE;
-    maxElevation = -Double.MAX_VALUE;
-    double extremum;
+    m_minElevation = Double.MAX_VALUE;
+    m_maxElevation = -Double.MAX_VALUE;
 
-    union = rings[0].getEnvelopeInternal();
+    m_union = rings[0].getEnvelopeInternal();
+
     for( final LinearRing ring : rings )
     {
-      triangleData = new TriangleData( ring, crs );
-      final Envelope envelopeInternal = ring.getEnvelopeInternal();
-      triangles.insert( envelopeInternal, triangleData );
-      // set min
-      extremum = triangleData.getMinElevation();
-      if( minElevation > extremum )
+      try
       {
-        minElevation = extremum;
-      }
-      // set max
-      extremum = triangleData.getMaxElevation();
-      if( maxElevation < extremum )
-      {
-        maxElevation = extremum;
-      }
+        final TriangleData triangleData = new TriangleData( ring, crs );
+        final Envelope envelopeInternal = ring.getEnvelopeInternal();
+        m_triangles.insert( envelopeInternal, triangleData );
 
-      union.expandToInclude( envelopeInternal );
+        final double min = triangleData.getMinElevation();
+        m_minElevation = Math.min( m_minElevation, min );
+
+        final double max = triangleData.getMaxElevation();
+        m_maxElevation = Math.max( m_maxElevation, max );
+
+        m_union.expandToInclude( envelopeInternal );
+      }
+      catch( final java.lang.ArithmeticException e )
+      {
+        // TODO: error handling?
+        // ignore, we have a corrupt triangle here (colinear)
+      }
     }
   }
 
@@ -139,11 +140,10 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
   {
     try
     {
-      // GM_Position min = JTSAdapter.wrap( union. ).getEnvelope();
-      return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Envelope( union.getMinX(),// minx,
-      union.getMinY(),// miny,
-      union.getMaxX(),// maxx,
-      union.getMaxY(),// maxy
+      return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Envelope( m_union.getMinX(),// minx,
+          m_union.getMinY(),// miny,
+          m_union.getMaxX(),// maxx,
+          m_union.getMaxY(),// maxy
           crs );
     }
     catch( final Throwable th )
@@ -163,7 +163,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
       final Point jtsPoint = (Point) JTSAdapter.export( location );
       final Envelope searchEnv = jtsPoint.getEnvelopeInternal();
 
-      final List<TriangleData> list = triangles.query( searchEnv );
+      final List<TriangleData> list = m_triangles.query( searchEnv );
 
       if( list.isEmpty() )
         return Double.NaN;
@@ -190,7 +190,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     final Coordinate max = JTSAdapter.export( envToVisit.getMax() );
     final Coordinate min = JTSAdapter.export( envToVisit.getMin() );
     final Envelope jtsEnv = new Envelope( min, max );
-    final List< ? > triToVisit = triangles.query( jtsEnv );
+    final List< ? > triToVisit = m_triangles.query( jtsEnv );
 
     monitor.beginTask( "", triToVisit.size() ); //$NON-NLS-1$
 
@@ -207,12 +207,12 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
   @Override
   public double getMaxElevation( )
   {
-    return maxElevation == -Double.MAX_VALUE ? Double.NaN : maxElevation;
+    return m_maxElevation == -Double.MAX_VALUE ? Double.NaN : m_maxElevation;
   }
 
   @Override
   public double getMinElevation( )
   {
-    return minElevation == Double.MAX_VALUE ? Double.NaN : minElevation;
+    return m_minElevation == Double.MAX_VALUE ? Double.NaN : m_minElevation;
   }
 }
