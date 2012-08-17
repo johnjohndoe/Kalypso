@@ -70,7 +70,7 @@ public final class RemoveCollectionOperation implements ICoreRunnableWithProgres
         /* Delete underlying file */
         final IFeatureBindingCollection<ICoverage> coverages = runoffEvent.getCoverages();
         for( final ICoverage coverage : coverages )
-          CoverageManagementHelper.deleteGridFile( coverage );
+          CoverageManagementHelper.deleteRangeSetFile( coverage );
 
         /* Delete coverage from collection */
         final DeleteFeatureCommand command = new DeleteFeatureCommand( runoffEvent );

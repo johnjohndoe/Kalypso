@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -75,7 +76,7 @@ import com.vividsolutions.jts.io.ParseException;
  * @author Patrice Congo
  * @author Madanagopal
  */
-public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePatchVisitable<GM_SurfacePatch>
+public class HMOTerrainElevationModel implements IElevationModel, ISurfacePatchVisitable<GM_SurfacePatch>
 {
   public static final double[][] NO_INTERIOR = {};
 
@@ -104,7 +105,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     final Reader r = new InputStreamReader( hmoFileURL.openStream() );
     final LinearRing[] rings = hmoReader.read( r );
 
-    this.m_triangles = new Quadtree();
+    m_triangles = new Quadtree();
 
     m_minElevation = Double.MAX_VALUE;
     m_maxElevation = -Double.MAX_VALUE;

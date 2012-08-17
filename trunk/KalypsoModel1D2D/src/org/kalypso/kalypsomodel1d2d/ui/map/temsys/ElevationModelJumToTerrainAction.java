@@ -46,6 +46,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypsodeegree.model.elevation.ElevationException;
 
 /**
  * @author Gernot Belger
@@ -67,8 +68,15 @@ class ElevationModelJumToTerrainAction extends Action
   @Override
   public void run( )
   {
-    final ITerrainElevationModel elevationModel = m_dataModel.getElevationModel();
-    if( elevationModel != null )
-      m_dataModel.getMapPanel().setBoundingBox( elevationModel.getBoundingBox() );
+    try
+    {
+      final ITerrainElevationModel elevationModel = m_dataModel.getElevationModel();
+      if( elevationModel != null )
+        m_dataModel.getMapPanel().setBoundingBox( elevationModel.getBoundingBox() );
+    }
+    catch( final ElevationException e )
+    {
+      e.printStackTrace();
+    }
   }
 }

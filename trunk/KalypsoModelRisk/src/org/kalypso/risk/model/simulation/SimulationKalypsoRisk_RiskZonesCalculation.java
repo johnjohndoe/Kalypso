@@ -149,7 +149,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       final IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
       final Set<URL> oldGridLocations = new HashSet<>( outputCoveragesList.size() );
       for( final ICoverage coverage : outputCoveragesList )
-        oldGridLocations.add( CoverageManagementHelper.getGridLocation( coverage ) );
+        oldGridLocations.add( CoverageManagementHelper.getFileLocation( coverage ) );
       oldGridLocations.remove( null );
 
       outputCoveragesList.clear();
@@ -186,7 +186,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
 
       /* Delete old result files */
       for( final URL oldGridLocation : oldGridLocations )
-        CoverageManagementHelper.deleteGridFile( oldGridLocation );
+        CoverageManagementHelper.deleteFile( oldGridLocation );
     }
     catch( final Exception e )
     {

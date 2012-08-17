@@ -203,7 +203,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
         final IAnnualCoverageCollection annualCoverageCollection = specificDamageCoverageCollection.get( i );
         final IFeatureBindingCollection<ICoverage> coverages = annualCoverageCollection.getCoverages();
         for( int k = 0; k < coverages.size(); k++ )
-          oldGridFiles.add( CoverageManagementHelper.getGridLocation( coverages.get( k ) ) );
+          oldGridFiles.add( CoverageManagementHelper.getFileLocation( coverages.get( k ) ) );
       }
       specificDamageCoverageCollection.clear();
 
@@ -282,7 +282,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
       /* really clear existing data; until now the user might have cancelled the operation */
       for( final URL url : oldGridFiles )
-        CoverageManagementHelper.deleteGridFile( url );
+        CoverageManagementHelper.deleteFile( url );
     }
     catch( final Exception e )
     {

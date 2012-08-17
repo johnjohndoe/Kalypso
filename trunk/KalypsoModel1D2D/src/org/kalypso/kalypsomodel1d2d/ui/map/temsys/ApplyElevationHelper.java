@@ -48,15 +48,15 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class ApplyElevationHelper
 {
@@ -77,14 +77,6 @@ public class ApplyElevationHelper
     if( model1d2d == null )
       return;
 
-    IElevationProvider elevationProvider = null;
-    // dataModel.getElevationModel();
-    // if( elevationProvider == null )
-    // {
-    // elevationProvider = dataModel.getElevationModelSystem();
-    // if( elevationProvider == null )
-    // return;
-    // }
 
     final CommandableWorkspace workspace = dataModel.getDiscretisationModelWorkspace();
     if( workspace == null )
@@ -95,9 +87,10 @@ public class ApplyElevationHelper
     // to provide real assign of elevations according to selected order in elevations model view
     for( int i = 0; i < elevationModels.size() && lListNodesToAssign.size() > 0; ++i )
     {
-      elevationProvider = elevationModels.get( i );
+      final IElevationModel elevationProvider = elevationModels.get( i );
       if( elevationProvider == null )
         continue;
+
       final ChangeTerrainElevationSystemCommand compositeCommand = new ChangeTerrainElevationSystemCommand( workspace, model1d2d, dataModel.getElevationModelSystem() );
       ChangeNodePositionCommand changePosCmd;
 

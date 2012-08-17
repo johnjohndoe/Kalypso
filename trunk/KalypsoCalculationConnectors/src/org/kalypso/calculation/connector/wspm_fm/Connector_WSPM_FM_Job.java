@@ -86,7 +86,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
           final IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
           for( final ICoverage coverage : coveragesList )
           {
-            CoverageManagementHelper.deleteGridFile( coverage );
+            CoverageManagementHelper.deleteRangeSetFile( coverage );
           }
         }
         floodModelEvents.clear();

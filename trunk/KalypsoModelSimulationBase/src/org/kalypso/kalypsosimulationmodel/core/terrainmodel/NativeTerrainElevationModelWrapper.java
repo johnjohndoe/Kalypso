@@ -54,6 +54,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.elevation.ElevationException;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -73,14 +75,14 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
 
   public static final QName SIM_BASE_PROP_FILE_NAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "fileName" ); //$NON-NLS-1$
 
-  private IElevationProvider m_elevationProvider;
+  private IElevationModel m_elevationProvider;
 
   public NativeTerrainElevationModelWrapper( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public IElevationProvider getElevationProvider( )
+  public IElevationModel getElevationProvider( )
   {
     if( m_elevationProvider != null )
       return m_elevationProvider;
@@ -115,13 +117,13 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   }
 
   @Override
-  public double getElevation( final GM_Point location )
+  public double getElevation( final GM_Point location ) throws ElevationException
   {
     return getElevationProvider().getElevation( location );
   }
 
   @Override
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getBoundingBox( ) throws ElevationException
   {
     return getElevationProvider().getBoundingBox();
   }
@@ -142,13 +144,13 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   }
 
   @Override
-  public double getMaxElevation( )
+  public double getMaxElevation( ) throws ElevationException
   {
     return getElevationProvider().getMaxElevation();
   }
 
   @Override
-  public double getMinElevation( )
+  public double getMinElevation( ) throws ElevationException
   {
     return getElevationProvider().getMinElevation();
   }
