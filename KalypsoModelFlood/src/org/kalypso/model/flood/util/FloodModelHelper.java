@@ -243,7 +243,7 @@ public class FloodModelHelper
       for( final ICoverage coverageToDelete : coverages )
       {
         /* Delete underlying grid grid file */
-        final IStatus status = CoverageManagementHelper.deleteGridFile( coverageToDelete );
+        final IStatus status = CoverageManagementHelper.deleteRangeSetFile( coverageToDelete );
         if( !status.isOK() )
           return status;
 

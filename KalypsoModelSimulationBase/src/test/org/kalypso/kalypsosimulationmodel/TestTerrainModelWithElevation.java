@@ -60,7 +60,6 @@ public class TestTerrainModelWithElevation extends TestCase
 {
   public void testWorkspaceLoad( )
   {
-
     GMLWorkspace workspace = null;
 
     try

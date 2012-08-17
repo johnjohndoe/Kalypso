@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -104,19 +105,26 @@ public class TerrainElevationModelSystem extends Feature_Impl implements ITerrai
 
     for( final ITerrainElevationModel tem : m_terrainElevationModels )
     {
-      final GM_Envelope temEnv = tem.getBoundingBox();
+      try
+      {
+        final GM_Envelope temEnv = tem.getBoundingBox();
 
-      if( env == null )
-        env = temEnv;
-      else if( temEnv != null )
-        env = env.getMerged( temEnv );
+        if( env == null )
+          env = temEnv;
+        else if( temEnv != null )
+          env = env.getMerged( temEnv );
+      }
+      catch( final ElevationException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     return env;
   }
 
   @Override
-  public double getMaxElevation( )
+  public double getMaxElevation( ) throws ElevationException
   {
     double maxEle = -Double.MAX_VALUE;
     for( final ITerrainElevationModel eleModel : m_terrainElevationModels )
@@ -130,7 +138,7 @@ public class TerrainElevationModelSystem extends Feature_Impl implements ITerrai
   }
 
   @Override
-  public double getMinElevation( )
+  public double getMinElevation( ) throws ElevationException
   {
     double minEle = Double.MAX_VALUE;
     for( final ITerrainElevationModel eleModel : m_terrainElevationModels )

@@ -60,7 +60,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
@@ -76,6 +75,8 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypsodeegree.model.elevation.ElevationException;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -99,7 +100,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
 
   public ApplyElevationWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { IFE1D2DNode.QNAME }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { IFE1D2DNode.QNAME }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.14" ) ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
@@ -284,7 +285,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       if( nodePoint == null )
         nodePoint = MapUtilities.transform( mapPanel, p );
 
-      final IElevationProvider elevationProvider = getElevationProvider();
+      final IElevationModel elevationProvider = getElevationProvider();
       if( elevationProvider != null )
       {
         final double elevation = elevationProvider.getElevation( nodePoint );
@@ -308,6 +309,10 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     {
       e.printStackTrace();
     }
+    catch( final ElevationException e )
+    {
+      e.printStackTrace();
+    }
     finally
     {
       g.setColor( color );
@@ -323,9 +328,9 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     super.doubleClickedLeft( p );
   }
 
-  private final IElevationProvider getElevationProvider( )
+  private final IElevationModel getElevationProvider( )
   {
-    IElevationProvider elevationProvider = m_dataModel.getElevationModel();
+    IElevationModel elevationProvider = m_dataModel.getElevationModel();
     if( elevationProvider == null )
       elevationProvider = m_dataModel.getElevationModelSystem();
     return elevationProvider;

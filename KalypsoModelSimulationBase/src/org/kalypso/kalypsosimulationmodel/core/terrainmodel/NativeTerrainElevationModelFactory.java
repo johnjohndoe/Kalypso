@@ -46,6 +46,7 @@ import java.net.URLDecoder;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.adaptor.CacheMap;
 import org.shiftone.cache.policy.fifo.FifoCacheFactory;
@@ -63,7 +64,7 @@ public class NativeTerrainElevationModelFactory
     // yes empty
   }
 
-  public static final IElevationProvider getTerrainElevationModel( final File nativeTerrainModelFile_ ) throws IOException
+  public static final IElevationModel getTerrainElevationModel( final File nativeTerrainModelFile_ ) throws IOException
   {
     Assert.throwIAEOnNullParam( nativeTerrainModelFile_, "nativeTerrainModelFile_" ); //$NON-NLS-1$
     // Decoding the White Spaces present in the File Paths. Sometimes requires to decode twice.
@@ -85,13 +86,13 @@ public class NativeTerrainElevationModelFactory
     return resolveTerrainElevationModel( nativeTerrainModelFile );
   }
 
-  private static final IElevationProvider resolveTerrainElevationModel( final File ascFile ) throws IllegalArgumentException, IOException
+  private static final IElevationModel resolveTerrainElevationModel( final File ascFile ) throws IllegalArgumentException, IOException
   {
     final String filePath = ascFile.getAbsolutePath();
     final Object cachedEleModel = cache.getObject( filePath );
     if( cachedEleModel != null )
     {
-      return (IElevationProvider) cachedEleModel;
+      return (IElevationModel) cachedEleModel;
     }
     if( filePath.endsWith( ".asc" ) || filePath.endsWith( ".asg" ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {

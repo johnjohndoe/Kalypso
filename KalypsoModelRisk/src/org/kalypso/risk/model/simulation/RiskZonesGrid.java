@@ -72,7 +72,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
+public class RiskZonesGrid extends AbstractDelegatingGeoGrid
 {
   private final Map<String, List<BinaryGeoGridReader>> m_gridMap;
 
@@ -272,7 +272,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   /**
    * returns the flow depth value for a given position.
-   * 
+   *
    * @param collection
    *          grid collection of water depth grids
    * @param x

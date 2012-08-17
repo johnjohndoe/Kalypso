@@ -48,7 +48,7 @@ import org.kalypso.risk.i18n.Messages;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-public class RiskZonesDifferenceGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
+public class RiskZonesDifferenceGrid extends AbstractDelegatingGeoGrid
 {
   private final IGeoGrid m_inputGrid1;
 

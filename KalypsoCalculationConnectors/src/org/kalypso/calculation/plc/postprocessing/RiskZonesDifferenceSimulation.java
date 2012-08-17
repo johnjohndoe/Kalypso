@@ -159,7 +159,7 @@ public class RiskZonesDifferenceSimulation implements ISimulationSpecKalypsoRisk
       final ICoverageCollection outputCoverages = rasterModelOutput.getRiskZonesCoverage();
       final IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
       for( final ICoverage coverage : outputCoveragesList )
-        CoverageManagementHelper.deleteGridFile( coverage );
+        CoverageManagementHelper.deleteRangeSetFile( coverage );
 
       outputCoveragesList.clear();
 

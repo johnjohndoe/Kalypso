@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -56,7 +57,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
  */
-public interface ITerrainElevationModelSystem extends Feature, IElevationProvider
+public interface ITerrainElevationModelSystem extends Feature, IElevationModel
 {
   /**
    * To get all terrain elevation model in that system

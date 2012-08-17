@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -49,11 +50,11 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  *
  */
-public interface ITerrainElevationModel extends Feature, IElevationProvider
+public interface ITerrainElevationModel extends Feature, IElevationModel
 {
   /**
    * To get the coordinate system of this elevation provider
-   * 
+   *
    * @return return the coordinate system as {@link CS_CoordinateSystem}
    */
   String getCoordinateSystem( );

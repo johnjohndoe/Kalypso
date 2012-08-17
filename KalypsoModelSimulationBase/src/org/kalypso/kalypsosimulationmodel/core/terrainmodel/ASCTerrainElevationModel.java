@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -68,7 +69,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author Patrice Congo
  *
  */
-public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePatchVisitable<GM_SurfacePatch>
+public class ASCTerrainElevationModel implements IElevationModel, ISurfacePatchVisitable<GM_SurfacePatch>
 {
   private static final int PROPORTIONAL_FACTOR = 160;
 
