@@ -44,14 +44,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypsodeegree.model.elevation.IElevationModel;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.adaptor.CacheMap;
 import org.shiftone.cache.policy.fifo.FifoCacheFactory;
-
-import com.vividsolutions.jts.io.ParseException;
 
 public class NativeTerrainElevationModelFactory
 {
@@ -108,7 +108,7 @@ public class NativeTerrainElevationModelFactory
         cache.addObject( filePath, terrainElevationModel );
         return terrainElevationModel;
       }
-      catch( final ParseException e )
+      catch( final CoreException | GM_Exception e )
       {
         e.printStackTrace();
         throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelFactory.4" ), e ); //$NON-NLS-1$
