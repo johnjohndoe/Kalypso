@@ -86,17 +86,18 @@ public class HMOTerrainElevationModel implements IElevationModel, ISurfacePatchV
 
   private final void parseFile( final URL hmoFileURL ) throws CoreException, GM_Exception
   {
-      final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter();
-      m_surface = converter.convert( hmoFileURL, new NullProgressMonitor() );
+    final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter();
+    m_surface = converter.convert( hmoFileURL, new NullProgressMonitor() );
 
-      /* Determine min/max */
-      final MinMaxSurfacePatchVisitor<GM_Triangle> minMaxVisitor = new MinMaxSurfacePatchVisitor<>();
-      m_surface.acceptSurfacePatches( null, minMaxVisitor, new NullProgressMonitor() );
+    /* Determine min/max */
+    final MinMaxSurfacePatchVisitor<GM_Triangle> minMaxVisitor = new MinMaxSurfacePatchVisitor<>();
+    final GM_Envelope maxBox = m_surface.getEnvelope();
+    m_surface.acceptSurfacePatches( maxBox, minMaxVisitor, new NullProgressMonitor() );
 
-      final BigDecimal min = minMaxVisitor.getMin();
-      final BigDecimal max = minMaxVisitor.getMax();
+    final BigDecimal min = minMaxVisitor.getMin();
+    final BigDecimal max = minMaxVisitor.getMax();
 
-      m_minMax = Range.between( min, max );
+    m_minMax = Range.between( min, max );
   }
 
   @Override
