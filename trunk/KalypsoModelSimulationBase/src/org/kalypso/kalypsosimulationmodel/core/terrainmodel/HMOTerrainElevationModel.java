@@ -121,12 +121,12 @@ public class HMOTerrainElevationModel implements IElevationModel, ISurfacePatchV
   @Override
   public double getMaxElevation( )
   {
-    return m_minMax == null ? Double.NaN : m_minMax.getMinimum().doubleValue();
+    return m_minMax == null ? Double.NaN : m_minMax.getMaximum().doubleValue();
   }
 
   @Override
   public double getMinElevation( )
   {
-    return m_minMax == null ? Double.NaN : m_minMax.getMaximum().doubleValue();
+    return m_minMax == null ? Double.NaN : m_minMax.getMinimum().doubleValue();
   }
 }
