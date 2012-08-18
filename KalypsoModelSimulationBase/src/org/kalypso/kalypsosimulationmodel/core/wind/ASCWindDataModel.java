@@ -73,6 +73,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author ig
  *
  */
+// FIXME: never used, remove?
 public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitable<GM_SurfacePatch>
 {
   /**
@@ -107,7 +108,7 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
    *             if asc file is null or is a directory or does not exist or is not accesible (cannot be read)
    *
    */
-  public ASCWindDataModel( final URL ascFileURL, final RectifiedGridDomain gridDescriptor ) throws IllegalArgumentException, IOException
+  public ASCWindDataModel( final URL ascFileURL ) throws IllegalArgumentException, IOException
   {
     parse( ascFileURL.openStream() );
   }
@@ -226,8 +227,8 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
 
           final GM_Triangle patch1 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos00, pos01, pos03 }, crs );
           final GM_Triangle patch2 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos11, pos12, pos13 }, crs );
-          surfacePatchVisitor.visit( patch1, z.first );
-          surfacePatchVisitor.visit( patch2, z.first );
+          surfacePatchVisitor.visit( patch1 );
+          surfacePatchVisitor.visit( patch2 );
         }
 
         ProgressUtilities.worked( monitor, 1 );
