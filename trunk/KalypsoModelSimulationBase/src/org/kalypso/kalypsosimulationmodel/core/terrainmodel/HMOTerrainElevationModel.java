@@ -40,35 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.math.BigDecimal;
 import java.net.URL;
-import java.util.List;
 
+import org.apache.commons.lang3.Range;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
+import org.kalypso.gml.processes.tin.HmoTriangulatedSurfaceConverter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.bce.gis.io.hmo.HMOReader;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.index.quadtree.Quadtree;
-import com.vividsolutions.jts.io.ParseException;
+import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
 
 /**
  * An {@link IElevationProvider} based on an hmo file
@@ -76,144 +65,67 @@ import com.vividsolutions.jts.io.ParseException;
  * @author Patrice Congo
  * @author Madanagopal
  */
-public class HMOTerrainElevationModel implements IElevationModel, ISurfacePatchVisitable<GM_SurfacePatch>
+public class HMOTerrainElevationModel implements IElevationModel, ISurfacePatchVisitable<GM_Triangle>
 {
-  public static final double[][] NO_INTERIOR = {};
+  // public static final double[][] NO_INTERIOR = {};
+  //
+  // public static final GM_Position[][] NO_INTERIOR_POS = {};
 
-  public static final GM_Position[][] NO_INTERIOR_POS = {};
-
-  private double m_minElevation;
-
-  private double m_maxElevation;
-
-  private Envelope m_union;
-
-  private Quadtree m_triangles;
+  private Range<BigDecimal> m_minMax;
 
   // FIXME: this is nonsense, we should use the crs configured at our containing NativeTerrainModelWrapper and transform
   // our data into that crs
-  private final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+  private final String m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-  public HMOTerrainElevationModel( final URL hmoFileURL ) throws IOException, ParseException
+  private GM_TriangulatedSurface m_surface;
+
+  public HMOTerrainElevationModel( final URL hmoFileURL ) throws CoreException, GM_Exception
   {
     parseFile( hmoFileURL );
   }
 
-  private final void parseFile( final URL hmoFileURL ) throws IOException, ParseException
+  private final void parseFile( final URL hmoFileURL ) throws CoreException, GM_Exception
   {
-    final HMOReader hmoReader = new HMOReader( new GeometryFactory() );
-    final Reader r = new InputStreamReader( hmoFileURL.openStream() );
-    final LinearRing[] rings = hmoReader.read( r );
+      final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter();
+      m_surface = converter.convert( hmoFileURL, new NullProgressMonitor() );
 
-    m_triangles = new Quadtree();
+      /* Determine min/max */
+      final MinMaxSurfacePatchVisitor<GM_Triangle> minMaxVisitor = new MinMaxSurfacePatchVisitor<>();
+      m_surface.acceptSurfacePatches( null, minMaxVisitor, new NullProgressMonitor() );
 
-    m_minElevation = Double.MAX_VALUE;
-    m_maxElevation = -Double.MAX_VALUE;
+      final BigDecimal min = minMaxVisitor.getMin();
+      final BigDecimal max = minMaxVisitor.getMax();
 
-    m_union = rings[0].getEnvelopeInternal();
-
-    for( final LinearRing ring : rings )
-    {
-      try
-      {
-        final TriangleData triangleData = new TriangleData( ring, crs );
-        final Envelope envelopeInternal = ring.getEnvelopeInternal();
-        m_triangles.insert( envelopeInternal, triangleData );
-
-        final double min = triangleData.getMinElevation();
-        m_minElevation = Math.min( m_minElevation, min );
-
-        final double max = triangleData.getMaxElevation();
-        m_maxElevation = Math.max( m_maxElevation, max );
-
-        m_union.expandToInclude( envelopeInternal );
-      }
-      catch( final java.lang.ArithmeticException e )
-      {
-        // TODO: error handling?
-        // ignore, we have a corrupt triangle here (colinear)
-      }
-    }
+      m_minMax = Range.between( min, max );
   }
 
   @Override
   public GM_Envelope getBoundingBox( )
   {
-    try
-    {
-      return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Envelope( m_union.getMinX(),// minx,
-          m_union.getMinY(),// miny,
-          m_union.getMaxX(),// maxx,
-          m_union.getMaxY(),// maxy
-          crs );
-    }
-    catch( final Throwable th )
-    {
-      th.printStackTrace();
-      return null;
-    }
+    return m_surface.getEnvelope();
   }
 
   @Override
   public double getElevation( final GM_Point location )
   {
-    try
-    {
-      final double x = location.getX();
-      final double y = location.getY();
-      final Point jtsPoint = (Point) JTSAdapter.export( location );
-      final Envelope searchEnv = jtsPoint.getEnvelopeInternal();
-
-      final List<TriangleData> list = m_triangles.query( searchEnv );
-
-      if( list.isEmpty() )
-        return Double.NaN;
-
-      for( final TriangleData data : list )
-      {
-        if( data.contains( jtsPoint ) )
-          return data.computeZOfTrianglePlanePoint( x, y );
-      }
-      return Double.NaN;
-    }
-    catch( final Throwable th )
-    {
-      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.HMOTerrainElevationModel.0" ), th ); //$NON-NLS-1$
-    }
+    return m_surface.getValue( location );
   }
 
   @Override
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor )
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_Triangle> surfacePatchVisitor, final IProgressMonitor monitor ) throws GM_Exception, CoreException
   {
-    Assert.throwIAEOnNullParam( envToVisit, "envToVisit" ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( surfacePatchVisitor, "surfacePatchVisitor" ); //$NON-NLS-1$
-    // TODO; export the whole env at once
-    final Coordinate max = JTSAdapter.export( envToVisit.getMax() );
-    final Coordinate min = JTSAdapter.export( envToVisit.getMin() );
-    final Envelope jtsEnv = new Envelope( min, max );
-    final List< ? > triToVisit = m_triangles.query( jtsEnv );
-
-    monitor.beginTask( "", triToVisit.size() ); //$NON-NLS-1$
-
-    final IProgressMonitor nullMonitor = new NullProgressMonitor(); // we reuse the same null-monitor here to avoid
-    // production of thousands of sub-monitor, that do
-    // nothing...
-    for( final Object tri : triToVisit )
-    {
-      ((TriangleData) tri).acceptSurfacePatches( envToVisit, surfacePatchVisitor, nullMonitor );
-      ProgressUtilities.worked( monitor, 1 );
-    }
+    m_surface.acceptSurfacePatches( envToVisit, surfacePatchVisitor, monitor );
   }
 
   @Override
   public double getMaxElevation( )
   {
-    return m_maxElevation == -Double.MAX_VALUE ? Double.NaN : m_maxElevation;
+    return m_minMax == null ? Double.NaN : m_minMax.getMinimum().doubleValue();
   }
 
   @Override
   public double getMinElevation( )
   {
-    return m_minElevation == Double.MAX_VALUE ? Double.NaN : m_minElevation;
+    return m_minMax == null ? Double.NaN : m_minMax.getMaximum().doubleValue();
   }
 }
