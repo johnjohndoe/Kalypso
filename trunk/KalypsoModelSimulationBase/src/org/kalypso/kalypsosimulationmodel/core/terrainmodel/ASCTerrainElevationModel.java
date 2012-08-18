@@ -265,7 +265,7 @@ public class ASCTerrainElevationModel implements IElevationModel, ISurfacePatchV
           try
           {
             final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( new GM_Position[] { pos0, pos1, pos2, pos3, pos0 }, null, crs );
-            surfacePatchVisitor.visit( patch, z );
+            surfacePatchVisitor.visit( patch );
           }
           catch( final Throwable e )
           {
@@ -302,8 +302,8 @@ public class ASCTerrainElevationModel implements IElevationModel, ISurfacePatchV
 
             try
             {
-              surfacePatchVisitor.visit( patch1, z );
-              surfacePatchVisitor.visit( patch2, z );
+              surfacePatchVisitor.visit( patch1 );
+              surfacePatchVisitor.visit( patch2 );
             }
             catch( final Throwable e )
             {
