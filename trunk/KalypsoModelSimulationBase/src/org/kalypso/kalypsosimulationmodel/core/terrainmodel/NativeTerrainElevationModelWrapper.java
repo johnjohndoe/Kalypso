@@ -82,6 +82,16 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Override
+  public void dispose( )
+  {
+    if( m_elevationProvider != null )
+    {
+      m_elevationProvider.dispose();
+      m_elevationProvider = null;
+    }
+  }
+
   public IElevationModel getElevationProvider( )
   {
     if( m_elevationProvider != null )

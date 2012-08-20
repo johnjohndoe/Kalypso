@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
 
 /**
  * An {@link IElevationProvider} based on an hmo file
- * 
+ *
  * @author Patrice Congo
  * @author Madanagopal
  */
@@ -82,6 +82,11 @@ public class HMOTerrainElevationModel implements IElevationModel, ISurfacePatchV
   public HMOTerrainElevationModel( final URL hmoFileURL ) throws CoreException, GM_Exception
   {
     parseFile( hmoFileURL );
+  }
+
+  @Override
+  public void dispose( )
+  {
   }
 
   private final void parseFile( final URL hmoFileURL ) throws CoreException, GM_Exception
