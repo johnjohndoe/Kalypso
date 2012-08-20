@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
 
 /**
  * An {@link IElevationProvider} based on an hmo file
- *
+ * 
  * @author Patrice Congo
  * @author Madanagopal
  */
@@ -86,7 +86,9 @@ public class HMOTerrainElevationModel implements IElevationModel, ISurfacePatchV
 
   private final void parseFile( final URL hmoFileURL ) throws CoreException, GM_Exception
   {
-    final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter();
+    final String sourceSrs = m_crs;
+    // TODO: It does not transform anything. The read data will be in the source coordinate system.
+    final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter( sourceSrs );
     m_surface = converter.convert( hmoFileURL, new NullProgressMonitor() );
 
     /* Determine min/max */
