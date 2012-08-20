@@ -51,6 +51,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
+import com.bce.gis.io.zweidm.IPolygonWithName;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.index.ItemVisitor;

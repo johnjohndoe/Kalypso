@@ -44,6 +44,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.bce.gis.io.zweidm.IPolygonWithName;
+import com.bce.gis.io.zweidm.ISmsModel;
+import com.bce.gis.io.zweidm.SmsElement;
+
 /**
  * @author Gernot Belger
  */
@@ -51,9 +55,9 @@ public class SmsConverter
 {
   private final Collection<ISmsConversionTarget> m_targets = new ArrayList<ISmsConversionTarget>();
 
-  private final ISMSModel m_model;
+  private final ISmsModel m_model;
 
-  public SmsConverter( final ISMSModel model )
+  public SmsConverter( final ISmsModel model )
   {
     m_model = model;
   }

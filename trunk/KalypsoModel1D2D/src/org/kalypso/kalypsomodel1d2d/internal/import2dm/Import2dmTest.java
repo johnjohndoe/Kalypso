@@ -11,6 +11,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.bce.gis.io.zweidm.ISmsModel;
+import com.bce.gis.io.zweidm.SmsParser;
+
 /**
  * @author Thomas Jung
  */
@@ -46,14 +49,14 @@ public class Import2dmTest
     {
       final File inputFile = input[j];
 
-      final SMSParser parser = new SMSParser( sourceSrid );
+      final SmsParser parser = new SmsParser( sourceSrid );
 
       final URL url =  inputFile.toURI().toURL();
       final IStatus parseStatus = parser.parse( url, new NullProgressMonitor() );
 
       System.out.println( parseStatus );
 
-      final ISMSModel model = parser.getModel();
+      final ISmsModel model = parser.getModel();
       final SmsConverter converter = new SmsConverter( model );
 
       final File outputGmlFile = new File( outgml[j] );

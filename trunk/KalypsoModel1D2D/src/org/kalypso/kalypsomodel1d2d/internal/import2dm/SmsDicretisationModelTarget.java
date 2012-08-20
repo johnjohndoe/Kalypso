@@ -58,6 +58,8 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
+import com.bce.gis.io.zweidm.IPolygonWithName;
+
 /**
  * @author Thomas Jung
  * @author Gernot Belger
