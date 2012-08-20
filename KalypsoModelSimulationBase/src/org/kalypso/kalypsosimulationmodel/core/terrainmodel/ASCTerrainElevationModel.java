@@ -120,6 +120,11 @@ public class ASCTerrainElevationModel implements IElevationModel, ISurfacePatchV
     parse( ascFileURL.openStream() );
   }
 
+  @Override
+  public void dispose( )
+  {
+  }
+
   private void parse( final InputStream inputStream )
   {
     BufferedReader br = null;

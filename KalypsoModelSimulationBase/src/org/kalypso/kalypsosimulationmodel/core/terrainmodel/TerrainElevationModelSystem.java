@@ -72,6 +72,13 @@ public class TerrainElevationModelSystem extends Feature_Impl implements ITerrai
   }
 
   @Override
+  public void dispose( )
+  {
+    for( final ITerrainElevationModel elevationModel : m_terrainElevationModels )
+      elevationModel.dispose();
+  }
+
+  @Override
   public IFeatureBindingCollection<ITerrainElevationModel> getTerrainElevationModels( )
   {
     return m_terrainElevationModels;
