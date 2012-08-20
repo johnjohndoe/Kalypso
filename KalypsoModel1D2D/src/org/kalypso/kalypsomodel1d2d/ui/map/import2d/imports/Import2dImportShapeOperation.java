@@ -54,8 +54,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.internal.import2dm.IPolygonWithName;
-import org.kalypso.kalypsomodel1d2d.internal.import2dm.PolygonWithName;
 import org.kalypso.kalypsomodel1d2d.ui.map.import2d.Import2dElementsData;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
@@ -65,6 +63,8 @@ import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.tools.SHP2JTS;
 
+import com.bce.gis.io.zweidm.IPolygonWithName;
+import com.bce.gis.io.zweidm.PolygonWithName;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;

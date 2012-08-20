@@ -51,12 +51,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.kalypsomodel1d2d.internal.import2dm.IPolygonWithName;
-import org.kalypso.kalypsomodel1d2d.internal.import2dm.ISMSModel;
-import org.kalypso.kalypsomodel1d2d.internal.import2dm.SMSParser;
 import org.kalypso.kalypsomodel1d2d.internal.import2dm.SmsCollectorTarget;
 import org.kalypso.kalypsomodel1d2d.internal.import2dm.SmsConverter;
 import org.kalypso.kalypsomodel1d2d.ui.map.import2d.Import2dElementsData;
+
+import com.bce.gis.io.zweidm.IPolygonWithName;
+import com.bce.gis.io.zweidm.ISmsModel;
+import com.bce.gis.io.zweidm.SmsParser;
 
 /**
  * @author Gernot Belger
@@ -85,7 +86,7 @@ public class Import2dImport2dmOperation extends AbstractImport2DImportOperation
   @Override
   protected Pair<IStatus, IPolygonWithName[]> readFileData( final File importFile, final int sourceSrid, final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    final SMSParser parser = new SMSParser( sourceSrid );
+    final SmsParser parser = new SmsParser( sourceSrid );
 
     try
     {
@@ -95,7 +96,7 @@ public class Import2dImport2dmOperation extends AbstractImport2DImportOperation
       if( parseStatus.matches( IStatus.ERROR ) )
         return new ImmutablePair<IStatus, IPolygonWithName[]>( parseStatus, null );
 
-      final ISMSModel model = parser.getModel();
+      final ISmsModel model = parser.getModel();
       final SmsConverter converter = new SmsConverter( model );
 
       final SmsCollectorTarget target = new SmsCollectorTarget();

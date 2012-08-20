@@ -42,7 +42,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.kalypsomodel1d2d.internal.import2dm.IPolygonWithName;
+
+import com.bce.gis.io.zweidm.IPolygonWithName;
 
 /**
  * Data modle for {@link Import2dElementsWidget}

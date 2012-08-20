@@ -60,6 +60,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 import org.kalypsodeegree_impl.model.sort.SplitSortSpatialIndex;
 
+import com.bce.gis.io.zweidm.IPolygonWithName;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.index.ItemVisitor;

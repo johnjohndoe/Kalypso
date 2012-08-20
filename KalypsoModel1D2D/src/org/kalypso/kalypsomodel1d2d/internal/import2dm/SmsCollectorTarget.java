@@ -43,6 +43,8 @@ package org.kalypso.kalypsomodel1d2d.internal.import2dm;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.bce.gis.io.zweidm.IPolygonWithName;
+
 /**
  * @author Thomas Jung
  * @author Gernot Belger

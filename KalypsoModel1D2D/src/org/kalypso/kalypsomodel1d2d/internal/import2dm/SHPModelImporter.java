@@ -52,6 +52,7 @@ import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.shp.SHPException;
 import org.kalypso.shape.tools.JTS2SHP;
 
+import com.bce.gis.io.zweidm.IPolygonWithName;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**

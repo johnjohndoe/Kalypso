@@ -49,9 +49,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.kalypsomodel1d2d.internal.import2dm.IPolygonWithName;
 import org.kalypso.kalypsomodel1d2d.ui.map.import2d.Import2dElementsData;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.bce.gis.io.zweidm.IPolygonWithName;
 
 /**
  * @author Gernot Belger
