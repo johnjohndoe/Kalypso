@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -22,7 +23,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -34,7 +35,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  * 
  * @author Holger Albert
  */
-public class CreateProfileFromDEMWidget extends DeprecatedMouseWidget
+public class CreateProfileFromDEMWidget extends AbstractWidget
 {
   private static final String STR_DEFAULT_TOOLTIP = Messages.getString( "CreateProfileFromDEMWidget_0" ) + Messages.getString( "CreateProfileFromDEMWidget_1" ) + Messages.getString( "CreateProfileFromDEMWidget_2" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
@@ -185,33 +186,38 @@ public class CreateProfileFromDEMWidget extends DeprecatedMouseWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#mouseClicked(java.awt.event.MouseEvent)
    */
   @Override
-  public void doubleClickedLeft( final Point p )
+  public void mouseClicked( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 || event.getClickCount() != 2 )
+      return;
+
     if( m_strategy == null )
     {
       activate( getCommandTarget(), getMapPanel() );
+      return;
     }
-    else
-    {
-      m_strategy.run();
-    }
+
+    m_strategy.run();
   }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#leftPressed(java.awt.Point)
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#mousePressed(java.awt.event.MouseEvent)
    */
   @Override
-  public void leftPressed( final Point p )
+  public void mousePressed( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+
     if( m_strategy == null )
       return;
 
     try
     {
-      final GM_Point pos = MapUtilities.transform( getMapPanel(), p );
+      final GM_Point pos = MapUtilities.transform( getMapPanel(), event.getPoint() );
       m_strategy.addPoint( pos );
       repaintMap();
     }
@@ -224,10 +230,13 @@ public class CreateProfileFromDEMWidget extends DeprecatedMouseWidget
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#mouseMoved(java.awt.event.MouseEvent)
+   */
   @Override
-  public void moved( final Point p )
+  public void mouseMoved( final MouseEvent event )
   {
-    m_currentPoint = p;
+    m_currentPoint = event.getPoint();
 
     repaintMap();
   }
