@@ -43,6 +43,7 @@ package org.kalypso.model.flood.ui.map;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Date;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,6 +53,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.gml.processes.tin.GmlTriangulatedSurfaceConverter;
 import org.kalypso.gml.processes.tin.HmoTriangulatedSurfaceConverter;
 import org.kalypso.gml.processes.tin.ShapeTriangulatedSurfaceConverter;
@@ -72,7 +74,8 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
- * Updates the data of some tin-references. I.e. re-reads the original tin and copies the data into the reference.
+ * Updates the data of some tin-references. I.e. re-reads the original tin and copies the data into the reference.<br/>
+ * TODO: It does not transform anything. The read data will be in the source coordinate system.
  * 
  * @author Gernot Belger
  * 
@@ -203,7 +206,9 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     final URL sourceLocation = ref.getSourceLocation();
 
     /* Convert to triangulated surface. */
-    final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter();
+    final Properties properties = PropertiesUtilities.collectProperties( sourceLocation.getQuery(), "&", "=", null ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String sourceSrs = properties.getProperty( "srs" ); //$NON-NLS-1$
+    final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter( sourceSrs );
     final GM_TriangulatedSurface gmSurface = converter.convert( sourceLocation, new SubProgressMonitor( monitor, 50 ) );
 
     /* Monitor. */
@@ -231,7 +236,9 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     final URL sourceLocation = ref.getSourceLocation();
 
     /* Convert to triangulated surface. */
-    final ShapeTriangulatedSurfaceConverter converter = new ShapeTriangulatedSurfaceConverter();
+    final Properties properties = PropertiesUtilities.collectProperties( sourceLocation.getQuery(), "&", "=", null ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String sourceSrs = properties.getProperty( "srs" ); //$NON-NLS-1$
+    final ShapeTriangulatedSurfaceConverter converter = new ShapeTriangulatedSurfaceConverter( sourceSrs );
     final GM_TriangulatedSurface gmSurface = converter.convert( sourceLocation, new SubProgressMonitor( monitor, 50 ) );
 
     /* Monitor. */
