@@ -172,6 +172,9 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
       m_editor = new ElementGeometryEditor( getMapPanel(), m_nodeTheme );
     else
       m_editor = null;
+
+    /* show tooltip after activation, directly clean after ESC */
+    repaintMap();
   }
 
   @Override
@@ -184,7 +187,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_editor == null )
-      return;   
+      return;
 
     // REMARK: the first point must always snap: we want a node!
     // the second point never snaps, makes no real sense, because it is not possible to collapse elements by this action
@@ -316,8 +319,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
       reinit();
     else if( e.getKeyCode() == KeyEvent.VK_V )
       validateModel();
-    else
-      super.keyPressed( e );
+
   }
 
   private void validateModel( )
