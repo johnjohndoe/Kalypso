@@ -79,6 +79,8 @@ public class ExtendProfileJob extends AbstractDemProfileJob
 
   private int m_insertSign = 0;
 
+  private final double m_digitalizeDistance;
+
   private final SLDPainter2 m_profileLinePainter;
 
   private final SLDPainter2 m_grabPointPainter;
@@ -87,10 +89,11 @@ public class ExtendProfileJob extends AbstractDemProfileJob
 
   private ExtendProfileGrabber m_info;
 
-  public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final IMapPanel mapPanel, final ICoverageCollection coverages, final double simplifyDistance, final IKalypsoFeatureTheme[] profileThemes )
+  public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final IMapPanel mapPanel, final ICoverageCollection coverages, final double simplifyDistance, final double digitalizeDistance, final IKalypsoFeatureTheme[] profileThemes )
   {
     super( Messages.getString( "ExtendProfileJob_0" ), widget, mapPanel, coverages, simplifyDistance, profileThemes ); //$NON-NLS-1$
 
+    m_digitalizeDistance = digitalizeDistance;
     m_profileLinePainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/selected.profile.sld" ) } ); //$NON-NLS-1$
     m_grabPointPainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/selected.point.sld" ) } ); //$NON-NLS-1$
   }
@@ -129,8 +132,7 @@ public class ExtendProfileJob extends AbstractDemProfileJob
 
   private Coordinate[] fetchPoints( final GM_Curve curve, final RichCoverageCollection richCoverages )
   {
-    final double offset = 0.01;
-    final Coordinate[] newPoints = richCoverages.extractPoints( curve, offset );
+    final Coordinate[] newPoints = richCoverages.extractPoints( curve, m_digitalizeDistance );
     richCoverages.dispose();
     return newPoints;
   }
