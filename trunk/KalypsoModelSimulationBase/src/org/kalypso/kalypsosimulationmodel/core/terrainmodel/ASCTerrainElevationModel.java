@@ -228,6 +228,10 @@ public class ASCTerrainElevationModel implements IElevationModel, ISurfacePatchV
   @Override
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws GM_Exception
   {
+    // FIXME: painting a grid with the triangle stuff is NOT appropriate! -> makes never sense, because a grid cell has
+    // only onse single value; so splitting up
+    // into triangle parts according to color classes is slow and makes absolutely no sense!
+
     final int iProportional = (int) (Math.min( envToVisit.getHeight(), envToVisit.getWidth()) /( cellSize * PROPORTIONAL_FACTOR ));
     final int iShift = ( Math.max( MIN_FINE, iProportional ) );
     double dShiftMonitor = iShift;
