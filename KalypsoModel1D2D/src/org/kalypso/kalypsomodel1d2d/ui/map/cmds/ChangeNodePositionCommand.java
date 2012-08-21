@@ -77,11 +77,8 @@ public class ChangeNodePositionCommand implements IFeatureChangeCommand
     this( model, nodeToChange, createPoint( elevation, nodeToChange.getPoint() ), fireEventsForDependendElements );
   }
 
-  public static GM_Point createPoint( final double elevation, final GM_Point pos )
+  static GM_Point createPoint( final double elevation, final GM_Point pos )
   {
-    if( Double.isNaN( elevation ) )
-      return GeometryFactory.createGM_Point( pos.getX(), pos.getY(), pos.getCoordinateSystem() );
-
     return GeometryFactory.createGM_Point( pos.getX(), pos.getY(), elevation, pos.getCoordinateSystem() );
   }
 
