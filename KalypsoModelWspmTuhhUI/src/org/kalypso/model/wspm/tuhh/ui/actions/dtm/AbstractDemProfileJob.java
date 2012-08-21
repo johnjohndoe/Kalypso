@@ -10,13 +10,13 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.grid.RichCoverageCollection;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.coverage.RichCoverageCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -155,7 +155,7 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
 
   public IStatus openNoPointsWarning( )
   {
-    final String message = Messages.getString("AbstractDemProfileJob.0"); //$NON-NLS-1$
+    final String message = Messages.getString( "AbstractDemProfileJob.0" ); //$NON-NLS-1$
     MessageDialog.openWarning( getDisplay().getActiveShell(), getLabel(), message );
     return Status.OK_STATUS;
   }

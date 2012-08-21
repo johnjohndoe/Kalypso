@@ -9,7 +9,6 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.grid.RichCoverageCollection;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -26,6 +25,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypsodeegree.model.coverage.RichCoverageCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -90,14 +90,14 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
 
   private IProfil createProfile( final RichCoverageCollection richCoverages, final GM_Curve curve, final String profileType ) throws Exception
   {
-    final Coordinate[] gridCrds = richCoverages.extractPoints( curve );
+    final double offset = 0.01;
+    final Coordinate[] gridCrds = richCoverages.extractPoints( curve, offset );
     richCoverages.dispose();
     if( ArrayUtils.isEmpty( gridCrds ) )
       return null;
 
-    // TODO: would be nice to simplify the coords, but not the profile afterwards. We need Douglas-Peucker for
-    // coordinates (with distance by z!).
-
+    // TODO: Would be nice to simplify the coords, but not the profile afterwards.
+    // TODO: We need Douglas-Peucker for coordinates (with distance by z!).
     final IProfil profile = CoverageProfile.createProfile( profileType, gridCrds, curve.getCoordinateSystem(), getSimplifyDistance() );
     if( profile.getPoints().length == 0 )
       return CoverageProfile.convertLinestringToEmptyProfile( curve, profileType );

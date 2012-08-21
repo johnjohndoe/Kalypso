@@ -48,7 +48,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.grid.RichCoverageCollection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -60,6 +59,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.coverage.RichCoverageCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -98,16 +98,16 @@ public class ExtendProfileJob extends AbstractDemProfileJob
   @Override
   protected IStatus runJob( final GM_Curve curve, final RichCoverageCollection richCoverages ) throws Exception
   {
+    /* Need the info. */
     if( m_info == null )
       return Status.OK_STATUS;
 
-    // fetch points from DTM
-    final Coordinate[] newPoints = richCoverages.extractPoints( curve );
-    richCoverages.dispose();
+    /* Fetch points from DTM/TIN. */
+    final Coordinate[] newPoints = fetchPoints( curve, richCoverages );
     if( ArrayUtils.isEmpty( newPoints ) )
       return openNoPointsWarning();
 
-    // add line into profile
+    /* Add line into profile. */
     final IProfileFeature profile = m_info.getProfile();
     final IProfil profil = profile.getProfil();
     CoverageProfile.extendPoints( profil, m_insertSign, newPoints, getSimplifyDistance() );
@@ -115,17 +115,24 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     final TuhhReach reach = m_info.getReach();
     if( reach != null )
     {
-      /*
-       * If the reach is not null, we have a reach theme that does not get updated by the event on the profile itself.
-       * We need to fire an event on the reach itself.
-       */
+      /* If the reach is not null, we have a reach theme that does not get updated by the event on the profile itself. */
+      /* We need to fire an event on the reach itself. */
       final GMLWorkspace workspace = reach.getWorkspace();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reach, (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     }
 
+    /* Make the workspace dirty. */
     m_info.getWorkspace().postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
+  }
+
+  private Coordinate[] fetchPoints( final GM_Curve curve, final RichCoverageCollection richCoverages )
+  {
+    final double offset = 0.01;
+    final Coordinate[] newPoints = richCoverages.extractPoints( curve, offset );
+    richCoverages.dispose();
+    return newPoints;
   }
 
   @Override
