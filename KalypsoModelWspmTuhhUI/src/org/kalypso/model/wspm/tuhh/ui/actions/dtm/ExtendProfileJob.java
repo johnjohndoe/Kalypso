@@ -51,7 +51,6 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -62,7 +61,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.coverage.RichCoverageCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -115,13 +114,13 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     final IProfil profil = profile.getProfil();
     CoverageProfile.extendPoints( profil, m_insertSign, newPoints, getSimplifyDistance() );
 
-    final TuhhReach reach = m_info.getReach();
-    if( reach != null )
+    final Feature profileOwner = m_info.getProfileOwner();
+    if( profileOwner != null )
     {
       /* If the reach is not null, we have a reach theme that does not get updated by the event on the profile itself. */
       /* We need to fire an event on the reach itself. */
-      final GMLWorkspace workspace = reach.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reach, (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      final GMLWorkspace workspace = profileOwner.getWorkspace();
+      workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, new Feature[] { profileOwner } ) );
     }
 
     /* Make the workspace dirty. */

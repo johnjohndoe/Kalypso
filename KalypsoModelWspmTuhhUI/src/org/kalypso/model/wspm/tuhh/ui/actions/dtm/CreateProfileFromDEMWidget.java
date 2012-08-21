@@ -193,27 +193,18 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     return (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#mouseClicked(java.awt.event.MouseEvent)
-   */
   @Override
   public void mouseClicked( final MouseEvent event )
   {
     if( event.getButton() != MouseEvent.BUTTON1 || event.getClickCount() != 2 )
       return;
 
-    if( m_strategy == null )
-    {
-      activate( getCommandTarget(), getMapPanel() );
-      return;
-    }
+    if( m_strategy != null )
+      m_strategy.run();
 
-    m_strategy.run();
+    activate( getCommandTarget(), getMapPanel() );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#mousePressed(java.awt.event.MouseEvent)
-   */
   @Override
   public void mousePressed( final MouseEvent event )
   {
@@ -238,9 +229,6 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#mouseMoved(java.awt.event.MouseEvent)
-   */
   @Override
   public void mouseMoved( final MouseEvent event )
   {
