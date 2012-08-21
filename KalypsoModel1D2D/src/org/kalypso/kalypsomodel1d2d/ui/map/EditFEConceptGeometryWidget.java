@@ -183,8 +183,8 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     event.consume();
 
     final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return;
+    if( mapPanel == null || m_editor == null )
+      return;   
 
     // REMARK: the first point must always snap: we want a node!
     // the second point never snaps, makes no real sense, because it is not possible to collapse elements by this action
