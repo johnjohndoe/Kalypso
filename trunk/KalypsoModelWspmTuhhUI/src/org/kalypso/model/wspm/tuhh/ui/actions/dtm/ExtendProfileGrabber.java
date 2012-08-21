@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -65,6 +66,8 @@ public class ExtendProfileGrabber
   private IProfileFeature m_grabbedProfile;
 
   private TuhhReach m_reach;
+
+  private TuhhReachProfileSegment m_reachSegment;
 
   public ExtendProfileGrabber( final IKalypsoFeatureTheme theme, final double snapRadius )
   {
@@ -95,8 +98,17 @@ public class ExtendProfileGrabber
       return null;
 
     m_reach = (TuhhReach) nearest.getOwner();
+    m_reachSegment = nearest;
 
     return nearest.getProfileMember();
+  }
+
+  /**
+   * The element that holds the profile (e.g. the ReachSegment)
+   */
+  public Feature getProfileOwner( )
+  {
+    return m_reachSegment;
   }
 
   public IProfileFeature getProfile( )
