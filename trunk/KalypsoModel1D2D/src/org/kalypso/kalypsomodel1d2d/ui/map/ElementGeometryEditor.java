@@ -107,7 +107,7 @@ public class ElementGeometryEditor
     m_nodeTheme = nodeTheme;
   }
 
-  public void addElements( final IFE1D2DElement< ? , ? >[] elements )
+  private void addElements( final IFE1D2DElement< ? , ? >[] elements )
   {
     for( final IFE1D2DElement< ? , ? > element : elements )
     {
@@ -117,21 +117,16 @@ public class ElementGeometryEditor
 
   /**
    * REMARK: No validity check is done here. Call {@link #checkNewNode(Object)} before a new node is added.
-   *
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
-  public void finish( ) throws Exception
+  public void finish( final IFEDiscretisationModel1d2d discModel ) throws Exception
   {
-    final IFEDiscretisationModel1d2d discModel = Util.getModel( IFEDiscretisationModel1d2d.class.getName() );
-    final GM_Point newPosition = ChangeNodePositionCommand.createPoint( m_startNode.getPoint().getZ(), m_endPoint );
+    final double z = m_startNode.getPoint().getZ();
+
+    final GM_Point newPosition = GeometryFactory.createGM_Point( m_endPoint.getX(), m_endPoint.getY(), z, m_endPoint.getCoordinateSystem() );
     final ICommand changeCommand = new ChangeNodePositionCommand( discModel, m_startNode, newPosition, true );
     Util.postCommand( IFEDiscretisationModel1d2d.class, changeCommand );
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
     if( m_startNode != null )
@@ -349,8 +344,8 @@ public class ElementGeometryEditor
           posList.add( GeometryFactory.createGM_Position( x, y ) );
       }
     }
-    final GM_Position[] poses = posList.toArray( new GM_Position[posList.size()] );
-    return poses;
+
+    return posList.toArray( new GM_Position[posList.size()] );
   }
 
   public IFE1D2DNode< ? > getStartNode( )
@@ -398,5 +393,4 @@ public class ElementGeometryEditor
   {
     return m_valid;
   }
-
 }

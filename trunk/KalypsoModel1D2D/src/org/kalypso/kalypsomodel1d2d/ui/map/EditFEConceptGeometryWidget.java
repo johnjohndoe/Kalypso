@@ -46,6 +46,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +59,6 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.internal.validation.ValidateDiscretisationOperation;
@@ -75,13 +75,13 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -99,12 +99,12 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * </ul>
  * This widget rely on the assumption that the map to edit has layer holding feature with the QName
  * {@link Kalypso1D2DSchemaConstants#WB1D2D_F_NODE}
- * 
+ *
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  * @author Thomas Jung
  */
-public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
+public class EditFEConceptGeometryWidget extends AbstractWidget
 {
   /** Snapping radius in screen-pixels. */
   public static final int SNAPPING_RADIUS = 20;
@@ -123,36 +123,28 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
 
   private PointSnapper m_pointSnapper;
 
-  private IFE1D2DNode m_snapNode;
-
-  private boolean m_snappingActive;
-
   private ElementGeometryEditor m_editor;
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
   private final ToolTipRenderer m_warningRenderer = new ToolTipRenderer();
 
-  private boolean m_warning;
-
-  private Map<String, IFlowRelationship> m_mapElementWithFlowRelationship;
-
   public EditFEConceptGeometryWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
+    final String tooltipMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.3" ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( tooltipMsg );
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
+
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
     super.activate( commandPoster, mapPanel );
+
     m_nodeTheme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     m_discModel = UtilMap.findFEModelTheme( mapPanel );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
@@ -165,87 +157,117 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
 
     final FeatureList featureList = m_flowTheme.getFeatureList();
     final Feature parentFeature = featureList.getOwner();
+
     m_flowRelModel = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
     m_flowWorkspace = m_flowTheme.getWorkspace();
-    reinit();
-    m_snappingActive = true;
 
+    reinit();
   }
 
   private void reinit( )
   {
     m_editor = null;
 
-    m_mapElementWithFlowRelationship = new HashMap<String, IFlowRelationship>();
-
     if( m_nodeTheme != null )
       m_editor = new ElementGeometryEditor( getMapPanel(), m_nodeTheme );
-
-    m_snappingActive = true;
+    else
+      m_editor = null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#leftPressed(java.awt.Point)
-   */
   @Override
-  public void leftClicked( final Point p )
+  public void mouseMoved( final MouseEvent event )
   {
-    final Object newNode = checkNewNode( p );
-    if( newNode instanceof IFE1D2DNode )
-      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
-    else
-      m_currentMapPoint = p;
-
-    if( newNode == null )
-      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
-    else
-      getMapPanel().setCursor( Cursor.getDefaultCursor() );
-
-    if( p == null )
+    if( event.getButton() != 0 )
       return;
 
-    final IMapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaintMap();
+    event.consume();
+
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    // REMARK: the first point must always snap: we want a node!
+    // the second point never snaps, makes no real sense, because it is not possible to collapse elements by this action
+    final boolean snappingActive = m_editor.getStartNode() == null;
+
+    final GM_Point snappedPoint = snapToNode( mapPanel, event.getPoint(), snappingActive );
+    if( snappedPoint == null )
+    {
+      mapPanel.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
+      return;
+    }
+
+    m_currentMapPoint = MapUtilities.retransform( mapPanel, snappedPoint );
+
+    mapPanel.setCursor( Cursor.getDefaultCursor() );
+
+    repaintMap();
+  }
+
+  @Override
+  public void mousePressed( final MouseEvent event )
+  {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+
+    event.consume();
+
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    final boolean snappingActive = !event.isShiftDown();
+    final GM_Point snappedPoint = snapToNode( mapPanel, event.getPoint(), snappingActive );
+    if( snappedPoint == null )
+    {
+      mapPanel.setCursor( Cursor.getDefaultCursor() );
+      return;
+    }
+
+    m_currentMapPoint = MapUtilities.retransform( mapPanel, snappedPoint );
+
+    mapPanel.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
 
     if( m_editor.getStartNode() == null )
     {
-      final GM_Point currentPosition = MapUtilities.transform( panel, p );
-      final double snapRadius = MapUtilities.calculateWorldDistance( panel, currentPosition, SNAPPING_RADIUS );
-      m_editor.setStartNode( m_discModel.findNode( currentPosition, snapRadius ) );
-      collectFlowrelationsInformation();
+      final GM_Point currentPosition = MapUtilities.transform( mapPanel, event.getPoint() );
+      final double snapRadius = MapUtilities.calculateWorldDistance( mapPanel, currentPosition, SNAPPING_RADIUS );
+      final IFE1D2DNode< ? > startNode = m_discModel.findNode( currentPosition, snapRadius );
+      m_editor.setStartNode( startNode );
     }
     else
     {
       if( m_editor.isValid() )
-      {
-        try
-        {
-          m_editor.finish();
-          setNewPositionsOfFlowrelations();
-          getMapPanel().repaintMap();
-          reinit();
-
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
-        finally
-        {
-          repaintMap();
-        }
-      }
+        doMoveNode();
     }
-    super.leftPressed( p );
+
+    repaintMap();
   }
 
-  private void collectFlowrelationsInformation( )
+  private void doMoveNode( )
   {
-    final IFE1D2DNode startNode = m_editor.getStartNode();
-    if( startNode == null )
-      return;
+    try
+    {
+      final IFE1D2DNode startNode = m_editor.getStartNode();
+      if( startNode == null )
+        return;
+
+      final Map<String, IFlowRelationship> elementWithFlowRelationship = collectFlowrelationsInformation( startNode );
+      m_editor.finish( m_discModel );
+      setNewPositionsOfFlowrelations( elementWithFlowRelationship );
+
+      reinit();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+  }
+
+  private Map<String, IFlowRelationship> collectFlowrelationsInformation( final IFE1D2DNode startNode )
+  {
+    final Map<String, IFlowRelationship> elementWithFlowRelationship = new HashMap<String, IFlowRelationship>();
 
     for( final IFE1D2DElement element : startNode.getElements() )
     {
@@ -254,23 +276,25 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
         final IFlowRelationship lBuilding = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) element, m_flowRelModel );
         if( lBuilding != null )
         {
-          m_mapElementWithFlowRelationship.put( element.getId(), lBuilding );
+          elementWithFlowRelationship.put( element.getId(), lBuilding );
         }
       }
     }
+
+    return elementWithFlowRelationship;
   }
 
-  private void setNewPositionsOfFlowrelations( )
+  private void setNewPositionsOfFlowrelations( final Map<String, IFlowRelationship> elementWithFlowRelationship )
   {
     for( final IFE1D2DElement element : m_editor.getStartNode().getElements() )
     {
       if( element instanceof IPolyElement )
       {
-        final IFlowRelationship lBuilding = m_mapElementWithFlowRelationship.get( element.getId() );
+        final IFlowRelationship lBuilding = elementWithFlowRelationship.get( element.getId() );
         if( lBuilding != null )
         {
           final GM_Position lFlowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( element );
-          final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+          final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
           final ChangeFeatureCommand lChangeFeatureCommand = new ChangeFeatureCommand( lBuilding, lBuilding.getFeatureType().getProperty( IFlowRelationship.QNAME_PROP_POSITION ), GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
           try
           {
@@ -285,16 +309,11 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.SnapToGeometryWidget#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
     if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
       reinit();
-    else if( e.getKeyCode() == KeyEvent.VK_SHIFT )
-      m_snappingActive = false;
     else if( e.getKeyCode() == KeyEvent.VK_V )
       validateModel();
     else
@@ -305,47 +324,32 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
   {
     final Display display = PlatformUI.getWorkbench().getDisplay();
     final IKalypsoFeatureTheme discModelTheme = UtilMap.findEditableTheme( getMapPanel(), IFE1D2DElement.QNAME );
-    
+
     final ValidateDiscretisationOperation operation = new ValidateDiscretisationOperation( m_discModel );
-    
+
     display.syncExec( new Runnable()
     {
       @Override
       public void run( )
       {
         final Shell shell = display.getActiveShell();
-        
+
         final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-        
-        new StatusDialog( shell, status, "Valdiation" ).open();
-        
+
+        StatusDialog.open( shell, status, "Valdiation" );
+
         if( status.isOK() )
           return;
-        
+
         if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Validation", "Fix validation problems now?" ) )
           return;
-        
+
         final ICommand command = operation.getValidationFix();
         discModelTheme.postCommand( command, null );
       }
     } );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
-   */
-  @Override
-  public void keyReleased( final KeyEvent e )
-  {
-    if( e.getKeyCode() == KeyEvent.VK_SHIFT )
-      m_snappingActive = true;
-
-    super.keyReleased( e );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.SnapToGeometryWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -366,97 +370,47 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
       /* Paint as linestring. */
       g.drawPolygon( arrayX, arrayY, arrayX.length );
       UtilMap.drawHandles( g, arrayX, arrayY );
-
-      /* paint the snap */
-      if( m_pointSnapper != null )
-        m_pointSnapper.paint( g );
-
-      /* paint the preview */
-      if( m_editor != null )
-        m_editor.paint( g, projection, m_currentMapPoint );
     }
 
-    super.paint( g );
+    /* paint the snap */
+    if( m_pointSnapper != null )
+      m_pointSnapper.paint( g );
+
+    /* paint the preview */
+    if( m_editor != null )
+      m_editor.paint( g, projection, m_currentMapPoint );
 
     final Rectangle bounds = mapPanel.getScreenBounds();
 
-    String tooltipMsg = ""; //$NON-NLS-1$
-    if( m_snappingActive == true )
-      tooltipMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.3" ); //$NON-NLS-1$
-    else
-      tooltipMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.4" ); //$NON-NLS-1$
-
-    m_toolTipRenderer.setTooltip( tooltipMsg );
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
-    if( m_warning == true )
-      m_warningRenderer.paintToolTip( new Point( 5, bounds.height - 80 ), g, bounds );
-
+    m_warningRenderer.paintToolTip( new Point( 5, bounds.height - 80 ), g, bounds );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#moved(java.awt.Point)
-   */
-  @Override
-  public void moved( final Point p )
+  private GM_Point snapToNode( final IMapPanel mapPanel, final Point p, final boolean snappingActive )
   {
-    final Object newNode = checkNewNode( p );
-    if( newNode instanceof IFE1D2DNode )
-      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
-    else
-      m_currentMapPoint = p;
-
-    if( newNode == null )
-      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
-    else
-      getMapPanel().setCursor( Cursor.getDefaultCursor() );
-
-    if( p == null )
-      return;
-
-    final IMapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaintMap();
-
-    final IKalypsoTheme activeTheme = getActiveTheme();
-    if( activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
-      return;
-
-  }
-
-  private Object checkNewNode( final Point p )
-  {
-    final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return null;
-
     final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
 
-    if( m_snappingActive )
-      m_snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
-
-    final Object newNode = m_snapNode == null ? currentPoint : m_snapNode;
-
-    if( m_editor == null )
+    if( m_pointSnapper == null || m_editor == null )
       return null;
 
+    m_pointSnapper.activate( snappingActive );
+
+    final IFE1D2DNode< ? > snapNode = m_pointSnapper.moved( currentPoint );
+    final GM_Point result = snapNode == null ? currentPoint : snapNode.getPoint();
+    final Object snapObject = snapNode == null ? currentPoint : snapNode;
+
+    // TODO: wrong place to do this!
     if( m_editor.getStartNode() != null )
     {
-      final IStatus status = m_editor.checkNewNode( newNode );
+      final IStatus status = m_editor.checkNewNode( snapObject );
+
       if( status.isOK() )
-        m_warning = false;
+        m_warningRenderer.setTooltip( null );
       else
-      {
-        m_warning = true;
         m_warningRenderer.setTooltip( status.getMessage() );
-      }
-
-      if( status.isOK() )
-        return newNode;
     }
-    else
-      return newNode;
 
-    return null;
+    return result;
   }
 }
