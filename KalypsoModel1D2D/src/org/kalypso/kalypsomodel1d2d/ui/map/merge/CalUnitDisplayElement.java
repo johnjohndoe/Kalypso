@@ -80,10 +80,6 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 
   private DisplayElement m_decoratedElement;
 
-  private boolean m_isHighlighted;
-
-  private boolean m_isSelected;
-
   private static final Color ELEMENT_FILL_COLOR = new Color( 0, 0, 255, 85 );
 
   private static final Color ELEMENT_BORDER_COLOR = Color.BLUE;
@@ -96,32 +92,21 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 
   public CalUnitDisplayElement( final ICalculationUnit calUnit )
   {
-    m_isSelected = false;
-    m_isHighlighted = false;
     m_calculationUnit = calUnit;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#getDecorated()
-   */
   @Override
   public DisplayElement getDecorated( )
   {
     return m_decoratedElement;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#setDecorated(org.kalypsodeegree.graphics.displayelements.DisplayElement)
-   */
   @Override
   public void setDecorated( final DisplayElement decorated )
   {
-    this.m_decoratedElement = decorated;
+    m_decoratedElement = decorated;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getFeature()
-   */
   @Override
   public Feature getFeature( )
   {
@@ -135,47 +120,12 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#isHighlighted()
-   */
-  @Override
-  public boolean isHighlighted( )
-  {
-    if( m_decoratedElement != null )
-    {
-      return m_decoratedElement.isHighlighted();
-    }
-    else
-    {
-      return m_isHighlighted;
-    }
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#isSelected()
-   */
-  @Override
-  public boolean isSelected( )
-  {
-    if( m_decoratedElement != null )
-    {
-      return m_decoratedElement.isSelected();
-    }
-    else
-    {
-      return m_isSelected;
-    }
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
   @Override
   public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
   {
     if( m_calculationUnit == null )
       return;
+
     final GM_Envelope sourceRect = projection.getSourceRect();
     final List<IFENetItem> visibleElements;
     if( m_calculationUnit instanceof ICalculationUnit1D2D )
@@ -188,7 +138,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
       {
         try
         {
-          final GM_Surface surface = (GM_Surface) ((IFENetItem) element).recalculateElementGeometry();
+          final GM_Surface< ? > surface = (GM_Surface< ? >) ((IFENetItem) element).recalculateElementGeometry();
           paintSurface( surface, ELEMENT_FILL_COLOR, (Graphics2D) g, projection, ELEMENT_BORDER_WIDTH );
         }
         catch( final Exception e )
@@ -229,7 +179,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     }
   }
 
-  public static final void paintSurface( final GM_Surface surface, final Color color, final Graphics2D g2d, final GeoTransform projection, final float lineWidth )
+  public static final void paintSurface( final GM_Surface< ? > surface, final Color color, final Graphics2D g2d, final GeoTransform projection, final float lineWidth )
   {
     try
     {
@@ -262,7 +212,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * calculates the Area (image or screen coordinates) where to draw the surface.
    */
-  public static final Area calcTargetCoordinates( final GeoTransform projection, final GM_Surface<GM_SurfacePatch> surface ) throws Exception
+  public static final Area calcTargetCoordinates( final GeoTransform projection, final GM_Surface< ? > surface ) throws Exception
   {
     final float width = 1;
     try
@@ -281,31 +231,12 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
-   */
-  @Override
-  public void setHighlighted( final boolean highlighted )
-  {
-    this.m_isHighlighted = highlighted;
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setSelected(boolean)
-   */
-  @Override
-  public void setSelected( final boolean selected )
-  {
-    this.m_isSelected = selected;
-  }
-
   public static final CalUnitDisplayElement createDisplayElement( final ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" ); //$NON-NLS-1$
     final CalUnitDisplayElement calUnitDisplayElement = new CalUnitDisplayElement( calUnit );
 
     return calUnitDisplayElement;
-
   }
 
   /**

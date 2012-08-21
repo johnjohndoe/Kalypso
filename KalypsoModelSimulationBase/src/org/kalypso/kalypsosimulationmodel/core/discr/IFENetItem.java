@@ -6,5 +6,5 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 public interface IFENetItem extends Feature
 {
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception;
+  GM_Object recalculateElementGeometry( ) throws GM_Exception;
 }
