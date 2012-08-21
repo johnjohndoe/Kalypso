@@ -39,9 +39,13 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 final class CreateNewProfileJob extends AbstractDemProfileJob
 {
-  public CreateNewProfileJob( final CreateProfileFromDEMWidget widget, final IMapPanel mapPanel, final ICoverageCollection coverages, final double simplifyDistance, final IKalypsoFeatureTheme[] profileThemes )
+  private final double m_digitalizeDistance;
+
+  public CreateNewProfileJob( final CreateProfileFromDEMWidget widget, final IMapPanel mapPanel, final ICoverageCollection coverages, final double simplifyDistance, final double digitalizeDistance, final IKalypsoFeatureTheme[] profileThemes )
   {
     super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ), widget, mapPanel, coverages, simplifyDistance, profileThemes ); //$NON-NLS-1$
+
+    m_digitalizeDistance = digitalizeDistance;
   }
 
   @Override
@@ -90,8 +94,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
 
   private IProfil createProfile( final RichCoverageCollection richCoverages, final GM_Curve curve, final String profileType ) throws Exception
   {
-    final double offset = 0.01;
-    final Coordinate[] gridCrds = richCoverages.extractPoints( curve, offset );
+    final Coordinate[] gridCrds = richCoverages.extractPoints( curve, m_digitalizeDistance );
     richCoverages.dispose();
     if( ArrayUtils.isEmpty( gridCrds ) )
       return null;

@@ -9,8 +9,14 @@ import java.awt.event.MouseEvent;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.jface.validators.DoubleInputValidator;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -37,9 +43,9 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public class CreateProfileFromDEMWidget extends AbstractWidget
 {
-  private static final String STR_DEFAULT_TOOLTIP = Messages.getString( "CreateProfileFromDEMWidget_0" ) + Messages.getString( "CreateProfileFromDEMWidget_1" ) + Messages.getString( "CreateProfileFromDEMWidget_2" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
   private static final String SETTINGS_MODE = "mode"; //$NON-NLS-1$
+
+  private static final String SETTINGS_DIGITALIZE_DISTANCE = "digitalize_distance"; //$NON-NLS-1$
 
   private final ToolTipRenderer m_standardTooltip = ToolTipRenderer.createStandardTooltip();
 
@@ -55,6 +61,8 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   private ICreateProfileStrategy m_strategy = null;
 
   private boolean m_strategyExtendProfile = true;
+
+  private double m_digitalizeDistance = 0.01;
 
   public CreateProfileFromDEMWidget( )
   {
@@ -142,9 +150,9 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     final double simplifyDistance = 0.01;
 
     if( m_strategyExtendProfile )
-      return new ExtendProfileJob( this, mapPanel, coverages, simplifyDistance, profileThemes );
+      return new ExtendProfileJob( this, mapPanel, coverages, simplifyDistance, m_digitalizeDistance, profileThemes );
     else
-      return new CreateNewProfileJob( this, mapPanel, coverages, simplifyDistance, profileThemes );
+      return new CreateNewProfileJob( this, mapPanel, coverages, simplifyDistance, m_digitalizeDistance, profileThemes );
   }
 
   private IKalypsoFeatureTheme[] findProfileThemes( final IMapModell model )
@@ -249,21 +257,30 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       return;
 
     if( m_strategy != null )
-    {
       m_strategy.paint( g, mapPanel, m_currentPoint );
-    }
 
     if( m_tooltip != null )
     {
       final Rectangle bounds = mapPanel.getScreenBounds();
 
       if( m_strategy != null )
-      {
-        m_standardTooltip.setTooltip( STR_DEFAULT_TOOLTIP + m_strategy.getLabel() );
-      }
+        m_standardTooltip.setTooltip( buildTooltip() );
 
       m_tooltip.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
+  }
+
+  private String buildTooltip( )
+  {
+    final StringBuilder tooltip = new StringBuilder();
+    tooltip.append( String.format( Messages.getString( "CreateProfileFromDEMWidget_0" ) ) ); //$NON-NLS-1$
+    tooltip.append( String.format( Messages.getString( "CreateProfileFromDEMWidget_1" ) ) ); //$NON-NLS-1$
+    tooltip.append( String.format( Messages.getString( "CreateProfileFromDEMWidget_7", m_digitalizeDistance ) ) ); //$NON-NLS-1$
+    tooltip.append( String.format( Messages.getString( "CreateProfileFromDEMWidget_2" ) ) ); //$NON-NLS-1$
+    tooltip.append( String.format( Messages.getString( "CreateProfileFromDEMWidget_3" ) ) ); //$NON-NLS-1$
+    tooltip.append( String.format( Messages.getString( "CreateProfileFromDEMWidget_4", m_strategy.getLabel() ) ) ); //$NON-NLS-1$
+
+    return tooltip.toString();
   }
 
   @Override
@@ -273,29 +290,58 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     switch( keyCode )
     {
       case KeyEvent.VK_ESCAPE:
+      {
         activate( getCommandTarget(), getMapPanel() );
         repaintMap();
         return;
-
+      }
       case KeyEvent.VK_BACK_SPACE:
+      {
         if( m_strategy != null )
         {
           m_strategy.removeLastPoint();
           repaintMap();
         }
         break;
-
+      }
       case KeyEvent.VK_SPACE:
+      {
         m_strategyExtendProfile = !m_strategyExtendProfile;
+
         final IDialogSettings settings = getSettings();
         if( settings != null )
-        {
           settings.put( SETTINGS_MODE, m_strategyExtendProfile );
-        }
+
         activate( getCommandTarget(), getMapPanel() );
         repaintMap();
         break;
+      }
+      case KeyEvent.VK_1:
+      {
+        final double result = askForDigitalizeDistance();
+        if( Double.isNaN( result ) )
+          break;
+
+        m_digitalizeDistance = result;
+        final IDialogSettings settings = getSettings();
+        if( settings != null )
+          settings.put( SETTINGS_DIGITALIZE_DISTANCE, m_digitalizeDistance );
+
+        break;
+      }
     }
+  }
+
+  private double askForDigitalizeDistance( )
+  {
+    final Shell shell = SWT_AWT_Utilities.findActiveShell();
+
+    final InputDialog inputDialog = new InputDialog( shell, "Profil verlängern", "Digitalisierungsdistanz", String.format( "%.2f", m_digitalizeDistance ), new DoubleInputValidator() );
+    final int result = SWT_AWT_Utilities.openSwtWindow( inputDialog );
+    if( result != Window.OK )
+      return Double.NaN;
+
+    return NumberUtils.parseQuietDouble( inputDialog.getValue() );
   }
 
   private void readSettings( )
@@ -305,6 +351,11 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       return;
 
     m_strategyExtendProfile = settings.getBoolean( SETTINGS_MODE );
+
+    final String digitalizeDistance = settings.get( SETTINGS_DIGITALIZE_DISTANCE );
+    final double parsedDigitalizeDistance = NumberUtils.parseQuietDouble( digitalizeDistance );
+    if( !Double.isNaN( parsedDigitalizeDistance ) )
+      m_digitalizeDistance = parsedDigitalizeDistance;
   }
 
   private IDialogSettings getSettings( )
