@@ -188,9 +188,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
     return new ColorMapConverterData( fill, stroke, null, null, m_projection, label, from, to );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorModel#getColor(double)
-   */
   @Override
   public Color getColor( final double elevation )
   {

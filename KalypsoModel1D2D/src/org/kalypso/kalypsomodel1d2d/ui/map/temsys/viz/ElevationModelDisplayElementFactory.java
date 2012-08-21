@@ -50,8 +50,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
@@ -63,7 +62,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDis
  */
 public class ElevationModelDisplayElementFactory
 {
-  public static final SurfacePatchVisitableDisplayElement createDisplayElement( final Feature feature )
+  public static final SurfacePatchVisitableDisplayElement<GM_Polygon> createDisplayElement( final Feature feature )
   {
     if( feature == null )
     {
@@ -78,16 +77,16 @@ public class ElevationModelDisplayElementFactory
         final IElevationColorModel colorModel = createColorModel( elevationProvider );
         ColorModelIntervalSingleton.getInstance().setInterval( colorModel.getDiscretisationInterval() );
 
-        final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
+        final IVisitorFactory<GM_Polygon> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Polygon>()
         {
           @Override
-          public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
+          public ISurfacePatchVisitor<GM_Polygon> createVisitor( final Graphics g, final GeoTransform projection )
           {
-            return new SurfacePaintPlainTriangleVisitor<GM_Triangle>( g, projection, colorModel );
+            return new SurfacePaintPlainTriangleVisitor<GM_Polygon>( g, projection, colorModel );
           }
         };
 
-        return new SurfacePatchVisitableDisplayElement( feature, (ISurfacePatchVisitable<GM_SurfacePatch>) elevationProvider, colorModel, visitorFactory );
+        return new SurfacePatchVisitableDisplayElement<GM_Polygon>( feature, (ISurfacePatchVisitable<GM_Polygon>) elevationProvider, visitorFactory );
       }
       else
       {
