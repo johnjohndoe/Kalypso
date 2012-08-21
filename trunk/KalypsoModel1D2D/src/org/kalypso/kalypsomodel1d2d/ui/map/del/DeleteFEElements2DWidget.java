@@ -74,9 +74,6 @@ public class DeleteFEElements2DWidget extends AbstractDelegateWidget
     m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.4" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -94,13 +91,9 @@ public class DeleteFEElements2DWidget extends AbstractDelegateWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
-
     if( e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE )
     {
       e.consume();
