@@ -45,7 +45,6 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void setEdges( final IFE1D2DEdge[] edges )
   {
     final IFeatureBindingCollection<IFE1D2DEdge> myEdges = getEdges();
@@ -142,9 +141,6 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     return null;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
@@ -159,9 +155,6 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     return buf.toString();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessClsID()
-   */
   @Override
   public String getRoughnessClsID( )
   {
@@ -171,36 +164,24 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     return property.toString();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionAxAy()
-   */
   @Override
   public Double getRoughnessCorrectionAxAy( )
   {
     return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionDP()
-   */
   @Override
   public Double getRoughnessCorrectionDP( )
   {
     return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionKS()
-   */
   @Override
   public Double getRoughnessCorrectionKS( )
   {
     return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessStyle()
-   */
   @Override
   public String getRoughnessStyle( )
   {
@@ -210,49 +191,33 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     return property.toString();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessClsID(java.lang.String)
-   */
   @Override
   public void setRoughnessClsID( final String value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionAxAy(java.lang.String)
-   */
   @Override
   public void setRoughnessCorrectionAxAy( final Double value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionDP(java.lang.String)
-   */
   @Override
   public void setRoughnessCorrectionDP( final Double value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionKS(java.lang.String)
-   */
   @Override
   public void setRoughnessCorrectionKS( final Double value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessStyle(java.lang.String)
-   */
   @Override
   public void setRoughnessStyle( final String value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );
   }
-
 }
