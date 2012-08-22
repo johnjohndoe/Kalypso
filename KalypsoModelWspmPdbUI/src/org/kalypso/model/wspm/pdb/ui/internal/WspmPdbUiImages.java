@@ -73,7 +73,10 @@ public class WspmPdbUiImages
     IMPORT("icons/import.gif"), //$NON-NLS-1$
     EXPORT("icons/export.gif"), //$NON-NLS-1$
 
-    WARNING_DECORATION("icons/warning_small.gif"); //$NON-NLS-1$
+    WARNING_DECORATION("icons/warning_small.gif"), //$NON-NLS-1$
+
+    ADD_COVERAGE("icons/addCoverage.gif"), //$NON-NLS-1$
+    EXPORT_COVERAGE("icons/exportCoverage.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 
