@@ -10,8 +10,8 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil;
@@ -101,9 +101,9 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
 
     // TODO: Would be nice to simplify the coords, but not the profile afterwards.
     // TODO: We need Douglas-Peucker for coordinates (with distance by z!).
-    final IProfil profile = CoverageProfile.createProfile( profileType, gridCrds, curve.getCoordinateSystem(), getSimplifyDistance() );
+    final IProfil profile = WspmProfileHelper.createProfile( profileType, gridCrds, curve.getCoordinateSystem(), getSimplifyDistance() );
     if( profile.getPoints().length == 0 )
-      return CoverageProfile.convertLinestringToEmptyProfile( curve, profileType );
+      return WspmProfileHelper.convertLinestringToEmptyProfile( curve, profileType );
 
     return profile;
   }

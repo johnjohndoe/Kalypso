@@ -130,9 +130,6 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
     return getProperty( PROPERTY_PROFILE_LOCATION, GM_Curve.class );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
