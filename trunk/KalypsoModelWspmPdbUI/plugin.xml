@@ -536,5 +536,18 @@
      <contexts
            file="$nl$/contexts.xml">
      </contexts>
+  </extension>
+  <extension
+        point="org.kalypso.gml.ui.coverageManagementAction">
+     <action
+           class="org.kalypso.model.wspm.pdb.ui.internal.tin.ImportFromExternalLocationAction"
+           id="org.kalypso.model.wspm.pdb.ui.internal.tin.ImportFromExternalLocationAction"
+           role="widget">
+     </action>
+     <action
+           class="org.kalypso.model.wspm.pdb.ui.internal.tin.ExportToExternalLocationAction"
+           id="org.kalypso.model.wspm.pdb.ui.internal.tin.ExportToExternalLocationAction"
+           role="wizard">
+     </action>
   </extension>   
 </plugin>
