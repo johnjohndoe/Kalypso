@@ -48,7 +48,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.IColorModelPreferenceConstants;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ColorModelIntervalSingleton;
 import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
 
 /**
@@ -221,7 +220,6 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
   public static void setColorIndex( final int colorIndex1 )
   {
     ElevationColorControl.colorIndex = colorIndex1;
-    ColorModelIntervalSingleton.getInstance().setInterval( ElevationColorControl.colorIndex );
   }
 
   public static boolean getMinMaxStatus( )

@@ -2,47 +2,46 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -61,7 +60,7 @@ import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
  */
 public class SimpleElevationColorModel implements IElevationColorModel
 {
-  private final List<ColorMapConverterData> m_lister = new LinkedList<ColorMapConverterData>();
+  private final List<ColorMapConverterData> m_lister = new ArrayList<ColorMapConverterData>();
 
   public static final double DEEPEST_POINT_ON_EARTH = -10924;
 
@@ -107,7 +106,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
   public SimpleElevationColorModel( final double minElevation, final double maxElevation, final Color minColor, final Color maxColor, final Color noElevationColor, final double transparency, final int numOfClasses, final boolean goDarkerFromMinToMax )
   {
-
     m_minElevation = minElevation;
     m_maxElevation = maxElevation;
 
@@ -180,7 +178,13 @@ public class SimpleElevationColorModel implements IElevationColorModel
     final int alpha = rgbColor.getAlpha();
     final double opacity = alpha / 255.0;
     final Fill fill = StyleFactory.createFill( rgbColor, opacity );
-    final Stroke stroke = StyleFactory.createStroke( rgbColor, 1, 0.1 );
+
+    // REMARK: NOT using a stroke for two reasons:
+    // - paint speed-up by ~40%
+    // - looks better (before, always some white pixels where visible)
+    final Stroke stroke = null;
+    // final Stroke stroke = StyleFactory.createStroke( rgbColor, 1, 0.1 );
+
     final String label = ""; //$NON-NLS-1$
     final double from = getFrom( i );
     final double to = getTo( i );
@@ -196,7 +200,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
   /**
    * gets the corresponding color class for the given elevation
-   * 
+   *
    * @param elevation
    *            given elevation
    */
@@ -277,10 +281,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
     return rgbColor;
   }
 
-  /**
-   * 
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#setElevationMinMax(double, double)
-   */
   @Override
   public void setElevationMinMax( final double minElevation, final double maxElevation )
   {
@@ -297,9 +297,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getHSB(double)
-   */
   public float[] getHSB( final double elevation )
   {
     if( Double.isNaN( elevation ) )
@@ -326,9 +323,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
     return new float[] { Color.getHSBColor( val[0], val[1], val[2] ).getRed(), Color.getHSBColor( val[0], val[1], val[2] ).getGreen(), Color.getHSBColor( val[0], val[1], val[2] ).getBlue() };
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getElevationMinMax(double, double)
-   */
   @Override
   public double[] getElevationMinMax( )
   {
@@ -344,54 +338,36 @@ public class SimpleElevationColorModel implements IElevationColorModel
     return m_numOfClasses;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getDiscretisationInterval()
-   */
   @Override
   public double getDiscretisationInterval( )
   {
     return Math.abs( (m_maxElevation - m_minElevation) ) / m_numOfClasses;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getFrom(int)
-   */
   @Override
   public double getFrom( final int currentClass )
   {
     return m_minElevation + currentClass * getDiscretisationInterval();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getTo(int)
-   */
   @Override
   public double getTo( final int currentClass )
   {
     return m_minElevation + (currentClass + 1) * getDiscretisationInterval();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getFillPolygonPainter(int)
-   */
   @Override
   public FillPainter getFillPolygonPainter( final int currentClass )
   {
     return m_lister.get( currentClass ).getPolygonPainter();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getLinePainter(int)
-   */
   @Override
   public StrokePainter getLinePainter( final int currentClass )
   {
     return m_lister.get( currentClass ).getLinePainter();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#setProjection(org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
   @Override
   public void setProjection( final GeoTransform projection )
   {
