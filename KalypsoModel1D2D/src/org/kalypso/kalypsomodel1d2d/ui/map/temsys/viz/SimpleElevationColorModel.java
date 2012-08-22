@@ -181,7 +181,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
     // REMARK: NOT using a stroke for two reasons:
     // - paint speed-up by ~40%
-    // - looks better (before, always some white pixels where visible)
+    // - looks better in most cases (before, always some white pixels where visible)
     final Stroke stroke = null;
     // final Stroke stroke = StyleFactory.createStroke( rgbColor, 1, 0.1 );
 
