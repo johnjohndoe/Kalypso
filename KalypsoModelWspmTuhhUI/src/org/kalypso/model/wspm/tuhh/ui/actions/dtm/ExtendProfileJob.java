@@ -49,8 +49,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -112,13 +112,14 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     /* Add line into profile. */
     final IProfileFeature profile = m_info.getProfile();
     final IProfil profil = profile.getProfil();
-    CoverageProfile.extendPoints( profil, m_insertSign, newPoints, getSimplifyDistance() );
+    WspmProfileHelper.extendPoints( profil, m_insertSign, newPoints, getSimplifyDistance(), curve.getCoordinateSystem() );
 
     final Feature profileOwner = m_info.getProfileOwner();
     if( profileOwner != null )
     {
       /* If the reach is not null, we have a reach theme that does not get updated by the event on the profile itself. */
       /* We need to fire an event on the reach itself. */
+      profileOwner.setEnvelopesUpdated();
       final GMLWorkspace workspace = profileOwner.getWorkspace();
       workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, new Feature[] { profileOwner } ) );
     }
@@ -209,19 +210,13 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     final GM_Point currentPos = MapUtilities.transform( mapPanel, currentPoint );
     final GM_Point grabPoint;
     if( pointCount == 0 )
-    {
       grabPoint = grabProfileEnd( currentPos );
-    }
     else
-    {
       grabPoint = m_startPoint;
-    }
 
-    // paint grabbed point: the first one we got....
+    // Paint grabbed point: the first one we got....
     if( grabPoint != null )
-    {
       m_grabPointPainter.paint( g, projection, grabPoint );
-    }
   }
 
   @Override
