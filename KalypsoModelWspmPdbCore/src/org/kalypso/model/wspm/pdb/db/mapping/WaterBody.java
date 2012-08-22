@@ -252,4 +252,10 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     setRank( waterBody.getRank() );
     setRiverline( waterBody.getRiverline() );
   }
+
+  @Override
+  public String toString( )
+  {
+    return String.format( "%s [%s]", getLabel(), getName() );
+  }
 }
