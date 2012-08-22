@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 import java.awt.Graphics;
 
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ColorModelIntervalSingleton;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -74,15 +73,13 @@ public class ElevationModelDisplayElementFactory
       final IElevationModel elevationProvider = ((NativeTerrainElevationModelWrapper) terrainElevationModel).getElevationProvider();
       if( elevationProvider instanceof ISurfacePatchVisitable )
       {
-        final IElevationColorModel colorModel = createColorModel( elevationProvider );
-        ColorModelIntervalSingleton.getInstance().setInterval( colorModel.getDiscretisationInterval() );
-
         final IVisitorFactory<GM_Polygon> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Polygon>()
         {
           @Override
           public ISurfacePatchVisitor<GM_Polygon> createVisitor( final Graphics g, final GeoTransform projection )
           {
-            return new SurfacePaintPlainTriangleVisitor<GM_Polygon>( g, projection, colorModel );
+            final IElevationColorModel colorModel = createColorModel( elevationProvider, projection );
+            return new SurfacePaintPlainTriangleVisitor<GM_Polygon>( g, colorModel );
           }
         };
 
@@ -100,11 +97,14 @@ public class ElevationModelDisplayElementFactory
     }
   }
 
-  private static IElevationColorModel createColorModel( final IElevationModel elevationProvider )
+  static IElevationColorModel createColorModel( final IElevationModel elevationProvider, final GeoTransform projection )
   {
     try
     {
-      return ElevationColorControl.getColorModel( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
+      final IElevationColorModel colorModel = ElevationColorControl.getColorModel( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
+      // REMARK: very slow -> only call once per triangulated surface!
+      colorModel.setProjection( projection );
+      return colorModel;
     }
     catch( final ElevationException e )
     {
