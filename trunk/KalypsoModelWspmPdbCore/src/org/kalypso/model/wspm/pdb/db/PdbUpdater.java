@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db;
 
@@ -286,9 +286,12 @@ public class PdbUpdater
   private Properties determineVariables( final UpdateScript[] scripts ) throws CoreException
   {
     final Properties properties = new Properties();
+
     /* some defaults */
     properties.setProperty( PdbInfo.PROPERTY_DOCUMENT_SERVER, "http://example.com/document/path/" ); //$NON-NLS-1$
+    properties.setProperty( PdbInfo.PROPERTY_DEM_SERVER, "P:/data/terrain/" ); //$NON-NLS-1$
     properties.setProperty( PdbInfo.PROPERTY_SRID, "31468" ); //$NON-NLS-1$
+
     /* Add depending variables */
     final String srid = properties.getProperty( PdbInfo.PROPERTY_SRID );
     final Envelope domainOfValidity = m_connection.getCrsEnvelope( Integer.valueOf( srid ) );
@@ -315,17 +318,19 @@ public class PdbUpdater
 
     /* Ask user for missing variables */
     final IWizardPage[] pages = findUpdatePages( scripts, properties );
-          if( pages.length > 0 )
-          {
-            final UpdateScriptWizard wizard = new UpdateScriptWizard( pages );
-            wizard.setWindowTitle( WINDOW_TITLE );
-            if( new WizardDialog( m_shell, wizard ).open() != Window.OK )
-              throw new CoreException( Status.CANCEL_STATUS );
-          }
+    if( pages.length > 0 )
+    {
+      final UpdateScriptWizard wizard = new UpdateScriptWizard( pages );
+      wizard.setWindowTitle( WINDOW_TITLE );
 
-          updateDependendProperties( properties );
+      final int open = new WizardDialog( m_shell, wizard ).open();
+      if( open != Window.OK )
+        throw new CoreException( Status.CANCEL_STATUS );
+    }
 
-          return properties;
+    updateDependendProperties( properties );
+
+    return properties;
   }
 
   private IWizardPage[] findUpdatePages( final UpdateScript[] scripts, final Properties properties ) throws CoreException

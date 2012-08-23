@@ -53,7 +53,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
@@ -66,6 +66,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -170,7 +171,9 @@ public class CheckoutPdbData extends AbstractModelObject
       e.printStackTrace();
 
       final String STR_ATTACHMENTS_DISABLED = Messages.getString( "CheckoutPdbData.3" ); //$NON-NLS-1$
-      new StatusDialog2( shell, e.getStatus(), commandName, STR_ATTACHMENTS_DISABLED ).open();
+      final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, STR_ATTACHMENTS_DISABLED, e );
+
+      StatusDialog.open( shell, status, commandName );
 
       return null;
     }
