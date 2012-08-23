@@ -52,7 +52,9 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.URIUtil;
 import org.hibernate.Session;
@@ -80,7 +82,7 @@ public class PdbInfo
 
   public final static String PROPERTY_DOCUMENT_SERVER = "DocumentServer"; //$NON-NLS-1$
 
-  public final static String PROPERTY_DHM_SERVER = "DHMServer"; //$NON-NLS-1$
+  public final static String PROPERTY_DEM_SERVER = "DEMServer"; //$NON-NLS-1$
 
   public final static String PROPERTY_SRS_MIN_X = "srsMinX"; //$NON-NLS-1$
 
@@ -198,6 +200,22 @@ public class PdbInfo
       final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
+  }
+
+  /**
+   * @return base path to the server containing the dhm files.
+   */
+  public IPath getDemServerPath( ) throws CoreException
+  {
+    final String property = m_properties.getProperty( PROPERTY_DEM_SERVER );
+    if( StringUtils.isBlank( property ) )
+    {
+      final String message = "Base path to the dem server is empty";
+      final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
+    }
+
+    return Path.fromOSString( property );
   }
 
   @SuppressWarnings("unchecked")
