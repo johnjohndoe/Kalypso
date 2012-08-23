@@ -412,8 +412,8 @@ UPDATE INFO set value='updating 0.0.4 to 0.0.5: drop temp table ''bcp_event'''  
 DROP TABLE BCP_EVENT;
 
 -- set root path for DHM files
-UPDATE INFO set value='updating 0.0.4 to 0.0.5: set root path for DHM files (''DHMServer'')'  where key ='Version';
-INSERT INTO INFO("KEY", "VALUE") VALUES ('DHMServer', '${DHMServer}');
+UPDATE INFO set value='updating 0.0.4 to 0.0.5: set root path for DHM files (''DEMServer'')'  where key ='Version';
+INSERT INTO INFO("KEY", "VALUE") VALUES ('DEMServer', '${DEMServer}');
 
 -- Version endgültig setzen
 UPDATE INFO set value='0.0.5'  where key ='Version';
