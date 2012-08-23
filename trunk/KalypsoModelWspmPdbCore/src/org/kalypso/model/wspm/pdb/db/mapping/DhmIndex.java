@@ -93,6 +93,8 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
 
   private String m_copyright;
 
+  private String m_srid;
+
   public DhmIndex( )
   {
   }
@@ -293,5 +295,16 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setCopyright( final String copyright )
   {
     m_copyright = copyright;
+  }
+
+  @Column(name = "srid", nullable = false, length = 15)
+  public String getSrid( )
+  {
+    return m_srid;
+  }
+
+  public void setSrid( final String srid )
+  {
+    m_srid = srid;
   }
 }
