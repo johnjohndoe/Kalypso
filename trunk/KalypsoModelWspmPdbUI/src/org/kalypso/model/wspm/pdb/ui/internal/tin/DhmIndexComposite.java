@@ -40,22 +40,70 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.tin;
 
-import org.eclipse.swt.widgets.Event;
-import org.kalypso.gml.ui.internal.coverage.actions.CoverageManagementAction;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Layout;
 
 /**
+ * This composite allows the editing of {@link org.kalypso.model.wspm.pdb.db.mapping.DhmIndex}.
+ * 
  * @author Holger Albert
  */
-public class ImportFromExternalLocationAction extends CoverageManagementAction
+public class DhmIndexComposite extends Composite
 {
-  public ImportFromExternalLocationAction( )
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   *          A widget which will be the parent of the new instance (cannot be null).
+   * @param style
+   *          The style of widget to construct.
+   */
+  public DhmIndexComposite( final Composite parent, final int style )
   {
-    super( "Höhendaten aus externen Speicherort hinzufügen", WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.ADD_COVERAGE ) );
+    super( parent, style );
+
+    /* Initialize. */
+    // TODO
+
+    /* Create the controls. */
+    createControls();
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  public void setLayout( final Layout layout )
   {
+    /* Ignore user set layouts, only layout datas are permitted. */
+  }
+
+  @Override
+  public void dispose( )
+  {
+    // TODO
+
+    super.dispose();
+  }
+
+  /**
+   * This function creates the controls.
+   */
+  private void createControls( )
+  {
+    /* Create the layout. */
+    final GridLayout parentLayout = new GridLayout( 1, false );
+    parentLayout.marginHeight = 0;
+    parentLayout.marginWidth = 0;
+    super.setLayout( parentLayout );
+
+    /* Create the main group. */
+    final Group main = new Group( this, SWT.NONE );
+    main.setLayout( new GridLayout( 2, false ) );
+    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    main.setText( "Details" );
+
+    // TODO
   }
 }
