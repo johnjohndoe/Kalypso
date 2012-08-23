@@ -53,7 +53,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.wspm.FindViewRunnable;
 
 /**
  * General helper stuff for PDB-UI
- *
+ * 
  * @author Gernot Belger
  */
 public final class PdbUiUtils
@@ -82,6 +82,15 @@ public final class PdbUiUtils
 
     final IWorkbenchWindow window = site.getWorkbenchWindow();
     return getConnectionViewerChecked( window );
+  }
+
+  public static IPdbConnection getConnection( final IWorkbenchWindow window )
+  {
+    final IConnectionViewer viewer = getConnectionViewer( window );
+    if( viewer == null )
+      return null;
+
+    return viewer.getConnection();
   }
 
   public static IPdbConnection getConnectionChecked( final IWorkbenchWindow window ) throws ExecutionException

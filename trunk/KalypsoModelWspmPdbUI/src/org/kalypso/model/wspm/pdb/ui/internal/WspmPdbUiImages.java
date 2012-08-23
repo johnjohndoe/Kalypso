@@ -75,8 +75,7 @@ public class WspmPdbUiImages
 
     WARNING_DECORATION("icons/warning_small.gif"), //$NON-NLS-1$
 
-    ADD_COVERAGE("icons/addCoverage.gif"), //$NON-NLS-1$
-    EXPORT_COVERAGE("icons/exportCoverage.gif"); //$NON-NLS-1$
+    ADD_COVERAGE("icons/addCoverage.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 
