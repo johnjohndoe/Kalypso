@@ -239,7 +239,8 @@ public class PdbUpdater
     }
     catch( final CoreException e )
     {
-      e.printStackTrace();
+      if( !e.getStatus().matches( IStatus.CANCEL ) )
+        e.printStackTrace();
       return e.getStatus();
     }
   }

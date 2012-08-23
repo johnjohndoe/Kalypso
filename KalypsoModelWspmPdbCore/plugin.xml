@@ -27,6 +27,7 @@
             location="etc/scripts/update_V0.0.4_V0.0.5/postgis.sql"
             targetVersion="0.0.5"
             type="postgis">
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePage004two005"/>
       </script>
       <script
             comment="Oracle 0.0.1 -&gt; 0.0.2"
@@ -47,28 +48,27 @@
             type="oracle">
       </script>
       <script
+            comment="Oracle 0.0.4 -&gt; 0.0.5"
+            location="etc/scripts/update_V0.0.4_V0.0.5/oracle.sql"
+            targetVersion="0.0.5"
+            type="oracle">
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePage004two005"/>
+      </script>
+      <script
             comment="Oracle - Create DB"
             location="etc/scripts/create/V0.0.4/oracle.sql"
             targetVersion="0.0.0"
             type="oracle">
-         <page
-               class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo">
-         </page>
-         <page
-               class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageExtent">
-         </page>
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo"/>
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageExtent"/>
       </script>
       <script
             comment="Postgis - Create DB"
             location="etc/scripts/create/V0.0.4/postgis.sql"
             targetVersion="0.0.0"
             type="postgis">
-         <page
-               class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo">
-         </page>
-         <page
-               class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageExtent">
-         </page>
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo"/>
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageExtent"/>
       </script>
    </extension>
 
