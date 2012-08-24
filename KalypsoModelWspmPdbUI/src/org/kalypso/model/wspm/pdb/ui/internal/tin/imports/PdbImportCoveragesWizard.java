@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin;
+package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -57,6 +57,7 @@ import org.kalypso.gml.ui.coverage.ImportCoverageData;
 import org.kalypso.gml.ui.coverage.ImportCoveragesOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 import org.kalypso.model.wspm.pdb.ui.internal.checkout.ConnectionChooserPage;
+import org.kalypso.model.wspm.pdb.ui.internal.tin.PdbImportConnectionChooserData;
 
 /**
  * This wizard shows a page to select from an entry (path) of the external storage location and imports the coverages.

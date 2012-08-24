@@ -38,31 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin;
+package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 
 /**
  * @author Holger Albert
  */
-public class DhmIndexNameViewerComparator extends ViewerComparator
+public class DhmIndexFilenameLabelProvider extends ColumnLabelProvider
 {
   @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
-  {
-    final String c1 = getValue( e1 );
-    final String c2 = getValue( e2 );
-
-    return c1.compareTo( c2 );
-  }
-
-  private String getValue( final Object element )
+  public String getText( final Object element )
   {
     if( element instanceof DhmIndex )
-      return ((DhmIndex) element).getName();
+    {
+      final DhmIndex dhmIndex = (DhmIndex) element;
+      return dhmIndex.getFilename();
+    }
 
-    return element.toString();
+    return super.getText( element );
   }
 }

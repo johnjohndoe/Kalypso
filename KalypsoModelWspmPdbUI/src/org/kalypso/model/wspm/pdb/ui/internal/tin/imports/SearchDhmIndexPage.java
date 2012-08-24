@@ -38,14 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin;
+package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -60,6 +65,8 @@ import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
+import org.kalypso.model.wspm.pdb.ui.internal.tin.DhmIndexComposite;
+import org.kalypso.model.wspm.pdb.ui.internal.tin.PdbImportConnectionChooserData;
 
 /**
  * This page lists all {@link org.kalypso.model.wspm.pdb.db.mapping.DhmIndex} and enables the user to select one.
@@ -128,7 +135,7 @@ public class SearchDhmIndexPage extends WizardPage
     main.setLayout( mainLayout );
 
     /* Create the filter textbox. */
-    final Text filterText = new Text( main, SWT.BORDER );
+    final Text filterText = new Text( main, SWT.BORDER | SWT.SEARCH );
     filterText.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Create the filter button. */
@@ -152,11 +159,6 @@ public class SearchDhmIndexPage extends WizardPage
     /* Add the column resize control listener. */
     m_searchViewer.getTree().addControlListener( new ColumnsResizeControlListener() );
 
-    /* Do the data binding. */
-    final IObservableValue targetInput = ViewersObservables.observeInput( m_searchViewer );
-    final IObservableValue modelInput = BeansObservables.observeValue( m_settingsData, PdbImportConnectionChooserData.PROPERTY_DHM_INDEXES );
-    dataBinding.bindValue( targetInput, modelInput );
-
     /* Create a scrolled form. */
     final ScrolledForm scrolledForm = new ScrolledForm( main );
     scrolledForm.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
@@ -173,6 +175,27 @@ public class SearchDhmIndexPage extends WizardPage
 
     /* Reflow. */
     scrolledForm.reflow( true );
+
+    /* Create the filter. */
+    final DhmIndexFilter filter = new DhmIndexFilter( m_searchViewer, "", StringUtils.EMPTY, false );
+    m_searchViewer.setFilters( new ViewerFilter[] { filter } );
+
+    /* Do the data binding. */
+    final ISWTObservableValue textTarget = SWTObservables.observeText( filterText, new int[] { SWT.Modify } );
+    final IObservableValue textModel = PojoObservables.observeValue( filter, DhmIndexFilter.PROPERTY_FILTER_TEXT );
+    dataBinding.bindValue( textTarget, textModel );
+
+    /* Do the data binding. */
+    final ISWTObservableValue buttonTarget = SWTObservables.observeSelection( filterButton );
+    final IObservableValue buttonModel = PojoObservables.observeValue( filter, DhmIndexFilter.PROPERTY_FILTER_QUERY );
+    dataBinding.bindValue( buttonTarget, buttonModel );
+
+    /* Do the data binding. */
+    final IObservableValue targetViewer = ViewersObservables.observeInput( m_searchViewer );
+    final IObservableValue modelViewer = BeansObservables.observeValue( m_settingsData, PdbImportConnectionChooserData.PROPERTY_DHM_INDEXES );
+    dataBinding.bindValue( targetViewer, modelViewer );
+
+    // TODO The dhm index composite needs to get the new object set...
 
     /* Set the control to the page. */
     setControl( main );
