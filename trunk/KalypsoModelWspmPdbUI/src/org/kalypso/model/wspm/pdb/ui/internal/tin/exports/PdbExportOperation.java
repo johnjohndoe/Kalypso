@@ -38,61 +38,60 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
+package org.kalypso.model.wspm.pdb.ui.internal.tin.exports;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.IPath;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 
 /**
  * @author Holger Albert
  */
-public class SearchDhmIndexContentProvider implements ITreeContentProvider
+public class PdbExportOperation implements IPdbOperation
 {
-  public SearchDhmIndexContentProvider( )
+  private final PdbExportConnectionChooserData m_settingsData;
+
+  public PdbExportOperation( final PdbExportConnectionChooserData settingsData )
   {
+    m_settingsData = settingsData;
   }
 
   @Override
-  public Object[] getChildren( final Object parentElement )
+  public String getLabel( )
   {
-    return null;
+    return "Save and update external location";
   }
 
   @Override
-  public Object getParent( final Object element )
+  public void execute( final Session session ) throws PdbConnectException
   {
-    return null;
+    try
+    {
+      final File sourceFile = m_settingsData.getSourceFile();
+      final DhmIndex dhmIndex = m_settingsData.getDhmIndex();
+      final IPath demServerPath = m_settingsData.getDemServerPath();
+      final IPath targetPath = demServerPath.append( dhmIndex.getFilename() );
+
+      session.saveOrUpdate( dhmIndex );
+
+      FileUtils.copyFile( sourceFile, targetPath.toFile() );
+    }
+    catch( final HibernateException ex )
+    {
+      ex.printStackTrace();
+    }
+    catch( final IOException ex )
+    {
+      ex.printStackTrace();
+    }
   }
 
-  @Override
-  public boolean hasChildren( final Object element )
-  {
-    return false;
-  }
-
-  @Override
-  public Object[] getElements( final Object inputElement )
-  {
-    if( !(inputElement instanceof PdbImportConnectionChooserData) )
-      return new Object[] {};
-
-    final PdbImportConnectionChooserData data = (PdbImportConnectionChooserData) inputElement;
-
-    final DhmIndex[] dhmIndexes = data.getDhmIndexes();
-    if( dhmIndexes != null )
-      return dhmIndexes;
-
-    return new Object[] {};
-  }
-
-  @Override
-  public void dispose( )
-  {
-  }
-
-  @Override
-  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
-  {
-  }
+  // TODO How to handle transaction?
 }

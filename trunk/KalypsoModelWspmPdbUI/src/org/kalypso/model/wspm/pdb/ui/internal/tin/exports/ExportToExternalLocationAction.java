@@ -40,9 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.tin.exports;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.coverage.ImportCoverageData;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.tin.imports.PdbImportConnectionChooserData;
 
 /**
  * @author Holger Albert
@@ -81,6 +86,22 @@ public class ExportToExternalLocationAction extends Action
   @Override
   public void run( )
   {
-    // TODO
+    try
+    {
+      final PdbExportConnectionChooserData settingsData = new PdbExportConnectionChooserData( m_data );
+      final IPdbConnection connection = PdbImportConnectionChooserData.checkConnection();
+      settingsData.setConnection( connection );
+
+      /* Create the wizard. */
+      final PdbExportCoveragesWizard wizard = new PdbExportCoveragesWizard( settingsData );
+
+      /* Open the dialog. */
+      final WizardDialog dialog = new WizardDialog( m_shell, wizard );
+      dialog.open();
+    }
+    catch( final CoreException e )
+    {
+      StatusDialog.open( m_shell, e.getStatus(), getText() );
+    }
   }
 }
