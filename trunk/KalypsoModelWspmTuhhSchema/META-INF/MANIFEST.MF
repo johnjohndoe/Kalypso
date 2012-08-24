@@ -4,7 +4,7 @@ Bundle-Name: KalypsoModelWspmTuhhSchema Plug-in
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.schema; singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Require-Bundle: org.kalypso.model.wspm.tuhh.core;visibility:=reexport,
  org.kalypso.simulation.core,
  org.kalypso.core,

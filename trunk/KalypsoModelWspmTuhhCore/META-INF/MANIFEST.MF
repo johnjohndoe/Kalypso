@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.core; singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Require-Bundle: org.kalypso.model.wspm.core;visibility:=reexport,
  org.kalypso.ui,
  org.kalypso.model.wspm.schema;visibility:=reexport,

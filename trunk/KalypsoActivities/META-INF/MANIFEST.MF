@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoActivities
 Bundle-SymbolicName: org.kalypso.activities;singleton:=true
 Bundle-Version: 12.7.0.qualifier
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,

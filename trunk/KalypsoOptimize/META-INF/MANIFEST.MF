@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoOptimizePlugin
 Bundle-SymbolicName: org.kalypso.optimize;singleton:=true
 Bundle-Version: 12.7.0.qualifier
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Export-Package: org.kalypso.optimize,
  org.kalypso.optimize.errorfunctions,
  org.kalypso.optimize.transform,
