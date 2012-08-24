@@ -45,6 +45,15 @@ package org.kalypso.model.wspm.pdb.db.constants;
  */
 public interface DhmIndexConstants
 {
+  String PROPERTY_ID = "id"; //$NON-NLS-1$
+
+  String PROPERTY_NAME = "name"; //$NON-NLS-1$
+
+  String PROPERTY_LOCATION = "location"; //$NON-NLS-1$
+
+  String PROPERTY_FILENAME = "filename"; //$NON-NLS-1$
+
+  String PROPERTY_MIMETYPE = "mimeType"; //$NON-NLS-1$
 
   String PROPERTY_CREATIONDATE = "creationDate"; //$NON-NLS-1$
 
@@ -54,4 +63,15 @@ public interface DhmIndexConstants
 
   String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
 
+  String PROPERTY_SOURCE = "source"; //$NON-NLS-1$
+
+  String PROPERTY_EDITOR = "editor"; //$NON-NLS-1$
+
+  String PROPERTY_MEASUREMENTACCURACY = "measurementAccuracy"; //$NON-NLS-1$
+
+  String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
+
+  String PROPERTY_COPYRIGHT = "copyright"; //$NON-NLS-1$
+
+  String PROPERTY_SRID = "srid"; //$NON-NLS-1$
 }
