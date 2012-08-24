@@ -90,7 +90,7 @@ public class EditStationLocationAction extends Action
       return;
 
     /* Create new point */
-    final String newCrs = dialog.getCS_CoordinateSystem();
+    final String newCrs = dialog.getCS();
     final double[] newValues = dialog.getValues();
     final GM_Position newPos = GeometryFactory.createGM_Position( newValues );
 
