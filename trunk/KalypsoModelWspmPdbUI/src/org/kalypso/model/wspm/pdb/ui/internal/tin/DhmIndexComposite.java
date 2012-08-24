@@ -40,12 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.tin;
 
+import java.util.Date;
+
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 
 /**
  * This composite allows the editing of {@link org.kalypso.model.wspm.pdb.db.mapping.DhmIndex}.
@@ -55,19 +65,40 @@ import org.eclipse.swt.widgets.Layout;
 public class DhmIndexComposite extends Composite
 {
   /**
+   * The dhm index.
+   */
+  private DhmIndex m_dhmIndex;
+
+  /**
+   * True, if the controls should be editable.
+   */
+  private final boolean m_editable;
+
+  /**
+   * The data binding.
+   */
+  private final IDataBinding m_dataBinding;
+
+  /**
    * The constructor.
    * 
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
    *          The style of widget to construct.
+   * @param dhmIndex
+   *          The dhm index to edit.
+   * @param editable
+   *          True, if the controls should be editable.
    */
-  public DhmIndexComposite( final Composite parent, final int style )
+  public DhmIndexComposite( final Composite parent, final int style, final DhmIndex dhmIndex, final boolean editable, final IDataBinding dataBinding )
   {
     super( parent, style );
 
     /* Initialize. */
-    // TODO
+    m_dhmIndex = dhmIndex != null ? dhmIndex : getNewDhmIndex();
+    m_editable = editable;
+    m_dataBinding = dataBinding;
 
     /* Create the controls. */
     createControls();
@@ -82,7 +113,7 @@ public class DhmIndexComposite extends Composite
   @Override
   public void dispose( )
   {
-    // TODO
+    m_dhmIndex = null;
 
     super.dispose();
   }
@@ -98,12 +129,67 @@ public class DhmIndexComposite extends Composite
     parentLayout.marginWidth = 0;
     super.setLayout( parentLayout );
 
-    /* Create the main group. */
-    final Group main = new Group( this, SWT.NONE );
+    /* Create the main composite. */
+    final Composite main = new Composite( this, SWT.NONE );
     main.setLayout( new GridLayout( 2, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    main.setText( "Details" );
 
-    // TODO
+    /* Create the controls. */
+    createTextControl( main, m_dataBinding, "Name", DhmIndex.PROPERTY_NAME, m_editable );
+    createTextControl( main, m_dataBinding, "Beschreibung", DhmIndex.PROPERTY_DESCRIPTION, m_editable );
+    createTextControl( main, m_dataBinding, "Dateiname", DhmIndex.PROPERTY_FILENAME, false );
+    createTextControl( main, m_dataBinding, "Bearbeiter", DhmIndex.PROPERTY_EDITINGUSER, m_editable );
+    createDateControl( main, m_dataBinding, "Messdatum", DhmIndex.PROPERTY_MEASUREMENTDATE, m_editable );
+    createTextControl( main, m_dataBinding, "Messgenauigkeit", DhmIndex.PROPERTY_MEASUREMENTACCURACY, m_editable );
+    createTextControl( main, m_dataBinding, "Quelle", DhmIndex.PROPERTY_SOURCE, m_editable );
+    createTextControl( main, m_dataBinding, "Editor", DhmIndex.PROPERTY_EDITOR, m_editable );
+    createTextControl( main, m_dataBinding, "Copyright", DhmIndex.PROPERTY_COPYRIGHT, m_editable );
+    // createTextControl( main, dataBinding, "ID", DhmIndex.PROPERTY_ID, m_editable );
+    // createTextControl( main, dataBinding, "MimeType", DhmIndex.PROPERTY_MIMETYPE, m_editable );
+    // createDateControl( main, dataBinding, "Erstellungsdatum", DhmIndex.PROPERTY_CREATIONDATE, m_editable );
+    // createDateControl( main, dataBinding, "Änderungsdatum", DhmIndex.PROPERTY_EDITINGDATE, m_editable );
+    // createLocationControl( main, dataBinding, "Ort", m_editable );
+    // createSridControl( main, dataBinding, "Koordinaten-System", m_editable );
+  }
+
+  private void createTextControl( final Composite main, final IDataBinding dataBinding, final String displayLabel, final String property, final boolean editable )
+  {
+    final Label label = new Label( main, SWT.NONE );
+    label.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, false ) );
+    label.setText( displayLabel );
+
+    final Text text = new Text( main, SWT.BORDER );
+    text.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    text.setEnabled( editable );
+
+    final ISWTObservableValue targetValue = SWTObservables.observeText( text, SWT.Modify );
+    final IObservableValue modelValue = BeansObservables.observeValue( m_dhmIndex, property );
+    dataBinding.bindValue( targetValue, modelValue );
+  }
+
+  private void createDateControl( final Composite main, final IDataBinding dataBinding, final String displayLabel, final String property, final boolean editable )
+  {
+    final Label label = new Label( main, SWT.NONE );
+    label.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, false ) );
+    label.setText( displayLabel );
+
+    final DateTime dateTime = new DateTime( main, SWT.DATE | SWT.DROP_DOWN | SWT.BORDER );
+    dateTime.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    dateTime.setEnabled( editable );
+
+    final ISWTObservableValue targetValue = SWTObservables.observeSelection( dateTime );
+    final IObservableValue modelValue = BeansObservables.observeValue( m_dhmIndex, property );
+    dataBinding.bindValue( targetValue, modelValue );
+  }
+
+  private DhmIndex getNewDhmIndex( )
+  {
+    /* HINT: Prevents null pointer during binding. */
+    final DhmIndex dhmIndex = new DhmIndex();
+    dhmIndex.setCreationDate( new Date() );
+    dhmIndex.setEditingDate( new Date() );
+    dhmIndex.setMeasurementDate( new Date() );
+
+    return dhmIndex;
   }
 }
