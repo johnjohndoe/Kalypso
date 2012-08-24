@@ -12,6 +12,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.help.webapp
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.KalypsoManualRisk.help
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Bundle-ClassPath: library.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

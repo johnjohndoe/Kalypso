@@ -4,7 +4,7 @@ Bundle-Name: Kalypso
 Bundle-SymbolicName: org.kalypso.model.product;singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.model.product.KalypsoModelProductPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.help.ui,
  org.eclipse.ui.ide.application,

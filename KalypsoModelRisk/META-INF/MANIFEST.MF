@@ -4,7 +4,7 @@ Bundle-Name: org.kalypso.risk
 Bundle-SymbolicName: org.kalypso.risk;singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.risk.plugin.KalypsoRiskPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.ui.addlayer,
  org.kalypso.ModelSimulationBase,

@@ -28,4 +28,4 @@ Export-Package: org.kalypso.calculation.connector,
  org.kalypso.calculation.plc.postprocessing,
  org.kalypso.calculation.plc.postprocessing.binding
 Bundle-ClassPath: .
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/

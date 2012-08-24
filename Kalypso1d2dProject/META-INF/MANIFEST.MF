@@ -36,5 +36,5 @@ Export-Package: org.kalypso.kalypso1d2d.extension,
  org.kalypso.ui.wizards.imports.observation,
  org.kalypso.ui.wizards.imports.roughness,
  org.kalypso.ui.wizards.results
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -25,6 +25,6 @@ Export-Package: org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.kalypsosimulationmodel.utils,
  test.org.kalypso.kalypsosimulationmodel
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Bundle-Activator: org.kalypso.kalypsosimulationmodel.internal.KalypsoModelSimulationBase
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

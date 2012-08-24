@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: RMM project templates Plug-in
 Bundle-SymbolicName: org.kalypso.model.rrm.project.template;singleton:=true
 Bundle-Version: 12.7.0.qualifier
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Require-Bundle: org.kalypso.contribs.eclipseplatform
 Bundle-Localization: plugin
 
