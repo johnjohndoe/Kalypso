@@ -38,62 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.provider;
+package org.kalypso.model.wspm.pdb.ui.internal.tin;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.data.PdbImportConnectionChooserData;
 
 /**
  * @author Holger Albert
  */
-public class SearchDhmIndexContentProvider implements ITreeContentProvider
+public class DhmIndexFilenameViewerComparator extends ViewerComparator
 {
-  public SearchDhmIndexContentProvider( )
+  @Override
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
+    final String c1 = getValue( e1 );
+    final String c2 = getValue( e2 );
+
+    return c1.compareTo( c2 );
   }
 
-  @Override
-  public Object[] getChildren( final Object parentElement )
+  private String getValue( final Object element )
   {
-    return null;
-  }
+    if( element instanceof DhmIndex )
+      return ((DhmIndex) element).getFilename();
 
-  @Override
-  public Object getParent( final Object element )
-  {
-    return null;
-  }
-
-  @Override
-  public boolean hasChildren( final Object element )
-  {
-    return false;
-  }
-
-  @Override
-  public Object[] getElements( final Object inputElement )
-  {
-    if( !(inputElement instanceof PdbImportConnectionChooserData) )
-      return new Object[] {};
-
-    final PdbImportConnectionChooserData data = (PdbImportConnectionChooserData) inputElement;
-
-    final DhmIndex[] dhmIndexes = data.getDhmIndexes();
-    if( dhmIndexes != null )
-      return dhmIndexes;
-
-    return new Object[] {};
-  }
-
-  @Override
-  public void dispose( )
-  {
-  }
-
-  @Override
-  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
-  {
+    return element.toString();
   }
 }

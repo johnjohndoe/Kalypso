@@ -60,14 +60,6 @@ import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.comparators.DhmIndexDescriptionViewerComparator;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.comparators.DhmIndexFilenameViewerComparator;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.comparators.DhmIndexNameViewerComparator;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.data.PdbImportConnectionChooserData;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.provider.DhmIndexDescriptionLabelProvider;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.provider.DhmIndexFilenameLabelProvider;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.provider.DhmIndexNameLabelProvider;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.provider.SearchDhmIndexContentProvider;
 
 /**
  * This page lists all {@link org.kalypso.model.wspm.pdb.db.mapping.DhmIndex} and enables the user to select one.

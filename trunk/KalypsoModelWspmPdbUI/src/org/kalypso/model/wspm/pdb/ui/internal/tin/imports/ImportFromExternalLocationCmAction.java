@@ -38,74 +38,60 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.actions;
+package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.gml.ui.internal.coverage.imports.ImportCoverageData;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.gml.ui.coverage.CoverageManagementAction;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 
 /**
  * @author Holger Albert
  */
-public class ExportToExternalLocationRunnable implements ICoreRunnableWithProgress
+public class ImportFromExternalLocationCmAction extends CoverageManagementAction
 {
   /**
    * The shell.
    */
-  private final Shell m_shell;
-
-  /**
-   * The data object.
-   */
-  private final ImportCoverageData m_data;
+  private Shell m_shell;
 
   /**
    * The constructor.
-   * 
-   * @param shell
-   *          The shell.
-   * @param data
-   *          The data object.
    */
-  public ExportToExternalLocationRunnable( final Shell shell, final ImportCoverageData data )
+  public ImportFromExternalLocationCmAction( )
   {
-    m_shell = shell;
-    m_data = data;
+    super( "Höhendaten aus externen Speicherort hinzufügen" );
   }
 
   @Override
-  public IStatus execute( IProgressMonitor monitor )
+  public boolean isVisible( )
   {
-    /* Monitor. */
-    if( monitor == null )
-      monitor = new NullProgressMonitor();
-
     try
     {
-      /* Monitor. */
-      monitor.beginTask( "", 1000 );
-      monitor.subTask( "" );
+      final IPdbSettings[] settings = PdbSettings.getSettings();
+      if( settings.length == 0 )
+        return false;
 
-      // TODO
-
-      /* Monitor. */
-      monitor.worked( 1000 );
-
-      return null;
+      return true;
     }
-    catch( final Exception ex )
+    catch( final PdbConnectException ex )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, ex.getLocalizedMessage(), ex );
+      // ex.printStackTrace();
+      return false;
     }
-    finally
-    {
-      /* Monitor. */
-      monitor.done();
-    }
+  }
+
+  @Override
+  public void preExecute( final Shell shell, final Object data )
+  {
+    m_shell = shell;
+  }
+
+  @Override
+  public IAction getAction( )
+  {
+    return new ImportFromExternalLocationAction( m_shell );
   }
 }

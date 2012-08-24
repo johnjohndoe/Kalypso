@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.joda.time.LocalTime;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -94,6 +95,8 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    * The qname of the catchment member.
    */
   QName MEMBER_CATCHMENT = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "catchmentMember" ); // $NON-NLS-1$ //$NON-NLS-1$
+
+  void setValidityRange( DateRange validityRange );
 
   /**
    * This function returns the comment.

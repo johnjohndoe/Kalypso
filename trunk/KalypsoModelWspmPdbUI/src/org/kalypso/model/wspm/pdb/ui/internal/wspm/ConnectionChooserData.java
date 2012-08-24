@@ -80,7 +80,7 @@ public class ConnectionChooserData extends AbstractModelObject
     final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
     final IStatus result = RunnableContextHelper.execute( context, true, true, operation );
 
-    m_connection = operation.getConnection();
+    setConnection( operation.getConnection() );
 
     return result;
   }

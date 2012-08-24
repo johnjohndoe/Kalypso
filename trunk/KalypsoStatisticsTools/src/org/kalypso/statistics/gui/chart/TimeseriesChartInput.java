@@ -13,7 +13,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPersistableElement;
-import org.kalypso.chart.ui.internal.workbench.IDatabaseStorageEditorInput;
+import org.kalypso.chart.ui.workbench.IDatabaseStorageEditorInput;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.statistics.types.ETimeseriesType;

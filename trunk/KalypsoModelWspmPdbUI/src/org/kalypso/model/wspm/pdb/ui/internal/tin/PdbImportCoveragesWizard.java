@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.tin;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -49,17 +49,14 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IMessage;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.PdbUiUtils;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.gml.ui.coverage.ImportCoverageData;
+import org.kalypso.gml.ui.coverage.ImportCoveragesOperation;
+import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 import org.kalypso.model.wspm.pdb.ui.internal.checkout.ConnectionChooserPage;
-import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.data.PdbImportConnectionChooserData;
 
 /**
  * This wizard shows a page to select from an entry (path) of the external storage location and imports the coverages.
@@ -88,9 +85,9 @@ public class PdbImportCoveragesWizard extends Wizard
   /**
    * The constructor.
    */
-  public PdbImportCoveragesWizard( )
+  public PdbImportCoveragesWizard( final PdbImportConnectionChooserData settingsData )
   {
-    m_settingsData = new PdbImportConnectionChooserData();
+    m_settingsData = settingsData;
 
     setWindowTitle( "Höhendaten aus externen Speicherort hinzufügen" );
     setNeedsProgressMonitor( true );
@@ -120,13 +117,7 @@ public class PdbImportCoveragesWizard extends Wizard
   @Override
   public void addPages( )
   {
-    final IStatus connectionStatus = checkConnection();
-    if( connectionStatus.getSeverity() == IStatus.ERROR )
-    {
-      // TODO
-    }
-
-    if( connectionStatus.getSeverity() == IStatus.WARNING )
+    if( m_settingsData.getConnection() == null )
       addPage( new ConnectionChooserPage( "connectionChooser", m_settingsData ) ); //$NON-NLS-1$
 
     addPage( new SearchDhmIndexPage( "searchDhmIndex", m_settingsData ) ); //$NON-NLS-1$
@@ -135,39 +126,29 @@ public class PdbImportCoveragesWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    // TODO
+    /* Get the selected dhm index. */
+    final DhmIndex dhmIndex = m_settingsData.getDhmIndex();
 
-    return false;
-  }
+    /* Build the path. */
+    final String filename = dhmIndex.getFilename();
+    final IPath demServerPath = m_settingsData.getDemServerPath();
+    final IPath filePath = demServerPath.append( filename );
+    final String path = filePath.toOSString();
 
-  private IStatus checkConnection( )
-  {
-    /* Get the active workbench window. */
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+    /* Get the srid. */
+    final String srid = dhmIndex.getSrid();
 
-    /* If there is a viewer, we are within the PDB perspective. */
-    final IConnectionViewer connectionViewer = PdbUiUtils.getConnectionViewer( window );
-    if( connectionViewer != null )
-    {
-      /* We are within the PDB perspective. */
-      final IPdbConnection connection = PdbUiUtils.getConnection( window );
-      if( connection == null )
-        return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Es besteht keine Verbindung zur Datenbank." );
+    /* Create the data object for the operation. */
+    final ImportCoverageData data = new ImportCoverageData();
+    data.setDataContainerPath( path );
+    data.setSourceSRS( srid );
 
-      m_settingsData.setConnection( connection );
+    /* Create the operation and execute it. */
+    final ImportCoveragesOperation operation = new ImportCoveragesOperation( data );
+    final IStatus operationStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    StatusDialog.open( getShell(), operationStatus, getWindowTitle() );
 
-      return Status.OK_STATUS;
-    }
-
-    /* We are outside the PDB. */
-    final IPdbConnection connection = PdbUiUtils.getConnection( window );
-    if( connection == null )
-      return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, "Es besteht keine Verbindung zur Datenbank." );
-
-    m_settingsData.setConnection( connection );
-
-    return Status.OK_STATUS;
+    return true;
   }
 
   protected void pageChanging( final PageChangingEvent event )

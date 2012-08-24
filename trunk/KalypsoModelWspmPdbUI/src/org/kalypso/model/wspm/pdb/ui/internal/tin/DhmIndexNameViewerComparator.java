@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.comparators;
+package org.kalypso.model.wspm.pdb.ui.internal.tin;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 /**
  * @author Holger Albert
  */
-public class DhmIndexFilenameViewerComparator extends ViewerComparator
+public class DhmIndexNameViewerComparator extends ViewerComparator
 {
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
@@ -61,7 +61,7 @@ public class DhmIndexFilenameViewerComparator extends ViewerComparator
   private String getValue( final Object element )
   {
     if( element instanceof DhmIndex )
-      return ((DhmIndex) element).getFilename();
+      return ((DhmIndex) element).getName();
 
     return element.toString();
   }

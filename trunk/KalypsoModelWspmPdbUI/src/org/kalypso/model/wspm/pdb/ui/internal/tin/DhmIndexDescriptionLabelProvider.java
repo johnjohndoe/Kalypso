@@ -38,45 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.actions;
+package org.kalypso.model.wspm.pdb.ui.internal.tin;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.PdbImportCoveragesWizard;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 
 /**
  * @author Holger Albert
  */
-public class ImportFromExternalLocationAction extends Action
+public class DhmIndexDescriptionLabelProvider extends ColumnLabelProvider
 {
-  /**
-   * The shell.
-   */
-  private final Shell m_shell;
-
-  /**
-   * The constructor.
-   * 
-   * @param shell
-   *          The shell.
-   */
-  public ImportFromExternalLocationAction( final Shell shell )
-  {
-    super( "Höhendaten aus externen Speicherort hinzufügen", WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.ADD_COVERAGE ) );
-
-    m_shell = shell;
-  }
-
   @Override
-  public void run( )
+  public String getText( final Object element )
   {
-    /* Create the wizard. */
-    final PdbImportCoveragesWizard wizard = new PdbImportCoveragesWizard();
+    if( element instanceof DhmIndex )
+    {
+      final DhmIndex dhmIndex = (DhmIndex) element;
+      return dhmIndex.getDescription();
+    }
 
-    /* Open the dialog. */
-    final WizardDialog dialog = new WizardDialog( m_shell, wizard );
-    dialog.open();
+    return super.getText( element );
   }
 }

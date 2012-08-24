@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.kalypso.afgui.internal.ui.workflow.WorkflowBreadcrumbContentProvider;
+import org.kalypso.afgui.ui.workflow.WorkflowBreadcrumbContentProvider;
 import org.kalypso.afgui.views.ScenarioViewerFilter;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.DataSetBinder;

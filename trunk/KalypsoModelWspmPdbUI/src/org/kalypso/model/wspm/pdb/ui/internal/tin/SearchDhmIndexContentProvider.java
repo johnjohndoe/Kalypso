@@ -38,25 +38,61 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.provider;
+package org.kalypso.model.wspm.pdb.ui.internal.tin;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 
 /**
  * @author Holger Albert
  */
-public class DhmIndexDescriptionLabelProvider extends ColumnLabelProvider
+public class SearchDhmIndexContentProvider implements ITreeContentProvider
 {
-  @Override
-  public String getText( final Object element )
+  public SearchDhmIndexContentProvider( )
   {
-    if( element instanceof DhmIndex )
-    {
-      final DhmIndex dhmIndex = (DhmIndex) element;
-      return dhmIndex.getDescription();
-    }
+  }
 
-    return super.getText( element );
+  @Override
+  public Object[] getChildren( final Object parentElement )
+  {
+    return null;
+  }
+
+  @Override
+  public Object getParent( final Object element )
+  {
+    return null;
+  }
+
+  @Override
+  public boolean hasChildren( final Object element )
+  {
+    return false;
+  }
+
+  @Override
+  public Object[] getElements( final Object inputElement )
+  {
+    if( !(inputElement instanceof PdbImportConnectionChooserData) )
+      return new Object[] {};
+
+    final PdbImportConnectionChooserData data = (PdbImportConnectionChooserData) inputElement;
+
+    final DhmIndex[] dhmIndexes = data.getDhmIndexes();
+    if( dhmIndexes != null )
+      return dhmIndexes;
+
+    return new Object[] {};
+  }
+
+  @Override
+  public void dispose( )
+  {
+  }
+
+  @Override
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
+  {
   }
 }
