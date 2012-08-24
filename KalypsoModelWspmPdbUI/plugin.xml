@@ -540,13 +540,13 @@
   <extension
         point="org.kalypso.gml.ui.coverageManagementAction">
      <action
-           class="org.kalypso.model.wspm.pdb.ui.internal.tin.actions.ImportFromExternalLocationCmAction"
-           id="org.kalypso.model.wspm.pdb.ui.internal.tin.ImportFromExternalLocationCmAction"
+           class="org.kalypso.model.wspm.pdb.ui.internal.tin.imports.ImportFromExternalLocationCmAction"
+           id="org.kalypso.model.wspm.pdb.ui.internal.tin.imports.ImportFromExternalLocationCmAction"
            role="widget">
      </action>
      <action
-           class="org.kalypso.model.wspm.pdb.ui.internal.tin.actions.ExportToExternalLocationCmAction"
-           id="org.kalypso.model.wspm.pdb.ui.internal.tin.ExportToExternalLocationCmAction"
+           class="org.kalypso.model.wspm.pdb.ui.internal.tin.exports.ExportToExternalLocationCmAction"
+           id="org.kalypso.model.wspm.pdb.ui.internal.tin.exports.ExportToExternalLocationCmAction"
            role="wizard">
      </action>
   </extension>   

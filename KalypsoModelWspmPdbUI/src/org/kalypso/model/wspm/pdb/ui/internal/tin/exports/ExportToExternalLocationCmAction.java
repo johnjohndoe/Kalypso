@@ -38,31 +38,67 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.comparators;
+package org.kalypso.model.wspm.pdb.ui.internal.tin.exports;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
-import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.gml.ui.coverage.CoverageManagementAction;
+import org.kalypso.gml.ui.coverage.ImportCoverageData;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 
 /**
  * @author Holger Albert
  */
-public class DhmIndexDescriptionViewerComparator extends ViewerComparator
+public class ExportToExternalLocationCmAction extends CoverageManagementAction
 {
-  @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
-  {
-    final String c1 = getValue( e1 );
-    final String c2 = getValue( e2 );
+  /**
+   * The shell.
+   */
+  private Shell m_shell;
 
-    return c1.compareTo( c2 );
+  /**
+   * The data object.
+   */
+  private ImportCoverageData m_data;
+
+  /**
+   * The constructor.
+   */
+  public ExportToExternalLocationCmAction( )
+  {
+    super( "Zusätzlich in externen Speicherort ablegen" );
   }
 
-  private String getValue( final Object element )
+  @Override
+  public boolean isVisible( )
   {
-    if( element instanceof DhmIndex )
-      return ((DhmIndex) element).getDescription();
+    try
+    {
+      final IPdbSettings[] settings = PdbSettings.getSettings();
+      if( settings.length == 0 )
+        return false;
 
-    return element.toString();
+      return true;
+    }
+    catch( final PdbConnectException ex )
+    {
+      // ex.printStackTrace();
+      return false;
+    }
+  }
+
+  @Override
+  public void preExecute( final Shell shell, final Object data )
+  {
+    m_shell = shell;
+    m_data = (ImportCoverageData) data;
+  }
+
+  @Override
+  public IAction getAction( )
+  {
+    return new ExportToExternalLocationAction( m_shell, m_data );
   }
 }

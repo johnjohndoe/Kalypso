@@ -61,7 +61,6 @@ import org.kalypso.model.hydrology.binding.cm.ICatchment;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.internal.binding.cm.LinearSumGenerator;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.hydrology.util.cm.CatchmentHelper;
 import org.kalypso.model.rcm.IRainfallModelProvider;
@@ -151,7 +150,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* Initialize the generator. */
       final ILinearSumGenerator clonedGenerator = (ILinearSumGenerator) rainfallModel.getGenerators().get( 0 );
-      initGenerator( (LinearSumGenerator) clonedGenerator, simulationRange, unadjustedSimulationRange, timestep, parameterType );
+      initGenerator( clonedGenerator, simulationRange, unadjustedSimulationRange, timestep, parameterType );
 
       /* Initialize the catchment target links. */
       initTargetLinks( simulation, clonedGenerator, targetLink, parameterType );
@@ -177,7 +176,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     }
   }
 
-  private void initGenerator( final LinearSumGenerator generator, final DateRange simulationRange, final DateRange unadjustedSimulationRange, final Period timestep, final String parameterType )
+  private void initGenerator( final ILinearSumGenerator generator, final DateRange simulationRange, final DateRange unadjustedSimulationRange, final Period timestep, final String parameterType )
   {
     /* Set the period. */
     generator.setPeriod( simulationRange );

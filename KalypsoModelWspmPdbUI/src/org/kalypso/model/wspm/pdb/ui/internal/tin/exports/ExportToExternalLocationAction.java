@@ -38,67 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.actions;
+package org.kalypso.model.wspm.pdb.ui.internal.tin.exports;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.gml.ui.internal.coverage.actions.CoverageManagementAction;
-import org.kalypso.gml.ui.internal.coverage.imports.ImportCoverageData;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.PdbSettings;
+import org.kalypso.gml.ui.coverage.ImportCoverageData;
 
 /**
  * @author Holger Albert
  */
-public class ExportToExternalLocationCmAction extends CoverageManagementAction
+public class ExportToExternalLocationAction extends Action
 {
   /**
    * The shell.
    */
-  private Shell m_shell;
+  private final Shell m_shell;
 
   /**
    * The data object.
    */
-  private ImportCoverageData m_data;
+  private final ImportCoverageData m_data;
 
   /**
    * The constructor.
+   * 
+   * @param shell
+   *          The shell.
+   * @param data
+   *          The data object.
    */
-  public ExportToExternalLocationCmAction( )
+  public ExportToExternalLocationAction( final Shell shell, final ImportCoverageData data )
   {
-    super( "Zusätzlich in externen Speicherort ablegen" );
-  }
+    super( "Höhendaten hochladen" );
 
-  @Override
-  public boolean isVisible( )
-  {
-    try
-    {
-      final IPdbSettings[] settings = PdbSettings.getSettings();
-      if( settings.length == 0 )
-        return false;
-
-      return true;
-    }
-    catch( final PdbConnectException ex )
-    {
-      // ex.printStackTrace();
-      return false;
-    }
-  }
-
-  @Override
-  public void preExecute( final Shell shell, final Object data )
-  {
     m_shell = shell;
-    m_data = (ImportCoverageData) data;
+    m_data = data;
   }
 
+  /**
+   * @see org.eclipse.jface.action.Action#run()
+   */
   @Override
-  public ICoreRunnableWithProgress getRunnable( )
+  public void run( )
   {
-    return new ExportToExternalLocationRunnable( m_shell, m_data );
+    // TODO
   }
 }

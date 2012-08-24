@@ -275,14 +275,14 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       final DateRange timeseriesRange = MetadataHelper.getDateRange( source.getMetadataList() );
       final DateRange validityRange = getValidityRange( dateRange );
       if( !timeseriesRange.containsInclusive( validityRange ) )
-        throw new SensorException( String.format( Messages.getString("LinearSumGenerator.0"), source.getName(), timeseriesRange.toString(), validityRange.toString() ) ); //$NON-NLS-1$
+        throw new SensorException( String.format( Messages.getString( "LinearSumGenerator.0" ), source.getName(), timeseriesRange.toString(), validityRange.toString() ) ); //$NON-NLS-1$
 
       final IObservation filteredObservation = ZmlFilterWorker.applyFilters( source, filters );
       final IObservation resolvedObservation = ObservationHelper.clone( filteredObservation, request );
       return resolvedObservation;
     }
 
-    throw new SensorException( Messages.getString("LinearSumGenerator.1") ); //$NON-NLS-1$
+    throw new SensorException( Messages.getString( "LinearSumGenerator.1" ) ); //$NON-NLS-1$
   }
 
   private DateRange getValidityRange( final DateRange defaultRange )
@@ -293,14 +293,6 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     return m_validityRange;
   }
 
-  public void setValidityRange( final DateRange validityRange )
-  {
-    m_validityRange = validityRange;
-  }
-
-  /**
-   * @see org.kalypso.model.rcm.binding.AbstractRainfallGenerator#setValidFrom(java.util.Date)
-   */
   @Override
   public void setValidFrom( final Date validFrom )
   {
@@ -311,9 +303,6 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     adjustValidities();
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.AbstractRainfallGenerator#setValidTo(java.util.Date)
-   */
   @Override
   public void setValidTo( final Date validTo )
   {
@@ -322,6 +311,12 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
     /* Adjust the validities. */
     adjustValidities();
+  }
+
+  @Override
+  public void setValidityRange( final DateRange validityRange )
+  {
+    m_validityRange = validityRange;
   }
 
   @Override

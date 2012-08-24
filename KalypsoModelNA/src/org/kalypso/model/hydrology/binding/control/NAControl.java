@@ -54,7 +54,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.gml.ui.internal.feature.marker.IDuplicateFeatureMarker;
+import org.kalypso.gml.ui.gml.IDuplicateFeatureMarker;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -148,7 +148,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
     final IFeatureBindingCollection<NAControl> allSimulations = owner.getSimulations();
 
     /* Find the new description. */
-    final String newDescription = findUniqueValue( allSimulations.toArray( new NAControl[] {} ), NAControl.QN_DESCRIPTION, Messages.getString("NAControl.0"), null ); //$NON-NLS-1$
+    final String newDescription = findUniqueValue( allSimulations.toArray( new NAControl[] {} ), NAControl.QN_DESCRIPTION, Messages.getString( "NAControl.0" ), null ); //$NON-NLS-1$
 
     /* Set the new description. */
     setDescription( newDescription );
@@ -487,7 +487,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
     final IFeatureBindingCollection<NAControl> allSimulations = owner.getSimulations();
 
     /* Find the new description. */
-    final String newDescription = findUniqueValue( allSimulations.toArray( new NAControl[] {} ), NAControl.QN_DESCRIPTION, previousDescription, Messages.getString("NAControl.1") ); //$NON-NLS-1$
+    final String newDescription = findUniqueValue( allSimulations.toArray( new NAControl[] {} ), NAControl.QN_DESCRIPTION, previousDescription, Messages.getString( "NAControl.1" ) ); //$NON-NLS-1$
 
     /* Set the new description. */
     final IPropertyType pt = getFeatureType().getProperty( NAControl.QN_DESCRIPTION );

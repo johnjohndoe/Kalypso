@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.provider;
+package org.kalypso.model.wspm.pdb.ui.internal.tin;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
@@ -46,7 +46,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 /**
  * @author Holger Albert
  */
-public class DhmIndexFilenameLabelProvider extends ColumnLabelProvider
+public class DhmIndexNameLabelProvider extends ColumnLabelProvider
 {
   @Override
   public String getText( final Object element )
@@ -54,7 +54,7 @@ public class DhmIndexFilenameLabelProvider extends ColumnLabelProvider
     if( element instanceof DhmIndex )
     {
       final DhmIndex dhmIndex = (DhmIndex) element;
-      return dhmIndex.getFilename();
+      return dhmIndex.getName();
     }
 
     return super.getText( element );

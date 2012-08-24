@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.data;
+package org.kalypso.model.wspm.pdb.ui.internal.tin;
 
 import java.util.List;
 
@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.operation.IRunnableContext;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -78,19 +77,6 @@ public class PdbImportConnectionChooserData extends ConnectionChooserData
     m_demServerPath = null;
     m_dhmIndexes = null;
     m_dhmIndex = null;
-  }
-
-  @Override
-  public IStatus doConnect( final IRunnableContext context )
-  {
-    final IStatus connectStatus = super.doConnect( context );
-
-    if( connectStatus.isOK() )
-      return updateData( getConnection() );
-
-    updateData( null );
-
-    return connectStatus;
   }
 
   @Override
