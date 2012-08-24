@@ -56,7 +56,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.tin.PdbImportConnectionChooserData;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.PdbImportCoveragesWizard;
 
 /**
  * @author Holger Albert
