@@ -38,9 +38,8 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
+package org.kalypso.model.wspm.pdb.ui.internal.tin.exports;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.PageChangingEvent;
@@ -53,17 +52,16 @@ import org.eclipse.ui.forms.IMessage;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.gml.ui.coverage.ImportCoverageData;
-import org.kalypso.gml.ui.coverage.ImportCoveragesOperation;
-import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.checkout.ConnectionChooserPage;
 
 /**
- * This wizard shows a page to select from an entry (path) of the external storage location and imports the coverages.
+ * This wizard shows a page to edit properties for an entry (path) of the external storage location.
  * 
  * @author Holger Albert
  */
-public class PdbImportCoveragesWizard extends Wizard
+public class PdbExportCoveragesWizard extends Wizard
 {
   /**
    * This listener is notified, if the page has changed.
@@ -80,16 +78,16 @@ public class PdbImportCoveragesWizard extends Wizard
   /**
    * The data containing the connection settings.
    */
-  private final PdbImportConnectionChooserData m_settingsData;
+  private final PdbExportConnectionChooserData m_settingsData;
 
   /**
    * The constructor.
    */
-  public PdbImportCoveragesWizard( final PdbImportConnectionChooserData settingsData )
+  public PdbExportCoveragesWizard( final PdbExportConnectionChooserData settingsData )
   {
     m_settingsData = settingsData;
 
-    setWindowTitle( "Höhendaten aus externen Speicherort hinzufügen" );
+    setWindowTitle( "Höhendaten hochladen" );
     setNeedsProgressMonitor( true );
   }
 
@@ -120,33 +118,18 @@ public class PdbImportCoveragesWizard extends Wizard
     if( m_settingsData.getConnection() == null )
       addPage( new ConnectionChooserPage( "connectionChooser", m_settingsData ) ); //$NON-NLS-1$
 
-    addPage( new SearchDhmIndexPage( "searchDhmIndex", m_settingsData ) ); //$NON-NLS-1$
+    addPage( new EditDhmIndexPage( "editDhmIndex", m_settingsData ) ); //$NON-NLS-1$
   }
 
   @Override
   public boolean performFinish( )
   {
-    /* Get the selected dhm index. */
-    final DhmIndex dhmIndex = m_settingsData.getDhmIndex();
-
-    /* Build the path. */
-    final String filename = dhmIndex.getFilename();
-    final IPath demServerPath = m_settingsData.getDemServerPath();
-    final IPath filePath = demServerPath.append( filename );
-    final String path = filePath.toOSString();
-
-    /* Get the srid. */
-    final String srid = dhmIndex.getSrid();
-
-    /* Create the data object for the operation. */
-    final ImportCoverageData data = new ImportCoverageData();
-    data.setDataContainerPath( path );
-    data.setSourceSRS( srid );
-
-    /* Create the operation and execute it. */
-    final ImportCoveragesOperation operation = new ImportCoveragesOperation( data );
-    final IStatus operationStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    StatusDialog.open( getShell(), operationStatus, getWindowTitle() );
+    final IPdbConnection connection = m_settingsData.getConnection();
+    final PdbExportOperation operation = new PdbExportOperation( m_settingsData );
+    final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, runnable );
+    if( result.isOK() )
+      StatusDialog.open( getShell(), result, getWindowTitle() );
 
     return true;
   }

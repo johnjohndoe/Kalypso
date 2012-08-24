@@ -41,21 +41,12 @@
 package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.PdbUiUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.PdbImportConnectionChooserData;
 
 /**
  * @author Holger Albert
@@ -89,7 +80,7 @@ public class ImportFromExternalLocationAction extends Action
     {
       // TODO: potentially slow, maybe call in operation
       final PdbImportConnectionChooserData settingsData = new PdbImportConnectionChooserData();
-      final IPdbConnection connection = checkConnection();
+      final IPdbConnection connection = PdbImportConnectionChooserData.checkConnection();
       settingsData.setConnection( connection );
 
       /* Create the wizard. */
@@ -103,24 +94,5 @@ public class ImportFromExternalLocationAction extends Action
     {
       StatusDialog.open( m_shell, e.getStatus(), getText() );
     }
-  }
-
-  private IPdbConnection checkConnection( ) throws CoreException
-  {
-    /* Get the active workbench window. */
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-
-    /* If there is a viewer, we are within the PDB perspective. */
-    final IConnectionViewer connectionViewer = PdbUiUtils.getConnectionViewer( window );
-    if( connectionViewer == null )
-      return null;
-
-    /* We are within the PDB perspective. */
-    final IPdbConnection connection = PdbUiUtils.getConnection( window );
-    if( connection == null )
-      throw new CoreException( new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, "Es besteht keine Verbindung zur Datenbank." ) );
-
-    return connection;
   }
 }

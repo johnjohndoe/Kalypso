@@ -48,6 +48,8 @@ import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -57,7 +59,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
@@ -66,7 +68,6 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.ui.internal.tin.DhmIndexComposite;
-import org.kalypso.model.wspm.pdb.ui.internal.tin.PdbImportConnectionChooserData;
 
 /**
  * This page lists all {@link org.kalypso.model.wspm.pdb.db.mapping.DhmIndex} and enables the user to select one.
@@ -78,12 +79,17 @@ public class SearchDhmIndexPage extends WizardPage
   /**
    * The settings.
    */
-  private final PdbImportConnectionChooserData m_settingsData;
+  protected final PdbImportConnectionChooserData m_settingsData;
 
   /**
    * The tree viewer displays the dhm indexes.
    */
   private TreeViewer m_searchViewer;
+
+  /**
+   * The dhm index composite.
+   */
+  protected DhmIndexComposite m_dhmIndexComposite;
 
   /**
    * The constructor.
@@ -116,6 +122,7 @@ public class SearchDhmIndexPage extends WizardPage
 
     m_settingsData = settingsData;
     m_searchViewer = null;
+    m_dhmIndexComposite = null;
 
     setTitle( "Datei auswählen" );
     setDescription( "Auswahl der Datei der zu importierenden Höhendaten." );
@@ -134,18 +141,20 @@ public class SearchDhmIndexPage extends WizardPage
     mainLayout.marginWidth = 0;
     main.setLayout( mainLayout );
 
+    /* Create the filter group. */
+    final Group filterGroup = new Group( main, SWT.NONE );
+    filterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    filterGroup.setLayout( new GridLayout( 1, false ) );
+    filterGroup.setText( "Auswahl einschränken" );
+
     /* Create the filter textbox. */
-    final Text filterText = new Text( main, SWT.BORDER | SWT.SEARCH );
+    final Text filterText = new Text( filterGroup, SWT.BORDER | SWT.SEARCH );
     filterText.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Create the filter button. */
-    final Button filterButton = new Button( main, SWT.CHECK );
+    final Button filterButton = new Button( filterGroup, SWT.CHECK );
     filterButton.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     filterButton.setText( "Nach Kartenausschnitt filtern" );
-
-    /* Create an empty label. */
-    final Label label = new Label( main, SWT.NONE );
-    label.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Create a tree viewer. */
     m_searchViewer = new TreeViewer( main, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL );
@@ -154,7 +163,7 @@ public class SearchDhmIndexPage extends WizardPage
     m_searchViewer.getTree().setHeaderVisible( true );
     configureTreeViewer( m_searchViewer );
     m_searchViewer.setContentProvider( new SearchDhmIndexContentProvider() );
-    m_searchViewer.setInput( m_settingsData );
+    // m_searchViewer.setInput( m_settingsData );
 
     /* Add the column resize control listener. */
     m_searchViewer.getTree().addControlListener( new ColumnsResizeControlListener() );
@@ -167,17 +176,21 @@ public class SearchDhmIndexPage extends WizardPage
 
     /* Get the body. */
     final Composite body = scrolledForm.getBody();
-    body.setLayout( new GridLayout( 1, false ) );
+    final GridLayout bodyLayout = new GridLayout( 1, false );
+    bodyLayout.marginHeight = 0;
+    bodyLayout.marginWidth = 0;
+    body.setLayout( bodyLayout );
 
     /* Add the dhm index composite. */
-    final DhmIndexComposite dhmIndexComposite = new DhmIndexComposite( body, SWT.NONE );
-    dhmIndexComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_dhmIndexComposite = new DhmIndexComposite( body, SWT.NONE, m_settingsData.getDhmIndex(), false, dataBinding );
+    m_dhmIndexComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Reflow. */
     scrolledForm.reflow( true );
 
     /* Create the filter. */
-    final DhmIndexFilter filter = new DhmIndexFilter( m_searchViewer, "", StringUtils.EMPTY, false );
+    final String dbCoordinateSystem = m_settingsData.getDbCoordinateSystem();
+    final DhmIndexFilter filter = new DhmIndexFilter( m_searchViewer, dbCoordinateSystem, StringUtils.EMPTY, false );
     m_searchViewer.setFilters( new ViewerFilter[] { filter } );
 
     /* Do the data binding. */
@@ -191,11 +204,32 @@ public class SearchDhmIndexPage extends WizardPage
     dataBinding.bindValue( buttonTarget, buttonModel );
 
     /* Do the data binding. */
+    // TODO Binding or update data object on my own...
     final IObservableValue targetViewer = ViewersObservables.observeInput( m_searchViewer );
     final IObservableValue modelViewer = BeansObservables.observeValue( m_settingsData, PdbImportConnectionChooserData.PROPERTY_DHM_INDEXES );
     dataBinding.bindValue( targetViewer, modelViewer );
 
-    // TODO The dhm index composite needs to get the new object set...
+    /* Add a listener. */
+    m_searchViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        /* The dhm index composite needs to get the new object set. */
+        if( m_dhmIndexComposite != null && !m_dhmIndexComposite.isDisposed() )
+          m_dhmIndexComposite.dispose();
+
+        /* Add the dhm index composite. */
+        // TODO The settings seems not to be updated here...
+        // TODO Get dhm index from selection (event)...
+        // TODO Better: Add binding for dhm index and composite and move code into a property listener on model
+        m_dhmIndexComposite = new DhmIndexComposite( body, SWT.NONE, m_settingsData.getDhmIndex(), false, dataBinding );
+        m_dhmIndexComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+        /* Reflow. */
+        scrolledForm.reflow( true );
+      }
+    } );
 
     /* Set the control to the page. */
     setControl( main );

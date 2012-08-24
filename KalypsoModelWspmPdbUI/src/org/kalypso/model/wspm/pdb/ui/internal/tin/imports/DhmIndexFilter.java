@@ -110,7 +110,7 @@ public class DhmIndexFilter extends ViewerFilter
     if( filterByText( dhmIndex.getFilename() ) )
       return true;
 
-    if( filterByText( dhmIndex.getMimetype() ) )
+    if( filterByText( dhmIndex.getMimeType() ) )
       return true;
 
     if( filterByText( dhmIndex.getEditingUser() ) )
