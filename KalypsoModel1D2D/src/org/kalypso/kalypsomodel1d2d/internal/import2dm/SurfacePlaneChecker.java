@@ -159,7 +159,7 @@ public class SurfacePlaneChecker
     final Polygon polygon = item.getPolygon();
 
     final int numPoints = polygon.getNumPoints();
-    if( numPoints > 4 )
+    if( numPoints > 5 )
       // TODO: would be nice if we could handle this -> preprocess elements and triangulate them
       return "too many vertices, can only handle 3 or 4";
 
