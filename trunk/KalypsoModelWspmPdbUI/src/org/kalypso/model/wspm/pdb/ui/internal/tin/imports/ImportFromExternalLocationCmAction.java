@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gml.ui.coverage.CoverageManagementAction;
+import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
@@ -58,11 +59,18 @@ public class ImportFromExternalLocationCmAction extends CoverageManagementAction
   private Shell m_shell;
 
   /**
+   * The coverage management widget.
+   */
+  private CoverageManagementWidget m_widget;
+
+  /**
    * The constructor.
    */
   public ImportFromExternalLocationCmAction( )
   {
     super( "Höhendaten aus externen Speicherort hinzufügen" );
+
+    m_widget = null;
   }
 
   @Override
@@ -87,11 +95,12 @@ public class ImportFromExternalLocationCmAction extends CoverageManagementAction
   public void preExecute( final Shell shell, final Object data )
   {
     m_shell = shell;
+    m_widget = (CoverageManagementWidget) data;
   }
 
   @Override
   public IAction getAction( )
   {
-    return new ImportFromExternalLocationAction( m_shell );
+    return new ImportFromExternalLocationAction( m_shell, m_widget );
   }
 }

@@ -74,15 +74,20 @@ public class SearchDhmIndexContentProvider implements ITreeContentProvider
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    if( !(inputElement instanceof PdbImportConnectionChooserData) )
-      return new Object[] {};
+    /* CASE: DhmIndex[] was set as input. */
+    if( inputElement instanceof DhmIndex[] )
+      return (Object[]) inputElement;
 
-    final PdbImportConnectionChooserData data = (PdbImportConnectionChooserData) inputElement;
+    /* CASE: PdbImportConnectionChooserData was set as input. */
+    if( inputElement instanceof PdbImportConnectionChooserData )
+    {
+      final PdbImportConnectionChooserData data = (PdbImportConnectionChooserData) inputElement;
+      final DhmIndex[] dhmIndexes = data.getDhmIndexes();
+      if( dhmIndexes != null )
+        return dhmIndexes;
+    }
 
-    final DhmIndex[] dhmIndexes = data.getDhmIndexes();
-    if( dhmIndexes != null )
-      return dhmIndexes;
-
+    /* CASE: null or something unknown was set as input. */
     return new Object[] {};
   }
 

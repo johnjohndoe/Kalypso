@@ -85,13 +85,11 @@ public class PdbExportOperation implements IPdbOperation
     }
     catch( final HibernateException ex )
     {
-      ex.printStackTrace();
+      throw new PdbConnectException( "Updating the database failed...", ex );
     }
     catch( final IOException ex )
     {
-      ex.printStackTrace();
+      throw new PdbConnectException( "Could not copy the file...", ex );
     }
   }
-
-  // TODO How to handle transaction?
 }

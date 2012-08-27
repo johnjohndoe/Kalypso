@@ -99,6 +99,20 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
 
   public DhmIndex( )
   {
+    m_id = null;
+    m_name = "";
+    m_location = null;
+    m_filename = "";
+    m_mimeType = "";
+    m_creationDate = new Date();
+    m_editingDate = new Date();
+    m_editingUser = "";
+    m_measurementDate = new Date();
+    m_source = "";
+    m_editor = "";
+    m_measurementAccuracy = "";
+    m_description = "";
+    m_copyright = "";
   }
 
   public DhmIndex( final BigDecimal id, final String name, final com.vividsolutions.jts.geom.Polygon location, final String filename, final String mimetype, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String editor, final String measurementAccuracy, final String description, final String copyright )

@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.tin.exports;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -61,6 +64,11 @@ public class EditDhmIndexPage extends WizardPage
    * The settings.
    */
   protected final PdbExportConnectionChooserData m_settingsData;
+
+  /**
+   * The dhm index composite.
+   */
+  protected DhmIndexComposite m_dhmIndexComposite;
 
   /**
    * The constructor.
@@ -92,6 +100,7 @@ public class EditDhmIndexPage extends WizardPage
     super( pageName, title, titleImage );
 
     m_settingsData = settingsData;
+    m_dhmIndexComposite = null;
 
     setTitle( "Eintrag editieren" );
     setDescription( "Eigenschaften des Eintrages editieren." );
@@ -100,8 +109,6 @@ public class EditDhmIndexPage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
-    final DatabindingWizardPage dataBinding = new DatabindingWizardPage( this, null );
-
     /* Create the main composite. */
     final Composite main = new Composite( parent, SWT.NONE );
     final GridLayout mainLayout = new GridLayout( 1, false );
@@ -110,17 +117,39 @@ public class EditDhmIndexPage extends WizardPage
     main.setLayout( mainLayout );
 
     /* The dhm index to edit. */
-    /* HINT: This data object should already contain the dhm index, to edit. */
     final DhmIndex dhmIndex = m_settingsData.getDhmIndex();
 
     /* Add the dhm index composite. */
-    final DhmIndexComposite detailsComposite = new DhmIndexComposite( main, SWT.NONE, dhmIndex, true, dataBinding );
-    detailsComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_dhmIndexComposite = new DhmIndexComposite( main, SWT.NONE, dhmIndex, true, new DatabindingWizardPage( this, null ) );
+    m_dhmIndexComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    /* React to changes to the data model from outside. */
+    m_settingsData.addPropertyChangeListener( PdbExportConnectionChooserData.PROPERTY_DHM_INDEX, new PropertyChangeListener()
+    {
+      @Override
+      public void propertyChange( final PropertyChangeEvent evt )
+      {
+        /* Parent is disposed. */
+        if( main == null || main.isDisposed() )
+          return;
+
+        /* The dhm index to edit. */
+        final DhmIndex newDhmIndex = m_settingsData.getDhmIndex();
+
+        /* The dhm index composite needs to get the new object set. */
+        if( m_dhmIndexComposite != null && !m_dhmIndexComposite.isDisposed() )
+          m_dhmIndexComposite.dispose();
+
+        /* Add the dhm index composite. */
+        m_dhmIndexComposite = new DhmIndexComposite( main, SWT.NONE, newDhmIndex, true, new DatabindingWizardPage( EditDhmIndexPage.this, null ) );
+        m_dhmIndexComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+        /* Do a layout. */
+        main.layout();
+      }
+    } );
 
     /* Set the control to the page. */
     setControl( main );
   }
-
-  // TODO Needs a set function which updates the dhm index and disposes/recreates the dhm index composite...
-  // TODO Or if the settings changes, needs to do something...
 }
