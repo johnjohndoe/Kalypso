@@ -59,9 +59,10 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Thomas Jung
@@ -99,15 +100,13 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   /**
    * add a triangle to the eater. The triangle is defined by its three nodes ({@link INodeResult} and a information, if
    * the triangle is marked as wet or dry.
-   * 
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
   @Override
   public void add( final INodeResult... nodes )
   {
     try
     {
-      final GM_Triangle_Impl gmTriangle = TriangulatedSurfaceDirectTriangleEater.createTriangle( nodes, m_parameter );
+      final GM_Triangle gmTriangle = TriangulatedSurfaceDirectTriangleEater.createTriangle( nodes, m_parameter );
       if( gmTriangle != null )
         m_surface.add( gmTriangle );
     }
@@ -156,9 +155,6 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(java.util.Date)
-   */
   @Override
   public void setTime( final Date date )
   {
@@ -177,8 +173,6 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   {
     final String crs = pointList.get( 0 ).getCoordinateSystem();
 
-    GM_Triangle_Impl gmTriangle = null;
-
     final GM_Position pos[] = new GM_Position[3];
 
     for( int i = 0; i < pointList.size(); i++ )
@@ -187,21 +181,11 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
       pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( point.getX(), point.getY(), point.getZ() );
     }
 
-    try
-    {
-      // for shape export we need a clockwise orientation, the algorithm that delivers the nodes is the nodes to the
-      // eater is thinking counter-clockwise.
-      // for that reason we switch the positions order to get that clockwise orientation.
-      gmTriangle = new GM_Triangle_Impl( pos[2], pos[1], pos[0], crs );
-    }
-    catch( final GM_Exception e )
-    {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      e.printStackTrace();
-    }
-
-    if( gmTriangle != null )
-      m_surface.add( gmTriangle );
+    // for shape export we need a clockwise orientation, the algorithm that delivers the nodes is the nodes to the
+    // eater is thinking counter-clockwise.
+    // for that reason we switch the positions order to get that clockwise orientation.
+    final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( pos[2], pos[1], pos[0], crs );
+    m_surface.add( gmTriangle );
   }
 
   public GM_TriangulatedSurface getSurface( )

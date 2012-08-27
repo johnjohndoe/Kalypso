@@ -67,13 +67,13 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This eater writes the triangles into an GML-File as TriangualtedSurface.<br>
  * The triangles directly get written without storing them into an intermediate GML-Workspace.
- * 
+ *
  * @author Thomas Jung
  */
 public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
@@ -101,8 +101,6 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
   /**
    * add a triangle to the eater. The triangle is defined by its three nodes ({@link INodeResult} and a information, if
    * the triangle is marked as wet or dry.
-   * 
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
   @Override
   public void add( final INodeResult... nodes )
@@ -126,7 +124,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
   }
 
-  public static GM_Triangle_Impl createTriangle( final INodeResult[] nodes, final ResultType.TYPE parameter ) throws GM_Exception
+  public static GM_Triangle createTriangle( final INodeResult[] nodes, final ResultType.TYPE parameter ) throws GM_Exception
   {
     if( nodes.length < 3 )
       return null;
@@ -135,13 +133,13 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     if( pos != null )
     {
       final String crs = nodes[0].getPoint().getCoordinateSystem();
-      return new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
+      return GeometryFactory.createGM_Triangle( pos[0], pos[1], pos[2], crs );
     }
 
     return null;
   }
 
-  private static GM_Position[] processNodes( final INodeResult[] nodes, ResultType.TYPE parameter )
+  private static GM_Position[] processNodes( final INodeResult[] nodes, final ResultType.TYPE parameter )
   {
     final GM_Position pos[] = new GM_Position[3];
 
@@ -157,7 +155,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
       // exclude triangles with water levels below terrain surface
       if( parameter == ResultType.TYPE.WATERLEVEL && z < point.getZ() )
         return null;
-      
+
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
     }
     return pos;

@@ -12,7 +12,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -27,7 +26,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -60,7 +58,8 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
   private FeatureList m_featureList = null;
 
-//  private static List<String> m_listSWANProps = new ArrayList< String >( Arrays.asList( new String[]{ ResultSldHelper.WAVE_HSIG_TYPE, ResultSldHelper.WAVE_DIRECTION_TYPE, ResultSldHelper.WAVE_PERIOD_TYPE } ) );
+  // private static List<String> m_listSWANProps = new ArrayList< String >( Arrays.asList( new String[]{
+  // ResultSldHelper.WAVE_HSIG_TYPE, ResultSldHelper.WAVE_DIRECTION_TYPE, ResultSldHelper.WAVE_PERIOD_TYPE } ) );
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
@@ -85,7 +84,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     {
       m_actPropQname = "".equals( m_propertyNameFromTheme ) ? null : new QName( PROP_NS_PREFIX, m_propertyNameFromTheme.toLowerCase() ); //$NON-NLS-1$
     }
-//    if( m_listSWANProps.contains( m_propertyNameFromTheme ) )
+    // if( m_listSWANProps.contains( m_propertyNameFromTheme ) )
     {
       m_boolResolveNodesFromDiscrModel = true;
       final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
@@ -137,13 +136,16 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
       return;
 
     Object nodeObject = null;
-    if( m_boolResolveNodesFromDiscrModel ){
-      if( m_discretisationModel == null ){
+    if( m_boolResolveNodesFromDiscrModel )
+    {
+      if( m_discretisationModel == null )
+      {
         return;
       }
       nodeObject = m_discretisationModel.find2DElement( GeometryFactory.createGM_Point( pos, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ), 0.01 );
     }
-    else{
+    else
+    {
       nodeObject = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( pos, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
     }
     if( nodeObject == null )
@@ -151,10 +153,10 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
     {
       /* Search for the first feature which provides a value */
-//      final Feature feature = FeatureHelper.getFeature( workspace, nodeObject );
+      // final Feature feature = FeatureHelper.getFeature( workspace, nodeObject );
 
-      final Object value = getInterpolatedValue(nodeObject, pos);
-//      Object value = feature.getProperty( m_actPropQname );
+      final Object value = getInterpolatedValue( nodeObject, pos );
+      // Object value = feature.getProperty( m_actPropQname );
 
       if( value instanceof Double && !Double.isNaN( (Double) value ) )
       {
@@ -180,21 +182,23 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
   private Object getInterpolatedValue( final Object nodeObject, final GM_Position pos )
   {
-    if( nodeObject instanceof IPolyElement ){
+    if( nodeObject instanceof IPolyElement )
+    {
       final IPolyElement lPolyEl = (IPolyElement) nodeObject;
 
       final List nodes = lPolyEl.getNodes();
-      if( nodes.size() > 5 ){
+      if( nodes.size() > 5 )
+      {
         return getNodePropertyAtPos( pos );
       }
       final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      final List< GM_Position > lListPositionWithValues = new ArrayList<GM_Position>();
-      final List< GM_Position > lListPositionWithValues2 = new ArrayList<GM_Position>();
+      final List<GM_Position> lListPositionWithValues = new ArrayList<GM_Position>();
+      final List<GM_Position> lListPositionWithValues2 = new ArrayList<GM_Position>();
       for( final Iterator<IFE1D2DNode> iterator = nodes.iterator(); iterator.hasNext(); )
       {
         final IFE1D2DNode actNode = iterator.next();
         final Feature nodeRes = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( actNode.getPoint().getPosition(), coordinateSystem ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
-        if(nodeRes == null)
+        if( nodeRes == null )
           continue;
 
         Object value = nodeRes.getProperty( m_actPropQname );
@@ -203,16 +207,18 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
         if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( m_propertyNameFromTheme ) )
         {
           final List<Double> vector = new ArrayList<Double>();
-          vector.add( Math.cos( (Double) value * ( 2 * Math.PI ) / 360 ) );
-          vector.add( Math.sin( (Double) value * ( 2 * Math.PI ) / 360 ) );
+          vector.add( Math.cos( (Double) value * (2 * Math.PI) / 360 ) );
+          vector.add( Math.sin( (Double) value * (2 * Math.PI) / 360 ) );
           value = vector;
         }
 
         final INodeResult nodeResAdapter = (INodeResult) nodeRes.getAdapter( INodeResult.class );
-        if( value instanceof Double ){
-          lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double)value ) );
+        if( value instanceof Double )
+        {
+          lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double) value ) );
         }
-        else if( value instanceof List< ? > ){
+        else if( value instanceof List< ? > )
+        {
           final List<Double> vector = (List<Double>) value;
           if( vector == null || vector.size() != 2 )
             continue;
@@ -221,36 +227,24 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
           lListPositionWithValues2.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), vector.get( 1 ) ) );
         }
       }
-      if( lListPositionWithValues.size() < 3 ){
+      if( lListPositionWithValues.size() < 3 )
+      {
         return getNodePropertyAtPos( pos );
       }
-      GM_Triangle lTri = null;
+      GM_Triangle lTri = GeometryFactory.createGM_Triangle( lListPositionWithValues.get( 0 ), lListPositionWithValues.get( 1 ), lListPositionWithValues.get( 2 ), coordinateSystem );
       GM_Triangle lTri2 = null;
-      try
-      {
-        lTri = GeometryFactory.createGM_Triangle( lListPositionWithValues.get( 0 ), lListPositionWithValues.get( 1 ), lListPositionWithValues.get( 2 ), coordinateSystem );
-        if( lListPositionWithValues2.size() > 2 )
-          lTri2 = GeometryFactory.createGM_Triangle( lListPositionWithValues2.get( 0 ), lListPositionWithValues2.get( 1 ), lListPositionWithValues2.get( 2 ), coordinateSystem );
-      }
-      catch( final GM_Exception e )
-      {
-        e.printStackTrace();
-      }
+      if( lListPositionWithValues2.size() > 2 )
+        lTri2 = GeometryFactory.createGM_Triangle( lListPositionWithValues2.get( 0 ), lListPositionWithValues2.get( 1 ), lListPositionWithValues2.get( 2 ), coordinateSystem );
       final Object lRes = getValueFromTrianglesAtPosition( pos, lTri, lTri2 );
-      if( lRes != null ){
+      if( lRes != null )
+      {
         return lRes;
       }
-      else if( lListPositionWithValues.size() > 4 ){
-        try
-        {
-          lTri = GeometryFactory.createGM_Triangle( lListPositionWithValues.get( 0 ), lListPositionWithValues.get( 2 ), lListPositionWithValues.get( 3 ), coordinateSystem );
-          if( lListPositionWithValues2.size() > 2 )
-            lTri2 = GeometryFactory.createGM_Triangle( lListPositionWithValues2.get( 0 ), lListPositionWithValues2.get( 2 ), lListPositionWithValues2.get( 3 ), coordinateSystem );
-        }
-        catch( final GM_Exception e )
-        {
-          return null;
-        }
+      else if( lListPositionWithValues.size() > 4 )
+      {
+        lTri = GeometryFactory.createGM_Triangle( lListPositionWithValues.get( 0 ), lListPositionWithValues.get( 2 ), lListPositionWithValues.get( 3 ), coordinateSystem );
+        if( lListPositionWithValues2.size() > 2 )
+          lTri2 = GeometryFactory.createGM_Triangle( lListPositionWithValues2.get( 0 ), lListPositionWithValues2.get( 2 ), lListPositionWithValues2.get( 3 ), coordinateSystem );
         return getValueFromTrianglesAtPosition( pos, lTri, lTri2 );
       }
       else
@@ -265,7 +259,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     }
   }
 
-  //TODO: switch to this implementation
+  // TODO: switch to this implementation
   // private Pair<Double, Double> getInterpolatedPair( final GM_Point pPointToInterpolateAt, final Map<GM_Point,
   // Pair<Double, Double>> pMapPointsValues )
   // {
@@ -316,9 +310,11 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
   private Object getValueFromTrianglesAtPosition( final GM_Position pos, final GM_Triangle lTri, final GM_Triangle lTri2 )
   {
-    if( lTri != null && lTri.contains( pos )){
-      if( lTri2 != null ){
-        final List< Double > lListRes = new ArrayList<Double>();
+    if( lTri != null && lTri.contains( pos ) )
+    {
+      if( lTri2 != null )
+      {
+        final List<Double> lListRes = new ArrayList<Double>();
         lListRes.add( lTri.getValue( pos ) );
         lListRes.add( lTri2.getValue( pos ) );
         if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( m_propertyNameFromTheme ) )
@@ -336,7 +332,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
   {
     final Feature nodeRes = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( pos, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
     final Feature feature = FeatureHelper.getFeature( m_workspace, nodeRes );
-    return feature == null? null: feature.getProperty( m_actPropQname );
+    return feature == null ? null : feature.getProperty( m_actPropQname );
   }
 
 }
