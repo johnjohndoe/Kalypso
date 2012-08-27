@@ -213,9 +213,9 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
   /**
    * gets the corresponding color class for the given elevation
-   *
+   * 
    * @param elevation
-   *            given elevation
+   *          given elevation
    */
   private final Color interpolateColor( final double elevation )
   {
@@ -402,6 +402,10 @@ public class SimpleElevationColorModel implements IElevationColorModel
   @Override
   public ElevationColorEntry getColorEntry( final double elevation )
   {
+    // REMARK: necessary! query to empty index leads to endless loop.
+    if( m_entries.size() == 0 )
+      return null;
+
     final ElevationColorEntry[] result = new ElevationColorEntry[1];
 
     final ItemVisitor visitor = new ItemVisitor()
