@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IPageChangingListener;
@@ -50,6 +51,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.forms.IMessage;
+import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.core.status.StatusDialog;
@@ -57,6 +59,8 @@ import org.kalypso.gml.ui.coverage.ImportCoverageData;
 import org.kalypso.gml.ui.coverage.ImportCoveragesOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 import org.kalypso.model.wspm.pdb.ui.internal.checkout.ConnectionChooserPage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * This wizard shows a page to select from an entry (path) of the external storage location and imports the coverages.
@@ -83,11 +87,30 @@ public class PdbImportCoveragesWizard extends Wizard
   private final PdbImportConnectionChooserData m_settingsData;
 
   /**
-   * The constructor.
+   * The coverages container.
    */
-  public PdbImportCoveragesWizard( final PdbImportConnectionChooserData settingsData )
+  private final ICoverageCollection m_coveragesContainer;
+
+  /**
+   * The data container.
+   */
+  private final IContainer m_dataContainer;
+
+  /**
+   * The constructor.
+   * 
+   * @param settingsData
+   *          The data containing the connection settings.
+   * @param coveragesContainer
+   *          The coverages container.
+   * @param dataContainer
+   *          The data container.
+   */
+  public PdbImportCoveragesWizard( final PdbImportConnectionChooserData settingsData, final ICoverageCollection coveragesContainer, final IContainer dataContainer )
   {
     m_settingsData = settingsData;
+    m_coveragesContainer = coveragesContainer;
+    m_dataContainer = dataContainer;
 
     setWindowTitle( "Höhendaten aus externen Speicherort hinzufügen" );
     setNeedsProgressMonitor( true );
@@ -133,15 +156,19 @@ public class PdbImportCoveragesWizard extends Wizard
     final String filename = dhmIndex.getFilename();
     final IPath demServerPath = m_settingsData.getDemServerPath();
     final IPath filePath = demServerPath.append( filename );
-    final String path = filePath.toOSString();
+
+    /* The source files. */
+    final FileAndHistoryData fileAndHistory = new FileAndHistoryData( "sourceFiles" ); //$NON-NLS-1$
+    fileAndHistory.setFile( filePath.toFile() );
 
     /* Get the srid. */
     final String srid = dhmIndex.getSrid();
 
     /* Create the data object for the operation. */
     final ImportCoverageData data = new ImportCoverageData();
-    data.setDataContainerPath( path );
-    data.setSourceSRS( srid );
+    data.init( m_coveragesContainer, m_dataContainer, false );
+    data.setSourceFile( fileAndHistory );
+    data.setSourceSRS( JTSAdapter.toSrs( Integer.valueOf( srid ) ) );
 
     /* Create the operation and execute it. */
     final ImportCoveragesOperation operation = new ImportCoveragesOperation( data );

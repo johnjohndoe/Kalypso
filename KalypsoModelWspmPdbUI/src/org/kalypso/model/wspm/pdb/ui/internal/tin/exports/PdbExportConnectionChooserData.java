@@ -44,6 +44,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -174,7 +175,7 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
       session.close();
 
       final String sourceSRS = m_data.getSourceSRS();
-      dhmIndex.setMimeType( "" ); // TODO Find mime type
+      dhmIndex.setMimeType( findMimeType() );
       dhmIndex.setEditingDate( new Date() );
       dhmIndex.setEditingUser( SystemUtils.USER_NAME );
       dhmIndex.setSrid( String.format( "%d", JTSAdapter.toSrid( sourceSRS ) ) );
@@ -217,16 +218,33 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
     dhmIndex.setCreationDate( new Date() );
     dhmIndex.setMeasurementDate( new Date() );
 
-    /* HINT: To avoid errors (null constraints) during update db. */
-    // TODO Initialize with empty values in the data object...
-    dhmIndex.setName( "" );
-    dhmIndex.setSource( "" );
-    dhmIndex.setEditor( "" );
-    dhmIndex.setMeasurementAccuracy( "" );
-    dhmIndex.setDescription( "" );
-    dhmIndex.setCopyright( "" );
-
     return dhmIndex;
+  }
+
+  private String findMimeType( )
+  {
+    final File sourceFile = getSourceFile();
+    final String extension = FilenameUtils.getExtension( sourceFile.getName() );
+
+    if( "hmo".equals( extension ) )
+      return "tin/hmo";
+
+    if( "gml".equals( extension ) )
+      return "tin/gml";
+
+    if( "shp".equals( extension ) )
+      return "tin/shp";
+
+    if( "2dm".equals( extension ) )
+      return "tin/2dm";
+
+    if( "bin".equals( extension ) )
+      return "image/bin";
+
+    if( "tif".equals( extension ) || "tiff".equals( extension ) )
+      return "image/tiff";
+
+    return "unknown";
   }
 
   private Polygon findLocation( final int srid ) throws CoreException

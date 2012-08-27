@@ -40,13 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Holger Albert
@@ -59,16 +62,24 @@ public class ImportFromExternalLocationAction extends Action
   private final Shell m_shell;
 
   /**
+   * The coverage management widget.
+   */
+  private final CoverageManagementWidget m_widget;
+
+  /**
    * The constructor.
    * 
    * @param shell
    *          The shell.
+   * @param widget
+   *          The coverage management widget.
    */
-  public ImportFromExternalLocationAction( final Shell shell )
+  public ImportFromExternalLocationAction( final Shell shell, final CoverageManagementWidget widget )
   {
     super( "Höhendaten aus externen Speicherort hinzufügen" );
 
     m_shell = shell;
+    m_widget = widget;
 
     setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.ADD_COVERAGE ) );
   }
@@ -83,8 +94,11 @@ public class ImportFromExternalLocationAction extends Action
       final IPdbConnection connection = PdbImportConnectionChooserData.checkConnection();
       settingsData.setConnection( connection );
 
+      final ICoverageCollection coveragesContainer = m_widget.getCoverageCollection();
+      final IContainer dataContainer = m_widget.findGridFolder();
+
       /* Create the wizard. */
-      final PdbImportCoveragesWizard wizard = new PdbImportCoveragesWizard( settingsData );
+      final PdbImportCoveragesWizard wizard = new PdbImportCoveragesWizard( settingsData, coveragesContainer, dataContainer );
 
       /* Open the dialog. */
       final WizardDialog dialog = new WizardDialog( m_shell, wizard );

@@ -44,12 +44,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -67,6 +67,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
+import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 import org.kalypso.model.wspm.pdb.ui.internal.tin.DhmIndexComposite;
 
 /**
@@ -158,12 +159,13 @@ public class SearchDhmIndexPage extends WizardPage
 
     /* Create a tree viewer. */
     m_searchViewer = new TreeViewer( main, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL );
-    m_searchViewer.getTree().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final GridData treeData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    treeData.heightHint = 200;
+    m_searchViewer.getTree().setLayoutData( treeData );
     m_searchViewer.getTree().setLinesVisible( true );
     m_searchViewer.getTree().setHeaderVisible( true );
     configureTreeViewer( m_searchViewer );
     m_searchViewer.setContentProvider( new SearchDhmIndexContentProvider() );
-    // m_searchViewer.setInput( m_settingsData );
 
     /* Add the column resize control listener. */
     m_searchViewer.getTree().addControlListener( new ColumnsResizeControlListener() );
@@ -204,26 +206,34 @@ public class SearchDhmIndexPage extends WizardPage
     dataBinding.bindValue( buttonTarget, buttonModel );
 
     /* Do the data binding. */
-    // TODO Binding or update data object on my own...
     final IObservableValue targetViewer = ViewersObservables.observeInput( m_searchViewer );
     final IObservableValue modelViewer = BeansObservables.observeValue( m_settingsData, PdbImportConnectionChooserData.PROPERTY_DHM_INDEXES );
     dataBinding.bindValue( targetViewer, modelViewer );
 
+    /* Do the data binding. */
+    final IObservableValue targetIndex = ViewersObservables.observeSinglePostSelection( m_searchViewer );
+    final IObservableValue modelIndex = BeansObservables.observeValue( m_settingsData, PdbImportConnectionChooserData.PROPERTY_DHM_INDEX );
+    dataBinding.bindValue( targetIndex, modelIndex );
+
     /* Add a listener. */
-    m_searchViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    modelIndex.addValueChangeListener( new IValueChangeListener()
     {
       @Override
-      public void selectionChanged( final SelectionChangedEvent event )
+      public void handleValueChange( final ValueChangeEvent event )
       {
+        /* Parent is disposed. */
+        if( body == null || body.isDisposed() )
+          return;
+
+        /* Get the dhm index from the selection. */
+        final DhmIndex dhmIndex = (DhmIndex) event.getObservableValue().getValue();
+
         /* The dhm index composite needs to get the new object set. */
         if( m_dhmIndexComposite != null && !m_dhmIndexComposite.isDisposed() )
           m_dhmIndexComposite.dispose();
 
         /* Add the dhm index composite. */
-        // TODO The settings seems not to be updated here...
-        // TODO Get dhm index from selection (event)...
-        // TODO Better: Add binding for dhm index and composite and move code into a property listener on model
-        m_dhmIndexComposite = new DhmIndexComposite( body, SWT.NONE, m_settingsData.getDhmIndex(), false, dataBinding );
+        m_dhmIndexComposite = new DhmIndexComposite( body, SWT.NONE, dhmIndex, false, dataBinding );
         m_dhmIndexComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
         /* Reflow. */

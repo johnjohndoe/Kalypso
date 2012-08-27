@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.tin;
 
-import java.util.Date;
-
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -96,7 +94,7 @@ public class DhmIndexComposite extends Composite
     super( parent, style );
 
     /* Initialize. */
-    m_dhmIndex = dhmIndex != null ? dhmIndex : getNewDhmIndex();
+    m_dhmIndex = dhmIndex != null ? dhmIndex : new DhmIndex();
     m_editable = editable;
     m_dataBinding = dataBinding;
 
@@ -180,16 +178,5 @@ public class DhmIndexComposite extends Composite
     final ISWTObservableValue targetValue = SWTObservables.observeSelection( dateTime );
     final IObservableValue modelValue = BeansObservables.observeValue( m_dhmIndex, property );
     dataBinding.bindValue( targetValue, modelValue );
-  }
-
-  private DhmIndex getNewDhmIndex( )
-  {
-    /* HINT: Prevents null pointer during binding. */
-    final DhmIndex dhmIndex = new DhmIndex();
-    dhmIndex.setCreationDate( new Date() );
-    dhmIndex.setEditingDate( new Date() );
-    dhmIndex.setMeasurementDate( new Date() );
-
-    return dhmIndex;
   }
 }
