@@ -59,6 +59,7 @@ import org.kalypso.gml.ui.coverage.ImportCoverageData;
 import org.kalypso.gml.ui.coverage.ImportCoveragesOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 import org.kalypso.model.wspm.pdb.ui.internal.checkout.ConnectionChooserPage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -97,6 +98,11 @@ public class PdbImportCoveragesWizard extends Wizard
   private final IContainer m_dataContainer;
 
   /**
+   * The import coverages data.
+   */
+  private final ImportCoverageData m_data;
+
+  /**
    * The constructor.
    * 
    * @param settingsData
@@ -111,6 +117,7 @@ public class PdbImportCoveragesWizard extends Wizard
     m_settingsData = settingsData;
     m_coveragesContainer = coveragesContainer;
     m_dataContainer = dataContainer;
+    m_data = new ImportCoverageData();
 
     setWindowTitle( "Höhendaten aus externen Speicherort hinzufügen" );
     setNeedsProgressMonitor( true );
@@ -165,13 +172,12 @@ public class PdbImportCoveragesWizard extends Wizard
     final String srid = dhmIndex.getSrid();
 
     /* Create the data object for the operation. */
-    final ImportCoverageData data = new ImportCoverageData();
-    data.init( m_coveragesContainer, m_dataContainer, false );
-    data.setSourceFile( fileAndHistory );
-    data.setSourceSRS( JTSAdapter.toSrs( Integer.valueOf( srid ) ) );
+    m_data.init( m_coveragesContainer, m_dataContainer, false );
+    m_data.setSourceFile( fileAndHistory );
+    m_data.setSourceSRS( JTSAdapter.toSrs( Integer.valueOf( srid ) ) );
 
     /* Create the operation and execute it. */
-    final ImportCoveragesOperation operation = new ImportCoveragesOperation( data );
+    final ImportCoveragesOperation operation = new ImportCoveragesOperation( m_data );
     final IStatus operationStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
     StatusDialog.open( getShell(), operationStatus, getWindowTitle() );
 
@@ -185,9 +191,6 @@ public class PdbImportCoveragesWizard extends Wizard
       doConnect( event );
   }
 
-  /**
-   * This function connects to the database.
-   */
   private void doConnect( final PageChangingEvent event )
   {
     /* Connect to the database. */
@@ -206,5 +209,10 @@ public class PdbImportCoveragesWizard extends Wizard
     /* Set a message to the current page. */
     final IMessage message = MessageUtilitites.convertStatus( result );
     ((WizardPage) event.getCurrentPage()).setMessage( message.getMessage(), message.getMessageType() );
+  }
+
+  public ICoverage[] getNewCoverages( )
+  {
+    return m_data.getNewCoverages();
   }
 }

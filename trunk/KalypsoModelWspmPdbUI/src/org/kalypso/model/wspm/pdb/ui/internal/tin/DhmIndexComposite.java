@@ -133,21 +133,21 @@ public class DhmIndexComposite extends Composite
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the controls. */
-    createTextControl( main, m_dataBinding, "Name", DhmIndex.PROPERTY_NAME, m_editable );
-    createTextControl( main, m_dataBinding, "Beschreibung", DhmIndex.PROPERTY_DESCRIPTION, m_editable );
     createTextControl( main, m_dataBinding, "Dateiname", DhmIndex.PROPERTY_FILENAME, false );
+    createTextControl( main, m_dataBinding, "MimeType", DhmIndex.PROPERTY_MIMETYPE, false );
+    createTextControl( main, m_dataBinding, "Beschreibung", DhmIndex.PROPERTY_DESCRIPTION, m_editable );
     createTextControl( main, m_dataBinding, "Bearbeiter", DhmIndex.PROPERTY_EDITINGUSER, m_editable );
     createDateControl( main, m_dataBinding, "Messdatum", DhmIndex.PROPERTY_MEASUREMENTDATE, m_editable );
     createTextControl( main, m_dataBinding, "Messgenauigkeit", DhmIndex.PROPERTY_MEASUREMENTACCURACY, m_editable );
     createTextControl( main, m_dataBinding, "Quelle", DhmIndex.PROPERTY_SOURCE, m_editable );
     createTextControl( main, m_dataBinding, "Editor", DhmIndex.PROPERTY_EDITOR, m_editable );
     createTextControl( main, m_dataBinding, "Copyright", DhmIndex.PROPERTY_COPYRIGHT, m_editable );
-    // createTextControl( main, dataBinding, "ID", DhmIndex.PROPERTY_ID, m_editable );
-    // createTextControl( main, dataBinding, "MimeType", DhmIndex.PROPERTY_MIMETYPE, m_editable );
-    // createDateControl( main, dataBinding, "Erstellungsdatum", DhmIndex.PROPERTY_CREATIONDATE, m_editable );
-    // createDateControl( main, dataBinding, "Änderungsdatum", DhmIndex.PROPERTY_EDITINGDATE, m_editable );
-    // createLocationControl( main, dataBinding, "Ort", m_editable );
-    // createSridControl( main, dataBinding, "Koordinaten-System", m_editable );
+    // createTextControl( main, m_dataBinding, "ID", DhmIndex.PROPERTY_ID, m_editable );
+    // createTextControl( main, m_dataBinding, "Name", DhmIndex.PROPERTY_NAME, m_editable );
+    // createDateControl( main, m_dataBinding, "Erstellungsdatum", DhmIndex.PROPERTY_CREATIONDATE, m_editable );
+    // createDateControl( main, m_dataBinding, "Änderungsdatum", DhmIndex.PROPERTY_EDITINGDATE, m_editable );
+    // createLocationControl( main, m_dataBinding, "Ort", m_editable );
+    // createSridControl( main, m_dataBinding, "Koordinaten-System", m_editable );
   }
 
   private void createTextControl( final Composite main, final IDataBinding dataBinding, final String displayLabel, final String property, final boolean editable )

@@ -254,15 +254,15 @@ public class SearchDhmIndexPage extends WizardPage
   private void configureTreeViewer( final TreeViewer viewer )
   {
     /* Name. */
-    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
-    nameColumn.setLabelProvider( new DhmIndexNameLabelProvider() );
-
-    final ViewerColumnItem nameItem = new ViewerColumnItem( nameColumn );
-    nameItem.setText( "Name" );
-    nameItem.setResizable( false );
-
-    ColumnsResizeControlListener.setMinimumPackWidth( nameItem.getColumn() );
-    ColumnViewerSorter.registerSorter( nameColumn, new DhmIndexNameViewerComparator() );
+    // final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    // nameColumn.setLabelProvider( new DhmIndexNameLabelProvider() );
+    //
+    // final ViewerColumnItem nameItem = new ViewerColumnItem( nameColumn );
+    // nameItem.setText( "Name" );
+    // nameItem.setResizable( false );
+    //
+    // ColumnsResizeControlListener.setMinimumPackWidth( nameItem.getColumn() );
+    // ColumnViewerSorter.registerSorter( nameColumn, new DhmIndexNameViewerComparator() );
 
     /* Filename. */
     final ViewerColumn filenameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
@@ -285,5 +285,28 @@ public class SearchDhmIndexPage extends WizardPage
 
     ColumnsResizeControlListener.setMinimumPackWidth( descriptionItem.getColumn() );
     ColumnViewerSorter.registerSorter( descriptionColumn, new DhmIndexDescriptionViewerComparator() );
+
+    /* Measurement Date. */
+    final ViewerColumn measurementDateColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    measurementDateColumn.setLabelProvider( new DhmIndexMeasurementDateLabelProvider() );
+
+    final ViewerColumnItem measurementDateItem = new ViewerColumnItem( measurementDateColumn );
+    measurementDateItem.setText( "Messdatum" );
+    measurementDateItem.setResizable( false );
+
+    ColumnsResizeControlListener.setMinimumPackWidth( measurementDateItem.getColumn() );
+    ColumnViewerSorter.registerSorter( measurementDateColumn, new DhmIndexMeasurementDateViewerComparator() );
+
+    /* Measurename Accuracy. */
+    final ViewerColumn measurementAccuracyColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    measurementAccuracyColumn.setLabelProvider( new DhmIndexMeasurementAccuracyLabelProvider() );
+
+    final ViewerColumnItem measurementAccuracyItem = new ViewerColumnItem( measurementAccuracyColumn );
+    measurementAccuracyItem.setText( "Messgenauigkeit" );
+    measurementAccuracyItem.setResizable( false );
+
+    ColumnsResizeControlListener.setMinimumPackWidth( measurementAccuracyItem.getColumn() );
+    ColumnViewerSorter.registerSorter( measurementAccuracyColumn, new DhmIndexMeasurementAccuracyViewerComparator() );
+
   }
 }

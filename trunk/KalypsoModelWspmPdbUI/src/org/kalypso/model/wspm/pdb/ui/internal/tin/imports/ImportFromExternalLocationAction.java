@@ -42,13 +42,17 @@ package org.kalypso.model.wspm.pdb.ui.internal.tin.imports;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
+import org.kalypso.gml.ui.coverage.ImportCoverageUtilities;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
@@ -94,15 +98,29 @@ public class ImportFromExternalLocationAction extends Action
       final IPdbConnection connection = PdbImportConnectionChooserData.checkConnection();
       settingsData.setConnection( connection );
 
+      /* Create the wizard. */
       final ICoverageCollection coveragesContainer = m_widget.getCoverageCollection();
       final IContainer dataContainer = m_widget.findGridFolder();
-
-      /* Create the wizard. */
       final PdbImportCoveragesWizard wizard = new PdbImportCoveragesWizard( settingsData, coveragesContainer, dataContainer );
 
       /* Open the dialog. */
       final WizardDialog dialog = new WizardDialog( m_shell, wizard );
-      dialog.open();
+      if( dialog.open() != Window.OK )
+        return;
+
+      /* Get the new coverages. */
+      final ICoverage[] newCoverages = wizard.getNewCoverages();
+
+      /* Zoom to the new coverages. */
+      ImportCoverageUtilities.zoomToCoverages( newCoverages, m_widget );
+
+      /* Selct the new coverages in the widget. */
+      ImportCoverageUtilities.selectCoverages( newCoverages, m_widget );
+
+      /* Save the coverages. */
+      final IStatus status = ImportCoverageUtilities.saveCoverages( m_widget );
+      if( !status.isOK() )
+        throw new CoreException( status );
     }
     catch( final CoreException e )
     {
