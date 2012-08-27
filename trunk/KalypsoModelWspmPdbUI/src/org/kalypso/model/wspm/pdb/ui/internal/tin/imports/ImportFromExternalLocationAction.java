@@ -85,7 +85,7 @@ public class ImportFromExternalLocationAction extends Action
     m_shell = shell;
     m_widget = widget;
 
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.ADD_COVERAGE ) );
+    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.ADD_FROM_EXTERNAL_LOCATION ) );
   }
 
   @Override
