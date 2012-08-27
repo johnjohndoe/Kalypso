@@ -78,8 +78,6 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 {
   private final ICalculationUnit m_calculationUnit;
 
-  private DisplayElement m_decoratedElement;
-
   private static final Color ELEMENT_FILL_COLOR = new Color( 0, 0, 255, 85 );
 
   private static final Color ELEMENT_BORDER_COLOR = Color.BLUE;
@@ -96,15 +94,8 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   }
 
   @Override
-  public DisplayElement getDecorated( )
-  {
-    return m_decoratedElement;
-  }
-
-  @Override
   public void setDecorated( final DisplayElement decorated )
   {
-    m_decoratedElement = decorated;
   }
 
   @Override
