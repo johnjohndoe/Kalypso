@@ -71,6 +71,7 @@ public class ElevationModelDisplayElementFactory
     if( terrainElevationModel instanceof NativeTerrainElevationModelWrapper )
     {
       final IElevationModel elevationProvider = ((NativeTerrainElevationModelWrapper) terrainElevationModel).getElevationProvider();
+
       if( elevationProvider instanceof ISurfacePatchVisitable )
       {
         final IVisitorFactory<GM_Polygon> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Polygon>()
@@ -97,7 +98,7 @@ public class ElevationModelDisplayElementFactory
     }
   }
 
-  static IElevationColorModel createColorModel( final IElevationModel elevationProvider, final GeoTransform projection )
+  public static IElevationColorModel createColorModel( final IElevationModel elevationProvider, final GeoTransform projection )
   {
     try
     {
