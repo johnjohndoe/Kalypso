@@ -13,10 +13,13 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.WindModelDisplayElementFactory;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
+import org.kalypsodeegree_impl.graphics.displayelements.TriangulatedSurfacePolygonDisplayElement;
 
 /**
  * Adapter Factory for feature in the simBase namespace
@@ -90,6 +93,13 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         final QName name = feature.getFeatureType().getQName();
         if( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( name ) )
         {
+          if( true )
+          {
+            final ITerrainElevationModel terrainElevationModel = (ITerrainElevationModel) feature.getAdapter( ITerrainElevationModel.class );
+            final IElevationColorModel colorModel = ElevationModelDisplayElementFactory.createColorModel( terrainElevationModel, null );
+            return new TriangulatedSurfacePolygonDisplayElement( feature, terrainElevationModel, colorModel );
+          }
+
           return ElevationModelDisplayElementFactory.createDisplayElement( feature );
         }
         // FIXME: constant does not exist any more -> does wind work??
