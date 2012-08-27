@@ -49,18 +49,21 @@ import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree_impl.graphics.displayelements.ColorMapConverterData;
+import org.kalypsodeegree_impl.graphics.displayelements.ElevationColorEntry;
 import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
-import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
-import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
+
+import com.vividsolutions.jts.index.ItemVisitor;
+import com.vividsolutions.jts.index.intervalrtree.SortedPackedIntervalRTree;
 
 /**
  * @author Patrice Congo
  */
 public class SimpleElevationColorModel implements IElevationColorModel
 {
-  private final List<ColorMapConverterData> m_lister = new ArrayList<ColorMapConverterData>();
+  private final List<ElevationColorEntry> m_entries = new ArrayList<ElevationColorEntry>();
+
+  private final SortedPackedIntervalRTree m_entryIndex = new SortedPackedIntervalRTree();
 
   public static final double DEEPEST_POINT_ON_EARTH = -10924;
 
@@ -150,7 +153,8 @@ public class SimpleElevationColorModel implements IElevationColorModel
     Color rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), m_transparency );
     m_colorList.add( rgbColor );
 
-    m_lister.add( createPainterEntry( 0, rgbColor ) );
+    final ElevationColorEntry minEntry = createPainterEntry( 0, rgbColor );
+    addEntry( minEntry );
 
     for( int i = 1; i < m_numOfClasses - 1; i++ )
     {
@@ -162,7 +166,8 @@ public class SimpleElevationColorModel implements IElevationColorModel
       rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), m_transparency );
       m_colorList.add( rgbColor );
 
-      m_lister.add( createPainterEntry( i, rgbColor ) );
+      final ElevationColorEntry entry = createPainterEntry( i, rgbColor );
+      addEntry( entry );
     }
 
     /* max Color */
@@ -170,10 +175,17 @@ public class SimpleElevationColorModel implements IElevationColorModel
     rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), m_transparency );
     m_colorList.add( rgbColor );
 
-    m_lister.add( createPainterEntry( m_numOfClasses, rgbColor ) );
+    final ElevationColorEntry maxEntry = createPainterEntry( m_numOfClasses, rgbColor );
+    addEntry( maxEntry );
   }
 
-  private ColorMapConverterData createPainterEntry( final int i, final Color rgbColor ) throws FilterEvaluationException
+  private void addEntry( final ElevationColorEntry entry )
+  {
+    m_entries.add( entry );
+    m_entryIndex.insert( entry.getFrom(), entry.getTo(), entry );
+  }
+
+  private ElevationColorEntry createPainterEntry( final int i, final Color rgbColor ) throws FilterEvaluationException
   {
     final int alpha = rgbColor.getAlpha();
     final double opacity = alpha / 255.0;
@@ -182,14 +194,15 @@ public class SimpleElevationColorModel implements IElevationColorModel
     // REMARK: NOT using a stroke for two reasons:
     // - paint speed-up by ~40%
     // - looks better in most cases (before, always some white pixels where visible)
-    final Stroke stroke = null;
-    // final Stroke stroke = StyleFactory.createStroke( rgbColor, 1, 0.1 );
+    // final Stroke stroke = null;
+    final Stroke stroke = StyleFactory.createStroke( rgbColor, 1, opacity );
 
     final String label = ""; //$NON-NLS-1$
-    final double from = getFrom( i );
-    final double to = getTo( i );
+    final double interval = Math.abs( (m_maxElevation - m_minElevation) ) / m_numOfClasses;
+    final double from = m_minElevation + i * interval;
+    final double to = m_minElevation + (i + 1) * interval;
 
-    return new ColorMapConverterData( fill, stroke, null, null, m_projection, label, from, to );
+    return new ElevationColorEntry( fill, stroke, null, null, m_projection, label, from, to );
   }
 
   @Override
@@ -332,41 +345,41 @@ public class SimpleElevationColorModel implements IElevationColorModel
     return values;
   }
 
-  @Override
-  public int getNumOfClasses( )
-  {
-    return m_numOfClasses;
-  }
+  // @Override
+  // public int getNumOfClasses( )
+  // {
+  // return m_numOfClasses;
+  // }
 
-  @Override
-  public double getDiscretisationInterval( )
-  {
-    return Math.abs( (m_maxElevation - m_minElevation) ) / m_numOfClasses;
-  }
+  // @Override
+  // public double getDiscretisationInterval( )
+  // {
+  // return Math.abs( (m_maxElevation - m_minElevation) ) / m_numOfClasses;
+  // }
 
-  @Override
-  public double getFrom( final int currentClass )
-  {
-    return m_minElevation + currentClass * getDiscretisationInterval();
-  }
-
-  @Override
-  public double getTo( final int currentClass )
-  {
-    return m_minElevation + (currentClass + 1) * getDiscretisationInterval();
-  }
-
-  @Override
-  public FillPainter getFillPolygonPainter( final int currentClass )
-  {
-    return m_lister.get( currentClass ).getPolygonPainter();
-  }
-
-  @Override
-  public StrokePainter getLinePainter( final int currentClass )
-  {
-    return m_lister.get( currentClass ).getLinePainter();
-  }
+  // @Override
+  // public double getFrom( final int currentClass )
+  // {
+  // return m_minElevation + currentClass * getDiscretisationInterval();
+  // }
+  //
+  // @Override
+  // public double getTo( final int currentClass )
+  // {
+  // return m_minElevation + (currentClass + 1) * getDiscretisationInterval();
+  // }
+  //
+  // @Override
+  // public FillPainter getFillPolygonPainter( final int currentClass )
+  // {
+  // return m_lister.get( currentClass ).getPolygonPainter();
+  // }
+  //
+  // @Override
+  // public StrokePainter getLinePainter( final int currentClass )
+  // {
+  // return m_lister.get( currentClass ).getLinePainter();
+  // }
 
   @Override
   public void setProjection( final GeoTransform projection )
@@ -375,7 +388,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     try
     {
       m_colorList.clear();
-      m_lister.clear();
+      m_entries.clear();
 
       fillColorList();
     }
@@ -384,5 +397,29 @@ public class SimpleElevationColorModel implements IElevationColorModel
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public ElevationColorEntry getColorEntry( final double elevation )
+  {
+    final ElevationColorEntry[] result = new ElevationColorEntry[1];
+
+    final ItemVisitor visitor = new ItemVisitor()
+    {
+      @Override
+      public void visitItem( final Object item )
+      {
+        result[0] = (ElevationColorEntry) item;
+      }
+    };
+    m_entryIndex.query( elevation, elevation, visitor );
+
+    return result[0];
+  }
+
+  @Override
+  public ElevationColorEntry[] getColorEntries( )
+  {
+    return m_entries.toArray( new ElevationColorEntry[m_entries.size()] );
   }
 }
