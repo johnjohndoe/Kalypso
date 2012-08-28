@@ -6,7 +6,6 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
@@ -15,7 +14,6 @@ import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -27,9 +25,11 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
 {
-  public static final QName SIM_BASE_F_ROUGHNESS_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon" ); //$NON-NLS-1$
+  public static final QName FEATURE_ROUGHNESS_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon" ); //$NON-NLS-1$
 
-  public static final QName SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_ROUGHNESS_CLASS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" ); //$NON-NLS-1$
+
+  public static final QName PROPERTY_POLYGON_GEOMETRY = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "polygonGeometry" ); //$NON-NLS-1$
 
   // TODO: not a good place, move to constant in 1d2d
   public static final String DATA_LOCATION = "/.metadata/roughness.gml"; //$NON-NLS-1$
@@ -42,10 +42,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   @Override
   public GM_Surface< ? > getSurface( )
   {
-    final GM_Object defaultGeometryProperty = getDefaultGeometryPropertyValue();
-    if( defaultGeometryProperty instanceof GM_Surface< ? > )
-      return (GM_Surface< ? >) defaultGeometryProperty;
-    return null;
+    return (GM_Surface< ? >) getProperty( PROPERTY_POLYGON_GEOMETRY );
   }
 
   @Override
@@ -72,9 +69,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   {
     Assert.throwIAEOnNull( surface, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.7" ) ); //$NON-NLS-1$
 
-    final Feature feature = this;
-    final IPropertyType geometryProperty = feature.getFeatureType().getDefaultGeometryProperty();
-    feature.setProperty( geometryProperty, surface );
+    setProperty( PROPERTY_POLYGON_GEOMETRY, surface );
   }
 
   @Override
@@ -97,10 +92,10 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   public void setRoughnessClass( final IRoughnessCls reference ) throws IllegalArgumentException
   {
     if( reference == null )
-      setProperty( SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, null );
+      setProperty( MEMBER_ROUGHNESS_CLASS, null );
     else
     {
-      RoughnessPolygon.createClassLink( this, SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, reference );
+      RoughnessPolygon.createClassLink( this, MEMBER_ROUGHNESS_CLASS, reference );
     }
   }
 
