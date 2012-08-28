@@ -226,7 +226,9 @@
         <!--
         <image commandId="org.kalypso.model.1d2d.workflow.ResultLengthSectionViewGroup" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ConfigureResultLengthSectionView" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView" icon="icons/workflow/"/>
+        -->
+        <image commandId="org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView" icon="icons/workflow/ShowResultLengthSectionView.gif"/>
+        <!--
         <image commandId="org.kalypso.model.1d2d.workflow.DifferenceResultViewGroup" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.GenerateDifferenceResultView" icon="icons/workflow/"/>
         -->
