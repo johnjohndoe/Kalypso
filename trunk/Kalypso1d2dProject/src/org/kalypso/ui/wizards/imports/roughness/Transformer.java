@@ -147,7 +147,7 @@ public class Transformer implements ICoreRunnableWithProgress
       final Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
       if( linkedFeature != null )
       {
-        RoughnessPolygon.createClassLink( feature, RoughnessPolygon.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature );
+        RoughnessPolygon.createClassLink( feature, RoughnessPolygon.MEMBER_ROUGHNESS_CLASS, linkedFeature );
       }
     }
     // use (dummy) command to make workspace dirty
