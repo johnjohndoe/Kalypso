@@ -107,10 +107,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -166,9 +162,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     return m_widgetFace.createControl( parent );
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
-   */
   @Override
   public void disposeControl( )
   {
@@ -178,17 +171,11 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     m_dataModel.removeAllListeners();
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.ITerrainModelConsumer#setTerrainModel(org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel)
-   */
   public void setTerrainModel( final ITerrainElevationModel terrainModel )
   {
     m_dataModel.setElevationModel( terrainModel );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final Point p )
   {
@@ -201,9 +188,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       mapPanel.repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
@@ -390,10 +374,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     g2.setColor( oldColor );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {

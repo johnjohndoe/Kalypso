@@ -141,25 +141,21 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   public ITerrainElevationModel getElevationModel( )
   {
-    // return elevationModel;
     return (ITerrainElevationModel) getData( ITerrainElevationModel.class.toString() );
   }
 
   public void setElevationModel( final ITerrainElevationModel elevationModel )
   {
-    // this.elevationModel = elevationModel;
     setData( ITerrainElevationModel.class.toString(), elevationModel, true );
   }
 
   public ITerrainElevationModelSystem getElevationModelSystem( )
   {
-    // return elevationModelSystem;
     return (ITerrainElevationModelSystem) getData( ITerrainElevationModelSystem.class.toString() );
   }
 
   public void setElevationModelSystem( final ITerrainElevationModelSystem elevationModelSystem )
   {
-    // this.elevationModelSystem = elevationModelSystem;
     setData( ITerrainElevationModelSystem.class.toString(), elevationModelSystem );
   }
 

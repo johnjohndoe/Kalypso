@@ -137,8 +137,11 @@ public class ElevationModelSystemEditorComponent extends Composite
     } );
 
     final ITerrainElevationModelSystem elevationModelSystem = m_dataModel.getElevationModelSystem();
-    final IFeatureBindingCollection<ITerrainElevationModel> terrainElevationModels = elevationModelSystem.getTerrainElevationModels();
-    m_elevationViewer.setInput( terrainElevationModels );
+    if( elevationModelSystem != null )
+    {
+      final IFeatureBindingCollection<ITerrainElevationModel> terrainElevationModels = elevationModelSystem.getTerrainElevationModels();
+      m_elevationViewer.setInput( terrainElevationModels );
+    }
 
     return elevationTable;
   }
