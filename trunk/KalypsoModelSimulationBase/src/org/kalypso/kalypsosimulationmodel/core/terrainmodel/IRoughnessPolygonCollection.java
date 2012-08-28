@@ -50,5 +50,4 @@ public interface IRoughnessPolygonCollection extends IFeatureBindingCollection<I
    * @return List of overlapped polygons
    */
   public List<IRoughnessPolygon> getOverlappedPolygons( );
-
 }
