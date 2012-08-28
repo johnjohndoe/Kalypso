@@ -1,4 +1,4 @@
-This is Version 12.7.0.20120821 of Kalypso
+This is Version 12.7.0.20120828 of Kalypso
 
 For further information, visit http://kalypso.sourceforge.net
 
