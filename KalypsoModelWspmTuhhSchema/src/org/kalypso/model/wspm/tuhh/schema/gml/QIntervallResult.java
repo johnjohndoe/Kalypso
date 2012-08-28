@@ -174,7 +174,7 @@ public class QIntervallResult extends Feature_Impl
 
     final Feature polynomialFeature = workspace.createFeature( this, polynomialRelation, polynomialFT );
     workspace.addFeatureAsComposition( this, polynomialRelation, -1, polynomialFeature );
-    return (IPolynomial1D) polynomialFeature.getAdapter( IPolynomial1D.class );
+    return (IPolynomial1D) polynomialFeature;
   }
 
   /**
