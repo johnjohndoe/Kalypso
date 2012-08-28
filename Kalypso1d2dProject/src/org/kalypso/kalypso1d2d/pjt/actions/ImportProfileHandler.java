@@ -45,7 +45,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
@@ -103,7 +102,7 @@ public class ImportProfileHandler extends AbstractHandler
     final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
     dialog.setRememberSize( true );
     if( dialog.open() != Window.OK )
-      return Status.CANCEL_STATUS;
+      return null;
 
     try
     {
@@ -143,7 +142,6 @@ public class ImportProfileHandler extends AbstractHandler
     else
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.3" ) ); //$NON-NLS-1$
 
-    return Status.OK_STATUS;
+    return null;
   }
-
 }

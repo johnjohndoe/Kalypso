@@ -49,7 +49,6 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
@@ -111,7 +110,7 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
         ((ICommandPoster) modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
         modelProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
 
-        return Status.OK_STATUS;
+        return null;
       }
     }
     catch( final CoreException e )
@@ -123,7 +122,6 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
       e.printStackTrace();
     }
 
-    return Status.CANCEL_STATUS;
+    return null;
   }
-
 }

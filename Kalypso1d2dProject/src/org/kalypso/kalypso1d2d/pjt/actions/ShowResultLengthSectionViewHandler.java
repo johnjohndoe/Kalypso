@@ -136,7 +136,7 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
         };
         job.schedule();
 
-        return Status.OK_STATUS;
+        return null;
       }
     }
     catch( final CoreException e )
@@ -144,6 +144,6 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
       e.printStackTrace();
     }
 
-    return Status.CANCEL_STATUS;
+    return null;
   }
 }

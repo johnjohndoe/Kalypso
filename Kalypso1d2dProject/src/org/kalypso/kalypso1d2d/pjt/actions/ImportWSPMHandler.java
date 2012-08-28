@@ -45,7 +45,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
@@ -89,7 +88,7 @@ public class ImportWSPMHandler extends AbstractHandler
       final IFlowRelationshipModel flowRelationModel = modelProvider.getModel( IFlowRelationshipModel.class.getName() );
 
       if( discModel == null )
-        return Status.CANCEL_STATUS;
+        return null;
 
       /* Import Reach into Terrain-Model */
       final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
@@ -100,7 +99,7 @@ public class ImportWSPMHandler extends AbstractHandler
       final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
       dialog.setRememberSize( true );
       if( dialog.open() != Window.OK )
-        return Status.CANCEL_STATUS;
+        return null;
 
       try
       {
@@ -133,7 +132,6 @@ public class ImportWSPMHandler extends AbstractHandler
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.3" ), e ); //$NON-NLS-1$
     }
 
-    return Status.OK_STATUS;
+    return null;
   }
-
 }
