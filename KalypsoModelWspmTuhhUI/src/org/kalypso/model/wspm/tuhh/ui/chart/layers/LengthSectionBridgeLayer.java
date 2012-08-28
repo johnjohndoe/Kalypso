@@ -24,6 +24,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 public class LengthSectionBridgeLayer extends TupleResultLineLayer
 {
@@ -33,7 +34,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
   {
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( valueData == null )

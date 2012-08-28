@@ -52,6 +52,7 @@ import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * A layer which renders a King-Profile.
@@ -70,7 +71,7 @@ public class KingLayer extends AbstractChartLayer
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
   {
     final IAxis domainAxis = getDomainAxis();
     final IAxis valueAxis = getTargetAxis();

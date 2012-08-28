@@ -127,7 +127,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     axisRendererConfigLR.tickLineStyle.setLineJoin( LINEJOIN.BEVEL );
     axisRendererConfigLR.axisLineStyle.setWidth( 2 );
     axisRendererConfigLR.tickLineStyle.setWidth( 2 );
-    axisRendererConfigLR.axisInsets = new Insets( 5, 0, 0, 0 );
+    axisRendererConfigLR.axisInsets = new Insets( 0, 0, 0, 0 );
     axisRendererConfigLR.hideCut = false;
     final AxisRendererConfig axisRendererConfigD = new AxisRendererConfig();
     axisRendererConfigD.axisLineStyle.setLineCap( LINECAP.FLAT );
@@ -140,7 +140,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     axisRendererConfigD.tickLineStyle.setWidth( 2 );
     axisRendererConfigD.axisInsets = new Insets( 0, 0, 0, 0 );
     axisRendererConfigD.hideCut = true;
-
+   
     m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_VERTICAL_SCREEN", POSITION.RIGHT );//$NON-NLS-1$
     m_screenAxisVertical.setPreferredAdjustment( new AxisAdjustment( 0, 1, 0 ) );
     m_domainAxis = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_DOMAIN", POSITION.BOTTOM, axisRendererConfigD );//$NON-NLS-1$
@@ -435,10 +435,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   {
     final String domLabel = String.format( AXIS_LABEL, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) ) );
     m_domainAxis.clearLabels();
-    m_domainAxis.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_domainAxis.getPosition(), domLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
+    m_domainAxis.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_domainAxis.getPosition(), domLabel, new Insets( 1, 2, 4, 2 ), StyleUtils.getDefaultTextStyle() ) );
     final String leftLabel = String.format( AXIS_LABEL, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE ) ) );
     m_targetAxisLeft.clearLabels();
-    m_targetAxisLeft.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_targetAxisLeft.getPosition(), leftLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
+    m_targetAxisLeft.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_targetAxisLeft.getPosition(), leftLabel, new Insets( 1, 2, 4, 2 ), StyleUtils.getDefaultTextStyle() ) );
 
     final IComponent roughnessKS = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
     final IComponent roughnessKST = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
@@ -456,6 +456,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       rightLabel = ""; //$NON-NLS-1$
     }
     m_targetAxisRight.clearLabels();
-    m_targetAxisRight.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_targetAxisRight.getPosition(), rightLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
+    m_targetAxisRight.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_targetAxisRight.getPosition(), rightLabel, new Insets( 1, 2, 4, 2 ), StyleUtils.getDefaultTextStyle() ) );
   }
 }
