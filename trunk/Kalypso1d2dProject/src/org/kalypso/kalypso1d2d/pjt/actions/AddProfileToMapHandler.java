@@ -52,7 +52,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -62,7 +61,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
@@ -110,7 +108,7 @@ public class AddProfileToMapHandler extends AbstractHandler
       /* ask user and add everything to map */
       final Object[] result = showNetworksDialog( shell, riverProfileNetworkCollection );
       if( result == null )
-        return Status.CANCEL_STATUS;
+        return null;
 
       final IRiverProfileNetwork network = (IRiverProfileNetwork) result[0];
 
@@ -140,12 +138,13 @@ public class AddProfileToMapHandler extends AbstractHandler
       if( envelope != null )
         mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
 
-      return Status.OK_STATUS;
+      return null;
     }
     catch( final Exception e )
     {
+      // FIXME: error handling
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e );
+      return null;
     }
   }
 

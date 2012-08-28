@@ -49,7 +49,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -113,7 +112,7 @@ public class ImportElevationHandler extends AbstractHandler
       {
         // REMARK: small hack: in order to refresh the widget, we execute the handler again
         handler.execute( exc );
-        return Status.OK_STATUS;
+        return null;
       }
       handler.execute( exc );
     }
@@ -122,6 +121,6 @@ public class ImportElevationHandler extends AbstractHandler
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler.4" ) ); //$NON-NLS-1$
     }
 
-    return Status.CANCEL_STATUS;
+    return null;
   }
 }

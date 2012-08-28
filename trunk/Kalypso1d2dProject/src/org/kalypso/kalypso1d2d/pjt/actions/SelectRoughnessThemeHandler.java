@@ -155,7 +155,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
         final IFeatureType featureType = ((IKalypsoFeatureTheme) theme).getFeatureType();
         if( featureType == null )
           return false;
-        final boolean equals = featureType.getQName().equals( RoughnessPolygon.SIM_BASE_F_ROUGHNESS_POLYGON );
+        final boolean equals = featureType.getQName().equals( RoughnessPolygon.FEATURE_ROUGHNESS_POLYGON );
         return equals;
       }
     };
