@@ -6,6 +6,7 @@
 <view id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"/>
 <view id="org.kalypso.ui.views.outline"/>
 <view id="org.kalypso.ui.views.mapView"/>
+<view id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"/>
 <fastViewBars/>
 <viewLayoutRec closeable="false" id="org.kalypso.kalypso1d2d.pjt.views.WorklistView"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.views.outline"/>
@@ -30,22 +31,23 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info part="org.eclipse.ui.editorss" ratio="0.19277108" ratioLeft="368" ratioRight="1541" relationship="2" relative="leftTop"/>
+<info part="org.eclipse.ui.editorss" ratio="0.18805657" ratioLeft="359" ratioRight="1550" relationship="2" relative="leftTop"/>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@1ee22840" ratio="0.5" ratioLeft="527" ratioRight="527" relationship="2" relative="org.eclipse.ui.editorss">
 <folder activePageID="org.kalypso.ui.views.mapView" appearance="2" expanded="2">
 <page content="org.kalypso.ui.views.mapView" label="FE-Netz"/>
 <page content="org.kalypso.ui.views.featuretemplateview" label="LabelNotFound"/>
-<page content="org.kalypso.model.wspm.ui.view.chart.ChartView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@1df90db3" ratio="0.59980524" ratioLeft="616" ratioRight="411" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1ee22840">
-<folder appearance="2" expanded="2">
-<page content="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" label="LabelNotFound"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@1df90db3" ratio="0.8106012" ratioLeft="1254" ratioRight="293" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1ee22840">
+<folder activePageID="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" appearance="2" expanded="2">
+<page content="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" label="Höhen zuweisen"/>
 <page content="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@4db02043" ratio="0.66309637" ratioLeft="681" ratioRight="346" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1df90db3">
@@ -67,7 +69,7 @@
 </folder>
 </info>
 <info folder="true" part="leftBottom" ratio="0.6106061" ratioLeft="403" ratioRight="257" relationship="4" relative="leftTop">
-<folder activePageID="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" appearance="2" expanded="2">
+<folder activePageID="org.kalypso.ui.views.outline" appearance="2" expanded="2">
 <page content="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" label="Szenarien"/>
 <page content="org.kalypso.ui.views.outline" label="Gliederung"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
