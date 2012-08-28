@@ -214,7 +214,7 @@
 						<Parameter name="inset_label" value="2" />
 						<Parameter name="tick_length" value="5" />
 						<Parameter name="hide_cut" value="false" />
-						<Parameter name="gap" value="5" />
+						<Parameter name="gap" value="0" />
 					</Parameters>
 				</Provider>
 			</AxisRenderer>

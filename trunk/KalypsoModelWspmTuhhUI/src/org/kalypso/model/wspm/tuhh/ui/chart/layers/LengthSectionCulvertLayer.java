@@ -22,6 +22,7 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 public class LengthSectionCulvertLayer extends TupleResultLineLayer
 {
@@ -67,7 +68,7 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( valueData == null )

@@ -11,6 +11,7 @@ import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 public class LengthSectionRunOffLayer extends TupleResultLineLayer
 {
@@ -25,7 +26,7 @@ public class LengthSectionRunOffLayer extends TupleResultLineLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
   {
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( valueData == null )

@@ -66,6 +66,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author kimwerner
@@ -87,7 +88,7 @@ public class RoughnessLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
     if( profil == null )
@@ -96,11 +97,12 @@ public class RoughnessLayer extends AbstractProfilLayer
     if( !hasRoughnessProperties() )
       return;
 
-    final int baseLine = getTargetAxis().getScreenHeight();
+    final int baseLine = chartImageInfo.getLayerRect().y+chartImageInfo.getLayerRect().height;
     final FullRectangleFigure fr = new FullRectangleFigure();
 
     final IPointStyle ps = getPointStyle();
     // FIXME: why the heck is this translation needed??
+    // Kim: rückwärtskompatibel zu alten *.KOD
     final AreaStyle as = new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), ps.isVisible() );
     fr.setStyle( as );
 

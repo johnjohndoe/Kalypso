@@ -62,6 +62,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author kimwerner
@@ -96,7 +97,7 @@ public class CulvertLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
   {
     final IProfileBuilding tube = getTube();
     if( tube == null )

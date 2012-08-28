@@ -74,7 +74,7 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author kimwerner
@@ -84,6 +84,10 @@ public class PointMarkerLayer extends AbstractProfilLayer
   private final int m_offset;
 
   private final boolean m_close;
+
+  private int m_screenTop;
+
+  private int m_screenBottom;
 
   public PointMarkerLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
   {
@@ -253,7 +257,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
     final IComponent target = getTargetComponent();
@@ -263,9 +267,8 @@ public class PointMarkerLayer extends AbstractProfilLayer
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( target.getId() );
     final int len = deviders.length;
 
-
-    final int bottom = getBottom();
-    final int top = getTop();
+    m_screenBottom = chartImageInfo.getLayerRect().y + chartImageInfo.getLayerRect().height;
+    m_screenTop = chartImageInfo.getLayerRect().y + m_offset;
 
     final IAxis domainAxis = getDomainAxis();
 
@@ -275,8 +278,8 @@ public class PointMarkerLayer extends AbstractProfilLayer
     {
       final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, deviders[i].getPoint() );
       final int screenX = domainAxis.numericToScreen( breite );
-      final Point p1 = new Point( screenX, bottom );
-      final Point p2 = new Point( screenX, top );
+      final Point p1 = new Point( screenX, getBottom() );
+      final Point p2 = new Point( screenX, getTop() );
 
       pf.setPoints( new Point[] { p1, p2 } );
       pf.paint( gc );
@@ -287,26 +290,18 @@ public class PointMarkerLayer extends AbstractProfilLayer
       final int screenX1 = domainAxis.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
       final int screenX2 = domainAxis.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[len - 1].getPoint() ) );
 
-      pf.setPoints( new Point[] { new Point( screenX1, top ), new Point( screenX2, top ) } );
+      pf.setPoints( new Point[] { new Point( screenX1, getTop() ), new Point( screenX2, getTop() ) } );
       pf.paint( gc );
     }
   }
 
   private int getTop( )
   {
-    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
-
-    final IAxis targetAxis = coordinateMapper.getTargetAxis();
-
-    return targetAxis.numericToScreen( 0 ) + m_offset;
+    return m_screenTop + m_offset;
   }
 
   private int getBottom( )
   {
-    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
-
-    final IAxis targetAxis = coordinateMapper.getTargetAxis();
-
-    return targetAxis.numericToScreen( targetAxis.getScreenHeight() );
+    return m_screenBottom;
   }
 }
