@@ -25,7 +25,6 @@ public interface IRoughnessClsCorrection extends Feature
   public static final QName WBR_PROP_EDDY_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "eddyCor" ); //$NON-NLS-1$
 
   public static final QName WBR_PROP_MARSH_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "marshCor" ); //$NON-NLS-1$
-
   
   public static enum RoughnessCorConfigConsistency
   {
