@@ -27,7 +27,6 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
 {
-
   public static final QName SIM_BASE_F_ROUGHNESS_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon" ); //$NON-NLS-1$
 
   public static final QName SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" ); //$NON-NLS-1$
@@ -40,11 +39,6 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getLinestring()
-   */
   @Override
   public GM_Surface< ? > getSurface( )
   {
@@ -54,11 +48,6 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getRoughnessID()
-   */
   @Override
   public String getRoughnessStyle( )
   {
@@ -85,13 +74,9 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
 
     final Feature feature = this;
     final IPropertyType geometryProperty = feature.getFeatureType().getDefaultGeometryProperty();
-    // final IPropertyType geometryProperty = feature.getFeatureType().getProperty( IRoughnessPolygon.PROP_GEOMETRY );
     feature.setProperty( geometryProperty, surface );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getRoughnessCls()
-   */
   @Override
   public IRoughnessCls getRoughnessCls( )
   {
@@ -140,117 +125,98 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
     return buf.toString();
   }
 
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj instanceof IRoughnessPolygon )
-    {
-      final String style1 = getRoughnessStyle();
-      final String style2 = ((IRoughnessPolygon) obj).getRoughnessStyle();
-      if( style1 != null && style2 == null )
-      {
-        return false;
-      }
-      else if( style1 == null && style2 != null )
-      {
-        return false;
-      }
-      else if( style1 == style2 )
-      {
-        // all null of the same or the same internalized
-        // can match
-      }
-      else if( style1.equals( style2 ) )
-      {
-        // can match
-      }
-      else
-      {
-        return false;
-      }
+  // FIXME 1) overwriting equals of Feature's is forbidden -> break integrity of feature lists etc.
+  // FIXME 2) !! hashCode not overwritten as well !!
+  // @Override
+  // public boolean equals( final Object obj )
+  // {
+  // if( obj instanceof IRoughnessPolygon )
+  // {
+  // final String style1 = getRoughnessStyle();
+  // final String style2 = ((IRoughnessPolygon) obj).getRoughnessStyle();
+  // if( style1 != null && style2 == null )
+  // {
+  // return false;
+  // }
+  // else if( style1 == null && style2 != null )
+  // {
+  // return false;
+  // }
+  // else if( style1 == style2 )
+  // {
+  // // all null of the same or the same internalized
+  // // can match
+  // }
+  // else if( style1.equals( style2 ) )
+  // {
+  // // can match
+  // }
+  // else
+  // {
+  // return false;
+  // }
+  //
+  // final GM_Surface< ? > pol1 = getSurface();
+  // final GM_Surface< ? > pol2 = ((IRoughnessPolygon) obj).getSurface();
+  // if( pol1 == pol2 )
+  // {
+  // return true;
+  // }
+  // else if( pol1 != null && pol2 == null )
+  // {
+  // return false;
+  // }
+  // else if( pol1 == null && pol2 != null )
+  // {
+  // return false;
+  // }
+  // else
+  // {
+  // return pol1.equals( pol2 );
+  // }
+  // }
+  // else
+  // {
+  // return super.equals( obj );
+  // }
+  // }
 
-      final GM_Surface< ? > pol1 = getSurface();
-      final GM_Surface< ? > pol2 = ((IRoughnessPolygon) obj).getSurface();
-      if( pol1 == pol2 )
-      {
-        return true;
-      }
-      else if( pol1 != null && pol2 == null )
-      {
-        return false;
-      }
-      else if( pol1 == null && pol2 != null )
-      {
-        return false;
-      }
-      else
-      {
-        return pol1.equals( pol2 );
-      }
-    }
-    else
-    {
-      return super.equals( obj );
-    }
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getCorrectionParameterAxAy()
-   */
   @Override
   public Double getCorrectionParameterAxAy( )
   {
     return (Double) getProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getCorrectionParameterDP()
-   */
   @Override
   public Double getCorrectionParameterDP( )
   {
     return (Double) getProperty( IRoughnessPolygon.PROP_CORRECTION_DP );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getCorrectionParameterKS()
-   */
   @Override
   public Double getCorrectionParameterKS( )
   {
     return (Double) getProperty( IRoughnessPolygon.PROP_CORRECTION_KS );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterAxAy(double)
-   */
   @Override
   public void setCorrectionParameterAxAy( final double value )
   {
     setProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterDP(double)
-   */
   @Override
   public void setCorrectionParameterDP( final double value )
   {
     setProperty( IRoughnessPolygon.PROP_CORRECTION_DP, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterKS(double)
-   */
   @Override
   public void setCorrectionParameterKS( final double value )
   {
     setProperty( IRoughnessPolygon.PROP_CORRECTION_KS, value );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#resetRoughnessClassMemberXLink()
-   */
   @Override
   public FeatureChange[] resetRoughnessClassMemberXLink( )
   {

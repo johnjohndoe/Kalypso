@@ -32,26 +32,20 @@ public class RoughnessPolygonCollection extends FeatureBindingCollection<IRoughn
     super( parentFeature, IRoughnessPolygon.class, SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#checkOverlapping()
-   */
   @Override
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public boolean checkOverlapping( )
   {
     final List<Feature> srcPolygonsList = getFeatureList();
-    Feature feature1, feature2;
-    Polygon polygon1, polygon2;
     try
     {
       for( int i = 0; i < srcPolygonsList.size(); i++ )
       {
-        feature1 = srcPolygonsList.get( i );
-        polygon1 = (Polygon) JTSAdapter.export( feature1.getDefaultGeometryPropertyValue() );
+        final Feature feature1 = srcPolygonsList.get( i );
+        final Polygon polygon1 = (Polygon) JTSAdapter.export( feature1.getDefaultGeometryPropertyValue() );
         for( int j = i + 1; j < srcPolygonsList.size(); j++ )
         {
-          feature2 = srcPolygonsList.get( j );
-          polygon2 = (Polygon) JTSAdapter.export( feature2.getDefaultGeometryPropertyValue() );
+          final Feature feature2 = srcPolygonsList.get( j );
+          final Polygon polygon2 = (Polygon) JTSAdapter.export( feature2.getDefaultGeometryPropertyValue() );
           final Geometry jtsIntersection = polygon1.intersection( polygon2 );
           if( jtsIntersection.getArea() > 0 )
           {
@@ -68,27 +62,29 @@ public class RoughnessPolygonCollection extends FeatureBindingCollection<IRoughn
   }
 
   @Override
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public List<IRoughnessPolygon> getOverlappedPolygons( )
   {
     final List<Feature> srcPolygonsList = getFeatureList();
+
     final List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
+
     final int[] containsList = getEmptyList( srcPolygonsList.size() );
-    IRoughnessPolygon roughnessPolygon1, roughnessPolygon2;
-    Feature feature1, feature2;
-    MultiPolygon polygon1, polygon2;
+
     try
     {
       for( int i = 0; i < srcPolygonsList.size(); i++ )
       {
-        feature1 = srcPolygonsList.get( i );
-        roughnessPolygon1 = (IRoughnessPolygon) feature1;
-        polygon1 = (MultiPolygon) JTSAdapter.export( feature1.getDefaultGeometryPropertyValue() );
+        final Feature feature1 = srcPolygonsList.get( i );
+
+        final IRoughnessPolygon roughnessPolygon1 = (IRoughnessPolygon) feature1;
+        final MultiPolygon polygon1 = (MultiPolygon) JTSAdapter.export( feature1.getDefaultGeometryPropertyValue() );
+
         for( int j = i + 1; j < srcPolygonsList.size(); j++ )
         {
-          feature2 = srcPolygonsList.get( j );
-          roughnessPolygon2 = (IRoughnessPolygon) feature2;
-          polygon2 = (MultiPolygon) JTSAdapter.export( feature2.getDefaultGeometryPropertyValue() );
+          final Feature feature2 = srcPolygonsList.get( j );
+          final IRoughnessPolygon roughnessPolygon2 = (IRoughnessPolygon) feature2;
+          final MultiPolygon polygon2 = (MultiPolygon) JTSAdapter.export( feature2.getDefaultGeometryPropertyValue() );
+
           final Geometry jtsIntersection = polygon1.intersection( polygon2 );
           if( jtsIntersection.getArea() > 0 )
           {
@@ -116,62 +112,15 @@ public class RoughnessPolygonCollection extends FeatureBindingCollection<IRoughn
   @Override
   public List<IRoughnessPolygon> getRoughnessPolygons( )
   {
-    // List<Feature> srcPolygonsList = getFeatureList();
-    // List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
-    // Iterator<Feature> iterator = srcPolygonsList.listIterator();
-    // while( iterator.hasNext() )
-    // {
-    // dstPolygonsList.add( new RoughnessPolygon( iterator.next() ) );
-    // }
-    // return dstPolygonsList;
-    final List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>( this );
-    return dstPolygonsList;
+    return new ArrayList<IRoughnessPolygon>( this );
   }
 
   @Override
   public List<IRoughnessPolygon> selectRoughnessPolygons( final GM_Position location )
   {
     return query( location );
-
-    // List<Feature> srcPolygonsList = getFeatureList();
-    // List<Feature> dstPolygonsList = new ArrayList<Feature>();
-    // Iterator<Feature> iterator = srcPolygonsList.listIterator();
-    // Feature polygon = null;
-    // while( iterator.hasNext() )
-    // {
-    // polygon = iterator.next();
-    // if( polygon.getDefaultGeometryProperty().contains( location ) )
-    // dstPolygonsList.add( polygon );
-    // }
-    // if( dstPolygonsList.size() > 0 )
-    // {
-    // IRoughnessPolygon[] dstPolygonsArray = new IRoughnessPolygon[dstPolygonsList.size()];
-    // for( int i = 0; i < dstPolygonsList.size(); i++ )
-    // dstPolygonsArray[i] = new RoughnessPolygon( dstPolygonsList.get( i ) );
-    // return dstPolygonsArray;
-    // }
-    // else
-    // return null;
-
-    // /*
-    // * Mark from Dejan: The following code does not work correctly,
-    // * it checks if ENVELOPE contains point! GM_Position
-    // */
-    // position = GeometryFactory.createGM_Position( point.getX(), point.getY() );
-    // List<Feature> selectedPolygonsList = getFeatureList().query( position, null );
-    // IRoughnessPolygon[] dstPolygonsArray = new IRoughnessPolygon[selectedPolygonsList.size()];
-    // Iterator<Feature> iterator = selectedPolygonsList.listIterator();
-    // int i = 0;
-    // while(iterator.hasNext()){
-    // dstPolygonsArray[i++] = new RoughnessPolygon(iterator.next());
-    // }
-    // return dstPolygonsArray;
-
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#selectRoughnessPolygons(org.kalypsodeegree.model.geometry.GM_Polygon)
-   */
   @Override
   public List<IRoughnessPolygon> selectRoughnessPolygons( final GM_Surface< ? > selectionZone )
   {
