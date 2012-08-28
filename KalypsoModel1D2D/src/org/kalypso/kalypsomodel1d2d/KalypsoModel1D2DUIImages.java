@@ -75,7 +75,8 @@ public class KalypsoModel1D2DUIImages
     ELEVATION_MOVE_UP("icons/elcl16/list_up.gif"), //$NON-NLS-1$
     ELEVATION_MOVE_DOWN("icons/elcl16/list_down.gif"),
     IMPORT_EXTERNAL_RESULT("icons/obj16/importExternalResult.gif"), //$NON-NLS-1$
-    IMPORT_2D_ELEMENTS("icons/obj16/import2dElements.gif"); //$NON-NLS-1$
+    IMPORT_2D_ELEMENTS("icons/obj16/import2dElements.gif"), //$NON-NLS-1$
+    IMPORT_2D_ELEMENTS_JUMP_TO("icons/obj16/import2dElementsJumpTo.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

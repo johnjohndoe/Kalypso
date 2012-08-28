@@ -40,32 +40,46 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
+import java.awt.Graphics;
+import java.net.URL;
+
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.kalypsomodel1d2d.ui.map.import2d.imports.Import2dImportAction;
-import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
+import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.bce.gis.io.zweidm.IPolygonWithName;
 
 /**
  * @author Gernot Belger
  */
-public class Import2dElementsWidget extends AbstractDelegateWidget implements IWidgetWithOptions
+public class Import2dElementsWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private final Import2dElementsData m_data = new Import2dElementsData();
 
-  // private DatabindingForm m_binding;
+  private final SLDPainter2 m_elementPainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/elements.sld" ) } ); //$NON-NLS-1$
 
   public Import2dElementsWidget( )
   {
-    super( "2D-Import", "Import 2D-Elements", null );
+    super( "2D-Import", "Import 2D-Elements" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
@@ -87,17 +101,19 @@ public class Import2dElementsWidget extends AbstractDelegateWidget implements IW
     final Composite body = form.getBody();
     GridLayoutFactory.fillDefaults().applyTo( body );
 
-    // m_binding = new DatabindingForm( form, toolkit );
-
     createDatasetPanel( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     return body;
   }
 
-  private Control createDatasetPanel( final Composite panel, final FormToolkit toolkit )
+  private Control createDatasetPanel( final Composite parent, final FormToolkit toolkit )
   {
+    final Composite panel = toolkit.createComposite( parent );
+    GridLayoutFactory.swtDefaults().applyTo( panel );
+
     final Section section = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
     section.setText( "Import Dataset" );
+    section.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     createDatasetActions( section );
 
@@ -106,7 +122,12 @@ public class Import2dElementsWidget extends AbstractDelegateWidget implements IW
 
     section.setClient( statisticsComposite );
 
-    return section;
+    /* 'Apply To' button */
+    final ConvertToModelAction convertToModelAction = new ConvertToModelAction( m_data, this );
+    final Button buttonConvertToModel = ActionButton.createButton( toolkit, panel, convertToModelAction );
+    buttonConvertToModel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    return panel;
   }
 
   private void createDatasetActions( final Section section )
@@ -115,7 +136,36 @@ public class Import2dElementsWidget extends AbstractDelegateWidget implements IW
 
     manager.add( new Import2dImportAction( m_data ) );
     manager.add( new ClearDatasetAction( m_data ) );
+    manager.add( new JumpToDatasetAction( m_data, this ) );
 
     manager.update( true );
+  }
+
+  @Override
+  public void paint( final Graphics g )
+  {
+    final IMapPanel panel = getMapPanel();
+    if( panel == null )
+      return;
+
+    final GeoTransform projection = panel.getProjection();
+
+    final IPolygonWithName[] elements = m_data.getElements();
+    if( elements == null )
+      return;
+
+    final String srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    for( final IPolygonWithName polygon : elements )
+    {
+      try
+      {
+        final GM_Object surface = JTSAdapter.wrap( polygon.getPolygon(), srsName );
+        m_elementPainter.paint( g, projection, surface );
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
 }
