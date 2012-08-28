@@ -260,7 +260,6 @@
 
  	 <!--*** 2D-editing handlers ***-->
  	      <!-- FIXME: remove for now -->
- 	      <!--
 	     <handler
 	           commandId="org.kalypso.model.1d2d.workflow.Net2DImport">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
@@ -272,7 +271,6 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
-	     -->
 
 	     <handler
 	           commandId="org.kalypso.model.1d2d.workflow.Chan2DGen">

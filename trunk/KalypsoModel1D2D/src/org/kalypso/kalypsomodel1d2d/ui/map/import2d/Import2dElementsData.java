@@ -42,8 +42,12 @@ package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.bce.gis.io.zweidm.IPolygonWithName;
+import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * Data modle for {@link Import2dElementsWidget}
@@ -82,5 +86,32 @@ public class Import2dElementsData extends AbstractModelObject
   public boolean getAnalysisEnabled( )
   {
     return m_statistics.getElementCount() > 0;
+  }
+
+  public IPolygonWithName[] getElements( )
+  {
+    return m_elements;
+  }
+
+  public GM_Envelope getBoundingBox( )
+  {
+    GM_Envelope envelope = null;
+    if( m_elements == null )
+      return envelope;
+
+    final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    for( final IPolygonWithName element : m_elements )
+    {
+      final Envelope env = element.getEnvelope();
+      final GM_Envelope box = JTSAdapter.wrap( env, kalypsoSRS );
+
+      if( envelope == null )
+        envelope = box;
+      else
+        envelope = envelope.getMerged( box );
+    }
+
+    return envelope;
   }
 }
