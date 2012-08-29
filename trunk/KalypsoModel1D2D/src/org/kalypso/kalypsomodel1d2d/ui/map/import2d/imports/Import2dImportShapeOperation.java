@@ -47,6 +47,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -92,13 +93,15 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
   @Override
   public String getFilterExtension( )
   {
-    return ShapeFile.EXTENSION_SHP;
+    return "*" + ShapeFile.EXTENSION_SHP; //$NON-NLS-1$
   }
 
   @Override
   protected Pair<IStatus, IPolygonWithName[]> readFileData( final File importFile, final int sourceSrid, final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    final String filePath = importFile.getAbsolutePath();
+    String filePath = importFile.getAbsolutePath();
+    if( filePath.endsWith( ShapeFile.EXTENSION_SHP ) )
+      filePath = FilenameUtils.removeExtension( filePath );
 
     ShapeFile shapeFile = null;
     try

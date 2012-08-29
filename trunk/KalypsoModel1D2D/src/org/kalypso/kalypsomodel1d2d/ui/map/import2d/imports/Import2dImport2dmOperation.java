@@ -64,7 +64,7 @@ import com.bce.gis.io.zweidm.SmsParser;
  */
 public class Import2dImport2dmOperation extends AbstractImport2DImportOperation
 {
-  private static final String EXTENSION_2DM = ".2dm"; //$NON-NLS-1$
+  private static final String EXTENSION_2DM = "*.2dm"; //$NON-NLS-1$
 
   public Import2dImport2dmOperation( final Import2dElementsData data, final Import2dImportData importData )
   {
