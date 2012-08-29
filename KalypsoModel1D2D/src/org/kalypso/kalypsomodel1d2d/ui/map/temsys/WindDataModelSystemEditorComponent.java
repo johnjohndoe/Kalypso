@@ -120,11 +120,7 @@ public class WindDataModelSystemEditorComponent
       {
         final String lStrName = ((IWindDataModel) element).getName();
         final String lStrDate = ((IWindDataModel) element).getDateStep().toString();
-        final String name = lStrName + " " + lStrDate; //$NON-NLS-1$
-        if( name != null )
-          return name;
-        else
-          return ((IWindDataModel) element).getId();
+        return lStrName + " " + lStrDate; //$NON-NLS-1$
       }
       else
         throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.0" ) + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$

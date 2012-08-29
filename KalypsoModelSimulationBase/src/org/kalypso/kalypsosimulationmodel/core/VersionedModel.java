@@ -59,11 +59,12 @@ public class VersionedModel extends Feature_Impl implements IModel
 
   private static final String VERSION_0_0 = "0.0"; //$NON-NLS-1$
 
-  public VersionedModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public VersionedModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Override
   public String getVersion( )
   {
     final String property = (String) getProperty( SIM_BASE_PROP_VERSION );
@@ -78,5 +79,4 @@ public class VersionedModel extends Feature_Impl implements IModel
   {
     setProperty( SIM_BASE_PROP_VERSION, version );
   }
-
 }

@@ -198,7 +198,9 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     m_flowRelModel = flowModel;
     m_discModel = discModel;
     m_outputStream = outputStream;
-    m_status = StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.0" ) + m_flowRel.getName(), null ); //$NON-NLS-1$
+
+    final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.0" ) + m_flowRel.getName(); //$NON-NLS-1$
+    m_status = new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, message );
   }
 
   public void execute( final IProgressMonitor monitor )
@@ -207,17 +209,19 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     {
       m_running = true;
 
-      m_status = StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.1" ) + m_flowRel.getName(), null ); //$NON-NLS-1$
+      m_status = new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.1" ) + m_flowRel.getName(), null ); //$NON-NLS-1$
       m_result = calculateFlowRel( m_calculation, m_flowRel, monitor );
-      m_status = StatusUtilities.createStatus( IStatus.OK, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.2" ) + m_flowRel.getName(), null ); //$NON-NLS-1$
+      m_status = new Status( IStatus.OK, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.2" ) + m_flowRel.getName(), null ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
-      m_status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.3" ) + m_flowRel.getName(), e ); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.3" ) + m_flowRel.getName(); //$NON-NLS-1$
+      m_status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, e );
     }
     catch( final InvocationTargetException e )
     {
-      m_status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.4" ) + m_flowRel.getName(), e.getTargetException() ); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.4" ) + m_flowRel.getName(); //$NON-NLS-1$
+      m_status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, e.getTargetException() );
     }
     finally
     {
@@ -231,7 +235,10 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     {
       final IProfileFeature teschkeProfile = ((ITeschkeFlowRelation) flowRel).getProfile();
       if( teschkeProfile == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.5" ) + teschkeProfile.getName(), null ) ); //$NON-NLS-1$
+      {
+        final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.5" );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) ); //$NON-NLS-1$
+      }
 
       return runCalculation( calculation, flowRel, new IProfil[] { teschkeProfile.getProfil() }, monitor );
     }
@@ -255,11 +262,22 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       final IProfileFeature upProfile = tUp.getProfile();
 
       if( downProfile == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.6" ) + tDown.getName(), null ) ); //$NON-NLS-1$
+      {
+        final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.6" ) + tDown.getName(); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) );
+      }
+
       if( upProfile == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.7" ) + tUp.getName(), null ) ); //$NON-NLS-1$
+      {
+        final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.7" ) + tUp.getName(); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) );
+      }
+
       if( buildingProfile == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.8" ) + building.getName(), null ) ); //$NON-NLS-1$
+      {
+        final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.8" ) + building.getName();//$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) );
+      }
 
       final IProfil downStreamProfil = downProfile.getProfil();
       final IProfil buildingProfil = buildingProfile.getProfil();
@@ -268,7 +286,8 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       return runCalculation( calculation, flowRel, new IProfil[] { downStreamProfil, buildingProfil, upStreamProfil }, monitor );
     }
 
-    throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.9" ) + flowRel + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.10" ), null ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.9" ) + flowRel + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.10" ); //$NON-NLS-1$ //$NON-NLS-2$
+    throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) );
   }
 
   private QIntervallResult runCalculation( final TuhhCalculation templateCalculation, final IFlowRelation1D flowRel, final IProfil[] profiles, final IProgressMonitor monitor ) throws InvocationTargetException
@@ -337,7 +356,8 @@ public class FlowRelationshipCalcOperation implements IAdaptable
           return qresult;
       }
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.14" ), null ) ); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.14" ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) );
     }
     catch( final InvocationTargetException e )
     {
@@ -419,7 +439,11 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     final Double maxQ = template.getMaxQ();
     final Double step = template.getQStep();
     if( minQ == null || maxQ == null || step == null )
-      throw new InvocationTargetException( new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.20" ), null ) ) ); //$NON-NLS-1$
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.20" ) ); //$NON-NLS-1$
+      // FIXME: bah!
+      throw new InvocationTargetException( new CoreException( status ) );
+    }
 
     calculation.setQRange( minQ, maxQ, step );
     final boolean calcBuildings;

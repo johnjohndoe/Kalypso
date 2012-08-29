@@ -55,12 +55,12 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
@@ -76,15 +76,8 @@ public class LengthSectionHandler2dTest extends TestCase
     {
       // Demo river line file (Stör)
       final URL resourceShape = getClass().getResource( "resources/stoer_kompl2.shp" ); //$NON-NLS-1$
-      final GMLWorkspace shapeWorkspace = null;
-      // final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      // final CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
-      // csFac.getCSByName( "EPSG:31467" ) );
-      // GMLWorkspace shapeWorkspace = ShapeSerializer.deserialize( resourceShape.toString(), cSystem );
 
-      final Feature fRoot = shapeWorkspace.getRootFeature();
-      final FeatureList lstMembers = (FeatureList) fRoot.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-      final Feature[] features = lstMembers.toFeatures();
+      final ShapeCollection shapeWorkspace = ShapeSerializer.deserialize( resourceShape.toString(), "EPSG:31467" );
 
       final BigDecimal max = new BigDecimal( 62000 );
       final BigDecimal min = new BigDecimal( 58000 );
@@ -128,7 +121,9 @@ public class LengthSectionHandler2dTest extends TestCase
         surface = (GM_TriangulatedSurface) geometryProperty;
       }
 
-      final LengthSectionHandlerParameters data = new LengthSectionHandlerParameters( features, null, null, null, new BigDecimal( 100 ), false );
+      final IFeatureBindingCollection<AbstractShape> shapes = shapeWorkspace.getShapes();
+      final AbstractShape[] allShapes = shapes.toArray( new AbstractShape[shapes.size()] );
+      final LengthSectionHandlerParameters data = new LengthSectionHandlerParameters( allShapes, null, null, null, new BigDecimal( 100 ), false );
 
       LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, data, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new NullProgressMonitor() );
 

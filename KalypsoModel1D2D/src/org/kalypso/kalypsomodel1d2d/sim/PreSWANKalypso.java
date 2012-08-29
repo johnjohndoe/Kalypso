@@ -21,12 +21,12 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.vfs.FileSystemManagerWrapper;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -306,7 +306,6 @@ public class PreSWANKalypso implements ISimulation
         // cannot interpret given URL or file
       }
     }
-    final FileObject lAdditionalCoordFile = null;
     List<GM_Position> lListAdditionalCoord = null;
     if( lUrlFileAdditionalCoord != null && !"".equals( lUrlFileAdditionalCoord ) ) //$NON-NLS-1$
     {
@@ -324,14 +323,7 @@ public class PreSWANKalypso implements ISimulation
       {
         try
         {
-          if( lAdditionalCoordFile == null )
-          {
-            lListAdditionalCoord = readAdditionalCoordinates( lUrlFileAdditionalCoord.openStream() );
-          }
-          else
-          {
-            lListAdditionalCoord = readAdditionalCoordinates( lAdditionalCoordFile.getContent().getInputStream() );
-          }
+          lListAdditionalCoord = readAdditionalCoordinates( lUrlFileAdditionalCoord.openStream() );
           converter2D.setListAdditionalOuputCoord( lListAdditionalCoord );
         }
         catch( final IOException e )
@@ -435,9 +427,8 @@ public class PreSWANKalypso implements ISimulation
     }
     catch( final Exception e )
     {
-      // e.printStackTrace();
       final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.14" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, ISimulation1D2DConstants.CODE_PRE, msg, e ) );
     }
     finally
     {

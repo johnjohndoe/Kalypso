@@ -85,7 +85,7 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
  * necessary arguments are:<br>
  * <br>
  * result file 1, result file 2, template file, output file, parameter<br>
- * 
+ *
  * @author Thomas Jung
  */
 public class VeloDiff2DTest extends TestCase
@@ -181,7 +181,7 @@ public class VeloDiff2DTest extends TestCase
     // File template = templateFile.getLocation().toFile();
 
     final boolean parallel = true;
-    if( parallel == true )
+    if( parallel )
     {
       final File outputFileParallel = new File( outputDir2, "output_para.2d" ); //$NON-NLS-1$
       final File outputFileOrthogonal = new File( outputDir2, "output_ortho.2d" ); //$NON-NLS-1$
@@ -205,7 +205,7 @@ public class VeloDiff2DTest extends TestCase
     else
       gmlFile = new File( tinFolder, "tin_VELOCITY_Y.gml" ); //$NON-NLS-1$
 
-    final URL url = gmlFile.toURL();
+    final URL url = gmlFile.toURI().toURL();
 
     // REMARK 1: loads the source tin directly into memory.... will bring performance problems...
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );

@@ -2,7 +2,6 @@ package org.kalypso.kalypso1d2d.pjt.map;
 
 import java.util.ArrayList;
 import java.util.Formatter;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -186,7 +185,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     {
       final IPolyElement lPolyEl = (IPolyElement) nodeObject;
 
-      final List nodes = lPolyEl.getNodes();
+      final List<IFE1D2DNode> nodes = lPolyEl.getNodes();
       if( nodes.size() > 5 )
       {
         return getNodePropertyAtPos( pos );
@@ -194,9 +193,8 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
       final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       final List<GM_Position> lListPositionWithValues = new ArrayList<GM_Position>();
       final List<GM_Position> lListPositionWithValues2 = new ArrayList<GM_Position>();
-      for( final Iterator<IFE1D2DNode> iterator = nodes.iterator(); iterator.hasNext(); )
+      for( final IFE1D2DNode actNode : nodes )
       {
-        final IFE1D2DNode actNode = iterator.next();
         final Feature nodeRes = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( actNode.getPoint().getPosition(), coordinateSystem ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
         if( nodeRes == null )
           continue;
@@ -219,12 +217,12 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
         }
         else if( value instanceof List< ? > )
         {
-          final List<Double> vector = (List<Double>) value;
+          final List< ? > vector = (List< ? >) value;
           if( vector == null || vector.size() != 2 )
             continue;
 
-          lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), vector.get( 0 ) ) );
-          lListPositionWithValues2.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), vector.get( 1 ) ) );
+          lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double) vector.get( 0 ) ) );
+          lListPositionWithValues2.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double) vector.get( 1 ) ) );
         }
       }
       if( lListPositionWithValues.size() < 3 )
