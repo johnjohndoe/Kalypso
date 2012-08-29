@@ -102,7 +102,8 @@ public abstract class AbstractImport2DImportOperation implements IImport2dImport
     /* Check for cancel */
     ProgressUtilities.worked( monitor, 0 );
 
-    m_data.setElements( value, readStatus );
+    m_data.setElements( value );
+    m_data.setLastReadStatus( readStatus );
 
     /* always only return read status, the analyse status is shown in the details panel */
     return readStatus;

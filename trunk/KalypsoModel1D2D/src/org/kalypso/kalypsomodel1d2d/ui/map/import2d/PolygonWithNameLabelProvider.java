@@ -40,47 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.java.util.AbstractModelObject;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Image;
+
+import com.bce.gis.io.zweidm.IPolygonWithName;
 
 /**
  * @author Gernot Belger
  */
-public class Import2dDataset extends AbstractModelObject
+public class PolygonWithNameLabelProvider extends ColumnLabelProvider
 {
-  public static final String PROPERTY_ELEMENT_COUNT = "elementCount"; //$NON-NLS-1$
-
-  public static final String PROPERTY_LAST_READ_STATUS = "lastReadStatus"; //$NON-NLS-1$
-
-  private int m_elementCount;
-
-  private IStatus m_readStatus;
-
-  public void setElementCount( final int length )
+  @Override
+  public String getText( final Object element )
   {
-    final Object oldValue = m_elementCount;
+    if( element instanceof IPolygonWithName )
+      return ((IPolygonWithName) element).getName();
 
-    m_elementCount = length;
-
-    firePropertyChange( PROPERTY_ELEMENT_COUNT, oldValue, length );
+    return super.getText( element );
   }
 
-  public int getElementCount( )
+  @Override
+  public Image getImage( final Object element )
   {
-    return m_elementCount;
-  }
-
-  public IStatus getLastReadStatus( )
-  {
-    return m_readStatus;
-  }
-
-  public void setLastReadStatus( final IStatus readStatus )
-  {
-    final Object oldValue = m_readStatus;
-
-    m_readStatus = readStatus;
-
-    firePropertyChange( PROPERTY_LAST_READ_STATUS, oldValue, readStatus );
+    // TODO get status from polygon and show status icon
+    return super.getImage( element );
   }
 }

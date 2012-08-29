@@ -40,18 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+
+import com.bce.gis.io.zweidm.IPolygonWithName;
 
 /**
  * @author Gernot Belger
  */
-public class ClearDatasetAction extends Action
+public class ClearDatasetAction extends Action implements IUpdateable
 {
   private final Import2dElementsData m_data;
 
@@ -67,6 +71,13 @@ public class ClearDatasetAction extends Action
   }
 
   @Override
+  public void update( )
+  {
+    final IPolygonWithName[] elements = m_data.getElements();
+    setEnabled( !ArrayUtils.isEmpty( elements ) );
+  }
+
+  @Override
   public void runWithEvent( final Event event )
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
@@ -74,6 +85,6 @@ public class ClearDatasetAction extends Action
     if( !MessageDialog.openConfirm( shell, getText(), "Clear all elements from the dataset?" ) )
       return;
 
-    m_data.setElements( null, null );
+    m_data.clearElements();
   }
 }

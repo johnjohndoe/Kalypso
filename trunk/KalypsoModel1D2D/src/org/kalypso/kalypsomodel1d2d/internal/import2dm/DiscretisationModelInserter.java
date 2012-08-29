@@ -66,9 +66,11 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.index.ItemVisitor;
 
 /**
+ * TODO: check: merge with insertion code of BandGen etc.<br/>
+ *
  * Wrapper around a {@link org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d} that allows to
  * insert new element into the model.
- *
+ * 
  * TODO: <br/>
  * <ul>
  * <li>monitor progress</li>
@@ -78,7 +80,7 @@ import com.vividsolutions.jts.index.ItemVisitor;
  * <li>- or, remove intersected from existing</li>
  * <li>- or, refine on intersection</li>
  * </ul>
- *
+ * 
  * @author Gernot Belger
  */
 public class DiscretisationModelInserter

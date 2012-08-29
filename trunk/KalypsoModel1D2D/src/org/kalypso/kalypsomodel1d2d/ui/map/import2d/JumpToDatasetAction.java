@@ -40,26 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import com.bce.gis.io.zweidm.IPolygonWithName;
 
 /**
  * @author Gernot Belger
  */
-public class JumpToDatasetAction extends Action
+public class JumpToDatasetAction extends Action implements IUpdateable
 {
   private final Import2dElementsData m_data;
 
-  private final IWidget m_widget;
+  private final Import2dElementsWidget m_widget;
 
-  public JumpToDatasetAction( final Import2dElementsData data, final IWidget widget )
+  public JumpToDatasetAction( final Import2dElementsData data, final Import2dElementsWidget widget )
   {
     m_data = data;
     m_widget = widget;
@@ -72,14 +74,18 @@ public class JumpToDatasetAction extends Action
   }
 
   @Override
+  public void update( )
+  {
+    final IPolygonWithName[] elements = m_data.getElements();
+    setEnabled( !ArrayUtils.isEmpty( elements ) );
+  }
+
+  @Override
   public void runWithEvent( final Event event )
   {
     final GM_Envelope box = m_data.getBoundingBox();
-    final IMapPanel panel = m_widget.getMapPanel();
-    if( panel != null && box != null )
-    {
-      final GM_Envelope wishBBox = GeometryUtilities.scaleEnvelope( box, 1.05 );
-      panel.setBoundingBox( wishBBox, true );
-    }
+
+    final GM_Envelope wishBBox = GeometryUtilities.scaleEnvelope( box, 1.05 );
+    m_widget.setExtent( wishBBox );
   }
 }

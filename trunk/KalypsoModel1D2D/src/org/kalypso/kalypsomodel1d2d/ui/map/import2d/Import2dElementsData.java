@@ -41,7 +41,9 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -56,41 +58,80 @@ import com.vividsolutions.jts.geom.Envelope;
  */
 public class Import2dElementsData extends AbstractModelObject
 {
+  public static final String PROPERTY_ELEMENTS = "elements"; //$NON-NLS-1$
+
+  public static final String PROPERTY_ELEMENT_COUNT = "elementCount"; //$NON-NLS-1$
+
+  public static final String PROPERTY_SELECTED_ELEMENT = "selectedElement"; //$NON-NLS-1$
+
+  public static final String PROPERTY_LAST_READ_STATUS = "lastReadStatus"; //$NON-NLS-1$
+
   public static final String PROPERTY_ANALYSIS_ENABLED = "analysisEnabled"; //$NON-NLS-1$
+
+  private static final IStatus NO_STATUS = new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "No imported elements" );
 
   private IPolygonWithName[] m_elements;
 
-  private final Import2dDataset m_statistics = new Import2dDataset();
+  private IPolygonWithName m_selectedElement;
 
-  public Import2dDataset getStatistics( )
-  {
-    return m_statistics;
-  }
+  private int m_elementCount;
 
-  public void setElements( final IPolygonWithName[] elements, final IStatus readStatus )
+  private IStatus m_readStatus = NO_STATUS;
+
+  public void setElements( final IPolygonWithName[] elements )
   {
+    final Object oldElements = m_elements;
     final Object oldAnalysisEnabled = getAnalysisEnabled();
 
     m_elements = elements;
 
-    if( m_elements == null )
-      m_statistics.setElementCount( 0 );
-    else
-      m_statistics.setElementCount( m_elements.length );
+    setElementCount( m_elements.length );
 
-    m_statistics.setLastReadStatus( readStatus );
-
+    firePropertyChange( PROPERTY_ELEMENTS, oldElements, elements );
     firePropertyChange( PROPERTY_ANALYSIS_ENABLED, oldAnalysisEnabled, getAnalysisEnabled() );
+
+    setSelectedElement( m_elements.length == 0 ? null : m_elements[0] );
   }
 
   public boolean getAnalysisEnabled( )
   {
-    return m_statistics.getElementCount() > 0;
+    return getElementCount() > 0;
   }
 
   public IPolygonWithName[] getElements( )
   {
     return m_elements;
+  }
+
+  public void setElementCount( final int length )
+  {
+    final Object oldValue = m_elementCount;
+
+    m_elementCount = length;
+
+    firePropertyChange( PROPERTY_ELEMENT_COUNT, oldValue, length );
+  }
+
+  public int getElementCount( )
+  {
+    return m_elementCount;
+  }
+
+  public IStatus getLastReadStatus( )
+  {
+    return m_readStatus;
+  }
+
+  public void setLastReadStatus( final IStatus readStatus )
+  {
+    final Object oldValue = m_readStatus;
+
+    if( readStatus == null )
+      m_readStatus = NO_STATUS;
+    else
+      m_readStatus = readStatus;
+
+    firePropertyChange( PROPERTY_LAST_READ_STATUS, oldValue, m_readStatus );
   }
 
   public GM_Envelope getBoundingBox( )
@@ -113,5 +154,24 @@ public class Import2dElementsData extends AbstractModelObject
     }
 
     return envelope;
+  }
+
+  public IPolygonWithName getSelectedElement( )
+  {
+    return m_selectedElement;
+  }
+
+  public void setSelectedElement( final IPolygonWithName selectedElement )
+  {
+    final IPolygonWithName oldValue = m_selectedElement;
+
+    m_selectedElement = selectedElement;
+
+    firePropertyChange( PROPERTY_SELECTED_ELEMENT, oldValue, selectedElement );
+  }
+
+  public void clearElements( )
+  {
+    setElements( new IPolygonWithName[0] );
   }
 }
