@@ -272,7 +272,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     final Set<Feature> lSetToRemove = new HashSet<Feature>();
     for( final Integer lIntMidleNodeRMAId : m_setMiddleNodeIDs )
     {
-      final IFE1D2DNode< ? > lNode = getNode( lIntMidleNodeRMAId );
+      final IFE1D2DNode lNode = getNode( lIntMidleNodeRMAId );
       if( lNode == null )
         continue;
       lSetToRemove.add( lNode );
@@ -317,10 +317,10 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     final List<Feature> lListElementsToRemove = new ArrayList<Feature>();
     PolyElement lPoly = null;
     PolyElement lPolyPrev = null;
-    IFE1D2DNode< ? > lNodePrev = null;
-    IFE1D2DNode< ? > lNodeBckPrev = null;
-    IFE1D2DNode< ? > lNodeAct = null;
-    IFE1D2DNode< ? > lNodeBckAct = null;
+    IFE1D2DNode lNodePrev = null;
+    IFE1D2DNode lNodeBckPrev = null;
+    IFE1D2DNode lNodeAct = null;
+    IFE1D2DNode lNodeBckAct = null;
     IFE1D2DEdge< ? , ? > lCommonEdge = null;
     try
     {
@@ -491,7 +491,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     for( final Object element : m_set1dFlowNodes )
     {
       final Integer lId = (Integer) element;
-      final IFE1D2DNode< ? > lActNode = getNode( lId );
+      final IFE1D2DNode lActNode = getNode( lId );
       final QIntervallResult lQResult = m_mapQResults.get( lId );
       try
       {
@@ -556,8 +556,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   @Override
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
-    final IFE1D2DNode< ? > node1 = getNode( node1ID );
-    final IFE1D2DNode< ? > node2 = getNode( node2ID );
+    final IFE1D2DNode node1 = getNode( node1ID );
+    final IFE1D2DNode node2 = getNode( node2ID );
     m_setMiddleNodeIDs.add( middleNodeID );
 
     // FIXME: allow for arc with only one existing node, is this legal?
@@ -605,14 +605,14 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     }
   }
 
-  private final IFE1D2DNode< ? > getNode( final int rmaID )
+  private final IFE1D2DNode getNode( final int rmaID )
   {
     final String nodeGmlID = m_nodesNameConversionMap.get( rmaID );
     if( nodeGmlID == null )
       return null;
 
     final Feature nodeFeature = m_workspace.getFeature( nodeGmlID );
-    return (IFE1D2DNode< ? >) nodeFeature.getAdapter( IFE1D2DNode.class );
+    return (IFE1D2DNode) nodeFeature.getAdapter( IFE1D2DNode.class );
   }
 
   private final void maybeAddEdgeToElement( final int rmaID, final IFE1D2DEdge< ? , ? > edge )
@@ -732,15 +732,15 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   @Override
   public void handleNode( final String lineString, final int id, final double xCoord, final double yCoord, final double elevation )
   {
-    final IFE1D2DNode< ? > nodeWithSameId = getNode( id );
+    final IFE1D2DNode nodeWithSameId = getNode( id );
     if( nodeWithSameId != null )
       throw new RuntimeException( String.format( "ducplicate node id: %s", id ) );
 
     final GM_Point nodeLocation = m_positionProvider.getGMPoint( xCoord, yCoord, elevation );
     nodeLocation.setCoordinateSystem( m_crs );
-    final IFE1D2DNode< ? > existingNode = m_model.findNode( nodeLocation, 0.01 );
+    final IFE1D2DNode existingNode = m_model.findNode( nodeLocation, 0.01 );
 
-    final IFE1D2DNode< ? > node;
+    final IFE1D2DNode node;
     if( existingNode == null )
     {
       if( m_gmExistingEnvelope != null && m_gmExistingEnvelope.contains( nodeLocation.getPosition() ) )
@@ -771,10 +771,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     m_nodesNameConversionMap.put( id, node.getId() );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerError(java.lang.String,
-   *      org.kalypso.kalypsomodel1d2d.conv.EReadError)
-   */
   @Override
   public void handleError( final String lineString, final EReadError errorHints )
   {
@@ -819,10 +815,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomialRangesInformation(java.lang.String,
-   *      java.lang.String, int, int, java.util.List)
-   */
   @Override
   public void handle1dPolynomialRangesInformation( final String line, final String pStrPolyKind, final int pIntNodeId, final int pIntAmountRanges, final List<Double> pListPolyAreaMaxRanges )
   {
@@ -851,10 +843,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     return 0;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomeMinMax(java.lang.String, int,
-   *      double, double)
-   */
   @Override
   public void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max )
   {

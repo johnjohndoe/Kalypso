@@ -221,13 +221,13 @@ class ApplyElevationWidgetFace
   protected void handleSelectionChanged( final IFeatureSelection selection )
   {
     // FIXME: should go via the data model instead
-    final IFE1D2DNode< ? >[] nodeList = findSelectedNodes( selection );
+    final IFE1D2DNode[] nodeList = findSelectedNodes( selection );
     ViewerUtilities.setInput( m_nodeElevationViewer, nodeList, false );
   }
 
-  protected IFE1D2DNode< ? >[] findSelectedNodes( final IFeatureSelection selection )
+  protected IFE1D2DNode[] findSelectedNodes( final IFeatureSelection selection )
   {
-    final List<IFE1D2DNode< ? >> nodeList = new ArrayList<IFE1D2DNode< ? >>();
+    final List<IFE1D2DNode> nodeList = new ArrayList<>();
 
     for( final Object selected : selection.toList() )
     {
@@ -239,12 +239,12 @@ class ApplyElevationWidgetFace
 
       if( selecFeature != null )
       {
-        final IFE1D2DNode< ? > selecNode = (IFE1D2DNode< ? >) selecFeature.getAdapter( IFE1D2DNode.class );
+        final IFE1D2DNode selecNode = (IFE1D2DNode) selecFeature.getAdapter( IFE1D2DNode.class );
         if( selecNode != null )
           nodeList.add( selecNode );
       }
     }
 
-    return nodeList.toArray( new IFE1D2DNode< ? >[nodeList.size()] );
+    return nodeList.toArray( new IFE1D2DNode[nodeList.size()] );
   }
 }

@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * <li>Snapping to the nearest node in the snapping radius is the default behavior.
  * <li>Snapping will not occur if SHIFT button is pressed during the operation.
  * </ul>
- * 
+ *
  * @author Dejan Antanaskovic
  * @author Gernot Belger
  */
@@ -70,7 +70,7 @@ public class PointSnapper
 
   private boolean m_snappingActive = true;
 
-  private IFE1D2DNode< ? > m_snapNode = null;
+  private IFE1D2DNode m_snapNode = null;
 
   private final IMapPanel m_mapPanel;
 
@@ -85,10 +85,10 @@ public class PointSnapper
 
   /**
    * Move the mouse to the given position and try to snap the point.
-   * 
+   *
    * @return The snapped node, or <code>null</code> if none was found.
    */
-  public IFE1D2DNode< ? > moved( final GM_Point p )
+  public IFE1D2DNode moved( final GM_Point p )
   {
     m_snapNode = null;
 

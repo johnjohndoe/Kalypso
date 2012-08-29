@@ -108,7 +108,7 @@ public class HydrographUtils
       /* Node: return its position */
       final GM_Object geom;
       if( modelElement instanceof IFE1D2DNode )
-        geom = ((IFE1D2DNode< ? >) modelElement).getPoint();
+        geom = ((IFE1D2DNode) modelElement).getPoint();
       else
         geom = null;
 

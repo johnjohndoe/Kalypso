@@ -371,7 +371,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           continue;
 
         // get corresponding 1d-element
-        final IFE1D2DNode< ? > node = QIntervalIndex.forStation( elementsByStation, station );
+        final IFE1D2DNode node = QIntervalIndex.forStation( elementsByStation, station );
 
         final IFlowRelation1D flowRel;
 
@@ -386,8 +386,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
         else if( buildingObs != null )
         {
           // REMARK: it is important that elementsByStation is sorted in upstream direction
-          final IFE1D2DNode< ? > downStreamNode = PolynomeProcessor.forStationAdjacent( elementsByStation, station, false );
-          final IFE1D2DNode< ? > upStreamNode = PolynomeProcessor.forStationAdjacent( elementsByStation, station, true );
+          final IFE1D2DNode downStreamNode = PolynomeProcessor.forStationAdjacent( elementsByStation, station, false );
+          final IFE1D2DNode upStreamNode = PolynomeProcessor.forStationAdjacent( elementsByStation, station, true );
           if( downStreamNode == null || upStreamNode == null )
           {
             throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.17" ), null ) ); //$NON-NLS-1$

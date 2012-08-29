@@ -81,7 +81,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * FIXME: makes no sense at all:why create a new 2d element at all? just put the 2d relation on an exisint one and thats
  * it..!
  *
- * 
+ *
  * @author Gernot Belger
  * @author Thomas Jung
  * @author ig
@@ -212,7 +212,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
     if( m_pointSnapper != null )
     {
-      final IFE1D2DNode< ? > snapNode = m_pointSnapper.getSnapNode();
+      final IFE1D2DNode snapNode = m_pointSnapper.getSnapNode();
       if( snapNode == null )
         return;
 

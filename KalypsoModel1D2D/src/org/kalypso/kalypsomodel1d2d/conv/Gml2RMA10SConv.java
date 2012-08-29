@@ -106,7 +106,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Converts discretisation model to RMA�Kalypso model
- * 
+ *
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author ig
  */
@@ -398,8 +398,8 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     }
     final IFE1D2DNode node1D = line1D.getNodes().get( 0 );
     node1D_ID = getConversionID( node1D );
-    final IFeatureBindingCollection<Feature> containers = node1D.getContainers();
-    for( final Feature container : containers )
+    final IFeatureBindingCollection< ? extends IFENetItem> containers = node1D.getContainers();
+    for( final IFENetItem container : containers )
     {
       if( element1D_ID != -1 )
         break;

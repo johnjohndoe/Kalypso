@@ -103,7 +103,7 @@ public class ElementGeometryHelper
       if( foundNode == null )
       {
         // create new node
-        final IFE1D2DNode newNode = discModel.getNodes().addNew( IFE1D2DNode.QNAME );
+        final IFE1D2DNode newNode = discModel.getNodes().addNew( IFE1D2DNode.FEATURE_1D2DNODE, IFE1D2DNode.class );
 
         newNode.setPoint( point );
         newNode.setName( StringUtils.EMPTY );
@@ -121,7 +121,7 @@ public class ElementGeometryHelper
   /**
    * Makes sure that the given ring of nodes is oriented clockwise.
    */
-  public static IFE1D2DNode< ? >[] makeCCW( final IFE1D2DNode< ? >[] nodes )
+  public static IFE1D2DNode[] makeCCW( final IFE1D2DNode[] nodes )
   {
     // reverse direction of element nodes if not in ccw-order
     final Coordinate[] jtsCoordinates = new Coordinate[nodes.length + 1];

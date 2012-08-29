@@ -83,9 +83,9 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * 
+ *
  * @author ig
- * 
+ *
  */
 public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IWidgetWithOptions
 {
@@ -113,8 +113,9 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
 
   public ShowEditWindDataWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { NativeWindDataModelWrapper.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, IWindDataModelSystem.SIM_BASE_F_WIND_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$  
-    m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.2" ) );//$NON-NLS-1$  
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { NativeWindDataModelWrapper.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, IWindDataModelSystem.SIM_BASE_F_WIND_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL }, IFE1D2DNode.PROPERTY_POINT ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.2" ) );//$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
@@ -128,10 +129,10 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
       return;
     }
     final IKalypsoLayerModell mapModell = mapPanel.getMapModell();
-    
+
     final AddThemeCommand command = new AddThemeCommand( mapModell, WIND_THEME_NAME, GML_TYPE_STR, FEATURE_PATH_WIND_DATA_MODEL, WIND_GML_SOURCE_FILE ); //$NON-NLS-1$
     pCommandPoster.postCommand( command, null );
-   
+
   }
 
   private IKalypsoTheme findTheme( final IMapPanel mapPanel, final String pThemeName )
@@ -156,7 +157,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
               try
               {
                 if( lTheme.getName().getKey().toLowerCase().contains( lThemeName ) )
-                { 
+                {
                   return lTheme;
                 }
               }
@@ -168,7 +169,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
           else
           {
             if( lTheme.getName().getKey().toLowerCase().contains( lThemeName ) )
-            { 
+            {
               return lTheme;
             }
           }
@@ -326,15 +327,15 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
         final Pair<Double, Double> wind = NativeWindDataModelHelper.convertVectorWindToSpeedAndDirection( wind1 );
         if( wind != null && !Double.isNaN( wind.first ) && !Double.isNaN( wind.second ) )
         {
-          tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.3" ) ); //$NON-NLS-1$ 
-          tooltipText.append( String.format( ": %.3f m/s %.3f deg ", wind.first, wind.second ) ); //$NON-NLS-1$ 
-          tooltipText.append( String.format( "; %.3f U %.3f V ", wind1.first, wind1.second ) ); //$NON-NLS-1$ 
+          tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.3" ) ); //$NON-NLS-1$
+          tooltipText.append( String.format( ": %.3f m/s %.3f deg ", wind.first, wind.second ) ); //$NON-NLS-1$
+          tooltipText.append( String.format( "; %.3f U %.3f V ", wind1.first, wind1.second ) ); //$NON-NLS-1$
         }
         else
           tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.4" ) ); //$NON-NLS-1$
       }
       else
-        tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.4" ) ); //$NON-NLS-1$ 
+        tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.4" ) ); //$NON-NLS-1$
 
       m_toolTipRenderer.setTooltip( tooltipText.toString() );
       m_toolTipRenderer.paintToolTip( p, g, getMapPanel().getScreenBounds() );
@@ -379,11 +380,11 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
 
     if( m_widgetFace.isAnimating() )
     {
-      m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.5" ) + " " + delegateTooltip ); //$NON-NLS-1$ //$NON-NLS-2$ 
+      m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.5" ) + " " + delegateTooltip ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
     {
-      m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.6" ) + " " + delegateTooltip ); //$NON-NLS-1$ //$NON-NLS-2$ 
+      m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.6" ) + " " + delegateTooltip ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     m_toolTipRendererDesc.paintToolTip( new Point( 5, bounds.height - 5 ), g2, bounds );
   }

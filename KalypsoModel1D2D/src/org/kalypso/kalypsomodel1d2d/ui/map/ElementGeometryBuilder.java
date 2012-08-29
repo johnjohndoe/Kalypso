@@ -63,6 +63,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -189,7 +190,7 @@ public class ElementGeometryBuilder
     return m_nodes.size();
   }
 
-  public boolean contains( final IFE1D2DNode< ? > snapNode )
+  public boolean contains( final IFE1D2DNode snapNode )
   {
     return m_nodes.contains( snapNode );
   }
@@ -251,7 +252,7 @@ public class ElementGeometryBuilder
       final IPolyElement< ? , ? > elementForNewNode = discModel.find2DElement( newPoint, 0.0 );
       if( elementForNewNode != null )
       {
-        final IFE1D2DNode< ? > foundNode = discModel.findNode( newPoint, SEARCH_DISTANCE );
+        final IFE1D2DNode foundNode = discModel.findNode( newPoint, SEARCH_DISTANCE );
         if( foundNode == null )
         {
           final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
@@ -261,12 +262,13 @@ public class ElementGeometryBuilder
       }
 
       // 1a) Node lies on 1d node
-      final IFE1D2DNode< ? > node = discModel.findNode( newPoint, SEARCH_DISTANCE );
+      final IFE1D2DNode node = discModel.findNode( newPoint, SEARCH_DISTANCE );
       if( node != null )
       {
-        final IFeatureBindingCollection<IFE1D2DEdge> nodeEdges = (IFeatureBindingCollection<IFE1D2DEdge>) node.getContainers();
-        for( final IFE1D2DEdge nodeEdge : nodeEdges )
+        final IFeatureBindingCollection<IFENetItem> nodeEdges = node.getContainers();
+        for( final IFENetItem nodeItem : nodeEdges )
         {
+          final IFE1D2DEdge nodeEdge = (IFE1D2DEdge) nodeItem;
           final IFeatureBindingCollection< ? > containers = nodeEdge.getContainers();
           for( final Feature edgeContainer : containers )
           {

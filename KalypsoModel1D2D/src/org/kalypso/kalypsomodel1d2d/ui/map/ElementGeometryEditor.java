@@ -91,9 +91,9 @@ public class ElementGeometryEditor
 
   private final IKalypsoFeatureTheme m_nodeTheme;
 
-  private IFE1D2DNode< ? > m_startNode;
+  private IFE1D2DNode m_startNode;
 
-  private IFE1D2DNode< ? > m_endNode;
+  private IFE1D2DNode m_endNode;
 
   private GM_Point m_endPoint;
 
@@ -314,7 +314,7 @@ public class ElementGeometryEditor
     final List<IFE1D2DNode> nodes = element.getNodes();
     for( int i = 0; i < nodes.size(); i++ )
     {
-      final IFE1D2DNode< ? > node = nodes.get( i );
+      final IFE1D2DNode node = nodes.get( i );
       if( node.equals( m_startNode ) )
       {
         final GM_Position position = m_endPoint.getPosition();
@@ -348,12 +348,12 @@ public class ElementGeometryEditor
     return posList.toArray( new GM_Position[posList.size()] );
   }
 
-  public IFE1D2DNode< ? > getStartNode( )
+  public IFE1D2DNode getStartNode( )
   {
     return m_startNode;
   }
 
-  public void setStartNode( final IFE1D2DNode< ? > startNode )
+  public void setStartNode( final IFE1D2DNode startNode )
   {
     m_startNode = startNode;
 
@@ -371,7 +371,7 @@ public class ElementGeometryEditor
     /* set the new end node candidate */
     if( newNode instanceof IFE1D2DNode )
     {
-      m_endNode = (IFE1D2DNode< ? >) newNode;
+      m_endNode = (IFE1D2DNode) newNode;
       m_endPoint = m_endNode.getPoint();
     }
     else

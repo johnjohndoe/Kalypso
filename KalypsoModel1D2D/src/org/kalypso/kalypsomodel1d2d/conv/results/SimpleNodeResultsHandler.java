@@ -146,7 +146,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
 
   private IFE1D2DNode getResultNodeFromPoint( final GM_Point point )
   {
-    final Feature feature = GeometryUtilities.findNearestFeature( point, DEFAULT_SEARCH_DISTANCE, m_nodes, IFE1D2DNode.PROP_GEOMETRY );
+    final Feature feature = GeometryUtilities.findNearestFeature( point, DEFAULT_SEARCH_DISTANCE, m_nodes, IFE1D2DNode.PROPERTY_POINT );
     if( feature == null )
       return null;
 

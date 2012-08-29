@@ -235,7 +235,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     {
       final GM_Point currentPosition = MapUtilities.transform( mapPanel, event.getPoint() );
       final double snapRadius = MapUtilities.calculateWorldDistance( mapPanel, currentPosition, SNAPPING_RADIUS );
-      final IFE1D2DNode< ? > startNode = m_discModel.findNode( currentPosition, snapRadius );
+      final IFE1D2DNode startNode = m_discModel.findNode( currentPosition, snapRadius );
       m_editor.setStartNode( startNode );
     }
     else
@@ -398,7 +398,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
     m_pointSnapper.activate( snappingActive );
 
-    final IFE1D2DNode< ? > snapNode = m_pointSnapper.moved( currentPoint );
+    final IFE1D2DNode snapNode = m_pointSnapper.moved( currentPoint );
     final GM_Point result = snapNode == null ? currentPoint : snapNode.getPoint();
     final Object snapObject = snapNode == null ? currentPoint : snapNode;
 

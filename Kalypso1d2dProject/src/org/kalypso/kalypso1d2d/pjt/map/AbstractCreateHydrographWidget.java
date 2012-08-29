@@ -177,7 +177,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
       /* Node: return its position */
       if( m_modelElement instanceof IFE1D2DNode )
       {
-        final GM_Point point = ((IFE1D2DNode< ? >) m_modelElement).getPoint();
+        final GM_Point point = ((IFE1D2DNode) m_modelElement).getPoint();
         final Point nodePoint = MapUtilities.retransform( getMapPanel(), point );
         g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
         if( m_existingHydrograph != null )

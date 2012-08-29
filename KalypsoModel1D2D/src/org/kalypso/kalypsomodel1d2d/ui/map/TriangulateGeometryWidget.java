@@ -508,7 +508,7 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
     final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
 
     m_pointSnapper.activate( snappingActive );
-    final IFE1D2DNode< ? > snapNode = m_pointSnapper.moved( currentPoint );
+    final IFE1D2DNode snapNode = m_pointSnapper.moved( currentPoint );
 
     if( snapNode == null )
       return currentPoint;

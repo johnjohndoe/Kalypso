@@ -22,7 +22,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
 {
   /** Edges that contains this node */
-  private final IFeatureBindingCollection<IFENetItem> m_containers = new FeatureBindingCollection<IFENetItem>( this, IFENetItem.class, WB1D2D_PROP_NODE_CONTAINERS );
+  private final IFeatureBindingCollection<IFENetItem> m_containers = new FeatureBindingCollection<IFENetItem>( this, IFENetItem.class, MEMBER_NODE_CONTAINERS );
 
   public FE1D2DNode( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -32,7 +32,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   @Override
   public GM_Point getPoint( )
   {
-    return (GM_Point) getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
+    return (GM_Point) getProperty( IFE1D2DNode.PROPERTY_POINT );
   }
 
   @Override
@@ -41,7 +41,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
     if( point.getCoordinateSystem() == null )
       throw new IllegalStateException();
 
-    setProperty( IFE1D2DNode.WB1D2D_PROP_POINT, point );
+    setProperty( IFE1D2DNode.PROPERTY_POINT, point );
   }
 
   @Override

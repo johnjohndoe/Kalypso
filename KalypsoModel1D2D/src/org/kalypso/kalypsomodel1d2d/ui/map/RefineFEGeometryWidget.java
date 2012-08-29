@@ -749,9 +749,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
       return null;
 
     final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
-    final IFE1D2DNode< ? > snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
-    final Object newNode = snapNode;
-
-    return newNode;
+    return m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
   }
 }
