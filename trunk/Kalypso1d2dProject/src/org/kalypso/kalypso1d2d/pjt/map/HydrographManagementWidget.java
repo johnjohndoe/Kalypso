@@ -423,7 +423,6 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
     m_addHydrographCollectionButton.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {

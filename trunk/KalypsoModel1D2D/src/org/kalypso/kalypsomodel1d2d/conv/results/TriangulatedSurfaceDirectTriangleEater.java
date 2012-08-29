@@ -64,7 +64,6 @@ import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter.QNameAndString;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -124,7 +123,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
   }
 
-  public static GM_Triangle createTriangle( final INodeResult[] nodes, final ResultType.TYPE parameter ) throws GM_Exception
+  public static GM_Triangle createTriangle( final INodeResult[] nodes, final ResultType.TYPE parameter )
   {
     if( nodes.length < 3 )
       return null;

@@ -65,7 +65,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("rawtypes")
 public class Create1DElementCommand implements ICommand
 {
   private final IFEDiscretisationModel1d2d m_discModel;

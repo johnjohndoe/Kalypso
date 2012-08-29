@@ -86,10 +86,6 @@ public class ModelTinExporter implements ICoreRunnableWithProgress
     m_model = model;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @SuppressWarnings("unchecked")
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {

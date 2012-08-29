@@ -59,7 +59,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  * @author Patrice Congo
  * @author ig, barbarins
  */
-@SuppressWarnings("rawtypes")
 public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
 {
   private final IFEDiscretisationModel1d2d m_model1d2d;

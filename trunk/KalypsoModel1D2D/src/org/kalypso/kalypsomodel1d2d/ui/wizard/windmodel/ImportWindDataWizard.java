@@ -59,7 +59,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataCollectionReader;
 import org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataReader;
 import org.kalypso.kalypsomodel1d2d.conv.wind.WindDataConverterFactory;

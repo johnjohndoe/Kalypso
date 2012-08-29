@@ -56,7 +56,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.transformation.CRSHelper;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.io.sax.marshaller.TriangulatedSurfaceMarshaller;
@@ -111,7 +110,7 @@ public class TinResultWriter
    *
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
-  public void add( final GM_Position... nodes ) throws SAXException, GM_Exception
+  public void add( final GM_Position... nodes ) throws SAXException
   {
     if( m_marshaller == null )
       return;

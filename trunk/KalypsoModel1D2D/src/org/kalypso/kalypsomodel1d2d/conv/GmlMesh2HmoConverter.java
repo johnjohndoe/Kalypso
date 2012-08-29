@@ -81,7 +81,6 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
     m_discretisationModel1d2d = discretisationModel1d2d;
   }
 
-  @SuppressWarnings("unchecked")
   public void writeElements( final IFeatureBindingCollection<IFE1D2DElement> elements ) throws CoreException
   {
     final List<IFE1D2DElement> elementsInBBox = elements;

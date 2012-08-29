@@ -99,7 +99,6 @@ public class GeometryRecalculator
     init( changedFeatures );
   }
 
-  @SuppressWarnings("unchecked")
   private void init( final Collection<Feature> changedFeatures )
   {
     for( final Feature feature : changedFeatures )
@@ -190,7 +189,6 @@ public class GeometryRecalculator
     m_flowRelationshipsModelChanges.add( feature );
   }
 
-  @SuppressWarnings("unchecked")
   private void processNodes( )
   {
     while( m_nodesAdded )

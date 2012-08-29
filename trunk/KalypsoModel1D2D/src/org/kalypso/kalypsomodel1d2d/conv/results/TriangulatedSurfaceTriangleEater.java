@@ -104,17 +104,9 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   @Override
   public void add( final INodeResult... nodes )
   {
-    try
-    {
-      final GM_Triangle gmTriangle = TriangulatedSurfaceDirectTriangleEater.createTriangle( nodes, m_parameter );
-      if( gmTriangle != null )
-        m_surface.add( gmTriangle );
-    }
-    catch( final GM_Exception e )
-    {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      e.printStackTrace();
-    }
+    final GM_Triangle gmTriangle = TriangulatedSurfaceDirectTriangleEater.createTriangle( nodes, m_parameter );
+    if( gmTriangle != null )
+      m_surface.add( gmTriangle );
   }
 
   /**
