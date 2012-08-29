@@ -46,7 +46,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,14 +58,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.Add2DElementsCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -74,9 +72,8 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -87,21 +84,16 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -110,11 +102,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  *
  * @author Stefan Kurzbach
  */
-public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class TriangulateGeometryWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  // FIXME: snap distance shoul always be in pixels!
-  private static final double SNAP_DISTANCE = 0.02;
-
   private final TriangulateGeometryData m_data = new TriangulateGeometryData( this );
 
   private boolean m_modePolygon = true;
@@ -145,7 +134,6 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
 
   private IKalypsoFeatureTheme m_theme;
 
-
   public TriangulateGeometryWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -159,7 +147,7 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
     reinit();
   }
 
-  private final void reinit( )
+  final void reinit( )
   {
     final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
@@ -203,14 +191,19 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
   }
 
   @Override
-  public void leftPressed( final Point p )
+  public void mousePressed( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+
+    event.consume();
+
     try
     {
       final IMapPanel mapPanel = getMapPanel();
 
       final boolean snappingActive = true;
-      final GM_Point thePoint = snapToNode( p, snappingActive );
+      final GM_Point thePoint = snapToNode( event.getPoint(), snappingActive );
       if( thePoint == null )
       {
         mapPanel.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
@@ -240,6 +233,49 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
     }
   }
 
+  @Override
+  public void mouseClicked( final MouseEvent event )
+  {
+    if( event.getButton() != MouseEvent.BUTTON1 || event.getClickCount() < 2 )
+      return;
+
+    try
+    {
+      if( m_modePolygon )
+      {
+        final GM_Surface< ? > boundaryGeom = (GM_Surface< ? >) m_boundaryGeometryBuilder.finish();
+        m_data.setBoundary( boundaryGeom );
+      }
+      else
+      {
+        final GM_Curve finish = (GM_Curve) m_breaklineGeometryBuilder.finish();
+        m_data.addBreakLine( finish );
+      }
+
+      final GM_MultiCurve breaklines = m_data.getBreaklines();
+      if( breaklines != null )
+      {
+        final GM_Curve[] curves = breaklines.getAllCurves();
+        if( curves != null )
+        {
+          if( curves.length > 0 )
+            m_breaklineGeometryBuilder.reset();
+        }
+      }
+
+      m_data.finishGeometry();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+      final IMapPanel mapPanel = getMapPanel();
+      mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.4" ) + status.getMessage() ); //$NON-NLS-1$
+      reinit();
+    }
+  }
+
   private String validatePolygon( final GM_Point point )
   {
     m_warningRenderer.setTooltip( null );
@@ -249,7 +285,7 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
       if( point != null )
         m_boundaryGeometryBuilder.addPoint( point );
 
-      final GM_Surface<GM_SurfacePatch> finish = (GM_Surface<GM_SurfacePatch>) m_boundaryGeometryBuilder.finish();
+      final GM_Surface< ? > finish = (GM_Surface< ? >) m_boundaryGeometryBuilder.finish();
       if( finish == null )
         return null;
 
@@ -282,14 +318,14 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
   }
 
   @Override
-  public void moved( final Point p )
+  public void mouseMoved( final MouseEvent event )
   {
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
     final boolean snappingActive = true;
-    final GM_Point point = snapToNode( p, snappingActive );
+    final GM_Point point = snapToNode( event.getPoint(), snappingActive );
     if( point == null )
     {
       getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
@@ -307,7 +343,6 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
     }
 
     repaintMap();
-
   }
 
   @Override
@@ -344,6 +379,8 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
     {
       if( m_boundaryGeometryBuilder != null )
         m_boundaryGeometryBuilder.paint( g, projection, m_currentMapPoint );
+
+      // TODO: would be nice to hilight the snapped nodes as well (so the user can see, if there are unsnapped nodes)
     }
     else
     {
@@ -410,94 +447,11 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
         m_breaklineGeometryBuilder.removeLastPoint();
     }
     else if( e.getKeyCode() == KeyEvent.VK_ENTER )
-      convertTriangulationToModel();
+      m_data.convertTriangulationToModel();
     else
       super.keyPressed( e );
   }
 
-  // FIXME: move into operation
-  private void convertTriangulationToModel( )
-  {
-    final CommandableWorkspace workspace = m_theme.getWorkspace();
-
-    try
-    {
-      final List<GM_Ring> elements = getTinRings();
-      if( elements == null )
-        return;
-
-      final Add2DElementsCommand command = new Add2DElementsCommand( workspace, elements );
-      workspace.postCommand( command );
-    }
-    catch( final Exception e1 )
-    {
-      e1.printStackTrace();
-      SWT_AWT_Utilities.showSwtMessageBoxError( getName(), "Failed to create 2D-Elements: " + e1.toString() );
-    }
-    finally
-    {
-      reinit();
-    }
-  }
-
-  private List<GM_Ring> getTinRings( ) throws GM_Exception
-  {
-    final GM_TriangulatedSurface tin = m_data.getTin();
-    if( tin == null )
-      return null;
-
-    final List<GM_Ring> rings = new ArrayList<>( tin.size() );
-
-    for( final GM_Triangle triangle : tin )
-    {
-      final GM_Position[] exteriorRing = triangle.getExteriorRing();
-
-      final GM_Ring ring = GeometryFactory.createGM_Ring( exteriorRing, tin.getCoordinateSystem() );
-      rings.add( ring );
-    }
-
-    return rings;
-  }
-
-  @Override
-  public void doubleClickedLeft( final Point p )
-  {
-    try
-    {
-      if( m_modePolygon )
-      {
-        final GM_Surface< ? > boundaryGeom = (GM_Surface< ? >) m_boundaryGeometryBuilder.finish();
-        m_data.setBoundary( boundaryGeom );
-      }
-      else
-      {
-        final GM_Curve finish = (GM_Curve) m_breaklineGeometryBuilder.finish();
-        m_data.addBreakLine( finish );
-      }
-
-      final GM_MultiCurve breaklines = m_data.getBreaklines();
-      if( breaklines != null )
-      {
-        final GM_Curve[] curves = breaklines.getAllCurves();
-        if( curves != null )
-        {
-          if( curves.length > 0 )
-            m_breaklineGeometryBuilder.reset();
-        }
-      }
-
-      m_data.finishGeometry();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-      final IMapPanel mapPanel = getMapPanel();
-      mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.4" ) + status.getMessage() ); //$NON-NLS-1$
-      reinit();
-    }
-  }
 
   private GM_Point snapToNode( final Point p, final boolean snappingActive )
   {
@@ -542,5 +496,10 @@ public class TriangulateGeometryWidget extends DeprecatedMouseWidget implements 
     m_breaklineGeometryBuilder.reset();
 
     repaintMap();
+  }
+
+  IKalypsoFeatureTheme getDiscTheme( )
+  {
+    return m_theme;
   }
 }

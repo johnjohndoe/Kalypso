@@ -44,10 +44,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.Add2DElementsCommand;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -167,9 +173,6 @@ class TriangulateGeometryData extends AbstractModelObject
 
     try
     {
-      // if( m_featureList == null )
-      // return;
-
       // FIXME: encapsulate into a triangle.exe wrapper!
       final List<String> args = new ArrayList<String>();
       if( m_maxArea != null && m_maxArea > 0 )
@@ -204,5 +207,50 @@ class TriangulateGeometryData extends AbstractModelObject
     m_breaklines = null;
     m_boundaryGeom = null;
     m_tin = null;
+  }
+
+  // FIXME: move into operation
+  public void convertTriangulationToModel( )
+  {
+    final IKalypsoFeatureTheme theme = m_widget.getDiscTheme();
+    final CommandableWorkspace workspace = theme.getWorkspace();
+
+    try
+    {
+      final List<GM_Ring> elements = getTinRings();
+      if( elements == null )
+        return;
+
+      final Add2DElementsCommand command = new Add2DElementsCommand( workspace, elements );
+      workspace.postCommand( command );
+    }
+    catch( final Exception e1 )
+    {
+      e1.printStackTrace();
+      SWT_AWT_Utilities.showSwtMessageBoxError( m_widget.getName(), "Failed to create 2D-Elements: " + e1.toString() );
+    }
+    finally
+    {
+      m_widget.reinit();
+    }
+  }
+
+  private List<GM_Ring> getTinRings( ) throws GM_Exception
+  {
+    final GM_TriangulatedSurface tin = getTin();
+    if( tin == null )
+      return null;
+
+    final List<GM_Ring> rings = new ArrayList<>( tin.size() );
+
+    for( final GM_Triangle triangle : tin )
+    {
+      final GM_Position[] exteriorRing = triangle.getExteriorRing();
+
+      final GM_Ring ring = GeometryFactory.createGM_Ring( exteriorRing, tin.getCoordinateSystem() );
+      rings.add( ring );
+    }
+
+    return rings;
   }
 }
