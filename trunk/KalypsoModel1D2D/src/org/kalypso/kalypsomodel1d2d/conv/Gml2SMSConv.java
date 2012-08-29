@@ -75,7 +75,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Converts discretisation model to SMS .2dm file
- * 
+ *
  * @author Thomas Jung
  */
 public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
@@ -265,7 +265,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     /* Now really write the nodes */
     final double x = point.getX();
     final double y = point.getY();
-    double z = point.getZ();
+    final double z = point.getZ();
 
     /*
      * Card Type ND Description: Defines the ID and location for each node of the mesh. Required: NO Format: ND id x y z
@@ -301,7 +301,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
       }
       else if( element instanceof IPolyElement )
       {
-        for( final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
+        for( final IFE1D2DEdge edge : ((IPolyElement) element).getEdges() )
         {
           edgeSet.add( edge );
         }
@@ -326,10 +326,10 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     final Comparator comparator = new Comparator()
     {
       @Override
-      public int compare( Object o1, Object o2 )
+      public int compare( final Object o1, final Object o2 )
       {
-        Integer id1 = getConversionID( (IFE1D2DNode) o1 );
-        Integer id2 = getConversionID( (IFE1D2DNode) o2 );
+        final Integer id1 = getConversionID( (IFE1D2DNode) o1 );
+        final Integer id2 = getConversionID( (IFE1D2DNode) o2 );
         return id1.compareTo( id2 );
       }
     };
@@ -339,7 +339,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     for( final IFE1D2DEdge edge : edgeSet )
     {
       final IFeatureBindingCollection<IFE1D2DNode> nodes = edge.getNodes();
-      for( IFE1D2DNode node : nodes )
+      for( final IFE1D2DNode node : nodes )
       {
         nodeSet.add( node );
       }
@@ -361,7 +361,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * n1-n4: The ID's of nodes in the element.<br>
    * matid: The ID of the material assigned to the element.
    */
-  private void writeQuadrangularElement( Formatter formatter, int id, int roughnessID, List<IFE1D2DNode> nodes )
+  private void writeQuadrangularElement( final Formatter formatter, final int id, final int roughnessID, final List<IFE1D2DNode> nodes )
   {
     // TODO: check orientation
 

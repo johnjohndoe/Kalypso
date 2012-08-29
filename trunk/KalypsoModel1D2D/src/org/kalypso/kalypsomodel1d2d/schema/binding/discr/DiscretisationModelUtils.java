@@ -65,11 +65,10 @@ public class DiscretisationModelUtils
    * <p>
    * A 1d-node is a node which as at least on 1D-element connected to it. TODO move this into the TypeInfo class
    */
-  @SuppressWarnings("unchecked")
   public static boolean is1DNode( final IFE1D2DNode node )
   {
-    final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] elements = node.getElements();
-    for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element : elements )
+    final IFE1D2DElement[] elements = node.getElements();
+    for( final IFE1D2DElement element : elements )
     {
       if( element instanceof IElement1D )
         return true;

@@ -96,7 +96,7 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
       if( element instanceof IPolyElement )
       {
         // get surface
-        final IPolyElement< ? , ? > element2D = (IPolyElement< ? , ? >) element;
+        final IPolyElement element2D = (IPolyElement) element;
         final GM_Surface<GM_SurfacePatch> eleGeom = element2D.getGeometry();
 
         if( eleGeom == null )

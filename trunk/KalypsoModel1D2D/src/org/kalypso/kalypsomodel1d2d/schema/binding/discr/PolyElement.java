@@ -29,7 +29,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
  */
-public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> implements IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>
+public class PolyElement extends FE1D2DElement implements IPolyElement
 {
   private final IFeatureBindingCollection<IFE1D2DEdge> m_edges = new FeatureBindingCollection<IFE1D2DEdge>( this, IFE1D2DEdge.class, WB1D2D_PROP_DIRECTEDEDGE );
 

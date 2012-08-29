@@ -334,11 +334,11 @@ public class TempGrid
         // New Element intersects other elements
         final GM_Surface< ? extends GM_SurfacePatch> newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
-        for( final IFE1D2DElement< ? , ? > element : elements )
+        for( final IFE1D2DElement element : elements )
         {
           if( element instanceof IPolyElement )
           {
-            final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement< ? , ? >) element).getGeometry();
+            final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
             if( eleGeom.intersects( newSurface ) )
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );

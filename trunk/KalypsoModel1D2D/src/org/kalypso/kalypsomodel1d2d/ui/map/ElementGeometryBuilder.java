@@ -249,7 +249,7 @@ public class ElementGeometryBuilder
 
       // 1) New Node lies inside an element (only for non-grabbed point)
 
-      final IPolyElement< ? , ? > elementForNewNode = discModel.find2DElement( newPoint, 0.0 );
+      final IPolyElement elementForNewNode = discModel.find2DElement( newPoint, 0.0 );
       if( elementForNewNode != null )
       {
         final IFE1D2DNode foundNode = discModel.findNode( newPoint, SEARCH_DISTANCE );
@@ -290,11 +290,11 @@ public class ElementGeometryBuilder
 
         final GM_Curve curve = GeometryFactory.createGM_Curve( line, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         final List<IFE1D2DElement> elements = discModel.getElements().query( curve.getEnvelope() );
-        for( final IFE1D2DElement< ? , ? > element : elements )
+        for( final IFE1D2DElement element : elements )
         {
           if( element instanceof IPolyElement )
           {
-            final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement< ? , ? >) element).getGeometry();
+            final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
             if( eleGeom == null )
             {
               // check for null geometries... What to do?
@@ -338,11 +338,11 @@ public class ElementGeometryBuilder
 
       // new element intersects other elements
       final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
-      for( final IFE1D2DElement< ? , ? > element : elements )
+      for( final IFE1D2DElement element : elements )
       {
         if( element instanceof IPolyElement )
         {
-          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement< ? , ? >) element).getGeometry();
+          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
           if( eleGeom.intersects( newSurface ) && pBoolFinalPont )
           {
             final GM_Object intersection = eleGeom.intersection( newSurface );

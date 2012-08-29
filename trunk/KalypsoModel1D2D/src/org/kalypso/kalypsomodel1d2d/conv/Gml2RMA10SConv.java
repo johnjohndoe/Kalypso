@@ -404,14 +404,14 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         break;
       if( container instanceof IFE1D2DEdge )
       {
-        final IFeatureBindingCollection edgeContainers = ((IFE1D2DEdge) container).getContainers();
-        for( final Object edgeContainer : edgeContainers )
+        final IFeatureBindingCollection<IFE1D2DElement> edgeContainers = ((IFE1D2DEdge) container).getContainers();
+        for( final IFE1D2DElement edgeContainer : edgeContainers )
         {
           if( edgeContainer instanceof IElement1D )
           {
-            if( isCalcUnitElement( (IElement1D) edgeContainer ) )
+            if( isCalcUnitElement( edgeContainer ) )
             {
-              element1D_ID = getConversionID( (IElement1D) edgeContainer );
+              element1D_ID = getConversionID( edgeContainer );
               break;
             }
           }
@@ -1052,7 +1052,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
               formatter.format( "FE%10d%10d%10s%10s%10d%10d%n", id, buildingID, "", "", upstreamNodeID, lIntWeirDirection ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             }
-            for( final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
+            for( final IFE1D2DEdge edge : ((IPolyElement) element).getEdges() )
             {
               edgeSet.add( edge );
             }
@@ -1067,7 +1067,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
         else
         {
-          for( final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
+          for( final IFE1D2DEdge edge : ((IPolyElement) element).getEdges() )
           {
             edgeSet.add( edge );
           }
@@ -1147,11 +1147,11 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
   {
     final List<IFE1D2DNode> lOrderedListRes = new ArrayList<IFE1D2DNode>();
 
-    final int lIntEdgesSize = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().size();
+    final int lIntEdgesSize = ((IPolyElement) element).getEdges().size();
     for( int lIntCounter = 0; lIntCounter < lIntEdgesSize - 1; ++lIntCounter )
-    { // final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() ){
-      final IFE1D2DEdge lEdgeAct = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().get( lIntCounter );
-      final IFE1D2DEdge lEdgeNext = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().get( lIntCounter + 1 );
+    {
+      final IFE1D2DEdge lEdgeAct = ((IPolyElement) element).getEdges().get( lIntCounter );
+      final IFE1D2DEdge lEdgeNext = ((IPolyElement) element).getEdges().get( lIntCounter + 1 );
       if( lEdgeNext.getNodes().contains( lEdgeAct.getNode( 1 ) ) )
       {
         if( !lOrderedListRes.contains( lEdgeAct.getNode( 0 ) ) )
@@ -1344,7 +1344,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     // Right now it is set to '0' which means the element is deactivated for the simulation
     final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31", element.getId() ); //$NON-NLS-1$
 
-    final IFE1D2DNode node = (IFE1D2DNode) element.getNodes().get( 0 );
+    final IFE1D2DNode node = element.getNodes().get( 0 );
     final GM_Point point = node.getPoint();
     m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, msg, point, null );
 

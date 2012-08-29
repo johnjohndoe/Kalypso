@@ -310,7 +310,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    * +<---------+<---------+ lNodeBckPrev lNodeBckAct
    *
    */
-  private IPolyElement< ? , ? > mergeElementsToWeir( final List<Integer> pListElementsIdsRma, final int pIntDegrees )
+  private IPolyElement mergeElementsToWeir( final List<Integer> pListElementsIdsRma, final int pIntDegrees )
   {
     final List<GM_Point> lListRes = new ArrayList<GM_Point>();
     final List<GM_Point> lListResBck = new ArrayList<GM_Point>();
@@ -392,7 +392,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     }
 
 
-    final IPolyElement< ? , ? > lNewPoly = lPoly;
+    final IPolyElement lNewPoly = lPoly;
     if( pListElementsIdsRma.size() > 1 )
     {
       try
@@ -632,7 +632,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         {
           final String gmlID = m_elementsNameConversionMap.get( rmaID );
 
-          final String elementID = ((IPolyElement< ? , ? >) lFeature).getId();
+          final String elementID = ((IPolyElement) lFeature).getId();
           if( gmlID == null && !m_elementsNameConversionMap.values().contains( elementID ) )
           {
             m_elementsNameConversionMap.put( rmaID, elementID );
@@ -645,7 +645,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         return;
     }
 
-    final IPolyElement< ? , ? > element = getOrCreateElement( rmaID, edge );
+    final IPolyElement element = getOrCreateElement( rmaID, edge );
     if( element != null )
     {
       // add edge to element and element to edge
@@ -660,14 +660,14 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     }
   }
 
-  private IPolyElement< ? , ? > getOrCreateElement( final int rmaID, final IFE1D2DEdge edge )
+  private IPolyElement getOrCreateElement( final int rmaID, final IFE1D2DEdge edge )
   {
     if( rmaID == 0 )
     {
       // this is either the outer boundary or an adjacent existing element
       // try to find an element in the model that lies on the edge
       final GM_Point middleNodePoint = edge.getMiddleNodePoint();
-      final IPolyElement< ? , ? > existingElement2d = m_model.find2DElement( middleNodePoint, 0.01 );
+      final IPolyElement existingElement2d = m_model.find2DElement( middleNodePoint, 0.01 );
       if( existingElement2d == null )
         return null;
 
@@ -678,7 +678,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     if( gmlID != null )
     {
       // this is an imported element
-      return (IPolyElement< ? , ? >) m_workspace.getFeature( gmlID ).getAdapter( IPolyElement.class );
+      return (IPolyElement) m_workspace.getFeature( gmlID ).getAdapter( IPolyElement.class );
     }
 
     // really create a new element
@@ -745,7 +745,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       if( m_gmExistingEnvelope != null && m_gmExistingEnvelope.contains( nodeLocation.getPosition() ) )
       {
-        final IPolyElement< ? , ? > lFoundElement = m_model.find2DElement( nodeLocation, 0.01 );
+        final IPolyElement lFoundElement = m_model.find2DElement( nodeLocation, 0.01 );
         if( lFoundElement != null )
         {
           // do not insert nodes that are placed on existing model(overlapped elements)
