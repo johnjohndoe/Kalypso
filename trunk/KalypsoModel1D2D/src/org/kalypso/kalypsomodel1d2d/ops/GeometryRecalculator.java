@@ -51,6 +51,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
@@ -221,7 +222,8 @@ public class GeometryRecalculator
           else if( container instanceof IFE1D2DEdge )
           {
             final IFE1D2DEdge edge = (IFE1D2DEdge) container;
-            final IFeatureBindingCollection<Feature> edgeContainers = edge.getContainers();
+            final IFeatureBindingCollection<IFE1D2DElement> edgeContainers = edge.getContainers();
+            // FIXME: probably a bug!
             for( final Feature edgeContainer : edgeContainers )
               addToDiscretisationModelChanges( container );
           }

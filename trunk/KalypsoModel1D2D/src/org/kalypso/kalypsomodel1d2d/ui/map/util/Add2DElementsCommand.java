@@ -146,7 +146,7 @@ public class Add2DElementsCommand implements ICommand
   private List<Feature> createElementsFromRing( final IFEDiscretisationModel1d2d discModel, final GM_Ring ring )
   {
     final List<Feature> lListRes = new ArrayList<Feature>();
-    final List<IFE1D2DEdge< ? , ? >> lListEdges = new ArrayList<IFE1D2DEdge< ? , ? >>();
+    final List<IFE1D2DEdge> lListEdges = new ArrayList<IFE1D2DEdge>();
     final List<GM_Point> lListPoses = new ArrayList<GM_Point>();
 
     checkPosesForCreationOfElement( discModel, ring, lListPoses );
@@ -206,7 +206,7 @@ public class Add2DElementsCommand implements ICommand
 
     element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
     lListRes.add( element2d );
-    for( final IFE1D2DEdge< ? , ? > lEdge : lListEdges )
+    for( final IFE1D2DEdge lEdge : lListEdges )
     {
       // add edge to element and element to edge
       final String elementId = element2d.getId();
@@ -252,7 +252,7 @@ public class Add2DElementsCommand implements ICommand
     }
   }
 
-  private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge< ? , ? >> lListEdges, final List<GM_Point> lListPoses )
+  private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge> lListEdges, final List<GM_Point> lListPoses )
   {
     final List<Feature> lListRes = new ArrayList<Feature>();
     final Map<GM_Position, IFE1D2DNode> lNodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
@@ -286,8 +286,8 @@ public class Add2DElementsCommand implements ICommand
       final IFE1D2DNode node1 = nodes.get( i );
       final IFE1D2DNode node2 = nodes.get( (i + 1) % nodes.size() );
 
-      final IFE1D2DEdge< ? , ? > existingEdge = discModel.findEdge( node1, node2 );
-      final IFE1D2DEdge< ? , ? > edge;
+      final IFE1D2DEdge existingEdge = discModel.findEdge( node1, node2 );
+      final IFE1D2DEdge edge;
       if( existingEdge == null )
       {
         edge = FE1D2DEdge.createFromModel( discModel, node1, node2 );

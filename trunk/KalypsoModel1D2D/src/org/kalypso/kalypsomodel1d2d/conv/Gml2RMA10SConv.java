@@ -80,7 +80,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation2D;
@@ -496,7 +495,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-        final IFeatureBindingCollection<PolyElement> elements = edge.getAdjacentElements();
+        final IFeatureBindingCollection<IFE1D2DElement> elements = edge.getAdjacentElements();
 
         final GM_Point point0 = node0.getPoint();
         final GM_Point point1 = node1.getPoint();
@@ -509,9 +508,11 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         IFE1D2DElement leftElement = null;
         IFE1D2DElement rightElement = null;
         // find left and right elements
-        nextElement: for( final PolyElement element : elements )
+        nextElement: for( final IFE1D2DElement element : elements )
         {
-          final IFeatureBindingCollection<IFE1D2DEdge> elementEdges = element.getEdges();
+          final IPolyElement polyElement = (IPolyElement) element;
+
+          final IFeatureBindingCollection<IFE1D2DEdge> elementEdges = polyElement.getEdges();
           // find node adjacent to node0 other than node1
           IFE1D2DNode node2 = null;
           if( m_mapTmpElementToPolyWeir.containsValue( element.getId() ) )
@@ -559,6 +560,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
             }
           }
         }
+
         final int leftParent;
         final int rightParent;
         if( m_exportRequest )

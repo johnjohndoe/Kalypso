@@ -95,7 +95,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
       // this must be wrong
       return nodes;
 
-    final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> firstEdge = m_edges.get( 0 );
+    final IFE1D2DEdge firstEdge = m_edges.get( 0 );
     final IFeatureBindingCollection<IFE1D2DNode> firstTwoNodes = firstEdge.getNodes();
     final IFE1D2DNode firstNode = firstTwoNodes.get( 0 );
     nodes.add( firstNode );
@@ -120,7 +120,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
 
   private IFE1D2DNode getAdjacentNode( final IFE1D2DNode node, final List<IFE1D2DNode> excludeNodes )
   {
-    for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : m_edges )
+    for( final IFE1D2DEdge edge : m_edges )
     {
       final IFeatureBindingCollection<IFE1D2DNode> nodes = edge.getNodes();
       final IFE1D2DNode firstNode = nodes.get( 0 );

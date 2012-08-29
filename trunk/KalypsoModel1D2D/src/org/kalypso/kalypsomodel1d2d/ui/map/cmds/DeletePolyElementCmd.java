@@ -46,6 +46,7 @@ import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -114,10 +115,11 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
       for( final IFE1D2DEdge edge : edges )
       {
         final FeatureList containers = edge.getContainers().getFeatureList();
-        final List<IPolyElement> lListContainers = edge.getContainers();
+        final IFeatureBindingCollection<IFE1D2DElement> lListContainers = edge.getContainers();
         boolean lBoolContainsAll = true;
-        for( final IPolyElement lFeatureAct : lListContainers )
+        for( final IFE1D2DElement element : lListContainers )
         {
+          final IPolyElement lFeatureAct = (IPolyElement) element;
           if( !m_setFeaturesToRemove.contains( lFeatureAct ) )
           {
             lBoolContainsAll = false;
