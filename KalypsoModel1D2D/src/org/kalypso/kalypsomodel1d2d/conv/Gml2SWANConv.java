@@ -86,10 +86,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author ig
  */
-@SuppressWarnings("unchecked")
 public class Gml2SWANConv implements INativeIDProvider
 {
-
   private Formatter m_formatterNodes = null;
 
   private Formatter m_formatterElements = null;

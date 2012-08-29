@@ -180,7 +180,6 @@ public class WindDataWizardMainPage extends WizardPage
    * @param selection
    *          the selection or <code>null</code> if none
    */
-    @SuppressWarnings("unchecked")
   public void init( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )

@@ -84,7 +84,7 @@ public class DiscretizetionParsingTest extends GmlParsingTester
     assertTrue( node.getPoint().distance( point1 ) < DELTA );
     
     //getAdjacentNode
-    final IFE1D2DNode adjacentNode = (IFE1D2DNode) node.getNeighbours().get( 0 );
+    final IFE1D2DNode adjacentNode = node.getNeighbours().get( 0 );
     assertNotNull( adjacentNode );
     assertTrue( adjacentNode.getPoint().distance( point2 ) < DELTA );
     

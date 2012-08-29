@@ -386,10 +386,6 @@ public class DragBankLineWidget extends DeprecatedMouseWidget
       panel.repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
-  @SuppressWarnings("unchecked")
   @Override
   public void paint( final Graphics g )
   {

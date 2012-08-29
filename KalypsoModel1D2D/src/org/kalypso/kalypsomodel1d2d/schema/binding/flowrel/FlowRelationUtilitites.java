@@ -242,13 +242,11 @@ public class FlowRelationUtilitites
   {
     final List<IFlowRelationship> lListRes = new ArrayList<IFlowRelationship>();
 
-    // final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IFlowRelationship.class };
-
     final IFlowRelationship[] flowRels = model.findFlowrelationships( pPosition, 0.01 );
     for( final IFlowRelationship flowRel : flowRels )
     {
-      if( flowRel instanceof IFlowRelationship )
-      lListRes.add( flowRel );
+      if( flowRel != null )
+        lListRes.add( flowRel );
     }
 
     return lListRes;
@@ -359,7 +357,7 @@ public class FlowRelationUtilitites
     return discModel.find1DElement( building.getPosition(), 0.01 );
   }
 
- /**
+  /**
    * this function decides what node is the upstream node from given nodes:
    *
    * <pre>
@@ -473,10 +471,10 @@ public class FlowRelationUtilitites
     {
       final GM_Object geom = element.getDefaultGeometryPropertyValue();
 
-      //sad to say, that for now we could have null geoms, so we need this check
-      if (geom == null)
+      // sad to say, that for now we could have null geoms, so we need this check
+      if( geom == null )
         continue;
-      
+
       // TODO: random grab distance here....
       if( geom.distance( geom ) < 0.001 )
       {
