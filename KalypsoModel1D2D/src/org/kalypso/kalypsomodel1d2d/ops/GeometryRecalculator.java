@@ -49,7 +49,6 @@ import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -116,7 +115,7 @@ public class GeometryRecalculator
       }
       else if( TypeInfo.isPolyElementFeature( feature ) )
       {
-        final IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge> polyElement = (IPolyElement) feature.getAdapter( IPolyElement.class );
+        final IPolyElement polyElement = (IPolyElement) feature.getAdapter( IPolyElement.class );
         final List<IFE1D2DNode> nodes = polyElement.getNodes();
         for( final IFE1D2DNode node : nodes )
           addToNodes( node );

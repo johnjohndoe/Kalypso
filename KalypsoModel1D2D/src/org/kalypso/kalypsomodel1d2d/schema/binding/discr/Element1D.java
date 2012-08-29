@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Gernot Belger
  */
-public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends FE1D2DElement<CT, ET> implements IElement1D<CT, ET>
+public class Element1D extends FE1D2DElement implements IElement1D
 {
   public Element1D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -65,14 +65,14 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   }
 
   @Override
-  public ET getEdge( )
+  public IFE1D2DEdge getEdge( )
   {
     final Object property = getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
     final Feature edgeFeature = FeatureHelper.getFeature( this.getWorkspace(), property );
     if( edgeFeature == null )
       return null;
 
-    return (ET) edgeFeature;
+    return (IFE1D2DEdge) edgeFeature;
   }
 
   @Override
@@ -132,7 +132,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    final ET edge = getEdge();
+    final IFE1D2DEdge edge = getEdge();
     if( edge == null )
     {
       return null;

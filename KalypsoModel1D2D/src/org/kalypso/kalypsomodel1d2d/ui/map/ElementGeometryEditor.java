@@ -87,7 +87,7 @@ public class ElementGeometryEditor
 {
   private static final double SEARCH_DISTANCE = 0.1;
 
-  private final Set<IFE1D2DElement< ? , ? >> m_elementList = new HashSet<IFE1D2DElement< ? , ? >>();
+  private final Set<IFE1D2DElement> m_elementList = new HashSet<>();
 
   private final IKalypsoFeatureTheme m_nodeTheme;
 
@@ -107,9 +107,9 @@ public class ElementGeometryEditor
     m_nodeTheme = nodeTheme;
   }
 
-  private void addElements( final IFE1D2DElement< ? , ? >[] elements )
+  private void addElements( final IFE1D2DElement[] elements )
   {
-    for( final IFE1D2DElement< ? , ? > element : elements )
+    for( final IFE1D2DElement element : elements )
     {
       m_elementList.add( element );
     }
@@ -135,8 +135,8 @@ public class ElementGeometryEditor
 
   private void paintPreview( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
-    final IFE1D2DElement< ? , ? >[] elements = m_elementList.toArray( new IFE1D2DElement[m_elementList.size()] );
-    for( final IFE1D2DElement< ? , ? > element : elements )
+    final IFE1D2DElement[] elements = m_elementList.toArray( new IFE1D2DElement[m_elementList.size()] );
+    for( final IFE1D2DElement element : elements )
     {
       final List<GM_Point> pointsToDraw = new ArrayList<GM_Point>();
 
@@ -193,8 +193,8 @@ public class ElementGeometryEditor
 
       /* A) element type checks */
       // A.1) check for 1d-elements (they are not supported yet)
-      final IFE1D2DElement< ? , ? >[] startElements = m_startNode.getElements();
-      for( final IFE1D2DElement< ? , ? > element : startElements )
+      final IFE1D2DElement[] startElements = m_startNode.getElements();
+      for( final IFE1D2DElement element : startElements )
       {
         if( element instanceof Element1D )
           return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.0" ) ); //$NON-NLS-1$
@@ -212,7 +212,7 @@ public class ElementGeometryEditor
       // (only for non-grabbed point)
       if( m_endNode == null )
       {
-        final IPolyElement< ? , ? > elementForNewNode = discModel.find2DElement( m_endPoint, 0.0 );
+        final IPolyElement elementForNewNode = discModel.find2DElement( m_endPoint, 0.0 );
         if( elementForNewNode != null )
         {
           final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
@@ -245,11 +245,11 @@ public class ElementGeometryEditor
 
         // D.3) new elements intersect other elements
         final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
-        for( final IFE1D2DElement< ? , ? > element : elements )
+        for( final IFE1D2DElement element : elements )
         {
           if( element instanceof IPolyElement )
           {
-            final IPolyElement< ? , ? > element2D = (IPolyElement< ? , ? >) element;
+            final IPolyElement element2D = (IPolyElement) element;
             final GM_Surface<GM_SurfacePatch> eleGeom = element2D.getGeometry();
             if( eleGeom.intersects( newSurface ) && !m_elementList.contains( element2D ) )
             {
@@ -285,7 +285,7 @@ public class ElementGeometryEditor
   private GM_Ring[] getNewGeometries( ) throws GM_Exception
   {
     final List<GM_Ring> ringList = new ArrayList<GM_Ring>();
-    for( final IFE1D2DElement< ? , ? > element : m_elementList )
+    for( final IFE1D2DElement element : m_elementList )
     {
       if( element instanceof IPolyElement )
         ringList.add( getEditedGeometryAsRing( element ) );
@@ -296,7 +296,7 @@ public class ElementGeometryEditor
   /**
    * returns a given {@link IFE1D2DElement} as a {@link GM_Ring}
    */
-  private GM_Ring getEditedGeometryAsRing( final IFE1D2DElement< ? , ? > element ) throws GM_Exception
+  private GM_Ring getEditedGeometryAsRing( final IFE1D2DElement element ) throws GM_Exception
   {
     final GM_Position[] poses = getEditedNodesPositions( element );
 
@@ -308,7 +308,7 @@ public class ElementGeometryEditor
    * returns the updated geometry of an edited {@link IFE1D2DElement} as {@link GM_Position} array. <BR>
    * The z-coordinate value of the moved element node remains the same.
    */
-  private GM_Position[] getEditedNodesPositions( final IFE1D2DElement< ? , ? > element )
+  private GM_Position[] getEditedNodesPositions( final IFE1D2DElement element )
   {
     final List<GM_Position> posList = new ArrayList<GM_Position>();
     final List<IFE1D2DNode> nodes = element.getNodes();

@@ -54,7 +54,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
    * Returns all elements, this node is part of.
    */
   @Override
-  public IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] getElements( )
+  public IFE1D2DElement[] getElements( )
   {
     // REMARK: method reworked to use references instead of geometry (by Dejan)
     // (we had Splitsort problem before: sometimes the search query in SplitSort does not return anything)
@@ -81,9 +81,6 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
     return elementsList.toArray( new IFE1D2DElement[0] );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getNeighbours()
-   */
   @Override
   public List<IFE1D2DNode> getNeighbours( )
   {
@@ -102,9 +99,6 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
     return list;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#addContainer(java.lang.String)
-   */
   @Override
   public void addContainer( String linkRef )
   {
@@ -114,9 +108,6 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
       wrappedList.add( linkRef );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

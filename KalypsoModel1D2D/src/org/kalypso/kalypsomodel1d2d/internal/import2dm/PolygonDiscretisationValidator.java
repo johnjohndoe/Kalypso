@@ -99,15 +99,15 @@ public class PolygonDiscretisationValidator
     return null;
   }
 
-  private String validateElement( final IPolygonWithName item, final IFE1D2DElement< ? , IFE1D2DEdge> element )
+  private String validateElement( final IPolygonWithName item, final IFE1D2DElement element )
   {
     try
     {
       if( element instanceof IElement1D )
-        return validateElement1D( item, (IElement1D< ? , IFE1D2DEdge>) element );
+        return validateElement1D( item, (IElement1D) element );
 
       if( element instanceof IPolyElement )
-        return validateElement2D( item, (IPolyElement< ? , IFE1D2DEdge>) element );
+        return validateElement2D( item, (IPolyElement) element );
 
       throw new IllegalStateException();
     }
@@ -117,7 +117,7 @@ public class PolygonDiscretisationValidator
     }
   }
 
-  private String validateElement1D( final IPolygonWithName item, final IElement1D< ? , IFE1D2DEdge> element ) throws GM_Exception
+  private String validateElement1D( final IPolygonWithName item, final IElement1D element ) throws GM_Exception
   {
     final IFE1D2DEdge edge = element.getEdge();
     final GM_Curve geometry = edge.getGeometry();
@@ -131,7 +131,7 @@ public class PolygonDiscretisationValidator
     return null;
   }
 
-  private String validateElement2D( final IPolygonWithName item, final IPolyElement< ? , IFE1D2DEdge> element ) throws GM_Exception
+  private String validateElement2D( final IPolygonWithName item, final IPolyElement element ) throws GM_Exception
   {
     final GM_Surface<GM_SurfacePatch> surface = element.getGeometry();
     final Polygon polygon = (Polygon) JTSAdapter.export( surface );

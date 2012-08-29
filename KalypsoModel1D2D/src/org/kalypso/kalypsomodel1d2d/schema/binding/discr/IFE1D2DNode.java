@@ -88,7 +88,7 @@ public interface IFE1D2DNode extends IFENetItem
    *
    * @return the element containing this as array
    */
-  IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] getElements( );
+  IFE1D2DElement[] getElements( );
 
   /**
    * Gets all neighbours of this node. Neighbours nodes are nodes on the other side of all edges ending with this node.

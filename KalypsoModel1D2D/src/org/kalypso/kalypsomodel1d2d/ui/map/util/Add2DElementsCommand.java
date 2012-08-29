@@ -159,7 +159,7 @@ public class Add2DElementsCommand implements ICommand
       lListPoses.add( lListPoses.get( 0 ) );
     }
 
-    IPolyElement< ? , ? > element2d = discModel.find2DElement( GeometryUtilities.centroidFromRing( ring.getPositions(), ring.getCoordinateSystem() ), SNAP_DISTANCE );
+    IPolyElement element2d = discModel.find2DElement( GeometryUtilities.centroidFromRing( ring.getPositions(), ring.getCoordinateSystem() ), SNAP_DISTANCE );
 
     if( element2d != null )
     {
@@ -180,11 +180,11 @@ public class Add2DElementsCommand implements ICommand
 
     if( lListFoundPolyElements != null && lListFoundPolyElements.size() > 0 )
     {
-      for( final IFE1D2DElement< ? , ? > lEle : lListFoundPolyElements )
+      for( final IFE1D2DElement lEle : lListFoundPolyElements )
       {
         if( lEle instanceof IPolyElement )
         {
-          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement< ? , ? >) lEle).getGeometry();
+          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) lEle).getGeometry();
           if( eleGeom.intersects( newSurface ) )
           {
             try
