@@ -55,9 +55,9 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.SimpleDataBinding;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -95,9 +95,6 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     m_model = new RoughnessDataModel( profile, component );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#dispose()
-   */
   @Override
   public final void dispose( )
   {
@@ -163,9 +160,8 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     group.setText( Messages.getString( "AbstractRoughnessPage.1" ) ); //$NON-NLS-1$
     toolkit.adapt( group );
 
-    setBinding( new AbstractDatabinding( toolkit )
-    {
-    } );
+    // TODO: probably should use DatabindingPage
+    setBinding( new SimpleDataBinding( toolkit ) );
 
     build( group, toolkit, Messages.getString( "AbstractRoughnessPage.2" ), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN ); //$NON-NLS-1$
     build( group, toolkit, Messages.getString( "AbstractRoughnessPage.3" ), RoughnessDataModel.PROPERTY_RIVER_TUBE ); //$NON-NLS-1$

@@ -55,9 +55,9 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.SimpleDataBinding;
 import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -105,9 +105,8 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
     group.setText( Messages.getString( "VegetationPropertiesPage.2" ) ); //$NON-NLS-1$
     toolkit.adapt( group );
 
-    m_binding = new AbstractDatabinding( toolkit )
-    {
-    };
+    // FIXME: probably should use databinding wizard page
+    m_binding = new SimpleDataBinding( toolkit );
 
     toolkit.createLabel( group, StringUtils.EMPTY );
     toolkit.createLabel( group, Messages.getString( "VegetationPropertiesPage.4" ) ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$

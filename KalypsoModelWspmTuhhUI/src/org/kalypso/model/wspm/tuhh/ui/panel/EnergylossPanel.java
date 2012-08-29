@@ -61,9 +61,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.SimpleDataBinding;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ComboMessageFocusListener;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -100,10 +100,6 @@ public class EnergylossPanel extends AbstractProfilView
     super( profile );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
@@ -128,6 +124,7 @@ public class EnergylossPanel extends AbstractProfilView
     return enlosses.length == 0 ? null : enlosses[0];
   }
 
+  // FIXME: makes no sense in mixing databinding and modify listeners
   private final DoubleModifyListener getModifyListener( )
   {
     if( m_doubleModifyListener == null && m_propPanel != null )
@@ -165,39 +162,37 @@ public class EnergylossPanel extends AbstractProfilView
 
   }
 
-  private void buildText( final FormToolkit toolkit, EnergylossDataModel model )
+  private void buildText( final IDataBinding binding, final EnergylossDataModel model )
   {
-    final Text text = toolkit.createText( m_propPanel, StringUtils.EMPTY, SWT.BORDER | SWT.RIGHT );
+    final Text text = m_toolkit.createText( m_propPanel, StringUtils.EMPTY, SWT.BORDER | SWT.RIGHT );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     text.setMessage( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.1" ) ); //$NON-NLS-1$
     text.setText( model.getEnergylossValue() == null ? "" : model.getEnergylossValue().toString() ); //$NON-NLS-1$
     text.addModifyListener( getModifyListener() );
     final DataBinder binder = bind( text, model );
-    final IDataBinding binding = new AbstractDatabinding( toolkit )
-    {
-    };
     binding.bindValue( binder );
   }
 
-  private void buildCombo( final FormToolkit toolkit, final EnergylossDataModel model )
+  private void buildCombo( final IDataBinding dataBinding, final EnergylossDataModel model )
   {
-
     final ComboViewer elType = new ComboViewer( m_propPanel, SWT.BORDER );
     elType.setContentProvider( new ArrayContentProvider() );
     elType.setInput( ArrayUtils.remove( ENERGYLOSS_TYPE.values(), 0 ) );
     final Combo combo = elType.getCombo();
     combo.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
     combo.setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.2" ) ); //$NON-NLS-1$
+
+    // FIXME: makes no sense: data binding, but also a focus listener ?!?
     combo.addFocusListener( new FocusListener()
     {
       @Override
-      public void focusGained( FocusEvent e )
+      public void focusGained( final FocusEvent e )
       {
         //
       }
 
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         if( !(e.getSource() instanceof Combo) )
         {
@@ -217,21 +212,19 @@ public class EnergylossPanel extends AbstractProfilView
     combo.addFocusListener( getComboMessageListener() );
     m_toolkit.adapt( elType.getCombo() );
     final DataBinder binder = bind( elType.getCombo(), model );
-    final IDataBinding binding = new AbstractDatabinding( toolkit )
-    {
-    };
-    binding.bindValue( binder );
+
+    dataBinding.bindValue( binder );
     m_comboFocusListener.init( combo );
   }
 
-  private DataBinder bind( final Text textField, EnergylossDataModel model )
+  private DataBinder bind( final Text textField, final EnergylossDataModel model )
   {
     final ISWTObservableValue targetValue = SWTObservables.observeText( textField, SLDBinding.TEXT_DEFAULT_EVENTS );
     final IObservableValue modelValue = BeansObservables.observeValue( model, EnergylossDataModel.PROPERTY_ENERGYLOSS_VALUE );
     return new DataBinder( targetValue, modelValue );
   }
 
-  private DataBinder bind( final Combo combo, EnergylossDataModel model )
+  private DataBinder bind( final Combo combo, final EnergylossDataModel model )
   {
     final ISWTObservableValue targetValue = SWTObservables.observeSelection( combo );
     final IObservableValue modelValue = BeansObservables.observeValue( model, EnergylossDataModel.PROPERTY_ENERGYLOSS_TYPE );
@@ -244,7 +237,7 @@ public class EnergylossPanel extends AbstractProfilView
     {
       return;
     }
-    for( Control control : m_propPanel.getChildren() )
+    for( final Control control : m_propPanel.getChildren() )
     {
       control.dispose();
     }
@@ -263,6 +256,8 @@ public class EnergylossPanel extends AbstractProfilView
 
   protected void createPropertyPanel( )
   {
+    final IDataBinding binding = new SimpleDataBinding( m_toolkit );
+
     final TupleResult result = getEnergyloss().getObservation().getResult();
 
     EnergylossDataModel dataModel = null;
@@ -278,17 +273,18 @@ public class EnergylossPanel extends AbstractProfilView
       else
       {
         final EnergylossDataModel model = new EnergylossDataModel( getProfile(), i );
-        buildCombo( m_toolkit, model );
-        buildText( m_toolkit, model );
+        buildCombo( binding, model );
+        buildText( binding, model );
       }
     }
     final Label label = m_toolkit.createLabel( m_propPanel, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.4" ) + ": " + ENERGYLOSS_TYPE.eEinlauf.toString() );//$NON-NLS-1$ //$NON-NLS-2$
     label.setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.5" ) );//$NON-NLS-1$
     dataModel.setEnergylossType( ENERGYLOSS_TYPE.eEinlauf.getId() );
-    buildText( m_toolkit, dataModel ); //$NON-NLS-1$
+    buildText( binding, dataModel ); //$NON-NLS-1$
     m_propPanel.layout();
   }
 
+  // FIXME: makes no sense: data binding and updating the control like this
   protected void updateControls( )
   {
     clearPanel();

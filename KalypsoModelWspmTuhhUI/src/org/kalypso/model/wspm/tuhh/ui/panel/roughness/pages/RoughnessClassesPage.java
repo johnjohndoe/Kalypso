@@ -58,8 +58,8 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.SimpleDataBinding;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
@@ -106,10 +106,8 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     group.setText( Messages.getString( "RoughnessClassesPage.1" ) ); //$NON-NLS-1$
     toolkit.adapt( group );
 
-    // FIXME: databinding not intended to be used like this!
-    setBinding( new AbstractDatabinding( toolkit )
-    {
-    } );
+    // FIXME: probably should use DatabindingWizardPage
+    setBinding( new SimpleDataBinding( toolkit ) );
 
     build( group, toolkit, Messages.getString( "RoughnessClassesPage.2" ), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS ); //$NON-NLS-1$
     build( group, toolkit, Messages.getString( "RoughnessClassesPage.3" ), RoughnessDataModel.PROPERTY_RIVER_TUBE_CLASS ); //$NON-NLS-1$
