@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -64,7 +65,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -81,13 +81,13 @@ import com.vividsolutions.jts.geom.Polygon;
 /**
  * @author Gernot Belger
  */
-public class ConvertToModelAction extends Action
+public class ConvertToModelAction extends Action implements IUpdateable
 {
   private final Import2dElementsData m_data;
 
-  private final IWidget m_widget;
+  private final Import2dElementsWidget m_widget;
 
-  public ConvertToModelAction( final Import2dElementsData data, final IWidget widget )
+  public ConvertToModelAction( final Import2dElementsData data, final Import2dElementsWidget widget )
   {
     m_data = data;
     m_widget = widget;
@@ -97,6 +97,13 @@ public class ConvertToModelAction extends Action
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.OK ) );
+  }
+
+  @Override
+  public void update( )
+  {
+    final IPolygonWithName[] elements = m_data.getElements();
+    setEnabled( !ArrayUtils.isEmpty( elements ) );
   }
 
   @Override
@@ -140,13 +147,13 @@ public class ConvertToModelAction extends Action
       final GM_Envelope boundingBox = m_data.getBoundingBox();
 
       /* clear old state */
-      m_data.setElements( null, null );
+      m_data.clearElements();
 
       /* jump to inserted elements */
       if( boundingBox != null )
       {
         final GM_Envelope wishBBox = GeometryUtilities.scaleEnvelope( boundingBox, 1.05 );
-        panel.setBoundingBox( wishBBox, true );
+        m_widget.setExtent( wishBBox );
       }
     }
   }

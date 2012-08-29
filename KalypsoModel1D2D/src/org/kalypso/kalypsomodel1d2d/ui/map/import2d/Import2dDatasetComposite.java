@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -50,9 +49,11 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusCompositeValue;
 
@@ -61,21 +62,20 @@ import org.kalypso.core.status.StatusCompositeValue;
  */
 public class Import2dDatasetComposite extends Composite
 {
-  private final Import2dDataset m_dataSet;
+  private final Import2dElementsData m_dataSet;
 
-  private final DataBindingContext m_binding;
+  private final IDataBinding m_binding;
 
-  public Import2dDatasetComposite( final Composite parent, final FormToolkit toolkit, final Import2dDataset statistics )
+  public Import2dDatasetComposite( final Composite parent, final FormToolkit toolkit, final Import2dElementsData statistics, final IDataBinding binding )
   {
     super( parent, SWT.NONE );
 
     m_dataSet = statistics;
+    m_binding = binding;
 
     toolkit.adapt( this );
 
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( this );
-
-    m_binding = new DataBindingContext();
+    GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( this );
 
     createReadStatusControls( this, toolkit );
     createElementCountControls( this, toolkit );
@@ -83,14 +83,17 @@ public class Import2dDatasetComposite extends Composite
 
   private void createReadStatusControls( final Composite parent, final FormToolkit toolkit )
   {
-    final StatusComposite statusComposite = new StatusComposite( toolkit, parent, SWT.NONE );
+    final Label label = toolkit.createLabel( parent, "Last Status", SWT.NONE );
+    label.setToolTipText( "Log information for the last import operation" );
+
+    final StatusComposite statusComposite = new StatusComposite( toolkit, parent, StatusComposite.DETAILS );
     statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     final StatusCompositeValue target = new StatusCompositeValue( statusComposite );
-    final IObservableValue model = BeansObservables.observeValue( m_dataSet, Import2dDataset.PROPERTY_LAST_READ_STATUS );
+    final IObservableValue model = BeansObservables.observeValue( m_dataSet, Import2dElementsData.PROPERTY_LAST_READ_STATUS );
 
     final DataBinder binder = new DataBinder( target, model );
-    binder.apply( m_binding );
+    binder.apply( m_binding.getBindingContext() );
   }
 
   private void createElementCountControls( final Composite parent, final FormToolkit toolkit )
@@ -98,12 +101,12 @@ public class Import2dDatasetComposite extends Composite
     toolkit.createLabel( parent, "Available Elements" );
 
     final Text field = toolkit.createText( parent, StringUtils.EMPTY, SWT.READ_ONLY );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     final ISWTObservableValue target = SWTObservables.observeText( field );
-    final IObservableValue model = BeansObservables.observeValue( m_dataSet, Import2dDataset.PROPERTY_ELEMENT_COUNT );
+    final IObservableValue model = BeansObservables.observeValue( m_dataSet, Import2dElementsData.PROPERTY_ELEMENT_COUNT );
 
     final DataBinder binder = new DataBinder( target, model );
-    binder.apply( m_binding );
+    binder.apply( m_binding.getBindingContext() );
   }
 }

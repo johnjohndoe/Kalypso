@@ -95,7 +95,8 @@ public class Import2dImportWizard extends Wizard
     final IImport2dImportOperation operation = getOperation( smsFile );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    StatusDialog.open( getShell(), status, getWindowTitle() );
+    if( !status.isOK() )
+      StatusDialog.open( getShell(), status, getWindowTitle() );
 
     return !status.matches( IStatus.ERROR );
   }
