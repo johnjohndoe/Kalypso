@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypsomodel1d2d.schema.functions;
 
@@ -19,7 +19,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
  * Function Property that answers whether a 1D2D node has an elevation or not.
- * 
+ *
  * @author Patrice Congo
  */
 public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFunction
@@ -45,7 +45,7 @@ public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFuncti
     if( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( featureQName ) )
     {
       // TODO: Sometimes here is a NPE when first displaying the map. Race condition?
-      final IFE1D2DNode< ? > node = (IFE1D2DNode< ? >) feature.getAdapter( IFE1D2DNode.class );
+      final IFE1D2DNode node = (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class );
       try
       {
         final GM_Point point = node == null ? null : node.getPoint();

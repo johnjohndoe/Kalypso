@@ -156,7 +156,7 @@ public class Create1DElementCommand implements ICommand
   private void add1dElement( final GM_Point startPoint, final GM_Point endPoint )
   {
     /* Build new nodes */
-    final IFE1D2DNode< ? >[] nodes = ElementGeometryHelper.buildNewNodes( m_discModel, startPoint, endPoint );
+    final IFE1D2DNode[] nodes = ElementGeometryHelper.buildNewNodes( m_discModel, startPoint, endPoint );
 
     // REMARK: never build a new 1d edge on top of an existing edge
     final IFE1D2DEdge existing = m_discModel.findEdge( nodes[0], nodes[1] );

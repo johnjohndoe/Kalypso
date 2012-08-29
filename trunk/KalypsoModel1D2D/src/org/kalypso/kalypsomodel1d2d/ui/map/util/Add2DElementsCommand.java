@@ -70,7 +70,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * General command that adds 2D-Elements into the net.<br/>
  * FIXME: clean up this ugly code!
- * 
+ *
  * @author Gernot Belger
  */
 public class Add2DElementsCommand implements ICommand
@@ -81,7 +81,7 @@ public class Add2DElementsCommand implements ICommand
 
   private final List<GM_Position> m_setNotInsertedNodes = new ArrayList<GM_Position>();
 
-  private final Map<GM_Position, IFE1D2DNode< ? >> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode< ? >>();
+  private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<>();
 
   private GM_Envelope m_gmExistingEnvelope;
 
@@ -255,14 +255,14 @@ public class Add2DElementsCommand implements ICommand
   private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge< ? , ? >> lListEdges, final List<GM_Point> lListPoses )
   {
     final List<Feature> lListRes = new ArrayList<Feature>();
-    final Map<GM_Position, IFE1D2DNode< ? >> lNodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode< ? >>();
+    final Map<GM_Position, IFE1D2DNode> lNodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
     /* Create nodes */
-    final List<IFE1D2DNode< ? >> nodes = new ArrayList<IFE1D2DNode< ? >>();
+    final List<IFE1D2DNode> nodes = new ArrayList<>();
     for( int i = 0; i < lListPoses.size() - 1; i++ )
     {
       final GM_Point lPoint = lListPoses.get( i );
 
-      IFE1D2DNode< ? > actNode = m_nodesNameConversionMap.get( lPoint.getPosition() );
+      IFE1D2DNode actNode = m_nodesNameConversionMap.get( lPoint.getPosition() );
       if( actNode == null )
       {
         actNode = lNodesNameConversionMap.get( lPoint.getPosition() );
@@ -283,8 +283,8 @@ public class Add2DElementsCommand implements ICommand
     /* Create edges */
     for( int i = 0; i < nodes.size(); i++ )
     {
-      final IFE1D2DNode< ? > node1 = nodes.get( i );
-      final IFE1D2DNode< ? > node2 = nodes.get( (i + 1) % nodes.size() );
+      final IFE1D2DNode node1 = nodes.get( i );
+      final IFE1D2DNode node2 = nodes.get( (i + 1) % nodes.size() );
 
       final IFE1D2DEdge< ? , ? > existingEdge = discModel.findEdge( node1, node2 );
       final IFE1D2DEdge< ? , ? > edge;

@@ -47,6 +47,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -123,11 +124,11 @@ public class ChangeNodePositionCommand implements IFeatureChangeCommand
     if( m_fireEventsForDependendElements )
     {
       /* Edges etc. */
-      final IFeatureBindingCollection<Feature> containers = m_node.getContainers();
-      for( final Feature featureWrapper2 : containers )
+      final IFeatureBindingCollection< ? extends IFENetItem> containers = m_node.getContainers();
+      for( final IFENetItem container : containers )
       {
-        changedFeatures.add( featureWrapper2 );
-        featureWrapper2.setEnvelopesUpdated();
+        changedFeatures.add( container );
+        container.setEnvelopesUpdated();
       }
 
       /* Elements */

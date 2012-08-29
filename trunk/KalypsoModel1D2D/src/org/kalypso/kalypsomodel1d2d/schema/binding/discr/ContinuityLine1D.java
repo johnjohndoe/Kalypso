@@ -48,7 +48,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -78,8 +78,8 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
 
     IFE1D2DNode neighbour1 = null;
     IFE1D2DNode neighbour2 = null;
-    final IFeatureBindingCollection<Feature> containers = continuityLineNode.getContainers();
-    for( final Feature container : containers )
+    final IFeatureBindingCollection< ? extends IFENetItem> containers = continuityLineNode.getContainers();
+    for( final IFENetItem container : containers )
     {
       if( container instanceof IFE1D2DEdge )
       {

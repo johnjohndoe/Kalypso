@@ -163,7 +163,7 @@ public class AssignNodeElevationFaceComponent extends Composite
       @Override
       public void widgetSelected( final SelectionEvent event )
       {
-        final IFE1D2DNode< ? >[] allNonElevationNodes = ApplyElevationHelper.getAllNonElevationNodes( m_dataModel );
+        final IFE1D2DNode[] allNonElevationNodes = ApplyElevationHelper.getAllNonElevationNodes( m_dataModel );
         m_nodeElevationViewer.setInput( allNonElevationNodes );
         m_nodeElevationViewer.refresh();
       }

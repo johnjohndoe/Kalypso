@@ -56,6 +56,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
@@ -198,9 +199,9 @@ public class GeometryRecalculator
       for( final Feature feature : m_nodeList )
       {
         final IFE1D2DNode node = (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class );
-        final IFeatureBindingCollection<Feature> containers = node.getContainers();
+        final IFeatureBindingCollection< ? extends IFENetItem> containers = node.getContainers();
 
-        for( final Feature container : containers )
+        for( final IFENetItem container : containers )
         {
           if( container instanceof IFELine )
           {

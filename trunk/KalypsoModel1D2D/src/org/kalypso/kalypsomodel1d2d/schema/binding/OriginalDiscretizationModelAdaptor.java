@@ -40,7 +40,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Adapter from original 1d2d discretization model (containing inverted edges) to version 1.0 without.
- * 
+ *
  * @author kurzbach
  */
 public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
@@ -184,8 +184,9 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       {
         final IFeatureType nodeFeatureType = node.getFeatureType();
 
-        final IRelationType nodeContainersProperty = (IRelationType) nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
+        final IRelationType nodeContainersProperty = (IRelationType) nodeFeatureType.getProperty( IFE1D2DNode.MEMBER_NODE_CONTAINERS );
         final FeatureList nodeContainers = (FeatureList) node.getProperty( nodeContainersProperty );
+
         final List<String> newContainers = new ArrayList<String>();
         nextNode: for( final Feature nodeContainer : getFeatures( nodeContainers ) )
         {
@@ -217,8 +218,8 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
               continue nextNode;
             }
 
-            final Object p0 = myNodes[0].getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
-            final Object p1 = myNodes[1].getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
+            final Object p0 = myNodes[0].getProperty( IFE1D2DNode.PROPERTY_POINT );
+            final Object p1 = myNodes[1].getProperty( IFE1D2DNode.PROPERTY_POINT );
 
             for( final String otherEdgeLink : newContainers )
             {
@@ -229,8 +230,8 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
               final FeatureList otherNodeLinks = (FeatureList) otherEdge.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
 
               final Feature[] otherNodes = getFeatures( otherNodeLinks );
-              final Object op0 = otherNodes[0].getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
-              final Object op1 = otherNodes[1].getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
+              final Object op0 = otherNodes[0].getProperty( IFE1D2DNode.PROPERTY_POINT );
+              final Object op1 = otherNodes[1].getProperty( IFE1D2DNode.PROPERTY_POINT );
 
               if( (p0.equals( op0 ) && p1.equals( op1 )) || (p0.equals( op1 ) && p1.equals( op0 )) )
               {
@@ -277,11 +278,11 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     }
     catch( final Exception e )
     {
-      
+
       statusList.add( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.loader.GmlLoader.12" ) ) ); //$NON-NLS-1$
       statusList.add( StatusUtilities.statusFromThrowable( e ) );
-      
-//       update the gml version even in failure case, to avoid the dead-lock recursion 
+
+//       update the gml version even in failure case, to avoid the dead-lock recursion
       final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>( 1 );
       final IPropertyType versionProperty = modelFeatureType.getProperty( VersionedModel.SIM_BASE_PROP_VERSION );
       featureChanges.add( new FeatureChange( model, versionProperty, VERSION_1_0 ) );
@@ -390,7 +391,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     catch( final Exception e )
     {
       return false;
-    } 
+    }
     return true;
   }
 
@@ -447,7 +448,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.19", id, element ) ) ); //$NON-NLS-1$
       //TODO: what for?
 //      System.out.println();
-      
+
       if( !collectEdges.containsKey( id ) )
         collectEdges.put( id, edgeOrInvEdge );
 

@@ -107,8 +107,8 @@ public class Create2dElementCommand implements ICommand
   public void process( ) throws Exception
   {
     /* Build new nodes */
-    final IFE1D2DNode< ? >[] nodes1 = ElementGeometryHelper.buildNewNodes( m_discModel, m_points );
-    final IFE1D2DNode< ? >[] nodes = ElementGeometryHelper.makeCCW( nodes1 );
+    final IFE1D2DNode[] nodes1 = ElementGeometryHelper.buildNewNodes( m_discModel, m_points );
+    final IFE1D2DNode[] nodes = ElementGeometryHelper.makeCCW( nodes1 );
 
     /* Build new edges */
     final IFE1D2DEdge< ? , ? >[] edges = ElementGeometryHelper.buildNewEdges( m_discModel, nodes, m_points.length );

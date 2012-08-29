@@ -30,7 +30,7 @@ public class FENodeHeightProvider extends ColumnLabelProvider
     if( !(node instanceof IFE1D2DNode) )
       return Double.NaN;
 
-    final GM_Point point = ((IFE1D2DNode< ? >) node).getPoint();
+    final GM_Point point = ((IFE1D2DNode) node).getPoint();
     return point.getZ();
   }
 

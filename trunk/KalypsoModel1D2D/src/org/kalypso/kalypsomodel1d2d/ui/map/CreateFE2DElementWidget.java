@@ -61,7 +61,7 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
 
     final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
     // we must have a discretization model theme
-    m_nodeTheme = UtilMap.findEditableTheme( mapPanel, IFE1D2DNode.QNAME );
+    m_nodeTheme = UtilMap.findEditableTheme( mapPanel, IFE1D2DNode.FEATURE_1D2DNODE );
     if( m_nodeTheme == null )
       m_nodeTheme = UtilMap.findEditableTheme( mapPanel, IFE1D2DEdge.QNAME );
     if( m_nodeTheme == null )
@@ -117,7 +117,7 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
 
     if( m_pointSnapper != null )
     {
-      final IFE1D2DNode< ? > snapNode = m_pointSnapper.getSnapNode();
+      final IFE1D2DNode snapNode = m_pointSnapper.getSnapNode();
       if( snapNode == null )
         return;
 
@@ -166,7 +166,7 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
   {
     final Object newNode = checkNewNode( p );
     if( newNode instanceof IFE1D2DNode )
-      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode< ? >) newNode).getPoint() );
+      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
     else
       m_currentMapPoint = p;
 
@@ -195,7 +195,7 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
       }
       else
       {
-        command = m_builder.addNode( ((IFE1D2DNode< ? >) newNode).getPoint() );
+        command = m_builder.addNode( ((IFE1D2DNode) newNode).getPoint() );
       }
 
       if( command != null )
@@ -251,14 +251,14 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
       return null;
 
     final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
-    final IFE1D2DNode< ? > snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
+    final IFE1D2DNode snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
     final Object newNode = snapNode == null ? currentPoint : snapNode;
 
     IStatus status;
     if( newNode instanceof GM_Point )
       status = m_builder.checkNewNode( (GM_Point) newNode );
     else
-      status = m_builder.checkNewNode( ((IFE1D2DNode< ? >) newNode).getPoint() );
+      status = m_builder.checkNewNode( ((IFE1D2DNode) newNode).getPoint() );
 
     if( status.isOK() )
       m_warning = false;
