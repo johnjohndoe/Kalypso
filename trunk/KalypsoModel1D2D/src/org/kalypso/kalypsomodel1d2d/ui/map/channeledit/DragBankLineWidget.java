@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,13 +52,11 @@ import java.util.List;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.GM_PointSnapper;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.Handle;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.CssParameter;
@@ -85,7 +84,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * @author Thomas Jung
  */
-public class DragBankLineWidget extends DeprecatedMouseWidget
+public class DragBankLineWidget extends AbstractWidget
 {
   /**
    * This list stores all handles of the selected feature.
@@ -161,12 +160,11 @@ public class DragBankLineWidget extends DeprecatedMouseWidget
     m_pointSnapper = new GM_PointSnapper( posses, m_mapPanel, crs );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
-  public void moved( final Point p )
+  public void mouseMoved( final MouseEvent event )
   {
+    final Point p = event.getPoint();
+
     final Object newPoint = checkNewPoint( p );
 
     if( newPoint == null )
@@ -174,16 +172,7 @@ public class DragBankLineWidget extends DeprecatedMouseWidget
     else
       getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
 
-    if( p == null )
-      return;
-
-    final IMapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaintMap();
-
-    final IKalypsoTheme activeTheme = getActiveTheme();
-    if( activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
-      return;
+    repaintMap();
   }
 
   private Object checkNewPoint( final Point p )
@@ -269,11 +258,8 @@ public class DragBankLineWidget extends DeprecatedMouseWidget
     return list;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
   @Override
-  public void dragged( final Point p )
+  public void mouseDragged( final MouseEvent event )
   {
     if( m_handles == null )
     {
@@ -284,16 +270,18 @@ public class DragBankLineWidget extends DeprecatedMouseWidget
       return;
     }
 
+    final Point point = event.getPoint();
+
     if( m_startPoint == null )
     {
       /* Store the start point. */
-      m_startPoint = p;
+      m_startPoint = point;
 
       /* Check, if the mouse cursor is near some handles. */
       for( final IHandle handle : m_handles )
       {
         /* If the cursor is near the handle, set it active, otherwise inactive. */
-        if( handle.isSelectable( p, getMapPanel().getProjection() ) )
+        if( handle.isSelectable( point, getMapPanel().getProjection() ) )
           handle.setActive( true );
         else
           handle.setActive( false );
@@ -301,12 +289,10 @@ public class DragBankLineWidget extends DeprecatedMouseWidget
     }
 
     /* Store the current mouse position. */
-    m_currentPoint = p;
+    m_currentPoint = point;
 
     // TODO: check if this repaint is really necessary
-    final IMapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaintMap();
+    repaintMap();
   }
 
   /**
@@ -322,12 +308,13 @@ public class DragBankLineWidget extends DeprecatedMouseWidget
     super.finish();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
-   */
   @Override
-  public void leftReleased( final Point p )
+  public void mouseReleased( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+    event.consume();
+
     if( m_handles == null || m_startPoint == null || m_currentPoint == null )
       return;
 
