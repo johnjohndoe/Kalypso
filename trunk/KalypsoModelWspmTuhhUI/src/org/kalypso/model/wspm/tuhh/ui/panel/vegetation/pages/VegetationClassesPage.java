@@ -58,9 +58,9 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.SimpleDataBinding;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
@@ -112,10 +112,6 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
   {
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#render(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
@@ -125,9 +121,8 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
     group.setText( Messages.getString( "VegetationClassesPage.1" ) ); //$NON-NLS-1$
     toolkit.adapt( group );
 
-    m_binding = new AbstractDatabinding( toolkit )
-    {
-    };
+    // FIXME: probably should use DatabindingWizardPage
+    m_binding = new SimpleDataBinding( toolkit );
 
     build( group, toolkit, Messages.getString( "VegetationClassesPage.2" ), VegetationsDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS ); //$NON-NLS-1$
     build( group, toolkit, Messages.getString( "VegetationClassesPage.4" ), VegetationsDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS ); //$NON-NLS-1$
