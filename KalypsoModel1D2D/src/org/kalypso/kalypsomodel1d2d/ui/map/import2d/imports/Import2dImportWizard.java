@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.import2d.imports;
 
 import java.io.File;
 
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -94,19 +95,20 @@ public class Import2dImportWizard extends Wizard
     final IImport2dImportOperation operation = getOperation( smsFile );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    new StatusDialog( getShell(), status, getWindowTitle() ).open();
+    StatusDialog.open( getShell(), status, getWindowTitle() );
 
     return !status.matches( IStatus.ERROR );
   }
 
   private IImport2dImportOperation getOperation( final File smsFile )
   {
-    final String filename = smsFile.getName();
-
     for( final IImport2dImportOperation operation : m_operations )
     {
       final String filterExtension = operation.getFilterExtension();
-      if( filename.endsWith( filterExtension ) )
+
+      final WildcardFileFilter wildcardFilter = new WildcardFileFilter( filterExtension );
+
+      if( wildcardFilter.accept( smsFile ) )
         return operation;
     }
 

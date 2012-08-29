@@ -74,14 +74,12 @@ public abstract class AbstractImport2DImportOperation implements IImport2dImport
   {
     monitor.beginTask( "Import 2D-Elements", 100 );
 
-
     /* Read the file */
     final String srs = m_importData.getSrs();
     final int sourceSrid = JTSAdapter.toSrid( srs );
     final File importFile = m_importData.getFile();
 
     monitor.subTask( String.format( "reading file %s", importFile.getName() ) );
-
 
     final Pair<IStatus, IPolygonWithName[]> readData = readFileData( importFile, sourceSrid, new SubProgressMonitor( monitor, 33 ) );
 
