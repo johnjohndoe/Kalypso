@@ -111,7 +111,7 @@ public class Create2dElementCommand implements ICommand
     final IFE1D2DNode[] nodes = ElementGeometryHelper.makeCCW( nodes1 );
 
     /* Build new edges */
-    final IFE1D2DEdge< ? , ? >[] edges = ElementGeometryHelper.buildNewEdges( m_discModel, nodes, m_points.length );
+    final IFE1D2DEdge[] edges = ElementGeometryHelper.buildNewEdges( m_discModel, nodes, m_points.length );
 
     /* Build new element */
     final IPolyElement newElement = m_discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );

@@ -21,7 +21,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Gernot Belger
  */
-public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>
+public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge
 {
   private final IFeatureBindingCollection<IFE1D2DElement> m_containers = new FeatureBindingCollection<IFE1D2DElement>( this, IFE1D2DElement.class, WB1D2D_PROP_EDGE_CONTAINERS );
 
@@ -35,7 +35,7 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
   public static final IFE1D2DEdge createFromModel( final IFEDiscretisationModel1d2d model, final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
     final IFeatureBindingCollection<IFE1D2DEdge> edges = model.getEdges();
-    final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> curEdge = edges.addNew( IFE1D2DEdge.QNAME );
+    final IFE1D2DEdge curEdge = edges.addNew( IFE1D2DEdge.QNAME );
     final String edgeGmlID = curEdge.getId();
     curEdge.addNode( node0.getId() );
     node0.addContainer( edgeGmlID );
@@ -46,21 +46,14 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
     curEdge.setEnvelopesUpdated();
 
     return curEdge;
-
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge#getNodes()
-   */
   @Override
   public IFeatureBindingCollection<IFE1D2DNode> getNodes( )
   {
     return m_nodes;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getMiddleNode()
-   */
   @Override
   public IFE1D2DNode getMiddleNode( )
   {
@@ -75,9 +68,6 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
     return null;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#setMiddleNode(org.kalypso.kalypsomodel1d2d.schema.binding.IFEMiddleNode)
-   */
   @Override
   public void setMiddleNode( final IFE1D2DNode middleNode )
   {
@@ -104,23 +94,15 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
     nodeList.add( node0.getId() );
     nodeList.add( node1.getId() );
 
-    // nodeList.invalidate();
-
     setEnvelopesUpdated();
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge#getContainers()
-   */
   @Override
   public IFeatureBindingCollection<IFE1D2DElement> getContainers( )
   {
     return m_containers;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addContainer(java.lang.String)
-   */
   @Override
   public void addContainer( final String containerID )
   {
@@ -185,18 +167,12 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
       return GeometryFactory.createGM_Point( x, y, point1.getCoordinateSystem() );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getLeftElement()
-   */
   @Override
   public IFeatureBindingCollection<IFE1D2DElement> getAdjacentElements( )
   {
     return getContainers();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#isBorder()
-   */
   @Override
   public boolean isBorder( )
   {
@@ -204,13 +180,9 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
     return containers.size() == 1;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getGeometry()
-   */
   @Override
   public GM_Curve getGeometry( )
   {
     return getProperty( WB1D2D_PROP_MIDDLE_GEOM, GM_Curve.class );
   }
-
 }

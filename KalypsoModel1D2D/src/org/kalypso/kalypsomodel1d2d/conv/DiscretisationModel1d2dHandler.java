@@ -321,7 +321,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     IFE1D2DNode lNodeBckPrev = null;
     IFE1D2DNode lNodeAct = null;
     IFE1D2DNode lNodeBckAct = null;
-    IFE1D2DEdge< ? , ? > lCommonEdge = null;
+    IFE1D2DEdge lCommonEdge = null;
     try
     {
       for( final Object element : pListElementsIdsRma )
@@ -579,8 +579,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     }
 
     /* Create edge for the two existing nodes */
-    final IFE1D2DEdge< ? , ? > existingEdge = m_model.findEdge( node1, node2 );
-    final IFE1D2DEdge< ? , ? > edge;
+    final IFE1D2DEdge existingEdge = m_model.findEdge( node1, node2 );
+    final IFE1D2DEdge edge;
     if( existingEdge != null )
     {
       edge = existingEdge;
@@ -615,7 +615,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     return (IFE1D2DNode) nodeFeature.getAdapter( IFE1D2DNode.class );
   }
 
-  private final void maybeAddEdgeToElement( final int rmaID, final IFE1D2DEdge< ? , ? > edge )
+  private final void maybeAddEdgeToElement( final int rmaID, final IFE1D2DEdge edge )
   {
     final String edgeId = edge.getId();
 
@@ -660,7 +660,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     }
   }
 
-  private IPolyElement< ? , ? > getOrCreateElement( final int rmaID, final IFE1D2DEdge< ? , ? > edge )
+  private IPolyElement< ? , ? > getOrCreateElement( final int rmaID, final IFE1D2DEdge edge )
   {
     if( rmaID == 0 )
     {

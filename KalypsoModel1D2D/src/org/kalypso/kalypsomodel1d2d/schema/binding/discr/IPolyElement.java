@@ -54,18 +54,18 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  */
 public interface IPolyElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFE1D2DElement<CT, ET>
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "PolyElement" ); //$NON-NLS-1$
+  QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "PolyElement" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
+  QName QNAME_PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 
-  public GM_Surface<GM_SurfacePatch> getGeometry( );
+  GM_Surface<GM_SurfacePatch> getGeometry( );
 
-  public IFeatureBindingCollection<ET> getEdges( );
+  IFeatureBindingCollection<ET> getEdges( );
 
-  public void addEdge( final String edgeID );
+  void addEdge( String edgeID );
 
   /**
    * Resets the edges of this element. DOES NOT handle the containers of the involded edges.
    */
-  public void setEdges( final ET[] edges );
+  void setEdges( ET[] edges );
 }

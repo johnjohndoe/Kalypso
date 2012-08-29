@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.geom;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -63,7 +62,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class ModelGeometryBuilder
 {
-
   /**
    * Create a surface given its exterior ring represented by a list of nodes
    *
@@ -98,7 +96,7 @@ public class ModelGeometryBuilder
     return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], crs );
   }
 
-  public static final GM_Curve computeEgdeGeometry( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge ) throws GM_Exception
+  public static final GM_Curve computeEgdeGeometry( final IFE1D2DEdge edge ) throws GM_Exception
   {
     // REMARK: we assume here, that all nodes live in the same coordinate
     // system.

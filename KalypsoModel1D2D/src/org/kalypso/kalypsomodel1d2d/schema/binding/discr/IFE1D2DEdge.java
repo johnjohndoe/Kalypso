@@ -55,17 +55,17 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  */
-public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFENetItem
+public interface IFE1D2DEdge extends IFENetItem
 {
-  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Edge" ); //$NON-NLS-1$
+  QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Edge" ); //$NON-NLS-1$
 
-  public final static QName WB1D2D_PROP_EDGE_CONTAINERS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edgeContainer" ); //$NON-NLS-1$
+  QName WB1D2D_PROP_EDGE_CONTAINERS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edgeContainer" ); //$NON-NLS-1$
 
-  public final static QName WB1D2D_PROP_MIDDLE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "middleNode" ); //$NON-NLS-1$
+  QName WB1D2D_PROP_MIDDLE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "middleNode" ); //$NON-NLS-1$
 
-  public final static QName WB1D2D_PROP_DIRECTEDNODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedNode" ); //$NON-NLS-1$
+  QName WB1D2D_PROP_DIRECTEDNODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedNode" ); //$NON-NLS-1$
 
-  public final static QName WB1D2D_PROP_MIDDLE_GEOM = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
+  QName WB1D2D_PROP_MIDDLE_GEOM = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 
   /**
    * Adds the a container to this edge. edge container are typically finite elements.
@@ -73,7 +73,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    * @param containerID
    *          the id of the container
    */
-  public void addContainer( String containerID );
+  void addContainer( String containerID );
 
   /**
    * To get the edge node at the given index
@@ -89,7 +89,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    *           <ul>
    * @see #getNodes()
    */
-  public IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException;
+  IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException;
 
   /**
    * Add a node to this edge.
@@ -102,14 +102,14 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    *           if there are already 2 node in this edge
    *
    */
-  public void addNode( String nodeID );
+  void addNode( String nodeID );
 
   /**
    * Returns the middle node of this edge, or <code>null</code> if it is not defined.
    *
    * @return the middle node of the edge
    */
-  public IFE1D2DNode getMiddleNode( );
+  IFE1D2DNode getMiddleNode( );
 
   /**
    * Returns the middle node of this edge.
@@ -121,7 +121,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    * @see #getMiddleNode()
    * @return the middle node of the edge
    */
-  public GM_Point getMiddleNodePoint( );
+  GM_Point getMiddleNodePoint( );
 
   /**
    * Sets the middle node of this edge
@@ -130,14 +130,14 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    *          the new middle node of this edge. null is a legal value.
    *
    */
-  public void setMiddleNode( IFE1D2DNode middleNode );
+  void setMiddleNode( IFE1D2DNode middleNode );
 
   /**
    * To get the containers(typically elements) of this edge
    *
    * @return the containers of this edge as {@link IFeatureBindingCollection}
    */
-  public IFeatureBindingCollection<CT> getContainers( );
+  IFeatureBindingCollection<IFE1D2DElement> getContainers( );
 
   /**
    * To get the nodes of this edge
@@ -146,7 +146,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    *          get the node of this edge as {@link IFeatureBindingCollection}
    * @see #getNode(int)
    */
-  public IFeatureBindingCollection<IFE1D2DNode> getNodes( );
+  IFeatureBindingCollection<IFE1D2DNode> getNodes( );
 
   /**
    * An edge is inside the net if:
@@ -157,10 +157,9 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    *
    * @return <code>true</code>, if this edge lies on the border of the net.
    */
-  public boolean isBorder( );
+  boolean isBorder( );
 
-  public IFeatureBindingCollection<IFE1D2DElement> getAdjacentElements( );
+  IFeatureBindingCollection<IFE1D2DElement> getAdjacentElements( );
 
-  public GM_Curve getGeometry( );
-
+  GM_Curve getGeometry( );
 }
