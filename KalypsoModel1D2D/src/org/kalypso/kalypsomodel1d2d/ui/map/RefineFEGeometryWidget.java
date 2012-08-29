@@ -145,7 +145,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
   private boolean m_warning;
 
-  @SuppressWarnings("rawtypes")
   private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
 
   private GM_Object m_geom;
@@ -155,10 +154,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -198,10 +193,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     m_objects = null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
-  @SuppressWarnings({ "rawtypes" })
   @Override
   public void leftPressed( final Point p )
   {
@@ -240,7 +231,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     }
   }
 
-  @SuppressWarnings({ "rawtypes" })
   @Override
   public void moved( final Point p )
   {
@@ -447,7 +437,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
   // FIXME: who the HELL does such a thing?! This is just copy paste from other widget implementations! Is this really
   // SO hard to understand why this is really bad?!
   // FIXME: use the Add2DElementsCommand instead
-  @SuppressWarnings("rawtypes")
   private List<Feature> createPolyElement( final GM_Surface<GM_SurfacePatch> surface, final IFEDiscretisationModel1d2d discModel )
   {
     final List<Feature> lListRes = new ArrayList<Feature>();
@@ -475,7 +464,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     return lListRes;
   }
 
-  @SuppressWarnings("rawtypes")
   private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge> lListEdges, final List<GM_Point> lListPoses )
   {
     final List<Feature> lListRes = new ArrayList<Feature>();
@@ -569,9 +557,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     return centroidList;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
-   */
   @Override
   public void doubleClickedLeft( final Point p )
   {

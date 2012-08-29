@@ -144,10 +144,6 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
     mapPanel.repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
-  @SuppressWarnings("unchecked")
   @Override
   public void leftPressed( final Point p )
   {
