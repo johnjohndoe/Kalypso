@@ -70,7 +70,7 @@ public class Import2dElementsData extends AbstractModelObject
 
   private static final IStatus NO_STATUS = new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "No imported elements" );
 
-  private IPolygonWithName[] m_elements;
+  private IPolygonWithName[] m_elements = new IPolygonWithName[0];
 
   private IPolygonWithName m_selectedElement;
 

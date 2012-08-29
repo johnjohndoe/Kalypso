@@ -278,12 +278,12 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
   private String validatePolygon( final GM_Point point )
   {
-    m_warningRenderer.setTooltip( null );
+    if( point == null || m_boundaryGeometryBuilder == null )
+      return null;
 
     try
     {
-      if( point != null )
-        m_boundaryGeometryBuilder.addPoint( point );
+      m_boundaryGeometryBuilder.addPoint( point );
 
       final GM_Surface< ? > finish = (GM_Surface< ? >) m_boundaryGeometryBuilder.finish();
       if( finish == null )
@@ -312,8 +312,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     }
     finally
     {
-      if( point != null && m_boundaryGeometryBuilder != null )
-        m_boundaryGeometryBuilder.removeLastPoint();
+      m_boundaryGeometryBuilder.removeLastPoint();
     }
   }
 
@@ -451,7 +450,6 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     else
       super.keyPressed( e );
   }
-
 
   private GM_Point snapToNode( final Point p, final boolean snappingActive )
   {

@@ -230,9 +230,6 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
 
   /**
    * Finds an element-2d near to the given point.
-   *
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#find2DElement(org.kalypsodeegree.model.geometry.GM_Point,
-   *      double)
    */
   @Override
   public IPolyElement find2DElement( final GM_Point position, final double grabDistance )
@@ -245,8 +242,10 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   {
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
     final List<IFE1D2DElement> foundElements = m_elements.query( reqEnvelope );
+
     double min = Double.MAX_VALUE;
     T nearest = null;
+
     for( final IFE1D2DElement current : foundElements )
     {
       if( elementClass.isInstance( current ))
@@ -263,6 +262,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
         }
       }
     }
+
     return nearest;
   }
 
