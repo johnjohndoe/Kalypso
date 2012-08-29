@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
@@ -49,6 +49,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -62,16 +63,16 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * widget to create line geometries<br>
- * 
+ *
  * @author Thomas Jung
  */
-public class DrawBanklineWidget extends DeprecatedMouseWidget
+public class DrawBanklineWidget extends AbstractWidget
 {
   private LineGeometryBuilder m_lineBuilder = null;
 
@@ -144,10 +145,12 @@ public class DrawBanklineWidget extends DeprecatedMouseWidget
   }
 
   @Override
-  public void moved( final Point p )
+  public void mouseMoved( final MouseEvent event )
   {
+    final Point p = event.getPoint();
     if( p == null )
       return;
+
     final Object newNode = checkNewNode( p );
 
     if( newNode instanceof IFE1D2DNode )
@@ -161,9 +164,7 @@ public class DrawBanklineWidget extends DeprecatedMouseWidget
     else
       getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
 
-    final IMapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaintMap();
+    repaintMap();
   }
 
   private Object checkNewNode( final Point p )
@@ -183,23 +184,24 @@ public class DrawBanklineWidget extends DeprecatedMouseWidget
     return newNode;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
   @Override
-  public void dragged( final Point p )
+  public void mouseDragged( final MouseEvent event )
   {
     if( m_edit && m_bankline != null )
-      m_lineEditor.dragged( p, getMapPanel() );
+      m_lineEditor.dragged( event.getPoint(), getMapPanel() );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
   @Override
-  public void leftPressed( final Point p )
+  public void mousePressed( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+
+    event.consume();
+
     final IMapPanel mapPanel = getMapPanel();
+
+    final Point p = event.getPoint();
 
     final Object newNode = checkNewNode( p );
 
@@ -284,24 +286,33 @@ public class DrawBanklineWidget extends DeprecatedMouseWidget
 
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#leftReleased(java.awt.Point)
-   */
   @Override
-  public void leftReleased( final Point p )
+  public void mouseReleased( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+    event.consume();
+
     if( m_edit && m_lineEditor != null )
     {
       final GM_Curve curve = m_lineEditor.finish();
       if( curve != null )
         finishLine( curve );
     }
-    super.leftReleased( p );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#mouseClicked(java.awt.event.MouseEvent)
+   */
   @Override
-  public void doubleClickedLeft( final Point p )
+  public void mouseClicked( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+    if( event.getClickCount() < 2 )
+      return;
+    event.consume();
+
     if( m_lineBuilder != null )
     {
       try
@@ -325,19 +336,12 @@ public class DrawBanklineWidget extends DeprecatedMouseWidget
     reinit();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {
     m_toolTipRenderer.setTooltip( "" ); //$NON-NLS-1$
-    super.finish();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
@@ -372,14 +376,4 @@ public class DrawBanklineWidget extends DeprecatedMouseWidget
     }
     getMapPanel().repaintMap();
   }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
-   */
-  @Override
-  public void keyReleased( final KeyEvent e )
-  {
-    super.keyReleased( e );
-  }
-
 }

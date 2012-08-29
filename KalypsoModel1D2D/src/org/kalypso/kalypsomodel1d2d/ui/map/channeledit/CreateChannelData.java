@@ -206,7 +206,7 @@ public class CreateChannelData
    */
   public IKalypsoFeatureTheme[] getProfileThemes( )
   {
-    final IMapModell mapModell = m_widget.getPanel().getMapModell();
+    final IMapModell mapModell = m_widget.getMapPanel().getMapModell();
     if( mapModell == null )
       return new IKalypsoFeatureTheme[0];
 
@@ -377,7 +377,7 @@ public class CreateChannelData
         MessageDialog.openInformation( m_shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.1" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
-    m_widget.getPanel().repaintMap();
+    m_widget.getMapPanel().repaintMap();
   }
 
   public boolean getMeshStatus( )
@@ -393,7 +393,7 @@ public class CreateChannelData
     GM_Point[][] importingGridPoints = new GM_Point[m_meshCoords.length][m_meshCoords[0].length];
     importingGridPoints = convertToGMPoints( m_meshCoords );
 
-    final IMapPanel mapPanel = m_widget.getPanel();
+    final IMapPanel mapPanel = m_widget.getMapPanel();
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final CommandableWorkspace workspace = theme.getWorkspace();
 
@@ -968,7 +968,7 @@ public class CreateChannelData
 
   public void drawBankLines( final Graphics g )
   {
-    final IMapPanel panel = m_widget.getPanel();
+    final IMapPanel panel = m_widget.getMapPanel();
 
     for( final SegmentData segment : m_segmentList )
     {

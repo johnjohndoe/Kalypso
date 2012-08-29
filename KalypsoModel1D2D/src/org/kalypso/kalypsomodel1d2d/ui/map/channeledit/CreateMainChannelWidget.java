@@ -42,13 +42,10 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -57,8 +54,8 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
-import org.kalypso.ogc.gml.widgets.IDeprecatedMouseWidget;
+import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget2;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.CssParameter;
@@ -73,17 +70,15 @@ import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 /**
  * @author Thomas Jung
  */
-public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements IWidgetWithOptions
 {
   private final CreateChannelData m_data = new CreateChannelData( this );
 
   private CreateMainChannelComposite m_composite;
 
-  private IDeprecatedMouseWidget m_delegateWidget = null;
-
   public CreateMainChannelWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
@@ -103,26 +98,6 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
     }
   }
 
-  public void setDelegate( final IDeprecatedMouseWidget delegateWdget )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.finish();
-
-    m_delegateWidget = delegateWdget;
-
-    if( m_delegateWidget != null )
-      m_delegateWidget.activate( getCommandTarget(), getMapPanel() );
-  }
-
-  public IMapPanel getPanel( )
-  {
-    return super.getMapPanel();
-  }
-
-  /**
-   * @param g
-   * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -162,14 +137,13 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
       /* draw editable bankline */
       if( m_composite.isBankEdit() == true && m_data.getMeshStatus() == true )
         m_data.drawBankLines( g );
-      if( m_delegateWidget != null )
-        m_delegateWidget.paint( g );
+
+      super.paint( g );
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
     }
-
   }
 
   private void drawIntersProfiles( final Graphics g, final Color color )
@@ -177,9 +151,8 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
     if( m_data.getSelectedSegment() != null )
     {
       final SegmentData currentSegment = m_data.getSelectedSegment();
-      if( currentSegment != null )
-        if( currentSegment.complete() == true )
-          currentSegment.paintProfile( m_data.getCurrentProfile(), getPanel(), g, color );
+      if( currentSegment != null && currentSegment.complete() == true )
+        currentSegment.paintProfile( m_data.getCurrentProfile(), getMapPanel(), g, color );
     }
   }
 
@@ -188,15 +161,13 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
     if( m_data.getSelectedSegment() != null )
     {
       final SegmentData currentSegment = m_data.getSelectedSegment();
-      if( currentSegment != null )
-        if( currentSegment.complete() == true )
-          currentSegment.paintIntersectionPoints( getPanel(), g, color, m_data.getCurrentProfile() );
+      if( currentSegment != null && currentSegment.complete() == true )
+        currentSegment.paintIntersectionPoints( getMapPanel(), g, color, m_data.getCurrentProfile() );
     }
   }
 
   private void paintBanks( final Graphics g, final CreateChannelData.SIDE side, final Color color ) throws CoreException
   {
-
     final GM_Curve curve = m_data.getBanklineForSide( side );
 
     if( curve == null )
@@ -247,153 +218,6 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
    * Delegate methods for m_delegateWidget
    ********************************************************************************************************************/
 
-  /**
-   * @param selection
-   * @param mapPanel
-   * @return
-   * @see org.kalypso.ogc.gml.widgets.IWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
-  @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
-  {
-    return true;
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
-   */
-  @Override
-  public void doubleClickedLeft( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.doubleClickedLeft( p );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
-   */
-  @Override
-  public void doubleClickedRight( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.doubleClickedRight( p );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
-   */
-  @Override
-  public void dragged( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.dragged( p );
-  }
-
-  @Override
-  public void finish( )
-  {
-    // TODO!
-    if( m_delegateWidget != null )
-      m_delegateWidget.finish();
-
-    // m_delegateWidget = null;
-  }
-
-  /**
-   * @param e
-   * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
-   */
-  @Override
-  public void keyPressed( final KeyEvent e )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.keyPressed( e );
-  }
-
-  /**
-   * @param e
-   * @see org.kalypso.ogc.gml.widgets.IWidget#keyReleased(java.awt.event.KeyEvent)
-   */
-  @Override
-  public void keyReleased( final KeyEvent e )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.keyReleased( e );
-  }
-
-  /**
-   * @param e
-   * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
-   */
-  @Override
-  public void keyTyped( final KeyEvent e )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.keyTyped( e );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
-   */
-  @Override
-  public void leftClicked( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.leftClicked( p );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
-   */
-  @Override
-  public void leftPressed( final Point p )
-  {
-    if( m_delegateWidget != null )
-    {
-      // TODO: check, if there is already a preview and if it would be deleted.
-      m_delegateWidget.leftPressed( p );
-    }
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
-   */
-  @Override
-  public void leftReleased( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.leftReleased( p );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
-   */
-  @Override
-  public void moved( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.moved( p );
-  }
-
-  /**
-   * @param selection
-   * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
-  @Override
-  public void setSelection( final ISelection selection )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.setSelection( selection );
-  }
-
   public void update( )
   {
     if( m_composite == null || m_composite.isDisposed() )
@@ -411,18 +235,21 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
         {
           m_composite.updateControl( false ); // false means calculate all again
         }
-        getPanel().repaintMap();
+
+        repaintMap();
       }
     } );
-
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
-   */
   @Override
   public String getPartName( )
   {
     return null;
+  }
+
+  @Override
+  public void setDelegate( final IWidget delegate )
+  {
+    super.setDelegate( delegate );
   }
 }
