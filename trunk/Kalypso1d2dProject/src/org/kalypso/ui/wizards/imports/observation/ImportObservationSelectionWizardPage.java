@@ -394,7 +394,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * validates the page
    */
-  private void validate( )
+  void validate( )
   {
     // TODO: does not belong here, strange!
     if( m_sourceFile != null && m_sourceFile.isFile() )

@@ -48,9 +48,9 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Command for deleting a wind data system
- * 
+ *
  * @author ig
- * 
+ *
  */
 public class DeleteWindDataSystem implements IFeatureChangeCommand
 {
@@ -60,8 +60,7 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
 
   private final boolean m_deleteFiles;
 
-  // FIXME: never used
-  private final boolean m_done = false;
+  private boolean m_done = false;
 
   public DeleteWindDataSystem( final IWindModel pWindModel, final IWindDataModelSystem pWindModelSystem, final boolean deleteFiles )
   {
@@ -70,9 +69,6 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
     m_deleteFiles = deleteFiles;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand#getChangedFeature()
-   */
   @Override
   public Feature[] getChangedFeatures( )
   {
@@ -92,47 +88,33 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
     return String.format( Messages.getString("DeleteWindDataSystem_0"), m_windDataModelSystem.getName() ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return !m_deleteFiles;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
     if( m_done )
-    {
       return;
-    }
+
     m_windModel.getWindDataModelSystems().remove( m_windDataModelSystem );
+    m_done = true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     process();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
     if( !m_done || m_deleteFiles )
-    {
       return;
-    }
   }
 
   protected final IWindDataModelSystem getWindDataModelSystem( )

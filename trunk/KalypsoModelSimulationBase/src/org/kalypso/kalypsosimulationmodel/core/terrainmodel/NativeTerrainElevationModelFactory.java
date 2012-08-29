@@ -96,7 +96,7 @@ public class NativeTerrainElevationModelFactory
     }
     if( filePath.endsWith( ".asc" ) || filePath.endsWith( ".asg" ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
-      final ASCTerrainElevationModel terrainElevationModel = new ASCTerrainElevationModel( ascFile.toURL() );
+      final ASCTerrainElevationModel terrainElevationModel = new ASCTerrainElevationModel( ascFile.toURI().toURL() );
       cache.addObject( filePath, terrainElevationModel );
       return terrainElevationModel;
     }
@@ -104,7 +104,7 @@ public class NativeTerrainElevationModelFactory
     {
       try
       {
-        final HMOTerrainElevationModel terrainElevationModel = new HMOTerrainElevationModel( ascFile.toURL() );
+        final HMOTerrainElevationModel terrainElevationModel = new HMOTerrainElevationModel( ascFile.toURI().toURL() );
         cache.addObject( filePath, terrainElevationModel );
         return terrainElevationModel;
       }

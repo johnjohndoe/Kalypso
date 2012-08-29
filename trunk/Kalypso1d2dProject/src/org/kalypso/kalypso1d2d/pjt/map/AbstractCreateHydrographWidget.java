@@ -211,13 +211,14 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
     final Feature parentFeature = m_hydrographCollection;
 
     /* Create hydrograph at position */
+    final Feature modelElement = m_modelElement;
     display.asyncExec( new Runnable()
     {
       @Override
       public void run( )
       {
         final IRelationType parentRelation = (IRelationType) parentFeature.getFeatureType().getProperty( IHydrographCollection.QNAME_PROP_HYDROGRAPH_MEMBER );
-        final IHydrograph hydro = createNewFeature( workspace, parentFeature, parentRelation, m_modelElement );
+        final IHydrograph hydro = createNewFeature( workspace, parentFeature, parentRelation, modelElement );
 
         if( hydro == null )
         {
@@ -235,9 +236,9 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
         {
           workspace.postCommand( command );
         }
-        catch( final Throwable e )
+        catch( final Throwable ex )
         {
-          final IStatus status = StatusUtilities.statusFromThrowable( e );
+          final IStatus status = StatusUtilities.statusFromThrowable( ex );
           // FIXME: we ARE already in the display thread!
           display.asyncExec( new Runnable()
           {

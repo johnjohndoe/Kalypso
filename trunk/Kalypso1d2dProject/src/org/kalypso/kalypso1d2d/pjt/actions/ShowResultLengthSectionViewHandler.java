@@ -61,6 +61,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -98,7 +99,7 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
 
         final String gmlResultPath = selectLengthSectionWizard.getSelectedLGmlResultPath();
         if( gmlResultPath == null )
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.0") ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.0" ) ); //$NON-NLS-1$
 
         final UIJob job = new UIJob( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.1") ) //$NON-NLS-1$
         {

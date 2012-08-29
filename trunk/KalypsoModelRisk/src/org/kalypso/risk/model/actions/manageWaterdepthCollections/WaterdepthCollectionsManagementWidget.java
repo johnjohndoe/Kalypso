@@ -75,7 +75,6 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
   {
     final IMapPanelProvider mapProvider = new IMapPanelProvider()
     {
-      @SuppressWarnings("synthetic-access")
       @Override
       public IMapPanel getMapPanel( )
       {

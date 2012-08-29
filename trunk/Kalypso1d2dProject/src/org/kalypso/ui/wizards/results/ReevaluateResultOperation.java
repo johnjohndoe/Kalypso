@@ -147,7 +147,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
           lLog.log( status );
         }
 
-        final ICalcUnitResultMeta calcunitMeta = ResultMeta1d2dHelper.getCalcUnitResultMeta( stepResult );
+        // final ICalcUnitResultMeta calcunitMeta = ResultMeta1d2dHelper.getCalcUnitResultMeta( stepResult );
 
         ResultManager resultManager = null;
         try

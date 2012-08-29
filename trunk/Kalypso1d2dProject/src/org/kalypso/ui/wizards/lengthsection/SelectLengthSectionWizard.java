@@ -43,12 +43,13 @@ package org.kalypso.ui.wizards.lengthsection;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -59,7 +60,7 @@ import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 
 /**
  * Wizard to show length sections to the chart view.
- * 
+ *
  * @author Thomas Jung
  */
 public class SelectLengthSectionWizard extends Wizard
@@ -125,14 +126,14 @@ public class SelectLengthSectionWizard extends Wizard
         IResultMeta result = null;
         monitor.beginTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.7" ), 2 ); //$NON-NLS-1$
 
-        
+
         // get the first length section element
-        
+
         for( final IResultMeta resultMeta : results )
         {
           if( resultMeta instanceof IDocumentResultMeta )
           {
-            IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+            final IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
             if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.lengthSection )
             {
               result = docResult;
@@ -145,13 +146,13 @@ public class SelectLengthSectionWizard extends Wizard
         if( result == null )
         {
           MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.8" ), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.10" ) ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.10" ) ); //$NON-NLS-1$
         }
 
         final IPath fullPath = result.getFullPath();
         m_selectedLGmlResultPath = fullPath.toPortableString();
 
-        return StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.11" ) ); //$NON-NLS-1$
+        return new Status( IStatus.OK, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.11" ) ); //$NON-NLS-1$
       }
     };
 

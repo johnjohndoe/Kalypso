@@ -573,13 +573,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       final IFlowRelationship lFlowRel = getFlowRelation( nodes[i] );
       if( !(lFlowRel instanceof IFlowRelation1D) )
-      {
         break;
-      }
-      final IFlowRelation1D flowRelation1d = (IFlowRelation1D) lFlowRel;
 
-      if( flowRelation1d == null )
-        break;
+      final IFlowRelation1D flowRelation1d = (IFlowRelation1D) lFlowRel;
 
       /* check, if node was already handled for lengthsection */
       if( !m_lengthsection1dNodes.contains( nodes[i].getId() ) )
@@ -817,7 +813,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * Splits the triangle into sub-triangles. At first, the arcs to split get identified and the split nodes are added to
    * the node list
-   * 
+   *
    * @param nodes
    *          node list of the triangle to split. In this list the split nodes are added.
    */
@@ -1087,7 +1083,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * - the inserted node lies between node0 and node1.<br>
    * - the inserted node lies between node1 and node2.<br>
    * - the inserted node lies between node2 and node0.<br>
-   * 
+   *
    * @param nodes
    *          list of all nodes of the triangle to split
    * @param splitArcs

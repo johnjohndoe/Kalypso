@@ -78,7 +78,7 @@ public class LinkedFeaturePropertyFunction extends FeaturePropertyFunction
       {
         final Object object = member.getProperty( Feature.QN_NAME );
         if( object instanceof List )
-          return ((List<Object>) object).get( 0 );
+          return ((List< ? >) object).get( 0 );
         else
           return object;
       }

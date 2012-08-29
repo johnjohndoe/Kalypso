@@ -82,7 +82,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       @Override
       public Object[] getElements( final Object inputElement )
       {
-        final Vector<IStepResultMeta> list = (Vector<IStepResultMeta>) inputElement;
+        final Vector< ? > list = (Vector< ? >) inputElement;
         return list.toArray();
       }
 

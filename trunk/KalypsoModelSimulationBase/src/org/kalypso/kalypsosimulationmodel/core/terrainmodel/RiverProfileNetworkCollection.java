@@ -18,11 +18,12 @@ public class RiverProfileNetworkCollection extends Feature_Impl implements IRive
 {
   private final IFeatureBindingCollection<IRiverProfileNetwork> m_riverProfileNetworks = new FeatureBindingCollection<IRiverProfileNetwork>( this, IRiverProfileNetwork.class, IRiverProfileNetworkCollection.QNAME_PROP_PROFILE_NETWORK );
 
-  public RiverProfileNetworkCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RiverProfileNetworkCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
   
+  @Override
   public IFeatureBindingCollection<IRiverProfileNetwork> getRiverProfileNetworks( )
   {
     return m_riverProfileNetworks;
