@@ -40,32 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.util.HashMap;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget2;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.CssParameter;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * @author Thomas Jung
@@ -73,6 +60,8 @@ import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements IWidgetWithOptions
 {
   private final CreateChannelData m_data = new CreateChannelData( this );
+
+  private final CreateChannelDataPainter m_painter = new CreateChannelDataPainter( m_data );
 
   private CreateMainChannelComposite m_composite;
 
@@ -104,136 +93,41 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
     if( m_composite == null || m_composite.isDisposed() )
       return;
 
-    try
-    {
-      final Feature[] selectedProfiles = m_data.getSelectedProfiles();
-
-      for( final Feature feature : selectedProfiles )
-      {
-        final IProfileFeature profile = (IProfileFeature) feature;
-        final GM_Curve line = profile.getLine();
-
-        final LineSymbolizer symb = getProfilLineSymbolizer( new Color( 255, 255, 0 ) );
-        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
-        de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
-      }
-
-      paintBanks( g, CreateChannelData.SIDE.RIGHT, new Color( 255, 0, 0 ) );
-      paintBanks( g, CreateChannelData.SIDE.LEFT, new Color( 0, 255, 0 ) );
-
-      final IMapPanel mapPanel = getMapPanel();
-
-      /* draw intersected profile */
-      drawIntersProfiles( g, new Color( 0, 153, 255 ) );
-      /* draw cropped profile */
-      // drawCroppedProfiles( g, new Color( 100, 153, 255 ) );
-      /* draw intersection points */
-      drawIntersPoints( g, new Color( 255, 153, 0 ) );
-
-      /* draw mesh */
-      if( m_data.getMeshStatus() == true )
-        m_data.paintAllSegments( g, mapPanel );
-
-      /* draw editable bankline */
-      if( m_composite.isBankEdit() == true && m_data.getMeshStatus() == true )
-        m_data.drawBankLines( g );
-
-      super.paint( g );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  private void drawIntersProfiles( final Graphics g, final Color color )
-  {
-    if( m_data.getSelectedSegment() != null )
-    {
-      final SegmentData currentSegment = m_data.getSelectedSegment();
-      if( currentSegment != null && currentSegment.complete() == true )
-        currentSegment.paintProfile( m_data.getCurrentProfile(), getMapPanel(), g, color );
-    }
-  }
-
-  private void drawIntersPoints( final Graphics g, final Color color )
-  {
-    if( m_data.getSelectedSegment() != null )
-    {
-      final SegmentData currentSegment = m_data.getSelectedSegment();
-      if( currentSegment != null && currentSegment.complete() == true )
-        currentSegment.paintIntersectionPoints( getMapPanel(), g, color, m_data.getCurrentProfile() );
-    }
-  }
-
-  private void paintBanks( final Graphics g, final CreateChannelData.SIDE side, final Color color ) throws CoreException
-  {
-    final GM_Curve curve = m_data.getBanklineForSide( side );
-
-    if( curve == null )
-      return;
-
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
-    final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
-
-    Stroke defaultstroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
-
-    defaultstroke = symb.getStroke();
-
-    stroke.setWidth( 1 );
-    stroke.setStroke( color );
-    symb.setStroke( stroke );
-
-    final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-    de.paint( g, mapPanel.getProjection(), new NullProgressMonitor() );
-
-    symb.setStroke( defaultstroke );
-  }
-
-  private LineSymbolizer getProfilLineSymbolizer( final Color color )
-  {
-    final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
-    stroke.setWidth( 3 );
-    stroke.setStroke( color );
-    symb.setStroke( stroke );
-    return symb;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
-  @Override
-  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
-  {
-    super.activate( commandPoster, mapPanel );
-  }
-
-  /*********************************************************************************************************************
-   * Delegate methods for m_delegateWidget
-   ********************************************************************************************************************/
-
-  public void update( )
-  {
-    if( m_composite == null || m_composite.isDisposed() )
+    final GeoTransform projection = mapPanel.getProjection();
+    if( projection == null )
       return;
 
-    m_composite.getDisplay().syncExec( new Runnable()
+    try
+    {
+      m_painter.paint( g, projection );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    super.paint( g );
+  }
+
+  /** Updates the widget control in the swt thread */
+  void updateSWT( )
+  {
+    final CreateMainChannelComposite composite = m_composite;
+    if( composite == null || composite.isDisposed() )
+      return;
+
+    composite.getDisplay().syncExec( new Runnable()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
       public void run( )
       {
-        // check if all needed data is specified
-        // m_data.completationCheck();
-        if( !m_composite.isDisposed() )
+        if( !composite.isDisposed() )
         {
-          m_composite.updateControl( false ); // false means calculate all again
+          composite.updateControl( false ); // false means calculate all again
         }
 
         repaintMap();
@@ -241,15 +135,27 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
     } );
   }
 
+  /**
+   * Overwritten in order to make public.
+   */
   @Override
-  public String getPartName( )
+  public void repaintMap( )
   {
-    return null;
+    super.repaintMap();
   }
 
+  /**
+   * Overwritten in order to make public.
+   */
   @Override
   public void setDelegate( final IWidget delegate )
   {
     super.setDelegate( delegate );
+  }
+
+  @Override
+  public String getPartName( )
+  {
+    return null;
   }
 }
