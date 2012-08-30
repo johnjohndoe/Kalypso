@@ -54,7 +54,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodeElevationCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
@@ -136,22 +136,26 @@ public class FENodeHeightEditingSupport extends EditingSupport
 
     final CommandableWorkspace workspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );
 
-    final ChangeNodePositionCommand command = new ChangeNodePositionCommand( model1d2d, node, elevation, false )
+    final ChangeNodeElevationCommand command = new ChangeNodeElevationCommand( model1d2d )
     {
       @Override
-      public void process( ) throws Exception
+      public void process( )
       {
         super.process();
 
         refreshTable( node );
       }
     };
+
+    command.addNodeElevation( node, elevation );
+
     try
     {
       workspace.postCommand( command );
     }
     catch( final Exception e )
     {
+      // FIXME:error handling?
       e.printStackTrace();
     }
   }
