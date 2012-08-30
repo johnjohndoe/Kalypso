@@ -53,7 +53,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Undoable command to change the position of a node. the change can be specified as a point or a change elevation
@@ -72,16 +71,6 @@ public class ChangeNodePositionCommand implements IFeatureChangeCommand
 
   /** If <code>true</code>, also modell-change events for depending elements (edges, elements) are fired. */
   private final boolean m_fireEventsForDependendElements;
-
-  public ChangeNodePositionCommand( final IFEDiscretisationModel1d2d model, final IFE1D2DNode nodeToChange, final double elevation, final boolean fireEventsForDependendElements )
-  {
-    this( model, nodeToChange, createPoint( elevation, nodeToChange.getPoint() ), fireEventsForDependendElements );
-  }
-
-  static GM_Point createPoint( final double elevation, final GM_Point pos )
-  {
-    return GeometryFactory.createGM_Point( pos.getX(), pos.getY(), elevation, pos.getCoordinateSystem() );
-  }
 
   /**
    * @param fireEvents

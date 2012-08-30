@@ -46,13 +46,11 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.ops.NodeOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodeElevationCommand;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.elevation.IElevationModel;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Thomas Jung
@@ -62,11 +60,7 @@ public class ApplyElevationHelper
 {
   public static void assignElevationToSelectedNodes( final ApplyElevationWidgetDataModel dataModel, final List<IFE1D2DNode> nodeList ) throws Exception
   {
-    final IFeatureBindingCollection<ITerrainElevationModel> elevationModels = dataModel.getTerrainElevationModels();
-    if( elevationModels == null )
-    {
-      return;
-    }
+    final ITerrainElevationModelSystem elevationModel = dataModel.getElevationModelSystem();
 
     final IMapPanel mapPanel = dataModel.getMapPanel();
     if( mapPanel == null )
@@ -77,54 +71,21 @@ public class ApplyElevationHelper
     if( model1d2d == null )
       return;
 
-
     final CommandableWorkspace workspace = dataModel.getDiscretisationModelWorkspace();
     if( workspace == null )
       return;
 
-    final List<IFE1D2DNode> lListNodesToAssign = new ArrayList<IFE1D2DNode>();
-    lListNodesToAssign.addAll( nodeList );
-    // to provide real assign of elevations according to selected order in elevations model view
-    for( int i = 0; i < elevationModels.size() && lListNodesToAssign.size() > 0; ++i )
+    final ChangeNodeElevationCommand command = new ChangeNodeElevationCommand( model1d2d );
+
+    for( final IFE1D2DNode node : nodeList )
     {
-      final IElevationModel elevationProvider = elevationModels.get( i );
-      if( elevationProvider == null )
-        continue;
-
-      final ChangeTerrainElevationSystemCommand compositeCommand = new ChangeTerrainElevationSystemCommand( workspace, model1d2d, dataModel.getElevationModelSystem() );
-      ChangeNodePositionCommand changePosCmd;
-
-      for( int j = lListNodesToAssign.size() - 1; j >= 0; --j )
-      // for( final IFE1D2DNode node : nodeList )
-      {
-        final IFE1D2DNode node = lListNodesToAssign.get( j );
-        if( node != null )
-        {
-          try
-          {
-            final double elevation = elevationProvider.getElevation( node.getPoint() );
-            if( !Double.isNaN( elevation ) )
-            {
-              changePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation, false );
-              changePosCmd.process();
-              compositeCommand.addCommand( changePosCmd, null );
-              lListNodesToAssign.remove( node );
-            }
-          }
-          catch( final Exception e )
-          {
-          }
-        }
-      }
-      try
-      {
-        workspace.postCommand( compositeCommand );
-      }
-      catch( final Throwable th )
-      {
-        th.printStackTrace();
-      }
+      final GM_Point point = node.getPoint();
+      final double elevation = elevationModel.getElevation( point );
+      if( !Double.isNaN( elevation ) )
+        command.addNodeElevation( node, elevation );
     }
+
+    workspace.postCommand( command );
   }
 
   public static IFE1D2DNode[] getAllNonElevationNodes( final ApplyElevationWidgetDataModel dataModel )

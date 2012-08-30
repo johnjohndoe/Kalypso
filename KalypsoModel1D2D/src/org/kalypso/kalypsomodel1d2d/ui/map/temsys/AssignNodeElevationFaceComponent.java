@@ -51,6 +51,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
@@ -74,6 +75,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListe
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Madanagopal
@@ -221,6 +223,17 @@ public class AssignNodeElevationFaceComponent extends Composite
       }
     } );
 
+    final Button selectAllWithoutElevation = toolkit.createButton( buttonPanel, "Knoten ohne Höhen selektieren", SWT.PUSH );
+    selectAllWithoutElevation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    selectAllWithoutElevation.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent event )
+      {
+        selectAllWithoutElevation();
+      }
+    } );
+
     final Button deSelectAll = toolkit.createButton( buttonPanel, WorkbenchMessages.SelectionDialog_deselectLabel, SWT.PUSH );
     deSelectAll.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     deSelectAll.addSelectionListener( new SelectionAdapter()
@@ -244,6 +257,22 @@ public class AssignNodeElevationFaceComponent extends Composite
     } );
 
     return panel;
+  }
+
+  protected void selectAllWithoutElevation( )
+  {
+    final List<IFE1D2DNode> nodesWithoutElevation = new ArrayList<>();
+
+    final IFE1D2DNode[] allNodes = (IFE1D2DNode[]) m_nodeElevationViewer.getInput();
+    for( final IFE1D2DNode node : allNodes )
+    {
+      final GM_Point point = node.getPoint();
+      if( point != null && Double.isNaN( point.getZ() ) )
+        nodesWithoutElevation.add( node );
+    }
+
+    final ISelection selection = new StructuredSelection( nodesWithoutElevation );
+    m_nodeElevationViewer.setSelection( selection );
   }
 
   private void createNameColumn( final TableViewer viewer )

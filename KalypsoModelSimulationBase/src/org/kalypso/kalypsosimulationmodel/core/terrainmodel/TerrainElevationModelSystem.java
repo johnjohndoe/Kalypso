@@ -92,7 +92,7 @@ public class TerrainElevationModelSystem extends Feature_Impl implements ITerrai
       try
       {
         final double elevation = terrainElevationModel.getElevation( location );
-        if( elevation != Double.NaN )
+        if( !Double.isNaN( elevation ) )
         {
           return elevation;
         }
