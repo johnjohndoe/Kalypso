@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,10 +49,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -72,7 +68,6 @@ import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -84,19 +79,13 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.CssParameter;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.feature.FeatureComparator;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -163,6 +152,10 @@ public class CreateChannelData
   private Shell m_shell;
 
   private final Map<GM_Position, SegmentData> m_segmentMap = new HashMap<GM_Position, SegmentData>();
+
+  private boolean m_bankEdit;
+
+  private CommandableWorkspace m_discWorkspace;
 
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
@@ -277,7 +270,7 @@ public class CreateChannelData
         }
 
         // final IProgressMonitor monitor = new NullProgressMonitor();
-        m_widget.update();
+        m_widget.updateSWT();
 
         return Status.OK_STATUS;
       }
@@ -309,7 +302,7 @@ public class CreateChannelData
   {
     m_selectedBanks.remove( curve );
 
-    m_widget.update();
+    m_widget.updateSWT();
 
     m_selectedBanks.keySet().remove( curve );
 
@@ -385,36 +378,23 @@ public class CreateChannelData
     return m_meshCoords != null;
   }
 
-  /**
-   * converts the mesh coordinates into the 2d model
-   */
-  public void convertToModel( )
+  public Coordinate[][] getMeshCoords( )
   {
-    GM_Point[][] importingGridPoints = new GM_Point[m_meshCoords.length][m_meshCoords[0].length];
-    importingGridPoints = convertToGMPoints( m_meshCoords );
-
-    final IMapPanel mapPanel = m_widget.getMapPanel();
-    final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    final CommandableWorkspace workspace = theme.getWorkspace();
-
-    final TempGrid tempGrid = new TempGrid();
-    tempGrid.importMesh( importingGridPoints );
-    tempGrid.setCoodinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-    final double searchDistance = 0.1;
-    tempGrid.getAddToModelCommand( workspace, searchDistance );
+    return m_meshCoords;
   }
+
 
   /**
    * converts a Coordinate[][] array into a GM_Point[][] array
    */
-  private GM_Point[][] convertToGMPoints( final Coordinate[][] meshCoords )
+  GM_Point[][] convertToGMPoints( )
   {
     final GeometryFactory geometryFactory = new GeometryFactory();
 
-    final GM_Point points2D[][] = new GM_Point[meshCoords.length][];
-    for( int i = 0; i < meshCoords.length; i++ )
+    final GM_Point points2D[][] = new GM_Point[m_meshCoords.length][];
+    for( int i = 0; i < m_meshCoords.length; i++ )
     {
-      final Coordinate[] line = meshCoords[i];
+      final Coordinate[] line = m_meshCoords[i];
       final GM_Point[] points1D = new GM_Point[line.length];
       points2D[i] = points1D;
       for( int j = 0; j < line.length; j++ )
@@ -815,22 +795,6 @@ public class CreateChannelData
     return check;
   }
 
-  public void paintAllSegments( final Graphics g, final IMapPanel mapPanel )
-  {
-    if( m_meshCoords != null )
-    {
-      try
-      {
-        paintEdges( m_meshCoords, g, mapPanel );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-      // paintCoords( m_meshCoords, g, mapPanel );
-    }
-  }
-
   public void setNumProfileIntersections( final int numProfileIntersections )
   {
     if( m_numbProfileIntersections != numProfileIntersections )
@@ -859,53 +823,6 @@ public class CreateChannelData
   {
     final int globNumBankIntersections = m_globNumbBankIntersections;
     return globNumBankIntersections;
-  }
-
-  private void paintEdges( final Coordinate[][] coords, final Graphics g, final IMapPanel mapPanel ) throws GM_Exception, CoreException
-  {
-    final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
-
-    final Color grey = new Color( 100, 100, 100 );
-
-    stroke.setWidth( 1 );
-    stroke.setStroke( grey );
-    symb.setStroke( stroke );
-    DisplayElement de;
-
-    final Coordinate[] lineCoords = new Coordinate[2];
-
-    for( final Coordinate[] element : coords )
-    {
-      final GeometryFactory factory = new GeometryFactory();
-      for( int j = 0; j < element.length - 1; j++ )
-      {
-        lineCoords[0] = element[j];
-        lineCoords[1] = element[j + 1];
-        final LineString line = factory.createLineString( lineCoords );
-        final GM_Curve curve;
-
-        if( lineCoords[1] == null || lineCoords[0] == null )
-          curve = (GM_Curve) JTSAdapter.wrap( line );
-        else
-          curve = (GM_Curve) JTSAdapter.wrap( line );
-        de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-        de.paint( g, mapPanel.getProjection(), new NullProgressMonitor() );
-      }
-    }
-    for( int j = 0; j < coords[0].length; j++ )
-    {
-      final GeometryFactory factory = new GeometryFactory();
-      for( int i = 0; i < coords.length - 1; i++ )
-      {
-        lineCoords[0] = coords[i][j];
-        lineCoords[1] = coords[i + 1][j];
-        final LineString line = factory.createLineString( lineCoords );
-        final GM_Curve curve = (GM_Curve) JTSAdapter.wrap( line );
-        de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-        de.paint( g, mapPanel.getProjection(), new NullProgressMonitor() );
-      }
-    }
   }
 
   public int getNumOfSegments( )
@@ -964,19 +881,6 @@ public class CreateChannelData
       }
     }
     completationCheck();
-  }
-
-  public void drawBankLines( final Graphics g )
-  {
-    final IMapPanel panel = m_widget.getMapPanel();
-
-    for( final SegmentData segment : m_segmentList )
-    {
-      if( segment == null || m_segmentList.size() == 0 )
-        continue;
-
-      segment.paintBankLineLineString( panel, g, new Color( 20, 20, 255 ) );
-    }
   }
 
   public void updateSegment( final boolean edit )
@@ -1197,4 +1101,30 @@ public class CreateChannelData
     return posList.toArray( new GM_Position[posList.size()] );
   }
 
+  public SegmentData[] getSegments( )
+  {
+    return m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
+  }
+
+  public boolean isBankEdit( )
+  {
+    return m_bankEdit;
+  }
+
+  public void setBankEdit( final boolean bankEdit )
+  {
+    m_bankEdit = bankEdit;
+  }
+
+  public CommandableWorkspace getDiscretisationWorkspace( )
+  {
+    final IMapPanel mapPanel = m_widget.getMapPanel();
+    final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    return theme.getWorkspace();
+  }
+
+  void setDelegate( final IWidget delegate )
+  {
+    m_widget.setDelegate( delegate );
+  }
 }

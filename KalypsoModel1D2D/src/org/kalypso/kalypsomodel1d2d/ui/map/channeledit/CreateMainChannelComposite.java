@@ -46,11 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -64,6 +60,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -74,14 +71,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -110,15 +106,17 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class CreateMainChannelComposite extends Composite
 {
-  final CreateChannelData m_data;
+  private static final int SPINNER_WIDTH = 50;
 
-  final CreateMainChannelWidget m_widget;
+  private final CreateChannelData m_data;
+
+  private final CreateMainChannelWidget m_widget;
 
   private Section m_profilSection;
 
   private Section m_segmentSection;
 
-  boolean m_ButtonStateZoom;
+  private boolean m_buttonStateZoom;
 
   /*********************************************************************************************************************
    * m_buttonList<BR>
@@ -131,16 +129,9 @@ public class CreateMainChannelComposite extends Composite
 
   private final FormToolkit m_toolkit;
 
-  Button m_buttonEditBank;
-
-  private boolean m_bankEdit;
+  private Button m_buttonEditBank;
 
   private EmbeddedSourceToolbarManager m_sourceManager;
-
-  public boolean isBankEdit( )
-  {
-    return m_bankEdit;
-  }
 
   public CreateMainChannelComposite( final Composite parent, final FormToolkit toolkit, final int style, final CreateChannelData data, final CreateMainChannelWidget widget )
   {
@@ -154,99 +145,57 @@ public class CreateMainChannelComposite extends Composite
     m_data = data;
     m_widget = widget;
 
-    try
-    {
-      init();
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-    }
+    setLayout( new FillLayout() );
+
+    createContents();
   }
 
   /**
    * initialisation
    */
-  private void init( )
+  private void createContents( )
   {
-    /* Retrieve data */
+    final ScrolledForm form = m_toolkit.createScrolledForm( this );
+    final Composite body = form.getBody();
+    GridLayoutFactory.fillDefaults().applyTo( body );
+
+    /* Create Profile control */
     final IKalypsoFeatureTheme[] profileThemes = m_data.getProfileThemes();
+    final Control profileSection = createProfileSelectionSection( body, profileThemes );
+    final GridData gridDataProf = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    profileSection.setLayoutData( gridDataProf );
+
+    /* Create Bank control */
     final IKalypsoFeatureTheme[] bankThemes = KalypsoFeatureThemeHelper.getLineThemes( m_widget.getMapPanel() );
-    /* Create gui */
-    final GridLayout myLayout = new GridLayout( 1, false );
-    myLayout.marginWidth = 0;
-    myLayout.marginHeight = 0;
-    setLayout( myLayout );
+    final Control bankSection = createBankSelectionSection( body, bankThemes );
+    final GridData gridDataBank = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    bankSection.setLayoutData( gridDataBank );
 
-    final ScrolledCompositeCreator creator = new ScrolledCompositeCreator( null )
-    {
-      @SuppressWarnings("synthetic-access")
-      @Override
-      protected Control createContents( final Composite parent, final int style )
-      {
-        final Composite contentCompo = m_toolkit.createComposite( parent, style );
-        final GridLayout layout = myLayout;
-        layout.marginWidth = 0;
-        layout.marginHeight = 0;
-        contentCompo.setLayout( layout );
+    /* Create segment switch control */
+    final Control segmentSwitchSection = createSegmentSwitchSection( body );
+    final GridData gridDataSegmentSwitch = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    segmentSwitchSection.setLayoutData( gridDataSegmentSwitch );
 
-        /* Create Profile control */
-        final Control profileSection = createProfileSelectionSection( contentCompo, profileThemes );
-        final GridData gridDataProf = new GridData( SWT.FILL, SWT.CENTER, true, false );
-        profileSection.setLayoutData( gridDataProf );
+    /* Create profile control */
+    final Control profilSection = createProfilSection( body );
+    final GridData gridDataProfileControl = new GridData( SWT.FILL, SWT.FILL, true, true );
+    profilSection.setLayoutData( gridDataProfileControl );
 
-        /* Create Bank control */
-        final Control bankSection = createBankSelectionSection( contentCompo, bankThemes );
-        final GridData gridDataBank = new GridData( SWT.FILL, SWT.CENTER, true, false );
-        bankSection.setLayoutData( gridDataBank );
+    /* conversion to model composite */
+    final Composite compConversion = m_toolkit.createComposite( body, SWT.NONE );
+    compConversion.setLayout( new GridLayout( 2, false ) );
 
-        /* Create segment switch control */
-        final Control segmentSwitchSection = createSegmentSwitchSection( contentCompo );
-        final GridData gridDataSegmentSwitch = new GridData( SWT.FILL, SWT.CENTER, true, false );
-        segmentSwitchSection.setLayoutData( gridDataSegmentSwitch );
-
-        /* Create profile control */
-        final Control profilSection = createProfilSection( contentCompo );
-        final GridData gridDataProfileControl = new GridData( SWT.FILL, SWT.FILL, true, true );
-        profilSection.setLayoutData( gridDataProfileControl );
-
-        /* conversion to model composite */
-        final Composite compConversion = m_toolkit.createComposite( contentCompo, SWT.NONE );
-        compConversion.setLayout( new GridLayout( 2, false ) );
-
-        m_buttonConvertToModel = m_toolkit.createButton( compConversion, "", SWT.PUSH ); //$NON-NLS-1$
-        m_buttonConvertToModel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
-
-        final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
-
-        m_buttonConvertToModel.setImage( imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.OK ) );
-        m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
-        {
-          @Override
-          public void widgetSelected( final SelectionEvent e )
-          {
-            handleConvertButtonPressed();
-          }
-        } );
-
-        m_toolkit.createLabel( compConversion, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.42" ), SWT.NULL ); //$NON-NLS-1$
-
-        return contentCompo;
-      }
-    };
-    creator.createControl( this, SWT.V_SCROLL, SWT.NONE );
-
-    creator.getScrolledComposite().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_toolkit.adapt( creator.getScrolledComposite() );
+    final CreateMainChannelApplyAction applyToAction = new CreateMainChannelApplyAction( m_data, this );
+    final Button applyToButton = ActionButton.createButton( m_toolkit, compConversion, applyToAction );
+    applyToButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     updateControl( true );
 
-    if( m_bankEdit == true )
+    if( m_data.isBankEdit() )
     {
       m_buttonEditBank.setSelection( true );
       editButtonUpdateBank();
     }
-
   }
 
   /**
@@ -256,6 +205,9 @@ public class CreateMainChannelComposite extends Composite
   private Control createProfilSection( final Composite parent )
   {
     m_profilSection = m_toolkit.createSection( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+
+    m_profilSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.39" ) ); //$NON-NLS-1$
+    m_profilSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.40" ) ); //$NON-NLS-1$
 
     return m_profilSection;
   }
@@ -267,6 +219,9 @@ public class CreateMainChannelComposite extends Composite
   private Control createSegmentSwitchSection( final Composite parent )
   {
     m_segmentSection = m_toolkit.createSection( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+
+    m_segmentSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.0" ) ); //$NON-NLS-1$
+    m_segmentSection.setDescription( "Bearbeiten Sie einen Profilabschnitt (Segment zwischen zwei Profilen)" );
 
     return m_segmentSection;
   }
@@ -282,44 +237,49 @@ public class CreateMainChannelComposite extends Composite
       client.dispose();
 
     final Composite sectionClient = m_toolkit.createComposite( m_segmentSection, SWT.NONE );
-    sectionClient.setLayout( new GridLayout( 4, false ) );
-
+    GridLayoutFactory.fillDefaults().applyTo( sectionClient );
     m_segmentSection.setClient( sectionClient );
-    m_segmentSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.0" ) ); //$NON-NLS-1$
+
     if( m_data.getNumOfSegments() > 0 )
       m_segmentSection.setExpanded( true );
     else
       m_segmentSection.setExpanded( false );
 
     /** ************************ Header ***************************** */
-    /* label */
 
-    final Label labelSpinnnerSegment = m_toolkit.createLabel( sectionClient, "", SWT.NULL ); //$NON-NLS-1$
-    labelSpinnnerSegment.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.1" ) ); //$NON-NLS-1$
-    final GridData gridDataLabelSpinner = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    gridDataLabelSpinner.horizontalSpan = 1;
-    labelSpinnnerSegment.setLayoutData( gridDataLabelSpinner );
+    final Group headerGroup = new Group( sectionClient, SWT.NONE );
+    m_toolkit.adapt( headerGroup );
+    headerGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( headerGroup );
+
+    headerGroup.setText( "Segmentauswahl" );
+
+    /* label */
+    final Label labelSpinnnerSegment = m_toolkit.createLabel( headerGroup, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.1" ) ); //$NON-NLS-1$
+    labelSpinnnerSegment.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* spinner for specify the current segment */
-    final Spinner spinnerSegment = new Spinner( sectionClient, 0 );
+    final Spinner spinnerSegment = new Spinner( headerGroup, SWT.BORDER );
     m_toolkit.adapt( spinnerSegment );
     final GridData gridDataSegmentSpinner = new GridData( SWT.END, SWT.CENTER, true, false );
-    gridDataSegmentSpinner.horizontalSpan = 3;
+    gridDataSegmentSpinner.widthHint = SPINNER_WIDTH;
     spinnerSegment.setLayoutData( gridDataSegmentSpinner );
 
     /* zoom to extend button */
-    final Button buttonZoomToExtend = new Button( sectionClient, SWT.CHECK );
+    final Button buttonZoomToExtend = new Button( headerGroup, SWT.CHECK );
+    buttonZoomToExtend.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     buttonZoomToExtend.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.2" ) ); //$NON-NLS-1$
     buttonZoomToExtend.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.43" ) ); //$NON-NLS-1$
-    buttonZoomToExtend.setSelection( m_ButtonStateZoom );
+    buttonZoomToExtend.setSelection( m_buttonStateZoom );
     buttonZoomToExtend.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        if( m_ButtonStateZoom == false )
+        if( m_buttonStateZoom == false )
         {
-          m_ButtonStateZoom = true;
+          m_buttonStateZoom = true;
 
           final GM_Envelope mapExtend = m_data.getSelectedSegment().getSegmentMapExtend();
           if( mapExtend != null )
@@ -329,7 +289,7 @@ public class CreateMainChannelComposite extends Composite
           }
         }
         else
-          m_ButtonStateZoom = false;
+          m_buttonStateZoom = false;
       }
     } );
 
@@ -384,36 +344,23 @@ public class CreateMainChannelComposite extends Composite
 
     /* Group Segmentdaten */
     final Group groupSegment = new Group( sectionClient, SWT.NULL );
+    groupSegment.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( groupSegment );
+
     groupSegment.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.3" ) ); //$NON-NLS-1$
 
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 4;
-    groupSegment.setLayout( gridLayout );
-    final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    gridData.horizontalSpan = 4;
-    groupSegment.setLayoutData( gridData );
-
-    final Composite compSegmentDataHeader = new Composite( groupSegment, SWT.NULL );
-    final GridLayout gridLayoutDataHeader = new GridLayout();
-    gridLayoutDataHeader.numColumns = 2;
-    compSegmentDataHeader.setLayout( gridLayoutDataHeader );
-    final GridData gridDataHeader = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    gridDataHeader.horizontalSpan = 4;
-    compSegmentDataHeader.setLayoutData( gridDataHeader );
-
-    final Label labelNumIntersSegment = new Label( compSegmentDataHeader, SWT.NULL );
-    labelNumIntersSegment.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.4" ) ); //$NON-NLS-1$
-    final GridData gridDatalabel = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    gridDatalabel.horizontalSpan = 1;
-    labelNumIntersSegment.setLayoutData( gridDatalabel );
+    final Label labelNumIntersSegment = m_toolkit.createLabel( groupSegment, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.4" ) ); //$NON-NLS-1$
+    labelNumIntersSegment.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* spinner for specifiying the number of intersection points for the current segment */
-    final Spinner spinnerNumIntersSegment = new Spinner( compSegmentDataHeader, 0 );
+    final Spinner spinnerNumIntersSegment = new Spinner( groupSegment, SWT.BORDER );
     m_toolkit.adapt( spinnerNumIntersSegment );
 
     final GridData gridDataNumIntersSpinner = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
-    gridDataNumIntersSpinner.horizontalSpan = 1;
+    gridDataNumIntersSpinner.widthHint = SPINNER_WIDTH;
     spinnerNumIntersSegment.setLayoutData( gridDataNumIntersSpinner );
+
     spinnerNumIntersSegment.setEnabled( true );
     spinnerNumIntersSegment.setMinimum( 2 );
     spinnerNumIntersSegment.setMaximum( 999 );
@@ -442,25 +389,19 @@ public class CreateMainChannelComposite extends Composite
       }
     } );
 
-    final Composite compSegmBanks1 = new Composite( groupSegment, SWT.NULL );
-    final GridLayout gridLayoutSegmBanks = new GridLayout();
-    gridLayoutSegmBanks.numColumns = 2;
-    compSegmBanks1.setLayout( gridLayoutSegmBanks );
-    final GridData gridDataSegmBanks = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    gridDataSegmBanks.horizontalSpan = 1;
-    compSegmBanks1.setLayoutData( gridDataSegmBanks );
-
-    final Label labelBankline = new Label( compSegmBanks1, SWT.NULL );
-    labelBankline.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.8" ) ); //$NON-NLS-1$
+    final Label labelBankline = m_toolkit.createLabel( groupSegment, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.8" ) ); //$NON-NLS-1$
+    labelBankline.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* edit button for bankline 1 */
-    m_buttonEditBank = m_toolkit.createButton( compSegmBanks1, "", SWT.TOGGLE ); //$NON-NLS-1$
+    m_buttonEditBank = m_toolkit.createButton( groupSegment, "", SWT.TOGGLE ); //$NON-NLS-1$
+    m_buttonEditBank.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
+
     m_buttonEditBank.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.9" ) ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     final Image editImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.EDIT );
     m_buttonEditBank.setImage( editImage );
-    m_buttonEditBank.setSelection( m_bankEdit );
+    m_buttonEditBank.setSelection( m_data.isBankEdit() );
     m_buttonEditBank.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -482,16 +423,19 @@ public class CreateMainChannelComposite extends Composite
   private Control createBankSelectionSection( final Composite parent, final IKalypsoFeatureTheme[] bankThemes )
   {
     final Section bankSection = m_toolkit.createSection( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+
     final Composite sectionClient = m_toolkit.createComposite( bankSection, SWT.NONE );
     sectionClient.setLayout( new GridLayout( 3, false ) );
     bankSection.setClient( sectionClient );
+
     bankSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.16" ) ); //$NON-NLS-1$
     bankSection.setExpanded( true );
     bankSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.17" ) ); //$NON-NLS-1$
 
     final ComboViewer combviewerBank1 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_toolkit.adapt( combviewerBank1.getControl(), true, false );
-    combviewerBank1.getControl().setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false ) );
+    combviewerBank1.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
     combviewerBank1.setContentProvider( new ArrayContentProvider() );
     combviewerBank1.setLabelProvider( new LabelProvider() );
     final IKalypsoFeatureTheme bankTheme = m_data.getBankTheme1();
@@ -533,7 +477,8 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the first bank selection */
     final Button chooseFirstBankButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonList.add( chooseFirstBankButton );
-    chooseFirstBankButton.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
+    chooseFirstBankButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
+
     chooseFirstBankButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.19" ) ); //$NON-NLS-1$
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     final Image selImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.SELECT );
@@ -562,11 +507,9 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the first bank drawing */
     final Button drawFirstBankButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonList.add( drawFirstBankButton );
+    drawFirstBankButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
 
-    final GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
-    layoutDataFirstButton.minimumWidth = 25;
     drawFirstBankButton.setVisible( true );
-    drawFirstBankButton.setLayoutData( layoutDataFirstButton );
     final Image editImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.EDIT );
     drawFirstBankButton.setImage( editImage );
     drawFirstBankButton.addSelectionListener( new SelectionAdapter()
@@ -591,7 +534,8 @@ public class CreateMainChannelComposite extends Composite
     /* ComboBox for the second bank line theme selection */
     final ComboViewer combviewerBank2 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_toolkit.adapt( combviewerBank2.getControl(), true, false );
-    combviewerBank2.getControl().setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false ) );
+    combviewerBank2.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
     combviewerBank2.setContentProvider( new ArrayContentProvider() );
     combviewerBank2.setLabelProvider( new LabelProvider() );
     final IKalypsoFeatureTheme bankTheme2 = m_data.getBankTheme2();
@@ -630,9 +574,11 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     /* Button for the second bank selection */
-    final Button chooseSecondBankButton = m_toolkit.createButton( sectionClient, null, SWT.TOGGLE );
-    chooseSecondBankButton.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
+    final Button chooseSecondBankButton = m_toolkit.createButton( sectionClient, StringUtils.EMPTY, SWT.TOGGLE );
+    chooseSecondBankButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
+
     m_buttonList.add( chooseSecondBankButton );
+
     chooseSecondBankButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.24" ) ); //$NON-NLS-1$
     chooseSecondBankButton.setImage( selImage );
     chooseSecondBankButton.addSelectionListener( new SelectionAdapter()
@@ -658,9 +604,9 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the second bank drawing */
     final Button drawSecondBankButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonList.add( drawSecondBankButton );
+    drawSecondBankButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
 
     drawSecondBankButton.setVisible( true );
-    drawSecondBankButton.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
     drawSecondBankButton.setImage( editImage );
     drawSecondBankButton.addSelectionListener( new SelectionAdapter()
     {
@@ -681,32 +627,31 @@ public class CreateMainChannelComposite extends Composite
       }
     } );
 
+    /* spinner for number for bank parts */
     final Label bankLabel = new Label( sectionClient, SWT.NULL );
     bankLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.28" ) ); //$NON-NLS-1$
-    final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    // gridData.horizontalSpan = 1;
-    bankLabel.setLayoutData( gridData );
+    bankLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Spinner spinNumBankIntersections = new Spinner( sectionClient, SWT.NONE );
+    final Spinner spinNumBankIntersections = new Spinner( sectionClient, SWT.BORDER );
 
-    final GridData gridDataSpin = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
-    // gridDataSpin.horizontalSpan = 1;
-
+    final GridData gridDataSpin = new GridData( SWT.FILL, SWT.CENTER, false, false, 2, 1 );
+    gridDataSpin.widthHint = SPINNER_WIDTH;
     spinNumBankIntersections.setLayoutData( gridDataSpin );
+
     spinNumBankIntersections.setDigits( 0 );
     spinNumBankIntersections.setMinimum( 2 );
     spinNumBankIntersections.setMaximum( 999 );
+
     if( m_data.getGlobNumBankIntersections() == 0 )
       spinNumBankIntersections.setSelection( 6 );
     else
       spinNumBankIntersections.setSelection( m_data.getGlobNumBankIntersections() );
+
     m_data.setGlobNumBankIntersections( 6 );
+
     spinNumBankIntersections.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.29" ) ); //$NON-NLS-1$
     spinNumBankIntersections.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -723,10 +668,6 @@ public class CreateMainChannelComposite extends Composite
         updateControl( false );
       }
     } );
-
-    final GridData gridDataSpinner = new GridData();
-    gridDataSpinner.horizontalAlignment = SWT.RIGHT;
-    spinNumBankIntersections.setLayoutData( gridDataSpinner );
 
     return bankSection;
   }
@@ -749,7 +690,7 @@ public class CreateMainChannelComposite extends Composite
     /* add combo-box for the wspm-profile theme selection */
     final ComboViewer combviewerProfiles = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_toolkit.adapt( combviewerProfiles.getControl(), true, false );
-    combviewerProfiles.getControl().setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false ) );
+    combviewerProfiles.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     combviewerProfiles.setContentProvider( new ArrayContentProvider() );
     combviewerProfiles.setLabelProvider( new LabelProvider() );
 
@@ -793,9 +734,9 @@ public class CreateMainChannelComposite extends Composite
     gridData.horizontalAlignment = SWT.RIGHT;
 
     /* Button for the wspm-profile selection */
-    final Button chooseProfilesButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
+    final Button chooseProfilesButton = m_toolkit.createButton( sectionClient, StringUtils.EMPTY, SWT.TOGGLE );
     m_buttonList.add( chooseProfilesButton );
-    final GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
+    final GridData layoutDataFirstButton = new GridData( SWT.LEFT, SWT.CENTER, false, false );
     layoutDataFirstButton.minimumWidth = 25;
     chooseProfilesButton.setLayoutData( layoutDataFirstButton );
     chooseProfilesButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
@@ -822,15 +763,18 @@ public class CreateMainChannelComposite extends Composite
         }
       }
     } );
-    final GridData gridDataLabel = new GridData( SWT.FILL, SWT.CENTER, true, false );
-
     /* spinner for specifying the global number of profile intersection points */
     final Label spinnerLabel = new Label( sectionClient, SWT.NULL );
     spinnerLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.36" ) ); //$NON-NLS-1$
-    spinnerLabel.setLayoutData( gridDataLabel );
+    spinnerLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Spinner spinNumProfIntersections = new Spinner( sectionClient, SWT.NONE );
+    final Spinner spinNumProfIntersections = new Spinner( sectionClient, SWT.BORDER );
     m_toolkit.adapt( spinNumProfIntersections );
+
+    final GridData gridDataSpinner = new GridData( SWT.FILL, SWT.CENTER, false, false );
+    gridDataSpinner.widthHint = SPINNER_WIDTH;
+    spinNumProfIntersections.setLayoutData( gridDataSpinner );
+
     spinNumProfIntersections.setDigits( 0 );
     spinNumProfIntersections.setMinimum( 4 );
     spinNumProfIntersections.setMaximum( 999 );
@@ -841,9 +785,6 @@ public class CreateMainChannelComposite extends Composite
     spinNumProfIntersections.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.37" ) ); //$NON-NLS-1$
     spinNumProfIntersections.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -861,9 +802,6 @@ public class CreateMainChannelComposite extends Composite
       }
     } );
 
-    final GridData gridDataSpinner = new GridData();
-    gridDataSpinner.horizontalAlignment = SWT.RIGHT;
-    spinNumProfIntersections.setLayoutData( gridDataSpinner );
     m_data.setNumProfileIntersections( spinNumProfIntersections.getSelection() );
 
     return mysection;
@@ -911,10 +849,7 @@ public class CreateMainChannelComposite extends Composite
 
     final Composite sectionClient = m_toolkit.createComposite( m_profilSection, SWT.NONE );
     GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( sectionClient );
-
     m_profilSection.setClient( sectionClient );
-    m_profilSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.39" ) ); //$NON-NLS-1$
-    m_profilSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.40" ) ); //$NON-NLS-1$
 
     m_widget.getMapPanel().repaintMap();
 
@@ -1038,38 +973,17 @@ public class CreateMainChannelComposite extends Composite
   {
     if( m_buttonEditBank.getSelection() == true )
     {
-      m_bankEdit = true;
+      m_data.setBankEdit( true );
 
       final DragBankLineWidget widget = new DragBankLineWidget( m_data, m_widget.getMapPanel() );
       m_widget.setDelegate( widget );
     }
     else
     {
-      m_bankEdit = false;
+      m_data.setBankEdit( false );
       m_widget.setDelegate( null );
     }
     updateData( true );
-  }
-
-  protected void handleConvertButtonPressed( )
-  {
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-    {
-      @Override
-      public IStatus execute( final IProgressMonitor monitor )
-      {
-        m_widget.setDelegate( null );
-        m_data.convertToModel();
-        return Status.OK_STATUS;
-      }
-    };
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
-    ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.46" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.45" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-    if( status.isOK() == true )
-    {
-      m_data.resetSelectedProfiles();
-      resetButtonGuard();
-    }
   }
 
   public SegmentData getCurrentSegment( )

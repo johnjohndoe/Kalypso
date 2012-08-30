@@ -40,17 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
@@ -70,22 +65,14 @@ import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.CssParameter;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -269,8 +256,7 @@ public class SegmentData
       m_upIntersProfile = adjustProfileArea( tempUpIntersProfile, m_areaUpCroppedProfile, m_areaUpIntersProfile );
 
       final GeometryFactory factory = new GeometryFactory();
-      m_upIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_upIntersProfile ) );
-
+      m_upIntersLinestring = factory.createLineString( ProfilUtil.getLineCoordinates( m_upIntersProfile ) );
     }
     catch( final Exception e )
     {
@@ -300,8 +286,7 @@ public class SegmentData
       m_downIntersProfile = adjustProfileArea( tempDownIntersProfile, m_areaDownCroppedProfile, m_areaDownIntersProfile );
 
       final GeometryFactory factory = new GeometryFactory();
-      m_downIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_downIntersProfile ) );
-
+      m_downIntersLinestring = factory.createLineString( ProfilUtil.getLineCoordinates( m_downIntersProfile ) );
     }
     catch( final Exception e )
     {
@@ -1041,63 +1026,6 @@ public class SegmentData
     }
   }
 
-  public void paintSegment( final Graphics g, final IMapPanel mapPanel ) throws Exception
-  {
-    // g.dispose();
-
-    // if( m_bankRightOrg != null )
-    // paintLineString( m_bankRightOrg, g, mapPanel, new Color( 150, 0, 0 ) );
-    // if( m_bankLeftOrg != null )
-    // paintLineString( m_bankLeftOrg, g, mapPanel, new Color( 0, 150, 0 ) );
-    // if( m_profDownInters != null )
-    // paintLinePoints( m_profDownInters, g, mapPanel, new Color( 100, 255, 50 ) );
-    // if( m_profUpInters != null )
-    // paintLinePoints( m_profUpInters, g, mapPanel, new Color( 100, 255, 50 ) );
-    if( m_bankLeftInters != null )
-      paintLineString( m_bankLeftInters, g, mapPanel, new Color( 100, 255, 50 ) );
-    if( m_bankRightInters != null )
-      paintLineString( m_bankRightInters, g, mapPanel, new Color( 100, 255, 50 ) );
-  }
-
-  private void paintLineStringPoints( final LineString line, final Graphics g, final IMapPanel mapPanel, final Color color )
-  {
-    if( line == null )
-      return;
-
-    final Color oldColor = g.getColor();
-    g.setColor( color );
-
-    for( int i = 0; i < line.getNumPoints(); i++ )
-    {
-      final int pointRectWidth = 5;
-      final int halfRectWidth = pointRectWidth / 2;
-
-      final double x = line.getPointN( i ).getCoordinate().x;
-      final double y = line.getPointN( i ).getCoordinate().y;
-      final int xs = (int) mapPanel.getProjection().getDestX( x );
-      final int ys = (int) mapPanel.getProjection().getDestY( y );
-      g.fill3DRect( xs - halfRectWidth, ys - halfRectWidth, pointRectWidth, pointRectWidth, true );
-    }
-    g.setColor( oldColor );
-  }
-
-  private void paintPoint( final Point point, final Graphics g, final IMapPanel mapPanel, final Color color )
-  {
-    final Color oldColor = g.getColor();
-    g.setColor( color );
-
-    final int pointRectWidth = 8;
-    final int halfRectWidth = pointRectWidth / 2;
-
-    final double x = point.getCoordinate().x;
-    final double y = point.getCoordinate().y;
-    final int xs = (int) mapPanel.getProjection().getDestX( x );
-    final int ys = (int) mapPanel.getProjection().getDestY( y );
-    g.fill3DRect( xs - halfRectWidth, ys - halfRectWidth, pointRectWidth, pointRectWidth, true );
-
-    g.setColor( oldColor );
-  }
-
   public boolean complete( )
   {
     boolean check;
@@ -1252,8 +1180,7 @@ public class SegmentData
         // m_upIntersProfile = createIntersectedIProfile( m_upCroppedProfile );
 
         final GeometryFactory factory = new GeometryFactory();
-        m_upIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_upIntersProfile ) );
-
+        m_upIntersLinestring = factory.createLineString( ProfilUtil.getLineCoordinates( m_upIntersProfile ) );
       }
       catch( final Exception e )
       {
@@ -1282,7 +1209,7 @@ public class SegmentData
         m_downIntersProfile = adjustProfileArea( m_downIntersProfile, areaDownCroppedProfile, areaDownIntersProfile );
 
         final GeometryFactory factory = new GeometryFactory();
-        m_downIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_downIntersProfile ) );
+        m_downIntersLinestring = factory.createLineString( ProfilUtil.getLineCoordinates( m_downIntersProfile ) );
 
       }
       catch( final Exception e )
@@ -1416,51 +1343,6 @@ public class SegmentData
 
   }
 
-  /**
-   * the editable bank linestring is painted
-   */
-  public void paintBankLineLineString( final IMapPanel panel, final Graphics g, final Color color )
-  {
-    // paint the line
-    try
-    {
-      paintLineString( getBankLeftInters(), g, panel, color );
-      paintLineString( getBankRightInters(), g, panel, color );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    // paint the nodes
-    paintLineStringPoints( getBankLeftInters(), g, panel, color );
-    paintLineStringPoints( getBankRightInters(), g, panel, color );
-
-  }
-
-  private void paintLineString( final LineString line, final Graphics g, final IMapPanel mapPanel, final Color color ) throws GM_Exception, CoreException
-  {
-    if( line == null )
-      return;
-
-    final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
-
-    final GM_Curve Curve = (GM_Curve) JTSAdapter.wrap( line );
-    Stroke defaultstroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
-    defaultstroke = symb.getStroke();
-    stroke.setWidth( 2 );
-    stroke.setStroke( color );
-    symb.setStroke( stroke );
-
-    final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, Curve, symb );
-    de.paint( g, mapPanel.getProjection(), new NullProgressMonitor() );
-
-    // Set the Stroke back to default
-    symb.setStroke( defaultstroke );
-
-  }
-
   public void setBankLeftInters( final LineString bankLeftInters )
   {
     m_bankLeftInters = bankLeftInters;
@@ -1479,61 +1361,6 @@ public class SegmentData
   public void setBankRightOrg( final LineString bankRightInters )
   {
     m_bankRightOrg = bankRightInters;
-  }
-
-  public void paintProfile( final CreateChannelData.PROF currentProfile, final IMapPanel panel, final Graphics g, final Color color )
-  {
-    LineString line = null;
-    final GeometryFactory factory = new GeometryFactory();
-
-    if( currentProfile == PROF.UP )
-      line = factory.createLineString( convertProfileToCoordinates( m_upIntersProfile ) );
-    else if( currentProfile == PROF.DOWN )
-      line = factory.createLineString( convertProfileToCoordinates( m_downIntersProfile ) );
-
-    try
-    {
-      paintLineString( line, g, panel, color );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    paintLineStringPoints( line, g, panel, color );
-
-  }
-
-  public void paintIntersectionPoints( final IMapPanel panel, final Graphics g, final Color color, final PROF prof )
-  {
-    for( int i = 0; i < m_intersPoints.size(); i++ )
-      if( m_intersPoints.get( i ).getProf() == prof )
-      {
-        final Point point = m_intersPoints.get( i ).getPoint();
-        paintPoint( point, g, panel, color );
-      }
-
-  }
-
-  private Coordinate[] convertProfileToCoordinates( final IProfil profile )
-  {
-    final Coordinate[] coords = new Coordinate[profile.getPoints().length];
-
-    for( int i = 0; i < coords.length; i++ )
-    {
-      final IRecord record = profile.getPoints()[i];
-      final TupleResult owner = record.getOwner();
-
-      final IComponent rwComponent = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      final IComponent hwComponent = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT );
-      final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE );
-
-      final double x = (Double) record.getValue( owner.indexOfComponent( rwComponent ) );
-      final double y = (Double) record.getValue( owner.indexOfComponent( hwComponent ) );
-      final double z = (Double) record.getValue( owner.indexOfComponent( hoeheComponent ) );
-
-      coords[i] = new Coordinate( x, y, z );
-    }
-    return coords;
   }
 
   /**
@@ -1605,4 +1432,23 @@ public class SegmentData
     }
   }
 
+  public IntersPointData[] getIntersectionPoints( )
+  {
+    return m_intersPoints.toArray( new IntersPointData[m_intersPoints.size()] );
+  }
+
+  public IProfil getCurrentProfile( final PROF prof )
+  {
+    switch( prof )
+    {
+      case DOWN:
+        return getProfDownIntersProfile();
+
+      case UP:
+        return getProfUpIntersProfile();
+
+      default:
+        throw new UnsupportedOperationException();
+    }
+  }
 }
