@@ -151,7 +151,6 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   {
     final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
-    mapPanel.repaintMap();
 
     m_modePolygon = true;
 
@@ -188,6 +187,8 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     m_lineSymb = new LineSymbolizer_Impl();
     final Stroke lineStroke = StyleFactory.createStroke( new Color( 0, 255, 0 ) );
     m_lineSymb.setStroke( lineStroke );
+
+    repaintMap();
   }
 
   @Override
@@ -444,6 +445,8 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
         m_boundaryGeometryBuilder.removeLastPoint();
       else
         m_breaklineGeometryBuilder.removeLastPoint();
+
+      repaintMap();
     }
     else if( e.getKeyCode() == KeyEvent.VK_ENTER )
       m_data.convertTriangulationToModel();
