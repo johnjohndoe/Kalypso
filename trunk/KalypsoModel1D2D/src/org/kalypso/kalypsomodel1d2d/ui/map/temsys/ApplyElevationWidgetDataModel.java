@@ -61,8 +61,8 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -118,8 +118,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
       e.printStackTrace();
     }
     return null;
-    // return discretisationModel;
-    // return (IFEDiscretisationModel1d2d) getData( IFEDiscretisationModel1d2d.class.toString() );
   }
 
   public CommandableWorkspace getDiscretisationModelWorkspace( )
@@ -139,14 +137,14 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     return null;
   }
 
-  public ITerrainElevationModel getElevationModel( )
+  private ITerrainElevationModel[] getElevationModels( )
   {
-    return (ITerrainElevationModel) getData( ITerrainElevationModel.class.toString() );
+    return (ITerrainElevationModel[]) getData( ITerrainElevationModel.class.toString() );
   }
 
-  public void setElevationModel( final ITerrainElevationModel elevationModel )
+  public void setElevationModels( final ITerrainElevationModel[] elevationModels )
   {
-    setData( ITerrainElevationModel.class.toString(), elevationModel, true );
+    setData( ITerrainElevationModel.class.toString(), elevationModels, true );
   }
 
   public ITerrainElevationModelSystem getElevationModelSystem( )
@@ -163,7 +161,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   public List<IFE1D2DNode> getSelectedNode( )
   {
     return (List<IFE1D2DNode>) getData( SELECTED_NODE_KEY );
-
   }
 
   public void setSelectedNode( final List<IFE1D2DNode> selectedNode )
@@ -206,9 +203,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setData( IMapPanel.class.toString(), mapPanel );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection)
-   */
   @Override
   public void selectionChanged( final Object source, final IFeatureSelection selection )
   {
@@ -230,15 +224,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setSelectedNode( nodes );
   }
 
-  public final IFeatureBindingCollection<ITerrainElevationModel> getTerrainElevationModels( )
-  {
-    final ITerrainElevationModelSystem elevationModelSystem = getElevationModelSystem();
-    if( elevationModelSystem == null )
-      return null;
-    else
-      return elevationModelSystem.getTerrainElevationModels();
-  }
-
   public void setSelectedNodeList( final List<IFE1D2DNode> selectionNodeList )
   {
     m_selectedNodeList = selectionNodeList;
@@ -252,5 +237,22 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   public void saveModels( ) throws CoreException
   {
     m_dataProvider.saveModel( new NullProgressMonitor() );
+  }
+
+  /**
+   * Returns an elevation model based on the curretn selection of models. The node heights are assigned according to
+   * this model.<br/>
+   * <ul>
+   * <li>If no model is selected, all models are used.</li>
+   * <li>If one ore more models are selected, only these models are used to determine the height.</li>
+   * </ul>
+   */
+  public final IElevationModel getElevationProvider( )
+  {
+    final ITerrainElevationModel[] selectedModels = getElevationModels();
+    if( selectedModels == null )
+      return getElevationModelSystem();
+
+    return new ElevationArrayModel( selectedModels );
   }
 }

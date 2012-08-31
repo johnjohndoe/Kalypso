@@ -60,7 +60,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -171,11 +170,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     m_dataModel.removeAllListeners();
   }
 
-  public void setTerrainModel( final ITerrainElevationModel terrainModel )
-  {
-    m_dataModel.setElevationModel( terrainModel );
-  }
-
   @Override
   public void moved( final Point p )
   {
@@ -269,7 +263,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       if( nodePoint == null )
         nodePoint = MapUtilities.transform( mapPanel, p );
 
-      final IElevationModel elevationProvider = getElevationProvider();
+      final IElevationModel elevationProvider = m_dataModel.getElevationProvider();
       if( elevationProvider != null )
       {
         final double elevation = elevationProvider.getElevation( nodePoint );
@@ -303,26 +297,12 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#doubleClickedLeft(java.awt.Point)
-   */
   @Override
   public void doubleClickedLeft( final Point p )
   {
     super.doubleClickedLeft( p );
   }
 
-  private final IElevationModel getElevationProvider( )
-  {
-    IElevationModel elevationProvider = m_dataModel.getElevationModel();
-    if( elevationProvider == null )
-      elevationProvider = m_dataModel.getElevationModelSystem();
-    return elevationProvider;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {

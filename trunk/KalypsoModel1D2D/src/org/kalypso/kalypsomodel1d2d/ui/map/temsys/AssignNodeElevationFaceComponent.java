@@ -316,12 +316,11 @@ public class AssignNodeElevationFaceComponent extends Composite
         return;
 
       final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
+
       for( final Object selected : ((IStructuredSelection) selection).toList() )
       {
         if( selected instanceof IFE1D2DNode )
-        {
           nodeList.add( (IFE1D2DNode) selected );
-        }
       }
 
       ApplyElevationHelper.assignElevationToSelectedNodes( m_dataModel, nodeList );
@@ -342,8 +341,7 @@ public class AssignNodeElevationFaceComponent extends Composite
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
     m_selectionNodeList.clear();
-    final List tableSelection = selection.toList();
-    m_selectionNodeList.addAll( tableSelection );
+    m_selectionNodeList.addAll( selection.toList() );
 
     m_dataModel.setSelectedNodeList( m_selectionNodeList );
     final IMapPanel mapPanel = m_dataModel.getMapPanel();
