@@ -47,9 +47,9 @@ import org.kalypso.kalypsomodel1d2d.ops.NodeOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodeElevationCommand;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -60,19 +60,20 @@ public class ApplyElevationHelper
 {
   public static void assignElevationToSelectedNodes( final ApplyElevationWidgetDataModel dataModel, final List<IFE1D2DNode> nodeList ) throws Exception
   {
-    final ITerrainElevationModelSystem elevationModel = dataModel.getElevationModelSystem();
-
     final IMapPanel mapPanel = dataModel.getMapPanel();
     if( mapPanel == null )
       return;
 
     final IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
-
     if( model1d2d == null )
       return;
 
     final CommandableWorkspace workspace = dataModel.getDiscretisationModelWorkspace();
     if( workspace == null )
+      return;
+
+    final IElevationModel elevationModel = dataModel.getElevationProvider();
+    if( elevationModel == null )
       return;
 
     final ChangeNodeElevationCommand command = new ChangeNodeElevationCommand( model1d2d );

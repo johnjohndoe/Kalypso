@@ -187,7 +187,7 @@ class ApplyElevationWidgetFace
     elevationSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.6" ) ); //$NON-NLS-1$
     elevationSection.setLayout( new FillLayout() );
 
-  final ElevationModelSystemEditorComponent editor = new ElevationModelSystemEditorComponent( toolkit, elevationSection, m_dataModel );
+    final ElevationModelSystemEditorComponent editor = new ElevationModelSystemEditorComponent( toolkit, elevationSection, m_dataModel );
     elevationSection.setClient( editor );
 
     return elevationSection;

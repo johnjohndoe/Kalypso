@@ -40,10 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -58,13 +62,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
@@ -77,6 +80,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class ElevationModelSystemEditorComponent extends Composite
 {
+  private final Collection<IAction> m_actions = new ArrayList<>();
+
   private TableViewer m_elevationViewer;
 
   private final ApplyElevationWidgetDataModel m_dataModel;
@@ -114,7 +119,7 @@ public class ElevationModelSystemEditorComponent extends Composite
 
   private Control createElevationViewer( final FormToolkit toolkit, final Composite parent )
   {
-    final Table elevationTable = toolkit.createTable( parent, SWT.FILL | SWT.BORDER );
+    final Table elevationTable = toolkit.createTable( parent, SWT.FILL | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     elevationTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     elevationTable.setLinesVisible( true );
     elevationTable.setHeaderVisible( true );
@@ -173,14 +178,30 @@ public class ElevationModelSystemEditorComponent extends Composite
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
     if( selection.isEmpty() )
-      m_dataModel.setElevationModel( null );
+      m_dataModel.setElevationModels( null );
     else
     {
-      if( selection.getFirstElement() instanceof ITerrainElevationModel )
+      final List< ? > list = selection.toList();
+
+      final Collection<ITerrainElevationModel> elevationModels = new ArrayList<>( list.size() );
+      for( final Object object : list )
       {
-        final ITerrainElevationModel firstElement = (ITerrainElevationModel) selection.getFirstElement();
-        m_dataModel.setElevationModel( firstElement );
+        if( object instanceof ITerrainElevationModel )
+          elevationModels.add( (ITerrainElevationModel) object );
       }
+
+      m_dataModel.setElevationModels( elevationModels.toArray( new ITerrainElevationModel[elevationModels.size()] ) );
+    }
+
+    updateActions();
+  }
+
+  private void updateActions( )
+  {
+    for( final IAction action : m_actions )
+    {
+      if( action instanceof IUpdateable )
+        ((IUpdateable) action).update();
     }
   }
 
@@ -194,27 +215,25 @@ public class ElevationModelSystemEditorComponent extends Composite
     createActions();
 
     m_toolbar.update( true );
+    updateActions();
 
     return tb;
   }
 
   private void createActions( )
   {
-    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
-
-    final Action moveUpAction = new ElevationModelMoveSelectionAction( m_elevationViewer, m_dataModel, -1 );
-    final ImageDescriptor moveUpImage = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_MOVE_UP );
-    moveUpAction.setImageDescriptor( moveUpImage );
+    final Action moveUpAction = new ElevationModelMoveSelectionAction( m_elevationViewer, m_dataModel, -1, KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_MOVE_UP );
     m_toolbar.add( moveUpAction );
+    m_actions.add( moveUpAction );
 
-    final Action moveDownAction = new ElevationModelMoveSelectionAction( m_elevationViewer, m_dataModel, 1 );
-    final ImageDescriptor moveDownImage = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_MOVE_DOWN );
-    moveDownAction.setImageDescriptor( moveDownImage );
+    final Action moveDownAction = new ElevationModelMoveSelectionAction( m_elevationViewer, m_dataModel, 1, KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_MOVE_DOWN );
     m_toolbar.add( moveDownAction );
+    m_actions.add( moveDownAction );
 
-    m_toolbar.add( new ElevationModelJumToTerrainAction( m_dataModel ) );
+    m_toolbar.add( new ElevationModelJumpToTerrainAction( m_dataModel ) );
 
     final Action deleteAction = new ElevationModelDeleteTerrainAction( m_elevationViewer, m_dataModel );
     m_toolbar.add( deleteAction );
+    m_actions.add( deleteAction );
   }
 }
