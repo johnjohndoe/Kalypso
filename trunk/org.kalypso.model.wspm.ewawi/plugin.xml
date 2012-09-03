@@ -17,7 +17,7 @@
          id="ewawi2shapeProduct"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.kalypso.ewawi.ewawi2shapeApp"
+            application="org.kalypso.model.wspm.ewawi.ewawi2shapeApp"
             description="Konvertiert EWAWI+ in das Shapeformat"
             name="Ewawi2Shape">
          <property
