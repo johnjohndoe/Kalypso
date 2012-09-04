@@ -222,11 +222,11 @@ public class SearchDhmIndexPage extends WizardPage
       public void handleValueChange( final ValueChangeEvent event )
       {
         /* Parent is disposed. */
-        if( body == null || body.isDisposed() )
+        if( body.isDisposed() )
           return;
 
         /* Get the dhm index from the selection. */
-        final DhmIndex dhmIndex = (DhmIndex) event.getObservableValue().getValue();
+        final DhmIndex dhmIndex = (DhmIndex)event.getObservableValue().getValue();
 
         /* The dhm index composite needs to get the new object set. */
         if( m_dhmIndexComposite != null && !m_dhmIndexComposite.isDisposed() )

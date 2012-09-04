@@ -297,4 +297,11 @@
          install-size="0"
          version="12.7.0.qualifier"/>
 
+   <plugin
+         id="org.kalypso.model.wspm.ewawi"
+         download-size="0"
+         install-size="0"
+         version="12.7.0.qualifier"
+         unpack="false"/>
+
 </feature>
