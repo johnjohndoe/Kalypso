@@ -825,6 +825,14 @@
               name="%command.name.4">
               <description>%command.description.3</description>
         </wizard>
+        
+        <wizard
+              class="org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard"
+              icon="icons/elcl16/import_ewawi.gif"
+              name="%org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard.name">
+              <description>%org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard.description</description>
+        </wizard>
 
        <wizard
              category="importWizards"
@@ -922,6 +930,15 @@
            </enablement>
         </wizardEnablement>
         <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard">
+           <enablement>
+                <with variable="selection">
+                       <iterate ifEmpty="false" operator="and">
+                          <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody"/>
+                       </iterate>
+                </with>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard">
            <enablement>
                 <with variable="selection">
                        <iterate ifEmpty="false" operator="and">

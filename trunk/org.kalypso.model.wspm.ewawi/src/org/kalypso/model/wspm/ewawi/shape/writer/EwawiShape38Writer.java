@@ -111,7 +111,7 @@ public class EwawiShape38Writer extends AbstractEwawiShapeWriter
     return new SHPPoint( rechtswert, hochwert );
   }
 
-  private Object[] getValues( final EwawiEplLine eplLine, final EwawiPlus data )
+  private Object[] getValues( final EwawiEplLine eplLine, final EwawiPlus data ) throws DBaseException
   {
     final EwawiKey key = data.getKey();
 

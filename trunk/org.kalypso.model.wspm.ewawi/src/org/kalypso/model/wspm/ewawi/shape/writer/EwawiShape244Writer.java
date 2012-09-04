@@ -124,7 +124,7 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     }
   }
 
-  private Object[] getValues( final EwawiProfilePart part, final EwawiPlus data ) throws EwawiShapeException
+  private Object[] getValues( final EwawiProfilePart part, final EwawiPlus data ) throws DBaseException, EwawiShapeException
   {
     final EwawiKey key = data.getKey();
     final EwawiSta staIndex = data.getStaIndex();

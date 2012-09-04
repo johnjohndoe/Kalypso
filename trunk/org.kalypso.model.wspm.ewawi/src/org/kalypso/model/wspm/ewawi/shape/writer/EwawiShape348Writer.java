@@ -92,7 +92,7 @@ public class EwawiShape348Writer extends AbstractEwawiShapeWriter
     shapeFile.addFeature( shape, values );
   }
 
-  private Object[] getValues( final EwawiLengthStructure structure, final EwawiPlus data )
+  private Object[] getValues( final EwawiLengthStructure structure, final EwawiPlus data ) throws DBaseException
   {
     final EwawiKey key = data.getKey();
 
