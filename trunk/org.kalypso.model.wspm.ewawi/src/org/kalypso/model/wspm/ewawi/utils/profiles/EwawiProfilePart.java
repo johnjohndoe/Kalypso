@@ -20,6 +20,7 @@ package org.kalypso.model.wspm.ewawi.utils.profiles;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -107,6 +108,8 @@ public class EwawiProfilePart
     m_proLines.put( proLine.getPunktReihenfolge(), proLine );
   }
 
+  // HINT: Every function downward uses the first pro point to retrieve the data.
+
   public EwawiObjectart getObjectArt( )
   {
     final EwawiProLine[] proLines = getProLines();
@@ -129,6 +132,32 @@ public class EwawiProfilePart
   {
     final EwawiProLine[] proLines = getProLines();
     return proLines[0].getZusatz();
+  }
+
+  // HINT: Every function downward uses the left fix point to retrieve the data.
+
+  public EwawiObjectart getObjectArt( final EwawiSta staIndex ) throws EwawiException
+  {
+    final EwawiStaLine leftFixPoint = getLeftFixPoint( staIndex );
+    return leftFixPoint.getObjectArt();
+  }
+
+  public Short getZusatz( final EwawiSta staIndex ) throws EwawiException
+  {
+    final EwawiStaLine leftFixPoint = getLeftFixPoint( staIndex );
+    return leftFixPoint.getZusatz();
+  }
+
+  public EwawiPunktart getPunktArt( final EwawiSta staIndex ) throws EwawiException
+  {
+    final EwawiStaLine leftFixPoint = getLeftFixPoint( staIndex );
+    return leftFixPoint.getPunktArt();
+  }
+
+  public Date getValidity( final EwawiSta staIndex ) throws EwawiException
+  {
+    final EwawiStaLine leftFixPoint = getLeftFixPoint( staIndex );
+    return leftFixPoint.getValidity();
   }
 
   public String getComment( final EwawiSta staIndex ) throws EwawiException

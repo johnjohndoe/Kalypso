@@ -21,6 +21,8 @@ package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.text.DateFormat;
+import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -43,6 +45,8 @@ import org.kalypso.model.wspm.ewawi.data.EwawiPro;
 import org.kalypso.model.wspm.ewawi.data.EwawiProLine;
 import org.kalypso.model.wspm.ewawi.data.EwawiSta;
 import org.kalypso.model.wspm.ewawi.data.EwawiStaLine;
+import org.kalypso.model.wspm.ewawi.data.enums.EwawiObjectart;
+import org.kalypso.model.wspm.ewawi.data.enums.EwawiProfilart;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiPunktart;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
@@ -159,10 +163,15 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       final String riverId = String.format( "%d", basePart.getGewKennzahl() );
       final String riverName = getRiverName( gewShape, basePart );
       final String[] photos = basePart.getPhotos( staIndex );
+      final String name = getName( staIndex, basePart );
+      final String description = getDescription( staIndex, basePart );
 
       final IProfileFeature profileFeature = m_targetProject.createNewProfile( riverName, m_data.isDirectionUpstreams() );
+      profileFeature.setBigStation( station );
       profileFeature.getWater().setRefNr( riverId );
       profileFeature.setSrsName( m_data.getCoordinateSystem() );
+      profileFeature.setName( name );
+      profileFeature.setDescription( description );
 
       for( final String foto : photos )
       {
@@ -175,39 +184,7 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
         image.setName( FilenameUtils.removeExtension( foto ) );
       }
 
-      final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-      final IComponent hochwertComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-      final IComponent rechtswertComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      final IComponent hoeheComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-      final IComponent breiteComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-
-      final IProfil profil = profileFeature.getProfil();
-      profil.addPointProperty( hochwertComponent );
-      profil.addPointProperty( rechtswertComponent );
-      profil.addPointProperty( hoeheComponent );
-      profil.addPointProperty( breiteComponent );
-
-      final EwawiProLine[] proLines = basePart.getProLines();
-      for( final EwawiProLine proLine : proLines )
-      {
-        final EwawiProfilePoint profilePoint = createProfilePoint( staIndex, proLine );
-        final SHPPoint shape = profilePoint.getShape();
-
-        final double hochwert = shape.getY();
-        final double rechtswert = shape.getX();
-        final double hoehe = profilePoint.getHoehe().doubleValue();
-        final double breite = profilePoint.getBreite().doubleValue();
-
-        final IProfileRecord record = profil.createProfilPoint();
-        record.setValue( record.indexOfProperty( hochwertComponent ), hochwert );
-        record.setValue( record.indexOfProperty( rechtswertComponent ), rechtswert );
-        record.setValue( record.indexOfProperty( hoeheComponent ), hoehe );
-        record.setValue( record.indexOfProperty( breiteComponent ), breite );
-
-        // TODO Set the values...
-
-        profil.addPoint( record );
-      }
+      createProfilePoints( staIndex, basePart, profileFeature );
 
       return profileFeature;
     }
@@ -233,6 +210,115 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       return "Undefiniert";
 
     return name;
+  }
+
+  private String getName( final EwawiSta staIndex, final EwawiProfilePart basePart ) throws EwawiException
+  {
+    final Short profilNummer = basePart.getProfilNummer( staIndex );
+    if( profilNummer != null )
+      return String.format( "%d", profilNummer );
+
+    return "";
+  }
+
+  private String getDescription( final EwawiSta staIndex, final EwawiProfilePart basePart ) throws EwawiException
+  {
+    final StringBuilder description = new StringBuilder();
+
+    final EwawiObjectart objectArt = basePart.getObjectArt( staIndex );
+    if( objectArt != null )
+    {
+      final String objectArtText = String.format( "Objektart: %d, %s%n", objectArt.getKey(), objectArt.getLabel() );
+      description.append( objectArtText );
+    }
+
+    final Short zusatz = basePart.getZusatz( staIndex );
+    if( zusatz != null )
+    {
+      final String zusatzText = String.format( "Zusatzkennzahl: %d%n", zusatz );
+      description.append( zusatzText );
+    }
+
+    final EwawiPunktart punktArt = basePart.getPunktArt( staIndex );
+    if( punktArt != null )
+    {
+      final String punktArtText = String.format( "Punktart: %d, %s%n", punktArt.getKey(), punktArt.getLabel() );
+      description.append( punktArtText );
+    }
+
+    final Date validity = basePart.getValidity( staIndex );
+    if( validity != null )
+    {
+      final DateFormat df = DateFormat.getDateInstance( DateFormat.MEDIUM );
+      final String validityText = df.format( validity );
+      description.append( validityText + "%n" );
+    }
+
+    final EwawiProfilart profilArt = basePart.getProfilArt( staIndex );
+    if( profilArt != null )
+    {
+      final String profilArtText = String.format( "Profilart: %d, %s%n", profilArt.getKey(), profilArt.getLabel() );
+      description.append( profilArtText );
+    }
+
+    final String comment = basePart.getComment( staIndex );
+    if( comment != null )
+    {
+      final String commentText = String.format( "%s%n", comment );
+      description.append( commentText );
+    }
+
+    return description.toString();
+  }
+
+  private void createProfilePoints( final EwawiSta staIndex, final EwawiProfilePart basePart, final IProfileFeature profileFeature ) throws EwawiException
+  {
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    final IComponent idComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_ID );
+    final IComponent commentComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_COMMENT );
+    final IComponent rechtswertComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hochwertComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent breiteComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent hoeheComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+
+    final IProfil profil = profileFeature.getProfil();
+    profil.addPointProperty( idComponent );
+    profil.addPointProperty( commentComponent );
+    profil.addPointProperty( rechtswertComponent );
+    profil.addPointProperty( hochwertComponent );
+    profil.addPointProperty( breiteComponent );
+    profil.addPointProperty( hoeheComponent );
+
+    final EwawiProLine[] proLines = basePart.getProLines();
+    for( final EwawiProLine proLine : proLines )
+    {
+      final EwawiProfilePoint profilePoint = createProfilePoint( staIndex, proLine );
+      final SHPPoint shape = profilePoint.getShape();
+
+      final String id = String.format( "%d", proLine.getPunktNummer() );
+      final String comment = proLine.getComment();
+      final double hochwert = shape.getY();
+      final double rechtswert = shape.getX();
+      final double hoehe = profilePoint.getHoehe().doubleValue();
+      final double breite = profilePoint.getBreite().doubleValue();
+
+      final IProfileRecord record = profil.createProfilPoint();
+      record.setValue( record.indexOfProperty( idComponent ), id );
+      record.setValue( record.indexOfProperty( commentComponent ), comment );
+      record.setValue( record.indexOfProperty( rechtswertComponent ), rechtswert );
+      record.setValue( record.indexOfProperty( hochwertComponent ), hochwert );
+      record.setValue( record.indexOfProperty( breiteComponent ), breite );
+      record.setValue( record.indexOfProperty( hoeheComponent ), hoehe );
+
+      // TODO PRO
+      // Objektart
+      // Zusatzkennzahl
+      // Punktart
+      // Aufnahmedatum
+      // Bedeutung horizont
+
+      profil.addPoint( record );
+    }
   }
 
   private EwawiProfilePoint createProfilePoint( final EwawiSta staIndex, final EwawiProLine proLine ) throws EwawiException

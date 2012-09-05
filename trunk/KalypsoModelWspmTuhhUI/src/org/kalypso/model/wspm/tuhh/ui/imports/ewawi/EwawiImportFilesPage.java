@@ -20,6 +20,8 @@ package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -27,14 +29,19 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.DirectoryBinding;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.swt.FileBinding;
+import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.java.io.FileExtensions;
 import org.kalypso.contribs.java.io.FilePattern;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 
 /**
  * @author Holger Albert
@@ -61,50 +68,68 @@ public class EwawiImportFilesPage extends WizardPage
 
     /* Create the main composite. */
     final Composite main = new Composite( parent, SWT.NONE );
-    final GridLayout mainLayout = new GridLayout( 2, false );
+    final GridLayout mainLayout = new GridLayout( 1, false );
     mainLayout.marginHeight = 0;
     mainLayout.marginWidth = 0;
     main.setLayout( mainLayout );
 
+    /* Create a group. */
+    final Group filesGroup = new Group( main, SWT.NONE );
+    filesGroup.setLayout( new GridLayout( 2, false ) );
+    filesGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    filesGroup.setText( "Quellen" );
+
     /* Create a label. */
-    final Label proFileLabel = new Label( main, SWT.NONE );
+    final Label proFileLabel = new Label( filesGroup, SWT.NONE );
     proFileLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     proFileLabel.setText( ".pro Datei:" );
 
     /* Create the .pro file controls. */
-    createProFileControls( main, dataBinding );
+    createProFileControls( filesGroup, dataBinding );
 
     /* Create a label. */
-    final Label staFileLabel = new Label( main, SWT.NONE );
+    final Label staFileLabel = new Label( filesGroup, SWT.NONE );
     staFileLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     staFileLabel.setText( ".sta Datei:" );
 
     /* Create the .sta file controls. */
-    createStaFileControls( main, dataBinding );
+    createStaFileControls( filesGroup, dataBinding );
 
     /* Create a label. */
-    final Label fotoDirectoryLabel = new Label( main, SWT.NONE );
+    final Label fotoDirectoryLabel = new Label( filesGroup, SWT.NONE );
     fotoDirectoryLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     fotoDirectoryLabel.setText( "Bilderverzeichnis [optional]:" );
 
     /* Create the foto directory controls. */
-    createFotoDirectoryControls( main, dataBinding );
+    createFotoDirectoryControls( filesGroup, dataBinding );
 
     /* Create a label. */
-    final Label documentDirectoryLabel = new Label( main, SWT.NONE );
+    final Label documentDirectoryLabel = new Label( filesGroup, SWT.NONE );
     documentDirectoryLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     documentDirectoryLabel.setText( "Dokumentenverzeichnis [optional]:" );
 
     /* Create the document directory controls. */
-    createDocumentDirectoryControls( main, dataBinding );
+    createDocumentDirectoryControls( filesGroup, dataBinding );
 
     /* Create a label. */
-    final Label shpFileLabel = new Label( main, SWT.NONE );
+    final Label shpFileLabel = new Label( filesGroup, SWT.NONE );
     shpFileLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     shpFileLabel.setText( "Gewässershape [optional]:" );
 
     /* Create the .shp file controls. */
-    createShpFileControls( main, dataBinding );
+    createShpFileControls( filesGroup, dataBinding );
+
+    /* Create the coordinate system control. */
+    createCoordinateSystemControl( main, dataBinding );
+
+    /* Create a group. */
+    final Group optionsGroup = new Group( main, SWT.NONE );
+    optionsGroup.setLayout( new GridLayout( 1, false ) );
+    optionsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    optionsGroup.setText( "Optionen" );
+
+    /* Create the direction upstreams controls. */
+    createDirectionUpstreamsControls( optionsGroup, dataBinding );
 
     /* Set the control to the page. */
     setControl( main );
@@ -189,6 +214,29 @@ public class EwawiImportFilesPage extends WizardPage
 
     final Button fileButton = fileBinding.createFileSearchButton( main, historyControl );
     fileButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+  }
+
+  private void createCoordinateSystemControl( final Composite panel, final IDataBinding dataBinding )
+  {
+    final CRSSelectionPanel crsPanel = new CRSSelectionPanel( panel, SWT.NONE );
+    crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final IObservableValue target = crsPanel.observe();
+    final IObservableValue model = BeansObservables.observeValue( m_data, EwawiImportData.PROPERTY_COORDINATE_SYSTEM );
+
+    final DataBinder binder = new DataBinder( target, model );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "Bitte wählen Sie ein Koordinaten-System aus." ) );
+    dataBinding.bindValue( binder );
+  }
+
+  private void createDirectionUpstreamsControls( final Group optionsGroup, final DatabindingWizardPage dataBinding )
+  {
+    final Button directionUpstreamsButton = new Button( optionsGroup, SWT.CHECK );
+    directionUpstreamsButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    directionUpstreamsButton.setText( "" );
+
+    final IObservableValue target = SWTObservables.observeSelection( directionUpstreamsButton );
+    final IObservableValue model = BeansObservables.observeValue( m_data, EwawiImportData.PROPERTY_DIRECTION_UPSTREAMS );
+    dataBinding.bindValue( target, model );
   }
 
   private FileChooserDelegateOpen createFileChooserDelegate( final FilePattern pattern )
