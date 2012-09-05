@@ -48,9 +48,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -84,21 +82,9 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
     m_data = data;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction#execute(org.kalypso.ogc.gml.map.MapPanel,
-   *      org.eclipse.swt.graphics.Rectangle)
-   */
   @Override
-  @SuppressWarnings("unchecked")
   public void execute( final IMapPanel mapPanel, final Rectangle rectangle )
   {
-
-    if( m_data.getMeshStatus() == true )
-    {
-      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ProfileSelectorFunction.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ProfileSelectorFunction.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        return;
-    }
-
     final GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( mapPanel.getProjection(), rectangle );
 
     final IKalypsoFeatureTheme profileTheme = m_data.getProfileTheme();
@@ -107,11 +93,13 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
 
     // search profile within rectangle
     final FeatureList featureList = profileTheme.getFeatureList();
-    final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
+    if( featureList == null )
+      return;
 
-    final IProfileFeature[] selectedProfiles = m_data.getSelectedProfiles();
-    final Set<IProfileFeature> selectedProfileSet = new HashSet<IProfileFeature>( Arrays.asList( selectedProfiles ) );
+    final Feature owner = featureList.getOwner();
+    final GMLWorkspace workspace = owner.getWorkspace();
 
+    @SuppressWarnings( "unchecked" )
     final List< ? > list = featureList.query( envelope, null );
 
     final Polygon rectanglePoly = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
@@ -139,6 +127,9 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
       }
     }
 
+    final IProfileFeature[] selectedProfiles = m_data.getSelectedProfileFeatures();
+    final Set<IProfileFeature> selectedProfileSet = new HashSet<>( Arrays.asList( selectedProfiles ) );
+
     if( list.size() == 0 )
     {
       // empty selection: remove selection
@@ -146,8 +137,8 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
     }
     else
     {
-      final List<IProfileFeature> featureToAdd = new ArrayList<IProfileFeature>();
-      final List<IProfileFeature> featureToRemove = new ArrayList<IProfileFeature>();
+      final List<IProfileFeature> featureToAdd = new ArrayList<>();
+      final List<IProfileFeature> featureToRemove = new ArrayList<>();
 
       for( int i = 0; i < list.size(); i++ )
       {

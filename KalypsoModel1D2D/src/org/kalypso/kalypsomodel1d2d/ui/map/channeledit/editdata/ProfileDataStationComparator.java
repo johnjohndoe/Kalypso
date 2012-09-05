@@ -38,40 +38,33 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
+package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.Comparator;
 
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
 
-public class MainChannelHelper
+/**
+ * Compares {@link ProfileData} objects by its original profile's station.
+ *
+ * @author Gernot Belger
+ */
+class ProfileDataStationComparator implements Comparator<IProfileData>
 {
-  public static GM_Position[] getPositionsFromCurves( final GM_Curve[] curves, final Map<GM_Position, GM_Curve> map )
-  {
-    final List<GM_Position> posList = new ArrayList<>();
+  private final ProfileFeatureStationComparator m_profileComparator;
 
-    for( final GM_Curve curve : curves )
-    {
-      try
-      {
-        final GM_Position[] positions = curve.getAsLineString().getPositions();
-        for( final GM_Position position : positions )
-        {
-          posList.add( position );
-          map.put( position, curve );
-        }
-      }
-      catch( final GM_Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        return null;
-      }
-    }
-    return posList.toArray( new GM_Position[posList.size()] );
+  public ProfileDataStationComparator( final boolean isDirectionUpstreams )
+  {
+    m_profileComparator = new ProfileFeatureStationComparator( isDirectionUpstreams );
+  }
+
+  @Override
+  public int compare( final IProfileData o1, final IProfileData o2 )
+  {
+    final IProfileFeature p1 = o1.getFeature();
+    final IProfileFeature p2 = o2.getFeature();
+
+    return m_profileComparator.compare( p1, p2 );
   }
 }

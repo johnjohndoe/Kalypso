@@ -40,45 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IBankData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.GM_PointSnapper;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.Handle;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.CssParameter;
-import org.kalypsodeegree.graphics.sld.Fill;
-import org.kalypsodeegree.graphics.sld.Graphic;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Mark;
-import org.kalypsodeegree.graphics.sld.PointSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -86,20 +79,24 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class DragBankLineWidget extends AbstractWidget
 {
+  private final SLDPainter2 m_handlePainter = new SLDPainter2( getClass().getResource( "resources/handleRect.sld" ) );
+
+  private final SLDPainter2 m_currentLinePainter = new SLDPainter2( getClass().getResource( "resources/draggedBankLine.sld" ) );
+
   /**
    * This list stores all handles of the selected feature.
    */
-  private List<IHandle> m_handles;
+  private final Map<IHandle, IBankData> m_handles = new HashMap<>();
 
   /**
    * The radius, in which a handle should be selectable.
    */
-  private final int m_radius;
+  private final int m_radius = 10;
 
   /**
    * The start point, if dragged.
    */
-  private Point m_startPoint;
+  private IHandle m_draggedHandle;
 
   /**
    * The current point, if dragged, otherwise null.
@@ -107,197 +104,31 @@ public class DragBankLineWidget extends AbstractWidget
   private Point m_currentPoint;
 
   /**
-   * The bankline.
-   */
-  private GM_Curve m_bankline;
-
-  /**
    * The new curve.
    */
-  private GM_Curve m_newCurve;
-
-  /**
-   * The current segment.
-   */
-  private SegmentData m_currentSegment;
+  private GM_Curve m_currentCurve;
 
   private final CreateChannelData m_data;
 
-  private final boolean m_snappingActive;
-
   private GM_PointSnapper m_pointSnapper;
 
-  // private Point m_currentMapPoint;
-
-  private GM_Point m_snapPoint;
-
-  private final IMapPanel m_mapPanel;
-
-  public DragBankLineWidget( final CreateChannelData channeldata, final IMapPanel mapPanel )
+  public DragBankLineWidget( final CreateChannelData channeldata )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DragBankLineWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DragBankLineWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_mapPanel = mapPanel;
 
     m_data = channeldata;
-    m_currentSegment = m_data.getSelectedSegment();
-    m_newCurve = null;
-    m_handles = null;
-    m_radius = 10;
-    m_snappingActive = true;
 
-    setPointSnapper( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-    /* The start & current points are null. */
-    m_startPoint = null;
-    m_currentPoint = null;
-
-    /* Create a new list for the handles. */
-    m_handles = new ArrayList<IHandle>();
-  }
-
-  private void setPointSnapper( final String crs )
-  {
-    final GM_Position[] posses = m_data.getAllSegmentPosses();
-    m_pointSnapper = new GM_PointSnapper( posses, m_mapPanel, crs );
+    reset();
   }
 
   @Override
-  public void mouseMoved( final MouseEvent event )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
-    final Point p = event.getPoint();
+    super.activate( commandPoster, mapPanel );
 
-    final Object newPoint = checkNewPoint( p );
-
-    if( newPoint == null )
-      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
-    else
-      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
-
-    repaintMap();
+    reset();
   }
 
-  private Object checkNewPoint( final Point p )
-  {
-    final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return null;
-
-    final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
-
-    if( m_snappingActive )
-      m_snapPoint = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
-
-    final Object newNode = m_snapPoint == null ? null : m_snapPoint;
-
-    if( newNode instanceof GM_Point )
-    {
-      try
-      {
-        final SegmentData segment = m_data.getSegmentAtPosition( ((GM_Point) newNode).getPosition() );
-        if( segment != null )
-        {
-          m_currentSegment = segment;
-          if( m_currentSegment.getBankLeftInters().contains( JTSAdapter.export( (GM_Point) newNode ) ) )
-            m_bankline = (GM_Curve) JTSAdapter.wrap( m_currentSegment.getBankLeftInters() );
-          else if( m_currentSegment.getBankRightInters().contains( JTSAdapter.export( (GM_Point) newNode ) ) )
-            m_bankline = (GM_Curve) JTSAdapter.wrap( m_currentSegment.getBankRightInters() );
-        }
-        if( m_bankline != null )
-        {
-          /* Create a new list for the handles. */
-          m_handles = new ArrayList<IHandle>();
-
-          /* Collect all handles from the handle provider. */
-          m_handles.addAll( collectHandles() );
-          m_handles.remove( 0 );
-          m_handles.remove( m_handles.size() - 1 );
-
-          collectHandles();
-        }
-      }
-      catch( final GM_Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
-
-    return newNode;
-  }
-
-  private List<IHandle> collectHandles( )
-  {
-    ArrayList<IHandle> list = null;
-    list = new ArrayList<IHandle>();
-
-    if( m_bankline == null )
-      return list;
-
-    try
-    {
-
-      final int numberOfCurveSegments = m_bankline.getNumberOfCurveSegments();
-
-      for( int i = 0; i < numberOfCurveSegments; i++ )
-      {
-        /* One segment of a curve. It can contain several points. */
-        final GM_CurveSegment curveSegment = m_bankline.getCurveSegmentAt( i );
-
-        final GM_Position[] positions = curveSegment.getPositions();
-        for( final GM_Position position : positions )
-        {
-          /* Add the points of every segment to the list of handles. */
-          list.add( new Handle( position, null, null, m_radius ) );
-        }
-      }
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    return list;
-  }
-
-  @Override
-  public void mouseDragged( final MouseEvent event )
-  {
-    if( m_handles == null )
-    {
-      // TODO: check if this repaint is really necessary
-      final IMapPanel panel = getMapPanel();
-      if( panel != null )
-        panel.repaintMap();
-      return;
-    }
-
-    final Point point = event.getPoint();
-
-    if( m_startPoint == null )
-    {
-      /* Store the start point. */
-      m_startPoint = point;
-
-      /* Check, if the mouse cursor is near some handles. */
-      for( final IHandle handle : m_handles )
-      {
-        /* If the cursor is near the handle, set it active, otherwise inactive. */
-        if( handle.isSelectable( point, getMapPanel().getProjection() ) )
-          handle.setActive( true );
-        else
-          handle.setActive( false );
-      }
-    }
-
-    /* Store the current mouse position. */
-    m_currentPoint = point;
-
-    // TODO: check if this repaint is really necessary
-    repaintMap();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {
@@ -309,146 +140,206 @@ public class DragBankLineWidget extends AbstractWidget
   }
 
   @Override
-  public void mouseReleased( final MouseEvent event )
+  public void mouseMoved( final MouseEvent event )
   {
-    if( event.getButton() != MouseEvent.BUTTON1 )
-      return;
-    event.consume();
-
-    if( m_handles == null || m_startPoint == null || m_currentPoint == null )
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
       return;
 
-    /* Set all handles inactive. */
-    for( final IHandle handle : m_handles )
-      handle.setActive( false );
-
-    if( m_newCurve == null )
-    {
-      /* Reset. */
-      m_currentPoint = null;
-      m_startPoint = null;
-
-      final IMapPanel panel = getMapPanel();
-      if( panel != null )
-        panel.repaintMap();
-
+    if( m_pointSnapper == null || m_draggedHandle != null )
       return;
-    }
+
+    final Point p = event.getPoint();
+
+    final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
+    final GM_Point snappedPoint = m_pointSnapper.moved( currentPoint );
+
+    if( snappedPoint == null )
+      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
+    else
+      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
+
+    repaintMap();
+  }
+
+  @Override
+  public void mouseDragged( final MouseEvent event )
+  {
+    final Point point = event.getPoint();
+
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    if( m_draggedHandle == null )
+      return;
+
+    /* Store the current mouse position. */
+    m_currentPoint = point;
+
+    final GM_Position oldPosition = m_draggedHandle.getPosition();
+
+    /* Create new geometry. */
+    final GM_Point newPoint = MapUtilities.transform( mapPanel, point );
+
+    final String mapSRS = mapPanel.getMapModell().getCoordinatesSystem();
 
     try
     {
-      /* Create new geometry. */
-      final LineString newLinestring = (LineString) JTSAdapter.export( m_newCurve );
-      if( newLinestring.getStartPoint().equals( m_currentSegment.getBankLeftInters().getStartPoint() ) )
-      {
-        m_currentSegment.setBankLeftInters( newLinestring );
-        m_currentSegment.setBankLeftOrg( newLinestring );
-      }
-      else
-      {
-        m_currentSegment.setBankRightInters( newLinestring );
-        m_currentSegment.setBankRightOrg( newLinestring );
-      }
-
-      m_data.updateSegments( true );
-      setPointSnapper( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-
-      m_bankline = m_newCurve;
-      m_newCurve = null;
-      m_handles = collectHandles();
-      m_handles.remove( 0 );
-      m_handles.remove( m_handles.size() - 1 );
+      final IBankData bank = m_handles.get( m_draggedHandle );
+      m_currentCurve = updateCurrentCurve( bank, oldPosition, newPoint.getPosition(), mapSRS );
     }
     catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
 
-    /* Reset. */
-    m_currentPoint = null;
-    m_startPoint = null;
+    repaintMap();
+  }
 
-    final IMapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaintMap();
+  private GM_Curve updateCurrentCurve( final IBankData bank, final GM_Position oldPosition, final GM_Position newPosition, final String mapSRS ) throws GM_Exception
+  {
+    final Coordinate handleCrd = JTSAdapter.export( oldPosition );
+    final Coordinate newCrd = JTSAdapter.export( newPosition );
+
+    final LineString segmented = bank.getSegmented();
+
+    final Coordinate[] oldCoordinates = segmented.getCoordinates();
+    final Coordinate[] newCoordinates = new Coordinate[oldCoordinates.length];
+
+    for( int i = 0; i < oldCoordinates.length; i++ )
+    {
+      final Coordinate oldCrd = oldCoordinates[i];
+
+      if( oldCrd.distance( handleCrd ) < 0.001 )
+      {
+        newCoordinates[i] = newCrd;
+        newCoordinates[i].z = oldCrd.z;
+      }
+      else
+        newCoordinates[i] = oldCrd;
+    }
+
+    final GM_Position[] newPositions = JTSAdapter.wrap( newCoordinates );
+    return GeometryFactory.createGM_Curve( newPositions, mapSRS );
+  }
+
+  private IHandle findHandle( final Point point, final GeoTransform projection )
+  {
+    /* Check, if the mouse cursor is near some handles. */
+    for( final IHandle handle : m_handles.keySet() )
+    {
+      /* If the cursor is near the handle, set it active, otherwise inactive. */
+      if( handle.isSelectable( point, projection ) )
+        return handle;
+    }
+
+    return null;
+  }
+
+  @Override
+  public void mousePressed( final MouseEvent event )
+  {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+    event.consume();
+
+    final Point point = event.getPoint();
+
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    final GeoTransform projection = mapPanel.getProjection();
+
+    if( m_draggedHandle == null )
+      m_draggedHandle = findHandle( point, projection );
+  }
+
+  @Override
+  public void mouseReleased( final MouseEvent event )
+  {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+    event.consume();
+
+    if( m_draggedHandle == null || m_currentCurve == null )
+      return;
+
+    try
+    {
+      final LineString currentLine = (LineString)JTSAdapter.export( m_currentCurve );
+
+      final IBankData bank = m_handles.get( m_draggedHandle );
+      final ISegmentData segment = bank.getSegment();
+      segment.updateSegmentedGeometry( bank, currentLine );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    reset();
   }
 
   @Override
   public void paint( final Graphics g )
   {
-    if( m_handles == null || m_bankline == null )
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
       return;
 
-    final GM_Position[] positions = new GM_Position[m_handles.size() + 2]; // number of handles plus start and end
-    // point
-    int i = 0;
-    positions[i] = m_bankline.getStartPoint().getPosition();
+    final GeoTransform projection = mapPanel.getProjection();
 
-    /* Paint all handles. */
-    for( final IHandle handle : m_handles )
+    final IKalypsoLayerModell mapModell = mapPanel.getMapModell();
+    if( mapModell == null )
+      return;
+
+    final String mapSRS = mapModell.getCoordinatesSystem();
+
+    final IBankData draggedBank = m_handles.get( m_draggedHandle );
+
+    /* Paint all banks */
+    for( final IBankData bank : m_handles.values() )
     {
-      i = i + 1;
-      if( handle.isActive() )
+      if( bank != draggedBank )
       {
-        if( m_currentPoint != null )
-          positions[i] = MapUtilities.transform( getMapPanel(), m_currentPoint ).getPosition();
-        else
+        try
         {
-          final GM_Position position = handle.getPosition();
-          positions[i] = GeometryFactory.createGM_Point( position, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ).getPosition();
+          final GM_Curve bankCurve = (GM_Curve)JTSAdapter.wrap( bank.getSegmented(), mapSRS );
+          m_currentLinePainter.paint( g, projection, bankCurve );
+        }
+        catch( final GM_Exception e )
+        {
+          e.printStackTrace();
         }
       }
-      else
+    }
+
+    /* Paint all handles. */
+    for( final IHandle handle : m_handles.keySet() )
+    {
+      if( handle != m_draggedHandle )
       {
-        final GM_Position position = handle.getPosition();
-        positions[i] = GeometryFactory.createGM_Point( position, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ).getPosition();
+        final GM_Position handlePos = handle.getPosition();
+        final GM_Point handlePoint = GeometryFactory.createGM_Point( handlePos, mapSRS );
+
+        m_handlePainter.paint( g, projection, handlePoint );
       }
     }
-    i = i + 1;
-    positions[i] = m_bankline.getEndPoint().getPosition();
 
     // paint the current dragged line
-    final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
+    if( m_currentCurve != null )
+      m_currentLinePainter.paint( g, projection, m_currentCurve );
 
-    final GM_Curve curve;
-    try
+    if( m_currentPoint != null )
     {
-      curve = GeometryFactory.createGM_Curve( positions, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      Stroke defaultstroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
-      defaultstroke = symb.getStroke();
-
-      stroke.setWidth( 2 );
-      final Color color = new Color( 30, 255, 255 );
-      stroke.setStroke( color );
-      symb.setStroke( stroke );
-
-      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-      de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
-
-      // Set the Stroke back to default
-      symb.setStroke( defaultstroke );
-
-      // paint points
-      final List<GM_Point> points = MainChannelHelper.getPointsFromCurve( curve );
-      final PointSymbolizer pointSymb = new PointSymbolizer_Impl();
-
-      final Fill fill = StyleFactory.createFill( color );
-      final Mark mark = StyleFactory.createMark( "square", fill, stroke ); //$NON-NLS-1$
-      final Graphic graphic = StyleFactory.createGraphic( null, mark, 1, 5, 0 );
-
-      pointSymb.setGraphic( graphic );
-      final DisplayElement de2 = DisplayElementFactory.buildPointDisplayElement( null, points, pointSymb );
-      if( de2 != null )
-        de2.paint( g, m_mapPanel.getProjection(), new NullProgressMonitor() );
-
-      m_newCurve = curve;
+      final GM_Point currentPoint = MapUtilities.transform( mapPanel, m_currentPoint );
+      m_handlePainter.paint( g, projection, currentPoint );
     }
-    catch( final Exception e1 )
-    {
-      e1.printStackTrace();
-    }
-    m_pointSnapper.paint( g );
+
+    if( m_draggedHandle == null && m_pointSnapper != null )
+      m_pointSnapper.paint( g );
   }
 
   /**
@@ -456,10 +347,59 @@ public class DragBankLineWidget extends AbstractWidget
    */
   public void reset( )
   {
-    m_newCurve = null;
-
     /* Reset the start & current points. */
-    m_startPoint = null;
+    m_currentCurve = null;
+    m_draggedHandle = null;
     m_currentPoint = null;
+
+    m_handles.clear();
+
+    final Collection<GM_Position> handlePositions = new ArrayList<>();
+    final ISegmentData[] segments = m_data.getSegments();
+    for( final ISegmentData segment : segments )
+    {
+      final GM_Position[] leftPositions = updateHandles( segment.getBankLeft() );
+      handlePositions.addAll( Arrays.asList( leftPositions ) );
+
+      final GM_Position[] rightPositions = updateHandles( segment.getBankRight() );
+      handlePositions.addAll( Arrays.asList( rightPositions ) );
+    }
+
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      m_pointSnapper = null;
+    else
+    {
+      final GM_Position[] allPositions = handlePositions.toArray( new GM_Position[handlePositions.size()] );
+
+      m_pointSnapper = new GM_PointSnapper( allPositions, mapPanel );
+    }
+
+    repaintMap();
+  }
+
+  private GM_Position[] updateHandles( final IBankData bank )
+  {
+    if( bank == null )
+      return new GM_Position[0];
+
+    final Geometry segmented = bank.getSegmented();
+    if( segmented == null )
+      return new GM_Position[0];
+
+    final Coordinate[] coordinates = segmented.getCoordinates();
+    final GM_Position[] positions = new GM_Position[coordinates.length - 2];
+
+    // REMARK: omit first and last point
+    for( int i = 1; i < coordinates.length - 1; i++ )
+    {
+      final GM_Position position = JTSAdapter.wrap( coordinates[i] );
+      positions[i - 1] = position;
+
+      /* Add the points of every segment to the list of handles. */
+      m_handles.put( new Handle( position, null, null, m_radius ), bank );
+    }
+
+    return positions;
   }
 }

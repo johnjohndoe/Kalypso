@@ -41,12 +41,19 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.awt.Graphics;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ChannelEditProfileData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IBankData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
+import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesh;
+import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMeshPainter;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -55,9 +62,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * Paints the current state of the create main channel on the map.
@@ -76,11 +80,13 @@ class CreateChannelDataPainter
 
   private final SLDPainter2 m_editProfilePointPainter = new SLDPainter2( getClass().getResource( "resources/editProfilePoint.sld" ) );
 
-  private final SLDPainter2 m_intersectionPointPainter = new SLDPainter2( getClass().getResource( "resources/intersectionPoint.sld" ) );
-
   private final SLDPainter2 m_edgePainter = new SLDPainter2( getClass().getResource( "resources/edge.sld" ) );
 
   private final SLDPainter2 m_bankLinePainter = new SLDPainter2( getClass().getResource( "resources/bankLine.sld" ) );
+
+  private final SLDPainter2 m_bankLineDownPainter = new SLDPainter2( getClass().getResource( "resources/bankLineDown.sld" ) );
+
+  private final SLDPainter2 m_bankLineUpPainter = new SLDPainter2( getClass().getResource( "resources/bankLineUp.sld" ) );
 
   private final SLDPainter2 m_bankPointPainter = new SLDPainter2( getClass().getResource( "resources/bankPoint.sld" ) );
 
@@ -88,67 +94,69 @@ class CreateChannelDataPainter
 
   private final String m_srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-
-
   public CreateChannelDataPainter( final CreateChannelData data )
   {
     m_data = data;
   }
 
-  public void paint( final Graphics g, final GeoTransform projection ) throws GM_Exception
+  public void paint( final Graphics g, final GeoTransform projection ) throws GM_Exception, GeoTransformerException
   {
-    paintSelectedProfile( g, projection );
+    paintSelectedProfiles( g, projection );
+
+    final ISegmentData[] segments = m_data.getSegments();
 
     paintBanks( g, projection, CreateChannelData.SIDE.RIGHT, m_leftBankPainter );
     paintBanks( g, projection, CreateChannelData.SIDE.LEFT, m_rightBankPainter );
 
     /* draw intersected profile */
-    drawIntersProfiles( g, projection );
+    paintActiveIntersectionProfile( g, projection );
 
     /* draw intersection points */
-    drawIntersPoints( g, projection );
+    // drawIntersectionPoints( g, projection );
 
     /* draw mesh */
-    final Coordinate[][] meshCoords = m_data.getMeshCoords();
-    if( meshCoords != null )
-      paintEdges( meshCoords, g, projection );
+    paintMeshes( g, projection, segments );
 
     /* draw editable bankline */
-    if( m_data.isBankEdit() && m_data.getMeshStatus() == true )
-      drawBankLines( g, projection );
+    drawBankLines( g, projection, segments );
   }
 
-  private void paintSelectedProfile( final Graphics g, final GeoTransform projection )
+  private void paintMeshes( final Graphics g, final GeoTransform projection, final ISegmentData[] segments )
   {
-    final IProfileFeature[] selectedProfiles = m_data.getSelectedProfiles();
-
-    for( final IProfileFeature profile : selectedProfiles )
+    for( final ISegmentData segment : segments )
     {
-      final GM_Curve line = profile.getLine();
+      final QuadMesh mesh = segment.getMesh();
+      final QuadMeshPainter painter = new QuadMeshPainter( mesh, m_edgePainter );
+      painter.paint( g, projection );
+    }
+  }
+
+  private void paintSelectedProfiles( final Graphics g, final GeoTransform projection )
+  {
+    final IProfileData[] selectedProfiles = m_data.getSelectedProfiles();
+
+    for( final IProfileData profile : selectedProfiles )
+    {
+      final GM_Curve line = profile.getFeature().getLine();
       m_selectedProfilePainter.paint( g, projection, line );
     }
   }
 
-  private void drawIntersProfiles( final Graphics g, final GeoTransform projection ) throws GM_Exception
+  private void paintActiveIntersectionProfile( final Graphics g, final GeoTransform projection ) throws GM_Exception, GeoTransformerException
   {
-    if( m_data.getSelectedSegment() != null )
-    {
-      final SegmentData currentSegment = m_data.getSelectedSegment();
-      final PROF prof = m_data.getCurrentProfile();
+    final IProfileData activeProfile = m_data.getActiveProfile();
+    if( activeProfile == null )
+      return;
 
-      if( currentSegment != null && currentSegment.complete() == true && prof != null )
-        paintProfile( g, projection, currentSegment, prof );
-    }
-  }
+    final IProfil intersectionProfile = activeProfile.getProfIntersProfile();
+    if( intersectionProfile == null )
+      return;
 
-  private void drawIntersPoints( final Graphics g, final GeoTransform projection )
-  {
-    if( m_data.getSelectedSegment() != null )
-    {
-      final SegmentData currentSegment = m_data.getSelectedSegment();
-      if( currentSegment != null && currentSegment.complete() == true )
-        paintIntersectionPoints( g, projection, currentSegment, m_data.getCurrentProfile() );
-    }
+    final GM_Curve line = (GM_Curve)ProfilUtil.getLine( intersectionProfile ).transform( m_srsName );
+
+    m_editProfileLinePainter.paint( g, projection, line );
+
+    paintPoints( g, projection, line, m_editProfilePointPainter );
   }
 
   private void paintBanks( final Graphics g, final GeoTransform projection, final CreateChannelData.SIDE side, final SLDPainter2 painter )
@@ -157,59 +165,41 @@ class CreateChannelDataPainter
     painter.paint( g, projection, curve );
   }
 
-  private void paintEdges( final Coordinate[][] coords, final Graphics g, final GeoTransform projection ) throws GM_Exception
+  private void drawBankLines( final Graphics g, final GeoTransform projection, final ISegmentData[] segments ) throws GM_Exception
   {
-    for( final Coordinate[] element : coords )
-    {
-      for( int j = 0; j < element.length - 1; j++ )
-      {
-        final GM_Position p0 = GeometryFactory.createGM_Position( element[j].x, element[j].y );
-        final GM_Position p1 = GeometryFactory.createGM_Position( element[j + 1].x, element[j + 1].y );
-
-        final GM_Curve edge = GeometryFactory.createGM_Curve( new GM_Position[] { p0, p1 }, m_srsName );
-
-        m_edgePainter.paint( g, projection, edge );
-      }
-    }
-
-    for( int j = 0; j < coords[0].length; j++ )
-    {
-      for( int i = 0; i < coords.length - 1; i++ )
-      {
-        final Coordinate c0 = coords[i][j];
-        final Coordinate c1 = coords[i + 1][j];
-
-        final GM_Position p0 = GeometryFactory.createGM_Position( c0.x, c0.y );
-        final GM_Position p1 = GeometryFactory.createGM_Position( c1.x, c1.y );
-
-        final GM_Curve edge = GeometryFactory.createGM_Curve( new GM_Position[] { p0, p1 }, m_srsName );
-
-        m_edgePainter.paint( g, projection, edge );
-      }
-    }
-  }
-
-  private void drawBankLines( final Graphics g, final GeoTransform projection ) throws GM_Exception
-  {
-    final SegmentData[] segments = m_data.getSegments();
-    for( final SegmentData segment : segments )
-    {
-      if( segment != null )
-        paintBank( g, projection, segment );
-    }
-  }
-
-  private void paintProfile( final Graphics g, final GeoTransform projection, final SegmentData currentSegment, final PROF prof ) throws GM_Exception
-  {
-    final IProfil currentProfile = currentSegment.getCurrentProfile( prof );
-    if( currentProfile == null )
+    final ChannelEditProfileData editData = m_data.getEditData();
+    if( editData == null )
       return;
 
-    final GM_Curve line = ProfilUtil.getLine( currentProfile, m_srsName );
+    final Set<IBankData> banks = new HashSet<>();
 
-    m_editProfileLinePainter.paint( g, projection, line );
+    for( final ISegmentData segment : segments )
+    {
+      banks.add( segment.getBankLeft() );
+      banks.add( segment.getBankRight() );
+    }
 
-    paintPoints( g, projection, line, m_editProfilePointPainter );
+    for( final IBankData bank : banks )
+      paintBank( g, projection, bank, m_bankLinePainter );
+
+    /* paint banks of current segment */
+    final IProfileData activeProfile = m_data.getActiveProfile();
+    if( activeProfile == null )
+      return;
+
+    final ISegmentData downSegment = activeProfile.getDownSegment();
+    if( downSegment != null )
+    {
+      paintBank( g, projection, downSegment.getBankLeft(), m_bankLineDownPainter );
+      paintBank( g, projection, downSegment.getBankRight(), m_bankLineDownPainter );
+    }
+
+    final ISegmentData upSegment = activeProfile.getUpSegment();
+    if( upSegment != null )
+    {
+      paintBank( g, projection, upSegment.getBankLeft(), m_bankLineUpPainter );
+      paintBank( g, projection, upSegment.getBankRight(), m_bankLineUpPainter );
+    }
   }
 
   /**
@@ -225,34 +215,17 @@ class CreateChannelDataPainter
     }
   }
 
-  private void paintIntersectionPoints( final Graphics g, final GeoTransform projection, final SegmentData segment, final PROF prof )
+  private void paintBank( final Graphics g, final GeoTransform projection, final IBankData bank, final SLDPainter2 linePainter ) throws GM_Exception
   {
-    final IntersPointData[] points = segment.getIntersectionPoints();
-    for( final IntersPointData intersectionPoint : points )
-    {
-      if( intersectionPoint.getProf() == prof )
-      {
-        final Point point = intersectionPoint.getPoint();
-        final GM_Point gmPoint = GeometryFactory.createGM_Point( point.getX(), point.getY(), m_srsName );
-        m_intersectionPointPainter.paint( g, projection, gmPoint );
-      }
-    }
-  }
+    if( bank == null )
+      return;
 
-  /**
-   * Paints the editable bank
-   */
-  private void paintBank( final Graphics g, final GeoTransform projection, final SegmentData segment ) throws GM_Exception
-  {
     // paint the line
-    final GM_Curve bankLeft = (GM_Curve) JTSAdapter.wrap( segment.getBankLeftInters(), m_srsName );
-    m_bankLinePainter.paint( g, projection, bankLeft );
+    final GM_Curve bankCurve = (GM_Curve)JTSAdapter.wrap( bank.getSegmented(), m_srsName );
 
-    final GM_Curve bankRight = (GM_Curve) JTSAdapter.wrap( segment.getBankRightInters(), m_srsName );
-    m_bankLinePainter.paint( g, projection, bankRight );
+    linePainter.paint( g, projection, bankCurve );
 
     // paint the nodes
-    paintPoints( g, projection, bankLeft, m_bankPointPainter );
-    paintPoints( g, projection, bankRight, m_bankPointPainter );
+    paintPoints( g, projection, bankCurve, m_bankPointPainter );
   }
 }

@@ -50,6 +50,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget2;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -68,13 +69,23 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
   public CreateMainChannelWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    m_data.addPropertyChangeListener( new CreateChannelMapControler( this ) );
   }
 
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_composite = new CreateMainChannelComposite( parent, toolkit, SWT.NONE, m_data, this );
+    resetData();
+
+    m_composite = new CreateMainChannelComposite( parent, toolkit, SWT.NONE, m_data );
     return m_composite;
+  }
+
+  private void resetData( )
+  {
+    final CreateMainChannelDataInit init = new CreateMainChannelDataInit( m_data, getMapPanel() );
+    init.init();
   }
 
   @Override
@@ -105,34 +116,12 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
     {
       m_painter.paint( g, projection );
     }
-    catch( final GM_Exception e )
+    catch( final GM_Exception | GeoTransformerException e )
     {
       e.printStackTrace();
     }
 
     super.paint( g );
-  }
-
-  /** Updates the widget control in the swt thread */
-  void updateSWT( )
-  {
-    final CreateMainChannelComposite composite = m_composite;
-    if( composite == null || composite.isDisposed() )
-      return;
-
-    composite.getDisplay().syncExec( new Runnable()
-    {
-      @Override
-      public void run( )
-      {
-        if( !composite.isDisposed() )
-        {
-          composite.updateControl( false ); // false means calculate all again
-        }
-
-        repaintMap();
-      }
-    } );
   }
 
   /**
@@ -151,6 +140,12 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
   public void setDelegate( final IWidget delegate )
   {
     super.setDelegate( delegate );
+  }
+
+  @Override
+  public IWidget getDelegate( )
+  {
+    return super.getDelegate();
   }
 
   @Override

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -49,30 +48,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.GM_PointSnapper;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.Handle;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.CssParameter;
-import org.kalypsodeegree.graphics.sld.Fill;
-import org.kalypsodeegree.graphics.sld.Graphic;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Mark;
-import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -80,7 +69,11 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class LineGeometryEditor
 {
-  private final Map<GM_Position, GM_Curve> m_positionMap = new HashMap<GM_Position, GM_Curve>();
+  private final SLDPainter2 m_linePainter = new SLDPainter2( getClass().getResource( "resources/bankEditLine.sld" ) );
+
+  private final SLDPainter2 m_pointPainter = new SLDPainter2( getClass().getResource( "resources/bankEditPoint.sld" ) );
+
+  private final Map<GM_Position, GM_Curve> m_positionMap = new HashMap<>();
 
   final java.awt.Cursor CROSSHAIR_CURSOR = java.awt.Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
 
@@ -92,7 +85,7 @@ public class LineGeometryEditor
 
   private GM_Curve m_curve = null;
 
-  private ArrayList<IHandle> m_handles;
+  private List<IHandle> m_handles;
 
   private final int m_radius = 10;
 
@@ -104,9 +97,13 @@ public class LineGeometryEditor
 
   private GM_Curve m_currentCurve;
 
-  public LineGeometryEditor( final GM_Curve[] curves, final IMapPanel panel )
+  public LineGeometryEditor( final GM_Curve[] curves, final GM_Curve currentCurve, final IMapPanel panel )
   {
     m_curves = curves;
+
+    Assert.isTrue( ArrayUtils.contains( curves, currentCurve ) );
+    m_curve = currentCurve;
+
     m_mapPanel = panel;
 
     m_startPoint = null;
@@ -117,7 +114,11 @@ public class LineGeometryEditor
   private void reinit( )
   {
     final GM_Position[] positions = MainChannelHelper.getPositionsFromCurves( m_curves, m_positionMap );
-    m_pointSnapper = new GM_PointSnapper( positions, m_mapPanel, m_curves[0].getCoordinateSystem() );
+    m_pointSnapper = new GM_PointSnapper( positions, m_mapPanel );
+
+    m_handles = collectHandles();
+
+    repaintMap();
   }
 
   public void moved( final GM_Point p )
@@ -130,16 +131,18 @@ public class LineGeometryEditor
       m_curve = m_positionMap.get( movedPoint.getPosition() );
 
       m_handles = collectHandles();
-      m_mapPanel.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
 
+      m_mapPanel.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
     }
     else
       m_mapPanel.setCursor( Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
+
+    repaintMap();
   }
 
-  private ArrayList<IHandle> collectHandles( )
+  private List<IHandle> collectHandles( )
   {
-    final ArrayList<IHandle> list = new ArrayList<IHandle>();
+    final List<IHandle> list = new ArrayList<>();
 
     if( m_curve == null )
       return list;
@@ -171,86 +174,67 @@ public class LineGeometryEditor
 
   public void paint( final Graphics g )
   {
-    if( m_curve != null )
+    if( m_curve == null )
+      return;
+
+    final GeoTransform projection = m_mapPanel.getProjection();
+
+    final GM_Position[] positions = getCurrentHandles();
+    if( positions == null )
+      return;
+
+    try
     {
-      if( m_handles == null )
-        return;
+      // paint line
+      final GM_Curve curve = GeometryFactory.createGM_Curve( positions, m_curve.getCoordinateSystem() );
+      m_linePainter.paint( g, projection, curve );
 
-      final GM_Position[] positions = new GM_Position[m_handles.size()]; // number of handles plus start and end
-      // point
-
-      /* Paint all handles. */
-      for( int i = 0; i < m_handles.size(); i++ )
+      // paint points
+      for( final GM_Position position : positions )
       {
-        final IHandle handle = m_handles.get( i );
+        final GM_Point point = GeometryFactory.createGM_Point( position, m_curve.getCoordinateSystem() );
+        m_pointPainter.paint( g, projection, point );
+      }
 
-        if( handle.isActive() )
-        {
-          if( m_currentPoint != null )
-            positions[i] = MapUtilities.transform( m_mapPanel, m_currentPoint ).getPosition();
-          else
-          {
-            final GM_Position position = handle.getPosition();
-            positions[i] = GeometryFactory.createGM_Point( position, m_curve.getCoordinateSystem() ).getPosition();
-          }
-        }
+      m_currentCurve = curve;
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    m_pointSnapper.paint( g );
+  }
+
+  private GM_Position[] getCurrentHandles( )
+  {
+    if( m_handles == null )
+      return null;
+
+    final GM_Position[] positions = new GM_Position[m_handles.size()]; // number of handles plus start and end
+
+    for( int i = 0; i < m_handles.size(); i++ )
+    {
+      final IHandle handle = m_handles.get( i );
+
+      if( handle.isActive() )
+      {
+        if( m_currentPoint != null )
+          positions[i] = MapUtilities.transform( m_mapPanel, m_currentPoint ).getPosition();
         else
         {
           final GM_Position position = handle.getPosition();
           positions[i] = GeometryFactory.createGM_Point( position, m_curve.getCoordinateSystem() ).getPosition();
         }
       }
-      //
-
-      // paint line
-      final LineSymbolizer symb = new LineSymbolizer_Impl();
-      final org.kalypsodeegree.graphics.sld.Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
-
-      try
+      else
       {
-        final GM_Curve curve = GeometryFactory.createGM_Curve( positions, m_curve.getCoordinateSystem() );
-        org.kalypsodeegree.graphics.sld.Stroke defaultstroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
-        defaultstroke = symb.getStroke();
-
-        stroke.setWidth( 2 );
-        final Color color = new Color( 30, 255, 255 );
-        stroke.setStroke( color );
-        symb.setStroke( stroke );
-
-        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-        de.paint( g, m_mapPanel.getProjection(), new NullProgressMonitor() );
-
-        // Set the Stroke back to default
-        symb.setStroke( defaultstroke );
-
-        // paint points
-        final List<GM_Point> points = MainChannelHelper.getPointsFromCurve( curve );
-        final PointSymbolizer pointSymb = new PointSymbolizer_Impl();
-
-        final Fill fill = StyleFactory.createFill( color );
-        final Mark mark = StyleFactory.createMark( "square", fill, stroke ); //$NON-NLS-1$
-        final Graphic graphic = StyleFactory.createGraphic( null, mark, 1, 5, 0 );
-
-        pointSymb.setGraphic( graphic );
-        final DisplayElement de2 = DisplayElementFactory.buildPointDisplayElement( null, points, pointSymb );
-        if( de2 != null )
-          de2.paint( g, m_mapPanel.getProjection(), new NullProgressMonitor() );
-
-        m_currentCurve = curve;
+        final GM_Position position = handle.getPosition();
+        positions[i] = GeometryFactory.createGM_Point( position, m_curve.getCoordinateSystem() ).getPosition();
       }
-      catch( final CoreException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( final GM_Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-
-      m_pointSnapper.paint( g );
     }
+
+    return positions;
   }
 
   public void dragged( final Point p, final IMapPanel mapPanel )
@@ -277,16 +261,16 @@ public class LineGeometryEditor
     /* Store the current mouse position. */
     m_currentPoint = p;
 
-    // TODO: check if this repaint is really necessary
-    if( mapPanel != null )
-      mapPanel.repaintMap();
+    repaintMap();
   }
 
   public GM_Curve finish( )
   {
     m_startPoint = null;
+
     setCurve();
     reinit();
+
     return m_currentCurve;
   }
 
@@ -298,5 +282,11 @@ public class LineGeometryEditor
       if( curve.equals( m_curve ) )
         m_curves[i] = m_currentCurve;
     }
+  }
+
+  private void repaintMap( )
+  {
+    if( m_mapPanel != null )
+      m_mapPanel.repaintMap();
   }
 }
