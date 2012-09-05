@@ -101,7 +101,7 @@ public class TimeseriesManagementView extends ViewPart
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
 
     final Composite body = toolkit.createComposite( parent );
-    GridLayoutFactory.swtDefaults().applyTo( body );
+    GridLayoutFactory.fillDefaults().applyTo( body );
 
     createTimeseriesTree( body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createSearchControls( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
