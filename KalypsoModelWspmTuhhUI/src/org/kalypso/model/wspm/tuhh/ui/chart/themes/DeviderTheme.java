@@ -75,18 +75,12 @@ public class DeviderTheme extends AbstractProfilTheme
     super( profil, IWspmTuhhConstants.LAYER_DEVIDER, TITLE, chartLayers, cm );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public IProfilView createLayerPanel( )
   {
     return new TrennerPanel( getProfil() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
-   */
   @Override
   public IChartLayer[] getLegendNodes( )
   {
@@ -104,13 +98,9 @@ public class DeviderTheme extends AbstractProfilTheme
     return cl.toArray( new IChartLayer[] {} );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
-   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-
     if( ArrayUtils.isEmpty( m_legendEntries ) )
     {
       m_legendEntries = createLegendEntries();

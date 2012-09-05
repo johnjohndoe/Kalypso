@@ -95,7 +95,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
   private final IdMap m_linesIDProvider = new IdMap();
 
   // TODO probably identical to m_nodesProvider (its key set))
-  private final Set<String> m_writtenNodesIDs = new HashSet<String>();
+  private final Set<String> m_writtenNodesIDs = new HashSet<>();
 
   private final IFEDiscretisationModel1d2d m_discretisationModel1d2d;
 
@@ -279,11 +279,10 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
   /**
    * write elements nodes and edges in a way which avoids the filtering of edges and nodes
    */
-  @SuppressWarnings("unchecked")
   private void writeElementsAndNodes( final Formatter formatter, final IFeatureBindingCollection<IFE1D2DElement> elements ) throws CoreException, IOException
   {
     final List<IFE1D2DElement> elementsInBBox = elements;
-    final Set<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
+    final Set<IFE1D2DEdge> edgeSet = new HashSet<>( elementsInBBox.size() * 2 );
 
     if( elementsInBBox.size() == 0 )
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.2" ), null ) ); //$NON-NLS-1$
@@ -323,18 +322,18 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
 
     // write edge set nodes
 
-    final Comparator comparator = new Comparator()
+    final Comparator<IFE1D2DNode> comparator = new Comparator<IFE1D2DNode>()
     {
       @Override
-      public int compare( final Object o1, final Object o2 )
+      public int compare( final IFE1D2DNode o1, final IFE1D2DNode o2 )
       {
-        final Integer id1 = getConversionID( (IFE1D2DNode) o1 );
-        final Integer id2 = getConversionID( (IFE1D2DNode) o2 );
+        final Integer id1 = getConversionID( o1 );
+        final Integer id2 = getConversionID( o2 );
         return id1.compareTo( id2 );
       }
     };
 
-    final SortedSet<IFE1D2DNode> nodeSet = new TreeSet<IFE1D2DNode>( comparator );
+    final SortedSet<IFE1D2DNode> nodeSet = new TreeSet<>( comparator );
 
     for( final IFE1D2DEdge edge : edgeSet )
     {
@@ -410,23 +409,16 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#supportFlowResistanceClasses()
-   */
   @Override
   public boolean supportFlowResistanceClasses( )
   {
     return SUPPORT_FLOW_RESISTANCE_CLASSES;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#supportMidsideNodes()
-   */
   @Override
   public boolean supportMidsideNodes( )
   {
     // TODO Auto-generated method stub
     return SUPPORT_MIDSIDE_NODES;
   }
-
 }
