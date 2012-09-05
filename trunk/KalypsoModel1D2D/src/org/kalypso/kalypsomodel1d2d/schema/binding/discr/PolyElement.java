@@ -158,10 +158,7 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
   @Override
   public String getRoughnessClsID( )
   {
-    final Object property = getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID );
-    if( property == null )
-      return ""; //$NON-NLS-1$
-    return property.toString();
+    return getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID, String.class );
   }
 
   @Override

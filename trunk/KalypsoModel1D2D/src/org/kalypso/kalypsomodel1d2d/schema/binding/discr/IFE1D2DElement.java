@@ -46,7 +46,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -108,11 +107,4 @@ public interface IFE1D2DElement extends IFENetItem
    * @return a list of the nodes of this elements
    */
   List<IFE1D2DNode> getNodes( );
-
-  /**
-   * Gets the virtual geometry of this element by recalculating it
-   *
-   * @return the recalculated geometry of this element
-   */
-  FeatureChange[] assignRoughness( String roughnessID, Double correctionParameterKS, Double correctionParameterAxAy, Double correctionParameterDP, String roughnessStyle );
 }
