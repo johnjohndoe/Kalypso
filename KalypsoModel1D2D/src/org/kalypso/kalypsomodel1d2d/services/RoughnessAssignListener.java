@@ -90,12 +90,11 @@ public class RoughnessAssignListener implements ModellEventListener
    */
   private void startJob( final GM_Envelope envelope )
   {
+    // REMARK: cannot cancel because work area changes for each job anf must be processed. Instead, we could keep a queue of dirty elements and process them in another thread
     // if( m_job != null )
     // m_job.cancel();
 
-    m_job = new RoughnessAssignService( Messages.getString( "org.kalypso.kalypsomodel1d2d.services.RoughnessAssignListener.0" ), m_terrainModel, m_discModel ); //$NON-NLS-1$
-
-    m_job.setWorkarea( envelope );
+    m_job = new RoughnessAssignService( Messages.getString( "org.kalypso.kalypsomodel1d2d.services.RoughnessAssignListener.0" ), m_terrainModel, m_discModel, envelope ); //$NON-NLS-1$
 
     // m_job.setSystem( true );
     m_job.setUser( false );
@@ -104,9 +103,6 @@ public class RoughnessAssignListener implements ModellEventListener
     m_job.schedule( 500 );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
   @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
@@ -150,13 +146,12 @@ public class RoughnessAssignListener implements ModellEventListener
     {
       if( element == null )
         continue;
-      final QName qname = element.getFeatureType().getQName();
-      if( qname.equals( IPolyElement.QNAME ) || qname.equals( IRoughnessPolygon.QNAME ) || qname.equals( IRoughnessLayer.QNAME ) )
-        return FeatureHelper.getEnvelope( features );
 
       // Also handle change of node, it's position may have changed, so the geometry of it's adjacent elements may have
       // changed as well
-      if( qname.equals( IFE1D2DNode.FEATURE_1D2DNODE ) )
+
+      final QName qname = element.getFeatureType().getQName();
+      if( qname.equals( IPolyElement.QNAME ) || qname.equals( IRoughnessPolygon.QNAME ) || qname.equals( IRoughnessLayer.QNAME ) || qname.equals( IFE1D2DNode.FEATURE_1D2DNODE ) )
       {
         final GM_Envelope envelope = FeatureHelper.getEnvelope( features );
         // WE do buffer the envelope a bit here, as it may be only one point. A too big envelope only results in too

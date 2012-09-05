@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -76,32 +77,32 @@ public class RoughnessAssignService extends Job
 
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
-  private final List<FeatureChange> m_changesDiscretisationModel = new ArrayList<FeatureChange>();
+  private final GM_Envelope m_workArea;
 
-  private GM_Envelope m_workArea;
-
-  public RoughnessAssignService( final String name, final ITerrainModel terrainModel, final IFEDiscretisationModel1d2d model1d2d )
+  public RoughnessAssignService( final String name, final ITerrainModel terrainModel, final IFEDiscretisationModel1d2d model1d2d, final GM_Envelope workArea )
   {
     super( name );
+
     m_model1d2d = model1d2d;
+    m_workArea = workArea;
     m_roughnessPolygonCollections = terrainModel.getRoughnessPolygonCollections();
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
+    final List<FeatureChange> allChanges = new ArrayList<>();
+
     try
     {
       final List<IFE1D2DElement> elementsInWorkarea = (m_workArea != null) ? m_model1d2d.getElements().query( m_workArea ) : m_model1d2d.getElements();
       final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.kalypsomodel1d2d.services.RoughnessAssignService.0" ), elementsInWorkarea.size() ); //$NON-NLS-1$
-      // ProgressUtilities.worked( progress, 0 );
-      m_changesDiscretisationModel.clear();
+
       for( final IFE1D2DElement element : elementsInWorkarea )
       {
-        assignRoughness( element );
+        if( (element instanceof IPolyElement) )
+          assignRoughness( allChanges, (IPolyElement)element );
+
         // if( monitor.isCanceled() )
         // return Status.CANCEL_STATUS;
         // TODO: do not cancel, does not work well with work area...
@@ -118,18 +119,15 @@ public class RoughnessAssignService extends Job
     finally
     {
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.services.RoughnessAssignService.1" ) ); //$NON-NLS-1$
-      fireEvents();
+      postCommands( allChanges );
       monitor.done();
     }
     return Status.OK_STATUS;
   }
 
-  private void assignRoughness( final IFE1D2DElement element )
+  private void assignRoughness( final List<FeatureChange> allChanges, final IPolyElement element )
   {
-    if( !(element instanceof IPolyElement) )
-      return;
-
-    final GM_Object geometryProperty = ((IPolyElement) element).getGeometry();
+    final GM_Object geometryProperty = element.getGeometry();
 
     // this might happen if 2d network is just imported, and new elements are created
     // (by the widget) before saving anything
@@ -138,15 +136,13 @@ public class RoughnessAssignService extends Job
 
     final GM_Point centroid = geometryProperty.getCentroid();
     final GM_Position position = centroid.getPosition();
-    boolean missingRoughnessClsID = true;
-    boolean missingRoughnessCorrectionKS = true;
-    boolean missingRoughnessCorrectionAxAy = true;
-    boolean missingRoughnessCorrectionDP = true;
+
     String roughnessClsID = null;
     String roughnessStyle = IRoughnessPolygon.NO_ROUGHNESS;
     Double correctionParameterKS = null;
     Double correctionParameterAxAy = null;
     Double correctionParameterDP = null;
+
     for( int i = 0; i < m_roughnessPolygonCollections.size(); i++ )
     {
       // if( monitor.isCanceled() )
@@ -162,95 +158,90 @@ public class RoughnessAssignService extends Job
 
       // later: get rid of overlapping!!! :)
 
-      // for( final IRoughnessPolygon roughnessPolygon : matchedRoughness )
       for( int j = matchedRoughness.size() - 1; j >= 0; j-- )
       {
         final IRoughnessPolygon roughnessPolygon = matchedRoughness.get( j );
         if( roughnessPolygon.getSurface().contains( position ) )
         {
-          if( missingRoughnessCorrectionKS )
+          if( correctionParameterKS == null )
           {
             final Double check = roughnessPolygon.getCorrectionParameterKS();
             if( check != null && !check.isNaN() )
             {
               correctionParameterKS = check;
-              missingRoughnessCorrectionKS = false;
             }
           }
-          if( missingRoughnessCorrectionAxAy )
+
+          if( correctionParameterAxAy == null )
           {
             final Double check = roughnessPolygon.getCorrectionParameterAxAy();
             if( check != null && !check.isNaN() )
-            {
               correctionParameterAxAy = check;
-              missingRoughnessCorrectionAxAy = false;
-            }
           }
-          if( missingRoughnessCorrectionDP )
+
+          if( correctionParameterDP == null )
           {
             final Double check = roughnessPolygon.getCorrectionParameterDP();
             if( check != null && !check.isNaN() )
-            {
               correctionParameterDP = check;
-              missingRoughnessCorrectionDP = false;
-            }
           }
-          if( missingRoughnessClsID )
+
+          if( roughnessClsID != null )
           {
             final IRoughnessCls roughnessCls = roughnessPolygon.getRoughnessCls();
             if( roughnessCls != null )
             {
               roughnessClsID = roughnessCls.getId();
               roughnessStyle = roughnessPolygon.getRoughnessStyle();
-              missingRoughnessClsID = false;
             }
           }
         }
       }
     }
-    boolean anyChanges = false;
-    final String elementRoughnessClsID = element.getRoughnessClsID();
-    final String elementRoughnessStyle = element.getRoughnessStyle();
-    final Double elementRoughnessCorrectionKS = element.getRoughnessCorrectionKS();
-    final Double elementRoughnessCorrectionAxAy = element.getRoughnessCorrectionAxAy();
-    final Double elementRoughnessCorrectionDP = element.getRoughnessCorrectionDP();
-    anyChanges |= elementRoughnessClsID != null && elementRoughnessClsID.length() > 0 && !elementRoughnessClsID.equals( roughnessClsID );
-    anyChanges |= !elementRoughnessStyle.equals( roughnessStyle );
-    anyChanges |= elementRoughnessCorrectionKS != null && elementRoughnessCorrectionKS != correctionParameterKS;
-    anyChanges |= elementRoughnessCorrectionAxAy != null && elementRoughnessCorrectionAxAy != correctionParameterAxAy;
-    anyChanges |= elementRoughnessCorrectionDP != null && elementRoughnessCorrectionDP != correctionParameterDP;
-    if( anyChanges )
-    {
-      final FeatureChange[] changes = element.assignRoughness( roughnessClsID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
-      for( final FeatureChange featureChange : changes )
-        m_changesDiscretisationModel.add( featureChange );
-    }
+
+    assignRoughness( allChanges, element, roughnessClsID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
   }
 
-  private void fireEvents( )
+  private void assignRoughness( final List<FeatureChange> allChanges, final IPolyElement element, final String roughnessClsID, final Double correctionParameterKS, final Double correctionParameterAxAy, final Double correctionParameterDP, final String roughnessStyle )
   {
-    if( m_changesDiscretisationModel.size() > 0 )
+    final String elementRoughnessClsID = element.getRoughnessClsID();
+    if( !ObjectUtils.equals( elementRoughnessClsID, roughnessClsID ) )
+      allChanges.add( new FeatureChange( element, IPolyElement.PROP_ROUGHNESS_CLS_ID, roughnessClsID ) );
+
+    final String elementRoughnessStyle = element.getRoughnessStyle();
+    if( !ObjectUtils.equals( elementRoughnessStyle, roughnessStyle ) )
+      allChanges.add( new FeatureChange( element, IPolyElement.PROP_ROUGHNESS_STYLE, roughnessStyle ) );
+
+    final Double elementRoughnessCorrectionKS = element.getRoughnessCorrectionKS();
+    if( !ObjectUtils.equals( elementRoughnessCorrectionKS, correctionParameterKS ) )
+      allChanges.add( new FeatureChange( element, IPolyElement.PROP_ROUGHNESS_CORRECTION_KS, correctionParameterKS ) );
+
+    final Double elementRoughnessCorrectionAxAy = element.getRoughnessCorrectionAxAy();
+    if( !ObjectUtils.equals( elementRoughnessCorrectionAxAy, correctionParameterAxAy ) )
+      allChanges.add( new FeatureChange( element, IPolyElement.PROP_ROUGHNESS_CORRECTION_AXAY, correctionParameterAxAy ) );
+
+    final Double elementRoughnessCorrectionDP = element.getRoughnessCorrectionDP();
+    if( !ObjectUtils.equals( elementRoughnessCorrectionDP, correctionParameterDP ) )
+      allChanges.add( new FeatureChange( element, IPolyElement.PROP_ROUGHNESS_CORRECTION_DP, correctionParameterDP ) );
+  }
+
+  private void postCommands( final List<FeatureChange> changes )
+  {
+    if( changes.size() == 0 )
+      return;
+
+    try
     {
       final GMLWorkspace workspace = m_model1d2d.getWorkspace();
       final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-      final RoughnessAssignCommand command = new RoughnessAssignCommand( workspace, m_changesDiscretisationModel.toArray( new FeatureChange[m_changesDiscretisationModel.size()] ) );
-      try
-      {
-        ((ICommandPoster) modelProvider).postCommand( IFEDiscretisationModel1d2d.class.getName(), command );
-      }
-      catch( final Exception e1 )
-      {
-        // TODO Auto-generated catch block
-        e1.printStackTrace();
-      }
-    }
-  }
 
-  /**
-   * Defines the area where roughness recalculation is needed; if <code>null</code>, whole model will be recalculated
-   */
-  public void setWorkarea( final GM_Envelope envelope )
-  {
-    m_workArea = envelope;
+      final RoughnessAssignCommand command = new RoughnessAssignCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) );
+
+      ((ICommandPoster)modelProvider).postCommand( IFEDiscretisationModel1d2d.class.getName(), command );
+    }
+    catch( final Exception e1 )
+    {
+      e1.printStackTrace();
+    }
   }
 }
