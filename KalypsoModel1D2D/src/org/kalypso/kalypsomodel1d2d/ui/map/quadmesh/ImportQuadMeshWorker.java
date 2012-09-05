@@ -38,34 +38,63 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.grid;
+package org.kalypso.kalypsomodel1d2d.ui.map.quadmesh;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.Add2DElementsCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 
 /**
+ * Imports a QuadMesh into a discretisation model.
+ *
  * @author Gernot Belger
  */
-class CreateGridOperation implements ICoreRunnableWithProgress
+public class ImportQuadMeshWorker implements ICoreRunnableWithProgress
 {
-  private static final double DISTANCE_DEF = 0.01;
+  private final CommandableWorkspace m_discretisationWorkspace;
+  private final double m_searchRectWidth;
 
-  private final TempGrid m_tempGrid;
+  private final QuadMesh[] m_grids;
 
-  private final CommandableWorkspace m_workspace;
-
-  public CreateGridOperation( final TempGrid tempGrid, final CommandableWorkspace workspace )
+  public ImportQuadMeshWorker( final CommandableWorkspace discretisationWorkspace, final double searchRectWidth, final QuadMesh... grids )
   {
-    m_tempGrid = tempGrid;
-    m_workspace = workspace;
+    m_discretisationWorkspace = discretisationWorkspace;
+    m_searchRectWidth = searchRectWidth;
+    m_grids = grids;
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    return m_tempGrid.getAddToModelCommand( m_workspace, DISTANCE_DEF );
+    try
+    {
+      /* Fetch all rings */
+      final List<GM_Ring> rings = new ArrayList<>();
+      for( final QuadMesh mesh : m_grids )
+      {
+        final List<GM_Ring> meshRings = mesh.toRings( m_searchRectWidth );
+        rings.addAll( meshRings );
+      }
+
+      /* Add rings as 2d elements to net */
+      final Add2DElementsCommand command = new Add2DElementsCommand( m_discretisationWorkspace, rings );
+      m_discretisationWorkspace.postCommand( command );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.2" ), e ); //$NON-NLS-1$
+    }
+
+    return Status.OK_STATUS;
   }
 }

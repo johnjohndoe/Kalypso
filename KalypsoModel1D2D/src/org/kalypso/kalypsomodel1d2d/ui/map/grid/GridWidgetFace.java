@@ -262,7 +262,8 @@ class GridWidgetFace
       m_tableViewer.setSelection( new StructuredSelection( currentLPCConfig ) );
     }
 
-    final IStatus valid = m_gridPointCollector.getTempGrid().isValid();
+    final IStatus valid = m_gridPointCollector.isValid();
+
     final boolean hasAllSides = m_gridPointCollector.getHasAllSides();
     final boolean canFinish = valid.isOK() && hasAllSides;
     m_buttonConvertToModel.setEnabled( canFinish );
