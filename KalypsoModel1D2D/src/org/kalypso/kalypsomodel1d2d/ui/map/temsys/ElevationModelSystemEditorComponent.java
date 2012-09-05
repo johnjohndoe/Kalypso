@@ -119,7 +119,7 @@ public class ElevationModelSystemEditorComponent extends Composite
 
   private Control createElevationViewer( final FormToolkit toolkit, final Composite parent )
   {
-    final Table elevationTable = toolkit.createTable( parent, SWT.FILL | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+    final Table elevationTable = toolkit.createTable( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     elevationTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     elevationTable.setLinesVisible( true );
     elevationTable.setHeaderVisible( true );

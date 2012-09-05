@@ -87,7 +87,7 @@ public class AssignNodeElevationFaceComponent extends Composite
 
   private Text m_inputText;
 
-  private final List<IFE1D2DNode> m_selectionNodeList = new ArrayList<IFE1D2DNode>();
+  private final List<IFE1D2DNode> m_selectionNodeList = new ArrayList<>();
 
   private TableViewer m_nodeElevationViewer;
 
@@ -145,6 +145,7 @@ public class AssignNodeElevationFaceComponent extends Composite
     m_inputText = toolkit.createText( panel, StringUtils.EMPTY );
     m_inputText.setMessage( Messages.getString( "AssignNodeElevationFaceComponent.1" ) ); //$NON-NLS-1$
     m_inputText.setEditable( false );
+    m_inputText.setEnabled( false );
     m_inputText.setTextLimit( 100 );
     m_inputText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
@@ -368,15 +369,24 @@ public class AssignNodeElevationFaceComponent extends Composite
   {
     if( ITerrainElevationModel.class.toString().equals( key ) )
     {
-      if( newValue == null )
-        m_inputText.setText( StringUtils.EMPTY );
-      else
+      final ITerrainElevationModel[] selection = (ITerrainElevationModel[]) newValue;
+      String name = StringUtils.EMPTY;
+      if( selection != null )
       {
-        String name = ((INativeTerrainElevationModelWrapper) newValue).getName();
-        if( name == null )
-          name = ((INativeTerrainElevationModelWrapper) newValue).getId();
-        m_inputText.setText( name );
+        final String[] names = new String[selection.length];
+        for( int i = 0; i < names.length; i++ )
+        {
+          names[i] = selection[i].getName();
+          if( StringUtils.isBlank( names[i] ) )
+            names[i] = ((INativeTerrainElevationModelWrapper) newValue).getId();
+        }
+
+        name = StringUtils.join( names, ", " ); //$NON-NLS-1$
       }
+      else
+        name = "<none - use all models at once>";
+
+      m_inputText.setText( name );
     }
     else if( ApplyElevationWidgetDataModel.SELECTED_NODE_KEY.equals( key ) )
     {
