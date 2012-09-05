@@ -23,9 +23,13 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
 /**
  * @author Holger Albert
@@ -46,6 +50,10 @@ public class EwawiImportData extends AbstractModelObject
 
   public static final String PROPERTY_RIVER_SHAPE_DATA = "riverShapeData"; //$NON-NLS-1$
 
+  public static final String PROPERTY_EWAWI_DATA = "ewawiData"; //$NON-NLS-1$
+
+  public static final String PROPERTY_EWAWI_DATA_STATUS = "ewawiDataStatus"; //$NON-NLS-1$
+
   private final FileAndHistoryData m_proFile;
 
   private final FileAndHistoryData m_staFile;
@@ -60,6 +68,10 @@ public class EwawiImportData extends AbstractModelObject
 
   private final EwawiRiverShapeData m_riverShapeData;
 
+  private EwawiPlus m_ewawiData;
+
+  private IStatus m_ewawiDataStatus;
+
   public EwawiImportData( )
   {
     m_proFile = new FileAndHistoryData( "proFile" ); //$NON-NLS-1$
@@ -69,6 +81,8 @@ public class EwawiImportData extends AbstractModelObject
     m_documentDirectory = null;
     m_documentDirectoryHistory = new String[0];
     m_riverShapeData = new EwawiRiverShapeData();
+    m_ewawiData = null;
+    m_ewawiDataStatus = new Status( IStatus.INFO, KalypsoModelWspmTuhhUIPlugin.getID(), "Keine Daten geladen." );
   }
 
   public void init( final IDialogSettings settings )
@@ -176,6 +190,28 @@ public class EwawiImportData extends AbstractModelObject
     return m_riverShapeData;
   }
 
+  public String getCoordinateSystem( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public boolean isDirectionUpstreams( )
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  public EwawiPlus getEwawiData( )
+  {
+    return m_ewawiData;
+  }
+
+  public IStatus getEwawiDataStatus( )
+  {
+    return m_ewawiDataStatus;
+  }
+
   public void setFotoDirectory( final File fotoDirectory )
   {
     final File oldValue = m_fotoDirectory;
@@ -202,5 +238,19 @@ public class EwawiImportData extends AbstractModelObject
     final String[] oldValue = m_documentDirectoryHistory;
     m_documentDirectoryHistory = documentDirectoryHistory;
     firePropertyChange( PROPERTY_DOCUMENT_DIRECTORY_HISTORY, oldValue, m_documentDirectoryHistory );
+  }
+
+  public void setEwawiData( final EwawiPlus ewawiData )
+  {
+    final EwawiPlus oldValue = m_ewawiData;
+    m_ewawiData = ewawiData;
+    firePropertyChange( PROPERTY_EWAWI_DATA, oldValue, m_ewawiData );
+  }
+
+  public void setEwawiDataStatus( final IStatus ewawiDataStatus )
+  {
+    final IStatus oldValue = m_ewawiDataStatus;
+    m_ewawiDataStatus = ewawiDataStatus;
+    firePropertyChange( PROPERTY_EWAWI_DATA_STATUS, oldValue, m_ewawiDataStatus );
   }
 }

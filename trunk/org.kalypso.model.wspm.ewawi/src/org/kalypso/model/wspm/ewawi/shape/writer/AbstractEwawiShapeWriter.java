@@ -26,6 +26,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.data.EwawiPro;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
+import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
@@ -56,7 +57,7 @@ public abstract class AbstractEwawiShapeWriter
     m_shapeType = shapeType;
   }
 
-  public void writeShape( ) throws DBaseException, IOException, SHPException, EwawiShapeException
+  public void writeShape( ) throws DBaseException, IOException, SHPException, EwawiException
   {
     /* Create the shape file. */
     final File targetFile = getTargetFile();
@@ -101,7 +102,7 @@ public abstract class AbstractEwawiShapeWriter
 
   protected abstract IDBFField[] createFields( ) throws DBaseException;
 
-  protected abstract void writeData( ShapeFile shapeFile, EwawiPlus[] data ) throws DBaseException, IOException, SHPException, EwawiShapeException;
+  protected abstract void writeData( ShapeFile shapeFile, EwawiPlus[] data ) throws DBaseException, IOException, SHPException, EwawiException;
 
   private ShapeFile createShapeFile( final File shapeFile, final IDBFField[] fields ) throws DBaseException, IOException
   {

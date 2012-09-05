@@ -23,6 +23,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.kalypso.model.wspm.ewawi.data.EwawiProLine;
+import org.kalypso.model.wspm.ewawi.data.enums.EwawiHorizont;
 
 /**
  * A EWAWI+ profile.
@@ -49,6 +50,19 @@ public class EwawiProfile
   public EwawiProfilePart[] getParts( )
   {
     return m_parts.values().toArray( new EwawiProfilePart[] {} );
+  }
+
+  public EwawiProfilePart getBasePart( )
+  {
+    final EwawiProfilePart[] parts = getParts();
+    for( final EwawiProfilePart part : parts )
+    {
+      final Integer horizont = part.getHorizont();
+      if( horizont.intValue() == EwawiHorizont._0.getKey() )
+        return part;
+    }
+
+    return null;
   }
 
   public void addProLine( final EwawiProLine proLine )

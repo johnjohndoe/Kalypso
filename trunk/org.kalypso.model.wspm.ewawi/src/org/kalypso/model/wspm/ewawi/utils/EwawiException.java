@@ -16,19 +16,19 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.ewawi.shape.writer;
+package org.kalypso.model.wspm.ewawi.utils;
 
 /**
- * Exception that indicates an error during shape export of EWAWI+ data.
+ * Exception that indicates an error with EWAWI+ data.
  * 
  * @author Holger Albert
  */
-public class EwawiShapeException extends Exception
+public class EwawiException extends Exception
 {
   /**
    * The constructor.
    */
-  public EwawiShapeException( )
+  public EwawiException( )
   {
   }
 
@@ -38,7 +38,7 @@ public class EwawiShapeException extends Exception
    * @param message
    *          The detail message. The detail message is saved for later retrieval by the getMessage() method.
    */
-  public EwawiShapeException( final String message )
+  public EwawiException( final String message )
   {
     super( message );
   }
@@ -50,7 +50,7 @@ public class EwawiShapeException extends Exception
    *          The cause (which is saved for later retrieval by the getCause() method). (A null value is permitted, and
    *          indicates that the cause is nonexistent or unknown.)
    */
-  public EwawiShapeException( final Throwable cause )
+  public EwawiException( final Throwable cause )
   {
     super( cause );
   }
@@ -64,7 +64,7 @@ public class EwawiShapeException extends Exception
    *          The cause (which is saved for later retrieval by the getCause() method). (A null value is permitted, and
    *          indicates that the cause is nonexistent or unknown.)
    */
-  public EwawiShapeException( final String message, final Throwable cause )
+  public EwawiException( final String message, final Throwable cause )
   {
     super( message, cause );
   }
