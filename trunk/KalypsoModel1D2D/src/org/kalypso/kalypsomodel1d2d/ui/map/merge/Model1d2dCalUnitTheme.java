@@ -70,7 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * Theme that shows a calculation unit
  * 
  * @author Patrice Congo
- * 
  */
 public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 {
@@ -99,9 +98,6 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     super( name, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme.0" ), mapModel ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -128,9 +124,6 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     fireRepaintRequested( null );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
-   */
   @Override
   public GM_Envelope getFullExtent( )
   {
@@ -139,11 +132,6 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     return CalcUnitOps.getBoundingBox( m_calcUnit );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
@@ -181,18 +169,12 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#isLoaded()
-   */
   @Override
   public boolean isLoaded( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getType()
-   */
   @Override
   public String getType( )
   {

@@ -79,20 +79,19 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 /**
  * @author Patrice Congo
  * @author Thomas Jung (changes in order to use the common SelectFeatureWidget)
- *
  */
 
 public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWidget
 {
-  private static final String SEPARATOR_PSEUDO_TEXT = "_separator_pseudo_text_";  //$NON-NLS-1$
+  private static final String SEPARATOR_PSEUDO_TEXT = "_separator_pseudo_text_"; //$NON-NLS-1$
 
-  private static final String ICONS_ELCL16_REMOVE_GIF = "icons/elcl16/remove.gif";  //$NON-NLS-1$
+  private static final String ICONS_ELCL16_REMOVE_GIF = "icons/elcl16/remove.gif"; //$NON-NLS-1$
 
-  private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif";  //$NON-NLS-1$
+  private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif"; //$NON-NLS-1$
 
-  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.1"); //$NON-NLS-1$
+  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.1" ); //$NON-NLS-1$
 
-  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.2"); //$NON-NLS-1$
+  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.2" ); //$NON-NLS-1$
 
   private static final String[][] MENU_ITEM_SPECS = { { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF }, { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF } };
 
@@ -100,7 +99,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
 
   private JPopupMenu m_popupMenu;
 
-  private final List<JMenuItem> m_popupMenuItems = new ArrayList<JMenuItem>();
+  private final List<JMenuItem> m_popupMenuItems = new ArrayList<>();
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
@@ -112,30 +111,27 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
 
   public AddRemoveContinuityLineToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.5"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.6"), new SelectFeatureWidget( "", "", new QName[] { IFELine.QNAME }, IFELine.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.5" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.6" ), new SelectFeatureWidget( "", "", new QName[] { IFELine.QNAME }, IFELine.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.9") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.9" ) ); //$NON-NLS-1$
     final Color color = new Color( 1f, 1f, 0.6f, 0.70f );
     m_toolTipRenderer.setBackgroundColor( color );
 
     m_dataModel = dataModel;
-    m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
+    m_selDelegateWidget = (SelectFeatureWidget)getDelegate();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#clickPopup(java.awt.Point)
-   */
   @Override
   public void clickPopup( final Point p )
   {
     // TODO: we should discuss, if we want this right-click popup behavior. Right now it is only used in the calcunit
     // widgets and no common kalypso style...
 
-    final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+    final IMapPanel mapPanel = (IMapPanel)m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     if( m_popupMenu == null )
       m_popupMenu = createMenu();
     updateMenuItem();
-    m_popupMenu.show( (Component) mapPanel, p.x, p.y );
+    m_popupMenu.show( (Component)mapPanel, p.x, p.y );
     super.clickPopup( p );
   }
 
@@ -184,7 +180,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
         {
           return;
         }
-        doMenuAction( ((JMenuItem) source).getText() );
+        doMenuAction( ((JMenuItem)source).getText() );
       }
     };
     return al;
@@ -292,7 +288,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     for( final String[] spec : MENU_ITEM_SPECS )
     {
       if( spec.length != 2 )
-        throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.10") + spec.length );  //$NON-NLS-1$
+        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.10" ) + spec.length ); //$NON-NLS-1$
       final String text = spec[0];
       if( SEPARATOR_PSEUDO_TEXT.equals( text ) )
         menu.addSeparator();
@@ -309,9 +305,6 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     return menu;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -323,20 +316,16 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.11") + delegateTooltip ); //$NON-NLS-1$
+      m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.11" ) + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget#finish()
-   */
   @Override
   public void finish( )
   {
     getMapPanel().getSelectionManager().clear();
     super.finish();
   }
-
 }

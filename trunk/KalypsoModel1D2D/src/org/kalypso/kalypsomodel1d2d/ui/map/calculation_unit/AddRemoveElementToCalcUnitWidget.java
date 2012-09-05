@@ -81,8 +81,6 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  * @author Madanagopal
  * @author Thomas Jung (changes in order to use the common SelectFeatureWidget)
- *
- *
  */
 public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
 {
@@ -103,9 +101,6 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
       super( calculationUnit, elementsToAdd, model1d2d );
     }
 
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnit#process()
-     */
     @Override
     public void process( ) throws Exception
     {
@@ -121,9 +116,6 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
       super( calculationUnit, elementsToRemove, model1d2d );
     }
 
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnit#process()
-     */
     @Override
     public void process( ) throws Exception
     {
@@ -134,14 +126,14 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
 
   public AddRemoveElementToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IPolyElement.QNAME, IElement1D.QNAME }, IFE1D2DElement.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { IPolyElement.QNAME, IElement1D.QNAME }, IFE1D2DElement.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.4") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.4" ) ); //$NON-NLS-1$
     final Color color = new Color( 1f, 1f, 0.6f, 0.70f );
     m_toolTipRenderer.setBackgroundColor( color );
 
     m_dataModel = dataModel;
-    m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
+    m_selDelegateWidget = (SelectFeatureWidget)getDelegate();
   }
 
   @Override
@@ -172,10 +164,10 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
 
     final Feature[] selectedFeatures = CalcUnitHelper.getSelectedFeature( mapPanel );
     final Object selectedWrapper = m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d)m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
     if( selectedWrapper instanceof ICalculationUnit )
     {
-      final ICalculationUnit calUnit = (ICalculationUnit) selectedWrapper;
+      final ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;
       final AddElementToCalculationUnitWithPostCall command = new AddElementToCalculationUnitWithPostCall( calUnit, selectedFeatures, model1d2d );
       KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
     }
@@ -191,41 +183,39 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
 
     final Feature[] selectedFeatures = CalcUnitHelper.getSelectedFeature( mapPanel );
     final Object selectedWrapper = m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d)m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
     if( selectedWrapper instanceof ICalculationUnit )
     {
-      final ICalculationUnit calUnit = (ICalculationUnit) selectedWrapper;
+      final ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;
       final RemoveElementFromCalculationUnitWithPostCall command = new RemoveElementFromCalculationUnitWithPostCall( calUnit, selectedFeatures, model1d2d );
       KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
     }
+
     getMapPanel().getSelectionManager().clear();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#clickPopup(java.awt.Point)
-   */
   @Override
   public void clickPopup( final Point p )
   {
     // TODO: we should discuss, if we want this right-click popup behavior. Right now it is only used in the calcunit
     // widgets and no common kalypso style...
 
-    final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+    final IMapPanel mapPanel = (IMapPanel)m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addElement = new JMenuItem();
-    addElement.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.5") );  //$NON-NLS-1$
-    addElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) );  //$NON-NLS-1$
+    addElement.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.5" ) ); //$NON-NLS-1$
+    addElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) ); //$NON-NLS-1$
     addElement.addActionListener( makeAddElementActionListener() );
 
     final JMenuItem removeElement = new JMenuItem();
-    removeElement.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.7") );  //$NON-NLS-1$
-    removeElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) );  //$NON-NLS-1$
+    removeElement.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.7" ) ); //$NON-NLS-1$
+    removeElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) ); //$NON-NLS-1$
     removeElement.addActionListener( makeRemoveElementActionListener() );
     // popupMenu.add( addNameDescription );
     popupMenu.add( addElement );
     popupMenu.add( removeElement );
-    popupMenu.show( (Component) mapPanel, p.x, p.y );
+    popupMenu.show( (Component)mapPanel, p.x, p.y );
   }
 
   private ActionListener makeAddElementActionListener( )
@@ -277,9 +267,6 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
     return al;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -291,15 +278,12 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.9") + delegateTooltip ); //$NON-NLS-1$
+      m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.9" ) + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget#finish()
-   */
   @Override
   public void finish( )
   {

@@ -157,7 +157,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     }
   };
 
-  private final Set<String> m_buttonsList = new HashSet<String>();
+  private final Set<String> m_buttonsList = new HashSet<>();
 
   private Button m_btnDeleteCalcUnit;
 
@@ -406,7 +406,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           }
         } );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         // TODO: handle exception
       }
@@ -490,7 +490,8 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           final IStatus status = ResultMeta1d2dHelper.removeResult( calcUnitResultMeta );
           if( status != Status.OK_STATUS )
           {
-            return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.4" ) + calcUnitToDel.getName() ); //$NON-NLS-1$
+            final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.4" ) + calcUnitToDel.getName(); //$NON-NLS-1$
+            return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message );
           }
         }
       }
@@ -504,9 +505,6 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
       final DeleteCalculationUnitCmd delCmd = new DeleteCalculationUnitCmd( model1d2d, calcUnitToDel )
       {
-        /**
-         * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnit#process()
-         */
         @Override
         public void process( ) throws Exception
         {
@@ -562,7 +560,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       return (List<ICalculationUnit>) inputData;
     }
 
-    return new ArrayList<ICalculationUnit>();
+    return new ArrayList<>();
   }
 
   private void maximizeSelected( )

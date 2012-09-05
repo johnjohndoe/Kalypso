@@ -54,21 +54,17 @@ import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 public class CalculationUnit2D extends CalculationUnit implements ICalculationUnit2D
 {
 
-  public CalculationUnit2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public CalculationUnit2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement)
-   */
   @Override
   public boolean addElementAsRef( final IFENetItem element )
   {
-    boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IContinuityLine2D);
+    final boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IContinuityLine2D);
     if( !isPolyElementOrBoundaryLine )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D.0" ) ); //$NON-NLS-1$
     return super.addElementAsRef( element );
   }
-
 }
