@@ -181,7 +181,7 @@ public class RiverLineBuilder
     try
     {
       final double width = WspmSohlpunkte.findSohlpunkt( profil );
-      final GM_Point gmp = WspmProfileHelper.getGeoPosition( width, profil );
+      final GM_Point gmp = WspmProfileHelper.getGeoPositionKalypso( width, profil );
       final Point point = (Point) JTSAdapter.export( gmp );
 
       return transformer.transform( point.getCoordinate() );

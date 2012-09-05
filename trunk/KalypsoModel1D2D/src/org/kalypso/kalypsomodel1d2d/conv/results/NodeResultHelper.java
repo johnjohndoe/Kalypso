@@ -78,17 +78,17 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class NodeResultHelper
 {
-  public static final String AMOUNT_OF_CLASSES_PREFIX = "defaultamountclasses"; //$NON-NLS-1$ 
+  public static final String AMOUNT_OF_CLASSES_PREFIX = "defaultamountclasses"; //$NON-NLS-1$
 
-  public static final String VALUE_MAX_PREFIX = "defaultvaluemax"; //$NON-NLS-1$ 
+  public static final String VALUE_MAX_PREFIX = "defaultvaluemax"; //$NON-NLS-1$
 
-  public static final String VALUE_MIN_PREFIX = "defaultvaluemin"; //$NON-NLS-1$ 
+  public static final String VALUE_MIN_PREFIX = "defaultvaluemin"; //$NON-NLS-1$
 
-  public static final String COLOR_MAX_PREFIX = "defaultcolormax"; //$NON-NLS-1$ 
+  public static final String COLOR_MAX_PREFIX = "defaultcolormax"; //$NON-NLS-1$
 
-  public static final String COLOR_MIN_PREFIX = "defaultcolormin"; //$NON-NLS-1$ 
+  public static final String COLOR_MIN_PREFIX = "defaultcolormin"; //$NON-NLS-1$
 
-  public static final String COLOR_MAP_PREFIX = "stepcolormap"; //$NON-NLS-1$ 
+  public static final String COLOR_MAP_PREFIX = "stepcolormap"; //$NON-NLS-1$
 
   public static final String WAVE_PERIOD_TYPE = "WavePeriod"; //$NON-NLS-1$
 
@@ -120,9 +120,9 @@ public class NodeResultHelper
 
   public static final Double DEFAULT_AMOUNT_CLASSES = 100.;
 
-  public static final String NODESTYLE_TEMPLATE = "NODESTYLE_TEMPLATE"; //$NON-NLS-1$ 
+  public static final String NODESTYLE_TEMPLATE = "NODESTYLE_TEMPLATE"; //$NON-NLS-1$
 
-  public static final String VECTORFACTOR = "VECTORFACTOR"; //$NON-NLS-1$ 
+  public static final String VECTORFACTOR = "VECTORFACTOR"; //$NON-NLS-1$
 
   public static final String SIZE_NORM_NODE_FUNC = "SIZE_NORM"; //$NON-NLS-1$
 
@@ -130,7 +130,7 @@ public class NodeResultHelper
 
   /**
    * sets the mid-side node's water level and depth by interpolation between the corner nodes.
-   * 
+   *
    * @param nodeDown
    *          first node of the corresponding arc.
    * @param nodeUp
@@ -172,7 +172,7 @@ public class NodeResultHelper
   /**
    * interpolates the water level for the midside node by using the water levels of the corner nodes. The depth will be
    * calculated as well, using the interpolated water level.
-   * 
+   *
    * @param nodeDown
    *          first node of the arc on which the corner node lies.
    * @param nodeUp
@@ -238,7 +238,7 @@ public class NodeResultHelper
 
   /**
    * returns a simplified profile curve of a 1d-node, already cut at the intersection points with the water level
-   * 
+   *
    * @param nodeResult
    *          1d-node
    */
@@ -249,8 +249,6 @@ public class NodeResultHelper
     /* cut the profile at the intersection points with the water level */
     // get the intersection points
     // get the crs from the profile-gml
-    final String srsName = profile.getSrsName();
-    final String crs = srsName == null ? KalypsoDeegreePlugin.getDefault().getCoordinateSystem() : srsName;
 
     // final double waterlevel = nodeResult.getWaterlevel();
 
@@ -258,7 +256,7 @@ public class NodeResultHelper
 
     // final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
     // final GM_Curve curve = cutProfileAtWaterlevel( waterlevel, profil, crs );
-    final GM_Curve curve = ProfilUtil.getLine( profil, crs );
+    final GM_Curve curve = ProfilUtil.getLine( profil );
     final GM_Curve transformCurve = (GM_Curve) curve.transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     /* simplify the profile */
     final double epsThinning = 1.0;
@@ -294,7 +292,7 @@ public class NodeResultHelper
   /**
    * gets the x-coordinate of the zero point of a line defined by y1 (>0), y2 (<0) and the difference of the
    * x-coordinates (x2-x1) = dx12.
-   * 
+   *
    * @param dx12
    *          distance between x1 and x2.
    * @param y1
@@ -345,8 +343,8 @@ public class NodeResultHelper
 
       boundaryProfil.addPoint( point );
     }
-    return WspmProfileHelper.cutProfileAtWaterlevel( waterlevel, boundaryProfil, crs );
 
+    return WspmProfileHelper.cutProfileAtWaterlevel( waterlevel, boundaryProfil );
   }
 
   public static INodeResult getNodeResult( final GM_Point point, final FeatureList resultList, final double searchDistance )
