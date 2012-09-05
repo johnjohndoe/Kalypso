@@ -30,6 +30,7 @@ import org.kalypso.model.wspm.ewawi.data.EwawiSta;
 import org.kalypso.model.wspm.ewawi.data.EwawiStaLine;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiPunktart;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
+import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePoint;
 import org.kalypso.shape.ShapeFile;
@@ -80,13 +81,13 @@ public class EwawiShape347Writer extends AbstractEwawiShapeWriter
   }
 
   @Override
-  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data ) throws DBaseException, IOException, SHPException, EwawiShapeException
+  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data ) throws DBaseException, IOException, SHPException, EwawiException
   {
     for( final EwawiPlus ewawiData : data )
       writeData( shapeFile, ewawiData );
   }
 
-  private void writeData( final ShapeFile shapeFile, final EwawiPlus data ) throws DBaseException, IOException, SHPException, EwawiShapeException
+  private void writeData( final ShapeFile shapeFile, final EwawiPlus data ) throws DBaseException, IOException, SHPException, EwawiException
   {
     /* Get the pro index and the sta index. */
     final EwawiPro proIndex = data.getProIndex();
@@ -98,13 +99,13 @@ public class EwawiShape347Writer extends AbstractEwawiShapeWriter
       writeProLine( shapeFile, staIndex, proLine );
   }
 
-  private void writeProLine( final ShapeFile shapeFile, final EwawiSta staIndex, final EwawiProLine proLine ) throws EwawiShapeException, IOException, DBaseException, SHPException
+  private void writeProLine( final ShapeFile shapeFile, final EwawiSta staIndex, final EwawiProLine proLine ) throws EwawiException, IOException, DBaseException, SHPException
   {
     /* Find the fix points. */
     final EwawiStaLine leftFixPoint = staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._1, proLine.getGewKennzahl(), proLine.getStation() );
     final EwawiStaLine rightFixPoint = staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._2, proLine.getGewKennzahl(), proLine.getStation() );
     if( leftFixPoint == null || rightFixPoint == null )
-      throw new EwawiShapeException( "Einer der Festpunkte wurde nicht gefunden." );
+      throw new EwawiException( "Einer der Festpunkte wurde nicht gefunden." );
 
     /* Create the profile point. */
     final EwawiProfilePoint proPoint = new EwawiProfilePoint( leftFixPoint, rightFixPoint, proLine );

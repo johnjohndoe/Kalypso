@@ -30,7 +30,7 @@ import org.kalypso.model.wspm.ewawi.data.EwawiStaLine;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiObjectart;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiProfilart;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiPunktart;
-import org.kalypso.model.wspm.ewawi.shape.writer.EwawiShapeException;
+import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.shape.geometry.ISHPMultiPoint;
 import org.kalypso.shape.geometry.SHPEnvelope;
 import org.kalypso.shape.geometry.SHPGeometryUtils;
@@ -67,7 +67,7 @@ public class EwawiProfilePart
     return m_proLines.values().toArray( new EwawiProLine[] {} );
   }
 
-  public SHPPolyLinez getShape( final EwawiSta staIndex ) throws EwawiShapeException
+  public SHPPolyLinez getShape( final EwawiSta staIndex ) throws EwawiException
   {
     /* Find the fix points. */
     final EwawiStaLine leftFixPoint = getLeftFixPoint( staIndex );
@@ -131,44 +131,50 @@ public class EwawiProfilePart
     return proLines[0].getZusatz();
   }
 
-  public String getComment( final EwawiSta staIndex ) throws EwawiShapeException
+  public String getComment( final EwawiSta staIndex ) throws EwawiException
   {
     final EwawiStaLine leftFixPoint = getLeftFixPoint( staIndex );
     return leftFixPoint.getComment();
   }
 
-  public EwawiProfilart getProfilArt( final EwawiSta staIndex ) throws EwawiShapeException
+  public EwawiProfilart getProfilArt( final EwawiSta staIndex ) throws EwawiException
   {
     final EwawiStaLine leftFixPoint = getLeftFixPoint( staIndex );
     return leftFixPoint.getProfilArt();
   }
 
-  public Short getProfilNummer( final EwawiSta staIndex ) throws EwawiShapeException
+  public Short getProfilNummer( final EwawiSta staIndex ) throws EwawiException
   {
     final EwawiStaLine leftFixPoint = getLeftFixPoint( staIndex );
     return leftFixPoint.getProfilNummer();
   }
 
-  private EwawiStaLine getLeftFixPoint( final EwawiSta staIndex ) throws EwawiShapeException
+  public String[] getPhotos( final EwawiSta staIndex ) throws EwawiException
+  {
+    final EwawiStaLine leftFixPoint = getLeftFixPoint( staIndex );
+    return leftFixPoint.getPhotos();
+  }
+
+  private EwawiStaLine getLeftFixPoint( final EwawiSta staIndex ) throws EwawiException
   {
     final EwawiProLine[] proLines = getProLines();
     final EwawiProLine proLine = proLines[0];
 
     final EwawiStaLine leftFixPoint = staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._1, proLine.getGewKennzahl(), proLine.getStation() );
     if( leftFixPoint == null )
-      throw new EwawiShapeException( "Der linke Festpunkt wurde nicht gefunden." );
+      throw new EwawiException( "Der linke Festpunkt wurde nicht gefunden." );
 
     return leftFixPoint;
   }
 
-  private EwawiStaLine getRightFixPoint( final EwawiSta staIndex ) throws EwawiShapeException
+  private EwawiStaLine getRightFixPoint( final EwawiSta staIndex ) throws EwawiException
   {
     final EwawiProLine[] proLines = getProLines();
     final EwawiProLine proLine = proLines[0];
 
     final EwawiStaLine rightFixPoint = staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._2, proLine.getGewKennzahl(), proLine.getStation() );
     if( rightFixPoint == null )
-      throw new EwawiShapeException( "Der rechte Festpunkt wurde nicht gefunden." );
+      throw new EwawiException( "Der rechte Festpunkt wurde nicht gefunden." );
 
     return rightFixPoint;
   }

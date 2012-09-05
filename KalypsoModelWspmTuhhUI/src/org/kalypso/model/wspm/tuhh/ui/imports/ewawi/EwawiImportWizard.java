@@ -19,7 +19,11 @@
 package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IPageChangeProvider;
+import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
@@ -28,7 +32,6 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.imports.WspmTuhhProjectSelection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
@@ -37,17 +40,32 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
 {
+  private final IPageChangedListener m_pageListener = new IPageChangedListener()
+  {
+    @Override
+    public void pageChanged( final PageChangedEvent event )
+    {
+      handlePageChanged( event.getSelectedPage() );
+    }
+  };
+
   private CommandableWorkspace m_workspace;
 
   private TuhhWspmProject m_targetProject;
 
   private EwawiImportData m_data;
 
+  private EwawiImportFilesPage m_importFilesPage;
+
+  private EwawiPreviewProfilesPage m_profilesPreviewPage;
+
   public EwawiImportWizard( )
   {
     m_workspace = null;
     m_targetProject = null;
     m_data = null;
+    m_importFilesPage = null;
+    m_profilesPreviewPage = null;
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "ewawiImportWizard" ) ); //$NON-NLS-1$
     setWindowTitle( "EWAWI+ Import" );
@@ -59,7 +77,7 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
   {
     final WspmTuhhProjectSelection projectSelection = new WspmTuhhProjectSelection( selection );
     if( !projectSelection.hasProject() )
-      throw new IllegalArgumentException( Messages.getString( "ImportWProfHandler_1" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "Please select the 'Water bodies' section of a KalypsoWSPM project." );
 
     m_workspace = projectSelection.getWorkspace();
     m_targetProject = projectSelection.getProject();
@@ -70,7 +88,24 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void addPages( )
   {
-    addPage( new EwawiImportFilesPage( m_data ) );
+    m_importFilesPage = new EwawiImportFilesPage( m_data );
+    m_profilesPreviewPage = new EwawiPreviewProfilesPage( m_data );
+
+    addPage( m_importFilesPage );
+    addPage( m_profilesPreviewPage );
+  }
+
+  @Override
+  public void setContainer( final IWizardContainer container )
+  {
+    final IWizardContainer oldContainer = getContainer();
+    if( oldContainer instanceof IPageChangeProvider )
+      ((IPageChangeProvider)oldContainer).removePageChangedListener( m_pageListener );
+
+    super.setContainer( container );
+
+    if( container instanceof IPageChangeProvider )
+      ((IPageChangeProvider)container).addPageChangedListener( m_pageListener );
   }
 
   @Override
@@ -85,5 +120,18 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
       StatusDialog.open( getShell(), result, getWindowTitle() );
 
     return !result.matches( IStatus.ERROR );
+  }
+
+  protected void handlePageChanged( final Object selectedPage )
+  {
+    if( selectedPage == m_profilesPreviewPage )
+    {
+      final EwawiCreateProfilesOperation operation = new EwawiCreateProfilesOperation( m_data );
+      final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+      if( !status.isOK() )
+        new StatusDialog( getShell(), status, getWindowTitle() ).open();
+
+      m_profilesPreviewPage.updateControls();
+    }
   }
 }

@@ -307,6 +307,5 @@ public class SearchDhmIndexPage extends WizardPage
 
     ColumnsResizeControlListener.setMinimumPackWidth( measurementAccuracyItem.getColumn() );
     ColumnViewerSorter.registerSorter( measurementAccuracyColumn, new DhmIndexMeasurementAccuracyViewerComparator() );
-
   }
 }

@@ -30,7 +30,7 @@ import org.kalypso.model.wspm.ewawi.shape.writer.EwawiShape32Writer;
 import org.kalypso.model.wspm.ewawi.shape.writer.EwawiShape347Writer;
 import org.kalypso.model.wspm.ewawi.shape.writer.EwawiShape348Writer;
 import org.kalypso.model.wspm.ewawi.shape.writer.EwawiShape38Writer;
-import org.kalypso.model.wspm.ewawi.shape.writer.EwawiShapeException;
+import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.shp.SHPException;
@@ -78,7 +78,7 @@ public class Ewawi2ShapeOperation implements IRunnableWithProgress
       final EwawiShape348Writer writer348 = new EwawiShape348Writer( ewawiData, gewShape );
       writer348.writeShape();
     }
-    catch( DBaseException | IOException | SHPException | EwawiShapeException e )
+    catch( DBaseException | IOException | SHPException | EwawiException e )
     {
       throw new InvocationTargetException( e );
     }

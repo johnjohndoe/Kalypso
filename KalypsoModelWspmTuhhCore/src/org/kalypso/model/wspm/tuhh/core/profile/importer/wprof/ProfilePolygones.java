@@ -117,5 +117,4 @@ class ProfilePolygones extends HashMap<String, ProfilePolygon>
 
     return new URI[0];
   }
-
 }

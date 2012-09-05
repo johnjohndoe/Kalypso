@@ -31,6 +31,7 @@ import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.data.EwawiPro;
 import org.kalypso.model.wspm.ewawi.data.EwawiSta;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
+import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfile;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
@@ -96,13 +97,13 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
   }
 
   @Override
-  protected void writeData( final ShapeFile shapeFile, final EwawiPlus data[] ) throws DBaseException, IOException, SHPException, EwawiShapeException
+  protected void writeData( final ShapeFile shapeFile, final EwawiPlus data[] ) throws DBaseException, IOException, SHPException, EwawiException
   {
     for( final EwawiPlus ewawiData : data )
       writeData( shapeFile, ewawiData );
   }
 
-  private void writeData( final ShapeFile shapeFile, final EwawiPlus data ) throws DBaseException, IOException, SHPException, EwawiShapeException
+  private void writeData( final ShapeFile shapeFile, final EwawiPlus data ) throws DBaseException, IOException, SHPException, EwawiException
   {
     final EwawiPro proIndex = data.getProIndex();
     final EwawiProfile[] profiles = proIndex.getProfiles();
@@ -110,7 +111,7 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
       writeProfile( shapeFile, profile, data );
   }
 
-  private void writeProfile( final ShapeFile shapeFile, final EwawiProfile profile, final EwawiPlus data ) throws DBaseException, IOException, SHPException, EwawiShapeException
+  private void writeProfile( final ShapeFile shapeFile, final EwawiProfile profile, final EwawiPlus data ) throws DBaseException, IOException, SHPException, EwawiException
   {
     final EwawiSta staIndex = data.getStaIndex();
 
@@ -124,7 +125,7 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     }
   }
 
-  private Object[] getValues( final EwawiProfilePart part, final EwawiPlus data ) throws DBaseException, EwawiShapeException
+  private Object[] getValues( final EwawiProfilePart part, final EwawiPlus data ) throws DBaseException, EwawiException
   {
     final EwawiKey key = data.getKey();
     final EwawiSta staIndex = data.getStaIndex();
