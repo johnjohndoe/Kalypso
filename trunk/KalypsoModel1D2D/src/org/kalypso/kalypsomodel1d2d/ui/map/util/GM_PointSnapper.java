@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * <li>Snapping to the nearest point in the snapping radius is the default behavior.
  * <li>Snapping will not occur if SHIFT button is pressed during the operation.
  * </ul>
- * 
+ *
  * @author Thomas Jung
  */
 public class GM_PointSnapper
@@ -74,22 +74,18 @@ public class GM_PointSnapper
 
   private final GM_Position[] m_positions;
 
-  private final String m_crs;
-
-  public GM_PointSnapper( final GM_Position[] positions, final IMapPanel panel, final String crs )
+  public GM_PointSnapper( final GM_Position[] positions, final IMapPanel panel )
   {
     Assert.isNotNull( panel );
     Assert.isNotNull( positions );
 
-    m_crs = crs;
     m_positions = positions;
     m_mapPanel = panel;
-
   }
 
   /**
    * Move the mouse to the given position and try to snap the point.
-   * 
+   *
    * @return The snapped point, or <code>null</code> if none was found.
    */
   public GM_Point moved( final GM_Point p )
@@ -110,10 +106,10 @@ public class GM_PointSnapper
   // TODO: implement better search! This is just for testing!
   private GM_Point findNode( final GM_Point p, final double snapRadius )
   {
-    for( int i = 0; i < m_positions.length; i++ )
+    for( final GM_Position m_position : m_positions )
     {
-      if( p.getPosition().getDistance( m_positions[i] ) < snapRadius )
-        return GeometryFactory.createGM_Point( m_positions[i], m_crs );
+      if( p.getPosition().getDistance( m_position ) < snapRadius )
+        return GeometryFactory.createGM_Point( m_position, p.getCoordinateSystem() );
     }
     return null;
   }

@@ -46,10 +46,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
@@ -76,42 +79,43 @@ public class BankSelectorFunction implements IRectangleMapFunction
 {
   private final CreateChannelData m_data;
 
-  private final CreateChannelData.SIDE m_side;
+  private final IObservableValue m_themeValue;
 
-  public BankSelectorFunction( final CreateChannelData data, final CreateChannelData.SIDE side )
+  private final SIDE m_side;
+
+  public BankSelectorFunction( final CreateChannelData data, final SIDE side, final IObservableValue themeValue )
   {
     m_data = data;
     m_side = side;
+    m_themeValue = themeValue;
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void execute( final IMapPanel mapPanel, final Rectangle rectangle )
   {
-    if( m_data.getMeshStatus() == true )
-    {
-      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        return;
-    }
+    // FIXME
+    // if( m_data.getMeshStatus() )
+    // {
+    //      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    // return;
+    // }
 
-    final GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( mapPanel.getProjection(), rectangle );
-    IKalypsoFeatureTheme bankTheme = null;
-    if( m_side == CreateChannelData.SIDE.LEFT )
-    {
-      bankTheme = m_data.getBankTheme1();
-    }
-    else if( m_side == CreateChannelData.SIDE.RIGHT )
-    {
-      bankTheme = m_data.getBankTheme2();
-    }
+    final IKalypsoFeatureTheme bankTheme = getBankTheme();
     if( bankTheme == null )
       return;
 
+    final GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( mapPanel.getProjection(), rectangle );
+
     // search bank within rectangle
     final FeatureList featureList = bankTheme.getFeatureList();
+    if( featureList == null )
+      return;
+
     final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
 
+    @SuppressWarnings( "unchecked" )
     final List< ? > list = featureList.query( envelope, null );
+
     final Polygon rectanglePoly = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
 
     for( final Iterator< ? > iter = list.iterator(); iter.hasNext(); )
@@ -153,7 +157,7 @@ public class BankSelectorFunction implements IRectangleMapFunction
     }
 
     final GM_Curve bankline = m_data.getBanklineForSide( m_side );
-    final Set<GM_Curve> selectedBankSet = new HashSet<GM_Curve>( Arrays.asList( bankline ) );
+    final Set<GM_Curve> selectedBankSet = new HashSet<>( Arrays.asList( bankline ) );
 
     if( list.size() == 0 )
     {
@@ -177,6 +181,26 @@ public class BankSelectorFunction implements IRectangleMapFunction
           m_data.setBankline( bankCurve, m_side );
       }
     }
+  }
+
+  private IKalypsoFeatureTheme getBankTheme( )
+  {
+    final IKalypsoFeatureTheme[] result = new IKalypsoFeatureTheme[] { null };
+
+    final IObservableValue themeValue = m_themeValue;
+
+    // must be fetched in swt thread
+    final Runnable runnable = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        result[0] = (IKalypsoFeatureTheme) themeValue.getValue();
+      }
+    };
+    PlatformUI.getWorkbench().getDisplay().syncExec( runnable );
+
+    return result[0];
   }
 
   private GM_Curve getCurveFromBanklineFeature( final Feature feature )

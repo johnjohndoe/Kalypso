@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 
 import java.awt.geom.Point2D;
-import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
@@ -49,9 +48,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHORDER;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.SegmentData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -71,7 +70,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
-import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.MarkerFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -82,8 +81,9 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class ProfilOverlayLayer extends PointsLineLayer
 {
-
   CreateMainChannelWidget m_widget = null;
+
+  static String LAYER_OVERLAY = "org.kalypso.model.wspm.tuhh.ui.chart.overlay.LAYER_OVERLAY"; //$NON-NLS-1$
 
   public static String LAYER_ID = "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay"; //$NON-NLS-1$
 
@@ -114,10 +114,6 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.PointsLineLayer#drag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public EditInfo drag( final Point curserPos, final EditInfo dragStartData )
   {
@@ -129,7 +125,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     final Point2D curserPoint = toNumeric( curserPos );
 
-    final IProfileRecord profilePoint = ProfileVisitors.findNearestPoint( m_data.getProfil(), curserPoint.getX() );
+    final IProfil profile = m_data.getActiveProfile().getProfilOrg();
+    final IProfileRecord profilePoint = ProfileVisitors.findNearestPoint( profile, curserPoint.getX() );
     final IProfileRecord fePoint = ProfileVisitors.findNearestPoint( getProfil(), curserPoint.getX() );
 
     final Point profilePointScreen = toScreen( profilePoint );
@@ -187,8 +184,11 @@ public class ProfilOverlayLayer extends PointsLineLayer
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
     final Integer index = (Integer) dragStartData.getData();
+
     final IProfil profil = getProfil();
-    final IProfil origProfil = m_data.getProfil();
+    final IProfileData activeProfile = m_data.getActiveProfile();
+    final IProfil origProfil = activeProfile.getProfilOrg();
+
     final IRecord targetPoint = profil.getPoint( index );
 
     /**
@@ -242,12 +242,12 @@ public class ProfilOverlayLayer extends PointsLineLayer
     try
     {
       heigth = WspmProfileHelper.getHeightByWidth( width, origProfil );
-      gmPoint = WspmProfileHelper.getGeoPosition( width, origProfil );
+      gmPoint = WspmProfileHelper.getGeoPositionKalypso( width, origProfil );
       if( gmPoint == null )
         return;
 
       // FIXME: check if srsname is null. This would lead in an drawing error
-      final String srsName = (String) origProfil.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+      final String srsName = origProfil.getSrsName();
       geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );
       // geoPoint = WspmGeometryUtilities.pointFromRwHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );
     }
@@ -257,7 +257,6 @@ public class ProfilOverlayLayer extends PointsLineLayer
     }
 
     final IRecord[] points = profil.getPoints();
-    // final int breiteIndexPoint = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
 
     /* save the first and last widths of the intersected profile for comparing them later with the new widths */
     final double oldStartWdith = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[0] );
@@ -272,32 +271,34 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     // TODO: not so nice, use the same profile object for both segments, so that changes goes to both segments
     // directly
-    updateProfileForNeighbourSegment();
+    // updateProfileForNeighbourSegment();
 
-    // /* check if the first or last intersection point has been moved -> update intersected profile and bank
-    // linestrings
-    // */
-    try
-    {
-      checkIntersectionPoints( oldStartWdith, oldEndWdith );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    final SegmentData currentSegment = m_data.getSelectedSegment();
-    currentSegment.updateProfileIntersection();
-    final CreateChannelData.PROF prof = m_data.getCurrentProfile();
-    m_data.completationCheck();
+    // TODO: both adjacent segments must be updated
+    final ISegmentData upstreamSegment = activeProfile.getUpSegment();
+    final ISegmentData downstreamSegment = activeProfile.getDownSegment();
+
+    /* check if the first or last intersection point has been moved -> update intersected profile and bank linestrings */
+    checkIntersectionPoints( upstreamSegment, downstreamSegment, oldStartWdith, oldEndWdith );
+
+    // final SegmentData currentSegment = m_data.getSelectedSegment();
+    // currentSegment.updateProfileIntersection();
+
+    // FIXME
+    // if( upstreamSegment != null )
+    // upstreamSegment.updateProfileIntersection();
+    // if( downstreamSegment != null )
+    // downstreamSegment.updateProfileIntersection();
+
+    // final CreateChannelData.PROF prof = m_data.getCurrentProfile();
+    // FIXME
+    // m_data.completationCheck();
 
     // CreateChannelData.PROF prof = m_data.getCurrentProfile();
-    if( prof == CreateChannelData.PROF.UP )
-      setProfil( currentSegment.getProfUpIntersProfile() );
-    else
-      setProfil( currentSegment.getProfDownIntersProfile() );
+    // setProfil( currentSegment.getProfUpIntersProfile() );
 
     if( breiteComponent != null )
       getProfil().getResult().setSortComponents( new IComponent[] { breiteComponent } );
+
     getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
@@ -323,13 +324,10 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
-   */
   @Override
   public String getIdentifier( )
   {
-    return IWspmOverlayConstants.LAYER_OVERLAY;
+    return LAYER_OVERLAY;
   }
 
   @Override
@@ -351,10 +349,17 @@ public class ProfilOverlayLayer extends PointsLineLayer
     pl.setPoints( points );
     pl.paint( gc );
 
-    final PointFigure pfl = new PointFigure();
-    pfl.setStyle( getPointStyle() );
-    pfl.setPoints( points );
-    pfl.paint( gc );
+    final MarkerFigure figure = new MarkerFigure( getPointStyle() );
+    for( final Point point : points )
+    {
+      figure.setCenterPoint( point.x, point.y );
+      figure.paint( gc );
+    }
+
+    // final PointFigure pfl = new PointFigure();
+    // pfl.setStyle( getPointStyle() );
+    // pfl.setPoints( points );
+    // pfl.paint( gc );
   }
 
   public void setProfile( final IProfil profile, final CreateChannelData data, final CreateMainChannelWidget widget )
@@ -371,15 +376,13 @@ public class ProfilOverlayLayer extends PointsLineLayer
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTitle()
-   */
   @Override
   public String getTitle( )
   {
     return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer.1" ); //$NON-NLS-1$
   }
 
+  // FIXME: use ChannelEditUtil
   private IProfil createNewProfile( final IRecord profilePoint, final double width, final double heigth, final GM_Point geoPoint )
   {
     final IProfil profil = getProfil();
@@ -431,8 +434,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     tmpProfil.setStation( profil.getStation() );
 
     /* coordinate system */
-    final String srsName = (String) profil.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
-    tmpProfil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, srsName );
+    tmpProfil.setSrsName( profil.getSrsName() );
 
     return tmpProfil;
   }
@@ -446,238 +448,62 @@ public class ProfilOverlayLayer extends PointsLineLayer
    * @param oldEndWdith
    *          the width coordinate of the last intersection profile point before user interaction
    */
-  private void checkIntersectionPoints( final double oldStartWdith, final double oldEndWdith ) throws Exception
+  private void checkIntersectionPoints( final ISegmentData upstreamSegment, final ISegmentData downstreamSegment, final double oldStartWdith, final double oldEndWdith )
   {
-
-    final IProfil profil = getProfil();
-    final IRecord firstPoint = profil.getPoints()[0];
-    final IRecord lastPoint = profil.getPoints()[profil.getPoints().length - 1];
-
-    final double newStartWidth = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, firstPoint );
-    final double newEndWidth = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, lastPoint );
-
-    final CreateChannelData.PROF prof = m_data.getCurrentProfile();
-
-    /* get the current segment to set the new intersection point for it */
-    final SegmentData currentSegment = m_data.getSelectedSegment();
-
-    /* get the neighbor segments of the current segment */
-    final List<SegmentData> neighbourSegments = m_data.getNeighbourSegments( currentSegment );
-
-    WIDTHORDER widthorder = null;
-    double width = 0;
-    GM_Point point = null;
-
-    /* check, what intersection points have changed */
-    final int iHoehe = m_data.getProfil().indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    if( oldStartWdith != newStartWidth && oldEndWdith != newEndWidth ) // both intersection points have been moved
+    try
     {
-      // FIRST
-      final WIDTHORDER widthorder1 = CreateChannelData.WIDTHORDER.FIRST;
-      final double width1 = newStartWidth;
-      final GM_Point point1 = WspmProfileHelper.getGeoPosition( width1, m_data.getProfil() );
+      final IProfil profil = getProfil();
+      final IRecord firstPoint = profil.getPoints()[0];
+      final IRecord lastPoint = profil.getPoints()[profil.getPoints().length - 1];
 
-      /* update the first intersection point */
-      currentSegment.setIntersPoint( point1, prof, widthorder1, width1 );
-      /* intersection points have to have the same heigth as the orig profile */
+      final double newStartWidth = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, firstPoint );
+      final double newEndWidth = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, lastPoint );
 
-      firstPoint.setValue( iHoehe, point1.getZ() );
+      /* check, what intersection points have changed */
+      final IProfileData activeProfile = m_data.getActiveProfile();
+      final IProfil activeDataProfile = activeProfile.getProfilOrg();
 
-      // LAST
-      final WIDTHORDER widthorder2 = CreateChannelData.WIDTHORDER.LAST;
-      final double width2 = newEndWidth;
-      final GM_Point point2 = WspmProfileHelper.getGeoPosition( width2, m_data.getProfil() );
+      final int iHoehe = activeDataProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
-      /* update the last intersection point */
-      currentSegment.setIntersPoint( point2, prof, widthorder2, width2 );
-      /* intersection points have to have the same heigth as the orig profile */
-      lastPoint.setValue( iHoehe, point2.getZ() );
+      final GM_Point startPoint = WspmProfileHelper.getGeoPositionKalypso( newStartWidth, activeDataProfile );
+      final GM_Point endPoint = WspmProfileHelper.getGeoPositionKalypso( newEndWidth, activeDataProfile );
 
-      /* update the intersected profile */
-      currentSegment.setNewIntersectedProfile( profil, prof );
-
-      // TODO: we should also update the neighbor segment of the current profile
-      // currentSegment.updateProfileIntersection();
-
-      /* update the neighbour segment */
-      updateNeighbourSegment( prof, currentSegment, neighbourSegments, widthorder1, width1, point1, widthorder2, width2, point2 );
-
-    }
-    else if( oldStartWdith != newStartWidth ) // first intersection point has been moved
-    {
-      widthorder = CreateChannelData.WIDTHORDER.FIRST;
-      width = newStartWidth;
-      point = WspmProfileHelper.getGeoPosition( width, m_data.getProfil() );
-
-      /* update the last intersection point */
-      currentSegment.setIntersPoint( point, prof, widthorder, width );
-      /* intersection points have to have the same heigth as the orig profile */
-
-      firstPoint.setValue( iHoehe, point.getZ() );
-
-      /* update the intersected profile */
-      currentSegment.setNewIntersectedProfile( profil, prof );
-      // currentSegment.updateProfileIntersection();
-
-      /* update the neighbour segment */
-      updateNeighbourSegment( point, prof, currentSegment, neighbourSegments, widthorder, width );
-    }
-    else if( oldEndWdith != newEndWidth )
-    {
-      widthorder = CreateChannelData.WIDTHORDER.LAST;
-      width = newEndWidth;
-      point = WspmProfileHelper.getGeoPosition( width, m_data.getProfil() );
-
-      /* update the last intersection point */
-      currentSegment.setIntersPoint( point, prof, widthorder, width );
-      /* intersection points have to have the same heigth as the orig profile */
-      lastPoint.setValue( iHoehe, point.getZ() );
-
-      /* update the intersected profile */
-      currentSegment.setNewIntersectedProfile( profil, prof );
-      currentSegment.updateProfileIntersection();
-
-      /* update the neighbour segment */
-      updateNeighbourSegment( point, prof, currentSegment, neighbourSegments, widthorder, width );
-    }
-    else
-      widthorder = null;
-
-  }
-
-  /**
-   * updates both intersection points of the corresponding profile of the neighbouring segment.
-   *
-   * @param prof
-   *          profile side of the current segment (up/down)
-   * @param currentSegment
-   *          segment data of the current segment
-   * @param neighbourSegments
-   *          list of the neighbouring segments
-   * @param widthorder1
-   *          widthorder of the first intersection point (first/last)
-   * @param width1
-   *          width coordinate of the new intersection point
-   * @param point1
-   *          geo coords of the new intersection point
-   * @param widthorder2
-   *          widthorder of the second intersection point (first/last)
-   * @param width2
-   *          width coordinate of the new intersection point
-   * @param point2
-   *          geo coords of the new intersection point
-   */
-  private void updateNeighbourSegment( final CreateChannelData.PROF prof, final SegmentData currentSegment, final List<SegmentData> neighbourSegments, final WIDTHORDER widthorder1, final double width1, final GM_Point point1, final WIDTHORDER widthorder2, final double width2, final GM_Point point2 )
-  {
-    final IProfil profil = getProfil();
-    /* change prof, because now it is the profile of the other side of the segment */
-    CreateChannelData.PROF profNeighbour = prof;
-    if( prof == CreateChannelData.PROF.DOWN )
-      profNeighbour = CreateChannelData.PROF.UP;
-    else if( prof == CreateChannelData.PROF.UP )
-      profNeighbour = CreateChannelData.PROF.DOWN;
-
-    for( final SegmentData segment : neighbourSegments )
-    {
-      // check if the changed profile is in the neighbour segment, if not, do nothing.
-      if( segment != currentSegment )
+      if( oldStartWdith != newStartWidth ) // first intersection point has been moved
       {
-        if( segment.getProfilDownOrg().getStation() == profil.getStation() || segment.getProfilUpOrg().getStation() == profil.getStation() )
-        {
-          if( widthorder1 != null && widthorder2 != null )
-          {
-            try
-            {
-              segment.setIntersPoint( point1, profNeighbour, widthorder1, width1 );
-              segment.setIntersPoint( point2, profNeighbour, widthorder2, width2 );
-            }
-            catch( final Exception e )
-            {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-            segment.setNewIntersectedProfile( profil, profNeighbour );
-            // segment.updateProfileIntersection();
-          }
-        }
+        /* intersection points have to have the same heigth as the orig profile */
+        firstPoint.setValue( iHoehe, startPoint.getZ() );
+
+        // FIXME
+        // upstreamSegment.setIntersPoint( startPoint, PROF.DOWN, WIDTHORDER.FIRST, newStartWidth );
+        // downstreamSegment.setIntersPoint( startPoint, PROF.UP, WIDTHORDER.FIRST, newStartWidth );
+      }
+
+      if( oldEndWdith != newEndWidth )
+      {
+        /* intersection points have to have the same heigth as the orig profile */
+        lastPoint.setValue( iHoehe, endPoint.getZ() );
+
+        // FIXME
+        // upstreamSegment.setIntersPoint( endPoint, PROF.DOWN, WIDTHORDER.LAST, newEndWidth );
+        // downstreamSegment.setIntersPoint( endPoint, PROF.UP, WIDTHORDER.LAST, newEndWidth );
+      }
+
+      if( oldStartWdith != newStartWidth || oldEndWdith != newEndWidth )
+      {
+        // FIXME
+        // upstreamSegment.setNewIntersectedProfile( profil, PROF.DOWN );
+        // downstreamSegment.setNewIntersectedProfile( profil, PROF.UP );
       }
     }
-  }
-
-  /**
-   * updates one intersection point of the corresponding profile of the neighbouring segment.
-   *
-   * @param prof
-   *          profile side of the current segment (up/down)
-   * @param currentSegment
-   *          segment data of the current segment
-   * @param neighbourSegments
-   *          list of the neighbouring segments
-   * @param widthorder1
-   *          widthorder of the first intersection point (first/last)
-   * @param width1
-   *          width coordinate of the new intersection point
-   * @param point1
-   *          geo coords of the new intersection point
-   */
-  private void updateNeighbourSegment( final GM_Point point, final CreateChannelData.PROF prof, final SegmentData currentSegment, final List<SegmentData> neighbourSegments, final WIDTHORDER widthorder, final double width )
-  {
-    final IProfil profil = getProfil();
-    /* change prof, because now it is the profile of the other side of the segment */
-    CreateChannelData.PROF profNeighbour = prof;
-    if( prof == CreateChannelData.PROF.DOWN )
-      profNeighbour = CreateChannelData.PROF.UP;
-    else if( prof == CreateChannelData.PROF.UP )
-      profNeighbour = CreateChannelData.PROF.DOWN;
-
-    for( final SegmentData segment : neighbourSegments )
+    catch( final IndexOutOfBoundsException e )
     {
-      // check if the changed profile is in the neighbour segment, if not, do nothing.
-      if( segment != currentSegment )
-      {
-        if( segment.getProfilDownOrg().getStation() == profil.getStation() || segment.getProfilUpOrg().getStation() == profil.getStation() )
-        {
-          if( widthorder != null )
-            try
-            {
-              segment.setIntersPoint( point, profNeighbour, widthorder, width );
-            }
-            catch( final Exception e )
-            {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-          segment.setNewIntersectedProfile( profil, profNeighbour );
-        }
-      }
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
-  }
-
-  /**
-   * updates the profile for the neighboring segment.
-   */
-  private void updateProfileForNeighbourSegment( )
-  {
-    final IProfil profil = getProfil();
-    /* get the current segment to set the new profile for it */
-    final SegmentData currentSegment = m_data.getSelectedSegment();
-
-    /* get the neighbor segments of the current segment */
-    final List<SegmentData> neighbourSegments = m_data.getNeighbourSegments( currentSegment );
-    final CreateChannelData.PROF prof = m_data.getCurrentProfile();
-
-    /* change prof, because now it is the profile of the other side of the segment */
-    CreateChannelData.PROF profNeighbour = prof;
-    if( prof == CreateChannelData.PROF.DOWN )
-      profNeighbour = CreateChannelData.PROF.UP;
-    else if( prof == CreateChannelData.PROF.UP )
-      profNeighbour = CreateChannelData.PROF.DOWN;
-
-    for( final SegmentData segment : neighbourSegments )
-      // check if the changed profile is in the neighbor segment, if not, do nothing.
-      if( segment != currentSegment )
-        if( segment.getProfilDownOrg().getStation() == profil.getStation() || segment.getProfilUpOrg().getStation() == profil.getStation() )
-          segment.setNewIntersectedProfile( profil, profNeighbour );
-    // segment.updateProfileIntersection();
+    catch( final Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 }

@@ -40,51 +40,68 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import org.eclipse.core.runtime.IStatus;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ui.views.map.MapView;
 
 /**
  * @author Gernot Belger
  */
-public class CreateMainChannelApplyAction extends Action
+public class SetWidgetAction extends Action
 {
+  private final IWidget m_widget;
+
   private final CreateChannelData m_data;
 
-  public CreateMainChannelApplyAction( final CreateChannelData data )
+  public SetWidgetAction( final CreateChannelData data, final IWidget widget )
   {
+    super( StringUtils.EMPTY, Action.AS_CHECK_BOX );
+
     m_data = data;
+    m_widget = widget;
 
-    setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.42" ) ); //$NON-NLS-1$
-    setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
-
-    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
-    setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.OK ) );
+    setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
   }
 
   @Override
   public void runWithEvent( final Event event )
   {
-    final ICoreRunnableWithProgress operation = new CreateMainChannelConvertToOperation( m_data );
+    final IWidget delegate = m_data.getDelegate();
 
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
-    if( status.isOK() == true )
-    {
-      // TODO: ugly
-      m_data.resetSelectedProfiles();
+    if( delegate == m_widget )
       m_data.setDelegate( null );
-    }
     else
-      StatusDialog.open( shell, status, getText() );
+      m_data.setDelegate( m_widget );
+
+    // REMARK: give focus to map pane now: the tools need key stroke (e.g. SPACE), but if the focus stays at the button,
+    // space will deactive the tool again.
+    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    if( window == null )
+      return;
+
+    final IWorkbenchPage page = window.getActivePage();
+    if( page == null )
+      return;
+
+    try
+    {
+      page.showView( MapView.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
+    }
+    catch( final PartInitException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  public IWidget getDelegate( )
+  {
+    return m_widget;
   }
 }

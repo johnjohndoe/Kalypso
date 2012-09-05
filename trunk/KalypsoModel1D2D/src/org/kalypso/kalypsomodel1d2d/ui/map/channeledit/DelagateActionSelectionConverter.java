@@ -40,38 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.kalypso.commons.databinding.conversion.TypedConverter;
+import org.kalypso.ogc.gml.widgets.IWidget;
 
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Position;
-
-public class MainChannelHelper
+/**
+ * @author belger
+ */
+public class DelagateActionSelectionConverter extends TypedConverter<IWidget, Boolean>
 {
-  public static GM_Position[] getPositionsFromCurves( final GM_Curve[] curves, final Map<GM_Position, GM_Curve> map )
-  {
-    final List<GM_Position> posList = new ArrayList<>();
+  private final IWidget m_delegateToObserve;
 
-    for( final GM_Curve curve : curves )
-    {
-      try
-      {
-        final GM_Position[] positions = curve.getAsLineString().getPositions();
-        for( final GM_Position position : positions )
-        {
-          posList.add( position );
-          map.put( position, curve );
-        }
-      }
-      catch( final GM_Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        return null;
-      }
-    }
-    return posList.toArray( new GM_Position[posList.size()] );
+  public DelagateActionSelectionConverter( final IWidget delegateToObserve )
+  {
+    super( IWidget.class, Boolean.class );
+
+    m_delegateToObserve = delegateToObserve;
+  }
+
+  @Override
+  public Boolean convertTyped( final IWidget fromObject )
+  {
+    return fromObject == m_delegateToObserve;
   }
 }

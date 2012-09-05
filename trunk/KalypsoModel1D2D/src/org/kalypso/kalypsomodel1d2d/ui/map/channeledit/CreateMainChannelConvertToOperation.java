@@ -40,22 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
+import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.ImportQuadMeshWorker;
+import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesh;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * @author belger
- *
+ * @author Gernot Belger
  */
 final class CreateMainChannelConvertToOperation implements ICoreRunnableWithProgress
 {
   private final CreateChannelData m_data;
+
+  private final double SEARCH_DISTANCE = 0.02;
 
   public CreateMainChannelConvertToOperation( final CreateChannelData data )
   {
@@ -67,17 +70,30 @@ final class CreateMainChannelConvertToOperation implements ICoreRunnableWithProg
   {
     m_data.setDelegate( null );
 
-    final GM_Point[][] importingGridPoints = m_data.convertToGMPoints();
+    final QuadMesh[] meshes = getMeshes();
 
     final CommandableWorkspace workspace = m_data.getDiscretisationWorkspace();
 
-    final TempGrid tempGrid = new TempGrid();
-    tempGrid.importMesh( importingGridPoints );
-    tempGrid.setCoodinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-    final double searchDistance = 0.1;
+    final ImportQuadMeshWorker worker = new ImportQuadMeshWorker( workspace, SEARCH_DISTANCE, meshes );
+    return worker.execute( monitor );
+  }
 
-    tempGrid.getAddToModelCommand( workspace, searchDistance );
+  /**
+   * converts a Coordinate[][] array into a GM_Point[][] array
+   */
+  private QuadMesh[] getMeshes( )
+  {
+    final ISegmentData[] segments = m_data.getSegments();
 
-    return Status.OK_STATUS;
+    final Collection<QuadMesh> meshes = new ArrayList<>( segments.length );
+
+    for( final ISegmentData segment : segments )
+    {
+      final QuadMesh mesh = segment.getMesh();
+      if( mesh != null )
+        meshes.add( mesh );
+    }
+
+    return meshes.toArray( new QuadMesh[meshes.size()] );
   }
 }

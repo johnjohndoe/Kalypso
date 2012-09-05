@@ -24,7 +24,7 @@
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  Lesser General public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
@@ -40,1007 +40,283 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.jts.LineStringUtilities;
-import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
-import org.kalypso.jts.QuadMesher.JTSQuadMesher;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ChannelEditProfileData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.UpdateEditDataOperation;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.feature.FeatureComparator;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
 
 /**
- * State object for creating main channel widget and composite.
- *
+ * @author Gernot Belger
  * @author Thomas Jung
  */
-public class CreateChannelData
+public class CreateChannelData extends AbstractModelObject
 {
+  static final String STR_NO_PROFILE_THEMES = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.32" ); //$NON-NLS-1$
+
+  static final String STR_NO_BANK_THEMES = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.18" ); //$NON-NLS-1$
+
+  static final String STR_DIALOG_TITLE = "Flussschlauchgenerator";
+
+  static final String PROPERTY_PROFILE_THEME_INPUT = "profileThemeInput"; //$NON-NLS-1$
+
+  static final String PROPERTY_PROFILE_THEME_SELECTED = "selectedProfileTheme"; //$NON-NLS-1$
+
+  static final String PROPERTY_PROFILE_THEME_SELECTION_ENABLED = "profileThemeSelectionEnabled"; //$NON-NLS-1$
+
+  static final String PROPERTY_BANK_THEME_INPUT = "bankThemeInput"; //$NON-NLS-1$
+
+  static final String PROPERTY_BANK_THEME_LEFT = "bankThemeLeft"; //$NON-NLS-1$
+
+  static final String PROPERTY_BANK_THEME_SELECTED_LEFT = "selectedBankThemeLeft"; //$NON-NLS-1$
+
+  static final String PROPERTY_BANK_THEME_RIGHT = "bankThemeRight"; //$NON-NLS-1$
+
+  static final String PROPERTY_BANK_THEME_SELECTED_RIGHT = "selectedBankThemeRight"; //$NON-NLS-1$
+
+  static final String PROPERTY_BANK_THEME_SELECTION_ENABLED = "bankThemeSelectionEnabled"; //$NON-NLS-1$
+
+  public static final String PROPERTY_DELEGATE = "delegate"; //$NON-NLS-1$
+
+  public static final String PROPERTY_SELECT_PROFILE_WIDGET_ENABLED = "selectProfileWidgetEnabled"; //$NON-NLS-1$
+
+  public static final String PROPERTY_PROFILE_AUTO_ZOOM = "profileAutoZoom"; //$NON-NLS-1$
+
+  public static final String PROPERTY_PROFILE_DATA_CHOOSER_INPUT = "profileDataChooserInput"; //$NON-NLS-1$
+
+  public static final String PROPERTY_PROFILE_EDITING_ENABLED = "profileEditingEnabled"; //$NON-NLS-1$
+
+  public static final String PROPERTY_ACTIVE_PROFILE = "activeProfile"; //$NON-NLS-1$
+
+  public static final String PROPERTY_NUM_PROFILE_SEGMENTS = "numberProfileSegments"; //$NON-NLS-1$
+
+  public static final String PROPERTY_NUM_BANK_SEGMENTS = "numberBankSegments"; //$NON-NLS-1$
+
+  public static final String PROPERTY_NUM_BANK_SEGMENTS_ENABLED_DOWN = "numberBankSegmentsEnabledDown"; //$NON-NLS-1$
+
+  public static final String PROPERTY_NUM_BANK_SEGMENTS_ENABLED_UP = "numberBankSegmentsEnabledUp"; //$NON-NLS-1$
+
+  public static final String PROPERTY_NUM_BANK_SEGMENTS_DOWN = "numberBankSegmentsDown"; //$NON-NLS-1$
+
+  public static final String PROPERTY_NUM_BANK_SEGMENTS_UP = "numberBankSegmentsUp"; //$NON-NLS-1$
+
+  /* hack: pseudo for triggering a map repaint: works, because any property change triggers a map repaint */
+  static final String PROPERTY_MAP_REPAINT = "pseudoPropertyMapRepaint"; //$NON-NLS-1$
+
+  private static final Object[] EMPTY_PROFILE_SELECTION = new String[] { "<no profiles selected in map>" };
+
+  private final Object[] EMPTY_PROFILE_THEME_INPUT = new Object[] { STR_NO_PROFILE_THEMES };
+
+  private final Object[] EMPTY_BANK_THEME_INPUT = new Object[] { STR_NO_BANK_THEMES };
+
   public enum SIDE
   {
     LEFT,
     RIGHT;
   }
 
-  public enum PROF
-  {
-    UP,
-    DOWN;
-  }
-
-  public enum WIDTHORDER
-  {
-    FIRST,
-    LAST;
-  }
-
-  private static ISchedulingRule THE_SEGMENT_INIT_MUTEX = new MutexRule();
-
-  private IKalypsoFeatureTheme m_profileTheme;
-
-  private IKalypsoFeatureTheme m_bankTheme1; // LEFT = 1
-
-  private IKalypsoFeatureTheme m_bankTheme2; // RIGHT = 2
-
-  private final Set<IProfileFeature> m_selectedProfiles = new HashSet<IProfileFeature>();
-
-  private int m_numbProfileIntersections = 6;
-
-  private final Map<GM_Curve, SIDE> m_selectedBanks = new HashMap<GM_Curve, SIDE>();
-
   private final CreateMainChannelWidget m_widget;
 
-  private boolean datacomplete;
+  /* Profile selection data */
+  private IKalypsoFeatureTheme m_profileTheme;
 
-  private int m_globNumbBankIntersections;
+  private IKalypsoFeatureTheme[] m_profileThemes = new IKalypsoFeatureTheme[0];
 
-  private final List<SegmentData> m_segmentList = new LinkedList<SegmentData>();
+  private ChannelEditProfileData m_editData = new ChannelEditProfileData( new IProfileFeature[0], 6, new HashMap<GM_Curve, SIDE>(), 5 );
 
-  private final List<Coordinate[][]> m_coordList = new LinkedList<Coordinate[][]>();
+  /* bankline selection data */
+  private IKalypsoFeatureTheme[] m_bankThemes = new IKalypsoFeatureTheme[0];
 
-  private Coordinate[][] m_meshCoords;
+  private IKalypsoFeatureTheme m_bankThemeLeft;
 
-  public SegmentData m_selectedSegment;
+  private IKalypsoFeatureTheme m_bankThemeRight;
 
-  private CreateChannelData.PROF m_selectedProfile;
+  private IProfileData m_activeProfile;
 
-  private Shell m_shell;
-
-  private final Map<GM_Position, SegmentData> m_segmentMap = new HashMap<GM_Position, SegmentData>();
-
-  private boolean m_bankEdit;
-
-  private CommandableWorkspace m_discWorkspace;
+  private boolean m_profileAutoZoom = false;
 
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
     m_widget = widget;
   }
 
-  /* --------------------- Theme handling ---------------------------------- */
-
-  public IKalypsoFeatureTheme getProfileTheme( )
+  /** The really selected profile theme, may be null, if not theme can be selected */
+  IKalypsoFeatureTheme getProfileTheme( )
   {
     return m_profileTheme;
   }
 
-  public IKalypsoFeatureTheme getBankTheme1( )
+  /** Selection for the profile theme combom */
+  public Object getSelectedProfileTheme( )
   {
-    return m_bankTheme1;
+    if( m_profileTheme == null )
+      return STR_NO_PROFILE_THEMES;
+
+    return m_profileTheme;
   }
 
-  public IKalypsoFeatureTheme getBankTheme2( )
+  /** Setter of selection for the profile theme combom */
+  public void setSelectedProfileTheme( final Object selection )
   {
-    return m_bankTheme2;
+    final Object oldValue = getSelectedProfileTheme();
+    final boolean oldEnablement = getSelectProfileWidgetEnabled();
+
+    if( selection instanceof IKalypsoFeatureTheme )
+      m_profileTheme = (IKalypsoFeatureTheme)selection;
+    else
+      m_profileTheme = null;
+
+    firePropertyChange( PROPERTY_PROFILE_THEME_SELECTED, oldValue, getSelectedProfileTheme() );
+    firePropertyChange( PROPERTY_SELECT_PROFILE_WIDGET_ENABLED, oldEnablement, getSelectProfileWidgetEnabled() );
+
+    // TODO: reset dependend data?
   }
 
-  public void setProfileTheme( final IKalypsoFeatureTheme profileTheme )
+  public boolean getSelectProfileWidgetEnabled( )
   {
-    m_profileTheme = profileTheme;
+    return m_profileTheme != null;
   }
 
-  public void setBankTheme1( final IKalypsoFeatureTheme bankTheme )
+  void setProfileThemes( final IKalypsoFeatureTheme[] profileThemes )
   {
-    m_bankTheme1 = bankTheme;
+    final Object[] oldValue = getProfileThemeInput();
+    final boolean oldEnablement = getProfileThemeSelectionEnabled();
+
+    m_profileThemes = profileThemes;
+
+    final Object[] newInput = getProfileThemeInput();
+
+    firePropertyChange( PROPERTY_PROFILE_THEME_INPUT, oldValue, getProfileThemeInput() );
+    firePropertyChange( PROPERTY_PROFILE_THEME_SELECTION_ENABLED, oldEnablement, getProfileThemeSelectionEnabled() );
+
+    setSelectedProfileTheme( newInput[0] );
   }
 
-  public void setBankTheme2( final IKalypsoFeatureTheme bankTheme )
+  public Object[] getProfileThemeInput( )
   {
-    m_bankTheme2 = bankTheme;
+    if( m_profileThemes.length == 0 )
+      return EMPTY_PROFILE_THEME_INPUT;
+
+    return m_profileThemes;
   }
 
-  /**
-   * Gets the WSPM profile themes in the Kalypso theme list
-   */
-  public IKalypsoFeatureTheme[] getProfileThemes( )
+  public boolean getProfileThemeSelectionEnabled( )
   {
-    final IMapModell mapModell = m_widget.getMapPanel().getMapModell();
-    if( mapModell == null )
-      return new IKalypsoFeatureTheme[0];
-
-    final IKalypsoThemePredicate profileThemePredicate = new IKalypsoThemePredicate()
-    {
-      @Override
-      public boolean decide( final IKalypsoTheme theme )
-      {
-        if( theme instanceof IKalypsoFeatureTheme )
-        {
-          final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
-          final IFeatureType featureType = fTheme.getFeatureType();
-
-          if( featureType != null && GMLSchemaUtilities.substitutes( featureType, IProfileFeature.FEATURE_PROFILE ) )
-            return true;
-        }
-
-        return false;
-      }
-    };
-    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( profileThemePredicate );
-
-    mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
-
-    final IKalypsoTheme[] foundThemes = visitor.getFoundThemes();
-    final IKalypsoFeatureTheme[] goodThemes = new IKalypsoFeatureTheme[foundThemes.length];
-    System.arraycopy( foundThemes, 0, goodThemes, 0, foundThemes.length );
-
-    return goodThemes;
+    return m_profileThemes.length > 0;
   }
 
-  /* --------------------- selection handling ---------------------------------- */
-
-  public void changeSelectedProfiles( final IProfileFeature[] profileFeaturesToRemove, final IProfileFeature[] profileFeaturesToAdd )
+  void setBankThemes( final IKalypsoFeatureTheme[] bankThemes )
   {
-    m_selectedProfiles.removeAll( Arrays.asList( profileFeaturesToRemove ) );
-    m_selectedProfiles.addAll( Arrays.asList( profileFeaturesToAdd ) );
-    initSegments();
+    final Object[] oldValue = getBankThemeInput();
+    final boolean oldEnablement = getBankThemeSelectionEnabled();
+
+    m_bankThemes = bankThemes;
+
+    final Object[] newInput = getBankThemeInput();
+
+    firePropertyChange( PROPERTY_BANK_THEME_INPUT, oldValue, getProfileThemeInput() );
+    firePropertyChange( PROPERTY_BANK_THEME_SELECTION_ENABLED, oldEnablement, getProfileThemeSelectionEnabled() );
+
+    setSelectedBankThemeLeft( newInput[0] );
+    setSelectedBankThemeRight( newInput[0] );
   }
 
-  public void resetSelectedProfiles( )
+  public Object[] getBankThemeInput( )
   {
-    m_selectedProfiles.clear();
-    initSegments();
+    if( m_bankThemes.length == 0 )
+      return EMPTY_BANK_THEME_INPUT;
+
+    return m_bankThemes;
   }
 
-  public void initSegments( )
+  public boolean getBankThemeSelectionEnabled( )
   {
-    final Job job = new Job( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.0" ) ) //$NON-NLS-1$
-    {
-      @SuppressWarnings("synthetic-access")
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
-      {
-        // there must be at least two selected profiles and one selected bank.
-        if( m_selectedBanks.size() > 1 && m_selectedProfiles.size() > 1 )
-        {
-          /* intersects the banks with the profiles and manages the initial segment creation */
-          intersectBanksWithProfs( monitor ); // initial calculation of the segments by global parameters
-          if( m_segmentList.size() > 0 )
-            m_selectedSegment = m_segmentList.get( 0 );
-        }
-        else if( m_selectedProfiles.size() <= 1 )
-        {
-          m_segmentList.clear();
-          m_coordList.clear();
-          m_selectedSegment = null;
-        }
-
-        // final IProgressMonitor monitor = new NullProgressMonitor();
-        m_widget.updateSWT();
-
-        return Status.OK_STATUS;
-      }
-    };
-    job.setRule( THE_SEGMENT_INIT_MUTEX );
-    job.setUser( true );
-    job.schedule();
+    return m_bankThemes.length > 0;
   }
 
-  public IProfileFeature[] getSelectedProfiles( )
+  public IKalypsoFeatureTheme getBankThemeLeft( )
   {
-    return m_selectedProfiles.toArray( new IProfileFeature[m_selectedProfiles.size()] );
+    return m_bankThemeLeft;
+  }
+
+  public Object getSelectedBankThemeLeft( )
+  {
+    if( m_bankThemeLeft == null )
+      return STR_NO_BANK_THEMES;
+
+    return m_bankThemeLeft;
+  }
+
+  public IKalypsoFeatureTheme getBankThemeRight( )
+  {
+    return m_bankThemeRight;
+  }
+
+  public Object getSelectedBankThemeRight( )
+  {
+    if( m_bankThemeRight == null )
+      return STR_NO_BANK_THEMES;
+
+    return m_bankThemeRight;
+  }
+
+  public void setSelectedBankThemeLeft( final Object selection )
+  {
+    final Object oldValue = getSelectedBankThemeLeft();
+
+    if( selection instanceof IKalypsoFeatureTheme )
+      m_bankThemeLeft = (IKalypsoFeatureTheme)selection;
+    else
+      m_bankThemeLeft = null;
+
+    firePropertyChange( PROPERTY_BANK_THEME_SELECTED_LEFT, oldValue, getSelectedBankThemeLeft() );
+  }
+
+  public void setSelectedBankThemeRight( final Object selection )
+  {
+    final Object oldValue = getSelectedBankThemeRight();
+
+    if( selection instanceof IKalypsoFeatureTheme )
+      m_bankThemeRight = (IKalypsoFeatureTheme)selection;
+    else
+      m_bankThemeRight = null;
+
+    firePropertyChange( PROPERTY_BANK_THEME_SELECTED_RIGHT, oldValue, getSelectedBankThemeRight() );
+  }
+
+  public ChannelEditProfileData getEditData( )
+  {
+    return m_editData;
   }
 
   public GM_Curve getBanklineForSide( final SIDE side )
   {
-    for( final Map.Entry<GM_Curve, SIDE> entry : m_selectedBanks.entrySet() )
-    {
-      final GM_Curve bankCurve = entry.getKey();
-      final SIDE value = entry.getValue();
-      if( value == side )
-        return bankCurve;
-    }
-
-    return null;
-  }
-
-  public void removeBank( final GM_Curve curve )
-  {
-    m_selectedBanks.remove( curve );
-
-    m_widget.updateSWT();
-
-    m_selectedBanks.keySet().remove( curve );
-
-    initSegments();
-  }
-
-  /* --------------------- profile chart handling ---------------------------------- */
-
-  public IProfil getProfil( )
-  {
-    if( m_selectedProfiles == null )
-      return null;
-
-    if( m_selectedProfiles.size() <= 1 )
-      return null;
-
-    // TODO: make sure that the initial selection is set.
-    if( getSelectedSegment() == null )
-      return null;
-
-    final SegmentData segment = m_selectedSegment;
-
-    if( segment == null )
-      return null;
-
-    final IProfil profil;
-    if( m_selectedProfile == PROF.UP )
-      profil = segment.getProfilUpOrg();
-    else
-      profil = segment.getProfilDownOrg();
-
-    return profil;
-  }
-
-  /* --------------------- workflow handling ---------------------------------- */
-
-  /**
-   * checks, if all necessary data is specified (profiles, bank lines...).
-   */
-  public void completationCheck( )
-  {
-    m_meshCoords = null;
-    datacomplete = false;
-
-    // there must be at least two selected profiles and one selected bank.
-    if( m_selectedBanks.size() > 1 && m_selectedProfiles.size() > 1 )
-      datacomplete = true;
-    else if( m_selectedProfiles.size() <= 1 )
-    {
-      m_segmentList.clear();
-      m_coordList.clear();
-    }
-
-    if( datacomplete == false )
-      m_segmentList.clear();
-
-    if( m_segmentList.size() > 0 )
-    /* if there are segments, start Quadmesher */
-    // TODO: error handling implementation!!
-    {
-      manageQuadMesher();
-      final IStatus status = mergeMeshList();
-      if( status != Status.OK_STATUS && m_shell != null )
-      {
-        MessageDialog.openInformation( m_shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.1" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-    }
-    m_widget.getMapPanel().repaintMap();
-  }
-
-  public boolean getMeshStatus( )
-  {
-    return m_meshCoords != null;
-  }
-
-  public Coordinate[][] getMeshCoords( )
-  {
-    return m_meshCoords;
-  }
-
-
-  /**
-   * converts a Coordinate[][] array into a GM_Point[][] array
-   */
-  GM_Point[][] convertToGMPoints( )
-  {
-    final GeometryFactory geometryFactory = new GeometryFactory();
-
-    final GM_Point points2D[][] = new GM_Point[m_meshCoords.length][];
-    for( int i = 0; i < m_meshCoords.length; i++ )
-    {
-      final Coordinate[] line = m_meshCoords[i];
-      final GM_Point[] points1D = new GM_Point[line.length];
-      points2D[i] = points1D;
-      for( int j = 0; j < line.length; j++ )
-      {
-        final Coordinate coord = line[j];
-        try
-        {
-          points1D[j] = (GM_Point) JTSAdapter.wrap( geometryFactory.createPoint( coord ) );
-          points1D[j].setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-        }
-        catch( final GM_Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-    return points2D;
-  }
-
-  /**
-   * this is the manager for starting the JTSQuadMesher for all complete segments
-   */
-  private void manageQuadMesher( )
-  {
-    m_coordList.clear();
-
-    for( int i = 0; i < m_segmentList.size(); i++ )
-    {
-      final boolean complete;
-      final SegmentData segment = m_segmentList.get( i );
-      complete = segment.complete();
-      if( complete == true )
-      {
-        /* arrange the lines for the mesher */
-        /*
-         * -the lines have to be oriented (clw or cclw), the order ist top (profile) - left (bank) - bottom (profile) -
-         * right (bank) or top - right - bottom - left -the end point of a line must be the same as the start point of
-         * the next line -the lines itself must be also oriented all in the same way (clw/cclw)
-         */
-
-        // at the end point of the profile line there should follow the start point of the next line
-        LineString[] lines = new LineString[4];
-
-        lines[0] = segment.getProfUpIntersLineString();
-        lines[1] = segment.getBankRightInters();
-        lines[2] = segment.getProfDownIntersLineString();
-        lines[3] = segment.getBankLeftInters();
-        lines = checkLineOrientation( lines );
-
-        if( lines == null )
-        {
-          initSegments();
-          completationCheck();
-          return;
-        }
-        // now the two lines are right oriented...
-        final LineString topLine = lines[0];
-        final LineString rightLine = lines[1];
-        final LineString bottomLine = lines[2];
-        final LineString leftLine = lines[3];
-
-        final JTSQuadMesher mesher = new JTSQuadMesher( topLine, bottomLine, leftLine, rightLine );
-        final Coordinate[][] coords = mesher.calculateMesh();
-        final JTSCoordsElevInterpol adjuster = new JTSCoordsElevInterpol( coords );
-        final Coordinate[][] coords2 = adjuster.calculateElevations();
-
-        m_coordList.add( coords2 );
-      }
-    }
-  }
-
-  public boolean checkMesh( final int segmentNumber )
-  {
-    boolean check = false;
-    if( m_coordList.get( segmentNumber ) != null )
-      check = true;
-
-    return check;
-  }
-
-  /**
-   * erases the double coords and merges the coords list to an array of coords
-   */
-  private IStatus mergeMeshList( )
-  {
-    try
-    {
-      m_meshCoords = null;
-      final int overallYCoordNum = calculateOverallYCoordNum();
-      final int numX = m_numbProfileIntersections;
-      final int numY = overallYCoordNum;
-      final Coordinate[][] newCoords = new Coordinate[numX][numY];
-
-      int coordYPosPointer = 0;
-      int coordSegmentPointer = 0;
-
-      // loop over all segments -> coords
-      for( int i = 0; i < m_coordList.size(); i++ )
-      {
-        final Coordinate[][] coordinates = m_coordList.get( i );
-        if( numX != coordinates.length )
-          return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.3" ) ); //$NON-NLS-1$
-        // coordSegmentPointer = coordYPosPointer;
-        // loop over all profile intersections -> coords [x][]
-        for( int j = 0; j < coordinates.length; j++ )
-        {
-          // loop over all bank intersections -> coords [][x]
-
-          for( int k = 0; k < coordinates[j].length; k++ )
-          {
-            coordYPosPointer = coordSegmentPointer + k;
-            newCoords[j][coordYPosPointer] = coordinates[j][k];
-          }
-        }
-        coordSegmentPointer = coordSegmentPointer + coordinates[0].length - 1;
-      }
-      if( coordYPosPointer != overallYCoordNum - 1 )
-      {
-        System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.4" ) ); //$NON-NLS-1$
-        return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.5" ) ); //$NON-NLS-1$
-      }
-
-      m_meshCoords = newCoords;
-
-      return Status.OK_STATUS;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.6" ) ); //$NON-NLS-1$
-    }
-  }
-
-  private int calculateOverallYCoordNum( )
-  {
-    int num = 0;
-
-    // add the coords lengths to num
-    for( int i = 0; i < m_coordList.size(); i++ )
-    {
-      num = num + m_coordList.get( i )[0].length;
-    }
-    // substract the number of double profile coords
-    if( m_coordList.size() > 0 )
-      num = num - (m_segmentList.size() - 1);
-
-    return num;
-  }
-
-  private LineString[] checkLineOrientation( final LineString[] lines )
-  {
-    final LineString[] lineArray = new LineString[4];
-
-    final GeometryFactory factory1 = new GeometryFactory();
-    final Coordinate[] coords1 = new Coordinate[lines[0].getNumPoints()];
-
-    final GeometryFactory factory2 = new GeometryFactory();
-    final Coordinate[] coords2 = new Coordinate[lines[1].getNumPoints()];
-
-    final GeometryFactory factory3 = new GeometryFactory();
-    final Coordinate[] coords3 = new Coordinate[lines[2].getNumPoints()];
-
-    final GeometryFactory factory4 = new GeometryFactory();
-    final Coordinate[] coords4 = new Coordinate[lines[3].getNumPoints()];
-
-    boolean error = false;
-
-    // At first line[0] and line [1]
-    // check if the lines lie already in a right orientation.
-
-    Point startpoint1 = lines[0].getStartPoint();
-    Point endpoint1 = lines[0].getEndPoint();
-    Point startpoint2 = lines[1].getStartPoint();
-    Point endpoint2 = lines[1].getEndPoint();
-
-    if( endpoint1.distance( startpoint2 ) < 0.001 ) // the distance method checks only in a 2d way!
-    {
-      for( int i = 0; i < coords1.length; i++ )
-        coords1[i] = lines[0].getCoordinateN( i );
-      final LineString line1 = factory1.createLineString( coords1 );
-
-      for( int i = 0; i < coords2.length; i++ )
-        coords2[i] = lines[1].getCoordinateN( i );
-      final LineString line2 = factory2.createLineString( coords2 );
-
-      lineArray[0] = line1;
-      lineArray[1] = line2;
-    }
-    else if( endpoint1.distance( endpoint2 ) < 0.001 )
-    {
-      // switch line 2
-      for( int i = 0; i < coords1.length; i++ )
-        coords1[i] = lines[0].getCoordinateN( i );
-      final LineString line1 = factory1.createLineString( coords1 );
-      final LineString line2 = LineStringUtilities.changeOrientation( lines[1] );
-
-      lineArray[0] = line1;
-      lineArray[1] = line2;
-    }
-    else if( startpoint1.distance( startpoint2 ) < 0.001 )
-    {
-      // switch line 1
-      final LineString line1 = LineStringUtilities.changeOrientation( lines[0] );
-
-      for( int i = 0; i < coords2.length; i++ )
-        coords2[i] = lines[1].getCoordinateN( i );
-      final LineString line2 = factory1.createLineString( coords2 );
-
-      lineArray[0] = line1;
-      lineArray[1] = line2;
-    }
-    else if( startpoint1.distance( endpoint2 ) < 0.001 )
-    {
-      // switch both lines
-      final LineString line1 = LineStringUtilities.changeOrientation( lines[0] );
-      final LineString line2 = LineStringUtilities.changeOrientation( lines[1] );
-
-      lineArray[0] = line1;
-      lineArray[1] = line2;
-    }
-
-    if( lineArray[0] == null || lineArray[1] == null )
-      return null;
-    // now the first two lines have the same orientation...
-    // update the corresponding start and end point informations
-    startpoint1 = lineArray[0].getStartPoint();
-    endpoint1 = lineArray[0].getEndPoint();
-    startpoint2 = lineArray[1].getStartPoint();
-    endpoint2 = lineArray[1].getEndPoint();
-
-    Point startpoint3 = lines[2].getStartPoint();
-    Point endpoint3 = lines[2].getEndPoint();
-
-    // next: check line[2] but don't change line 1 and line 2
-
-    if( endpoint2.distance( startpoint3 ) < 0.001 ) // the distance method checks only in a 2d way!
-    {
-      for( int i = 0; i < coords3.length; i++ )
-        coords3[i] = lines[2].getCoordinateN( i );
-      final LineString line3 = factory3.createLineString( coords3 );
-
-      lineArray[2] = line3;
-    }
-    else if( endpoint2.distance( endpoint3 ) < 0.001 )
-    {
-      // switch line 3
-      final LineString line3 = LineStringUtilities.changeOrientation( lines[2] );
-
-      lineArray[2] = line3;
-    }
-    else
-    {
-      // this should actually never happen!!
-      error = true;
-      return null;
-    }
-
-    // now the first three lines have the same orientation...
-    // update start / end point informations
-    startpoint3 = lineArray[2].getStartPoint();
-    endpoint3 = lineArray[2].getEndPoint();
-
-    // next: check line[3] but don't change line 1, line 2 and line 3
-    final Point startpoint4 = lines[3].getStartPoint();
-    final Point endpoint4 = lines[3].getEndPoint();
-
-    if( endpoint3.distance( startpoint4 ) < 0.001 ) // the distance method checks only in a 2d way!
-    {
-      for( int i = 0; i < coords4.length; i++ )
-        coords4[i] = lines[3].getCoordinateN( i );
-      final LineString line4 = factory4.createLineString( coords4 );
-
-      lineArray[3] = line4;
-    }
-    else if( endpoint3.distance( endpoint4 ) < 0.001 )
-    {
-      // switch line 4
-      final LineString line4 = LineStringUtilities.changeOrientation( lines[3] );
-
-      lineArray[3] = line4;
-    }
-    else
-    {
-      // this should actually never happen!!
-      error = true;
-      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.7" ) ); //$NON-NLS-1$
-      return null;
-    }
-
-    // final check: the last point of the last line should be the same as the first point of the first line
-    final Point endpoint = lineArray[3].getEndPoint();
-    final Point startpoint = lineArray[0].getStartPoint();
-
-    if( endpoint.distance( startpoint ) > 0.001 || error == true )
-      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.8" ) ); //$NON-NLS-1$
-
-    return lineArray;
-  }
-
-  /**
-   * all selected banks will be intersected by the selected profiles <br>
-   * Input: all selected banks and profiles Output: intersected banks as linestrings (including the intersection point)
-   */
-  private void intersectBanksWithProfs( final IProgressMonitor monitor )
-  {
-    /* at first -> clear the segment list! */
-    m_segmentList.clear();
-
-    final Feature[] profileFeatures = m_selectedProfiles.toArray( new Feature[m_selectedProfiles.size()] );
-
-    if( profileFeatures.length == 0 )
-      return;
-
-    monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.9" ), profileFeatures.length ); //$NON-NLS-1$
-
-    final Feature firstFeature = profileFeatures[0];
-    final IPropertyType stationProperty = firstFeature.getFeatureType().getProperty( IProfileFeature.PROPERTY_STATION );
-    Arrays.sort( profileFeatures, new FeatureComparator( firstFeature.getOwner(), stationProperty ) );
-
-    // loop over all profiles
-    // take two neighbouring profiles create a segment for them
-
-    IProfileFeature lastProfile = null;
-    for( final Feature profileFeature : profileFeatures )
-    {
-      // get the profile line
-      final IProfileFeature profile = (IProfileFeature) (profileFeature);
-
-      monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.10" ) + profile.getStation() ); //$NON-NLS-1$
-
-      if( !checkIntersection( profile ) )
-        continue;
-
-      if( lastProfile != null )
-      {
-
-        // working on the segment
-        final int numBankIntersections = getGlobNumBankIntersections();
-        final SegmentData segment = new SegmentData( this, profile, lastProfile, m_selectedBanks, numBankIntersections );
-        System.out.println( "up profile: " + lastProfile.getStation() ); //$NON-NLS-1$
-        System.out.println( "down profile: " + profile.getStation() ); //$NON-NLS-1$
-
-        // add to list
-        m_segmentList.add( segment );
-      }
-      else
-      {
-        // tu nix
-      }
-      lastProfile = profile;
-
-      if( monitor.isCanceled() )
-        throw new OperationCanceledException();
-
-      monitor.worked( 1 );
-    }
-  }
-
-  private boolean checkIntersection( final IProfileFeature profile )
-  {
-    boolean check = true;
-
-    final Set<GM_Curve> curves = m_selectedBanks.keySet();
-
-    for( final GM_Curve curve : curves )
-    {
-      // final GM_LineString asLineString = null;
-      final GM_Curve lCurve = curve;
-//      if( !lCurve.intersects( profile.getLine() ) && lCurve.intersection( profile.getLine() ) == null )
-//      {
-//        try
-//        {
-//          asLineString = curve.getAsLineString();
-//        }
-//        catch( GM_Exception e )
-//        {
-//          e.printStackTrace();
-//        }
-//        if( asLineString != null && asLineString.getNumberOfPoints() > 2
-//            && asLineString.getPositions()[asLineString.getNumberOfPoints() - 1].equals( asLineString.getPositions()[asLineString.getNumberOfPoints() - 2] ) )
-//        {
-//          try
-//          {
-//            lCurve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( Arrays.copyOf( asLineString.getPositions(), asLineString.getNumberOfPoints() - 1 ), curve.getCoordinateSystem() );
-//          }
-//          catch( GM_Exception e )
-//          {
-//            e.printStackTrace();
-//          }
-//        }
-        if( !lCurve.intersects( profile.getLine() ) && lCurve.intersection( profile.getLine() ) == null )
-        {
-          check = false;
-          break;
-        }
-//      }
-    }
-    return check;
-  }
-
-  public void setNumProfileIntersections( final int numProfileIntersections )
-  {
-    if( m_numbProfileIntersections != numProfileIntersections )
-    {
-      m_numbProfileIntersections = numProfileIntersections;
-      initSegments();
-      updateSegments( false );
-    }
-  }
-
-  public int getNumProfileIntersections( )
-  {
-    return m_numbProfileIntersections;
-  }
-
-  public void setGlobNumBankIntersections( final int globNumBankIntersections )
-  {
-    if( globNumBankIntersections != m_globNumbBankIntersections )
-    {
-      m_globNumbBankIntersections = globNumBankIntersections;
-      initSegments();
-    }
-  }
-
-  public int getGlobNumBankIntersections( )
-  {
-    final int globNumBankIntersections = m_globNumbBankIntersections;
-    return globNumBankIntersections;
-  }
-
-  public int getNumOfSegments( )
-  {
-    return m_segmentList.size();
-  }
-
-  public SegmentData getSelectedSegment( )
-  {
-    return m_selectedSegment;
-  }
-
-  public void setSelectedSegment( final int segmentIndex )
-  {
-    m_selectedSegment = m_segmentList.get( segmentIndex );
-  }
-
-  /**
-   * returns the number of bank intersections for the current segment
-   */
-  public int getNumBankIntersections( final SegmentData segment )
-  {
-    return segment.getNumBankIntersections();
-  }
-
-  /**
-   * sets the number of bank intersections for the current segment
-   */
-  public void setNumBankIntersections( final int segment, final int numIntersections )
-  {
-    m_segmentList.get( segment - 1 ).setNumBankIntersections( numIntersections );
-  }
-
-  /**
-   * this method possibly updates the segment data and pushes the calculation of the mesh. inputs: boolean edit: false->
-   * update of the bankline and profile intersections true: -> no data update
-   */
-  public void updateSegments( final boolean edit )
-  {
-    // loop over all segments
-    final SegmentData[] datas = m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
-    for( final SegmentData segment : datas )
-    {
-      if( segment != null & edit == false )
-      {
-        // intersect the bankline by the defined number of intersections
-        segment.updateBankIntersection();
-        segment.updateProfileIntersection();
-      }
-      else if( segment != null & edit == true )
-      {
-        // commits the done edits
-        // final int i = 1;
-        // segment.updateBank();
-        // segment.updateProfile();
-      }
-    }
-    completationCheck();
-  }
-
-  public void updateSegment( final boolean edit )
-  {
-    if( m_selectedSegment != null )
-    {
-      if( edit == false )
-      {
-        // intersect the bankline by the defined number of intersections
-        m_selectedSegment.updateBankIntersection();
-      }
-      else
-      {
-        // commits the done edits
-        m_selectedSegment.updateBankIntersection2();
-      }
-
-      m_selectedSegment.updateProfileIntersection();
-    }
-    completationCheck();
-
-  }
-
-  public final CreateChannelData.PROF getCurrentProfile( )
-  {
-    return m_selectedProfile;
-  }
-
-  public void setCurrentProfile( final CreateChannelData.PROF profile )
-  {
-    m_selectedProfile = profile;
-  }
-
-  public void switchProfile( )
-  {
-    if( m_selectedProfile == PROF.UP )
-      m_selectedProfile = PROF.DOWN;
-    else
-      m_selectedProfile = PROF.UP;
-  }
-
-  public CreateChannelData.PROF getCurrentProfilePlace( final double station )
-  {
-    final double stationUp = m_selectedSegment.getProfilUpOrg().getStation();
-    final double stationDown = m_selectedSegment.getProfilDownOrg().getStation();
-
-    if( stationUp == station )
-      return CreateChannelData.PROF.UP;
-    else if( stationDown == station )
-      return CreateChannelData.PROF.DOWN;
-
-    return null;
-  }
-
-  public void setShell( final Shell shell )
-  {
-    m_shell = shell;
-  }
-
-  public SegmentData getSegmentAtListPos( final int selection )
-  {
-    if( m_segmentList.size() == 0 )
-      return null;
-
-    if( m_segmentList.size() < selection )
-      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.11" ) ); //$NON-NLS-1$
-
-    return m_segmentList.get( selection );
-  }
-
-  public List<SegmentData> getNeighbourSegments( final SegmentData segment )
-  {
-    final List<SegmentData> neighbours = new LinkedList<SegmentData>();
-
-    /* check the neighbours */
-    final int currentIndex = m_segmentList.indexOf( segment );
-    final int lastIndex = m_segmentList.size() - 1;
-
-    if( currentIndex > 0 & currentIndex < lastIndex )
-    {
-      // the current segment lies inbetween -> two neighbours
-      neighbours.add( m_segmentList.get( currentIndex - 1 ) ); // neighbour before
-      neighbours.add( m_segmentList.get( currentIndex + 1 ) ); // neighbour after
-    }
-    else if( currentIndex > 0 & currentIndex == lastIndex )
-    {
-      // the current segment is the last segment -> one neighbour
-      neighbours.add( m_segmentList.get( currentIndex - 1 ) );
-
-    }
-    else if( currentIndex == 0 & currentIndex == lastIndex )
-    {
-      // there is only one segment, no neighbours
-    }
-    else if( currentIndex == 0 & currentIndex < lastIndex )
-    {
-      // the current segment is the first segment -> one neighbour
-      neighbours.add( m_segmentList.get( currentIndex + 1 ) );
-    }
-    return neighbours;
-  }
-
-  /**
-   * Returns the list position of the selected {@link SegmentData}.
-   */
-  public int getSelectedSegmentPos( )
-  {
-    return m_segmentList.indexOf( m_selectedSegment );
-  }
-
-  /**
-   * returns the {@link GM_Position}s of already intersected banklines for aall {@link SegmentData}s.<BR>
-   * The start and end points of the banklines will be neglected.
-   */
-  public GM_Position[] getAllSegmentPosses( )
-  {
-    final List<GM_Position> posList = new ArrayList<GM_Position>();
-
-    for( final SegmentData segment : m_segmentList )
-    {
-      final List<GM_Position> segmentPosses = getIntersectedBanklinePossesForSegment( segment );
-
-      posList.addAll( segmentPosses );
-    }
-    return posList.toArray( new GM_Position[posList.size()] );
-  }
-
-  /**
-   * returns the {@link GM_Position}s of already intersected banklines for a given {@link SegmentData}.<BR>
-   * The start and end points of the banklines will be neglected.
-   */
-  public List<GM_Position> getIntersectedBanklinePossesForSegment( final SegmentData segment )
-  {
-    final List<GM_Position> positionList = new ArrayList<GM_Position>();
-
-    final Coordinate[] bankLeftInters = segment.getBankLeftInters().getCoordinates();
-    final Coordinate[] bankRightInters = segment.getBankRightInters().getCoordinates();
-    for( int i = 1; i < bankRightInters.length - 1; i++ )
-    {
-      final GM_Position pos = JTSAdapter.wrap( bankRightInters[i] );
-      m_segmentMap.put( pos, segment );
-      positionList.add( pos );
-    }
-
-    for( int i = 1; i < bankLeftInters.length - 1; i++ )
-    {
-      final GM_Position pos = JTSAdapter.wrap( bankLeftInters[i] );
-      m_segmentMap.put( pos, segment );
-      positionList.add( pos );
-    }
-
-    return positionList;
-  }
-
-  /**
-   * returns the {@link SegmentData} at a given {@link GM_Position}
-   */
-  public SegmentData getSegmentAtPosition( final GM_Position position )
-  {
-    return m_segmentMap.get( position );
+    return m_editData.getBanklineForSide( side );
   }
 
   /**
@@ -1058,63 +334,187 @@ public class CreateChannelData
      * clear all existing banklines of the current side, because we allow only one bankline to be drawn for each side
      */
 
-    final Set<GM_Curve> keySet = m_selectedBanks.keySet();
+    final Map<GM_Curve, SIDE> banklines = m_editData.getBanklines();
 
-    final GM_Curve[] curves = keySet.toArray( new GM_Curve[keySet.size()] );
-    for( final GM_Curve curve2 : curves )
+    final Map<GM_Curve, SIDE> newBanklines = new HashMap<>();
+    newBanklines.put( curve, side );
+
+    /* copy other side */
+    final Set<Entry<GM_Curve, SIDE>> entrySet = banklines.entrySet();
+    for( final Entry<GM_Curve, SIDE> entry : entrySet )
     {
-      if( m_selectedBanks.get( curve2 ).equals( side ) )
-        m_selectedBanks.remove( curve2 );
+      if( entry.getValue() != side )
+        newBanklines.put( entry.getKey(), entry.getValue() );
     }
 
-    // set the new bankline
-    m_selectedBanks.put( curve, side );
+    final ChannelEditProfileData oldData = m_editData;
 
-    initSegments();
+    final ChannelEditProfileData newData = new ChannelEditProfileData( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), newBanklines, oldData.getNumberBanklineSegments() );
+
+    startUpdateEditData( newData );
   }
 
-  /**
-   * returns the two original bankline curves as {@link GM_Position}s
-   */
-  public GM_Position[] getBanklinePoses( final SIDE m_side )
+  public void removeBank( final GM_Curve toRemove )
   {
-    final GM_Curve bank = getBanklineForSide( m_side );
+    final Map<GM_Curve, SIDE> banklines = m_editData.getBanklines();
 
-    final List<GM_Position> posList = new ArrayList<GM_Position>();
+    final Map<GM_Curve, SIDE> newBanklines = new HashMap<>( banklines );
 
-    try
-    {
-      if( bank != null )
-      {
+    /* remove obsolete curve */
+    newBanklines.remove( toRemove );
 
-        final GM_Position[] leftPositions = bank.getAsLineString().getPositions();
-        for( final GM_Position position : leftPositions )
-          posList.add( position );
-      }
-    }
-    catch( final GM_Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    final ChannelEditProfileData oldData = m_editData;
 
-    return posList.toArray( new GM_Position[posList.size()] );
+    final ChannelEditProfileData newData = new ChannelEditProfileData( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), newBanklines, oldData.getNumberBanklineSegments() );
+
+    startUpdateEditData( newData );
   }
 
-  public SegmentData[] getSegments( )
+  public IProfileData[] getSelectedProfiles( )
   {
-    return m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
+    return m_editData.getProfiles();
   }
 
-  public boolean isBankEdit( )
+  IProfileFeature[] getSelectedProfileFeatures( )
   {
-    return m_bankEdit;
+    return m_editData.getProfileFeatures();
   }
 
-  public void setBankEdit( final boolean bankEdit )
+  private void setSelectedProfiles( final IProfileFeature[] profiles )
   {
-    m_bankEdit = bankEdit;
+    final ChannelEditProfileData oldData = m_editData;
+
+    final ChannelEditProfileData newData = new ChannelEditProfileData( profiles, oldData.getNumberProfileSegments(), oldData.getBanklines(), oldData.getNumberBanklineSegments() );
+
+    startUpdateEditData( newData );
   }
+
+  public void changeSelectedProfiles( final IProfileFeature[] profileFeaturesToRemove, final IProfileFeature[] profileFeaturesToAdd )
+  {
+    final IProfileFeature[] features = getSelectedProfileFeatures();
+
+    final Set<IProfileFeature> featureHash = new HashSet<>( Arrays.asList( features ) );
+
+    featureHash.removeAll( Arrays.asList( profileFeaturesToRemove ) );
+    featureHash.addAll( Arrays.asList( profileFeaturesToAdd ) );
+
+    final IProfileFeature[] newFeatures = featureHash.toArray( new IProfileFeature[featureHash.size()] );
+
+    setSelectedProfiles( newFeatures );
+  }
+
+  public void resetSelectedProfiles( )
+  {
+    setSelectedProfiles( new IProfileFeature[0] );
+  }
+
+  public void setNumberProfileSegments( final int numProfileSegments )
+  {
+    final ChannelEditProfileData oldData = m_editData;
+
+    final ChannelEditProfileData newData = new ChannelEditProfileData( oldData.getProfileFeatures(), numProfileSegments, oldData.getBanklines(), oldData.getNumberBanklineSegments() );
+
+    startUpdateEditData( newData );
+  }
+
+  public int getNumberProfileSegments( )
+  {
+    return m_editData.getNumberProfileSegments();
+  }
+
+  public int getNumberBankSegments( )
+  {
+    return m_editData.getNumberBanklineSegments();
+  }
+
+  public void setNumberBankSegments( final int numberBankSegments )
+  {
+    final ChannelEditProfileData oldData = m_editData;
+
+    final ChannelEditProfileData newData = new ChannelEditProfileData( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), oldData.getBanklines(), numberBankSegments );
+
+    startUpdateEditData( newData );
+  }
+
+  // /**
+  // * returns the {@link GM_Position}s of already intersected banklines for aall {@link SegmentData}s.<BR>
+  // * The start and end points of the banklines will be neglected.
+  // */
+  // public GM_Position[] getAllSegmentPosses( )
+  // {
+  // final List<GM_Position> posList = new ArrayList<GM_Position>();
+  //
+  // for( final SegmentData segment : m_segmentList )
+  // {
+  // final List<GM_Position> segmentPosses = getIntersectedBanklinePossesForSegment( segment );
+  //
+  // posList.addAll( segmentPosses );
+  // }
+  // return posList.toArray( new GM_Position[posList.size()] );
+  // }
+
+  // /**
+  // * returns the {@link GM_Position}s of already intersected banklines for a given {@link SegmentData}.<BR>
+  // * The start and end points of the banklines will be neglected.
+  // */
+  // public List<GM_Position> getIntersectedBanklinePossesForSegment( final SegmentData segment )
+  // {
+  // final List<GM_Position> positionList = new ArrayList<GM_Position>();
+  //
+  // final Coordinate[] bankLeftInters = segment.getBankLeftInters().getCoordinates();
+  // final Coordinate[] bankRightInters = segment.getBankRightInters().getCoordinates();
+  // for( int i = 1; i < bankRightInters.length - 1; i++ )
+  // {
+  // final GM_Position pos = JTSAdapter.wrap( bankRightInters[i] );
+  // m_segmentMap.put( pos, segment );
+  // positionList.add( pos );
+  // }
+  //
+  // for( int i = 1; i < bankLeftInters.length - 1; i++ )
+  // {
+  // final GM_Position pos = JTSAdapter.wrap( bankLeftInters[i] );
+  // m_segmentMap.put( pos, segment );
+  // positionList.add( pos );
+  // }
+  //
+  // return positionList;
+  // }
+
+  // /**
+  // * returns the {@link SegmentData} at a given {@link GM_Position}
+  // */
+  // public SegmentData getSegmentAtPosition( final GM_Position position )
+  // {
+  // return m_segmentMap.get( position );
+  // }
+
+//  /**
+//   * returns the two original bankline curves as {@link GM_Position}s
+//   */
+//  public GM_Position[] getBanklinePoses( final SIDE m_side )
+//  {
+//    final GM_Curve bank = getBanklineForSide( m_side );
+//
+//    final List<GM_Position> posList = new ArrayList<>();
+//
+//    try
+//    {
+//      if( bank != null )
+//      {
+//
+//        final GM_Position[] leftPositions = bank.getAsLineString().getPositions();
+//        for( final GM_Position position : leftPositions )
+//          posList.add( position );
+//      }
+//    }
+//    catch( final GM_Exception e )
+//    {
+//      // TODO Auto-generated catch block
+//      e.printStackTrace();
+//    }
+//
+//    return posList.toArray( new GM_Position[posList.size()] );
+//  }
 
   public CommandableWorkspace getDiscretisationWorkspace( )
   {
@@ -1123,8 +523,278 @@ public class CreateChannelData
     return theme.getWorkspace();
   }
 
-  void setDelegate( final IWidget delegate )
+  public void setDelegate( final IWidget delegate )
   {
+    final IWidget oldValue = getDelegate();
+
     m_widget.setDelegate( delegate );
+
+    firePropertyChange( PROPERTY_DELEGATE, oldValue, delegate );
+  }
+
+  public IWidget getDelegate( )
+  {
+    return m_widget.getDelegate();
+  }
+
+  public IProfileData getActiveProfile( )
+  {
+    return m_activeProfile;
+  }
+
+  public void setActiveProfile( final IProfileData activeProfile )
+  {
+    final IProfileData oldValue = m_activeProfile;
+
+    final int oldNumBankSegmentsDown = getNumberBankSegmentsDown();
+    final int oldNumBankSegmentsUp = getNumberBankSegmentsUp();
+    final boolean oldNumBankSegmentsEnabledDown = getNumberBankSegmentsEnabledDown();
+    final boolean oldNumBankSegmentsEnabeldUp = getNumberBankSegmentsEnabledUp();
+
+    m_activeProfile = activeProfile;
+
+    firePropertyChange( PROPERTY_ACTIVE_PROFILE, oldValue, activeProfile );
+
+    firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_DOWN, oldNumBankSegmentsDown, getNumberBankSegmentsDown() );
+    firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_UP, oldNumBankSegmentsUp, getNumberBankSegmentsUp() );
+    firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_ENABLED_DOWN, oldNumBankSegmentsEnabledDown, getNumberBankSegmentsEnabledDown() );
+    firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_ENABLED_UP, oldNumBankSegmentsEnabeldUp, getNumberBankSegmentsEnabledUp() );
+  }
+
+  public boolean getProfileAutoZoom( )
+  {
+    return m_profileAutoZoom;
+  }
+
+  public void setProfileAutoZoom( final boolean profileAutoZoom )
+  {
+    final boolean oldValue = m_profileAutoZoom;
+
+    m_profileAutoZoom = profileAutoZoom;
+
+    firePropertyChange( PROPERTY_PROFILE_AUTO_ZOOM, oldValue, profileAutoZoom );
+  }
+
+  public Object[] getProfileDataChooserInput( )
+  {
+    final IProfileData[] profiles = m_editData.getProfiles();
+    if( ArrayUtils.isEmpty( profiles ) )
+      return EMPTY_PROFILE_SELECTION;
+
+    return profiles;
+  }
+
+  public boolean getProfileEditingEnabled( )
+  {
+    final IProfileData[] profiles = m_editData.getProfiles();
+    if( ArrayUtils.isEmpty( profiles ) )
+      return false;
+
+    return profiles.length > 0;
+  }
+
+  public ISegmentData[] getSegments( )
+  {
+    final Set<ISegmentData> segments = new LinkedHashSet<>();
+
+    final ChannelEditProfileData editData = m_editData;
+
+    if( editData != null )
+    {
+      final IProfileData[] profiles = editData.getProfiles();
+      for( final IProfileData profile : profiles )
+      {
+        segments.add( profile.getDownSegment() );
+        segments.add( profile.getUpSegment() );
+      }
+    }
+
+    segments.remove( null );
+
+    return segments.toArray( new ISegmentData[segments.size()] );
+  }
+
+  public boolean getNumberBankSegmentsEnabledDown( )
+  {
+    final ISegmentData segment = getActiveSegmentDown();
+    return segment != null && segment.hasBanks();
+  }
+
+  public boolean getNumberBankSegmentsEnabledUp( )
+  {
+    final ISegmentData segment = getActiveSegmentUp();
+    return segment != null && segment.hasBanks();
+  }
+
+  public void setNumberBankSegmentsDown( final int segments )
+  {
+    final ISegmentData segment = getActiveSegmentDown();
+
+    updateNumberOfBankSegments( segment, segments, PROPERTY_NUM_BANK_SEGMENTS_DOWN );
+  }
+
+  public int getNumberBankSegmentsDown( )
+  {
+    final ISegmentData segment = getActiveSegmentDown();
+    if( segment == null )
+      return 0;
+
+    return segment.getNumberBankSegments();
+  }
+
+  public void setNumberBankSegmentsUp( final int segments )
+  {
+    final ISegmentData segment = getActiveSegmentUp();
+
+    updateNumberOfBankSegments( segment, segments, PROPERTY_NUM_BANK_SEGMENTS_UP );
+  }
+
+  public int getNumberBankSegmentsUp( )
+  {
+    final ISegmentData segment = getActiveSegmentUp();
+    if( segment == null )
+      return 0;
+
+    return segment.getNumberBankSegments();
+  }
+
+  private ISegmentData getActiveSegmentDown( )
+  {
+    if( m_activeProfile == null )
+      return null;
+
+    return m_activeProfile.getDownSegment();
+  }
+
+  private ISegmentData getActiveSegmentUp( )
+  {
+    if( m_activeProfile == null )
+      return null;
+
+    return m_activeProfile.getUpSegment();
+  }
+
+  private void startUpdateEditData( final ChannelEditProfileData newData )
+  {
+    final ChannelEditProfileData oldData = m_editData;
+
+    final UpdateEditDataOperation operation = new UpdateEditDataOperation( oldData, newData );
+
+    final IProfileData oldActiveProfile = getActiveProfile();
+    final IProfileData newActiveProfile = determineNewActiveProfile( newData.getProfiles(), oldActiveProfile );
+
+    setEditData( newData, oldActiveProfile, newActiveProfile );
+
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        final Shell shell = display.getActiveShell();
+
+        final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+        if( !status.isOK() )
+          StatusDialog.open( shell, status, STR_DIALOG_TITLE );
+
+        if( operation.hasDataLoss() )
+        {
+          /* ask user to apply anyways */
+          final boolean shouldRollback = askForUserEdits( shell );
+          if( shouldRollback )
+          {
+            setEditData( oldData, newActiveProfile, oldActiveProfile );
+            /* trigger map repaint */
+            firePropertyChange( PROPERTY_MAP_REPAINT, 0, 1 );
+            return;
+          }
+        }
+
+        /* force some property changed, that are not corretly handled */
+        firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_DOWN, getNumberBankSegmentsDown() + 1, getNumberBankSegmentsDown() );
+        firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_UP, getNumberBankSegmentsUp() + 1, getNumberBankSegmentsUp() );
+        firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_ENABLED_DOWN, !getNumberBankSegmentsEnabledDown(), getNumberBankSegmentsEnabledDown() );
+        firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_ENABLED_UP, !getNumberBankSegmentsEnabledUp(), getNumberBankSegmentsEnabledUp() );
+      }
+    } );
+  }
+
+  protected boolean askForUserEdits( final Shell shell )
+  {
+    return !MessageDialog.openQuestion( shell, STR_DIALOG_TITLE, "Vom Benutzer editierte Daten gehen verloren. Fortfahren?" );
+  }
+
+  void setEditData( final ChannelEditProfileData newData, final IProfileData oldActiveProfile, final IProfileData newActiveProfile )
+  {
+    final int oldNumberBankSegments = getNumberBankSegments();
+    final int oldNumberProfileSegments = getNumberProfileSegments();
+    final Object[] oldDataChooserInput = getProfileDataChooserInput();
+    final boolean oldProfileEditingEnabled = getProfileEditingEnabled();
+
+    final int oldNumBankSegmentsDown = getNumberBankSegmentsDown();
+    final int oldNumBankSegmentsUp = getNumberBankSegmentsUp();
+    final boolean oldNumBankSegmentsEnabledDown = getNumberBankSegmentsEnabledDown();
+    final boolean oldNumBankSegmentsEnabeldUp = getNumberBankSegmentsEnabledUp();
+
+    m_editData = newData;
+    m_activeProfile = newActiveProfile;
+
+    firePropertyChange( PROPERTY_NUM_PROFILE_SEGMENTS, oldNumberProfileSegments, getNumberProfileSegments() );
+    firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS, oldNumberBankSegments, getNumberBankSegments() );
+
+    firePropertyChange( PROPERTY_PROFILE_DATA_CHOOSER_INPUT, oldDataChooserInput, getProfileDataChooserInput() );
+    firePropertyChange( PROPERTY_PROFILE_EDITING_ENABLED, oldProfileEditingEnabled, getProfileEditingEnabled() );
+    firePropertyChange( PROPERTY_ACTIVE_PROFILE, oldActiveProfile, newActiveProfile );
+
+    firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_DOWN, oldNumBankSegmentsDown, getNumberBankSegmentsDown() );
+    firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_UP, oldNumBankSegmentsUp, getNumberBankSegmentsUp() );
+    firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_ENABLED_DOWN, oldNumBankSegmentsEnabledDown, getNumberBankSegmentsEnabledDown() );
+    firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_ENABLED_UP, oldNumBankSegmentsEnabeldUp, getNumberBankSegmentsEnabledUp() );
+  }
+
+  /* Find the profile in the given array that wraps the same feature as the current active profile. */
+  private static IProfileData determineNewActiveProfile( final IProfileData[] newProfiles, final IProfileData oldActiveProfile )
+  {
+    final IProfileData firstNewProfile = newProfiles.length > 0 ? newProfiles[0] : null;
+
+    if( oldActiveProfile == null )
+      return firstNewProfile;
+
+    /* search profile with same feature */
+    final IProfileFeature activeFeature = oldActiveProfile.getFeature();
+    for( final IProfileData newProfile : newProfiles )
+    {
+      if( newProfile.getFeature() == activeFeature )
+        return newProfile;
+    }
+
+    return firstNewProfile;
+  }
+
+  private void updateNumberOfBankSegments( final ISegmentData segment, final int segments, final String propertySegments )
+  {
+    final ChannelEditProfileData data = m_editData;
+    if( data == null )
+      return;
+
+    if( segment == null )
+      return;
+
+    final int oldNumberOfSegments = segment.getNumberBankSegments();
+    if( oldNumberOfSegments == segments )
+      return;
+
+    // REMARK: already fire change, so rollback will later be able to reset the ui
+    firePropertyChange( propertySegments, oldNumberOfSegments, segments );
+
+    if( segment.isUserChanged() )
+    {
+      askForUserEdits( PlatformUI.getWorkbench().getDisplay().getActiveShell() );
+
+      firePropertyChange( propertySegments, segments, oldNumberOfSegments );
+    }
+
+    segment.updateNumberOfSegments( segments );
+    firePropertyChange( propertySegments, oldNumberOfSegments, getNumberBankSegments() );
   }
 }
