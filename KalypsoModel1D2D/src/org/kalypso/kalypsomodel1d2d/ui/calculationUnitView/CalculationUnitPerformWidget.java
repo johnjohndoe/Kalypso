@@ -62,8 +62,8 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -71,13 +71,9 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * @author Madanagopal
  */
-public class CalculationUnitPerformWidget extends AbstractDelegateWidget implements IWidgetWithOptions
+public class CalculationUnitPerformWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private final CalculationUnitDataModel m_dataModel = new CalculationUnitDataModel();
-
-  private final String m_name;
-
-  private final String m_toolTip;
 
   public CalculationUnitPerformWidget( )
   {
@@ -86,10 +82,7 @@ public class CalculationUnitPerformWidget extends AbstractDelegateWidget impleme
 
   public CalculationUnitPerformWidget( final String name, final String toolTip )
   {
-    super( name, toolTip, null );
-
-    m_name = name;
-    m_toolTip = toolTip;
+    super( name, toolTip );
   }
 
   @Override
@@ -193,18 +186,6 @@ public class CalculationUnitPerformWidget extends AbstractDelegateWidget impleme
     }
 
     super.finish();
-  }
-
-  @Override
-  public String getName( )
-  {
-    return m_name;
-  }
-
-  @Override
-  public String getToolTip( )
-  {
-    return m_toolTip;
   }
 
   @Override

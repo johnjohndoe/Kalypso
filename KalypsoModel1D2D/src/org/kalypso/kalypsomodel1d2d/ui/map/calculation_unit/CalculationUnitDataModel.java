@@ -52,12 +52,10 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 /**
  * @author Madanagopal
  * @author Patrice Congo
- * 
  */
-@SuppressWarnings("unchecked")
 public class CalculationUnitDataModel extends KeyBasedDataModel
 {
-  private final Map<ICalculationUnit, List<IProblem>> validateMessages = new HashMap<ICalculationUnit, List<IProblem>>();
+  private final Map<ICalculationUnit, List<IProblem>> validateMessages = new HashMap<>();
 
   public CalculationUnitDataModel( )
   {

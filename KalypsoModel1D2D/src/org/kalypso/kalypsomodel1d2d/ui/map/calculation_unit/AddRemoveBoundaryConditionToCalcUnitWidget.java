@@ -130,14 +130,14 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
 
   public AddRemoveBoundaryConditionToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.4") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.4" ) ); //$NON-NLS-1$
     final Color color = new Color( 1f, 1f, 0.6f, 0.70f );
     m_toolTipRenderer.setBackgroundColor( color );
 
     m_dataModel = dataModel;
-    m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
+    m_selDelegateWidget = (SelectFeatureWidget)getDelegate();
   }
 
   @Override
@@ -146,17 +146,17 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
     // TODO: we should discuss, if we want this right-click popup behavior. Right now it is only used in the calcunit
     // widgets and no common kalypso style...
 
-    final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+    final IMapPanel mapPanel = (IMapPanel)m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addBoundaryCondition = new JMenuItem();
-    addBoundaryCondition.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.5") );  //$NON-NLS-1$
-    addBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) );  //$NON-NLS-1$
+    addBoundaryCondition.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.5" ) ); //$NON-NLS-1$
+    addBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) ); //$NON-NLS-1$
     addBoundaryCondition.addActionListener( makeAddBoundaryConditionListener() );
 
     final JMenuItem removeBoundaryCondition = new JMenuItem();
-    removeBoundaryCondition.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.7") );  //$NON-NLS-1$
-    removeBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) );  //$NON-NLS-1$
+    removeBoundaryCondition.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.7" ) ); //$NON-NLS-1$
+    removeBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) ); //$NON-NLS-1$
     removeBoundaryCondition.addActionListener( makeRemoveBoundaryConditionListener() );
 
     popupMenu.add( addBoundaryCondition );
@@ -192,7 +192,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
       removeBoundaryCondition.setEnabled( true );
     }
 
-    popupMenu.show( (Component) mapPanel, p.x, p.y );
+    popupMenu.show( (Component)mapPanel, p.x, p.y );
   }
 
   private ActionListener makeRemoveBoundaryConditionListener( )
@@ -230,20 +230,19 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
       return;
 
     final Feature[] selectedFeatures = CalcUnitHelper.getSelectedFeature( mapPanel );
-    final ICalculationUnit calUnit = (ICalculationUnit) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+    final ICalculationUnit calUnit = (ICalculationUnit)m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d)m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
     if( selectedFeatures.length == 0 )
       return;
     for( final Feature feature : selectedFeatures )
     {
-      final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
+      final IBoundaryCondition bc = (IBoundaryCondition)feature.getAdapter( IBoundaryCondition.class );
       if( bc == null )
         return;
       final RemoveBoundaryConditionFromCalcUnitCommand command = new RemoveBoundaryConditionFromCalcUnitCommandExtension( bc, calUnit, model1d2d );
-
-      if( command != null )
-        KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
+      KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
     }
+
     getMapPanel().getSelectionManager().clear();
   }
 
@@ -257,18 +256,18 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
     final Feature[] selectedFeatures = CalcUnitHelper.getSelectedFeature( mapPanel );
     if( selectedFeatures == null || selectedFeatures.length == 0 )
       return;
-    final ICalculationUnit calcUnit = (ICalculationUnit) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    final ICalculationUnit calcUnit = (ICalculationUnit)m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
 
     for( final Feature feature : selectedFeatures )
     {
-      final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
+      final IBoundaryCondition bc = (IBoundaryCondition)feature.getAdapter( IBoundaryCondition.class );
       if( bc == null )
         continue;
-      final AddBoundaryConditionToCalcUnitCommand command = new AddBoundaryConditionToCalcUnitCommandExtension( calcUnit, bc );
 
-      if( command != null )
-        KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
+      final AddBoundaryConditionToCalcUnitCommand command = new AddBoundaryConditionToCalcUnitCommandExtension( calcUnit, bc );
+      KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
     }
+
     getMapPanel().getSelectionManager().clear();
   }
 
@@ -313,9 +312,6 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
     super.keyPressed( e );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -327,15 +323,12 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.9") + delegateTooltip ); //$NON-NLS-1$
+      m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.9" ) + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget#finish()
-   */
   @Override
   public void finish( )
   {

@@ -214,7 +214,7 @@ public class CalculationUnitProblemsComponent
 
         if( currentSelection != null )
         {
-          final List<IProblem> tempProblemList = new ArrayList<IProblem>();
+          final List<IProblem> tempProblemList = new ArrayList<>();
           dataModel.addValidatingMessage( currentSelection, tempProblemList );
 
           // TODO:

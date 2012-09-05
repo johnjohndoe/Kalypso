@@ -99,7 +99,6 @@ public class RemoveElementFromCalculationUnitCmd implements IFeatureChangeComman
   @Override
   public void process( ) throws Exception
   {
-
     for( final IFE1D2DElement element : m_elementsToRemove )
     {
       LinksOps.delRelationshipElementAndComplexElement( element, m_calculationUnit );

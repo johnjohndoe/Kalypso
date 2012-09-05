@@ -49,7 +49,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class CalcUnitHelper
 {
@@ -58,7 +57,7 @@ public class CalcUnitHelper
    * 
    * @return a {@link Feature} array containing the selected feature
    */
-  public static Feature[] getSelectedFeature( IMapPanel mapPanel )
+  public static Feature[] getSelectedFeature( final IMapPanel mapPanel )
   {
     if( mapPanel == null )
       return null;
@@ -90,7 +89,6 @@ public class CalcUnitHelper
    *            the class the selection feature should be wrapped
    * @return return an array containing the wrappers of the selected features
    */
-  @SuppressWarnings("unchecked")
   public static <T> T[] getWrappedSelectedFeature( final Class<T> targetWrapClass, final IMapPanel mapPanel )
   {
     final Feature[] selectedFeature = CalcUnitHelper.getSelectedFeature( mapPanel );
@@ -101,5 +99,4 @@ public class CalcUnitHelper
     }
     return wrappers;
   }
-
 }

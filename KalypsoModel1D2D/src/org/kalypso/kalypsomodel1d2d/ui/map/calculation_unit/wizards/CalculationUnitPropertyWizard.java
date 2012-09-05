@@ -117,7 +117,7 @@ public class CalculationUnitPropertyWizard extends Wizard
         final String newName = m_wizardPage.getChangedName();
         if( !ObjectUtils.equals( m_parentCalcUnit.getName(), newName ) )
         {
-          final List<String> nameList = new ArrayList<String>();
+          final List<String> nameList = new ArrayList<>();
           nameList.add( newName );
           final ChangeFeatureCommand changeNameCmd = new ChangeFeatureCommand( calcUnitFeature, calcUnitFeature.getFeatureType().getProperty( Feature.QN_NAME ), nameList );
           commandManager.postCommand( changeNameCmd );
@@ -165,7 +165,7 @@ public class CalculationUnitPropertyWizard extends Wizard
 
   private boolean checkSubUnitsInterconnection( final ICalculationUnit[] inputListCalSubUnits )
   {
-    final List<ICalculationUnit> connectedUnits = new ArrayList<ICalculationUnit>();
+    final List<ICalculationUnit> connectedUnits = new ArrayList<>();
     connectedUnits.add( inputListCalSubUnits[0] );
 
     for( final ICalculationUnit subUnitsToGoThrough : inputListCalSubUnits )
@@ -220,13 +220,13 @@ public class CalculationUnitPropertyWizard extends Wizard
     final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = model.getComplexElements();
 
     // get all transition elements from the discretisation model
-    final List<ITransitionElement> allTransitionElements = new ArrayList<ITransitionElement>();
+    final List<ITransitionElement> allTransitionElements = new ArrayList<>();
     for( final IFE1D2DComplexElement complexElement : complexElements )
       if( complexElement instanceof ITransitionElement )
         allTransitionElements.add( (ITransitionElement) complexElement );
 
     // get all transition elements between already connected units
-    final List<ITransitionElement> connectedTransitionElements = new ArrayList<ITransitionElement>();
+    final List<ITransitionElement> connectedTransitionElements = new ArrayList<>();
     for( final ITransitionElement transitionElement : allTransitionElements )
     {
       for( final ICalculationUnit connectedUnit : connectedUnits )
@@ -255,13 +255,13 @@ public class CalculationUnitPropertyWizard extends Wizard
     if( currentUnit instanceof ICalculationUnit1D )
     {
       // get all junction elements from the discretisation model
-      final List<IJunctionElement> allJunctionElements = new ArrayList<IJunctionElement>();
+      final List<IJunctionElement> allJunctionElements = new ArrayList<>();
       for( final IFE1D2DComplexElement complexElement : complexElements )
         if( complexElement instanceof IJunctionElement )
           allJunctionElements.add( (IJunctionElement) complexElement );
 
       // get all junction elements between already connected units
-      final List<IJunctionElement> connectedJunctionElements = new ArrayList<IJunctionElement>();
+      final List<IJunctionElement> connectedJunctionElements = new ArrayList<>();
       for( final IJunctionElement junctionElement : allJunctionElements )
       {
         for( final ICalculationUnit connectedUnit : connectedUnits )
