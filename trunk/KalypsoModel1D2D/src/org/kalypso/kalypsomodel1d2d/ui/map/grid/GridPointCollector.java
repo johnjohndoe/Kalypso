@@ -47,10 +47,14 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
+import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesh;
+import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMeshPainter;
+import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMeshValidator;
+import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesher;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -69,6 +73,10 @@ public class GridPointCollector
 
   public static final int SIDE_RIGHT = 3;
 
+  private final SLDPainter2 m_meshEdgePainter = new SLDPainter2( getClass().getResource( "resources/meshEdge.sld" ) ); //$NON-NLS-1$
+
+  private final SLDPainter2 m_meshEdgeInvalidPainter = new SLDPainter2( getClass().getResource( "resources/meshEdgeInvalid.sld" ) ); //$NON-NLS-1$
+
   private int m_actualSideKey;
 
   private boolean m_hasAllSides = false;
@@ -77,14 +85,23 @@ public class GridPointCollector
 
   private final LinePointCollectorConfig m_lpcConfigs[] = new LinePointCollectorConfig[SIDE_MAX_NUM];
 
-  private final TempGrid m_tempGrid = new TempGrid();
+  private QuadMesh m_tempGrid = null;
 
   private final List<IGridPointCollectorStateListener> m_stateListeners = new ArrayList<IGridPointCollectorStateListener>();
 
-  private IKalypsoFeatureTheme m_nodeTheme;
+  private final String m_srsName;
 
-  public GridPointCollector( )
+  private final IFEDiscretisationModel1d2d m_discModel;
+
+  private final double m_searchDistance;
+
+
+  public GridPointCollector( final IFEDiscretisationModel1d2d discModel, final String srsName, final double searchDistance )
   {
+    m_discModel = discModel;
+    m_srsName = srsName;
+    m_searchDistance = searchDistance;
+
     initLPCConfigs();
   }
 
@@ -108,9 +125,12 @@ public class GridPointCollector
       else
         b = new LinePointCollector( 0, targetCrs );
     }
+
     m_actualSideKey = 0;
     m_hasAllSides = false;
-    m_tempGrid.resetTempGrid( targetCrs );
+
+    m_tempGrid = null;
+
     if( m_sides[m_actualSideKey] == null )
     {
       m_sides[m_actualSideKey] = new LinePointCollector( 0, targetCrs );
@@ -230,7 +250,9 @@ public class GridPointCollector
 
   private final void updateTempGrid( )
   {
-    m_tempGrid.setTempGrid( m_sides[SIDE_TOP], m_sides[SIDE_BOTTOM], m_sides[SIDE_LEFT], m_sides[SIDE_RIGHT] );
+    final QuadMesher mesher = new QuadMesher();
+    mesher.createMesh( m_srsName, m_sides[SIDE_TOP], m_sides[SIDE_BOTTOM], m_sides[SIDE_LEFT], m_sides[SIDE_RIGHT] );
+    m_tempGrid = mesher.getMesh();
   }
 
   private final int computeSize( )
@@ -274,7 +296,15 @@ public class GridPointCollector
     }
 
     /* draw temp grid */
-    m_tempGrid.paint( g, projection );
+    if( isValid().isOK() )
+    {
+    final QuadMeshPainter meshPainter = new QuadMeshPainter( m_tempGrid, m_meshEdgePainter );
+    meshPainter.paint( g, projection );
+    }
+    {
+      final QuadMeshPainter meshPainter = new QuadMeshPainter( m_tempGrid, m_meshEdgeInvalidPainter );
+      meshPainter.paint( g, projection );
+    }
 
     /* draw selected line */
     if( m_actualSideKey < SIDE_MAX_NUM )
@@ -458,18 +488,14 @@ public class GridPointCollector
     fireStateChanged();
   }
 
-  public void setNodeTheme( final IKalypsoFeatureTheme nodeTheme )
-  {
-    m_nodeTheme = nodeTheme;
-    m_tempGrid.setNodeTheme( m_nodeTheme );
-  }
-
   public IStatus isValid( )
   {
-    return m_tempGrid.isValid();
+    final QuadMeshValidator validator = new QuadMeshValidator( m_tempGrid, m_searchDistance );
+
+    return validator.isValid( m_discModel );
   }
 
-  public TempGrid getTempGrid( )
+  public QuadMesh getTempGrid( )
   {
     return m_tempGrid;
   }

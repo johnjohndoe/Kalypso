@@ -22,8 +22,9 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.ImportQuadMeshWorker;
+import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesh;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -48,9 +49,11 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private final GridPointCollector m_gridPointCollector = new GridPointCollector();
+  private static final double DISTANCE_DEF = 0.01;
 
-  private final GridWidgetFace m_gridWidgetFace = new GridWidgetFace( this, m_gridPointCollector );
+  private GridPointCollector m_gridPointCollector;
+
+  private GridWidgetFace m_gridWidgetFace;
 
   private final ToolTipRenderer m_warningRenderer = new ToolTipRenderer();
 
@@ -76,16 +79,17 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     if( isActivated == false )
     {
+      // find the right themes to edit i.e. the discretisation model
+      final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
+
+      m_gridPointCollector = new GridPointCollector( discModel, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), DISTANCE_DEF );
+      m_gridWidgetFace = new GridWidgetFace( this, m_gridPointCollector );
+
+      m_pointSnapper = new PointSnapper( discModel, mapPanel );
+
       reinit();
       isActivated = true;
     }
-
-    // find the right themes to edit i.e. the discretisation model
-    final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    m_gridPointCollector.setNodeTheme( nodeTheme );
-
-    final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
-    m_pointSnapper = new PointSnapper( discModel, mapPanel );
   }
 
   final void reinit( )
@@ -94,7 +98,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     if( targetCrs == null )
       targetCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    m_gridPointCollector.reset( targetCrs );
+    if( m_gridPointCollector != null )
+      m_gridPointCollector.reset( targetCrs );
   }
 
   private GM_Point snapToNode( final Point p, final boolean snappingActive )
@@ -130,7 +135,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     m_currentPoint = currentPoint;
 
-    if( m_gridPointCollector.getHasAllSides() )
+    if( m_gridPointCollector != null && m_gridPointCollector.getHasAllSides() )
     {
       final IMapPanel mapPanel = getMapPanel();
       final GM_Point point = MapUtilities.transform( mapPanel, p );
@@ -340,8 +345,9 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     final CommandableWorkspace workspace = theme.getWorkspace();
 
-    final TempGrid tempGrid = m_gridPointCollector.getTempGrid();
-    final ICoreRunnableWithProgress operation = new CreateGridOperation( tempGrid, workspace );
+    final QuadMesh tempGrid = m_gridPointCollector.getTempGrid();
+
+    final ICoreRunnableWithProgress operation = new ImportQuadMeshWorker( workspace, DISTANCE_DEF, tempGrid );
 
     final Display display = PlatformUI.getWorkbench().getDisplay();
     final Runnable runnable = new Runnable()
