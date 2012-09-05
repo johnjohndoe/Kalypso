@@ -98,8 +98,7 @@ public class ProfileInterpolation
 
     profile.setStation( station.doubleValue() );
 
-    final Object prevCrs = m_previousProfile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
-    profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, prevCrs );
+    profile.setSrsName( m_previousProfile.getSrsName() );
 
     interpolateProfile( profile );
 
