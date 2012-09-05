@@ -50,6 +50,10 @@ public class EwawiImportData extends AbstractModelObject
 
   public static final String PROPERTY_RIVER_SHAPE_DATA = "riverShapeData"; //$NON-NLS-1$
 
+  public static final String PROPERTY_COORDINATE_SYSTEM = "coordinateSystem"; //$NON-NLS-1$
+
+  public static final String PROPERTY_DIRECTION_UPSTREAMS = "directionUpstreams"; //$NON-NLS-1$
+
   public static final String PROPERTY_EWAWI_DATA = "ewawiData"; //$NON-NLS-1$
 
   public static final String PROPERTY_EWAWI_DATA_STATUS = "ewawiDataStatus"; //$NON-NLS-1$
@@ -68,6 +72,10 @@ public class EwawiImportData extends AbstractModelObject
 
   private final EwawiRiverShapeData m_riverShapeData;
 
+  private String m_coordinateSystem;
+
+  private boolean m_directionUpstreams;
+
   private EwawiPlus m_ewawiData;
 
   private IStatus m_ewawiDataStatus;
@@ -81,6 +89,8 @@ public class EwawiImportData extends AbstractModelObject
     m_documentDirectory = null;
     m_documentDirectoryHistory = new String[0];
     m_riverShapeData = new EwawiRiverShapeData();
+    m_coordinateSystem = null;
+    m_directionUpstreams = false;
     m_ewawiData = null;
     m_ewawiDataStatus = new Status( IStatus.INFO, KalypsoModelWspmTuhhUIPlugin.getID(), "Keine Daten geladen." );
   }
@@ -97,6 +107,9 @@ public class EwawiImportData extends AbstractModelObject
     initDocumentDirectoryHistory( settings );
 
     m_riverShapeData.init( settings );
+
+    m_coordinateSystem = settings.get( PROPERTY_COORDINATE_SYSTEM );
+    m_directionUpstreams = settings.getBoolean( PROPERTY_DIRECTION_UPSTREAMS );
   }
 
   private void initFotoDirectoryHistory( final IDialogSettings settings )
@@ -133,6 +146,9 @@ public class EwawiImportData extends AbstractModelObject
     storeDocumentDirectoryHistory( settings );
 
     m_riverShapeData.storeSettings( settings );
+
+    settings.put( PROPERTY_COORDINATE_SYSTEM, m_coordinateSystem );
+    settings.put( PROPERTY_DIRECTION_UPSTREAMS, m_directionUpstreams );
   }
 
   private void storeFotoDirectoryHistory( final IDialogSettings settings )
@@ -192,14 +208,12 @@ public class EwawiImportData extends AbstractModelObject
 
   public String getCoordinateSystem( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_coordinateSystem;
   }
 
   public boolean isDirectionUpstreams( )
   {
-    // TODO Auto-generated method stub
-    return false;
+    return m_directionUpstreams;
   }
 
   public EwawiPlus getEwawiData( )
@@ -238,6 +252,20 @@ public class EwawiImportData extends AbstractModelObject
     final String[] oldValue = m_documentDirectoryHistory;
     m_documentDirectoryHistory = documentDirectoryHistory;
     firePropertyChange( PROPERTY_DOCUMENT_DIRECTORY_HISTORY, oldValue, m_documentDirectoryHistory );
+  }
+
+  public void setCoordinateSystem( final String coordinateSystem )
+  {
+    final String oldValue = m_coordinateSystem;
+    m_coordinateSystem = coordinateSystem;
+    firePropertyChange( PROPERTY_COORDINATE_SYSTEM, oldValue, m_coordinateSystem );
+  }
+
+  public void setDirectionUpstreams( final boolean directionUpstreams )
+  {
+    final boolean oldValue = m_directionUpstreams;
+    m_directionUpstreams = directionUpstreams;
+    firePropertyChange( PROPERTY_DIRECTION_UPSTREAMS, oldValue, m_directionUpstreams );
   }
 
   public void setEwawiData( final EwawiPlus ewawiData )

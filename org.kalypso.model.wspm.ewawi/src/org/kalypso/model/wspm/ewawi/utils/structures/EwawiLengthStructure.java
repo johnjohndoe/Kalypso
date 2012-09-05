@@ -76,7 +76,7 @@ public class EwawiLengthStructure
 
   public SHPPolyLinez getShape( )
   {
-    /* The profile points. */
+    /* The structure points. */
     final List<SHPPointz> shpPoints = new ArrayList<>();
     final List<Coordinate> coordinates = new ArrayList<>();
 
@@ -110,6 +110,8 @@ public class EwawiLengthStructure
 
     return new SHPPolyLinez( multiPoint, new int[] { 0 } );
   }
+
+  // HINT: Every function downward uses the first epl point to retrieve the data.
 
   public EwawiObjectart getObjektArt( )
   {
