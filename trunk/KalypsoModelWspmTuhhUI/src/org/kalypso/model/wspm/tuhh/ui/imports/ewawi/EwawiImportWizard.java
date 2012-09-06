@@ -24,6 +24,7 @@ import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
@@ -106,6 +107,17 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
 
     if( container instanceof IPageChangeProvider )
       ((IPageChangeProvider)container).addPageChangedListener( m_pageListener );
+  }
+
+  @Override
+  public boolean canFinish( )
+  {
+    /* Do not allow to finish early. */
+    final IWizardPage currentPage = getContainer().getCurrentPage();
+    if( currentPage.getNextPage() != null )
+      return false;
+
+    return super.canFinish();
   }
 
   @Override

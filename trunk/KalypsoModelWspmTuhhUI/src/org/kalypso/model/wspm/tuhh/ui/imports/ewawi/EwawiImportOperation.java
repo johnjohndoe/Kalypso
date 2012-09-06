@@ -62,6 +62,7 @@ import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.geometry.SHPPoint;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
 
 /**
@@ -160,18 +161,23 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       if( basePart == null )
         throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( "No base profile found at station %.4f", station.doubleValue() ) ) );
 
-      final String riverId = String.format( "%d", basePart.getGewKennzahl() );
-      final String riverName = getRiverName( gewShape, basePart );
-      final String[] photos = basePart.getPhotos( staIndex );
       final String name = getName( staIndex, basePart );
       final String description = getDescription( staIndex, basePart );
+      final String[] photos = basePart.getPhotos( staIndex );
+
+      final String riverId = String.format( "%d", basePart.getGewKennzahl() );
+      final String riverName = getRiverName( gewShape, basePart );
+      final GM_Curve riverGeometry = getRiverGeometry( gewShape, basePart );
 
       final IProfileFeature profileFeature = m_targetProject.createNewProfile( riverName, m_data.isDirectionUpstreams() );
-      profileFeature.setBigStation( station );
-      profileFeature.getWater().setRefNr( riverId );
-      profileFeature.setSrsName( m_data.getCoordinateSystem() );
       profileFeature.setName( name );
       profileFeature.setDescription( description );
+      profileFeature.setSrsName( m_data.getCoordinateSystem() );
+      profileFeature.setBigStation( station );
+
+      final WspmWaterBody water = profileFeature.getWater();
+      water.setRefNr( riverId );
+      water.setCenterLine( riverGeometry );
 
       for( final String foto : photos )
       {
@@ -196,29 +202,15 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private String getRiverName( final GewShape gewShape, final EwawiProfilePart basePart ) throws DBaseException
-  {
-    if( gewShape == null )
-      return "Undefiniert";
-
-    final Long gewKennzahl = basePart.getGewKennzahl();
-    if( gewKennzahl == null )
-      return "Undefiniert";
-
-    final String name = gewShape.getName( gewKennzahl );
-    if( name == null )
-      return "Undefiniert";
-
-    return name;
-  }
-
   private String getName( final EwawiSta staIndex, final EwawiProfilePart basePart ) throws EwawiException
   {
     final Short profilNummer = basePart.getProfilNummer( staIndex );
-    if( profilNummer != null )
-      return String.format( "%d", profilNummer );
+    final EwawiProfilart profilArt = basePart.getProfilArt( staIndex );
 
-    return "";
+    if( profilNummer != null )
+      return String.format( "%d (%s)", profilNummer, profilArt.getLabel() );
+
+    return String.format( "NNN (%s)", profilArt.getLabel() );
   }
 
   private String getDescription( final EwawiSta staIndex, final EwawiProfilePart basePart ) throws EwawiException
@@ -226,32 +218,32 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
     final StringBuilder description = new StringBuilder();
 
     final EwawiObjectart objectArt = basePart.getObjectArt( staIndex );
-    if( objectArt != null )
+    if( objectArt != null && objectArt != EwawiObjectart._1100 )
     {
       final String objectArtText = String.format( "Objektart: %d, %s%n", objectArt.getKey(), objectArt.getLabel() );
       description.append( objectArtText );
     }
 
     final Short zusatz = basePart.getZusatz( staIndex );
-    if( zusatz != null )
+    if( zusatz != null && zusatz != 0 )
     {
       final String zusatzText = String.format( "Zusatzkennzahl: %d%n", zusatz );
       description.append( zusatzText );
     }
 
-    final EwawiPunktart punktArt = basePart.getPunktArt( staIndex );
-    if( punktArt != null )
-    {
-      final String punktArtText = String.format( "Punktart: %d, %s%n", punktArt.getKey(), punktArt.getLabel() );
-      description.append( punktArtText );
-    }
+    // final EwawiPunktart punktArt = basePart.getPunktArt( staIndex );
+    // if( punktArt != null )
+    // {
+    // final String punktArtText = String.format( "Punktart: %d, %s%n", punktArt.getKey(), punktArt.getLabel() );
+    // description.append( punktArtText );
+    // }
 
     final Date validity = basePart.getValidity( staIndex );
     if( validity != null )
     {
       final DateFormat df = DateFormat.getDateInstance( DateFormat.MEDIUM );
-      final String validityText = df.format( validity );
-      description.append( validityText + "%n" );
+      final String validityText = String.format( "Gültigkeitsdatum: %s%n", df.format( validity ) );
+      description.append( validityText );
     }
 
     final EwawiProfilart profilArt = basePart.getProfilArt( staIndex );
@@ -262,13 +254,41 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
     }
 
     final String comment = basePart.getComment( staIndex );
-    if( comment != null )
+    if( comment != null && !comment.equals( "-" ) )
     {
-      final String commentText = String.format( "%s%n", comment );
+      final String commentText = String.format( "Bemerkung: %s%n", comment );
       description.append( commentText );
     }
 
     return description.toString();
+  }
+
+  private String getRiverName( final GewShape gewShape, final EwawiProfilePart basePart ) throws DBaseException
+  {
+    if( gewShape == null )
+      return "Undefiniert";
+
+    final Long gewKennzahl = basePart.getGewKennzahl();
+    if( gewKennzahl == null )
+      return "Undefiniert";
+
+    final String name = (String)gewShape.getValue( gewKennzahl, m_data.getRiverShapeData().getRiverNameField() );
+    if( name == null )
+      return "Undefiniert";
+
+    return name;
+  }
+
+  private GM_Curve getRiverGeometry( final GewShape gewShape, final EwawiProfilePart basePart ) throws DBaseException
+  {
+    if( gewShape == null )
+      return null;
+
+    final Long gewKennzahl = basePart.getGewKennzahl();
+    if( gewKennzahl == null )
+      return null;
+
+    return (GM_Curve)gewShape.getValue( gewKennzahl, m_data.getRiverShapeData().getRiverGeometryField() );
   }
 
   private void createProfilePoints( final EwawiSta staIndex, final EwawiProfilePart basePart, final IProfileFeature profileFeature ) throws EwawiException
@@ -280,6 +300,7 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
     final IComponent hochwertComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
     final IComponent breiteComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent hoeheComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    // TODO CODE
 
     final IProfil profil = profileFeature.getProfil();
     profil.addPointProperty( idComponent );
@@ -296,11 +317,11 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       final SHPPoint shape = profilePoint.getShape();
 
       final String id = String.format( "%d", proLine.getPunktNummer() );
-      final String comment = proLine.getComment();
-      final double hochwert = shape.getY();
+      final String comment = getRecordDescription( proLine );
       final double rechtswert = shape.getX();
-      final double hoehe = profilePoint.getHoehe().doubleValue();
+      final double hochwert = shape.getY();
       final double breite = profilePoint.getBreite().doubleValue();
+      final double hoehe = profilePoint.getHoehe().doubleValue();
 
       final IProfileRecord record = profil.createProfilPoint();
       record.setValue( record.indexOfProperty( idComponent ), id );
@@ -309,13 +330,6 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       record.setValue( record.indexOfProperty( hochwertComponent ), hochwert );
       record.setValue( record.indexOfProperty( breiteComponent ), breite );
       record.setValue( record.indexOfProperty( hoeheComponent ), hoehe );
-
-      // TODO PRO
-      // Objektart
-      // Zusatzkennzahl
-      // Punktart
-      // Aufnahmedatum
-      // Bedeutung horizont
 
       profil.addPoint( record );
     }
@@ -329,6 +343,57 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       throw new EwawiException( "Einer der Festpunkte wurde nicht gefunden." );
 
     return new EwawiProfilePoint( leftFixPoint, rightFixPoint, proLine );
+  }
+
+  private String getRecordDescription( final EwawiProLine proLine )
+  {
+    final StringBuilder description = new StringBuilder();
+
+    // final EwawiObjectart objectArt = proLine.getObjectArt();
+    // if( objectArt != null )
+    // {
+    // final String objectArtText = String.format( "Objektart: %d, %s%n", objectArt.getKey(), objectArt.getLabel() );
+    // description.append( objectArtText );
+    // }
+
+    // final Short zusatz = proLine.getZusatz();
+    // if( zusatz != null )
+    // {
+    // final String zusatzText = String.format( "Zusatzkennzahl: %d%n", zusatz );
+    // description.append( zusatzText );
+    // }
+
+    // TODO Code
+    final EwawiPunktart punktArt = proLine.getPunktArt();
+    if( punktArt != null )
+    {
+      final String punktArtText = String.format( "Punktart: %d, %s%n", punktArt.getKey(), punktArt.getLabel() );
+      description.append( punktArtText );
+    }
+
+    // final Date aufnahmeDatum = proLine.getAufnahmeDatum();
+    // if( aufnahmeDatum != null )
+    // {
+    // final DateFormat df = DateFormat.getDateInstance( DateFormat.MEDIUM );
+    // final String aufnahmeDatumText = String.format( "Aufnahmedatum: %s%n", df.format( aufnahmeDatum ) );
+    // description.append( aufnahmeDatumText );
+    // }
+
+    // final EwawiHorizont horizont = proLine.getHorizont();
+    // if( horizont != null )
+    // {
+    // final String horizontText = String.format( "Horizont: %d, %s%n", horizont.getKey(), horizont.getLabel() );
+    // description.append( horizontText );
+    // }
+
+    final String comment = proLine.getComment();
+    if( comment != null && !comment.equals( "-" ) )
+    {
+      final String commentText = String.format( "%s", comment );
+      description.append( commentText );
+    }
+
+    return description.toString();
   }
 
   private void fireChangeEvents( )
