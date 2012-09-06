@@ -55,34 +55,28 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Default implementation for {@link ICalculationUnit}
- * 
+ *
  * @author Patrice Congo
  * @author Stefan Kurzbach
- * 
+ *
  */
 public class CalculationUnit extends Feature_Impl implements ICalculationUnit
 {
   public final static QName QN_PROPERTY_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" ); //$NON-NLS-1$
 
-  private final FeatureBindingCollection<IFENetItem> m_elements = new FeatureBindingCollection<IFENetItem>( this, IFENetItem.class, QN_PROPERTY_ELEMENT );
+  private final FeatureBindingCollection<IFENetItem> m_elements = new FeatureBindingCollection<>( this, IFENetItem.class, QN_PROPERTY_ELEMENT );
 
-  public CalculationUnit( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public CalculationUnit( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getElements()
-   */
   @Override
   public FeatureBindingCollection<IFENetItem> getElements( )
   {
     return m_elements;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
-   */
   @Override
   public boolean addElementAsRef( final IFENetItem element )
   {
@@ -90,18 +84,12 @@ public class CalculationUnit extends Feature_Impl implements ICalculationUnit
     return m_elements.addRef( element );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
-   */
   @Override
   public void removeElementAsRef( final IFENetItem element )
   {
-    m_elements.remove( element );
+    m_elements.getFeatureList().removeLink( element );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getType()
-   */
   @Override
   public TYPE getType( )
   {
@@ -117,42 +105,33 @@ public class CalculationUnit extends Feature_Impl implements ICalculationUnit
   @Override
   public List<IFELine> getContinuityLines( )
   {
-    final List<IFELine> continuityLines = new ArrayList<IFELine>();
+    final List<IFELine> continuityLines = new ArrayList<>();
     for( final IFENetItem element : m_elements )
       if( element instanceof IFELine )
         continuityLines.add( (IFELine) element );
     return continuityLines;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#contains(org.kalypsodeegree.model.feature.binding.Feature)
-   */
   @Override
   public boolean contains( final IFENetItem member )
   {
     return m_elements.contains( member );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getElements1D()
-   */
   @Override
   public List<IElement1D> getElements1D( )
   {
-    final List<IElement1D> list = new ArrayList<IElement1D>();
+    final List<IElement1D> list = new ArrayList<>();
     for( final IFENetItem element : m_elements )
       if( element instanceof IElement1D )
         list.add( (IElement1D) element );
     return list;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getElements2D()
-   */
   @Override
   public List<IPolyElement> getElements2D( )
   {
-    final List<IPolyElement> list = new ArrayList<IPolyElement>();
+    final List<IPolyElement> list = new ArrayList<>();
     for( final IFENetItem element : m_elements )
     {
       if( element instanceof IPolyElement )

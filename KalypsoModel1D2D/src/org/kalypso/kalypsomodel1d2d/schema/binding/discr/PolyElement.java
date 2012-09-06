@@ -18,20 +18,15 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
- * TODO: also make interface for this element
- *
  * Provide the default implementation for {@link org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement}. Those
  * classes kann be used as java abtract for the subtituable of wb1d2d:FE1D2D_2DElement: wb1d2d:FE1D2DQuadriElement,
  * wb1d2d:FE1D2DTriElement and wb1d2d:FE1D2DContinuityLine
  *
- *
  * @author Gernot Belger, Patrice Congo
- * @see IFE1D2DContinuityLine
- * @see FE1D2DContinuityLine
  */
 public class PolyElement extends FE1D2DElement implements IPolyElement
 {
-  private final IFeatureBindingCollection<IFE1D2DEdge> m_edges = new FeatureBindingCollection<IFE1D2DEdge>( this, IFE1D2DEdge.class, WB1D2D_PROP_DIRECTEDEDGE );
+  private final IFeatureBindingCollection<IFE1D2DEdge> m_edges = new FeatureBindingCollection<>( this, IFE1D2DEdge.class, WB1D2D_PROP_DIRECTEDEDGE );
 
   public PolyElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -89,7 +84,7 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
   @Override
   public List<IFE1D2DNode> getNodes( )
   {
-    final List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>( m_edges.size() + 1 );
+    final List<IFE1D2DNode> nodes = new ArrayList<>( m_edges.size() + 1 );
 
     if( m_edges.size() < 3 )
       // this must be wrong
@@ -113,7 +108,7 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
 
     if( nodes.size() < 4 )
       // this must be wrong
-      return new ArrayList<IFE1D2DNode>( 0 );
+      return new ArrayList<>( 0 );
 
     return nodes;
   }
