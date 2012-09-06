@@ -232,7 +232,7 @@ public class EwawiImportFilesPage extends WizardPage
   {
     final Button directionUpstreamsButton = new Button( optionsGroup, SWT.CHECK );
     directionUpstreamsButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    directionUpstreamsButton.setText( "" );
+    directionUpstreamsButton.setText( "Stationierung beginnt an der Mündung" );
 
     final IObservableValue target = SWTObservables.observeSelection( directionUpstreamsButton );
     final IObservableValue model = BeansObservables.observeValue( m_data, EwawiImportData.PROPERTY_DIRECTION_UPSTREAMS );

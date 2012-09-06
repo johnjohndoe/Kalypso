@@ -117,4 +117,22 @@ public class GewShape
 
     return (String)row.getValue( GN_ACHS_08 );
   }
+
+  public Object getValue( final Long gkzFgn25, final String field ) throws DBaseException
+  {
+    final GewShapeRow row = m_gkzFgn25Hash.get( gkzFgn25 );
+    if( row == null )
+      return null;
+
+    return row.getValue( field );
+  }
+
+  public Object getValue( final String alias, final String field ) throws DBaseException
+  {
+    final GewShapeRow row = m_aliasHash.get( alias );
+    if( row == null )
+      return null;
+
+    return row.getValue( field );
+  }
 }
