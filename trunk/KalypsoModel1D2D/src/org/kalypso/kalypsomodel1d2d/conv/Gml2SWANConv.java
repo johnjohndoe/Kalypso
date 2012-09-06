@@ -70,6 +70,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition.BOUNDARY_TYPE;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -83,7 +84,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Converts discretisation model to SWAN model
- * 
+ *
  * @author ig
  */
 public class Gml2SWANConv implements INativeIDProvider
@@ -104,9 +105,9 @@ public class Gml2SWANConv implements INativeIDProvider
 
   private Map<GM_Position, Integer> m_mapNodesActPositions;
 
-  private final Map<GM_Position, Integer> m_mapPositionsToConditions = new HashMap<GM_Position, Integer>();
+  private final Map<GM_Position, Integer> m_mapPositionsToConditions = new HashMap<>();
 
-  private final Map<IFELine, Integer> m_mapContiLineToConditions = new HashMap<IFELine, Integer>();
+  private final Map<IFELine, Integer> m_mapContiLineToConditions = new HashMap<>();
 
   private final List<IPolyElement> m_listAllElements;
 
@@ -128,7 +129,7 @@ public class Gml2SWANConv implements INativeIDProvider
 
   private String m_strCRS;
 
-  private final Map<IFELine, Integer> m_mapContiLineWithSWANBoundaryToCondition = new HashMap<IFELine, Integer>();
+  private final Map<IFELine, Integer> m_mapContiLineWithSWANBoundaryToCondition = new HashMap<>();
 
   /**
    *
@@ -151,7 +152,7 @@ public class Gml2SWANConv implements INativeIDProvider
     m_listAllElements = m_calculationUnit.getElements2D();
 
     final String lStrCalculationUnitId = m_calculationUnit.getId();
-    m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
+    m_unitBoundaryConditions = new ArrayList<>();
     for( final IFlowRelationship relationship : flowrelationModel.getFlowRelationsShips() )
     {
       if( relationship instanceof IBoundaryCondition )
@@ -190,12 +191,8 @@ public class Gml2SWANConv implements INativeIDProvider
     return 0;
   }
 
-  /**
-   *
-   */
   public Map<GM_Position, Integer> writeSWANModel( final OutputStream outputStreamNodes, final OutputStream outputStreamElements, final OutputStream outputStreamBat, final OutputStream outputStreamPos )
   {
-
     try
     {
       // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
@@ -370,7 +367,7 @@ public class Gml2SWANConv implements INativeIDProvider
   private void writeSWANNodesModel( )
   {
     m_strCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    final List<GM_Triangle> lListResults = new ArrayList<GM_Triangle>();
+    final List<GM_Triangle> lListResults = new ArrayList<>();
     for( final Object object : m_listAllElements )
     {
       if( object instanceof IPolyElement )
@@ -380,7 +377,8 @@ public class Gml2SWANConv implements INativeIDProvider
 
         try
         {
-          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, "-YY" );
+          //          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, "-YY" ); //$NON-NLS-1$
+          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, false, "-YY" ); //$NON-NLS-1$
           lListResults.addAll( Arrays.asList( triangles ) );
         }
         catch( final Throwable e )
@@ -400,12 +398,12 @@ public class Gml2SWANConv implements INativeIDProvider
     m_formatterElements.format( "%d 3 0%n", pTriangles.size() ); //$NON-NLS-1$
     m_formatterNodes.format( "%d 2 0 1%n", countNodes( pTriangles ) ); //$NON-NLS-1$
 
-    m_mapNodesActPositions = new HashMap<GM_Position, Integer>();
+    m_mapNodesActPositions = new HashMap<>();
     for( final GM_Triangle lTriangle : pTriangles )
     {
       try
       {
-        final List<Integer> lListNodesAct = new ArrayList<Integer>();
+        final List<Integer> lListNodesAct = new ArrayList<>();
         lListNodesAct.clear();
         final GM_Position[] lAllPositionsOfTri = lTriangle.getExteriorRing();
         for( final GM_Position lGM_Position : lAllPositionsOfTri )
@@ -468,7 +466,7 @@ public class Gml2SWANConv implements INativeIDProvider
 
     if( m_listAdditionalOuputCoord != null )
     {
-      final Set<GM_Position> lSetPositions = new HashSet<GM_Position>();
+      final Set<GM_Position> lSetPositions = new HashSet<>();
       for( final Object element : m_listAdditionalOuputCoord )
       {
         final GM_Position lPosition = getPositionRoundedForSWANAdditional( (GM_Position) element );
@@ -489,20 +487,14 @@ public class Gml2SWANConv implements INativeIDProvider
     return 0;
   }
 
-  /**
-   *
-   */
   private GM_Position getPositionRoundedForSWANAdditional( final GM_Position exactPosition )
   {
     return GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( exactPosition.getX(), 2 ), NumberUtils.getRoundedToSignificant( exactPosition.getY(), 2 ) );
   }
 
-  /**
-   *
-   */
   private int countNodes( final List<GM_Triangle> triangles )
   {
-    final Set<GM_Position> lSetPositions = new HashSet<GM_Position>();
+    final Set<GM_Position> lSetPositions = new HashSet<>();
     for( final GM_Triangle lTri : triangles )
     {
       lSetPositions.addAll( Arrays.asList( lTri.getExteriorRing() ) );
@@ -550,8 +542,9 @@ public class Gml2SWANConv implements INativeIDProvider
     {
       return lBoolResult;
     }
-    final IFeatureBindingCollection lContainers = pNode.getContainers();
-    for( final Object lContainerObject : lContainers )
+
+    final IFeatureBindingCollection<IFENetItem> lContainers = pNode.getContainers();
+    for( final IFENetItem lContainerObject : lContainers )
     {
       if( lContainerObject instanceof IFE1D2DEdge )
       {
