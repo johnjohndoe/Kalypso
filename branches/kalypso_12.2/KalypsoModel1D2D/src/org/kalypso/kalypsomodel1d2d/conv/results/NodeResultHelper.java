@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,6 +54,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -66,11 +68,15 @@ import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -78,17 +84,17 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class NodeResultHelper
 {
-  public static final String AMOUNT_OF_CLASSES_PREFIX = "defaultamountclasses"; //$NON-NLS-1$ 
+  public static final String AMOUNT_OF_CLASSES_PREFIX = "defaultamountclasses"; //$NON-NLS-1$
 
-  public static final String VALUE_MAX_PREFIX = "defaultvaluemax"; //$NON-NLS-1$ 
+  public static final String VALUE_MAX_PREFIX = "defaultvaluemax"; //$NON-NLS-1$
 
-  public static final String VALUE_MIN_PREFIX = "defaultvaluemin"; //$NON-NLS-1$ 
+  public static final String VALUE_MIN_PREFIX = "defaultvaluemin"; //$NON-NLS-1$
 
-  public static final String COLOR_MAX_PREFIX = "defaultcolormax"; //$NON-NLS-1$ 
+  public static final String COLOR_MAX_PREFIX = "defaultcolormax"; //$NON-NLS-1$
 
-  public static final String COLOR_MIN_PREFIX = "defaultcolormin"; //$NON-NLS-1$ 
+  public static final String COLOR_MIN_PREFIX = "defaultcolormin"; //$NON-NLS-1$
 
-  public static final String COLOR_MAP_PREFIX = "stepcolormap"; //$NON-NLS-1$ 
+  public static final String COLOR_MAP_PREFIX = "stepcolormap"; //$NON-NLS-1$
 
   public static final String WAVE_PERIOD_TYPE = "WavePeriod"; //$NON-NLS-1$
 
@@ -120,9 +126,9 @@ public class NodeResultHelper
 
   public static final Double DEFAULT_AMOUNT_CLASSES = 100.;
 
-  public static final String NODESTYLE_TEMPLATE = "NODESTYLE_TEMPLATE"; //$NON-NLS-1$ 
+  public static final String NODESTYLE_TEMPLATE = "NODESTYLE_TEMPLATE"; //$NON-NLS-1$
 
-  public static final String VECTORFACTOR = "VECTORFACTOR"; //$NON-NLS-1$ 
+  public static final String VECTORFACTOR = "VECTORFACTOR"; //$NON-NLS-1$
 
   public static final String SIZE_NORM_NODE_FUNC = "SIZE_NORM"; //$NON-NLS-1$
 
@@ -130,7 +136,7 @@ public class NodeResultHelper
 
   /**
    * sets the mid-side node's water level and depth by interpolation between the corner nodes.
-   * 
+   *
    * @param nodeDown
    *          first node of the corresponding arc.
    * @param nodeUp
@@ -172,7 +178,7 @@ public class NodeResultHelper
   /**
    * interpolates the water level for the midside node by using the water levels of the corner nodes. The depth will be
    * calculated as well, using the interpolated water level.
-   * 
+   *
    * @param nodeDown
    *          first node of the arc on which the corner node lies.
    * @param nodeUp
@@ -238,7 +244,7 @@ public class NodeResultHelper
 
   /**
    * returns a simplified profile curve of a 1d-node, already cut at the intersection points with the water level
-   * 
+   *
    * @param nodeResult
    *          1d-node
    */
@@ -259,7 +265,7 @@ public class NodeResultHelper
     // final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
     // final GM_Curve curve = cutProfileAtWaterlevel( waterlevel, profil, crs );
     final GM_Curve curve = ProfilUtil.getLine( profil, crs );
-    GM_Curve transformCurve = (GM_Curve) curve.transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    final GM_Curve transformCurve = (GM_Curve) curve.transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     /* simplify the profile */
     final double epsThinning = 1.0;
     final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( transformCurve, epsThinning );
@@ -271,6 +277,53 @@ public class NodeResultHelper
 
     // TODO: add some gml file for the points
     // TODO: King
+  }
+
+  /**
+   * returns {@link IProfileFeature} of the nearest profile to the given profile in the given network
+   *
+   * @param profileNetwork
+   *          {@link IRiverProfileNetwork} final IRiverProfileNetwork profileNetwork,
+   */
+  private static IProfileFeature findNearestProfile( final IProfileFeature profile )
+  {
+    final Feature parent = profile.getOwner();
+    final IRiverProfileNetwork profileNetwork = (IRiverProfileNetwork) parent.getAdapter( IRiverProfileNetwork.class );
+
+    double stationDistance = Double.MAX_VALUE;
+    IProfileFeature nextProfile = null;
+
+    final IFeatureBindingCollection<IProfileFeature> profiles = profileNetwork.getProfiles();
+    for( final IProfileFeature actProfile : profiles )
+    {
+      if( actProfile.getStation() == profile.getStation() )
+      {
+        continue;
+      }
+      final double absDistanceStations = Math.abs( actProfile.getStation() - profile.getStation() );
+      if( stationDistance > absDistanceStations )
+      {
+        stationDistance = absDistanceStations;
+        nextProfile = actProfile;
+      }
+    }
+    return nextProfile;
+  }
+
+  /**
+   * returns {@link IProfileFeature} of profile from provided profiles list with the same parent(means the same profiles
+   * network) corresponding to given profile
+   */
+  private static IProfileFeature findProfileWithSameParent( final IProfileFeature profile, final List<IProfileFeature> profilesList )
+  {
+    for( final IProfileFeature actProfile : profilesList )
+    {
+      if( actProfile != null && !profile.getId().equals( actProfile.getId() ) && profile.getOwner().getId().equals( actProfile.getOwner().getId() ) )
+      {
+        return actProfile;
+      }
+    }
+    return null;
   }
 
   public static BigDecimal getCrossSectionArea( final ITeschkeFlowRelation teschkeRelation, final BigDecimal depth )
@@ -294,7 +347,7 @@ public class NodeResultHelper
   /**
    * gets the x-coordinate of the zero point of a line defined by y1 (>0), y2 (<0) and the difference of the
    * x-coordinates (x2-x1) = dx12.
-   * 
+   *
    * @param dx12
    *          distance between x1 and x2.
    * @param y1
@@ -461,6 +514,150 @@ public class NodeResultHelper
       mapStyle.put( key.toLowerCase(), value );
       m_styleSettings.put( stepDate.toLowerCase(), mapStep );
     }
+  }
+
+  /**
+   * creating list of simplified curves as "normal" segments to given profiles, this segments are placed "outside"
+   * corresponding to 1d-junctions based on this profiles
+   *
+   */
+  public static List<GM_CurveSegment> createOuterNormalSegmentsToJunctionsProfiles( final List<IProfileFeature> profilesList, final String crs )
+  {
+    final List<GM_CurveSegment> listRes = new ArrayList<GM_CurveSegment>();
+    final List<IProfileFeature> profilesDone = new ArrayList<IProfileFeature>();
+    for( final IProfileFeature profile : profilesList )
+    {
+      try
+      {
+        if( profilesDone.contains( profile ) )
+        {
+          continue;
+        }
+
+        final GM_Point profileCentroid = profile.getLine().getCentroid();
+
+        final IProfileFeature profileOnSameParent = findProfileWithSameParent( profile, profilesList );
+
+        IProfileFeature nextProfile = null;
+        final List<GM_Position> points = new ArrayList<GM_Position>();
+
+        if( profileOnSameParent != null )
+        {
+          final GM_Point nearProfileCentroid = profileOnSameParent.getLine().getCentroid();
+
+          final GM_Point firstOuter = getPointReflection( nearProfileCentroid, profileCentroid );
+
+          points.clear();
+          points.add( nearProfileCentroid.getPosition() );
+          points.add( firstOuter.getCentroid().getPosition() );
+          GM_CurveSegment additionalSegment = GeometryFactory.createGM_CurveSegment( points.toArray( new GM_Position[points.size()] ), crs );
+          listRes.add( additionalSegment );
+
+          final GM_Point secondOuter = getPointReflection( profileCentroid, nearProfileCentroid );
+
+          points.clear();
+          points.add( profileCentroid.getCentroid().getPosition() );
+          points.add( secondOuter.getCentroid().getPosition() );
+          additionalSegment = GeometryFactory.createGM_CurveSegment( points.toArray( new GM_Position[points.size()] ), crs );
+
+          listRes.add( additionalSegment );
+          profilesDone.add( profileOnSameParent );
+        }
+        else
+        {
+          nextProfile = findNearestProfile( profile );
+          final GM_Point nearProfileCentroid = nextProfile.getLine().getCentroid();
+
+          final GM_Point firstOuter = profile.getLine().getCentroid();
+          points.clear();
+          points.add( nearProfileCentroid.getPosition() );
+          points.add( firstOuter.getCentroid().getPosition() );
+          final GM_CurveSegment additionalSegment = GeometryFactory.createGM_CurveSegment( points.toArray( new GM_Position[points.size()] ), crs );
+          listRes.add( additionalSegment );
+
+        }
+
+        profilesDone.add( profile );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+
+    }
+    return listRes;
+  }
+
+  /**
+   * 180 deg rotated; inversion of point b in respect to point a
+   *
+   * @param a
+   *          to rotate on
+   * @param b
+   *          will be rotated
+   * @return new point
+   */
+  private static GM_Point getPointReflection( final GM_Point a, final GM_Point b )
+  {
+    return GeometryFactory.createGM_Point( 2 * a.getX() - b.getX(), 2 * a.getY() - b.getY(), 2 * a.getZ() - b.getZ(), a.getCoordinateSystem() );
+  }
+
+  /**
+   * checks if given curve segments interpreted as straight lines are intersecting in 2d(their orthogonal projections on
+   * XY space)
+   */
+  public static boolean intersects2d( final GM_CurveSegment a, final GM_CurveSegment b )
+  {
+    final double v1 = (b.getEndPoint().getX() - b.getStartPoint().getX()) * (a.getStartPoint().getY() - b.getStartPoint().getY()) - (b.getEndPoint().getY() - b.getStartPoint().getY())
+        * (a.getStartPoint().getX() - b.getStartPoint().getX());
+    final double v2 = (b.getEndPoint().getX() - b.getStartPoint().getX()) * (a.getEndPoint().getY() - b.getStartPoint().getY()) - (b.getEndPoint().getY() - b.getStartPoint().getY())
+        * (a.getEndPoint().getX() - b.getStartPoint().getX());
+    final double v3 = (a.getEndPoint().getX() - a.getStartPoint().getX()) * (b.getStartPoint().getY() - a.getStartPoint().getY()) - (a.getEndPoint().getY() - a.getStartPoint().getY())
+        * (b.getStartPoint().getX() - a.getStartPoint().getX());
+    final double v4 = (a.getEndPoint().getX() - a.getStartPoint().getX()) * (b.getEndPoint().getY() - a.getStartPoint().getY()) - (a.getEndPoint().getY() - a.getStartPoint().getY())
+        * (b.getEndPoint().getX() - a.getStartPoint().getX());
+    return ((v1 * v2 <= 0) && (v3 * v4 <= 0));
+  }
+
+  /**
+   * checks if all given points are placed on given curve,
+   *
+   * @param listPoses
+   *          list of points {@link GM_Position} to check
+   *
+   * @param curve
+   *          {@link GM_Curve} should be checked for containing given points
+   *
+   * @param simpleCheck
+   *          if set true, only end and start points of the curve will be checked else the {@link GM_Object} contains
+   *          method will be called
+   */
+  public static boolean checkPointsOnCurve( final List<GM_Position> listPoses, final GM_Curve curve, final boolean simpleCheck )
+  {
+    for( final GM_Position actPos : listPoses )
+    {
+      try
+      {
+        if( !curve.getAsLineString().getStartPoint().getPosition().equals( actPos ) && !curve.getAsLineString().getEndPoint().getPosition().equals( actPos ) )
+        {
+          if( !simpleCheck )
+          {
+            if( curve.contains( actPos ) )
+            {
+              continue;
+            }
+          }
+          return false;
+        }
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+        return false;
+      }
+
+    }
+    return true;
   }
 
 }

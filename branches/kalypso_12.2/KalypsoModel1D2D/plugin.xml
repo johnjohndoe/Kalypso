@@ -576,7 +576,8 @@
         </visibleWhen>
       </command>
     </menuContribution>
-
+    
+ 	
 	<!-- Sub-Menues -->
     <menuContribution locationURI="menu:org.kalypso.ui.view.mapView.createParameterMenu">
       <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation" style="radio"/>
@@ -593,6 +594,23 @@
       <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.Triangulate" style="radio" 
         label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.Triangulate.label" tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.Triangulate.tooltip" />        
     </menuContribution>
+  </extension>
+  
+  <extension
+           point="org.kalypso.ui.exportWizards">
+        <category
+              id="profileExportWizards"
+              name="%category.name.2"
+              parentCategory="exportWizards">
+        </category>
+        <wizard
+              category="exportWizards/shapeExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard"
+              icon="icons/elcl16/exportProfilLine.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard1D2D"
+              name="%org.kalypso.model1d2d.exportProfiles.name">
+           <description>sjam</description>
+        </wizard>
   </extension>
 
   <extension point="org.eclipse.core.expressions.definitions">
