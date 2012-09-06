@@ -33,33 +33,21 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.data.EwawiPro;
-import org.kalypso.model.wspm.ewawi.data.EwawiProLine;
 import org.kalypso.model.wspm.ewawi.data.EwawiSta;
-import org.kalypso.model.wspm.ewawi.data.EwawiStaLine;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiObjectart;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiProfilart;
-import org.kalypso.model.wspm.ewawi.data.enums.EwawiPunktart;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfile;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
-import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePoint;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.shape.dbf.DBaseException;
-import org.kalypso.shape.geometry.SHPPoint;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -109,6 +97,16 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
 
       /* Monitor. */
       monitor.worked( 200 );
+      monitor.subTask( "Creating point classes..." );
+
+      /* Update the classifications. */
+      final EwawiClassificationUpdater classificationUpdater = new EwawiClassificationUpdater( m_targetProject );
+      classificationUpdater.updateClassification();
+
+      // TODO
+
+      /* Monitor. */
+      monitor.worked( 100 );
       monitor.subTask( "Creating profiles..." );
 
       /* Get the ewawi data object. */
@@ -126,7 +124,7 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
         createNewProfile( gewShape, staIndex, profile );
 
         /* Monitor. */
-        monitor.worked( 700 / profiles.length );
+        monitor.worked( 600 / profiles.length );
       }
 
       /* Monitor. */
@@ -190,7 +188,12 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
         image.setName( FilenameUtils.removeExtension( foto ) );
       }
 
-      createProfilePoints( staIndex, basePart, profileFeature );
+      final EwawiProfilePointCreator pointCreator = new EwawiProfilePointCreator( staIndex, basePart, profileFeature );
+      pointCreator.createProfilePoints();
+
+      /* HINT: The profile points must be created already. */
+      final EwawiProfilePointMarkerCreator markerCreator = new EwawiProfilePointMarkerCreator( profileFeature );
+      markerCreator.createProfilePointMarker();
 
       return profileFeature;
     }
@@ -230,13 +233,6 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       final String zusatzText = String.format( "Zusatzkennzahl: %d%n", zusatz );
       description.append( zusatzText );
     }
-
-    // final EwawiPunktart punktArt = basePart.getPunktArt( staIndex );
-    // if( punktArt != null )
-    // {
-    // final String punktArtText = String.format( "Punktart: %d, %s%n", punktArt.getKey(), punktArt.getLabel() );
-    // description.append( punktArtText );
-    // }
 
     final Date validity = basePart.getValidity( staIndex );
     if( validity != null )
@@ -289,111 +285,6 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       return null;
 
     return (GM_Curve)gewShape.getValue( gewKennzahl, m_data.getRiverShapeData().getRiverGeometryField() );
-  }
-
-  private void createProfilePoints( final EwawiSta staIndex, final EwawiProfilePart basePart, final IProfileFeature profileFeature ) throws EwawiException
-  {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    final IComponent idComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_ID );
-    final IComponent commentComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_COMMENT );
-    final IComponent rechtswertComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final IComponent hochwertComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final IComponent breiteComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final IComponent hoeheComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    // TODO CODE
-
-    final IProfil profil = profileFeature.getProfil();
-    profil.addPointProperty( idComponent );
-    profil.addPointProperty( commentComponent );
-    profil.addPointProperty( rechtswertComponent );
-    profil.addPointProperty( hochwertComponent );
-    profil.addPointProperty( breiteComponent );
-    profil.addPointProperty( hoeheComponent );
-
-    final EwawiProLine[] proLines = basePart.getProLines();
-    for( final EwawiProLine proLine : proLines )
-    {
-      final EwawiProfilePoint profilePoint = createProfilePoint( staIndex, proLine );
-      final SHPPoint shape = profilePoint.getShape();
-
-      final String id = String.format( "%d", proLine.getPunktNummer() );
-      final String comment = getRecordDescription( proLine );
-      final double rechtswert = shape.getX();
-      final double hochwert = shape.getY();
-      final double breite = profilePoint.getBreite().doubleValue();
-      final double hoehe = profilePoint.getHoehe().doubleValue();
-
-      final IProfileRecord record = profil.createProfilPoint();
-      record.setValue( record.indexOfProperty( idComponent ), id );
-      record.setValue( record.indexOfProperty( commentComponent ), comment );
-      record.setValue( record.indexOfProperty( rechtswertComponent ), rechtswert );
-      record.setValue( record.indexOfProperty( hochwertComponent ), hochwert );
-      record.setValue( record.indexOfProperty( breiteComponent ), breite );
-      record.setValue( record.indexOfProperty( hoeheComponent ), hoehe );
-
-      profil.addPoint( record );
-    }
-  }
-
-  private EwawiProfilePoint createProfilePoint( final EwawiSta staIndex, final EwawiProLine proLine ) throws EwawiException
-  {
-    final EwawiStaLine leftFixPoint = staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._1, proLine.getGewKennzahl(), proLine.getStation() );
-    final EwawiStaLine rightFixPoint = staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._2, proLine.getGewKennzahl(), proLine.getStation() );
-    if( leftFixPoint == null || rightFixPoint == null )
-      throw new EwawiException( "Einer der Festpunkte wurde nicht gefunden." );
-
-    return new EwawiProfilePoint( leftFixPoint, rightFixPoint, proLine );
-  }
-
-  private String getRecordDescription( final EwawiProLine proLine )
-  {
-    final StringBuilder description = new StringBuilder();
-
-    // final EwawiObjectart objectArt = proLine.getObjectArt();
-    // if( objectArt != null )
-    // {
-    // final String objectArtText = String.format( "Objektart: %d, %s%n", objectArt.getKey(), objectArt.getLabel() );
-    // description.append( objectArtText );
-    // }
-
-    // final Short zusatz = proLine.getZusatz();
-    // if( zusatz != null )
-    // {
-    // final String zusatzText = String.format( "Zusatzkennzahl: %d%n", zusatz );
-    // description.append( zusatzText );
-    // }
-
-    // TODO Code
-    final EwawiPunktart punktArt = proLine.getPunktArt();
-    if( punktArt != null )
-    {
-      final String punktArtText = String.format( "Punktart: %d, %s%n", punktArt.getKey(), punktArt.getLabel() );
-      description.append( punktArtText );
-    }
-
-    // final Date aufnahmeDatum = proLine.getAufnahmeDatum();
-    // if( aufnahmeDatum != null )
-    // {
-    // final DateFormat df = DateFormat.getDateInstance( DateFormat.MEDIUM );
-    // final String aufnahmeDatumText = String.format( "Aufnahmedatum: %s%n", df.format( aufnahmeDatum ) );
-    // description.append( aufnahmeDatumText );
-    // }
-
-    // final EwawiHorizont horizont = proLine.getHorizont();
-    // if( horizont != null )
-    // {
-    // final String horizontText = String.format( "Horizont: %d, %s%n", horizont.getKey(), horizont.getLabel() );
-    // description.append( horizontText );
-    // }
-
-    final String comment = proLine.getComment();
-    if( comment != null && !comment.equals( "-" ) )
-    {
-      final String commentText = String.format( "%s", comment );
-      description.append( commentText );
-    }
-
-    return description.toString();
   }
 
   private void fireChangeEvents( )
