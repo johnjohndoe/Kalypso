@@ -186,7 +186,7 @@ public class RoughnessAssignService extends Job
               correctionParameterDP = check;
           }
 
-          if( roughnessClsID != null )
+          if( roughnessClsID == null )
           {
             final IRoughnessCls roughnessCls = roughnessPolygon.getRoughnessCls();
             if( roughnessCls != null )
