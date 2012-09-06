@@ -43,11 +43,8 @@ package org.kalypso.model.wspm.tuhh.core.results;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.kalypso.model.wspm.core.gml.WspmFixation;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -74,17 +71,6 @@ public class WspmResultReachNode extends AbstractWspmResultNode
       final IWspmResultNode node = WspmResultFactory.createCalculationNode( this, calculation );
       if( node != null )
         results.add( node );
-    }
-
-    final WspmWaterBody waterBody = m_reach.getWaterBody();
-    if( waterBody != null )
-    {
-      final IFeatureBindingCollection<WspmFixation> wspFixations = waterBody.getWspFixations();
-      for( final WspmFixation fixation : wspFixations )
-      {
-        final WspmResultFixationNode node = new WspmResultFixationNode( this, fixation );
-        results.add( node );
-      }
     }
 
     return results.toArray( new IWspmResultNode[results.size()] );
