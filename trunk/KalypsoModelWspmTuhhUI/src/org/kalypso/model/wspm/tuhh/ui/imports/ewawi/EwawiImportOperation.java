@@ -103,8 +103,6 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       final EwawiClassificationUpdater classificationUpdater = new EwawiClassificationUpdater( m_targetProject );
       classificationUpdater.updateClassification();
 
-      // TODO
-
       /* Monitor. */
       monitor.worked( 100 );
       monitor.subTask( "Creating profiles..." );
@@ -124,10 +122,18 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
         createNewProfile( gewShape, staIndex, profile );
 
         /* Monitor. */
-        monitor.worked( 600 / profiles.length );
+        monitor.worked( 500 / profiles.length );
       }
 
       /* Monitor. */
+      monitor.subTask( "Creating water level fixations..." );
+
+      /* Update the water level fixation. */
+      final EwawiWaterLevelFixationUpdater waterLevelFixationUpdater = new EwawiWaterLevelFixationUpdater( m_targetProject, proIndex );
+      waterLevelFixationUpdater.updateWaterLevelFixation();
+
+      /* Monitor. */
+      monitor.worked( 100 );
       monitor.subTask( "Fireing events..." );
 
       /* Fire change events. */
