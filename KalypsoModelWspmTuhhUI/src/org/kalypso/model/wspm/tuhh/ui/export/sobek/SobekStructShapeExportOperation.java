@@ -114,6 +114,13 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
     if( minPoint == null )
       return;
 
+
+    if( minPoint == null )
+    {
+      // empty profile, ignore
+      return;
+    }
+
     final String srs = profileFeature.getSrsName();
     final GM_Point lowPoint = WspmGeometryUtilities.createLocation( profil, minPoint, srs );
 
