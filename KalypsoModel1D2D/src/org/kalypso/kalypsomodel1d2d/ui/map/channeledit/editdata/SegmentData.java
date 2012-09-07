@@ -330,6 +330,12 @@ class SegmentData implements ISegmentData
     if( Objects.isNull( leftLine, topLine, rightLine, bottomLine ) )
       return null;
 
+    if( topLine.getNumPoints() != bottomLine.getNumPoints() )
+      return null;
+
+    if( leftLine.getNumPoints() != rightLine.getNumPoints() )
+      return null;
+
     final QuadMesher mesher = new QuadMesher();
     // TODO: validate mesh and also keep mesh status -> paint mesh accordingly
     mesher.createMesh( srsName, leftLine, topLine, rightLine, bottomLine );
@@ -349,7 +355,7 @@ class SegmentData implements ISegmentData
   }
 
   @Override
-  public boolean isUserChanged( )
+  public boolean isBanksUserChanged( )
   {
     return m_leftBank.isUserChanged() || m_rightBank.isUserChanged();
   }
@@ -365,14 +371,17 @@ class SegmentData implements ISegmentData
     updateMesh();
   }
 
+  // FIXME: instead use current segmented line and change number of segments, so user edits do not get lost
   private BankData updateNumberOfSegments( final BankData bank, final int segments )
   {
     final LineString originalGeometry = bank.getOriginalGeometry();
     final LineString croppedGeometry = bank.getCroppedOriginalGeometry();
 
-    final LineString segmentedGeometry = ChannelEditUtil.intersectLineString( croppedGeometry, segments );
+    final LineString oldSegmentedGeometry = bank.getSegmented();
 
-    return new BankData( this, originalGeometry, croppedGeometry, segmentedGeometry, false );
+    final LineString segmentedGeometry = ChannelEditUtil.intersectLineString( oldSegmentedGeometry, segments );
+
+    return new BankData( this, originalGeometry, croppedGeometry, segmentedGeometry, bank.isUserChanged() );
   }
 
   @Override

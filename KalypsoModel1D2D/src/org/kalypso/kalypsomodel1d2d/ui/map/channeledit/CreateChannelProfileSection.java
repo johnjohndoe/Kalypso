@@ -76,11 +76,16 @@ import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.dialog.compare.ProfileChartComposite;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
+
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * @author Gernot Belger
@@ -98,9 +103,13 @@ public class CreateChannelProfileSection extends Composite
 
   private Composite m_toolbarPanel;
 
+  private final CreateChannelData m_data;
+
   public CreateChannelProfileSection( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding )
   {
     super( parent, SWT.NONE );
+
+    m_data = data;
 
     toolkit.adapt( this );
 
@@ -243,27 +252,19 @@ public class CreateChannelProfileSection extends Composite
   {
     final IProfileFeature feature = profileData == null ? null : profileData.getFeature();
     final IProfil profile = feature == null ? null : feature.getProfil();
+    final IProfil segmentedProfile = profileData == null ? null : profileData.getProfIntersProfile();
 
     m_profilComposite.setProfil( profile, null );
 
-    // FIXME: set segmented profile to overlay layer
-    // final ILayerManager mngr = chartModel.getLayerManager();
-    // final IChartLayer overlayLayer = mngr.findLayer( IWspmOverlayConstants.LAYER_OVERLAY );
-    //
-    // if( overlayLayer instanceof ProfilOverlayLayer )
-    // {
-    // if( currentSegment != null )
-    // {
-    // final IProfil layerData;
-    // if( m_data.getCurrentProfile() == PROF.UP )
-    // layerData = currentSegment.getProfUpIntersProfile();
-    // else
-    // layerData = currentSegment.getProfDownIntersProfile();
-    //
-    // ((ProfilOverlayLayer) overlayLayer).setProfile( layerData, m_data, m_widget );
-    // m_widget.getMapPanel().repaintMap();
-    // }
-    // }
+    /* set segmented profile to overlay */
+    final IChartModel chartModel = m_profilComposite.getChartModel();
+    final ILayerManager mngr = chartModel.getLayerManager();
+    final IChartLayer overlayLayer = mngr.findLayer( ProfilOverlayLayer.LAYER_OVERLAY );
+
+    if( overlayLayer instanceof ProfilOverlayLayer )
+    {
+      ((ProfilOverlayLayer)overlayLayer).setProfile( segmentedProfile, m_data );
+    }
 
     if( isDisposed() )
       return;

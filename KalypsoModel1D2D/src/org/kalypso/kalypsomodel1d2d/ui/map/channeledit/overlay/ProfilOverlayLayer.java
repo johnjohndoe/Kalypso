@@ -48,7 +48,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -81,9 +80,9 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class ProfilOverlayLayer extends PointsLineLayer
 {
-  CreateMainChannelWidget m_widget = null;
+//  CreateMainChannelWidget m_widget = null;
 
-  static String LAYER_OVERLAY = "org.kalypso.model.wspm.tuhh.ui.chart.overlay.LAYER_OVERLAY"; //$NON-NLS-1$
+  public static String LAYER_OVERLAY = "org.kalypso.model.wspm.tuhh.ui.chart.overlay.LAYER_OVERLAY"; //$NON-NLS-1$
 
   public static String LAYER_ID = "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay"; //$NON-NLS-1$
 
@@ -111,7 +110,6 @@ public class ProfilOverlayLayer extends PointsLineLayer
     getPointStyle().getStroke().setColor( COLOR_LINE );
     getLineStyleHover().setColor( COLOR_LINE );
     getLineStyleHover().setAlpha( getLineStyleHover().getAlpha() * 4 );
-
   }
 
   @Override
@@ -321,7 +319,6 @@ public class ProfilOverlayLayer extends PointsLineLayer
     {
       return e.getLocalizedMessage();
     }
-
   }
 
   @Override
@@ -362,11 +359,11 @@ public class ProfilOverlayLayer extends PointsLineLayer
     // pfl.paint( gc );
   }
 
-  public void setProfile( final IProfil profile, final CreateChannelData data, final CreateMainChannelWidget widget )
+  public void setProfile( final IProfil profile, final CreateChannelData data )
   {
     super.setProfil( profile );
+
     m_data = data;
-    m_widget = widget;
 
     if( profile != null )
     {

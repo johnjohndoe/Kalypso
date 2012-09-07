@@ -55,7 +55,24 @@ public class UpdateEditDataOperation implements ICoreRunnableWithProgress
 
   public boolean hasDataLoss( )
   {
-    // TODO Auto-generated method stub
+    // TODO: better test
+
+    /* we simply test if any of the elements has user edited data */
+    final IProfileData[] profiles = m_oldData.getProfiles();
+    for( final IProfileData data : profiles )
+    {
+      if( data.isUserChaned() )
+        return true;
+
+      final ISegmentData downSegment = data.getDownSegment();
+      if( downSegment != null && downSegment.isBanksUserChanged() )
+        return true;
+
+      final ISegmentData upSegment = data.getUpSegment();
+      if( upSegment != null && upSegment.isBanksUserChanged() )
+        return true;
+    }
+
     return false;
   }
 }
