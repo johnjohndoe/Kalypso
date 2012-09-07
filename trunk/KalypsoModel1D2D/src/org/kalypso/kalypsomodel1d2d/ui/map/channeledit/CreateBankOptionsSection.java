@@ -46,6 +46,9 @@ import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -84,13 +87,26 @@ public class CreateBankOptionsSection extends Composite
     final String labelUp = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.6" ); //$NON-NLS-1$
     final String tooltipUp = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.7" ); //$NON-NLS-1$
 
-    createNumberOfSegmentsSpinner( toolkit, parent, data, binding, spinnerWidth, labelDown, tooltipDown, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_ENABLED_DOWN, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_DOWN, SWT.COLOR_CYAN );
-    createNumberOfSegmentsSpinner( toolkit, parent, data, binding, spinnerWidth, labelUp, tooltipUp, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_ENABLED_UP, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_UP, SWT.COLOR_MAGENTA );
+    final Color colorCyan = new Color( parent.getDisplay(), 128, 255, 255 );
+    final Color colorMagenta = new Color( parent.getDisplay(), 255, 128, 255 );
+
+    createNumberOfSegmentsSpinner( toolkit, parent, data, binding, spinnerWidth, labelDown, tooltipDown, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_ENABLED_DOWN, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_DOWN, colorCyan );
+    createNumberOfSegmentsSpinner( toolkit, parent, data, binding, spinnerWidth, labelUp, tooltipUp, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_ENABLED_UP, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_UP, colorMagenta );
 
     createBankEditToggle( toolkit, parent, data, binding );
+
+    parent.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        colorCyan.dispose();
+        colorMagenta.dispose();
+      }
+    } );
   }
 
-  private void createNumberOfSegmentsSpinner( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding, final int spinnerWidth, final String label, final String tooltip, final String enabledProperty, final String numberProperty, final int systemColor )
+  private void createNumberOfSegmentsSpinner( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding, final int spinnerWidth, final String label, final String tooltip, final String enabledProperty, final String numberProperty, final Color background )
   {
     final Label labelNumIntersSegment = toolkit.createLabel( parent, label );
     labelNumIntersSegment.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -100,7 +116,7 @@ public class CreateBankOptionsSection extends Composite
     final Spinner spinnerNumProfileSegments = new Spinner( parent, SWT.BORDER );
     toolkit.adapt( spinnerNumProfileSegments );
 
-    spinnerNumProfileSegments.setBackground( parent.getDisplay().getSystemColor( systemColor ) );
+    spinnerNumProfileSegments.setBackground( background );
 
     final GridData gridDataNumProfileSegmentsSpinner = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
     gridDataNumProfileSegmentsSpinner.widthHint = spinnerWidth;
@@ -114,6 +130,7 @@ public class CreateBankOptionsSection extends Composite
     binding.bindValue( targetNumSegmentsEnabled, modelProfileEditingEnabled );
 
     final ISWTObservableValue targetNumSegmentsValue = SWTObservables.observeSelection( spinnerNumProfileSegments );
+
     final IObservableValue modelNumProfileSegments = BeansObservables.observeValue( data, numberProperty );
     binding.bindValue( targetNumSegmentsValue, modelNumProfileSegments );
   }

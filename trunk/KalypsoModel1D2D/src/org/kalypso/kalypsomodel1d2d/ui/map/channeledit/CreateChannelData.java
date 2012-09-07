@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
@@ -159,6 +158,8 @@ public class CreateChannelData extends AbstractModelObject
   private IProfileData m_activeProfile;
 
   private boolean m_profileAutoZoom = false;
+
+  private Shell m_shell;
 
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
@@ -433,88 +434,11 @@ public class CreateChannelData extends AbstractModelObject
 
     final ChannelEditProfileData newData = new ChannelEditProfileData( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), oldData.getBanklines(), numberBankSegments );
 
+    /* reset widget, because some of them keep stale data */
+    setDelegate( null );
+
     startUpdateEditData( newData );
   }
-
-  // /**
-  // * returns the {@link GM_Position}s of already intersected banklines for aall {@link SegmentData}s.<BR>
-  // * The start and end points of the banklines will be neglected.
-  // */
-  // public GM_Position[] getAllSegmentPosses( )
-  // {
-  // final List<GM_Position> posList = new ArrayList<GM_Position>();
-  //
-  // for( final SegmentData segment : m_segmentList )
-  // {
-  // final List<GM_Position> segmentPosses = getIntersectedBanklinePossesForSegment( segment );
-  //
-  // posList.addAll( segmentPosses );
-  // }
-  // return posList.toArray( new GM_Position[posList.size()] );
-  // }
-
-  // /**
-  // * returns the {@link GM_Position}s of already intersected banklines for a given {@link SegmentData}.<BR>
-  // * The start and end points of the banklines will be neglected.
-  // */
-  // public List<GM_Position> getIntersectedBanklinePossesForSegment( final SegmentData segment )
-  // {
-  // final List<GM_Position> positionList = new ArrayList<GM_Position>();
-  //
-  // final Coordinate[] bankLeftInters = segment.getBankLeftInters().getCoordinates();
-  // final Coordinate[] bankRightInters = segment.getBankRightInters().getCoordinates();
-  // for( int i = 1; i < bankRightInters.length - 1; i++ )
-  // {
-  // final GM_Position pos = JTSAdapter.wrap( bankRightInters[i] );
-  // m_segmentMap.put( pos, segment );
-  // positionList.add( pos );
-  // }
-  //
-  // for( int i = 1; i < bankLeftInters.length - 1; i++ )
-  // {
-  // final GM_Position pos = JTSAdapter.wrap( bankLeftInters[i] );
-  // m_segmentMap.put( pos, segment );
-  // positionList.add( pos );
-  // }
-  //
-  // return positionList;
-  // }
-
-  // /**
-  // * returns the {@link SegmentData} at a given {@link GM_Position}
-  // */
-  // public SegmentData getSegmentAtPosition( final GM_Position position )
-  // {
-  // return m_segmentMap.get( position );
-  // }
-
-//  /**
-//   * returns the two original bankline curves as {@link GM_Position}s
-//   */
-//  public GM_Position[] getBanklinePoses( final SIDE m_side )
-//  {
-//    final GM_Curve bank = getBanklineForSide( m_side );
-//
-//    final List<GM_Position> posList = new ArrayList<>();
-//
-//    try
-//    {
-//      if( bank != null )
-//      {
-//
-//        final GM_Position[] leftPositions = bank.getAsLineString().getPositions();
-//        for( final GM_Position position : leftPositions )
-//          posList.add( position );
-//      }
-//    }
-//    catch( final GM_Exception e )
-//    {
-//      // TODO Auto-generated catch block
-//      e.printStackTrace();
-//    }
-//
-//    return posList.toArray( new GM_Position[posList.size()] );
-//  }
 
   public CommandableWorkspace getDiscretisationWorkspace( )
   {
@@ -685,14 +609,13 @@ public class CreateChannelData extends AbstractModelObject
 
     setEditData( newData, oldActiveProfile, newActiveProfile );
 
-    final Display display = PlatformUI.getWorkbench().getDisplay();
+    final Shell shell = m_shell;
+    final Display display = shell.getDisplay();
     display.asyncExec( new Runnable()
     {
       @Override
       public void run( )
       {
-        final Shell shell = display.getActiveShell();
-
         final IStatus status = ProgressUtilities.busyCursorWhile( operation );
         if( !status.isOK() )
           StatusDialog.open( shell, status, STR_DIALOG_TITLE );
@@ -700,8 +623,7 @@ public class CreateChannelData extends AbstractModelObject
         if( operation.hasDataLoss() )
         {
           /* ask user to apply anyways */
-          final boolean shouldRollback = askForUserEdits( shell );
-          if( shouldRollback )
+          if( !askForUserEdits() )
           {
             setEditData( oldData, newActiveProfile, oldActiveProfile );
             /* trigger map repaint */
@@ -719,9 +641,9 @@ public class CreateChannelData extends AbstractModelObject
     } );
   }
 
-  protected boolean askForUserEdits( final Shell shell )
+  protected boolean askForUserEdits( )
   {
-    return !MessageDialog.openQuestion( shell, STR_DIALOG_TITLE, "Vom Benutzer editierte Daten gehen verloren. Fortfahren?" );
+    return MessageDialog.openQuestion( m_shell, STR_DIALOG_TITLE, "Vom Benutzer editierte Daten gehen verloren. Fortfahren?" );
   }
 
   void setEditData( final ChannelEditProfileData newData, final IProfileData oldActiveProfile, final IProfileData newActiveProfile )
@@ -784,17 +706,49 @@ public class CreateChannelData extends AbstractModelObject
     if( oldNumberOfSegments == segments )
       return;
 
-    // REMARK: already fire change, so rollback will later be able to reset the ui
-    firePropertyChange( propertySegments, oldNumberOfSegments, segments );
+    // REMARK: reset delegate, because this operation makes the data of the bank line edit widget stale
+    setDelegate( null );
 
-    if( segment.isUserChanged() )
+    // FIXME: ask users what they want:
+    // - changing the already segmented line is nice, but a bit unpredictable as the operation is not reversibel
+
+    /* keep old geometries for rollback */
+//    final LineString segmentedBankLeft = segment.getBankLeft().getSegmented();
+//    final LineString segmentedBankRight = segment.getBankRight().getSegmented();
+
+    // REMARK: needs to do the rest in an async call, because else the ui components will not update (during its own update)
+    final Runnable runnable2 = new Runnable()
     {
-      askForUserEdits( PlatformUI.getWorkbench().getDisplay().getActiveShell() );
+      @Override
+      public void run( )
+      {
+        // final boolean isUserChanged = segment.isUserChanged();
 
-      firePropertyChange( propertySegments, segments, oldNumberOfSegments );
-    }
+        /* really update, else rolback will fail */
+        segment.updateNumberOfSegments( segments );
 
-    segment.updateNumberOfSegments( segments );
-    firePropertyChange( propertySegments, oldNumberOfSegments, getNumberBankSegments() );
+        // REMARK: already fire change, so rollback will later be able to reset the ui
+        firePropertyChange( propertySegments, oldNumberOfSegments, segments );
+
+        // if( isUserChanged )
+//        {
+//          if( !askForUserEdits() )
+//          {
+//            segment.updateSegmentedGeometry( segment.getBankLeft(), segmentedBankLeft );
+//            segment.updateSegmentedGeometry( segment.getBankRight(), segmentedBankRight );
+//
+//            firePropertyChange( propertySegments, segments, oldNumberOfSegments );
+//            return;
+//          }
+//        }
+      }
+    };
+
+    m_shell.getDisplay().asyncExec( runnable2 );
+  }
+
+  public void setShell( final Shell shell )
+  {
+    m_shell = shell;
   }
 }

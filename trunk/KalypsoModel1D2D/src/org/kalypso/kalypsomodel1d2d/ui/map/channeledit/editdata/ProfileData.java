@@ -86,6 +86,12 @@ class ProfileData implements IProfileData
   }
 
   @Override
+  public boolean isUserChaned( )
+  {
+    return false;
+  }
+
+  @Override
   public IProfileFeature getFeature( )
   {
     return m_feature;

@@ -56,7 +56,21 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
+ * TODO:
+ * <ul>
+ * <li>show z value in tooltip</li>
+ * <li>use z values of bank lines if they exist</li>
+ * <li>FIXME editing segmented profile should change mesh</li>
+ * <li>FIXME: elevations of mesh and elevation corretion</li>
+ * <li>FIXME: profile view: set initial tool to profile edit</li>
+ * <li>FIXME: consisting naming of all classes</li>
+ * <li>discuss with Niloufar/Thoamas</li>
+ * <li>general cleaup</li>
+ * <li>decide naming of intersection points/segmentation</li>
+ * </ul>
+ *
  * @author Thomas Jung
+ * @author Gernot Belger
  */
 public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements IWidgetWithOptions
 {
@@ -79,6 +93,10 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
     resetData();
 
     m_composite = new CreateMainChannelComposite( parent, toolkit, SWT.NONE, m_data );
+
+    // REMARK: set specific shell to data, else model dialogs will be system model instead of model to this shell
+    m_data.setShell( parent.getShell() );
+
     return m_composite;
   }
 

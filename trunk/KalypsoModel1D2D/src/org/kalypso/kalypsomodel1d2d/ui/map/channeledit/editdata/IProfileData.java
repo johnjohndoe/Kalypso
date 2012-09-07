@@ -42,4 +42,6 @@ public interface IProfileData
   IProfil getProfIntersProfile( );
 
   GM_Envelope getSegmentMapExtent( String coordinatesSystem ) throws GeometryException;
+
+  boolean isUserChaned( );
 }

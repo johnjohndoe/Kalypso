@@ -43,7 +43,7 @@ public interface ISegmentData
 
   IProfileData getProfileDown( );
 
-  boolean isUserChanged( );
+  boolean isBanksUserChanged( );
 
   void updateNumberOfSegments( int segments );
 

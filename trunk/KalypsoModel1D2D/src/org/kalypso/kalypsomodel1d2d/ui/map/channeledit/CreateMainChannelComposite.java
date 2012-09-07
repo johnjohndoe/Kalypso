@@ -102,7 +102,7 @@ public class CreateMainChannelComposite extends Composite
     bankSection.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* Create segment switch control */
-    final Control segmentSwitchSection = createSegmentSwitchSection( body );
+    final Control segmentSwitchSection = createBanklineOptionsSection( body );
     segmentSwitchSection.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* Create profile control */
@@ -139,7 +139,7 @@ public class CreateMainChannelComposite extends Composite
    * in the segment section the crosssections will be displayed. the data filling is done in the function
    * "updateSegmentSection" (see below)
    */
-  private Control createSegmentSwitchSection( final Composite parent )
+  private Control createBanklineOptionsSection( final Composite parent )
   {
     final Section segmentSection = m_toolkit.createSection( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR | Section.EXPANDED );
 

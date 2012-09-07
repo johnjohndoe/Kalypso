@@ -5,7 +5,7 @@
       <WellKnownName>square</WellKnownName>
       <Fill>
         <CssParameter name="fill-opacity">1.0</CssParameter>
-        <CssParameter name="fill">#1EFFFF</CssParameter>
+        <CssParameter name="fill">#FFFF00</CssParameter>
       </Fill>
       <Stroke>
         <CssParameter name="stroke">#FF0000</CssParameter>
