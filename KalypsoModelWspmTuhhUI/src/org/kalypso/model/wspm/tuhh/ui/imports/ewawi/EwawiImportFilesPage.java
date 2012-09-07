@@ -141,7 +141,7 @@ public class EwawiImportFilesPage extends WizardPage
     final FilePattern filePattern = new FilePattern( "*.pro", "EWAWI+ .pro Datei" ); //$NON-NLS-1$
 
     final IObservableValue modelFile = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_FILE );
-    final FileChooserDelegateOpen delegate = createFileChooserDelegate( filePattern );
+    final FileChooserDelegateOpen delegate = createFileChooserDelegate( filePattern, false );
     final FileBinding fileBinding = new FileBinding( dataBinding, modelFile, delegate );
 
     final IObservableValue modelHistory = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_HISTORY );
@@ -158,7 +158,7 @@ public class EwawiImportFilesPage extends WizardPage
     final FilePattern filePattern = new FilePattern( "*.sta", "EWAWI+ .sta Datei" ); //$NON-NLS-1$
 
     final IObservableValue modelFile = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_FILE );
-    final FileChooserDelegateOpen delegate = createFileChooserDelegate( filePattern );
+    final FileChooserDelegateOpen delegate = createFileChooserDelegate( filePattern, false );
     final FileBinding fileBinding = new FileBinding( dataBinding, modelFile, delegate );
 
     final IObservableValue modelHistory = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_HISTORY );
@@ -172,7 +172,7 @@ public class EwawiImportFilesPage extends WizardPage
   private void createFotoDirectoryControls( final Composite main, final DatabindingWizardPage dataBinding )
   {
     final IObservableValue modelDir = BeansObservables.observeValue( m_data, EwawiImportData.PROPERTY_FOTO_DIRECTORY );
-    final DirectoryBinding directoryBinding = new DirectoryBinding( modelDir, SWT.SAVE );
+    final DirectoryBinding directoryBinding = new DirectoryBinding( modelDir, SWT.OPEN );
 
     final IObservableValue modelHistory = BeansObservables.observeValue( m_data, EwawiImportData.PROPERTY_FOTO_DIRECTORY_HISTORY );
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( main, modelHistory );
@@ -187,7 +187,7 @@ public class EwawiImportFilesPage extends WizardPage
   private void createDocumentDirectoryControls( final Composite main, final DatabindingWizardPage dataBinding )
   {
     final IObservableValue modelDir = BeansObservables.observeValue( m_data, EwawiImportData.PROPERTY_DOCUMENT_DIRECTORY );
-    final DirectoryBinding directoryBinding = new DirectoryBinding( modelDir, SWT.SAVE );
+    final DirectoryBinding directoryBinding = new DirectoryBinding( modelDir, SWT.OPEN );
 
     final IObservableValue modelHistory = BeansObservables.observeValue( m_data, EwawiImportData.PROPERTY_DOCUMENT_DIRECTORY_HISTORY );
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( main, modelHistory );
@@ -205,7 +205,7 @@ public class EwawiImportFilesPage extends WizardPage
     final FilePattern filePattern = new FilePattern( "*.shp", "ESRI .shp Datei" ); //$NON-NLS-1$
 
     final IObservableValue modelFile = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_FILE );
-    final FileChooserDelegateOpen delegate = createFileChooserDelegate( filePattern );
+    final FileChooserDelegateOpen delegate = createFileChooserDelegate( filePattern, true );
     final FileBinding fileBinding = new FileBinding( dataBinding, modelFile, delegate );
 
     final IObservableValue modelHistory = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_HISTORY );
@@ -239,9 +239,9 @@ public class EwawiImportFilesPage extends WizardPage
     dataBinding.bindValue( target, model );
   }
 
-  private FileChooserDelegateOpen createFileChooserDelegate( final FilePattern pattern )
+  private FileChooserDelegateOpen createFileChooserDelegate( final FilePattern pattern, final boolean optional )
   {
-    final FileChooserDelegateOpen delegate = new FileChooserDelegateOpen();
+    final FileChooserDelegateOpen delegate = new FileChooserDelegateOpen( new String[] {}, new String[] {}, optional );
     delegate.addFilter( pattern );
     delegate.addFilter( FileExtensions.ALL_FILES );
 
