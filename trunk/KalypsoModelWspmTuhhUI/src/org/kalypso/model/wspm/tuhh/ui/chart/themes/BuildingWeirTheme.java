@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import java.util.ArrayList;
 
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -59,6 +60,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
@@ -68,15 +70,6 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 public class BuildingWeirTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingWeirTheme.0" ); //$NON-NLS-1$
-
-  @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
-  {
-    if( hint.isSelectionChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
-    {
-      fireLayerContentChanged( ContentChangeType.value );
-    }
-  }
 
   public BuildingWeirTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ICoordinateMapper cmDevider )
   {
@@ -91,9 +84,14 @@ public class BuildingWeirTheme extends AbstractProfilTheme
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
-   */
+  @Override
+  public void onProfilChanged( final ProfilChangeHint hint )
+  {
+    if( hint.isSelectionChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
+    {
+      fireLayerContentChanged( ContentChangeType.value );
+    }
+  }
   @Override
   public void removeYourself( )
   {
@@ -109,9 +107,6 @@ public class BuildingWeirTheme extends AbstractProfilTheme
     new ProfilOperationJob( operation ).schedule();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
-   */
   @Override
   public IChartLayer[] getLegendNodes( )
   {
@@ -129,13 +124,15 @@ public class BuildingWeirTheme extends AbstractProfilTheme
     return cl.toArray( new IChartLayer[] {} );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public IProfilView createLayerPanel( )
   {
     return new WeirPanel( getProfil() );
   }
 
+  @Override
+  public EditInfo getHover( final Point pos )
+  {
+    return null;
+  }
 }

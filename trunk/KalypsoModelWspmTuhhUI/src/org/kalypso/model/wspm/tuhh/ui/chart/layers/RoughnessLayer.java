@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
@@ -61,6 +62,7 @@ import org.kalypso.observation.result.IComponent;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
@@ -81,9 +83,8 @@ public class RoughnessLayer extends AbstractProfilLayer
   }
 
   @Override
-  public Rectangle getHoverRect( final IProfileRecord profilPoint )
+  public EditInfo getHover( final Point pos )
   {
-    // TODO get HoverInfo
     return null;
   }
 

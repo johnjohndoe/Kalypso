@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -54,6 +55,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.IFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IFill;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -133,5 +135,12 @@ public class CulvertLayer extends AbstractProfilLayer
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return new CulvertPainter( getTube() ).getTargetRange();
+  }
+
+  @Override
+  public EditInfo getHover( final Point pos )
+  {
+    // TODO get figure of culvert and tooltip with parameters of culvert
+    return null;
   }
 }

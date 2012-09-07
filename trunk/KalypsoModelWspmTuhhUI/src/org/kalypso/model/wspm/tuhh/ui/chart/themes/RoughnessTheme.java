@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -51,6 +52,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
@@ -103,4 +105,9 @@ public class RoughnessTheme extends AbstractProfilTheme
     return new RoughnessPanel( getProfil() );
   }
 
+  @Override
+  public EditInfo getHover( final Point pos )
+  {
+    return null;
+  }
 }

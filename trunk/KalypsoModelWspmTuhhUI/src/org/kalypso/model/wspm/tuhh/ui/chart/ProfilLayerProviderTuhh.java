@@ -140,7 +140,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     axisRendererConfigD.tickLineStyle.setWidth( 2 );
     axisRendererConfigD.axisInsets = new Insets( 0, 0, 0, 0 );
     axisRendererConfigD.hideCut = true;
-   
+
     m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_VERTICAL_SCREEN", POSITION.RIGHT );//$NON-NLS-1$
     m_screenAxisVertical.setPreferredAdjustment( new AxisAdjustment( 0, 1, 0 ) );
     m_domainAxis = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_DOMAIN", POSITION.BOTTOM, axisRendererConfigD );//$NON-NLS-1$
@@ -259,7 +259,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   public IProfilChartLayer[] createLayers( final IProfil profile, final Object result )
   {
     // Achtung: diese Reihenfolge ist die natürliche Ordnung im Layermanager
-    final List<IProfilChartLayer> layersToAdd = new ArrayList<IProfilChartLayer>();
+    final List<IProfilChartLayer> layersToAdd = new ArrayList<>();
 
     /** geo coordinates */
     if( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT ) != null )
@@ -335,7 +335,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( Objects.isNull( profile ) )
       return new LayerDescriptor[] {};
 
-    final List<LayerDescriptor> addable = new ArrayList<LayerDescriptor>();
+    final List<LayerDescriptor> addable = new ArrayList<>();
     final String[] existing = TuhhLayers.getExistingLayers( chartModel );
 
     final IProfileObject[] objects = profile.getProfileObjects( IProfileBuilding.class );

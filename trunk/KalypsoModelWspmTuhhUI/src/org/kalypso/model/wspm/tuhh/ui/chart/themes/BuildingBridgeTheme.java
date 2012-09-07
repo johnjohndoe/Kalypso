@@ -79,18 +79,12 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
     super( profil, IWspmTuhhConstants.LAYER_BRUECKE, TITLE, chartLayers, cm );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public IProfilView createLayerPanel( )
   {
     return new BridgePanel( getProfil() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
-   */
   @Override
   public void removeYourself( )
   {
