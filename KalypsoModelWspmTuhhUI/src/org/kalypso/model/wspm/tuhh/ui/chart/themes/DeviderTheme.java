@@ -84,7 +84,7 @@ public class DeviderTheme extends AbstractProfilTheme
   @Override
   public IChartLayer[] getLegendNodes( )
   {
-    final ArrayList<IChartLayer> cl = new ArrayList<IChartLayer>();
+    final ArrayList<IChartLayer> cl = new ArrayList<>();
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
       if( layer instanceof IProfilChartLayer )
@@ -132,5 +132,4 @@ public class DeviderTheme extends AbstractProfilTheme
 
     return new ILegendEntry[] { le };
   }
-
 }

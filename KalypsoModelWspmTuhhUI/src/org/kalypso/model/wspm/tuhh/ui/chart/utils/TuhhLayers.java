@@ -133,7 +133,7 @@ public final class TuhhLayers
 
   public static String[] getExistingLayers( final ProfilChartModel model )
   {
-    final List<String> existing = new ArrayList<String>();
+    final List<String> existing = new ArrayList<>();
 
     final ILayerManager manager = model.getLayerManager();
     final IChartLayer[] layers = manager.getLayers();
@@ -145,5 +145,4 @@ public final class TuhhLayers
 
     return existing.toArray( new String[] {} );
   }
-
 }

@@ -50,7 +50,6 @@ import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
  */
 public class StationPointLayer extends PointsLineLayer
 {
-
   public StationPointLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( id, profil, targetRangeProperty, styleProvider );
@@ -63,5 +62,4 @@ public class StationPointLayer extends PointsLineLayer
     final String s = getProfil().getComment();
     return s == "" ? tp : tp + "\n" + s; //$NON-NLS-1$ //$NON-NLS-2$
   }
-
 }

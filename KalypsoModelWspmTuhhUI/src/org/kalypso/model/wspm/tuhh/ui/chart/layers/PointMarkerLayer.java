@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import java.awt.geom.Point2D;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -64,7 +66,10 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
+import org.kalypso.model.wspm.ui.view.chart.ProfilLayerUtils;
 import org.kalypso.observation.result.IComponent;
+
+import com.google.common.primitives.Doubles;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
@@ -81,13 +86,11 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class PointMarkerLayer extends AbstractProfilLayer
 {
+  private final Map<Rectangle, IProfilPointMarker> m_hoverRects = new ConcurrentHashMap<>();
+
   private final int m_offset;
 
   private final boolean m_close;
-
-  private int m_screenTop;
-
-  private int m_screenBottom;
 
   public PointMarkerLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
   {
@@ -102,9 +105,23 @@ public class PointMarkerLayer extends AbstractProfilLayer
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
     final IProfil profil = getProfil();
-    final IProfileRecord point = ProfileVisitors.findNearestPoint( profil, toNumeric( newPos ).getX() );
 
-    final Rectangle hoverRect = getHoverRect( point );
+    final Point2D numericPos = ProfilLayerUtils.toNumeric( getCoordinateMapper(), newPos );
+
+    final EmptyRectangleFigure startHoverFigure = (EmptyRectangleFigure)dragStartData.getHoverFigure();
+    final Rectangle startRectangle = startHoverFigure.getRectangle();
+
+    final IProfileRecord point = ProfileVisitors.findNearestPoint( profil, numericPos.getX() );
+    if( point == null )
+      return null;
+
+    final Double x = point.getBreite();
+    if( !Doubles.isFinite( x ) )
+        return null;
+
+    final Point screen = getCoordinateMapper().numericToScreen( x, 0 );
+
+    final Rectangle hoverRect = new Rectangle( screen.x - 5, startRectangle.y, 10, startRectangle.height );
 
     final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
     hoverFigure.setStyle( getLineStyleHover() );
@@ -116,16 +133,16 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public final void executeDrop( final Point point, final EditInfo dragStartData )
   {
-    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) dragStartData.getData() : -1;
-    if( pos == -1 )
+    final IProfilPointMarker draggedDevider = (IProfilPointMarker)dragStartData.getData();
+    if( draggedDevider == null )
       return;
 
     final IProfil profil = getProfil();
-    final Point2D numPoint = toNumeric( point );
+    final Point2D numPoint = ProfilLayerUtils.toNumeric( getCoordinateMapper(), point );
     if( numPoint == null )
       return;
 
-    final IProfileRecord profilPoint = profil.getPoint( pos );
+    final IProfileRecord profilPoint = draggedDevider.getPoint();
     final IProfileRecord newPoint = ProfileVisitors.findNearestPoint( profil, numPoint.getX() );
     if( newPoint == profilPoint )
       return;
@@ -152,35 +169,24 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public EditInfo getHover( final Point pos )
   {
-    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( getTargetComponent() );
-    for( final IProfilPointMarker devider : deviders )
+    for( final Map.Entry<Rectangle, IProfilPointMarker> entry : m_hoverRects.entrySet() )
     {
-      final IProfileRecord point = devider.getPoint();
-      final Rectangle hoverRect = getHoverRect( point );
+      final Rectangle hoverRect = entry.getKey();
+      final IProfilPointMarker devider = entry.getValue();
 
-      if( hoverRect != null && hoverRect.contains( pos ) )
+      if( hoverRect.contains( pos ) )
       {
         final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
         hoverFigure.setStyle( getLineStyleHover() );
         hoverFigure.setRectangle( hoverRect );
 
-        return new EditInfo( this, hoverFigure, null, point.getIndex(), getTooltipInfo( point ), pos );
+        final IProfileRecord point = devider.getPoint();
+
+        return new EditInfo( this, hoverFigure, null, devider, getTooltipInfo( point ), pos );
       }
     }
 
     return null;
-  }
-
-  @Override
-  public Rectangle getHoverRect( final IProfileRecord profilPoint )
-  {
-    final int bottom = getBottom() + 2;
-    final int top = getTop() - 2;
-
-    final Double breite = ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoint );
-
-    final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
-    return new Rectangle( screenX - 5, top, 10, bottom - top );
   }
 
   @Override
@@ -257,51 +263,50 @@ public class PointMarkerLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
     final IComponent target = getTargetComponent();
 
+    m_hoverRects.clear();
+
     if( profil == null || target == null )
       return;
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( target.getId() );
-    final int len = deviders.length;
 
-    m_screenBottom = chartImageInfo.getLayerRect().y + chartImageInfo.getLayerRect().height;
-    m_screenTop = chartImageInfo.getLayerRect().y + m_offset;
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( target.getId() );
+
+    /* calculate top and bottom */
+    final int screenBottom = chartImageInfo.getLayerRect().y + chartImageInfo.getLayerRect().height;
+    final int screenTop = chartImageInfo.getLayerRect().y + m_offset;
+    final int top = screenTop + m_offset;
 
     final IAxis domainAxis = getDomainAxis();
 
     final PolylineFigure pf = new PolylineFigure();
     pf.setStyle( getLineStyle() );
-    for( int i = 0; i < len; i++ )
+
+    for( final IProfilPointMarker devider : deviders )
     {
-      final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, deviders[i].getPoint() );
+      final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, devider.getPoint() );
       final int screenX = domainAxis.numericToScreen( breite );
-      final Point p1 = new Point( screenX, getBottom() );
-      final Point p2 = new Point( screenX, getTop() );
+      final Point p1 = new Point( screenX, screenBottom );
+      final Point p2 = new Point( screenX, top );
 
       pf.setPoints( new Point[] { p1, p2 } );
       pf.paint( gc );
+
+      /* remember hover rect for get hvoer */
+      final Rectangle hoverRect = new Rectangle( p1.x - 5, top - 2, 10, screenBottom - top + 4 );
+      m_hoverRects.put( hoverRect, devider );
     }
 
-    if( m_close && len > 1 )
+    if( m_close && deviders.length > 1 )
     {
       final int screenX1 = domainAxis.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
-      final int screenX2 = domainAxis.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[len - 1].getPoint() ) );
+      final int screenX2 = domainAxis.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[deviders.length - 1].getPoint() ) );
 
-      pf.setPoints( new Point[] { new Point( screenX1, getTop() ), new Point( screenX2, getTop() ) } );
+      pf.setPoints( new Point[] { new Point( screenX1, top ), new Point( screenX2, top ) } );
       pf.paint( gc );
     }
-  }
-
-  private int getTop( )
-  {
-    return m_screenTop + m_offset;
-  }
-
-  private int getBottom( )
-  {
-    return m_screenBottom;
   }
 }
