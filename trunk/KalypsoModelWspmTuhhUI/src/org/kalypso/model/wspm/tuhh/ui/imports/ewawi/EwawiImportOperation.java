@@ -129,7 +129,7 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       monitor.subTask( "Creating water level fixations..." );
 
       /* Update the water level fixation. */
-      final EwawiWaterLevelFixationUpdater waterLevelFixationUpdater = new EwawiWaterLevelFixationUpdater( m_targetProject, proIndex );
+      final EwawiWaterLevelFixationUpdater waterLevelFixationUpdater = new EwawiWaterLevelFixationUpdater( m_targetProject, staIndex, proIndex );
       waterLevelFixationUpdater.updateWaterLevelFixation();
 
       /* Monitor. */
@@ -180,8 +180,13 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       profileFeature.setBigStation( station );
 
       final WspmWaterBody water = profileFeature.getWater();
-      water.setRefNr( riverId );
-      water.setCenterLine( riverGeometry );
+      water.setRefNr( "-1" );
+      water.setCenterLine( null );
+      if( !riverName.equals( "Undefiniert" ) )
+      {
+        water.setRefNr( riverId );
+        water.setCenterLine( riverGeometry );
+      }
 
       for( final String foto : photos )
       {

@@ -18,28 +18,146 @@
  */
 package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.kalypso.model.wspm.core.gml.WspmFixation;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.ewawi.data.EwawiPro;
 import org.kalypso.model.wspm.ewawi.data.EwawiProLine;
+import org.kalypso.model.wspm.ewawi.data.EwawiSta;
+import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Holger Albert
  */
 public class EwawiWaterLevelFixationUpdater
 {
+  private static final String EWAWI_WATER_LEVEL_FIXATION = "EWAWI Water Level Fixation";
+
   private final TuhhWspmProject m_targetProject;
+
+  private final EwawiSta m_staIndex;
 
   private final EwawiPro m_proIndex;
 
-  public EwawiWaterLevelFixationUpdater( final TuhhWspmProject targetProject, final EwawiPro proIndex )
+  public EwawiWaterLevelFixationUpdater( final TuhhWspmProject targetProject, final EwawiSta staIndex, final EwawiPro proIndex )
   {
     m_targetProject = targetProject;
+    m_staIndex = staIndex;
     m_proIndex = proIndex;
   }
 
-  public void updateWaterLevelFixation( )
+  public void updateWaterLevelFixation( ) throws EwawiException
   {
-    final EwawiProLine[] proLines = m_proIndex.getProLines();
+    final Map<Long, EwawiWaterLevelPointCache> wlPointCache = cacheWaterLevelPoints();
 
+    updateWaterLevelFixation( wlPointCache );
+  }
+
+  private Map<Long, EwawiWaterLevelPointCache> cacheWaterLevelPoints( )
+  {
+    final Map<Long, EwawiWaterLevelPointCache> cache = new HashMap<>();
+
+    final EwawiProLine[] proLines = m_proIndex.getProLines();
+    for( final EwawiProLine proLine : proLines )
+    {
+      Long gewKennzahl = proLine.getGewKennzahl();
+      if( gewKennzahl == null )
+        gewKennzahl = new Long( -1 );
+
+      if( !cache.containsKey( gewKennzahl ) )
+        cache.put( gewKennzahl, new EwawiWaterLevelPointCache( m_staIndex ) );
+
+      final EwawiWaterLevelPointCache pointCache = cache.get( gewKennzahl );
+      pointCache.addProLine( proLine );
+    }
+
+    return cache;
+  }
+
+  private void updateWaterLevelFixation( final Map<Long, EwawiWaterLevelPointCache> wlPointCache ) throws EwawiException
+  {
+    for( final Long gewKennzahl : wlPointCache.keySet() )
+    {
+      final EwawiWaterLevelPointCache pointCache = wlPointCache.get( gewKennzahl );
+
+      /* CASE 1: A river id exists and a water body with it was created. */
+      /* CASE 2: No river id exists. */
+      final WspmWaterBody waterBody = m_targetProject.findWaterByRefNr( String.format( "%d", gewKennzahl ) );
+      if( waterBody != null )
+      {
+        updateWaterLevelFixation( pointCache, waterBody );
+        continue;
+      }
+
+      /* CASE 3: A river id exists and a water body with it was not created. */
+      /* CASE 3: This happens, if there was no river shape or the river shape did not contain the river id. */
+      final WspmWaterBody undefinedBody = m_targetProject.findWaterByRefNr( "-1" );
+      if( undefinedBody != null )
+      {
+        updateWaterLevelFixation( pointCache, undefinedBody );
+        continue;
+      }
+
+      /* HINT: No water body available to update. */
+    }
+  }
+
+  private void updateWaterLevelFixation( final EwawiWaterLevelPointCache pointCache, final WspmWaterBody waterBody ) throws EwawiException
+  {
+    final WspmFixation ewawiFixation = getEwawiFixation( waterBody );
+    final IObservation<TupleResult> observation = ewawiFixation.toObservation();
+
+    final BigDecimal[] stations = pointCache.getStations();
+    for( final BigDecimal station : stations )
+      updateEwawiFixation( observation, station, pointCache.createWaterLevel( station ) );
+
+    ewawiFixation.saveObservation( observation );
+  }
+
+  private WspmFixation getEwawiFixation( final WspmWaterBody waterBody )
+  {
+    final WspmFixation ewawiFixation = (WspmFixation)waterBody.findFixationByName( m_proIndex.getSourceFile().getName() );
+    if( ewawiFixation != null )
+      return ewawiFixation;
+
+    return createEwawiFixation( waterBody );
+  }
+
+  private WspmFixation createEwawiFixation( final WspmWaterBody waterBody )
+  {
+    final IFeatureBindingCollection<WspmFixation> wspFixations = waterBody.getWspFixations();
+    final WspmFixation wspFixation = wspFixations.addNew( WspmFixation.QNAME_FEATURE_WSPM_FIXATION );
+
+    final IObservation<TupleResult> obs = wspFixation.toObservation();
+    obs.setName( m_proIndex.getSourceFile().getName() );
+    obs.setDescription( EWAWI_WATER_LEVEL_FIXATION );
+
+    wspFixation.saveObservation( obs );
+
+    return wspFixation;
+  }
+
+  private void updateEwawiFixation( final IObservation<TupleResult> observation, final BigDecimal station, final EwawiWaterLevel waterLevel ) throws EwawiException
+  {
+    final TupleResult result = observation.getResult();
+
+    final int stationComp = result.indexOfComponent( WspmFixation.COMPONENT_STATION );
+    final int wspComp = result.indexOfComponent( WspmFixation.COMPONENT_WSP );
+    final int commentComp = result.indexOfComponent( WspmFixation.COMPONENT_COMMENT );
+
+    final IRecord record = result.createRecord();
+    record.setValue( stationComp, station );
+    record.setValue( wspComp, new BigDecimal( waterLevel.calculateMeanValue() ) );
+    record.setValue( commentComp, waterLevel.getComment() );
+
+    result.add( record );
   }
 }
