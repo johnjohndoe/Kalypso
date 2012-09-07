@@ -637,6 +637,9 @@ public class CreateChannelData extends AbstractModelObject
         firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_UP, getNumberBankSegmentsUp() + 1, getNumberBankSegmentsUp() );
         firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_ENABLED_DOWN, !getNumberBankSegmentsEnabledDown(), getNumberBankSegmentsEnabledDown() );
         firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_ENABLED_UP, !getNumberBankSegmentsEnabledUp(), getNumberBankSegmentsEnabledUp() );
+
+        /* necessary, so the provile overlay gets correctly initialized */
+        firePropertyChange( PROPERTY_ACTIVE_PROFILE, null, getActiveProfile() );
       }
     } );
   }

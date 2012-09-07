@@ -66,8 +66,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.chart.ui.IChartCommand;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
@@ -293,22 +295,24 @@ public class CreateChannelProfileSection extends Composite
 
     m_toolbarManager.removeAll();
 
-    m_sourceManager = new EmbeddedSourceToolbarManager( PlatformUI.getWorkbench(), ChartSourceProvider.ACTIVE_CHART_NAME, m_profilComposite );
+    final IWorkbench serviceLocator = PlatformUI.getWorkbench();
+    m_sourceManager = new EmbeddedSourceToolbarManager( serviceLocator, ChartSourceProvider.ACTIVE_CHART_NAME, m_profilComposite );
 
     final Collection<CommandWithStyle> commands = new ArrayList<>();
     // TODO: use constants for commands
-    commands.add( CommandWithStyle.radio( "org.kalypso.chart.ui.commands.zoom_pan_maximize" ) ); //$NON-NLS-1$
-    commands.add( CommandWithStyle.radio( "org.kalypso.chart.ui.commands.pan" )); //$NON-NLS-1$
-    commands.add( CommandWithStyle.radio( "org.kalypso.chart.ui.commands.edit" ) ); //$NON-NLS-1$
+    commands.add( CommandWithStyle.radio( IChartCommand.COMMAND_ZOOM_PAN_MAXIMIZE ) ); //$NON-NLS-1$
+    commands.add( CommandWithStyle.radio( IChartCommand.COMMAND_PAN ) ); //$NON-NLS-1$
+    commands.add( CommandWithStyle.radio( IChartCommand.COMMAND_EDIT ) ); //$NON-NLS-1$
     commands.add( CommandWithStyle.separator(  ) );
-    commands.add( CommandWithStyle.push( "org.kalypso.chart.ui.commands.maximize") ); //$NON-NLS-1$
+    commands.add( CommandWithStyle.push( IChartCommand.COMMAND_MAXIMIZE ) ); //$NON-NLS-1$
     commands.add( CommandWithStyle.separator() );
-    commands.add( CommandWithStyle.push( "org.kalypso.chart.ui.commands.ExportClipboardCommand" ) ); //$NON-NLS-1$
-    commands.add( CommandWithStyle.push( "org.kalypso.chart.ui.commands.export" ) ); //$NON-NLS-1$
+    commands.add( CommandWithStyle.push( IChartCommand.COMMAND_EXPORT_CLIPBOARD ) ); //$NON-NLS-1$
+    commands.add( CommandWithStyle.push( IChartCommand.COMMAND_EXPORT ) ); //$NON-NLS-1$
     commands.add( CommandWithStyle.separator() );
 
     m_sourceManager.fillToolbar( m_toolbarManager, commands.toArray( new CommandWithStyle[commands.size()] ) );
-    m_toolbarManager.update( true );
+
+    EmbeddedSourceToolbarManager.executeCommand( serviceLocator, m_toolbarManager, IChartCommand.COMMAND_EDIT );
 
     /* hide/show components */
     final boolean hasProfile = profile != null;
