@@ -62,6 +62,8 @@ import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
+import org.kalypso.model.wspm.ui.view.chart.ProfilLayerUtils;
+import org.kalypso.model.wspm.ui.view.chart.ProfilePointHover;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -80,6 +82,8 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class ProfilOverlayLayer extends PointsLineLayer
 {
+  private static final EditInfo NILL_INFO = new EditInfo( null, null, null, null, null, null );
+
 //  CreateMainChannelWidget m_widget = null;
 
   public static String LAYER_OVERLAY = "org.kalypso.model.wspm.tuhh.ui.chart.overlay.LAYER_OVERLAY"; //$NON-NLS-1$
@@ -113,15 +117,34 @@ public class ProfilOverlayLayer extends PointsLineLayer
   }
 
   @Override
+  public EditInfo getHover( final Point pos )
+  {
+    if( !isVisible() )
+      return NILL_INFO;
+
+    final ProfilePointHover helper = new ProfilePointHover( this );
+    final EditInfo pointHover = helper.getHover( pos );
+    if( pointHover != null )
+      return pointHover;
+
+    /* never return null, in order to suppress hover of other layers */
+    // TODO: check, do we still need this strange locking stuff?
+    return NILL_INFO;
+  }
+
+  @Override
   public EditInfo drag( final Point curserPos, final EditInfo dragStartData )
   {
+    if( dragStartData == NILL_INFO )
+      return null;
+
     /**
      * get Screen and logical Points
      */
     final int left = curserPos.x;
     final int top = getTargetAxis().getScreenHeight() - 10;
 
-    final Point2D curserPoint = toNumeric( curserPos );
+    final Point2D curserPoint = ProfilLayerUtils.toNumeric( getCoordinateMapper(), curserPos );
 
     final IProfil profile = m_data.getActiveProfile().getProfilOrg();
     final IProfileRecord profilePoint = ProfileVisitors.findNearestPoint( profile, curserPoint.getX() );
@@ -181,7 +204,10 @@ public class ProfilOverlayLayer extends PointsLineLayer
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
-    final Integer index = (Integer) dragStartData.getData();
+    if( dragStartData == NILL_INFO )
+      return;
+
+    final Integer index = (Integer)dragStartData.getData();
 
     final IProfil profil = getProfil();
     final IProfileData activeProfile = m_data.getActiveProfile();
@@ -192,7 +218,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     /**
      * get Screen and logical Points
      */
-    final Point2D curserPoint = toNumeric( point );
+    final Point2D curserPoint = ProfilLayerUtils.toNumeric( getCoordinateMapper(), point );
     if( curserPoint == null )
       return;
 
@@ -334,6 +360,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     if( profil == null )
       return;
+
     final IProfileRecord[] profilPoints = profil.getPoints();
     final int len = profilPoints.length;
     final Point[] points = new Point[len];
@@ -352,11 +379,6 @@ public class ProfilOverlayLayer extends PointsLineLayer
       figure.setCenterPoint( point.x, point.y );
       figure.paint( gc );
     }
-
-    // final PointFigure pfl = new PointFigure();
-    // pfl.setStyle( getPointStyle() );
-    // pfl.setPoints( points );
-    // pfl.paint( gc );
   }
 
   public void setProfile( final IProfil profile, final CreateChannelData data )
