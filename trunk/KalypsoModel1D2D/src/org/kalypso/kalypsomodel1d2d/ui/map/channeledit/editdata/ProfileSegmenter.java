@@ -52,14 +52,13 @@ import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * /** Initial intersection of an IProfil. There are two ways of intersection:<br>
+ * Initial intersection of an IProfil. There are two ways of intersection:<br>
  * - if there are more profile points than the wished number of intersection points, the intersection is done by
  * Douglas-Peucker<br>
  * - if there are not enough profile points, the intersection is done with an equidistant approach.
- *
+ * 
  * @param profile
  *          input profile to be intersected.
- *
  * @author Gernot Belger
  * @author Thomas Jung
  */
@@ -151,25 +150,16 @@ class ProfileSegmenter
     simplifiedRecords.retainAll( Arrays.asList( vipRecords ) );
 
     /* copy record into new profile */
-    Double lastBreite = null;
     for( final IProfileRecord element : simplifiedRecords )
     {
       final IProfileRecord newRecord = newProfile.createProfilPoint();
 
       newRecord.setBreite( element.getBreite() );
-      final Double hoehe = element.getHoehe();
-      newRecord.setHoehe( hoehe );
+      newRecord.setHoehe( element.getHoehe() );
       newRecord.setRechtswert( element.getRechtswert() );
       newRecord.setHochwert( element.getHochwert() );
 
       newProfile.addPoint( newRecord );
-
-      if( lastBreite != null && element.getBreite() < lastBreite )
-      {
-        System.out.println( "xxx" );
-      }
-
-      lastBreite = element.getBreite();
     }
   }
 }

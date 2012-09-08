@@ -57,6 +57,9 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
+ * Represants a segment of the river between two profiles.<br/>
+ * The segment is directed going from 'down' to 'up'.<br/>
+ *
  * @author Thomas Jung
  */
 class SegmentData implements ISegmentData

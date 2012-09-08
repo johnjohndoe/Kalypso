@@ -622,17 +622,12 @@ public class CreateChannelData extends AbstractModelObject
 
         if( operation.hasDataLoss() )
         {
-          /* ask user to apply anyways */
+          /* ask user to apply anyways, else -> rollback */
           if( !askForUserEdits() )
-          {
             setEditData( oldData, newActiveProfile, oldActiveProfile );
-            /* trigger map repaint */
-            firePropertyChange( PROPERTY_MAP_REPAINT, 0, 1 );
-            return;
-          }
         }
 
-        /* force some property changed, that are not corretly handled */
+        /* force some property changed, that are otherwise not corretly handled */
         firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_DOWN, getNumberBankSegmentsDown() + 1, getNumberBankSegmentsDown() );
         firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_UP, getNumberBankSegmentsUp() + 1, getNumberBankSegmentsUp() );
         firePropertyChange( PROPERTY_NUM_BANK_SEGMENTS_ENABLED_DOWN, !getNumberBankSegmentsEnabledDown(), getNumberBankSegmentsEnabledDown() );

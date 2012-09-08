@@ -51,14 +51,10 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
@@ -82,8 +78,6 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class ProfilOverlayLayer extends PointsLineLayer
 {
-  private static final EditInfo NILL_INFO = new EditInfo( null, null, null, null, null, null );
-
 //  CreateMainChannelWidget m_widget = null;
 
   public static String LAYER_OVERLAY = "org.kalypso.model.wspm.tuhh.ui.chart.overlay.LAYER_OVERLAY"; //$NON-NLS-1$
@@ -119,8 +113,11 @@ public class ProfilOverlayLayer extends PointsLineLayer
   @Override
   public EditInfo getHover( final Point pos )
   {
+    /* never return null, in order to suppress hover of other layers */
+    final EditInfo nilInfo = new EditInfo( null, null, null, null, null, pos );
+
     if( !isVisible() )
-      return NILL_INFO;
+      return nilInfo;
 
     final ProfilePointHover helper = new ProfilePointHover( this );
     final EditInfo pointHover = helper.getHover( pos );
@@ -128,14 +125,13 @@ public class ProfilOverlayLayer extends PointsLineLayer
       return pointHover;
 
     /* never return null, in order to suppress hover of other layers */
-    // TODO: check, do we still need this strange locking stuff?
-    return NILL_INFO;
+    return nilInfo;
   }
 
   @Override
   public EditInfo drag( final Point curserPos, final EditInfo dragStartData )
   {
-    if( dragStartData == NILL_INFO )
+    if( dragStartData == null || dragStartData.getData() == null )
       return null;
 
     /**
@@ -204,126 +200,60 @@ public class ProfilOverlayLayer extends PointsLineLayer
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
-    if( dragStartData == NILL_INFO )
+    if( dragStartData == null || dragStartData.getData() == null )
       return;
 
     final Integer index = (Integer)dragStartData.getData();
 
+    // FIXME: profil && origProfil should be the same!
     final IProfil profil = getProfil();
+
     final IProfileData activeProfile = m_data.getActiveProfile();
     final IProfil origProfil = activeProfile.getProfilOrg();
+    final IProfil segmentedProfile = activeProfile.getProfIntersProfile();
 
-    final IRecord targetPoint = profil.getPoint( index );
-
-    /**
-     * get Screen and logical Points
-     */
-    final Point2D curserPoint = ProfilLayerUtils.toNumeric( getCoordinateMapper(), point );
-    if( curserPoint == null )
+    /* data and my state should be the same, else something is wrong */
+    if( profil == null || profil != segmentedProfile )
       return;
 
-    final IProfileRecord profilePoint = ProfileVisitors.findNearestPoint( origProfil, curserPoint.getX() );
-    final IProfileRecord fePoint = ProfileVisitors.findNearestPoint( profil, curserPoint.getX() );
-    final Point profilePointScreen = toScreen( profilePoint );
-    final Point fePointScreen = toScreen( fePoint );
-
-    /**
-     * break, no Changes
-     */
-    if( Math.abs( point.x - fePointScreen.x ) < 5 )
+    /* check if destination point is at least 5px away from source record, else do nothing */
+    final IProfileRecord draggedRecord = segmentedProfile.getPoint( index );
+    final int draggedScreenX = toScreen( draggedRecord ).x;
+    if( Math.abs( point.x - draggedScreenX ) < 5 )
     {
       // force repaint
       getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
       return;
     }
-    /**
-     * snap Point
-     */
-    Double width = curserPoint.getX();
 
-    // check if there is a point in snap distance
-    if( Math.abs( point.x - profilePointScreen.x ) < 5 )
-    {
-      // Here we have to get the real width of the original profile point otherwise we have a rounding problem by
-      width = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, profilePoint );
-    }
-
-    // check if width is less than the first profile point
-    final double widthFirstProfilePoint = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, origProfil.getPoint( 0 ) );
-    if( width < widthFirstProfilePoint )
+    /* calculate destination width */
+    final Point2D numericPoint = ProfilLayerUtils.toNumeric( getCoordinateMapper(), point );
+    if( numericPoint == null )
       return;
 
-    // check if width is greater than the last profile point
-    final double widthLastProfilePoint = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, origProfil.getPoint( origProfil.getPoints().length - 1 ) );
-    if( width > widthLastProfilePoint )
-      return;
+    final double destinationWidth = calculateDestinationWidth( origProfil, point.x, numericPoint.getX() );
 
-    /* set the initial height to the profile height */
-    /* and get the geo coordinates for the moved profile point */
-    double heigth = 0;
-    GM_Point gmPoint = null;
-    GM_Point geoPoint = null;
-    try
-    {
-      heigth = WspmProfileHelper.getHeightByWidth( width, origProfil );
-      gmPoint = WspmProfileHelper.getGeoPositionKalypso( width, origProfil );
-      if( gmPoint == null )
-        return;
+    /* move the record */
+    final ProfileOverlayMovePointOperation worker = new ProfileOverlayMovePointOperation( origProfil, segmentedProfile );
+    final IProfil newSegmentedProfile = worker.moveRecord( draggedRecord, destinationWidth );
 
-      // FIXME: check if srsname is null. This would lead in an drawing error
-      final String srsName = origProfil.getSrsName();
-      geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );
-      // geoPoint = WspmGeometryUtilities.pointFromRwHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    final IRecord[] points = profil.getPoints();
-
-    /* save the first and last widths of the intersected profile for comparing them later with the new widths */
-    final double oldStartWdith = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[0] );
-    final double oldEndWdith = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[points.length - 1] );
-
-    // /* set the new profile */
-    final IProfil newProfile = createNewProfile( targetPoint, width, heigth, geoPoint );
-    final IComponent breiteComponent = newProfile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    if( breiteComponent != null )
-      newProfile.getResult().setSortComponents( new IComponent[] { breiteComponent } );
-    setProfil( newProfile );
-
-    // TODO: not so nice, use the same profile object for both segments, so that changes goes to both segments
-    // directly
-    // updateProfileForNeighbourSegment();
-
-    // TODO: both adjacent segments must be updated
-    final ISegmentData upstreamSegment = activeProfile.getUpSegment();
-    final ISegmentData downstreamSegment = activeProfile.getDownSegment();
-
-    /* check if the first or last intersection point has been moved -> update intersected profile and bank linestrings */
-    checkIntersectionPoints( upstreamSegment, downstreamSegment, oldStartWdith, oldEndWdith );
-
-    // final SegmentData currentSegment = m_data.getSelectedSegment();
-    // currentSegment.updateProfileIntersection();
-
-    // FIXME
-    // if( upstreamSegment != null )
-    // upstreamSegment.updateProfileIntersection();
-    // if( downstreamSegment != null )
-    // downstreamSegment.updateProfileIntersection();
-
-    // final CreateChannelData.PROF prof = m_data.getCurrentProfile();
-    // FIXME
-    // m_data.completationCheck();
-
-    // CreateChannelData.PROF prof = m_data.getCurrentProfile();
-    // setProfil( currentSegment.getProfUpIntersProfile() );
-
-    if( breiteComponent != null )
-      getProfil().getResult().setSortComponents( new IComponent[] { breiteComponent } );
+    activeProfile.updateSegmentedProfile( newSegmentedProfile );
+    // TODO: repaint map?
 
     getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
+  }
+
+  private double calculateDestinationWidth( final IProfil origProfil, final int destinationScreenX, final double unsnappedWidth )
+  {
+    /* snap to a record of the original profile near to destination */
+    final IProfileRecord snappedRecord = ProfileVisitors.findNearestPoint( origProfil, unsnappedWidth );
+    final Point snappedScreen = toScreen( snappedRecord );
+
+    if( snappedScreen == null || Math.abs( destinationScreenX - snappedScreen.x ) > 5 )
+      return unsnappedWidth;
+
+    // Here we have to get the real width of the original profile point otherwise we have a rounding problem by
+    return snappedRecord.getBreite();
   }
 
   @Override
@@ -387,75 +317,13 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     m_data = data;
 
-    if( profile != null )
-    {
-      final IComponent breiteComponent = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-      if( breiteComponent != null )
-        profile.getResult().setSortComponents( new IComponent[] { breiteComponent } );
-    }
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   @Override
   public String getTitle( )
   {
     return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer.1" ); //$NON-NLS-1$
-  }
-
-  // FIXME: use ChannelEditUtil
-  private IProfil createNewProfile( final IRecord profilePoint, final double width, final double heigth, final GM_Point geoPoint )
-  {
-    final IProfil profil = getProfil();
-    /* set the new values for the moved profile point */
-    profilePoint.setValue( profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE ), width );
-    profilePoint.setValue( profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE ), heigth );
-    profilePoint.setValue( profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), geoPoint.getX() );
-    profilePoint.setValue( profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ), geoPoint.getY() );
-
-    /* sort profile points by width */
-    final IProfileRecord[] points = profil.getPoints();
-
-    // TODO: save the sorted points as new m_profile
-    final IProfil tmpProfil = ProfilFactory.createProfil( profil.getType() );
-
-    /* get / create components */
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
-
-    final IComponent breiteComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final IComponent hoeheComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IComponent rwComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final IComponent hwComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    tmpProfil.addPointProperty( breiteComponent );
-    tmpProfil.addPointProperty( hoeheComponent );
-    tmpProfil.addPointProperty( rwComponent );
-    tmpProfil.addPointProperty( hwComponent );
-    final int iBreite = tmpProfil.indexOfProperty( breiteComponent );
-    final int iHoehe = tmpProfil.indexOfProperty( hoeheComponent );
-    final int iRW = tmpProfil.indexOfProperty( rwComponent );
-    final int iHW = tmpProfil.indexOfProperty( hwComponent );
-
-    for( final IProfileRecord element : points )
-    {
-      final IProfileRecord profilPoint = tmpProfil.createProfilPoint();
-
-      final double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, element );
-      final double hoehe = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, element );
-      final double rw = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, element );
-      final double hw = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, element );
-
-      profilPoint.setValue( iBreite, breite );
-      profilPoint.setValue( iHoehe, hoehe );
-      profilPoint.setValue( iRW, rw );
-      profilPoint.setValue( iHW, hw );
-
-      tmpProfil.addPoint( profilPoint );
-    }
-    /* station */
-    tmpProfil.setStation( profil.getStation() );
-
-    /* coordinate system */
-    tmpProfil.setSrsName( profil.getSrsName() );
-
-    return tmpProfil;
   }
 
   /**

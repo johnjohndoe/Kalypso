@@ -98,22 +98,13 @@ class ProfileAreaAdjuster
     {
       final IProfileRecord record = adjustingPoints[i];
 
-      final double width = record.getBreite();
-
-      // FIXME: check: height was interpolated from original profile; but the adjusting profile should have exactly the
-      // same heights at those places...
-      // final double heigth = WspmProfileHelper.getHeightByWidth( width, tmpProfile2 ) - dZ;
-      final double height = record.getHoehe() - dZ;
-
-      final double rw = record.getRechtswert();
-      final double hw = record.getHochwert();
-
       final IProfileRecord newRecord = newProfile.createProfilPoint();
 
-      newRecord.setBreite( width );
-      newRecord.setHoehe( height );
-      newRecord.setRechtswert( rw );
-      newRecord.setHochwert( hw );
+      newRecord.setBreite( record.getBreite() );
+      /* adjust height */
+      newRecord.setHoehe( record.getHoehe() - dZ );
+      newRecord.setRechtswert( record.getRechtswert() );
+      newRecord.setHochwert( record.getHochwert() );
 
       newProfile.addPoint( newRecord );
     }

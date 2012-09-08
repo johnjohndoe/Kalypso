@@ -94,7 +94,7 @@ class BanklineIntersector
       final LineString upProfileLine = ChannelEditUtil.convertProfilesToLineStrings( upProfile.getFeature() );
       final LineString downProfileLine = ChannelEditUtil.convertProfilesToLineStrings( downProfile.getFeature() );
 
-      return intersectBankline( upProfileLine, downProfileLine );
+      return intersectBankline( downProfileLine, upProfileLine );
     }
     catch( final Exception e )
     {
@@ -106,7 +106,7 @@ class BanklineIntersector
   /**
    * Find a bank line that intersect both profiles in exactly one point.
    */
-  private Pair<LineString, Pair<Point, Point>> findBankForProfiles( final LineString upProfile, final LineString downProfile )
+  private Pair<LineString, Pair<Point, Point>> findBankForProfiles( final LineString downProfile, final LineString upProfile )
   {
     for( final Entry<GM_Curve, SIDE> bankEntry : m_banks.entrySet() )
     {
@@ -138,21 +138,21 @@ class BanklineIntersector
     return null;
   }
 
-  private BankData intersectBankline( final LineString upProfileLine, final LineString downProfileLine ) throws Exception
+  private BankData intersectBankline( final LineString downProfileLine, final LineString upProfileLine ) throws Exception
   {
-    final Pair<LineString, Pair<Point, Point>> intersection = findBankForProfiles( upProfileLine, downProfileLine );
+    final Pair<LineString, Pair<Point, Point>> intersection = findBankForProfiles( downProfileLine, upProfileLine );
 
     if( intersection == null )
       return null;
 
     final Pair<Point, Point> points = intersection.getValue();
 
-    final Point upPoint = points.getKey();
-    final Point downPoint = points.getValue();
+    final Point downPoint = points.getLeft();
+    final Point upPoint = points.getRight();
 
     final LineString bankLine = intersection.getKey();
 
-    final LineString croppedBankLine = JTSUtilities.createLineString( bankLine, upPoint, downPoint );
+    final LineString croppedBankLine = (LineString)JTSUtilities.extractLineString( bankLine, downPoint, upPoint );
 
     final LineString segmentedGeometry = ChannelEditUtil.intersectLineString( croppedBankLine, m_numberOfBankSegments );
 
