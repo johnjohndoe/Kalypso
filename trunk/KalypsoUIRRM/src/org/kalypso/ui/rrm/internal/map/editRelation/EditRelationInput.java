@@ -70,7 +70,7 @@ public class EditRelationInput
   {
     m_workspace = workspace;
 
-    final Collection<IEditRelationType> elements = new ArrayList<IEditRelationType>();
+    final Collection<IEditRelationType> elements = new ArrayList<>();
 
     elements.add( addLightRelationType( INode.FEATURE_NODE, INode.PROPERTY_LINKED_DOWNSTREAMCHANNEL, IChannel.FEATURE_CHANNEL ) );
     elements.add( addLightRelationType( INode.FEATURE_NODE, INode.PROPERTY_QQ_RELATED_NODE, INode.FEATURE_NODE ) );

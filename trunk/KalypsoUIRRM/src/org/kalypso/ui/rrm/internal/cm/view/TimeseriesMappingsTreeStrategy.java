@@ -95,13 +95,13 @@ public class TimeseriesMappingsTreeStrategy implements ITreeNodeStrategy
     final Map<Object, Collection<Object>> byType = new TreeMap<>( byTypeComparator );
 
     /* Fill known types: tree should never be empty */
-    byType.put( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, new LinkedList<Object>() );
-    byType.put( ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, new LinkedList<Object>() );
-    byType.put( ITimeseriesConstants.TYPE_RAINFALL, new LinkedList<Object>() );
+    byType.put( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, new LinkedList<>() );
+    byType.put( ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED, new LinkedList<>() );
+    byType.put( ITimeseriesConstants.TYPE_RAINFALL, new LinkedList<>() );
 
-    byType.put( TimeseriesMappingType.gaugeMeasurement, new LinkedList<Object>() );
-    byType.put( TimeseriesMappingType.nodeInflow, new LinkedList<Object>() );
-    byType.put( TimeseriesMappingType.storageEvaporation, new LinkedList<Object>() );
+    byType.put( TimeseriesMappingType.gaugeMeasurement, new LinkedList<>() );
+    byType.put( TimeseriesMappingType.nodeInflow, new LinkedList<>() );
+    byType.put( TimeseriesMappingType.storageEvaporation, new LinkedList<>() );
 
     /* Rainfall generators */
     final IFeatureBindingCollection<IRainfallGenerator> generators = m_catchmentModel.getGenerators();

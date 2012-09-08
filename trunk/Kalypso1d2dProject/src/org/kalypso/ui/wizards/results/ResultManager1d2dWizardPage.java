@@ -294,7 +294,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                 // this is where the name of the result folder is actually set
                 final ICalcUnitResultMeta calcUnitMeta = processingOperation.getCalcUnitMeta();
                 final String calcUnitId = calcUnitMeta.getCalcUnit();
-                List<String> lListResultsToRemove = new ArrayList<String>();
+                List<String> lListResultsToRemove = new ArrayList<>();
                 lListResultsToRemove.addAll( Arrays.asList( processingOperation.getOriginalStepsToDelete() ) );
                 if( lListResultsToRemove.size() == 0 )
                 {
@@ -346,7 +346,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
 
         private List<String> removeAllOthersStepWithDate( final List<String> lListResultsToRemove, final String stepId )
         {
-          final List<String> lListRes = new ArrayList<String>();
+          final List<String> lListRes = new ArrayList<>();
           for( final String lId : lListResultsToRemove )
           {
             if( lId.equals( stepId ) )

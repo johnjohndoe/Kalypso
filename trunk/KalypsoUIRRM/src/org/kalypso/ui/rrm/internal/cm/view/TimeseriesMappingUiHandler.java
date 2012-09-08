@@ -95,7 +95,7 @@ public class TimeseriesMappingUiHandler extends AbstractTreeNodeUiHandler
     sectionToolbar.add( new EditMappingAction( m_model, m_mapping ) );
     sectionToolbar.add( new DeleteMappingAction( m_mapping ) );
 
-    final FeatureBean<ITimeseriesMapping> bean = new FeatureBean<ITimeseriesMapping>( m_mapping );
+    final FeatureBean<ITimeseriesMapping> bean = new FeatureBean<>( m_mapping );
 
     return new TimeseriesMappingComposite( parent, binding, bean, false );
   }

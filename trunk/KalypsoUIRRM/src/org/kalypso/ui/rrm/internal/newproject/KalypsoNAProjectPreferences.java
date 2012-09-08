@@ -182,7 +182,7 @@ public class KalypsoNAProjectPreferences extends WizardPage
 
     final int maxOccursSoil = catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER ).getMaxOccurs();
 
-    final List<Integer> noSoilLayer = new ArrayList<Integer>();
+    final List<Integer> noSoilLayer = new ArrayList<>();
     for( int i = 0; i < maxOccursSoil; i++ )
       noSoilLayer.add( i + 1 );
 

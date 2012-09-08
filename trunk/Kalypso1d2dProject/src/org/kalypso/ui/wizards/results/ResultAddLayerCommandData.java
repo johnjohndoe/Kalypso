@@ -59,11 +59,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
  * Holds the data (except the GisTemplateMapModell), that is needed for the addThemeCommand.
  *
  * @author Thomas Jung
- *
  */
 public class ResultAddLayerCommandData
 {
-  private final Map<String, String> m_properties = new HashMap<String, String>();
+  private final Map<String, String> m_properties = new HashMap<>();
 
   private String m_themeName;
 

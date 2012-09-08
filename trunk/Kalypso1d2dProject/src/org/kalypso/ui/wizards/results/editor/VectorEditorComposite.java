@@ -84,7 +84,7 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
  * @author jung
- * 
+ *
  */
 public class VectorEditorComposite extends Composite
 {
@@ -104,7 +104,7 @@ public class VectorEditorComposite extends Composite
 
   private Stroke m_stroke;
 
-  private final Set<IVectorModifyListener> m_listeners = new HashSet<IVectorModifyListener>();
+  private final Set<IVectorModifyListener> m_listeners = new HashSet<>();
 
   private Literal m_firstExpression;
 

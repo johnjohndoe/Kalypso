@@ -284,7 +284,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
   private void adjustSimulationModelGml( final RrmSimulation simulation, final NaModell model, final QName targetLink, final String parameterType, final Map<String, IObservation> observations ) throws Exception
   {
     /* Memory for the already used hash codes and their filenames. */
-    final Map<String, String> usedHashCodes = new HashMap<String, String>();
+    final Map<String, String> usedHashCodes = new HashMap<>();
 
     /* Get the catchments. */
     final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();

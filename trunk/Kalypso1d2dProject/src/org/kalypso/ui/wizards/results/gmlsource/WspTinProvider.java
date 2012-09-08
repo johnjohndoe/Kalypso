@@ -92,9 +92,9 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
 
   private final WorkbenchContentProvider m_workbenchContentProvider = new WorkbenchContentProvider();
 
-  private final List<GMLWorkspace> m_workspace = new ArrayList<GMLWorkspace>();
+  private final List<GMLWorkspace> m_workspace = new ArrayList<>();
 
-  private final Map<IResultMeta, IScenario> m_resultParents = new HashMap<IResultMeta, IScenario>();
+  private final Map<IResultMeta, IScenario> m_resultParents = new HashMap<>();
 
   private static final Object[] NO_CHILDREN = new Object[] {};
 
@@ -229,9 +229,6 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     return findScenario( meta.getOwner() );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-   */
   @Override
   public Object[] getChildren( final Object parentElement )
   {
@@ -239,7 +236,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     {
       if( parentElement instanceof IProject || parentElement instanceof IScenario )
       {
-        final List<Object> children = new ArrayList<Object>();
+        final List<Object> children = new ArrayList<>();
 
         final Object[] scenarioChildren = m_scenarioContentProvider.getChildren( parentElement );
         children.addAll( Arrays.asList( scenarioChildren ) );
@@ -288,7 +285,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
    */
   private IResultMeta[] filterMetaChildren( final Object[] metaChildren )
   {
-    final List<IResultMeta> result = new ArrayList<IResultMeta>();
+    final List<IResultMeta> result = new ArrayList<>();
 
     for( final Object child : metaChildren )
     {
@@ -314,7 +311,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
    */
   private List<IResultMeta> filterMetaChildren( final List<IResultMeta> metaChildren )
   {
-    final List<IResultMeta> result = new ArrayList<IResultMeta>();
+    final List<IResultMeta> result = new ArrayList<>();
 
     for( final IResultMeta child : metaChildren )
     {

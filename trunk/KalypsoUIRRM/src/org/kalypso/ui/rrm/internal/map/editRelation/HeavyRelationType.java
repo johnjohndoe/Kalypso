@@ -164,7 +164,7 @@ public class HeavyRelationType implements IEditRelationType
 
   private Feature[][] findExistingRelations( final Feature sourceFeature )
   {
-    final List<Feature[]> results = new ArrayList<Feature[]>();
+    final List<Feature[]> results = new ArrayList<>();
     final IRelationType link1Name = getLink1();
     final IRelationType link2Name = getLink2();
     final IFeatureType bodyFT = getBodyFT();

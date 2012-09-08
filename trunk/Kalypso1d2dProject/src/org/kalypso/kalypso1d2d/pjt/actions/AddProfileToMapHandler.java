@@ -167,7 +167,7 @@ public class AddProfileToMapHandler extends AbstractHandler
     final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), relativeTerrainPath ); //$NON-NLS-1$
     cascadingCommand.addCommand( command );
 
-    final Map<String, String> properties = new HashMap<String, String>();
+    final Map<String, String> properties = new HashMap<>();
     properties.put( CascadingThemeHelper.PROPERTY_THEME_ID, CONTAINER_THEME_ID );
     cascadingCommand.addProperties( properties );
 
@@ -213,7 +213,7 @@ public class AddProfileToMapHandler extends AbstractHandler
 
   protected IKalypsoTheme[] findExistingThemes( final GisTemplateMapModell mapModell, final FeaturePath profilesPath, final String absolutePath, final String relativePath )
   {
-    final Collection<IKalypsoTheme> allThemes = new ArrayList<IKalypsoTheme>();
+    final Collection<IKalypsoTheme> allThemes = new ArrayList<>();
 
     /* Find all themes with absolute path to terrain model */
     // REMARK: this is for backwards compatibility; the path was absolute in the beginning, so they might still be

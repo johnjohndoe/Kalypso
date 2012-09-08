@@ -25,7 +25,7 @@ import com.bce.datacenter.db.timeseries.TimeserieTupple;
 
 /**
  * DataCenterTuppleModel
- * 
+ *
  * @author marc
  */
 public class DataCenterTuppleModel implements ITupleModel
@@ -41,7 +41,7 @@ public class DataCenterTuppleModel implements ITupleModel
     m_tupples = tupples;
     m_axes = axes;
 
-    m_axesPos = new HashMap<IAxis, Integer>( axes.length );
+    m_axesPos = new HashMap<>( axes.length );
     for( int i = 0; i < axes.length; i++ )
       m_axesPos.put( axes[i], new Integer( i ) );
   }

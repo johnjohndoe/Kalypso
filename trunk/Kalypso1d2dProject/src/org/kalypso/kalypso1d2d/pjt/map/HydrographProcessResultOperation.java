@@ -120,9 +120,6 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
 
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
   {
@@ -132,7 +129,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
 
       final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.0" ), entrySet.size() ); //$NON-NLS-1$
 
-      final Map<GM_Point, IObservation<TupleResult>> obsMap = new HashMap<GM_Point, IObservation<TupleResult>>();
+      final Map<GM_Point, IObservation<TupleResult>> obsMap = new HashMap<>();
 
       for( final IHydrograph hydrograph : m_hydrographs.getHydrographs() )
       {

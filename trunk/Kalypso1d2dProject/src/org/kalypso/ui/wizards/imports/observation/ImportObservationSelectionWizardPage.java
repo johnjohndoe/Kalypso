@@ -103,7 +103,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private final INativeObservationAdapter[] m_adapter;
 
-  final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
+  final List<ISelectionChangedListener> m_selectionListener = new ArrayList<>();
 
   protected Text m_textFileSource;
 

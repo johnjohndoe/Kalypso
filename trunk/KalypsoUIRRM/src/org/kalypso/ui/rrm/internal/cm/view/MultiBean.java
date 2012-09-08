@@ -91,7 +91,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
 
   /**
    * Constructs a multi bean initialized with the values from the multi generator.
-   * 
+   *
    * @param generator
    *          The multi generator.
    */
@@ -104,7 +104,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
 
   /**
    * This function returns the checked sub generators.
-   * 
+   *
    * @return The checked sub generators.
    */
   public ILinearSumGenerator[] getSubGenerators( )
@@ -114,7 +114,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
 
   /**
    * This function sets the checked sub generators.
-   * 
+   *
    * @param subGenerators
    *          The checked sub generators.
    */
@@ -133,7 +133,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
 
   /**
    * This function returns the status.
-   * 
+   *
    * @return The status.
    */
   public IStatus getStatus( )
@@ -143,7 +143,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
 
   /**
    * This function applies the changes of this multi generator. It will create or update the multi generator feature.
-   * 
+   *
    * @param workspace
    *          The workspace.
    * @return The new multi generator.
@@ -155,7 +155,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
     if( feature == null )
     {
       /* The multi generator feature does not exist. */
-      final Map<QName, Object> properties = new HashMap<QName, Object>( getProperties() );
+      final Map<QName, Object> properties = new HashMap<>( getProperties() );
       final ICatchmentModel collection = (ICatchmentModel) workspace.getRootFeature();
       final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
       final QName type = getFeatureType().getQName();
@@ -198,7 +198,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
 
   private ILinearSumGenerator[] initSubGenerators( )
   {
-    final List<ILinearSumGenerator> results = new ArrayList<ILinearSumGenerator>();
+    final List<ILinearSumGenerator> results = new ArrayList<>();
 
     final IMultiGenerator generator = getFeature();
     final IFeatureBindingCollection<IRainfallGenerator> subGenerators = generator.getSubGenerators();

@@ -58,8 +58,8 @@ public class PageSecond extends WizardPage
     if( m_comboRoughnessIDs != null && m_comboRoughnessIDs.length > 0 )
     {
       final Control[] controls = composite.getChildren();
-      for( int i = 0; i < controls.length; i++ )
-        controls[i].dispose();
+      for( final Control control2 : controls )
+        control2.dispose();
     }
 
     /* introduce some headers */
@@ -71,7 +71,7 @@ public class PageSecond extends WizardPage
     for( final String key : m_data.getRoughnessStaticCollectionMap().keySet() )
       names[i++] = key;
     final LinkedHashMap<String, String> map = m_data.getRoughnessShapeStaticRelationMap();
-    m_shpNamesList = new ArrayList<String>();
+    m_shpNamesList = new ArrayList<>();
     m_comboRoughnessIDs = new Combo[map.size()];
     for( final String key : map.keySet() )
     {

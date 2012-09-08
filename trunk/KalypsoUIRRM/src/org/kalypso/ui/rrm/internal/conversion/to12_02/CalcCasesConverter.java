@@ -59,7 +59,7 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * Converts calc cases to scenarios.
- * 
+ *
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -141,7 +141,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
 
   /**
    * This function determines the directory of the scenario.
-   * 
+   *
    * @param sourceDir
    *          The directory of the source calc case.
    * @return The directory of the scenario.
@@ -159,7 +159,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
 
   /**
    * This function adds all segments after the segment 'Rechenvarianten' to a string. They will be separated by '_'.
-   * 
+   *
    * @param sourceDir
    *          The directory of the source calc case.
    * @return The name of the scenario.
@@ -167,7 +167,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
   private String findScenarioName( final File sourceDir )
   {
     /* All segments after 'Rechenvarianten'. */
-    final List<String> segmentsAfter = new ArrayList<String>();
+    final List<String> segmentsAfter = new ArrayList<>();
 
     /* Get the source path. */
     final IPath sourcePath = Path.fromOSString( sourceDir.getAbsolutePath() );

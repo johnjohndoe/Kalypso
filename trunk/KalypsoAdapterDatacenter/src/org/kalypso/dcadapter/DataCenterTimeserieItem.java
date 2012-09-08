@@ -32,7 +32,7 @@ import com.bce.datacenter.db.timeseries.TimeserieTupple;
 
 /**
  * DataCenterTimeserieItem
- * 
+ *
  * @author marc
  */
 public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
@@ -99,8 +99,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes")
-  final Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     if( anotherClass == IObservation.class )
       return this;

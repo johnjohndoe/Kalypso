@@ -55,8 +55,9 @@ public class DataContainer
   public DataContainer( )
   {
     super();
-    m_roughnessStaticCollectionMap = new LinkedHashMap<String, String>();
-    m_roughnessShapeStaticRelationMap = new LinkedHashMap<String, String>();
+
+    m_roughnessStaticCollectionMap = new LinkedHashMap<>();
+    m_roughnessShapeStaticRelationMap = new LinkedHashMap<>();
   }
 
   public final void setInputFile( final String inputFile )
@@ -221,12 +222,12 @@ public class DataContainer
       else
       {
         file.createNewFile();
-        m_userSelectionMap = new LinkedHashMap<String, String>();
+        m_userSelectionMap = new LinkedHashMap<>();
       }
     }
     catch( final Exception e )
     {
-      m_userSelectionMap = new LinkedHashMap<String, String>();
+      m_userSelectionMap = new LinkedHashMap<>();
       e.printStackTrace();
     }
   }

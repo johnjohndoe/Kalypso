@@ -115,13 +115,13 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
 
     if( m_generator instanceof ILinearSumGenerator )
     {
-      final FeatureBean<ILinearSumGenerator> bean = new FeatureBean<ILinearSumGenerator>( (ILinearSumGenerator) m_generator );
+      final FeatureBean<ILinearSumGenerator> bean = new FeatureBean<>( (ILinearSumGenerator)m_generator );
       return new LinearSumComposite( parent, bean, binding, false );
     }
 
     if( m_generator instanceof IMultiGenerator )
     {
-      final FeatureBean<IMultiGenerator> bean = new FeatureBean<IMultiGenerator>( (IMultiGenerator) m_generator );
+      final FeatureBean<IMultiGenerator> bean = new FeatureBean<>( (IMultiGenerator)m_generator );
       return new MultiComposite( parent, bean, binding, false );
     }
 

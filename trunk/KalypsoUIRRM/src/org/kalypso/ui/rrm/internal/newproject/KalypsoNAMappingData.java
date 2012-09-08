@@ -57,7 +57,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.WizardPage;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -73,7 +72,7 @@ import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 
 /**
  * Data (and binding) object for the Kalypso RRM project wizard.
- * 
+ *
  * @author Gernot Belger
  */
 public class KalypsoNAMappingData extends AbstractModelObject
@@ -94,7 +93,7 @@ public class KalypsoNAMappingData extends AbstractModelObject
 
   private IStatus m_shapeTypeStatus = SHAPE_TYPE_STATUS_NONE;
 
-  private final Map<IValuePropertyType, IValuePropertyType> m_mapping = new HashMap<IValuePropertyType, IValuePropertyType>();
+  private final Map<IValuePropertyType, IValuePropertyType> m_mapping = new HashMap<>();
 
   private ShapeCollection m_sourceData;
 
@@ -191,7 +190,7 @@ public class KalypsoNAMappingData extends AbstractModelObject
 
       page.setPageComplete( false );
 
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg, e );
 
       setShapeTypeStatus( status );
 
@@ -252,7 +251,7 @@ public class KalypsoNAMappingData extends AbstractModelObject
     final IPropertyType[] ftp = featureType.getProperties();
 
     /* filter all value types */
-    final List<IValuePropertyType> result = new ArrayList<IValuePropertyType>();
+    final List<IValuePropertyType> result = new ArrayList<>();
     for( final IPropertyType element : ftp )
     {
       if( element instanceof IValuePropertyType )

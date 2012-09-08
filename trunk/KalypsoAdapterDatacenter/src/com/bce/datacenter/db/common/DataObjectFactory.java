@@ -11,14 +11,14 @@ import com.bce.datacenter.db.timeseries.Channel;
 
 /**
  * Factory for DataObject subclasses
- * 
+ *
  * @author schlienger
  */
 public class DataObjectFactory
 {
   /**
    * Loads all channels belonging to the given owner
-   * 
+   *
    * @param con
    * @param ownerRef
    *          owner id
@@ -26,7 +26,7 @@ public class DataObjectFactory
    */
   public static List<Channel> loadChannels( final Connection con, final int ownerRef )
   {
-    final Vector<Channel> v = new Vector<Channel>();
+    final Vector<Channel> v = new Vector<>();
 
     try
     {
@@ -58,7 +58,7 @@ public class DataObjectFactory
 
   /**
    * Returns an owner Object from the database according to its identifier
-   * 
+   *
    * @param con
    * @param id
    * @return an owner Object from the database according to its identifier

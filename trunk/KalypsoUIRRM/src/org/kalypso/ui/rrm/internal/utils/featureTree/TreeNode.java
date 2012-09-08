@@ -145,7 +145,7 @@ public class TreeNode implements IAdaptable, Comparable<TreeNode>
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( !(m_treeData instanceof IAdaptable) )
       return null;

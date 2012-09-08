@@ -150,7 +150,7 @@ public class ImportWizard extends Wizard implements INewWizard
       m_data.saveUserSelection();
       m_szenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
 
-      final List<Feature> changedFeatures = new ArrayList<Feature>();
+      final List<Feature> changedFeatures = new ArrayList<>();
       final List<IRoughnessPolygonCollection> roughnessPolygonCollections = m_data.getModel().getRoughnessPolygonCollections();
       for( final IRoughnessPolygonCollection collection : roughnessPolygonCollections )
       {

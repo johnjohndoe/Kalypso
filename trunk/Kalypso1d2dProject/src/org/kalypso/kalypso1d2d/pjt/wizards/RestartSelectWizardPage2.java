@@ -11,7 +11,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,7 +27,8 @@ import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
+
+public class RestartSelectWizardPage2 extends WizardPage
 {
   private static final ImageData IMAGEDATA_ARROW_UP = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_up.gif" ).getImageData(); //$NON-NLS-1$
 
@@ -36,7 +36,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
 
   private ListViewer m_listViewer;
 
-  private final Vector<IStepResultMeta> m_sortedResults = new Vector<IStepResultMeta>();
+  private final Vector<IStepResultMeta> m_sortedResults = new Vector<>();
 
   private Button m_btnUp;
 

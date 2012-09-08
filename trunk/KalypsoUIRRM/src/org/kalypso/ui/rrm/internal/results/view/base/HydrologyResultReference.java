@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Dirk Kuch
  */
-public class HydrologyResultReference implements IHydrologyResultReference, IZmlSourceElement
+public class HydrologyResultReference implements IHydrologyResultReference
 {
   private final RRM_RESULT m_type;
 

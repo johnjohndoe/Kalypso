@@ -15,7 +15,7 @@ import com.bce.datacenter.db.timeseries.Channel;
 
 /**
  * DataCenterItem
- * 
+ *
  * @author marc
  */
 public class DataCenterLevelItem implements IRepositoryItem
@@ -74,15 +74,12 @@ public class DataCenterLevelItem implements IRepositoryItem
     return m_level.getChildCount() > 0 || m_level.getObjects().size() > 0;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getChildren()
-   */
   @Override
   public IRepositoryItem[] getChildren( )
   {
     if( m_children == null )
     {
-      final ArrayList<IRepositoryItem> list = new ArrayList<IRepositoryItem>();
+      final ArrayList<IRepositoryItem> list = new ArrayList<>();
       final Enumeration<Level> cs = m_level.children();
       while( cs.hasMoreElements() )
         list.add( new DataCenterLevelItem( m_rep, this, cs.nextElement() ) );
@@ -97,9 +94,6 @@ public class DataCenterLevelItem implements IRepositoryItem
     return m_children;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getRepository()
-   */
   @Override
   public IRepository getRepository( )
   {
@@ -107,14 +101,11 @@ public class DataCenterLevelItem implements IRepositoryItem
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     return null;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

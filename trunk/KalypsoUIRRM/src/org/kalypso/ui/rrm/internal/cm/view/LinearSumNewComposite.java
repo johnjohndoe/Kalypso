@@ -63,7 +63,7 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.TimestampTargetToModelCo
 
 /**
  * This composite shows the contents of the linear sum generator.
- * 
+ *
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -82,7 +82,7 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @param featureBean
@@ -182,7 +182,7 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
     createPropertyLabel( this, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
 
     /* Get the parameter labels. */
-    final LinkedHashMap<String, String> allowedParameterLabels = new LinkedHashMap<String, String>();
+    final LinkedHashMap<String, String> allowedParameterLabels = new LinkedHashMap<>();
     for( final String allowedParameterType : ALLOWED_PARAMETER_TYPES )
     {
       final String allowedParameterLabel = ParameterTypeUtils.formatParameterType( allowedParameterType );

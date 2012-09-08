@@ -54,7 +54,7 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 
 /**
  * This composite shows the contents of the multi generator.
- * 
+ *
  * @author Holger Albert
  */
 public class MultiNewComposite extends FeatureBeanComposite<IMultiGenerator>
@@ -67,7 +67,7 @@ public class MultiNewComposite extends FeatureBeanComposite<IMultiGenerator>
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @param featureBean
@@ -102,7 +102,7 @@ public class MultiNewComposite extends FeatureBeanComposite<IMultiGenerator>
     createPropertyLabel( this, IMultiGenerator.PROPERTY_PARAMETER_TYPE );
 
     /* Get the parameter labels. */
-    final LinkedHashMap<String, String> allowedParameterLabels = new LinkedHashMap<String, String>();
+    final LinkedHashMap<String, String> allowedParameterLabels = new LinkedHashMap<>();
     for( final String allowedParameterType : ALLOWED_PARAMETER_TYPES )
     {
       final String allowedParameterLabel = ParameterTypeUtils.formatParameterType( allowedParameterType );

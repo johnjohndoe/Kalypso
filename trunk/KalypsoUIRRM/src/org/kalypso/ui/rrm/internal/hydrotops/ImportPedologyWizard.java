@@ -112,7 +112,7 @@ public class ImportPedologyWizard extends AbstractHydrotopeDataImportWizard
 
   private Map<String, String> hashSoiltypeClasses( final Parameter parameter )
   {
-    final Map<String, String> pedologyClasses = new HashMap<String, String>();
+    final Map<String, String> pedologyClasses = new HashMap<>();
 
     final IFeatureBindingCollection<Soiltype> soiltypes = parameter.getSoiltypes();
     for( final Soiltype soilType : soiltypes )

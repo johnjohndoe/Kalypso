@@ -18,7 +18,7 @@ import com.bce.datacenter.db.timeseries.Channel;
 /**
  * A Level is an abstract element of the tree hierarchy of the datacenter. A Level belongs to exactly one parent, except
  * for the root that has no parent. Thus a given Level may have zero, one or more child Levels.
- * 
+ *
  * @author Marc Schlienger
  */
 public class Level extends Persistent implements TreeNode
@@ -43,7 +43,7 @@ public class Level extends Persistent implements TreeNode
 
   /**
    * constructs a Level based on an identifier with the database
-   * 
+   *
    * @param con
    * @param id
    *          level identifier as existing in the database
@@ -55,7 +55,7 @@ public class Level extends Persistent implements TreeNode
 
   /**
    * Constructor with parameters
-   * 
+   *
    * @param con
    * @param id
    * @param name
@@ -73,7 +73,7 @@ public class Level extends Persistent implements TreeNode
 
   /**
    * Returns the root level of the hierarchy
-   * 
+   *
    * @param con
    * @return the very root level
    */
@@ -151,7 +151,7 @@ public class Level extends Persistent implements TreeNode
 
     try
     {
-      m_children = new Vector<Level>();
+      m_children = new Vector<>();
 
       final PreparedStatement stmt = m_con.prepareStatement( "SELECT * FROM DC_TREELEVEL WHERE PARENTLEVEL = ? ORDER BY LEVELNAME ASC" );
       stmt.setInt( 1, m_ID );
@@ -244,7 +244,7 @@ public class Level extends Persistent implements TreeNode
 
   /**
    * Returns the path (that is concatenation of path of parent level + this name)
-   * 
+   *
    * @return path of this level,
    */
   public String getPathName( )

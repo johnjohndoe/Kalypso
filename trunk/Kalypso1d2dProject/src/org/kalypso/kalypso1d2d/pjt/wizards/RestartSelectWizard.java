@@ -139,7 +139,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     m_restartSelectWizardPage1.setTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.3" ) ); //$NON-NLS-1$
     m_restartSelectWizardPage1.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.4" ) ); //$NON-NLS-1$
 
-    final List<IResultMeta> checkedElements = new ArrayList<IResultMeta>();
+    final List<IResultMeta> checkedElements = new ArrayList<>();
 
     final List<IRestartInfo> restartInfos = m_controlModel.getRestartInfos();
     for( final IRestartInfo restartInfo : restartInfos )
@@ -178,9 +178,6 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     m_restartSelectWizardPage1.setInitialCheckedElements( checkedElements.toArray() );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {

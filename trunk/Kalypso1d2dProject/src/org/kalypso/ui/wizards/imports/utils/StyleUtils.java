@@ -57,7 +57,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Utility class for creating SLD styles
- * 
+ *
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class StyleUtils
@@ -98,7 +98,7 @@ public class StyleUtils
   public void importCustomFilterpropertyColorMap( final HashMap<String, Color> customPropertyColorMap, final boolean deleteExistingData )
   {
     if( m_customPropertyColorMap == null )
-      m_customPropertyColorMap = new HashMap<String, Color>();
+      m_customPropertyColorMap = new HashMap<>();
     if( deleteExistingData )
       m_customPropertyColorMap.clear();
     m_customPropertyColorMap.putAll( customPropertyColorMap );
@@ -115,7 +115,7 @@ public class StyleUtils
     if( m_DataPrepared )
       return;
     if( m_customPropertyColorMap == null )
-      m_customPropertyColorMap = new HashMap<String, Color>();
+      m_customPropertyColorMap = new HashMap<>();
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:" + m_InputGML ), null ); //$NON-NLS-1$
     final String ns = workspace.getGMLSchema().getTargetNamespace();
     boolean b_geometryPropertyExists = (m_GeometryProperty != null && m_GeometryProperty.trim().length() > 0);
@@ -240,7 +240,7 @@ public class StyleUtils
 
   /**
    * Creates custom SLD file based on input GML file
-   * 
+   *
    * @param inputGMLFile
    *          - input GML file, full path
    * @param resultSLDFile
@@ -271,7 +271,7 @@ public class StyleUtils
     final boolean b_knownPropertyColorSetExists = (knownPropertyColorSet != null && knownPropertyColorSet.size() > 0);
     final IFeatureType rootFeatureType = workspace.getRootFeature().getFeatureType();
     final IPropertyType[] propertyTypes = rootFeatureType.getProperties();
-    final HashMap<String, Color> filterPropertyColorMap = new HashMap<String, Color>();
+    final HashMap<String, Color> filterPropertyColorMap = new HashMap<>();
     try
     {
       for( final IPropertyType element : propertyTypes )
@@ -329,7 +329,7 @@ public class StyleUtils
 
   /**
    * Helper function that is actually creating SLD file
-   * 
+   *
    * @param styleLayerName
    * @param geometryProperty
    * @param filterProperty

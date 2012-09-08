@@ -98,7 +98,7 @@ public class WspCfg
     }
   }
 
-  private final Collection<WspWinZustand> m_zustaende = new ArrayList<WspWinZustand>();
+  private final Collection<WspWinZustand> m_zustaende = new ArrayList<>();
 
   private final WspWinProfProj m_profProj = new WspWinProfProj();
 
@@ -175,7 +175,7 @@ public class WspCfg
 
     final File profDir = m_project.getProfDir();
 
-    final Collection<ZustandBean> zustandBeans = new ArrayList<ZustandBean>();
+    final Collection<ZustandBean> zustandBeans = new ArrayList<>();
 
     final IStatus wspCfgStatus = readWspCfg( profDir, zustandBeans );
     log.add( wspCfgStatus );

@@ -76,7 +76,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Helper that guesses a CatchmentModel for each existing calculation case.
- * 
+ *
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -121,7 +121,7 @@ public class CatchmentModelBuilder
     final MutablePeriod smallestPeriod = Period.days( 10000 ).toMutablePeriod();
 
     /* Memory for the timestamps. */
-    final Map<LocalTime, Integer> timestamps = new HashMap<LocalTime, Integer>();
+    final Map<LocalTime, Integer> timestamps = new HashMap<>();
 
     /* Add catchments */
     final IFeatureBindingCollection<Catchment> catchments = m_naModel.getCatchments();

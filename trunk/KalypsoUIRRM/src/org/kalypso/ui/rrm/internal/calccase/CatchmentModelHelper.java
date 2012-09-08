@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
@@ -107,7 +107,7 @@ import com.google.common.base.Charsets;
 
 /**
  * This class contains functions for dealing with catchment models.
- * 
+ *
  * @author Holger Albert
  */
 public class CatchmentModelHelper
@@ -121,7 +121,7 @@ public class CatchmentModelHelper
 
   /**
    * This function bulds a link for the timeseries of the given catchment.
-   * 
+   *
    * @param simulation
    *          The rrm simulation.
    * @param prefix
@@ -163,7 +163,7 @@ public class CatchmentModelHelper
 
   /**
    * This function sets a link to the catchment.
-   * 
+   *
    * @param catchment
    *          This catchment will get the link set.
    * @param targetLink
@@ -193,7 +193,7 @@ public class CatchmentModelHelper
    * <li>Generators may not overlap. Touch is ok.</li>
    * <li>There are no gaps allowed between the validity ranges of adjacent generators.</li>
    * </ul>
-   * 
+   *
    * @param multiGenerator
    *          The multi generator.
    * @param control
@@ -228,7 +228,7 @@ public class CatchmentModelHelper
    * <li>Generators may not overlap. Touch is ok.</li>
    * <li>There are no gaps allowed between the validity ranges of adjacent generators.</li>
    * </ul>
-   * 
+   *
    * @param multiBean
    *          The multi bean.
    * @return A status. If the severity is ERROR, the validation has failed.
@@ -263,7 +263,7 @@ public class CatchmentModelHelper
    * <li>Generators may not overlap. Touch is ok.</li>
    * <li>There are no gaps allowed between the validity ranges of adjacent generators.</li>
    * </ul>
-   * 
+   *
    * @param generators
    *          The generators to validate.
    * @param simulationStart
@@ -355,7 +355,7 @@ public class CatchmentModelHelper
    * <li>The timestep must be the same.</li>
    * <li>The timestamp must be the same.</li>
    * </ul>
-   * 
+   *
    * @param generator1
    *          The first linear sum generator.
    * @param generator2
@@ -386,7 +386,7 @@ public class CatchmentModelHelper
    * <li>The order of the catchments.</li>
    * <li>Optional: The factors and timeseries in the catchments.</li>
    * </ul>
-   * 
+   *
    * @param generator1
    *          The first linear sum generator.
    * @param generator2
@@ -432,7 +432,7 @@ public class CatchmentModelHelper
 
   /**
    * This function compares the validity ranges of the generators.
-   * 
+   *
    * @param compareGenerator
    *          The compare generator.
    * @param generators
@@ -478,7 +478,7 @@ public class CatchmentModelHelper
 
   /**
    * This function checks the validity ranges of the generators for gaps.
-   * 
+   *
    * @param generators
    *          The generators to be checked.
    * @param simulationStart
@@ -574,7 +574,7 @@ public class CatchmentModelHelper
    * <li>1 timestep earlier</li>
    * <li>3 timesteps later</li>
    * </ul>
-   * 
+   *
    * @param control
    *          The na control.
    * @param timestep
@@ -641,7 +641,7 @@ public class CatchmentModelHelper
    * <li>If a date/value of the second simulation misses or is not equal in the first simulation, this is a difference.</li>
    * <li>It will not compare the length or metadata of the timeseries.</li>
    * </ul>
-   * 
+   *
    * @param simulationFolder
    *          The folder of the first simulation.
    * @param simulationTmpFolder
@@ -701,7 +701,7 @@ public class CatchmentModelHelper
 
   /**
    * This function loads the na model.
-   * 
+   *
    * @param simulation
    *          The simulation.
    * @return The na model.
@@ -846,7 +846,7 @@ public class CatchmentModelHelper
   private static Map<Long, Double> buildHash( final ITupleModel values ) throws SensorException
   {
     /* Memory for the hash. */
-    final Map<Long, Double> hash = new LinkedHashMap<Long, Double>();
+    final Map<Long, Double> hash = new LinkedHashMap<>();
 
     /* Find the needed axes. */
     final IAxis[] axes = values.getAxes();
@@ -868,7 +868,7 @@ public class CatchmentModelHelper
 
   /**
    * This function compares the catchments of the na model with the catchment of the given generator.
-   * 
+   *
    * @param model
    *          The na model.
    * @param generator

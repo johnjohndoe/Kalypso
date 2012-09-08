@@ -70,7 +70,7 @@ public class KMFilesReader implements IKMReader
     final FileReader fileReader = new FileReader( file );
     final LineNumberReader lineReader = new LineNumberReader( fileReader );
     ProfileData wqProfile = null;
-    final List<Row> rows = new ArrayList<Row>();
+    final List<Row> rows = new ArrayList<>();
     while( lineReader.ready() )
     {
       final String line = lineReader.readLine();
