@@ -66,7 +66,7 @@ public class RunOffEventBean
 {
   private final String m_name;
 
-  private final Map<BigDecimal, BigDecimal> m_entries = new TreeMap<BigDecimal, BigDecimal>();
+  private final Map<BigDecimal, BigDecimal> m_entries = new TreeMap<>();
 
   public RunOffEventBean( final String name )
   {
@@ -95,7 +95,7 @@ public class RunOffEventBean
     if( !qwtFile.exists() )
       return new RunOffEventBean[] {};
 
-    final List<RunOffEventBean> beans = new ArrayList<RunOffEventBean>( 10 );
+    final List<RunOffEventBean> beans = new ArrayList<>( 10 );
 
     LineIterator lineIt = null;
     try

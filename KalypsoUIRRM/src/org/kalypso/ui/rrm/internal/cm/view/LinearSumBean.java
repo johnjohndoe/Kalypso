@@ -90,7 +90,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 
   /**
    * Constructs a linear sum bean initialized with the values from the linear sum generator.
-   * 
+   *
    * @param generator
    *          The linear sum generator.
    */
@@ -117,7 +117,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
    * This function applies the changes of this linear sum generator. It will create or update the linear sum generator
    * feature. If the linear sum generator feature is existing, its (probably) existing catchment features will be
    * deleted. So always new ones will be generated.
-   * 
+   *
    * @param workspace
    *          The workspace.
    * @param parameterType
@@ -131,7 +131,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     if( feature == null )
     {
       /* The linear sum generator feature does not exist. */
-      final Map<QName, Object> properties = new HashMap<QName, Object>( getProperties() );
+      final Map<QName, Object> properties = new HashMap<>( getProperties() );
       final ICatchmentModel collection = (ICatchmentModel) workspace.getRootFeature();
       final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
       final QName type = getFeatureType().getQName();
@@ -199,7 +199,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 
   private CatchmentBean[] initCatchments( )
   {
-    final List<CatchmentBean> results = new ArrayList<CatchmentBean>();
+    final List<CatchmentBean> results = new ArrayList<>();
     final ILinearSumGenerator generator = getFeature();
     final List<ICatchment> catchments = generator.getCatchments();
     for( final ICatchment catchment : catchments )
@@ -223,7 +223,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 
   /**
    * Creates a empty linear sum bean with all catchments from the model.gml.
-   * 
+   *
    * @param model
    *          The na model.
    * @return The linear sum bean.
@@ -244,7 +244,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
   /**
    * Creates a linear sum bean representing the linear sum generator with all catchments from the model.gml. It keeps
    * the factors, where possible.
-   * 
+   *
    * @param model
    *          The na model.
    * @param generator
@@ -298,7 +298,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 
   private static Map<String, ICatchment> getCatchmentsFromGenerator( final ILinearSumGenerator generator )
   {
-    final Map<String, ICatchment> results = new HashMap<String, ICatchment>();
+    final Map<String, ICatchment> results = new HashMap<>();
 
     final IFeatureBindingCollection<ICatchment> catchments = generator.getCatchments();
     for( final ICatchment catchment : catchments )

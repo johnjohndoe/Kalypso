@@ -14,7 +14,7 @@ import com.bce.datacenter.db.timeseries.Timeserie;
 
 /**
  * DataCenterChannelItem
- * 
+ *
  * @author marc
  */
 public class DataCenterChannelItem implements IRepositoryItem
@@ -114,14 +114,11 @@ public class DataCenterChannelItem implements IRepositoryItem
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
-   */
   @Override
   public boolean hasAdapter( final Class< ? > adapter )
   {

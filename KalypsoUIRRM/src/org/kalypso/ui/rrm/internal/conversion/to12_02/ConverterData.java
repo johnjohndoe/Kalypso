@@ -65,7 +65,6 @@ public class ConverterData
     return m_baseDir;
   }
 
-  @SuppressWarnings("unchecked")
   <F extends Feature> F loadModel( final String path ) throws Exception
   {
     final File file = new File( m_baseDir, path );

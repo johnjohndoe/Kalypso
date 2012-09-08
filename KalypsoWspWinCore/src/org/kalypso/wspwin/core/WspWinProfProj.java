@@ -63,7 +63,7 @@ public class WspWinProfProj
 {
   public static final String PROFPROJ_FILENAME = "PROFPROJ.TXT"; //$NON-NLS-1$
 
-  private final Collection<ProfileBean> m_profiles = new ArrayList<ProfileBean>();
+  private final Collection<ProfileBean> m_profiles = new ArrayList<>();
 
   public void add( final ProfileBean profileBean )
   {

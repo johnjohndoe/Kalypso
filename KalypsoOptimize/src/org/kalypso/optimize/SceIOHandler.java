@@ -59,7 +59,7 @@ import org.kalypso.simulation.core.SimulationException;
 
 /**
  * this class handles the comunication between optimizer routine (SCE) and calcjob routine
- * 
+ *
  * @author doemming
  */
 public class SceIOHandler
@@ -80,7 +80,7 @@ public class SceIOHandler
 
   private final IErrorFunktion m_errorFunction;
 
-  private final List<Double> m_parameter = new ArrayList<Double>();
+  private final List<Double> m_parameter = new ArrayList<>();
 
   private final Logger m_logger;
 

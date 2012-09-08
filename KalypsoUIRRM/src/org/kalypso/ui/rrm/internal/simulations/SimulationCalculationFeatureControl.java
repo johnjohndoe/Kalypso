@@ -291,7 +291,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
   private NAControl[] findAllSimulations( )
   {
-    final Collection<NAControl> results = new ArrayList<NAControl>();
+    final Collection<NAControl> results = new ArrayList<>();
 
     final NAControl naControl = (NAControl) getFeature();
     final SimulationCollection owner = (SimulationCollection) naControl.getOwner();

@@ -55,7 +55,7 @@ import org.kalypso.optimizer.VolumeError;
 
 /**
  * factory class for creating error functions
- * 
+ *
  * @author doemming
  */
 public class ErrorFunctionFactory
@@ -70,7 +70,7 @@ public class ErrorFunctionFactory
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();
     final List<JAXBElement< ? >> errorFunktions = autocalibration.getOptParameter().getObjectiveFunction().getErrorFunktion();
-    final List<IErrorFunktion> functions = new ArrayList<IErrorFunktion>();
+    final List<IErrorFunktion> functions = new ArrayList<>();
     for( final JAXBElement< ? > element : errorFunktions )
     {
       final Object fXML = element.getValue();
@@ -97,7 +97,7 @@ public class ErrorFunctionFactory
       return createErrorFunction( (RootMeanSquareErrorPeakFlows) fXML, autocalibration, measuredTS );
 
     return null;
-  } 
+  }
 
   public static IErrorFunktion createErrorFunction( final RootMeanSquareErrorLowFlows error, final AutoCalibration autocalibration,
       final SortedMap<Date, Double> calcedTS )

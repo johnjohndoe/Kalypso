@@ -114,7 +114,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
  */
 public class EditStyleDialog extends TitleAreaDialog
 {
-  private final Set<IEditStyleDialogModifyListener> m_listeners = new HashSet<IEditStyleDialogModifyListener>();
+  private final Set<IEditStyleDialogModifyListener> m_listeners = new HashSet<>();
 
   private static final String SETTINGS_SECTION = "ResultStyleEditorDialogSettings"; //$NON-NLS-1$
 
@@ -368,7 +368,6 @@ public class EditStyleDialog extends TitleAreaDialog
             {
               private Map<Integer, Color> m_mapActualColorsCache;
 
-              @SuppressWarnings("unchecked")
               @Override
               protected void contentChanged( )
               {
@@ -589,7 +588,7 @@ public class EditStyleDialog extends TitleAreaDialog
         // we assume, that there is only one rule and take the first we can get.
         m_rules = featureTypeStyle.getRules();
 
-        final List<Symbolizer> symbList = new ArrayList<Symbolizer>();
+        final List<Symbolizer> symbList = new ArrayList<>();
 
         for( final Rule rule : m_rules )
         {

@@ -64,8 +64,8 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
+import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
@@ -114,7 +114,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
    */
   private static final int GEO_MAPPING_MULTICURVE_2_CURVE = 0x1 << 2;
 
-  private final Map<String, Feature> m_IDMap = new HashMap<String, Feature>();
+  private final Map<String, Feature> m_IDMap = new HashMap<>();
 
   private final RrmScenario m_scenario;
 
@@ -393,7 +393,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
     final String gmlVersion = schema.getGMLVersion();
     if( gmlVersion.startsWith( "3" ) && Feature.QN_NAME.equals( targetPT.getQName() ) ) //$NON-NLS-1$
     {
-      final List<String> nameList = new ArrayList<String>();
+      final List<String> nameList = new ArrayList<>();
       nameList.add( ObjectUtils.toString( sourceValue, StringUtils.EMPTY ) );
       return nameList;
     }
@@ -480,7 +480,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
    * generates an ID based on the FeatureType. If the idColKey variable is set, then use this field to generate the ID
    * and check if the ID doesn´t exist in the idMap. if the idColKey is not set, use the ID of the sourceFeature (shape
    * file).
-   * 
+   *
    * @param idColKey
    * @param sourceFeature
    * @param IDText

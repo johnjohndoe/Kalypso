@@ -583,7 +583,6 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       setHydrographs( null, null );
   }
 
-  @SuppressWarnings("unchecked")
   private void setHydrographs( final IHydrographCollection hydrographCollection, final IKalypsoFeatureTheme theme )
   {
     // remove listener
@@ -912,7 +911,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
     final IKalypsoTheme[] themes = mapModell.getAllThemes();
-    final List<IKalypsoTheme> themesForCombo = new ArrayList<IKalypsoTheme>();
+    final List<IKalypsoTheme> themesForCombo = new ArrayList<>();
     for( final IKalypsoTheme theme : themes )
     {
       if( HYDROGRAPH_PREDICATE.decide( theme ) )

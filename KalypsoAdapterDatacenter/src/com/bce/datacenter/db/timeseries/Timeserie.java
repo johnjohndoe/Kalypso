@@ -19,7 +19,7 @@ import com.bce.datacenter.db.persistent.Persistent;
  * Wraps all kind of timeseries that can be owned by a channel or a computation. Channels own work, original, and
  * computed timeseries. NOTE: TimeserieWrapper are not stored as is into the database, they just represent some common
  * business logic upon timeseries.
- * 
+ *
  * @author Marc Schlienger
  * @see Channel
  */
@@ -47,7 +47,7 @@ public class Timeserie extends Persistent
 
   /**
    * Constructor
-   * 
+   *
    * @param id
    *          internal db identifier
    */
@@ -92,7 +92,7 @@ public class Timeserie extends Persistent
 
   /**
    * returns the mindate of the wrapped timeseries
-   * 
+   *
    * @return min date, or null if error occurs
    */
   public Date getRealBegin( )
@@ -133,7 +133,7 @@ public class Timeserie extends Persistent
 
   /**
    * returns the max date of the wrapped timeseries
-   * 
+   *
    * @return max date, or null if error occurs
    */
   public Date getRealEnd( )
@@ -211,7 +211,7 @@ public class Timeserie extends Persistent
 
   /**
    * exports the timeserie owned by this wrapper to a file
-   * 
+   *
    * @param filename
    *          pathname of the file to create
    * @param from
@@ -297,7 +297,7 @@ public class Timeserie extends Persistent
 
   /**
    * createsQuery for this Timeseries
-   * 
+   *
    * @param from
    * @param to
    */
@@ -360,7 +360,7 @@ public class Timeserie extends Persistent
       // TODO: Berücksichtigt die Zeitzone nicht richtig - es sollte die Datenbankzeitzone gewählt werden!!!
       final ResultSet set = st.executeQuery( createQuery( from, to ) );
 
-      final Vector<TimeserieTupple> list = new Vector<TimeserieTupple>();
+      final Vector<TimeserieTupple> list = new Vector<>();
 
       // TODO Performanz verbessern!!!
       while( set.next() )
@@ -448,12 +448,12 @@ public class Timeserie extends Persistent
 
   /**
    * Fast load of all timeseries for a channel
-   * 
+   *
    * @return list of all timeseries for a channel
    */
   protected static List<Timeserie> dbReadAll( final Connection con, final int channelRef )
   {
-    final Vector<Timeserie> v = new Vector<Timeserie>();
+    final Vector<Timeserie> v = new Vector<>();
 
     try
     {
@@ -490,6 +490,12 @@ public class Timeserie extends Persistent
     }
 
     return v;
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    return getID();
   }
 
   @Override

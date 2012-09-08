@@ -152,7 +152,7 @@ public class Plotter
 
     final Runtime runtime = Runtime.getRuntime();
 
-    final Collection<String> commands = new ArrayList<String>();
+    final Collection<String> commands = new ArrayList<>();
     commands.add( plotterExe.getAbsolutePath() );
     if( doPrint )
       commands.add( "-p" ); //$NON-NLS-1$
@@ -163,5 +163,4 @@ public class Plotter
     new StreamStreamer( p.getInputStream(), System.out );
     new StreamStreamer( p.getErrorStream(), System.err );
   }
-
 }

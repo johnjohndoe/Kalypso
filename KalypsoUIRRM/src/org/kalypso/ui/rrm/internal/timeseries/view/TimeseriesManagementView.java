@@ -207,7 +207,7 @@ public class TimeseriesManagementView extends ViewPart
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == TreeViewer.class )
       return m_treeViewer;

@@ -78,7 +78,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * This class contains functions which are used by the linear sum generator, Thiessen Method and Inverse Distance
  * Weighting Method.
- * 
+ *
  * @author Holger Albert
  */
 public class LinearSumHelper
@@ -92,7 +92,7 @@ public class LinearSumHelper
 
   /**
    * This function creates the linear sum bean for the given parameter type from the current scenario.
-   * 
+   *
    * @param parameterType
    *          The parameter type.
    * @return The linear sum bean.
@@ -121,7 +121,7 @@ public class LinearSumHelper
 
   /**
    * This function loads the stations gml.
-   * 
+   *
    * @return The collection of stations. Each station corresponds to a timeseries. So this is better spoken a list of
    *         timeseries (which may have the same station).
    */
@@ -174,7 +174,7 @@ public class LinearSumHelper
 
   /**
    * This function applys the weights to the catchment.
-   * 
+   *
    * @param catchment
    *          The catchment.
    * @param timeseries
@@ -209,7 +209,7 @@ public class LinearSumHelper
    * <li>Converts the weights to factors (in percent).</li>
    * <li>Makes sure the factors does not exceed the 100%.</li>
    * </ul>
-   * 
+   *
    * @param weights
    *          The weights. The sum of weights must result in 1.0.
    * @return The factors (in percent).
@@ -312,7 +312,7 @@ public class LinearSumHelper
 
   public static ITimeseries[] collectTimeseries( final LinearSumBean bean )
   {
-    final List<ITimeseries> timeseries = new ArrayList<ITimeseries>();
+    final List<ITimeseries> timeseries = new ArrayList<>();
 
     final CatchmentBean[] catchments = bean.getCatchments();
     for( final CatchmentBean catchment : catchments )

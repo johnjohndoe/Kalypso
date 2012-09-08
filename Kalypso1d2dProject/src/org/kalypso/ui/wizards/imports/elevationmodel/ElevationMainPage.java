@@ -37,7 +37,7 @@ public class ElevationMainPage extends WizardPage
 
   private IPath m_initialSourcePath;
 
-  private final List<String> m_fileExtensions = new ArrayList<String>();
+  private final List<String> m_fileExtensions = new ArrayList<>();
 
   public Text m_tileTitle;
 
@@ -57,7 +57,7 @@ public class ElevationMainPage extends WizardPage
   /**
    * Creates the top level control for this dialog page under the given parent composite, then calls
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
-   * 
+   *
    * @param parent
    *          the parent composite
    */
@@ -155,7 +155,7 @@ public class ElevationMainPage extends WizardPage
 
   /**
    * Called by the wizard to initialize the receiver's cached selection.
-   * 
+   *
    * @param selection
    *          the selection or <code>null</code> if none
    */
@@ -257,7 +257,7 @@ public class ElevationMainPage extends WizardPage
 
   /**
    * Multiple Elevation Model Select.. Still under development Open a file dialog for selecting a file
-   * 
+   *
    * @param path
    *          the initially selected file
    * @param mustExist

@@ -130,7 +130,7 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     if( getSimulation() == null )
       return;
 
-    final List<Action> actions = new ArrayList<Action>();
+    final List<Action> actions = new ArrayList<>();
 
     // TODL: ugly: implement specific ui handler for this case, does not belong in abstract class
 

@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * ATTENTION: This bean does not wrap {@link IFactorizedTimeseries} features. It wraps the {@link ITimeseries} features.
- * 
+ *
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -147,7 +147,7 @@ public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
    * not exist or does not exist anymore, because it will create a new factorized timeseries feature. <br/>
    * <br/>
    * ATTENTION: This workspace is another workspace then the one of the feature of this class.
-   * 
+   *
    * @param workspace
    *          The workspace.
    * @param parent
@@ -167,7 +167,7 @@ public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
     final TimeseriesLinkType timeseriesLink = new TimeseriesLinkType();
     timeseriesLink.setHref( getFeature().getDataLink().getHref() );
 
-    final Map<QName, Object> properties = new HashMap<QName, Object>();
+    final Map<QName, Object> properties = new HashMap<>();
     properties.put( IFactorizedTimeseries.PROPERTY_FACTOR, new BigDecimal( m_factor ) );
     properties.put( IFactorizedTimeseries.PROPERTY_TIMESERIES_LINK, timeseriesLink );
 

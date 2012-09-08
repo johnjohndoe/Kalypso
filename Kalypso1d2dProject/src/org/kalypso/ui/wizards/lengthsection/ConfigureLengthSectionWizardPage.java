@@ -51,7 +51,6 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -74,7 +73,7 @@ import org.kalypso.ui.wizards.i18n.Messages;
  *
  * @author Thomas Jung * *
  */
-public class ConfigureLengthSectionWizardPage extends WizardPage implements IWizardPage
+public class ConfigureLengthSectionWizardPage extends WizardPage
 {
   private final CreateLengthSectionData m_data;
 
@@ -130,7 +129,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     final IViewerObservableValue targetRiverLine = ViewersObservables.observeSinglePostSelection( comboRiverLine );
     final IObservableValue modelRiverLine = BeansObservables.observeValue( m_data, CreateLengthSectionData.PROPERTY_RIVER_LINE );
-    final IValidator riverLineNotNullValidator = new NotNullValidator<IKalypsoFeatureTheme>( IKalypsoFeatureTheme.class, IStatus.WARNING, "Please select a river line" );
+    final IValidator riverLineNotNullValidator = new NotNullValidator<>( IKalypsoFeatureTheme.class, IStatus.WARNING, "Please select a river line" );
     m_binding.bindValue( targetRiverLine, modelRiverLine, riverLineNotNullValidator );
 
     /*
@@ -161,7 +160,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     final IViewerObservableValue targetRiverName = ViewersObservables.observeSinglePostSelection( comboRiverNameField );
     final IObservableValue modelRiverName = BeansObservables.observeValue( m_data, CreateLengthSectionData.PROPERTY_RIVER_NAME_PROPERTY );
-    final IValidator riverNameNotNullValidator = new NotNullValidator<IValuePropertyType>( IValuePropertyType.class, IStatus.ERROR, "'Name' property has not been selected" );
+    final IValidator riverNameNotNullValidator = new NotNullValidator<>( IValuePropertyType.class, IStatus.ERROR, "'Name' property has not been selected" );
     m_binding.bindValue( targetRiverName, modelRiverName, riverNameNotNullValidator );
 
     /* Selected water body */
@@ -183,7 +182,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     final IViewerObservableValue targetSelectedRiverName = ViewersObservables.observeSinglePostSelection( comboSelectedRiverNameField );
     final IObservableValue modelSelectedRiverName = BeansObservables.observeValue( m_data, CreateLengthSectionData.PROPERTY_SELECTED_RIVER_NAME );
-    final IValidator selectedRiverNameNotNullValidator = new NotNullValidator<String>( String.class, IStatus.ERROR, "River name has not been selected" );
+    final IValidator selectedRiverNameNotNullValidator = new NotNullValidator<>( String.class, IStatus.ERROR, "River name has not been selected" );
     m_binding.bindValue( targetSelectedRiverName, modelSelectedRiverName, selectedRiverNameNotNullValidator );
 
 

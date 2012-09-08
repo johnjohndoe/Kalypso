@@ -176,7 +176,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   private IValuePropertyType[] getAllValueProperties( final IFeatureType targetFT )
   {
-    final Collection<IValuePropertyType> result = new ArrayList<IValuePropertyType>();
+    final Collection<IValuePropertyType> result = new ArrayList<>();
 
     final IPropertyType[] targetFtp = targetFT.getProperties();
     for( final IPropertyType ftp : targetFtp )

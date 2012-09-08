@@ -150,7 +150,7 @@ public class HydrographUtils
   {
     final IDocumentResultMeta[] documents = calcUnitResult.getDocuments( documenttype );
 
-    final Map<IPath, Date> resultMap = new HashMap<IPath, Date>();
+    final Map<IPath, Date> resultMap = new HashMap<>();
 
     for( final IDocumentResultMeta documentResultMeta : documents )
     {
@@ -250,7 +250,7 @@ public class HydrographUtils
 
   public static void setHydrographComponents( final Feature feature )
   {
-    final List<String> componentUrnList = new ArrayList<String>();
+    final List<String> componentUrnList = new ArrayList<>();
 
     /* define hydrograph observation components */
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );

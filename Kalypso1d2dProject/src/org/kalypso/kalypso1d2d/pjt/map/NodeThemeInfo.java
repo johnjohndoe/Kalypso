@@ -167,7 +167,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
         if( value != null && value instanceof List< ? > )
         {
           final List<Double> vector = (List<Double>) value;
-          if( vector == null || vector.size() != 2 )
+          if( vector.size() != 2 )
             return;
 
           final double vx = vector.get( 0 );
@@ -191,8 +191,8 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
         return getNodePropertyAtPos( pos );
       }
       final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      final List<GM_Position> lListPositionWithValues = new ArrayList<GM_Position>();
-      final List<GM_Position> lListPositionWithValues2 = new ArrayList<GM_Position>();
+      final List<GM_Position> lListPositionWithValues = new ArrayList<>();
+      final List<GM_Position> lListPositionWithValues2 = new ArrayList<>();
       for( final IFE1D2DNode actNode : nodes )
       {
         final Feature nodeRes = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( actNode.getPoint().getPosition(), coordinateSystem ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
@@ -204,7 +204,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
           continue;
         if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( m_propertyNameFromTheme ) )
         {
-          final List<Double> vector = new ArrayList<Double>();
+          final List<Double> vector = new ArrayList<>();
           vector.add( Math.cos( (Double) value * (2 * Math.PI) / 360 ) );
           vector.add( Math.sin( (Double) value * (2 * Math.PI) / 360 ) );
           value = vector;
@@ -218,7 +218,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
         else if( value instanceof List< ? > )
         {
           final List< ? > vector = (List< ? >) value;
-          if( vector == null || vector.size() != 2 )
+          if( vector.size() != 2 )
             continue;
 
           lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double) vector.get( 0 ) ) );
@@ -312,7 +312,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     {
       if( lTri2 != null )
       {
-        final List<Double> lListRes = new ArrayList<Double>();
+        final List<Double> lListRes = new ArrayList<>();
         lListRes.add( lTri.getValue( pos ) );
         lListRes.add( lTri2.getValue( pos ) );
         if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( m_propertyNameFromTheme ) )

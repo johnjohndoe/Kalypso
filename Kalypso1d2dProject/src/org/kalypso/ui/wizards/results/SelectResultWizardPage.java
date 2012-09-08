@@ -56,7 +56,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -75,16 +74,16 @@ import org.kalypso.ui.wizards.i18n.Messages;
 /**
  * Wizard page for displaying the result database in a checkbox-treeview Components are a {@link CheckboxTreeViewer} and
  * an {@link ResultMetaInfoViewer}. <br>
- * 
+ *
  * optional: The result info viewer can be given a {@link IThemeConstructionFactory} for displaying special button /
  * combo components for sld handling displayed inside the info viewer.
- * 
- * 
+ *
+ *
  * @author Thomas Jung
  */
-public class SelectResultWizardPage extends WizardPage implements IWizardPage
+public class SelectResultWizardPage extends WizardPage
 {
-  private final Collection<IAction> m_actions = new ArrayList<IAction>();
+  private final Collection<IAction> m_actions = new ArrayList<>();
 
   private final IThemeConstructionFactory m_factory;
 

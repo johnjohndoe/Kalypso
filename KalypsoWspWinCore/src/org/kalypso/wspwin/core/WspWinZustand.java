@@ -61,22 +61,22 @@ import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * Represents the contents of a .str file
- * 
+ *
  * @author Gernot Belger
  */
 public class WspWinZustand
 {
-  private final List<ProfileBean> m_profileBeans = new ArrayList<ProfileBean>();
+  private final List<ProfileBean> m_profileBeans = new ArrayList<>();
 
-  private final List<ZustandSegmentBean> m_segmentBeans = new ArrayList<ZustandSegmentBean>();
+  private final List<ZustandSegmentBean> m_segmentBeans = new ArrayList<>();
 
-  private final Collection<RunOffEventBean> m_runoffs = new ArrayList<RunOffEventBean>();
+  private final Collection<RunOffEventBean> m_runoffs = new ArrayList<>();
 
-  private final Collection<RunOffEventBean> m_wspFixes = new ArrayList<RunOffEventBean>();
+  private final Collection<RunOffEventBean> m_wspFixes = new ArrayList<>();
 
-  private final Collection<LocalEnergyLossBean> m_losses = new ArrayList<LocalEnergyLossBean>();
+  private final Collection<LocalEnergyLossBean> m_losses = new ArrayList<>();
 
-  private final Collection<ICalculationContentBean> m_calculations = new ArrayList<ICalculationContentBean>();
+  private final Collection<ICalculationContentBean> m_calculations = new ArrayList<>();
 
   private final ZustandBean m_bean;
 
@@ -140,7 +140,7 @@ public class WspWinZustand
 
   private static ZustandSegmentBean[] readZustandSegments( final LineNumberReader reader, final int segmentCount, final String filename ) throws ParseException, IOException
   {
-    final List<ZustandSegmentBean> beans = new ArrayList<ZustandSegmentBean>( 20 );
+    final List<ZustandSegmentBean> beans = new ArrayList<>( 20 );
 
     int readSegments = 0;
     while( reader.ready() )

@@ -54,26 +54,21 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Factory for creating theme constructors
- * 
+ *
  * @author Thomas Jung
- * 
+ *
  */
 public class ThemeConstructionFactory implements IThemeConstructionFactory
 {
-
-  private final Map<IResultMeta, IResultThemeConstructor> m_creatorMap = new HashMap<IResultMeta, IResultThemeConstructor>();
+  private final Map<IResultMeta, IResultThemeConstructor> m_creatorMap = new HashMap<>();
 
   private final IFolder m_scenarioFolder;
 
-  public ThemeConstructionFactory( IFolder scenarioFolder )
+  public ThemeConstructionFactory( final IFolder scenarioFolder )
   {
     m_scenarioFolder = scenarioFolder;
-
   }
 
-  /**
-   * @see org.kalypso.ui.wizards.results.IThemeCreatorFactory#createThemeCreator(org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta)
-   */
   @Override
   public IResultThemeConstructor createThemeConstructor( final IResultMeta resultMeta )
   {
@@ -100,10 +95,10 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
 
       final CalcUnitResultThemeCreator calcUnitResultThemeCreator = new CalcUnitResultThemeCreator();
 
-      IFeatureBindingCollection<IResultMeta> children = calcUnitResult.getChildren();
-      for( IResultMeta child : children )
+      final IFeatureBindingCollection<IResultMeta> children = calcUnitResult.getChildren();
+      for( final IResultMeta child : children )
       {
-        ThemeConstructionFactory factory = new ThemeConstructionFactory( m_scenarioFolder );
+        final ThemeConstructionFactory factory = new ThemeConstructionFactory( m_scenarioFolder );
         factory.createThemeConstructor( child );
       }
 
@@ -121,10 +116,10 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
 
       final StepResultThemeCreator stepResultThemeCreator = new StepResultThemeCreator();
 
-      IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
-      for( IResultMeta child : children )
+      final IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
+      for( final IResultMeta child : children )
       {
-        ThemeConstructionFactory factory = new ThemeConstructionFactory( m_scenarioFolder );
+        final ThemeConstructionFactory factory = new ThemeConstructionFactory( m_scenarioFolder );
         factory.createThemeConstructor( child );
       }
 

@@ -77,7 +77,7 @@ public class ResultParameterTypeFilterControl extends Composite
 
   private final DataBindingContext m_binding = new DataBindingContext();
 
-  Set<Object> m_parameterTypes = new TreeSet<Object>( new Comparator<Object>()
+  Set<Object> m_parameterTypes = new TreeSet<>( new Comparator<Object>()
   {
     @Override
     public int compare( final Object o1, final Object o2 )

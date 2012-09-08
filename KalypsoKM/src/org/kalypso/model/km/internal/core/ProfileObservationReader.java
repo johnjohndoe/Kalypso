@@ -125,7 +125,7 @@ public class ProfileObservationReader implements IKMReader
   private ProfileData createProfileData( final BigDecimal station, final BigDecimal slope, final IObservation<TupleResult> observation )
   {
     /* Memory for the reows. */
-    final List<Row> rows = new ArrayList<Row>();
+    final List<Row> rows = new ArrayList<>();
 
     /* Each record represents one row. */
     final TupleResult result = observation.getResult();

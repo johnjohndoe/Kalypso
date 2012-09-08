@@ -125,7 +125,7 @@ public class ProfileBean
 
   public static ProfileBean[] readProfiles( final LineNumberReader reader, final int profilCount ) throws IOException, ParseException
   {
-    final List<ProfileBean> beans = new ArrayList<ProfileBean>( 20 );
+    final List<ProfileBean> beans = new ArrayList<>( 20 );
     for( int i = 0; i < profilCount; i++ )
     {
       if( !reader.ready() )

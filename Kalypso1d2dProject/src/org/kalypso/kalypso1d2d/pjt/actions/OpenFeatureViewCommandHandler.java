@@ -70,34 +70,31 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
       if( !file.exists() )
         throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.2" , file.getFullPath() )); //$NON-NLS-1$
 
-      if( activeWorkbenchWindow != null )
+      final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
+      final FeatureTemplateView featureView = (FeatureTemplateView)workbenchPage.showView( FeatureTemplateView.ID );
+
+      final UIJob job = new UIJob( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.3" ) + file.getName() ) //$NON-NLS-1$
       {
-        final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
-        final FeatureTemplateView featureView = (FeatureTemplateView) workbenchPage.showView( FeatureTemplateView.ID );
-
-        final UIJob job = new UIJob( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.3") + file.getName() ) //$NON-NLS-1$
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
         {
-          @Override
-          public IStatus runInUIThread( final IProgressMonitor monitor )
+          try
           {
-            try
-            {
-              final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( file );
+            final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( file );
 
-              final URL urlContext = ResourceUtilities.createURL( file );
+            final URL urlContext = ResourceUtilities.createURL( file );
 
-              featureView.setTemplate( template, urlContext, null, null, null );
+            featureView.setTemplate( template, urlContext, null, null, null );
 
-              return Status.OK_STATUS;
-            }
-            catch( final Throwable e )
-            {
-              return StatusUtilities.statusFromThrowable( e );
-            }
+            return Status.OK_STATUS;
           }
-        };
-        job.schedule();
-      }
+          catch( final Throwable e )
+          {
+            return StatusUtilities.statusFromThrowable( e );
+          }
+        }
+      };
+      job.schedule();
     }
     catch( final CoreException e )
     {

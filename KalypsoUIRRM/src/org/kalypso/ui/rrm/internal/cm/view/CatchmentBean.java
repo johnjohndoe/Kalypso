@@ -101,8 +101,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
   {
     super( ICatchment.FEATURE_CATCHMENT );
 
-    m_cache = new HashMap<String, FactorizedTimeseriesBean>();
-    m_timeseries = new ArrayList<FactorizedTimeseriesBean>();
+    m_cache = new HashMap<>();
+    m_timeseries = new ArrayList<>();
     m_catchmentRef = null;
     m_catchmentName = null;
     m_catchmentDescription = null;
@@ -115,8 +115,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
   {
     super( catchment );
 
-    m_cache = new HashMap<String, FactorizedTimeseriesBean>();
-    m_timeseries = new ArrayList<FactorizedTimeseriesBean>();
+    m_cache = new HashMap<>();
+    m_timeseries = new ArrayList<>();
     m_catchmentRef = resolveRef( catchment );
     m_catchmentName = catchment.resolveName();
     m_catchmentDescription = catchment.resolveDescription();
@@ -231,7 +231,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
   public void apply( final CommandableWorkspace workspace, final Feature parent, final String parameterType ) throws Exception
   {
     /* The catchment feature does not exist. */
-    final Map<QName, Object> properties = new HashMap<QName, Object>( getProperties() );
+    final Map<QName, Object> properties = new HashMap<>( getProperties() );
     final ILinearSumGenerator collection = (ILinearSumGenerator) parent;
     final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ILinearSumGenerator.MEMBER_CATCHMENT );
     final QName type = getFeatureType().getQName();

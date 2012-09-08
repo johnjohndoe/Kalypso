@@ -3,7 +3,6 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -30,7 +29,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.views.map.MapView;
 
-public class SelectRoughnessThemeHandler extends AbstractHandler implements IHandler
+public class SelectRoughnessThemeHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException

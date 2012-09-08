@@ -84,7 +84,7 @@ public class ImportWindDataHandler extends AbstractHandler
     {
       /* Always open the manage dtm widget - now the widget will be opened after the operation with the wizard */
       final SelectWidgetHandler handler = new SelectWidgetHandler();
-      final Map<String, String> newParameterMap = new HashMap<String, String>();
+      final Map<String, String> newParameterMap = new HashMap<>();
       newParameterMap.put( SelectWidgetHandler.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget" ); //$NON-NLS-1$
       newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" ); //$NON-NLS-1$
       handler.setInitializationData( null, null, newParameterMap );

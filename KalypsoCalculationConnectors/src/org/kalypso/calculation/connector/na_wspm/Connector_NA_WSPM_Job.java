@@ -73,7 +73,7 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
       try
       {
 
-        final List<BigDecimal> kilometerValuesList = new ArrayList<BigDecimal>();
+        final List<BigDecimal> kilometerValuesList = new ArrayList<>();
 
         final IRunOffEvent runOffEvent = Connectors.findRunOffEvent( workspaceWSPM, inputProvider );
         if( Objects.isNull( runOffEvent ) )

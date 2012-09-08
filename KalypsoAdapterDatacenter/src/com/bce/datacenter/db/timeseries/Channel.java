@@ -11,7 +11,7 @@ import com.bce.datacenter.db.common.DataObject;
 
 /**
  * Channel
- * 
+ *
  * @author schlienger
  */
 public class Channel extends DataObject
@@ -34,7 +34,7 @@ public class Channel extends DataObject
 
   /**
    * Constructor for existing object to build from database
-   * 
+   *
    * @param con
    * @param id
    *          internal object id
@@ -98,7 +98,7 @@ public class Channel extends DataObject
 
   /**
    * Returns the list of tables that should receive external data from sensors.
-   * 
+   *
    * @return the list of tables that should receive external data from sensors.
    * @throws SQLException
    */
@@ -109,7 +109,7 @@ public class Channel extends DataObject
       final String sql = "SELECT dataTableName FROM TS_TIMESERIES WHERE is_Recipient = 1 and channel_ref = " + m_ID;
       final ResultSet rs = m_con.createStatement().executeQuery( sql );
 
-      m_tables = new Vector<String>();
+      m_tables = new Vector<>();
 
       while( rs.next() )
         m_tables.add( rs.getString( 1 ) );

@@ -103,7 +103,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * This dialog allows the editing of the properties of a multi catchment model.
- * 
+ *
  * @author Holger Albert
  */
 public class EditMultiDialog extends TitleAreaDialog
@@ -167,7 +167,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
    * @param model
@@ -314,7 +314,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the main group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -347,7 +347,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function creates the content of the details group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -401,7 +401,7 @@ public class EditMultiDialog extends TitleAreaDialog
       {
         final Object[] checkedElements = m_generatorViewer.getCheckedElements();
 
-        final List<ILinearSumGenerator> subGenerators = new ArrayList<ILinearSumGenerator>();
+        final List<ILinearSumGenerator> subGenerators = new ArrayList<>();
         for( final Object checkedElement : checkedElements )
           subGenerators.add( (ILinearSumGenerator) checkedElement );
 
@@ -457,12 +457,12 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function returns all linear sum generators that can be linked in a multi generator.
-   * 
+   *
    * @return All linear sum generators that can be linked in a multi generator.
    */
   private ILinearSumGenerator[] getGenerators( )
   {
-    final List<ILinearSumGenerator> results = new ArrayList<ILinearSumGenerator>();
+    final List<ILinearSumGenerator> results = new ArrayList<>();
 
     try
     {
@@ -488,7 +488,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function saves the changes.
-   * 
+   *
    * @return A ERROR status on error or an OK status.
    */
   private IStatus performOk( )
@@ -541,7 +541,7 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function handles the property changed event for the parameter type.
-   * 
+   *
    * @param evt
    *          The property change event.
    */

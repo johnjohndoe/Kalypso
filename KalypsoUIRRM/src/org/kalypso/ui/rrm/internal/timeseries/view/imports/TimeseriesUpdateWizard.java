@@ -84,7 +84,7 @@ public class TimeseriesUpdateWizard extends Wizard
   {
     m_importOperation = importOperation;
     m_mergeOperation = mergeOperation;
-    m_bean = new FeatureBean<ITimeseries>( timeseries );
+    m_bean = new FeatureBean<>( timeseries );
 
     addPage( new ImportObservationSourcePage( "sourcePage", data, true ) ); //$NON-NLS-1$
 

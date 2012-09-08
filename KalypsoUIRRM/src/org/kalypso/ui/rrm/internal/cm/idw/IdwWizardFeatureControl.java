@@ -119,7 +119,7 @@ public class IdwWizardFeatureControl extends AbstractFeatureControl
 
   void changeIsUsed( final Boolean active )
   {
-    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+    final List<FeatureChange> changes = new ArrayList<>();
 
     final List< ? > stations = (List< ? >) getFeature().getProperty( getFeatureTypeProperty() );
     for( final Object object : stations )

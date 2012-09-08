@@ -50,7 +50,7 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 
 /**
  * Searches for calc case folders.
- * 
+ *
  * @author Gernot Belger
  */
 public class CalcCaseConvertWalker extends DirectoryWalker<File>
@@ -70,7 +70,7 @@ public class CalcCaseConvertWalker extends DirectoryWalker<File>
 
   public File[] execute( ) throws IOException
   {
-    final Collection<File> collector = new ArrayList<File>();
+    final Collection<File> collector = new ArrayList<>();
     walk( m_sourceDir, collector );
     return collector.toArray( new File[collector.size()] );
   }

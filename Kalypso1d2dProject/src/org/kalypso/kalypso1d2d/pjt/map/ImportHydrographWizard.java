@@ -61,7 +61,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 
   private char m_separator = m_defaultSeparator;
 
-  private final Set<String> m_setNewCreatedNames = new HashSet<String>();
+  private final Set<String> m_setNewCreatedNames = new HashSet<>();
 
   public ImportHydrographWizard( final IHydrographCollection hydrographCollection, final IKalypsoFeatureTheme hydroTheme, final IFEDiscretisationModel1d2d discModel )
   {
@@ -83,7 +83,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
   {
     final ShapeFileReader reader = new ShapeFileReader( inFile.getAbsolutePath() );
     ShapeFile sf;
-    final List<Feature> lListNewHydroFeatures = new ArrayList<Feature>();
+    final List<Feature> lListNewHydroFeatures = new ArrayList<>();
     try
     {
       sf = reader.read();
@@ -135,7 +135,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
     if( inFile.getName().endsWith( ".shp" ) ) { //$NON-NLS-1$
       bDone = doImportFromShape();
     }
-    else if( inFile.getName().endsWith( ".csv" ) ) { //$NON-NLS-1$ 
+    else if( inFile.getName().endsWith( ".csv" ) ) { //$NON-NLS-1$
       m_separator = getSeparatorAsChar( m_wizardPage.getsSeparator() );
       bDone = doImportFromCsv();
     }
@@ -188,7 +188,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 
   private boolean doImportFromCsv( )
   {
-    final List<Feature> lListNewHydroFeatures = new ArrayList<Feature>();
+    final List<Feature> lListNewHydroFeatures = new ArrayList<>();
     try
     {
       final CSVReader readerTimeSeries = new CSVReader( new FileReader( inFile ), m_separator );
@@ -241,7 +241,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 
   private boolean doImportFromTxt( )
   {
-    final List<Feature> lListNewHydroFeatures = new ArrayList<Feature>();
+    final List<Feature> lListNewHydroFeatures = new ArrayList<>();
 
     try
     {
@@ -457,7 +457,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
     /*
      * final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1,
      * hydro.getFeature(), selectionManager, true, true ); display.asyncExec( new Runnable() {
-     * 
+     *
      * @Override public void run( ) { try { workspace.postCommand( command ); } catch( final Throwable e ) { final
      * IStatus status = StatusUtilities.statusFromThrowable( e ); final Shell shell = display.getActiveShell(); m_errMsg
      * = Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.3" ); // ErrorDialog.openError(
