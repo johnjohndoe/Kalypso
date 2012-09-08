@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -126,27 +127,32 @@ public final class ChannelEditUtil
 
     final Coordinate[] points = new Coordinate[numIntersects];
 
-    final LengthIndexedLine lll = new LengthIndexedLine( line );
+    points[0] = line.getStartPoint().getCoordinate();
 
-    for( int i = 0; i < points.length; i++ )
-    {
+    /* interpolate intermediate points */
+    final LengthIndexedLine lll = new LengthIndexedLine( line );
+    for( int i = 1; i < points.length - 1; i++ )
       points[i] = lll.extractPoint( dDist * i );
-    }
+
+    points[points.length - 1] = line.getEndPoint().getCoordinate();
 
     return line.getFactory().createLineString( points );
   }
 
   /**
    * Create an empty profile from a template type, copying srsName and station.<br/>
-   * Only components for breite, hoehe, rechtswert and hochwert are added.
+   * Only components for breite, hoehe, rechtswert and hochwert are added.<br/>
+   * The new profile is in the Kalypso coordinate system, not in the system of the original profile.
    */
   public static IProfil createEmptyProfile( final IProfil templateProfile )
   {
     final String profileType = templateProfile.getType();
     final IProfil newProfil = ProfilFactory.createProfil( profileType );
 
-    newProfil.setSrsName( templateProfile.getSrsName() );
     newProfil.setStation( templateProfile.getStation() );
+
+    final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    newProfil.setSrsName( kalypsoSRS );
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileType );
 

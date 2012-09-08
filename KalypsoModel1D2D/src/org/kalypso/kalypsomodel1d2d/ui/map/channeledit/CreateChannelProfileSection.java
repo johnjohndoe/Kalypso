@@ -189,7 +189,6 @@ public class CreateChannelProfileSection extends Composite
     final ComboViewer profileChooser = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
 
     final Control profileChooserControl = profileChooser.getControl();
-    // profileChooserControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toolkit.adapt( profileChooserControl, true, true );
 
     profileChooser.setContentProvider( new ArrayContentProvider() );
@@ -218,7 +217,6 @@ public class CreateChannelProfileSection extends Composite
     final String checkboxAutoZoomLabel = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.2" ); //$NON-NLS-1$
 
     final Button checkboxAutoZoom = toolkit.createButton( parent, checkboxAutoZoomLabel, SWT.CHECK );
-    // checkboxAutoZoom.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     checkboxAutoZoom.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.43" ) ); //$NON-NLS-1$
 
     final ISWTObservableValue targetAutoZoom = SWTObservables.observeSelection( checkboxAutoZoom );
@@ -235,8 +233,6 @@ public class CreateChannelProfileSection extends Composite
     m_toolbarManager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
 
     final ToolBar toolbar = m_toolbarManager.createControl( parent );
-    // toolbar.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-
     toolkit.adapt( toolbar );
   }
 
@@ -255,6 +251,7 @@ public class CreateChannelProfileSection extends Composite
     final IProfileFeature feature = profileData == null ? null : profileData.getFeature();
     final IProfil profile = feature == null ? null : feature.getProfil();
     final IProfil segmentedProfile = profileData == null ? null : profileData.getProfIntersProfile();
+    final boolean hasSegmentedProfile = segmentedProfile != null;
 
     m_profilComposite.setProfil( profile, null );
 
@@ -280,18 +277,21 @@ public class CreateChannelProfileSection extends Composite
       @Override
       public void run( )
       {
-        doUpdateControls( profile );
+        doUpdateControls( profile, hasSegmentedProfile );
       }
     };
 
     display.asyncExec( runner );
   }
 
-  protected void doUpdateControls( final IProfil profile )
+  protected void doUpdateControls( final IProfil profile, final boolean hasSegmentedProfile )
   {
     /* update toolbar */
     if( m_sourceManager != null )
+    {
       m_sourceManager.dispose();
+      m_sourceManager = null;
+    }
 
     m_toolbarManager.removeAll();
 
@@ -299,11 +299,13 @@ public class CreateChannelProfileSection extends Composite
     m_sourceManager = new EmbeddedSourceToolbarManager( serviceLocator, ChartSourceProvider.ACTIVE_CHART_NAME, m_profilComposite );
 
     final Collection<CommandWithStyle> commands = new ArrayList<>();
-    // TODO: use constants for commands
     commands.add( CommandWithStyle.radio( IChartCommand.COMMAND_ZOOM_PAN_MAXIMIZE ) ); //$NON-NLS-1$
     commands.add( CommandWithStyle.radio( IChartCommand.COMMAND_PAN ) ); //$NON-NLS-1$
-    commands.add( CommandWithStyle.radio( IChartCommand.COMMAND_EDIT ) ); //$NON-NLS-1$
-    commands.add( CommandWithStyle.separator(  ) );
+
+    if( hasSegmentedProfile )
+      commands.add( CommandWithStyle.radio( IChartCommand.COMMAND_EDIT ) ); //$NON-NLS-1$
+
+    commands.add( CommandWithStyle.separator() );
     commands.add( CommandWithStyle.push( IChartCommand.COMMAND_MAXIMIZE ) ); //$NON-NLS-1$
     commands.add( CommandWithStyle.separator() );
     commands.add( CommandWithStyle.push( IChartCommand.COMMAND_EXPORT_CLIPBOARD ) ); //$NON-NLS-1$
@@ -312,7 +314,10 @@ public class CreateChannelProfileSection extends Composite
 
     m_sourceManager.fillToolbar( m_toolbarManager, commands.toArray( new CommandWithStyle[commands.size()] ) );
 
-    EmbeddedSourceToolbarManager.executeCommand( serviceLocator, m_toolbarManager, IChartCommand.COMMAND_EDIT );
+    if( hasSegmentedProfile )
+      EmbeddedSourceToolbarManager.executeCommand( serviceLocator, m_toolbarManager, IChartCommand.COMMAND_EDIT );
+    else
+      EmbeddedSourceToolbarManager.executeCommand( serviceLocator, m_toolbarManager, IChartCommand.COMMAND_ZOOM_PAN_MAXIMIZE );
 
     /* hide/show components */
     final boolean hasProfile = profile != null;
@@ -328,7 +333,7 @@ public class CreateChannelProfileSection extends Composite
   {
     control.setVisible( show );
 
-    final GridData data = (GridData) control.getLayoutData();
+    final GridData data = (GridData)control.getLayoutData();
     data.exclude = !show;
   }
 }

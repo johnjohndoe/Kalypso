@@ -125,6 +125,11 @@ public class CreateBankOptionsSection extends Composite
     spinnerNumProfileSegments.setToolTipText( tooltip );
     spinnerNumProfileSegments.setValues( 1, 2, 99, 0, 1, 10 );
 
+    /* disable AND hide spinner if not enabled */
+    final ISWTObservableValue targetNumSegmentsVisible = SWTObservables.observeVisible( spinnerNumProfileSegments );
+    final IObservableValue modelProfileEditingVisible = BeansObservables.observeValue( data, enabledProperty );
+    binding.bindValue( targetNumSegmentsVisible, modelProfileEditingVisible );
+
     final ISWTObservableValue targetNumSegmentsEnabled = SWTObservables.observeEnabled( spinnerNumProfileSegments );
     final IObservableValue modelProfileEditingEnabled = BeansObservables.observeValue( data, enabledProperty );
     binding.bindValue( targetNumSegmentsEnabled, modelProfileEditingEnabled );

@@ -55,6 +55,8 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -79,6 +81,8 @@ class ProfileData implements IProfileData
 
   private final int m_numIntersections;
 
+  private boolean m_isUserChanged = false;
+
   public ProfileData( final IProfileFeature feature, final int numIntersections )
   {
     m_feature = feature;
@@ -88,7 +92,7 @@ class ProfileData implements IProfileData
   @Override
   public boolean isUserChaned( )
   {
-    return false;
+    return m_isUserChanged;
   }
 
   @Override
@@ -161,8 +165,8 @@ class ProfileData implements IProfileData
       if( m_segmentedProfile == null )
         return null;
 
-      final GM_Curve line = (GM_Curve) ProfilUtil.getLine( m_segmentedProfile ).transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      return (LineString) JTSAdapter.export( line );
+      final GM_Curve line = (GM_Curve)ProfilUtil.getLine( m_segmentedProfile ).transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      return (LineString)JTSAdapter.export( line );
     }
     catch( final GM_Exception | GeoTransformerException e )
     {
@@ -218,12 +222,11 @@ class ProfileData implements IProfileData
     final Point point1 = getIntersPoint( profileLine, segment, SIDE.LEFT );
     final Point point2 = getIntersPoint( profileLine, segment, SIDE.RIGHT );
 
-    final String srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final String profilSRS = originalProfile.getSrsName();
-
-    final GM_Point intersectionPoint1 = (GM_Point) JTSAdapter.wrap( point1, srsName ).transform( profilSRS );
-    final GM_Point intersectionPoint2 = (GM_Point) JTSAdapter.wrap( point2, srsName ).transform( profilSRS );
+    // REMARK: the new profile is in kalypso coordinates
+    final GM_Point intersectionPoint1 = (GM_Point)JTSAdapter.wrap( point1, kalypsoSRS );
+    final GM_Point intersectionPoint2 = (GM_Point)JTSAdapter.wrap( point2, kalypsoSRS );
 
     final Double width1 = WspmProfileHelper.getWidthPosition( intersectionPoint1, originalProfile );
     final Double width2 = WspmProfileHelper.getWidthPosition( intersectionPoint2, originalProfile );
@@ -259,6 +262,8 @@ class ProfileData implements IProfileData
     /* Create new profile and fill with record */
     final IProfil newProfil = ChannelEditUtil.createEmptyProfile( originalProfile );
 
+    final String profilSRS = originalProfile.getSrsName();
+
     final IProfileRecord startRecord = newProfil.createProfilPoint();
     final IProfileRecord endRecord = newProfil.createProfilPoint();
 
@@ -285,11 +290,15 @@ class ProfileData implements IProfileData
 
       if( currentWidth > startWidth & currentWidth < endWidth )
       {
+        /* transform location */
+        final GM_Position location = GeometryFactory.createGM_Position( point.getRechtswert(), point.getHochwert() );
+        final GM_Position transformedLocation = location.transform( profilSRS, kalypsoSRS );
+
         final IProfileRecord pt = newProfil.createProfilPoint();
         pt.setBreite( point.getBreite() );
         pt.setHoehe( point.getHoehe() );
-        pt.setRechtswert( point.getRechtswert() );
-        pt.setHochwert( point.getHochwert() );
+        pt.setRechtswert( transformedLocation.getX() );
+        pt.setHochwert( transformedLocation.getY() );
 
         newProfil.addPoint( pt );
       }
@@ -312,7 +321,7 @@ class ProfileData implements IProfileData
   /* Intersection point is the nearest end-point of the bankline to the profile line */
   private static Point findIntersectionPoint( final GM_Curve profileLine, final LineString bankLine ) throws GM_Exception
   {
-    final LineString jtsLine = (LineString) JTSAdapter.export( profileLine );
+    final LineString jtsLine = (LineString)JTSAdapter.export( profileLine );
 
     final Point startPoint = bankLine.getStartPoint();
     final Point endPoint = bankLine.getEndPoint();
@@ -338,7 +347,7 @@ class ProfileData implements IProfileData
   }
 
   /**
-   * The boundig box of the prfile is the union of the boxes of the two adjacent segments and the real profile.
+   * The boundig box of the profile is the union of the boxes of the two adjacent segments and the real profile.
    */
   @Override
   public GM_Envelope getSegmentMapExtent( final String srsName ) throws GeometryException
@@ -355,5 +364,26 @@ class ProfileData implements IProfileData
   public String toString( )
   {
     return getFeature().getBigStation().toString();
+  }
+
+  @Override
+  public void updateSegmentedProfile( final IProfil newSegmentedProfile )
+  {
+    Assert.isNotNull( newSegmentedProfile );
+    Assert.isTrue( newSegmentedProfile.getPoints().length == m_numIntersections );
+
+    m_isUserChanged = true;
+
+    m_segmentedProfile = newSegmentedProfile;
+
+    // TODO: update banks if necessary (end point changed)
+    // TODO: move endpoints of adjacent banks to endpoints of profile
+
+    /* update meshes of adjacent segments */
+    if( m_downSegment != null )
+      m_downSegment.updateMesh();
+
+    if( m_upSegment != null )
+      m_upSegment.updateMesh();
   }
 }

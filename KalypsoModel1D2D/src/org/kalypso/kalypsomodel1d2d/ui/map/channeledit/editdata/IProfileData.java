@@ -44,4 +44,6 @@ public interface IProfileData
   GM_Envelope getSegmentMapExtent( String coordinatesSystem ) throws GeometryException;
 
   boolean isUserChaned( );
+
+  void updateSegmentedProfile( IProfil newSegmentedProfile );
 }
