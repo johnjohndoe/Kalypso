@@ -66,12 +66,7 @@ public class ProfileOverlayMovePointOperation
     if( gmPoint == null )
       return null;
 
-    /* set the new profile */
-    final IProfil newProfile = createNewProfile( recordToChange, destinationWidth, height, gmPoint.getX(), gmPoint.getY() );
-
-    // FIXME; elevation adjustment
-
-    return newProfile;
+    return createNewProfile( recordToChange, destinationWidth, height, gmPoint.getX(), gmPoint.getY() );
   }
 
   private IProfil createNewProfile( final IProfileRecord recordToChange, final double newWidth, final double newHeight, final double newRw, final double newHw )

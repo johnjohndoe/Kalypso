@@ -21,7 +21,9 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata;
 import org.deegree.model.spatialschema.GeometryException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * represants a profile of the channel data.
@@ -45,5 +47,5 @@ public interface IProfileData
 
   boolean isUserChaned( );
 
-  void updateSegmentedProfile( IProfil newSegmentedProfile );
+  void updateSegmentedProfile( IProfil newSegmentedProfile ) throws GM_Exception, GeoTransformerException;
 }
