@@ -44,6 +44,7 @@ import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfile;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -169,24 +170,19 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       final String description = getDescription( staIndex, basePart );
       final String[] photos = basePart.getPhotos( staIndex );
 
-      final String riverId = String.format( "%d", basePart.getGewKennzahl() );
+      final String riverId = getRiverId( basePart );
       final String riverName = getRiverName( gewShape, basePart );
       final GM_Curve riverGeometry = getRiverGeometry( gewShape, basePart );
 
-      final IProfileFeature profileFeature = m_targetProject.createNewProfile( riverName, m_data.isDirectionUpstreams() );
+      final IProfileFeature profileFeature = createNewProfile( riverId, m_data.isDirectionUpstreams() );
       profileFeature.setName( name );
       profileFeature.setDescription( description );
       profileFeature.setSrsName( m_data.getCoordinateSystem() );
       profileFeature.setBigStation( station );
 
       final WspmWaterBody water = profileFeature.getWater();
-      water.setRefNr( "-1" );
-      water.setCenterLine( null );
-      if( !riverName.equals( "Undefiniert" ) )
-      {
-        water.setRefNr( riverId );
-        water.setCenterLine( riverGeometry );
-      }
+      water.setName( riverName );
+      water.setCenterLine( riverGeometry );
 
       for( final String foto : photos )
       {
@@ -214,6 +210,16 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message, e );
       throw new CoreException( status );
     }
+  }
+
+  private IProfileFeature createNewProfile( final String riverId, final boolean isDirectionUpstreams ) throws GMLSchemaException
+  {
+    final WspmWaterBody water = m_targetProject.createOrGetWaterBodyByRefNr( riverId, isDirectionUpstreams );
+
+    final IProfileFeature newProfile = water.createNewProfile();
+    newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+
+    return newProfile;
   }
 
   private String getName( final EwawiSta staIndex, final EwawiProfilePart basePart ) throws EwawiException
@@ -268,6 +274,15 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
     }
 
     return description.toString();
+  }
+
+  private String getRiverId( final EwawiProfilePart basePart )
+  {
+    final Long gewKennzahl = basePart.getGewKennzahl();
+    if( gewKennzahl == null )
+      return "-1";
+
+    return String.format( "%d", gewKennzahl );
   }
 
   private String getRiverName( final GewShape gewShape, final EwawiProfilePart basePart ) throws DBaseException

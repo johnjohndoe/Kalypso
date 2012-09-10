@@ -88,25 +88,12 @@ public class EwawiWaterLevelFixationUpdater
     {
       final EwawiWaterLevelPointCache pointCache = wlPointCache.get( gewKennzahl );
 
-      /* CASE 1: A river id exists and a water body with it was created. */
-      /* CASE 2: No river id exists. */
       final WspmWaterBody waterBody = m_targetProject.findWaterByRefNr( String.format( "%d", gewKennzahl ) );
       if( waterBody != null )
       {
         updateWaterLevelFixation( pointCache, waterBody );
         continue;
       }
-
-      /* CASE 3: A river id exists and a water body with it was not created. */
-      /* CASE 3: This happens, if there was no river shape or the river shape did not contain the river id. */
-      final WspmWaterBody undefinedBody = m_targetProject.findWaterByRefNr( "-1" );
-      if( undefinedBody != null )
-      {
-        updateWaterLevelFixation( pointCache, undefinedBody );
-        continue;
-      }
-
-      /* HINT: No water body available to update. */
     }
   }
 
