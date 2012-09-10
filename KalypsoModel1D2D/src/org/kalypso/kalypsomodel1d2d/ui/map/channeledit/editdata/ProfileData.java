@@ -72,6 +72,9 @@ import com.vividsolutions.jts.geom.Point;
  */
 class ProfileData implements IProfileData
 {
+  /** Wether or not the area should be auto adjusted to the original profile */
+  private final boolean m_doAreaAdjustment = true;
+
   private final IProfileFeature m_feature;
 
   private IProfil m_segmentedProfile;
@@ -194,13 +197,21 @@ class ProfileData implements IProfileData
       final IProfil segmentedProfile = segmenter.execute( croppedProfile );
 
       /* Area adjustment */
-      final ProfileAreaAdjuster adjuster = new ProfileAreaAdjuster( croppedProfile );
-      m_segmentedProfile = adjuster.execute( segmentedProfile );
+      m_segmentedProfile = autoAdjustArea( croppedProfile, segmentedProfile );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
+  }
+
+  private IProfil autoAdjustArea( final IProfil croppedProfile, final IProfil segmentedProfile )
+  {
+    if( !m_doAreaAdjustment )
+      return segmentedProfile;
+
+    final ProfileAreaAdjuster adjuster = new ProfileAreaAdjuster( croppedProfile );
+    return adjuster.execute( segmentedProfile );
   }
 
   /**
@@ -217,11 +228,17 @@ class ProfileData implements IProfileData
    */
   private IProfil createCroppedIProfile( final SegmentData segment ) throws Exception
   {
-    final IProfil originalProfile = m_feature.getProfil();
     final GM_Curve profileLine = m_feature.getLine();
 
     final Point point1 = getIntersPoint( profileLine, segment, SIDE.LEFT );
     final Point point2 = getIntersPoint( profileLine, segment, SIDE.RIGHT );
+
+    return cropProfile( point1, point2 );
+  }
+
+  private IProfil cropProfile( final Point point1, final Point point2 ) throws GM_Exception, GeoTransformerException
+  {
+    final IProfil originalProfile = m_feature.getProfil();
 
     final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
@@ -269,7 +286,7 @@ class ProfileData implements IProfileData
     final IProfileRecord endRecord = newProfil.createProfilPoint();
 
     /* calculate the width of the intersected profile */
-    // sort intersection points by width
+
     startRecord.setBreite( startWidth );
     startRecord.setHoehe( startHeight );
     startRecord.setRechtswert( startPoint.getX() );
@@ -368,18 +385,27 @@ class ProfileData implements IProfileData
   }
 
   @Override
-  public void updateSegmentedProfile( final IProfil newSegmentedProfile )
+  public void updateSegmentedProfile( final IProfil newSegmentedProfile ) throws GM_Exception, GeoTransformerException
   {
     Assert.isNotNull( newSegmentedProfile );
     Assert.isTrue( newSegmentedProfile.getPoints().length == m_numIntersections );
 
     m_isUserChanged = true;
 
-    // FIXME: adjust area!
+    /* adjust area */
+    final LineString segmentedLine = ProfilUtil.getLineString( newSegmentedProfile );
+    // REMARK: we know the segmented profile is in Kalypso srs, so no projection is needed
+    final Point startPoint = segmentedLine.getStartPoint();
+    final Point endPoint = segmentedLine.getEndPoint();
 
-    adjustBanklineEndpoints( m_segmentedProfile, newSegmentedProfile );
+    final IProfil croppedProfile = cropProfile( startPoint, endPoint );
 
-    m_segmentedProfile = newSegmentedProfile;
+    final IProfil adjustedsegmentedProfile = autoAdjustArea( croppedProfile, newSegmentedProfile );
+
+    /* force endpoint of bank lines onto endpoints of profile */
+    adjustBanklineEndpoints( m_segmentedProfile, adjustedsegmentedProfile );
+
+    m_segmentedProfile = adjustedsegmentedProfile;
 
     /* update meshes */
     if( m_downSegment != null )

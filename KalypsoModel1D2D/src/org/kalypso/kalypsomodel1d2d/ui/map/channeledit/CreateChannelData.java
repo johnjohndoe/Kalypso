@@ -749,4 +749,10 @@ public class CreateChannelData extends AbstractModelObject
   {
     m_shell = shell;
   }
+
+  public void triggerMapRepaint( )
+  {
+    /* trigger any event, we know the widget has a listener that repaints on any property event */
+    firePropertyChange( PROPERTY_MAP_REPAINT, null, PROPERTY_MAP_REPAINT );
+  }
 }

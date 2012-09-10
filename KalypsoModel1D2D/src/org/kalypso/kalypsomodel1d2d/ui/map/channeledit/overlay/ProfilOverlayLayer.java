@@ -61,6 +61,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilePointHover;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.transformation.transformer.GeoTransformerException;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -75,8 +76,6 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class ProfilOverlayLayer extends PointsLineLayer
 {
-//  CreateMainChannelWidget m_widget = null;
-
   public static String LAYER_OVERLAY = "org.kalypso.model.wspm.tuhh.ui.chart.overlay.LAYER_OVERLAY"; //$NON-NLS-1$
 
   public static String LAYER_ID = "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay"; //$NON-NLS-1$
@@ -202,15 +201,13 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     final Integer index = (Integer)dragStartData.getData();
 
-    // FIXME: profil && origProfil should be the same!
-    final IProfil profil = getProfil();
-
     final IProfileData activeProfile = m_data.getActiveProfile();
     final IProfil origProfil = activeProfile.getProfilOrg();
     final IProfil segmentedProfile = activeProfile.getProfIntersProfile();
 
     /* data and my state should be the same, else something is wrong */
-    if( profil == null || profil != segmentedProfile )
+    final IProfil profilInternal = getProfil();
+    if( profilInternal == null || profilInternal != segmentedProfile )
       return;
 
     /* check if destination point is at least 5px away from source record, else do nothing */
@@ -238,15 +235,19 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
       activeProfile.updateSegmentedProfile( newSegmentedProfile );
 
-      setProfile( newSegmentedProfile, m_data );
+      // REMARK: the set segmented profile may have been further adjusted, so we need to get it from the data
+      final IProfil newAdjustedSegmentedProfile = activeProfile.getProfIntersProfile();
+
+      setProfile( newAdjustedSegmentedProfile, m_data );
     }
-    catch( final GeoTransformerException e )
+    catch( final GeoTransformerException | GM_Exception e )
     {
       e.printStackTrace();
     }
 
-    // TODO: repaint map!
+    /* repaint chart and map */
     getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
+    m_data.triggerMapRepaint();
   }
 
   private double calculateDestinationWidth( final IProfil origProfil, final int destinationScreenX, final double unsnappedWidth )
