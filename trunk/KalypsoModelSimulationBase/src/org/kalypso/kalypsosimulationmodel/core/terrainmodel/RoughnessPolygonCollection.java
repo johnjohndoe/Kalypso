@@ -66,7 +66,7 @@ public class RoughnessPolygonCollection extends FeatureBindingCollection<IRoughn
   {
     final List<Feature> srcPolygonsList = getFeatureList();
 
-    final List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
+    final List<IRoughnessPolygon> dstPolygonsList = new ArrayList<>();
 
     final int[] containsList = getEmptyList( srcPolygonsList.size() );
 
@@ -112,7 +112,7 @@ public class RoughnessPolygonCollection extends FeatureBindingCollection<IRoughn
   @Override
   public List<IRoughnessPolygon> getRoughnessPolygons( )
   {
-    return new ArrayList<IRoughnessPolygon>( this );
+    return new ArrayList<>( this );
   }
 
   @Override
