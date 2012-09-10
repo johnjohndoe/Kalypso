@@ -54,7 +54,6 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.model.wspm.core.gml.IObservationFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IRunOffEvent;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
@@ -67,6 +66,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObj
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.IObservationFeature;
 import org.kalypso.wspwin.core.LocalEnergyLossBean;
 import org.kalypso.wspwin.core.LocalEnergyLossBean.LOSSKIND;
 import org.kalypso.wspwin.core.ProfileBean;
