@@ -57,9 +57,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * Composite command used to change the discretisation command. This composite takes the responsibility to notify the
  * commandable workspace about the change introduced by its sub command
  *
- *
  * @author Patrice Congo
- *
  */
 public class ChangeDiscretiationModelCommand implements ICommand
 {
@@ -106,7 +104,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   @Override
   public void process( ) throws Exception
   {
-    final List<Feature> changedFeatures = new ArrayList<Feature>();
+    final List<Feature> changedFeatures = new ArrayList<>();
 
     // build nodes with geo indexing
     for( final IFeatureChangeCommand command : m_nodeCommands )
@@ -118,11 +116,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
         {
           if( changedFeature != null )
           {
-            final Feature wrappedFeature = changedFeature;
-            if( wrappedFeature != null )
-            {
-              changedFeatures.add( wrappedFeature );
-            }
+            changedFeatures.add( changedFeature );
           }
         }
       }
@@ -146,12 +140,8 @@ public class ChangeDiscretiationModelCommand implements ICommand
           {
             if( changedFeature != null )
             {
-              final Feature wrappedFeature = changedFeature;
-              if( wrappedFeature != null )
-              {
-                changedFeatures.add( wrappedFeature );
-                wrappedFeature.setEnvelopesUpdated();
-              }
+              changedFeatures.add( changedFeature );
+              changedFeature.setEnvelopesUpdated();
             }
           }
         }
@@ -171,10 +161,6 @@ public class ChangeDiscretiationModelCommand implements ICommand
     {
       edge.setEnvelopesUpdated();
     }
-
-    // m_model1d2d.getEdges().getFeatureList().invalidate();
-    // m_model1d2d.getElements().getFeatureList().invalidate();
-    // model1d2d.getNodes().getFeatureList().invalidate();
 
     fireStructureChange( changedFeatures );
   }
@@ -231,7 +217,6 @@ public class ChangeDiscretiationModelCommand implements ICommand
     else
     {
       m_commands.add( command );
-
     }
 
     m_isUndoable = m_isUndoable && command.isUndoable();

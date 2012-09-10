@@ -22,7 +22,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
 {
   /** Edges that contains this node */
-  private final IFeatureBindingCollection<IFENetItem> m_containers = new FeatureBindingCollection<IFENetItem>( this, IFENetItem.class, MEMBER_NODE_CONTAINERS );
+  private final IFeatureBindingCollection<IFENetItem> m_containers = new FeatureBindingCollection<>( this, IFENetItem.class, MEMBER_NODE_CONTAINERS );
 
   public FE1D2DNode( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -32,7 +32,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   @Override
   public GM_Point getPoint( )
   {
-    return (GM_Point) getProperty( IFE1D2DNode.PROPERTY_POINT );
+    return (GM_Point)getProperty( IFE1D2DNode.PROPERTY_POINT );
   }
 
   @Override
@@ -58,23 +58,22 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   {
     // REMARK: method reworked to use references instead of geometry (by Dejan)
     // (we had Splitsort problem before: sometimes the search query in SplitSort does not return anything)
-    final List<IFE1D2DElement> elementsList = new ArrayList<IFE1D2DElement>();
+    final List<IFE1D2DElement> elementsList = new ArrayList<>();
     for( final Object element : m_containers )
     {
       if( element instanceof IFE1D2DElement )
       {
         if( !elementsList.contains( element ) )
-          elementsList.add( (IFE1D2DElement) element );
+          elementsList.add( (IFE1D2DElement)element );
       }
       else if( element instanceof IFE1D2DEdge )
       {
-        final IFE1D2DEdge edge = (IFE1D2DEdge) element;
-        final IFeatureBindingCollection edgeContainers = edge.getContainers();
-        for( final Object edgeContainer : edgeContainers )
+        final IFE1D2DEdge edge = (IFE1D2DEdge)element;
+        final IFeatureBindingCollection<IFE1D2DElement> edgeContainers = edge.getContainers();
+        for( final IFE1D2DElement edgeContainer : edgeContainers )
         {
-          if( edgeContainer instanceof IFE1D2DElement )
-            if( !elementsList.contains( edgeContainer ) )
-              elementsList.add( (IFE1D2DElement) edgeContainer );
+          if( !elementsList.contains( edgeContainer ) )
+            elementsList.add( edgeContainer );
         }
       }
     }
@@ -84,13 +83,13 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   @Override
   public List<IFE1D2DNode> getNeighbours( )
   {
-    final List<IFE1D2DNode> list = new ArrayList<IFE1D2DNode>();
+    final List<IFE1D2DNode> list = new ArrayList<>();
     final IFeatureBindingCollection<IFENetItem> nodeContainers = getContainers();
     for( final Object container : nodeContainers )
     {
       if( container instanceof IFE1D2DEdge )
       {
-        final IFeatureBindingCollection<IFE1D2DNode> nodes = ((IFE1D2DEdge) container).getNodes();
+        final IFeatureBindingCollection<IFE1D2DNode> nodes = ((IFE1D2DEdge)container).getNodes();
         for( final IFE1D2DNode node : nodes )
           if( !getId().equals( node.getId() ) )
             list.add( node );
@@ -121,7 +120,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
     buf.append( "{Edges=" ); //$NON-NLS-1$
     for( int i = 0; i < containers.size(); i++ )
       if( containers.get( i ) instanceof IFE1D2DEdge )
-        buf.append( ((IFE1D2DEdge) containers.get( i )).getId() );
+        buf.append( ((IFE1D2DEdge)containers.get( i )).getId() );
     buf.append( '}' );
     buf.append( ']' );
     return buf.toString();
@@ -130,7 +129,6 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   @Override
   public GM_Object recalculateElementGeometry( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 }

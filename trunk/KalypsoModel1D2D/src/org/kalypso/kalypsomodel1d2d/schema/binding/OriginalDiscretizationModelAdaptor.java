@@ -11,11 +11,14 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.util.pool.IModelAdaptor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DElement;
@@ -70,10 +73,9 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     return m_result;
   }
 
-  // Ignore deprecation, we are using this stuff for backwards compatibility
   protected IStatus execute( final GMLWorkspace workspace, final IProgressMonitor monitor )
   {
-    final List<IStatus> statusList = new ArrayList<IStatus>();
+    final IStatusCollector log = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
 
     final Feature model = workspace.getRootFeature();
     final IFeatureType modelFeatureType = model.getFeatureType();
@@ -93,15 +95,15 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     try
     {
       final int numberOfChanges = complexElements.size() + elements.size() + continuityLines.size() + nodes.size();
-      final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>( numberOfChanges );
+      final List<FeatureChange> featureChanges = new ArrayList<>( numberOfChanges );
       final int amountOfWork = numberOfChanges * 10;
       monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.1" ), amountOfWork ); //$NON-NLS-1$
 
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.2" ) ); //$NON-NLS-1$
-      final Map<String, Feature> allNodes = new HashMap<String, Feature>( nodes.size() );
-      final Map<String, Feature> allEdges = new HashMap<String, Feature>( edges.size() );
-      final Map<String, Feature> allElements = new HashMap<String, Feature>( elements.size() );
-      final Map<String, Feature> allContinuityLines = new HashMap<String, Feature>( continuityLines.size() );
+      final Map<String, Feature> allNodes = new HashMap<>( nodes.size() );
+      final Map<String, Feature> allEdges = new HashMap<>( edges.size() );
+      final Map<String, Feature> allElements = new HashMap<>( elements.size() );
+      final Map<String, Feature> allContinuityLines = new HashMap<>( continuityLines.size() );
 
       // check all elements and collect edges and nodes
       for( final Object elementOrLink : elements )
@@ -119,7 +121,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
 
         if( elementQName.equals( IPolyElement.QNAME ) )
         {
-          if( checkPolyElement( element, allEdges, allNodes, featureChanges, statusList ) )
+          if( checkPolyElement( element, allEdges, allNodes, featureChanges, log ) )
             allElements.put( id, element );
         }
         else if( elementQName.equals( IElement1D.QNAME ) )
@@ -146,7 +148,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         final QName complexElementQName = complexElementFeatureType.getQName();
 
         if( complexElementQName.equals( ICalculationUnit2D.QNAME ) )
-          checkComplexElement2d( complexElement, featureChanges, statusList );
+          checkComplexElement2d( complexElement, featureChanges, log );
         monitor.worked( 10 );
       }
 
@@ -187,7 +189,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         final IRelationType nodeContainersProperty = (IRelationType) nodeFeatureType.getProperty( IFE1D2DNode.MEMBER_NODE_CONTAINERS );
         final FeatureList nodeContainers = (FeatureList) node.getProperty( nodeContainersProperty );
 
-        final List<String> newContainers = new ArrayList<String>();
+        final List<String> newContainers = new ArrayList<>();
         nextNode: for( final Feature nodeContainer : getFeatures( nodeContainers ) )
         {
           final IFeatureType nodeContainerFeatureType = nodeContainer.getFeatureType();
@@ -203,7 +205,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             // Edge
             if( !allEdges.containsKey( nodeContainer.getId() ) )
             {
-              statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.6", nodeContainer, node ) ) ); //$NON-NLS-1$
+              log.add( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.6", nodeContainer, node ) ); //$NON-NLS-1$
               continue nextNode;
             }
 
@@ -214,7 +216,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             final int nodeCount = myNodes.length;
             if( nodeCount != 2 )
             {
-              statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.7", nodeContainer, nodeCount ) ) ); //$NON-NLS-1$
+              log.add( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.7", nodeContainer, nodeCount ) ) ; //$NON-NLS-1$
               continue nextNode;
             }
 
@@ -235,7 +237,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
 
               if( (p0.equals( op0 ) && p1.equals( op1 )) || (p0.equals( op1 ) && p1.equals( op0 )) )
               {
-                statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.8", otherEdge, nodeContainer ) ) ); //$NON-NLS-1$
+                log.add( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.8", otherEdge, nodeContainer ) ) ; //$NON-NLS-1$
                 continue nextNode;
               }
             }
@@ -258,10 +260,10 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
 
       // set newly calculated elements, edges, nodes and continuity lines
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.10" ) ); //$NON-NLS-1$
-      featureChanges.add( 0, new FeatureListChange( model, nodesProperty, new ArrayList<Feature>( allNodes.values() ) ) );
-      featureChanges.add( 0, new FeatureListChange( model, elementsProperty, new ArrayList<Feature>( allElements.values() ) ) );
-      featureChanges.add( 0, new FeatureListChange( model, edgesProperty, new ArrayList<Feature>( allEdges.values() ) ) );
-      featureChanges.add( 0, new FeatureListChange( model, continuityLinesProperty, new ArrayList<Feature>( allContinuityLines.values() ) ) );
+      featureChanges.add( 0, new FeatureListChange( model, nodesProperty, new ArrayList<>( allNodes.values() ) ) );
+      featureChanges.add( 0, new FeatureListChange( model, elementsProperty, new ArrayList<>( allElements.values() ) ) );
+      featureChanges.add( 0, new FeatureListChange( model, edgesProperty, new ArrayList<>( allEdges.values() ) ) );
+      featureChanges.add( 0, new FeatureListChange( model, continuityLinesProperty, new ArrayList<>( allContinuityLines.values() ) ) );
 
       // set version
       final IPropertyType versionProperty = modelFeatureType.getProperty( VersionedModel.SIM_BASE_PROP_VERSION );
@@ -279,11 +281,11 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     catch( final Exception e )
     {
 
-      statusList.add( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.loader.GmlLoader.12" ) ) ); //$NON-NLS-1$
-      statusList.add( StatusUtilities.statusFromThrowable( e ) );
+      log.add( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.loader.GmlLoader.12" ) ); //$NON-NLS-1$
+      log.add( StatusUtilities.statusFromThrowable( e ) );
 
-//       update the gml version even in failure case, to avoid the dead-lock recursion
-      final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>( 1 );
+      // update the gml version even in failure case, to avoid the dead-lock recursion
+      final List<FeatureChange> featureChanges = new ArrayList<>( 1 );
       final IPropertyType versionProperty = modelFeatureType.getProperty( VersionedModel.SIM_BASE_PROP_VERSION );
       featureChanges.add( new FeatureChange( model, versionProperty, VERSION_1_0 ) );
       final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[featureChanges.size()] ) );
@@ -304,44 +306,32 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       // elements.invalidate();
       monitor.done();
     }
-    final IStatus resultStatus;
-    if( statusList.size() > 0 )
-      resultStatus = StatusUtilities.createStatus( statusList, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.12" ) ); //$NON-NLS-1$
+
+    if( log.size() > 0 )
+      return log.asMultiStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.12" ) ); //$NON-NLS-1$
     else
-      resultStatus = StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.13" ) ); //$NON-NLS-1$
-    return resultStatus;
+      return new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.13" ) ); //$NON-NLS-1$
   }
 
-  private void checkComplexElement2d( final Feature complexElement, final List<FeatureChange> collectChanges, final List<IStatus> statusList )
+  private void checkComplexElement2d( final Feature complexElement, final List<FeatureChange> collectChanges, final IStatusCollector log )
   {
     final IFeatureType complexElementFeatureType = complexElement.getFeatureType();
     final IRelationType elementsProperty = (IRelationType) complexElementFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
     final FeatureList elementsInComplexElement = (FeatureList) complexElement.getProperty( elementsProperty );
     final int numberOfElements = elementsInComplexElement.size();
 
-    final List<String> newElements = new ArrayList<String>( numberOfElements );
+    final List<String> newElements = new ArrayList<>( numberOfElements );
     for( final Object elementOrId : elementsInComplexElement )
     {
       final Feature elementFeature = FeatureHelper.getFeature( complexElement.getWorkspace(), elementOrId );
       if( elementFeature == null )
       {
         // feature does not exist
-        statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.14", elementOrId, complexElement ) ) ); //$NON-NLS-1$
+        log.add( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.14", elementOrId, complexElement ) ); //$NON-NLS-1$
         continue;
       }
 
       final String id = (String) elementOrId;
-      // final QName elementQName = element.getFeatureType().getQName();
-      // if( elementQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ) )
-      // {
-      //
-      // if( !allElements.containsKey( id ) )
-      // {
-      // System.out.println( "ignoring reference to non-existing PolyElement " + id + " in complex element " +
-      // complexElement );
-      // continue;
-      // }
-      // }
       newElements.add( id );
     }
 
@@ -405,9 +395,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     }
   }
 
-  // Ignore deprecation, we are using this stuff for backwards compability
-  @SuppressWarnings("deprecation")
-  private boolean checkPolyElement( final Feature element, final Map<String, Feature> collectEdges, final Map<String, Feature> collectNodes, final Collection<FeatureChange> collectChanges, final List<IStatus> statusList )
+  private boolean checkPolyElement( final Feature element, final Map<String, Feature> collectEdges, final Map<String, Feature> collectNodes, final Collection<FeatureChange> collectChanges, final IStatusCollector log )
   {
     final IFeatureType elementFeatureType = element.getFeatureType();
     final IRelationType edgesProperty = (IRelationType) elementFeatureType.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
@@ -416,17 +404,17 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     final int numberOfEdges = edgesInElement.size();
     if( numberOfEdges < 3 )
     {
-      statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.16", element ) ) ); //$NON-NLS-1$
+      log.add( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.16", element ) ); //$NON-NLS-1$
       return false;
     }
     if( numberOfEdges > 4 )
     {
-      statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.17", element ) ) ); //$NON-NLS-1$
+      log.add( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.17", element ) ); //$NON-NLS-1$
       return false;
     }
 
     // remove inverted edges from elements and add corresponding normal edges instead
-    final List<String> newEdges = new ArrayList<String>( numberOfEdges );
+    final List<String> newEdges = new ArrayList<>( numberOfEdges );
     for( Feature edgeOrInvEdge : getFeatures( edgesInElement ) )
     {
       final IFeatureType edgeFeatureType = edgeOrInvEdge.getFeatureType();
@@ -445,9 +433,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       if( !newEdges.contains( id ) )
         newEdges.add( id );
       else
-        statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.19", id, element ) ) ); //$NON-NLS-1$
-      //TODO: what for?
-//      System.out.println();
+        log.add( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.19", id, element ) ); //$NON-NLS-1$
 
       if( !collectEdges.containsKey( id ) )
         collectEdges.put( id, edgeOrInvEdge );
@@ -460,8 +446,6 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     return true;
   }
 
-  // Ignore deprecation, we are using this stuff for backwards compability
-  @SuppressWarnings({ "unchecked", "deprecation" })
   private Feature checkInvEdge( final Feature edge, final Collection<FeatureChange> collectChanges )
   {
     final IFeatureType edgeFeatureType = edge.getFeatureType();
@@ -473,7 +457,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     final List<String> elements = (FeatureList) edge.getProperty( elementsProperty );
     final List<String> elementsInInvEdge = (FeatureList) invEdge.getProperty( elementsProperty );
 
-    final List<String> newElements = new ArrayList<String>();
+    final List<String> newElements = new ArrayList<>();
     newElements.addAll( elements );
     newElements.addAll( elementsInInvEdge );
 
