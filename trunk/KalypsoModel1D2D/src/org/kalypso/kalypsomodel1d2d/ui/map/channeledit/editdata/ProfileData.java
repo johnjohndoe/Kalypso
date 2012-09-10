@@ -60,6 +60,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
@@ -354,8 +355,8 @@ class ProfileData implements IProfileData
   {
     final GM_Envelope profileEnvelope = m_feature.getBoundedBy();
 
-    final GM_Envelope downEnvelpe = m_downSegment == null ? null : m_downSegment.getSegmentMapExtend( srsName );
-    final GM_Envelope upEnvelpe = m_upSegment == null ? null : m_upSegment.getSegmentMapExtend( srsName );
+    final GM_Envelope downEnvelpe = m_downSegment == null ? null : m_downSegment.getSegmentMapExtent( srsName );
+    final GM_Envelope upEnvelpe = m_upSegment == null ? null : m_upSegment.getSegmentMapExtent( srsName );
 
     return GeometryUtilities.mergeEnvelopes( profileEnvelope, downEnvelpe, upEnvelpe );
   }
@@ -374,16 +375,44 @@ class ProfileData implements IProfileData
 
     m_isUserChanged = true;
 
+    // FIXME: adjust area!
+
+    adjustBanklineEndpoints( m_segmentedProfile, newSegmentedProfile );
+
     m_segmentedProfile = newSegmentedProfile;
 
-    // TODO: update banks if necessary (end point changed)
-    // TODO: move endpoints of adjacent banks to endpoints of profile
-
-    /* update meshes of adjacent segments */
+    /* update meshes */
     if( m_downSegment != null )
       m_downSegment.updateMesh();
-
     if( m_upSegment != null )
       m_upSegment.updateMesh();
+  }
+
+  private void adjustBanklineEndpoints( final IProfil oldSegmentedProfile, final IProfil newSegmentedProfile )
+  {
+    final IProfileRecord[] oldPoints = oldSegmentedProfile.getPoints();
+    final IProfileRecord[] newPoints = newSegmentedProfile.getPoints();
+
+    /* handle start point */
+    final Coordinate oldStartLocation = oldPoints[0].getCoordinate();
+    final Coordinate newStartLocation = newPoints[0].getCoordinate();
+    if( oldStartLocation.distance( newStartLocation ) > 0.0001 )
+      adjustBanklineEndpoints( oldStartLocation, newStartLocation );
+
+    /* handle end point */
+    final Coordinate oldEndLocation = oldPoints[oldPoints.length - 1].getCoordinate();
+    final Coordinate newEndLocation = newPoints[oldPoints.length - 1].getCoordinate();
+    if( oldEndLocation.distance( newEndLocation ) > 0.0001 )
+      adjustBanklineEndpoints( oldEndLocation, newEndLocation );
+  }
+
+  private void adjustBanklineEndpoints( final Coordinate oldEndpointLocation, final Coordinate newEndpointLocation )
+  {
+    /* update banks and meshes of adjacent segments */
+    if( m_downSegment != null )
+      m_downSegment.updateBankEndpoints( oldEndpointLocation, newEndpointLocation );
+
+    if( m_upSegment != null )
+      m_upSegment.updateBankEndpoints( oldEndpointLocation, newEndpointLocation );
   }
 }

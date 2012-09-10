@@ -53,8 +53,10 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * Represants a segment of the river between two profiles.<br/>
@@ -105,86 +107,10 @@ class SegmentData implements ISegmentData
     return m_mesh;
   }
 
-  // /**
-  // * manages the update of the profile data, after the intersected profiles were changed by the chart view layer in
-  // the
-  // * gui. things to do: -update the intersection points -> will be done by the layer -update the intersected banklines
-  // * -update the profiles (-> croping, intersecting, elevation adjusting)
-  // */
-  // public void updateProfileIntersection( )
-  // {
-  // if( complete() == true )
-  // {
-  // /* get the cropped and intersected profiles & linestrings */
-  //
-  // // muss jedes mal nach profile edit aufgerufen werden!
-  // // UPSTREAM
-  // try
-  // {
-  // /* crop the profile */
-  // m_upCroppedProfile = createCroppedIProfile( m_upProfile, CreateChannelData.PROF.UP );
-  //
-  // /* the cropped profile area is the desired value for the intersected profile area */
-  // final double areaUpCroppedProfile = ProfilUtil.calcArea( m_upCroppedProfile );
-  //
-  // /* intersect the cropped profile */
-  // // here not necessary, because the initial intersection was already done. The intersection here will be
-  // // handled by the user.
-  // // final IProfil tempPreviousIntersProfile = createIntersectedIProfile( m_previousCroppedProfile );
-  // // LineString
-  // // m_upProfLineString = createCroppedProfileLineString( m_upProfile, CreateChannelData.PROF.UP );
-  // final IProfil tmpupIntersProfile = adaptProfileElevations( m_upIntersProfile, m_upCroppedProfile );
-  // final double areaUpIntersProfile = ProfilUtil.calcArea( tmpupIntersProfile );
-  //
-  // // Fl�chenausgleich!!
-  // m_upIntersProfile = adjustProfileArea( m_upIntersProfile, areaUpCroppedProfile, areaUpIntersProfile );
-  //
-  // // m_upIntersProfile = createIntersectedIProfile( m_upCroppedProfile );
-  //
-  // final GeometryFactory factory = new GeometryFactory();
-  // m_upIntersLinestring = factory.createLineString( ProfilUtil.getLineCoordinates( m_upIntersProfile ) );
-  // }
-  // catch( final Exception e )
-  // {
-  // e.printStackTrace();
-  // }
-  //
-  // // DOWNSTREAM
-  // try
-  // {
-  // /* crop the profile */
-  // // IProfil
-  // m_downCroppedProfile = createCroppedIProfile( m_DownProfile, CreateChannelData.PROF.DOWN );
-  //
-  // /* the cropped profile area is the desired value for the intersected profile area */
-  // final double areaDownCroppedProfile = ProfilUtil.calcArea( m_downCroppedProfile );
-  //
-  // /* intersect the cropped profile */
-  // // here not necessary, because the initial intersection was already done. The intersection here will be
-  // // handeled by the user.
-  // // LineString
-  // // final IProfil tempNextIntersProfile = createIntersectedIProfile( m_nextCroppedProfile );
-  // final IProfil tmpdownIntersProfile = adaptProfileElevations( m_downIntersProfile, m_downCroppedProfile );
-  // final double areaDownIntersProfile = ProfilUtil.calcArea( tmpdownIntersProfile );
-  //
-  // // Fl�chenausgleich!!
-  // m_downIntersProfile = adjustProfileArea( m_downIntersProfile, areaDownCroppedProfile, areaDownIntersProfile );
-  //
-  // final GeometryFactory factory = new GeometryFactory();
-  // m_downIntersLinestring = factory.createLineString( ProfilUtil.getLineCoordinates( m_downIntersProfile ) );
-  //
-  // }
-  // catch( final Exception e )
-  // {
-  // e.printStackTrace();
-  // }
-  // }
-  // }
-
   /**
    * gets the map extend (GM_Envelope) of the current segment
    */
-  public GM_Envelope getSegmentMapExtend( final String srsName )
+  public GM_Envelope getSegmentMapExtent( final String srsName )
   {
     final Envelope[] boxes = new Envelope[4];
 
@@ -214,62 +140,6 @@ class SegmentData implements ISegmentData
 
     return JTSAdapter.wrap( fullExtend, srsName );
   }
-
-  // /**
-  // * updates the intersected bankline linestring with the new edge point (moved by profile chart) by moving the
-  // * first/last line point (oldPoint) to the new location (newPoint).
-  // */
-  // private void updateBanklines( final Point oldPoint, final Point newPoint )
-  // {
-  // // TODO: we have a problem with projected coords. check what has to be transformed (the new coord?). and do it!!
-  //
-  // // find the correct bankline
-  // Point point = m_bankLeftSegmented.getPointN( 0 );
-  //
-  // if( point.distance( oldPoint ) < 0.01 )
-  // {
-  // Coordinate[] coords = new Coordinate[m_numBankSegments];
-  // coords = m_bankLeftSegmented.getCoordinates();
-  // coords[0] = newPoint.getCoordinate();
-  //
-  // final GeometryFactory factory = new GeometryFactory();
-  // m_bankLeftOrg = factory.createLineString( coords );
-  // }
-  //
-  // point = m_bankLeftSegmented.getPointN( m_numBankSegments - 1 );
-  // if( point.distance( oldPoint ) < 0.01 )
-  // {
-  // Coordinate[] coords = new Coordinate[m_numBankSegments];
-  // coords = m_bankLeftSegmented.getCoordinates();
-  // coords[m_numBankSegments - 1] = newPoint.getCoordinate();
-  //
-  // final GeometryFactory factory = new GeometryFactory();
-  // m_bankLeftOrg = factory.createLineString( coords );
-  // }
-  //
-  // point = m_bankRightSegmented.getPointN( 0 );
-  // if( point.distance( oldPoint ) < 0.01 )
-  // {
-  // Coordinate[] coords = new Coordinate[m_numBankSegments];
-  // coords = m_bankRightSegmented.getCoordinates();
-  // coords[0] = newPoint.getCoordinate();
-  //
-  // final GeometryFactory factory = new GeometryFactory();
-  // m_bankRightOrg = factory.createLineString( coords );
-  //
-  // }
-  //
-  // point = m_bankRightSegmented.getPointN( m_numBankSegments - 1 );
-  // if( point.distance( oldPoint ) < 0.01 )
-  // {
-  // Coordinate[] coords = new Coordinate[m_numBankSegments];
-  // coords = m_bankRightSegmented.getCoordinates();
-  // coords[m_numBankSegments - 1].setCoordinate( newPoint.getCoordinate() );
-  //
-  // final GeometryFactory factory = new GeometryFactory();
-  // m_bankRightOrg = factory.createLineString( coords );
-  // }
-  // }
 
   @Override
   public ProfileData getProfileDown( )
@@ -406,5 +276,51 @@ class SegmentData implements ISegmentData
     final LineString croppedGeometry = bank.getCroppedOriginalGeometry();
 
     return new BankData( this, originalGeometry, croppedGeometry, newSegmentedLine, true );
+  }
+
+  void updateBankEndpoints( final Coordinate oldEndpointLocation, final Coordinate newEndpointLocation )
+  {
+    if( oldEndpointLocation != null )
+    {
+      m_leftBank = updateBankEndpoint( m_leftBank, oldEndpointLocation, newEndpointLocation );
+      m_rightBank = updateBankEndpoint( m_rightBank, oldEndpointLocation, newEndpointLocation );
+    }
+  }
+
+  private BankData updateBankEndpoint( final BankData bank, final Coordinate oldEndpointLocation, final Coordinate newEndpointLocation )
+  {
+    final LineString originalGeometry = bank.getOriginalGeometry();
+    final LineString croppedGeometry = bank.getCroppedOriginalGeometry();
+
+    final LineString segmentedLine = bank.getSegmented();
+    final LineString newSegmentedLine = updateBankEndpoint( segmentedLine, oldEndpointLocation, newEndpointLocation );
+
+    return new BankData( this, originalGeometry, croppedGeometry, newSegmentedLine, true );
+  }
+
+  private LineString updateBankEndpoint( final LineString segmentedLine, final Coordinate oldEndpointLocation, final Coordinate newEndpointLocation )
+  {
+    /* either it is the start of the line... */
+    final Point startPoint = segmentedLine.getStartPoint();
+    if( startPoint.getCoordinate().distance( oldEndpointLocation ) < 0.01 )
+    {
+      final Coordinate[] coordinates = segmentedLine.getCoordinates();
+      coordinates[0] = newEndpointLocation;
+      return segmentedLine.getFactory().createLineString( coordinates );
+    }
+
+    /* ... or the end ... */
+    final Point endPoint = segmentedLine.getEndPoint();
+    if( endPoint.getCoordinate().distance( oldEndpointLocation ) < 0.01 )
+    {
+      final Coordinate[] coordinates = segmentedLine.getCoordinates();
+      coordinates[coordinates.length - 1] = newEndpointLocation;
+      return segmentedLine.getFactory().createLineString( coordinates );
+    }
+
+    // TODO Auto-generated method stub
+
+    /* ... or neither start nor end -> other bank was changed, so return old value ... */
+    return segmentedLine;
   }
 }
