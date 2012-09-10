@@ -87,20 +87,16 @@ public class GridPointCollector
 
   private QuadMesh m_tempGrid = null;
 
-  private final List<IGridPointCollectorStateListener> m_stateListeners = new ArrayList<IGridPointCollectorStateListener>();
+  private final List<IGridPointCollectorStateListener> m_stateListeners = new ArrayList<>();
 
   private final String m_srsName;
 
   private final IFEDiscretisationModel1d2d m_discModel;
 
-  private final double m_searchDistance;
-
-
-  public GridPointCollector( final IFEDiscretisationModel1d2d discModel, final String srsName, final double searchDistance )
+  public GridPointCollector( final IFEDiscretisationModel1d2d discModel, final String srsName )
   {
     m_discModel = discModel;
     m_srsName = srsName;
-    m_searchDistance = searchDistance;
 
     initLPCConfigs();
   }
@@ -153,7 +149,7 @@ public class GridPointCollector
         return previousAdded;
     }
 
-    final GM_Point lastAdded = (GM_Point) m_sides[m_actualSideKey].addPoint( p );
+    final GM_Point lastAdded = (GM_Point)m_sides[m_actualSideKey].addPoint( p );
 
     final GM_Point autocompleted = autoComplete();
     if( autocompleted != null )
@@ -190,7 +186,7 @@ public class GridPointCollector
     else
     {
       if( m_sides[m_actualSideKey].getRemainingPointCnt() == 0 )
-        return (GM_Point) m_sides[m_actualSideKey].finish();// getLastPoint();
+        return (GM_Point)m_sides[m_actualSideKey].finish();// getLastPoint();
       else
         return null;
     }
@@ -298,11 +294,11 @@ public class GridPointCollector
     /* draw temp grid */
     if( isValid().isOK() )
     {
-    final QuadMeshPainter meshPainter = new QuadMeshPainter( m_tempGrid, m_meshEdgePainter );
-    meshPainter.paint( g, projection );
+      final QuadMeshPainter meshPainter = new QuadMeshPainter( m_tempGrid, m_meshEdgePainter, null );
+      meshPainter.paint( g, projection );
     }
     {
-      final QuadMeshPainter meshPainter = new QuadMeshPainter( m_tempGrid, m_meshEdgeInvalidPainter );
+      final QuadMeshPainter meshPainter = new QuadMeshPainter( m_tempGrid, m_meshEdgeInvalidPainter, null );
       meshPainter.paint( g, projection );
     }
 
@@ -442,8 +438,8 @@ public class GridPointCollector
   }
 
   /**
-   * To get the with for the square that are drawn to show point. if ther is an active {@link LinePointCollectorConfig}
-   * its actual point rect size is resturn otherwise the point square size of the first {@link LinePointCollectorConfig}
+   * To get the with for the square that are drawn to show point. if ther is an active {@link LinePointCollectorConfig} its actual point rect size is resturn otherwise the point square size of the
+   * first {@link LinePointCollectorConfig}
    *
    * @return Returns the with for the square that are drawn to show point
    */
@@ -490,7 +486,7 @@ public class GridPointCollector
 
   public IStatus isValid( )
   {
-    final QuadMeshValidator validator = new QuadMeshValidator( m_tempGrid, m_searchDistance );
+    final QuadMeshValidator validator = new QuadMeshValidator( m_tempGrid );
 
     return validator.isValid( m_discModel );
   }

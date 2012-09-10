@@ -68,12 +68,9 @@ public class QuadMeshValidator
 {
   private final QuadMesh m_mesh;
 
-  private final double m_searchDistance;
-
-  public QuadMeshValidator( final QuadMesh mesh, final double searchDistance )
+  public QuadMeshValidator( final QuadMesh mesh )
   {
     m_mesh = mesh;
-    m_searchDistance = searchDistance;
   }
 
   public IStatus isValid( final IFEDiscretisationModel1d2d discModel )
@@ -97,7 +94,7 @@ public class QuadMeshValidator
     if( discModel == null )
       return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.4" ) ); //$NON-NLS-1$
 
-    final List<GM_Ring> rings = m_mesh.toRings( m_searchDistance );
+    final List<GM_Ring> rings = m_mesh.toRings();
     for( final GM_Ring ring : rings )
     {
       // 4) New Element self-intersects

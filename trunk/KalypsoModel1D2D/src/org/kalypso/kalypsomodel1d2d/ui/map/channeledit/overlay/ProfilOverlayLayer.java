@@ -51,15 +51,12 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilLayerUtils;
 import org.kalypso.model.wspm.ui.view.chart.ProfilePointHover;
-import org.kalypso.observation.result.ComponentUtilities;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
@@ -269,22 +266,26 @@ public class ProfilOverlayLayer extends PointsLineLayer
   @Override
   public final String getTooltipInfo( final IProfileRecord point )
   {
-    final IProfil profil = getProfil();
-    final IComponent HW = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final IComponent RW = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    return super.getTooltipInfo( point );
 
-    if( HW == null || RW == null )
-      return ""; //$NON-NLS-1$
-    try
-    {
+    // TODO: check if this really makes sens: show rw/hw of point, but not breite/hoehe
 
-      return String.format( TOOLTIP_FORMAT, new Object[] { RW.getName(), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, point ), HW.getName(),
-          ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, point ), ComponentUtilities.getComponentUnitLabel( HW ) } );
-    }
-    catch( final RuntimeException e )
-    {
-      return e.getLocalizedMessage();
-    }
+//    final IProfil profil = getProfil();
+//    final IComponent HW = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+//    final IComponent RW = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+//
+//    if( HW == null || RW == null )
+//      return ""; //$NON-NLS-1$
+//    try
+//    {
+//
+//      return String.format( TOOLTIP_FORMAT, new Object[] { RW.getName(), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, point ), HW.getName(),
+//          ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, point ), ComponentUtilities.getComponentUnitLabel( HW ) } );
+//    }
+//    catch( final RuntimeException e )
+//    {
+//      return e.getLocalizedMessage();
+//    }
   }
 
   @Override

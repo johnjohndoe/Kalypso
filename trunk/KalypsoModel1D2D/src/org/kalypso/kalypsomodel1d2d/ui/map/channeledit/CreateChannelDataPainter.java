@@ -80,7 +80,9 @@ class CreateChannelDataPainter
 
   private final SLDPainter2 m_editProfilePointPainter = new SLDPainter2( getClass().getResource( "resources/editProfilePoint.sld" ) );
 
-  private final SLDPainter2 m_edgePainter = new SLDPainter2( getClass().getResource( "resources/edge.sld" ) );
+  private final SLDPainter2 m_meshEdgePainter = new SLDPainter2( getClass().getResource( "resources/meshEdge.sld" ) );
+
+  private final SLDPainter2 m_meshVertexPainter = new SLDPainter2( getClass().getResource( "resources/meshVertex.sld" ) );
 
   private final SLDPainter2 m_bankLinePainter = new SLDPainter2( getClass().getResource( "resources/bankLine.sld" ) );
 
@@ -126,7 +128,7 @@ class CreateChannelDataPainter
     for( final ISegmentData segment : segments )
     {
       final QuadMesh mesh = segment.getMesh();
-      final QuadMeshPainter painter = new QuadMeshPainter( mesh, m_edgePainter );
+      final QuadMeshPainter painter = new QuadMeshPainter( mesh, m_meshEdgePainter, m_meshVertexPainter );
       painter.paint( g, projection );
     }
   }

@@ -49,8 +49,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private static final double DISTANCE_DEF = 0.01;
-
   private GridPointCollector m_gridPointCollector;
 
   private GridWidgetFace m_gridWidgetFace;
@@ -82,7 +80,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       // find the right themes to edit i.e. the discretisation model
       final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
 
-      m_gridPointCollector = new GridPointCollector( discModel, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), DISTANCE_DEF );
+      m_gridPointCollector = new GridPointCollector( discModel, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       m_gridWidgetFace = new GridWidgetFace( this, m_gridPointCollector );
 
       m_pointSnapper = new PointSnapper( discModel, mapPanel );
@@ -347,7 +345,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     final QuadMesh tempGrid = m_gridPointCollector.getTempGrid();
 
-    final ICoreRunnableWithProgress operation = new ImportQuadMeshWorker( workspace, DISTANCE_DEF, tempGrid );
+    final ICoreRunnableWithProgress operation = new ImportQuadMeshWorker( workspace, tempGrid );
 
     final Display display = PlatformUI.getWorkbench().getDisplay();
     final Runnable runnable = new Runnable()

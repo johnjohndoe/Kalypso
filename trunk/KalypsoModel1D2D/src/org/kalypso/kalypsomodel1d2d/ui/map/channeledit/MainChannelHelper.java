@@ -67,7 +67,6 @@ public class MainChannelHelper
       }
       catch( final GM_Exception e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
         return null;
       }
