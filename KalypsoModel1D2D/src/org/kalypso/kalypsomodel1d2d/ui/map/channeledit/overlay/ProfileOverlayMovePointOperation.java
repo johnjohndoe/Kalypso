@@ -18,14 +18,18 @@
  */
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -43,7 +47,7 @@ public class ProfileOverlayMovePointOperation
     m_segmentedProfile = segmentedProfile;
   }
 
-  public IProfil moveRecord( final IRecord recordToChange, final double destinationWidth )
+  public IProfil moveRecord( final IProfileRecord recordToChange, final double destinationWidth ) throws GeoTransformerException
   {
     // check if width is less than the first profile point
     final double widthFirstProfilePoint = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_originalProfil.getFirstPoint() );
@@ -57,69 +61,31 @@ public class ProfileOverlayMovePointOperation
 
     /* set the initial height to the profile height */
     /* and get the geo coordinates for the moved profile point */
-    final double heigth = WspmProfileHelper.getHeightByWidth( destinationWidth, m_originalProfil );
-    final GM_Point gmPoint = WspmProfileHelper.getGeoPosition( destinationWidth, m_originalProfil );
+    final double height = WspmProfileHelper.getHeightByWidth( destinationWidth, m_originalProfil );
+    final GM_Point gmPoint = WspmProfileHelper.getGeoPositionKalypso( destinationWidth, m_originalProfil );
     if( gmPoint == null )
       return null;
 
     /* set the new profile */
-    final IProfil newProfile = createNewProfile( recordToChange, destinationWidth, heigth, gmPoint.getX(), gmPoint.getZ() );
+    final IProfil newProfile = createNewProfile( recordToChange, destinationWidth, height, gmPoint.getX(), gmPoint.getY() );
 
-    // FIXME: sort new profile by breite... so dragging point over another is not bad
-    final IComponent breiteComponent = newProfile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    if( breiteComponent != null )
-      newProfile.getResult().setSortComponents( new IComponent[] { breiteComponent } );
+    // FIXME; elevation adjustment
 
     return newProfile;
-
-    // TODO: not so nice, use the same profile object for both segments, so that changes goes to both segments
-    // directly
-    // updateProfileForNeighbourSegment();
-
-    // TODO: both adjacent segments must be updated
-    // FIXME:
-//    final ISegmentData upstreamSegment = activeProfile.getUpSegment();
-//    final ISegmentData downstreamSegment = activeProfile.getDownSegment();
-//
-//    /* check if the first or last intersection point has been moved -> update intersected profile and bank linestrings */
-//    final IProfileRecord[] points = profil.getPoints();
-//
-//    final double oldStartWdith = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[0] );
-//    final double oldEndWdith = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[points.length - 1] );
-//
-//    checkIntersectionPoints( upstreamSegment, downstreamSegment, oldStartWdith, oldEndWdith );
-
-    // final SegmentData currentSegment = m_data.getSelectedSegment();
-    // currentSegment.updateProfileIntersection();
-
-    // FIXME
-    // if( upstreamSegment != null )
-    // upstreamSegment.updateProfileIntersection();
-    // if( downstreamSegment != null )
-    // downstreamSegment.updateProfileIntersection();
-
-    // final CreateChannelData.PROF prof = m_data.getCurrentProfile();
-    // FIXME
-    // m_data.completationCheck();
-
-    // CreateChannelData.PROF prof = m_data.getCurrentProfile();
-    // setProfil( currentSegment.getProfUpIntersProfile() );
-
-    // FIXME: again?
-//    if( breiteComponent != null )
-//      getProfil().getResult().setSortComponents( new IComponent[] { breiteComponent } );
   }
 
-  private IProfil createNewProfile( final IRecord recordToChange, final double newWidth, final double newHeight, final double newRw, final double newHw )
+  private IProfil createNewProfile( final IProfileRecord recordToChange, final double newWidth, final double newHeight, final double newRw, final double newHw )
   {
     final IProfil newProfile = ChannelEditUtil.createEmptyProfile( m_segmentedProfile );
+
+    final List<IProfileRecord> newRecords = new ArrayList<>();
 
     /* copy old points into new profile and change the dragged record */
     for( final IProfileRecord oldRecord : m_segmentedProfile.getPoints() )
     {
       final IProfileRecord newPoint = newProfile.createProfilPoint();
 
-      if( oldRecord == recordToChange )
+      if( oldRecord.getRecord() == recordToChange.getRecord() )
       {
         newPoint.setBreite( newWidth );
         newPoint.setHoehe( newHeight );
@@ -134,8 +100,16 @@ public class ProfileOverlayMovePointOperation
         newPoint.setHochwert( oldRecord.getHochwert() );
       }
 
-      newProfile.addPoint( newPoint );
+      newRecords.add( newPoint );
     }
+
+    /* sort by width */
+    final Comparator<IProfileRecord> widthComparator = new BreiteComparator();
+    Collections.sort( newRecords, widthComparator );
+
+    /* add to new profile */
+    for( final IProfileRecord record : newRecords )
+      newProfile.addPoint( record );
 
     return newProfile;
   }

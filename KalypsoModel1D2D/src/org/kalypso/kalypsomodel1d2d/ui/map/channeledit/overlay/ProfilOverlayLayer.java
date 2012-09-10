@@ -49,21 +49,18 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilLayerUtils;
 import org.kalypso.model.wspm.ui.view.chart.ProfilePointHover;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -233,13 +230,22 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     final double destinationWidth = calculateDestinationWidth( origProfil, point.x, numericPoint.getX() );
 
-    /* move the record */
-    final ProfileOverlayMovePointOperation worker = new ProfileOverlayMovePointOperation( origProfil, segmentedProfile );
-    final IProfil newSegmentedProfile = worker.moveRecord( draggedRecord, destinationWidth );
+    try
+    {
+      /* move the record */
+      final ProfileOverlayMovePointOperation worker = new ProfileOverlayMovePointOperation( origProfil, segmentedProfile );
+      final IProfil newSegmentedProfile = worker.moveRecord( draggedRecord, destinationWidth );
 
-    activeProfile.updateSegmentedProfile( newSegmentedProfile );
-    // TODO: repaint map?
+      activeProfile.updateSegmentedProfile( newSegmentedProfile );
 
+      setProfile( newSegmentedProfile, m_data );
+    }
+    catch( final GeoTransformerException e )
+    {
+      e.printStackTrace();
+    }
+
+    // TODO: repaint map!
     getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
@@ -324,73 +330,5 @@ public class ProfilOverlayLayer extends PointsLineLayer
   public String getTitle( )
   {
     return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer.1" ); //$NON-NLS-1$
-  }
-
-  /**
-   * checks if the intersection points have been moved and updates them in the data class (also for the neighbour
-   * segments).
-   *
-   * @param oldStartWdith
-   *          the width coordinate of the first intersection profile point before user interaction
-   * @param oldEndWdith
-   *          the width coordinate of the last intersection profile point before user interaction
-   */
-  private void checkIntersectionPoints( final ISegmentData upstreamSegment, final ISegmentData downstreamSegment, final double oldStartWdith, final double oldEndWdith )
-  {
-    try
-    {
-      final IProfil profil = getProfil();
-      final IRecord firstPoint = profil.getPoints()[0];
-      final IRecord lastPoint = profil.getPoints()[profil.getPoints().length - 1];
-
-      final double newStartWidth = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, firstPoint );
-      final double newEndWidth = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, lastPoint );
-
-      /* check, what intersection points have changed */
-      final IProfileData activeProfile = m_data.getActiveProfile();
-      final IProfil activeDataProfile = activeProfile.getProfilOrg();
-
-      final int iHoehe = activeDataProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-
-      final GM_Point startPoint = WspmProfileHelper.getGeoPositionKalypso( newStartWidth, activeDataProfile );
-      final GM_Point endPoint = WspmProfileHelper.getGeoPositionKalypso( newEndWidth, activeDataProfile );
-
-      if( oldStartWdith != newStartWidth ) // first intersection point has been moved
-      {
-        /* intersection points have to have the same heigth as the orig profile */
-        firstPoint.setValue( iHoehe, startPoint.getZ() );
-
-        // FIXME
-        // upstreamSegment.setIntersPoint( startPoint, PROF.DOWN, WIDTHORDER.FIRST, newStartWidth );
-        // downstreamSegment.setIntersPoint( startPoint, PROF.UP, WIDTHORDER.FIRST, newStartWidth );
-      }
-
-      if( oldEndWdith != newEndWidth )
-      {
-        /* intersection points have to have the same heigth as the orig profile */
-        lastPoint.setValue( iHoehe, endPoint.getZ() );
-
-        // FIXME
-        // upstreamSegment.setIntersPoint( endPoint, PROF.DOWN, WIDTHORDER.LAST, newEndWidth );
-        // downstreamSegment.setIntersPoint( endPoint, PROF.UP, WIDTHORDER.LAST, newEndWidth );
-      }
-
-      if( oldStartWdith != newStartWidth || oldEndWdith != newEndWidth )
-      {
-        // FIXME
-        // upstreamSegment.setNewIntersectedProfile( profil, PROF.DOWN );
-        // downstreamSegment.setNewIntersectedProfile( profil, PROF.UP );
-      }
-    }
-    catch( final IndexOutOfBoundsException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( final Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
   }
 }
