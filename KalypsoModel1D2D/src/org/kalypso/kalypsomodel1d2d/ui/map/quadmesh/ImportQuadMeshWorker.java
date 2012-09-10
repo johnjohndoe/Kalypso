@@ -61,14 +61,12 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 public class ImportQuadMeshWorker implements ICoreRunnableWithProgress
 {
   private final CommandableWorkspace m_discretisationWorkspace;
-  private final double m_searchRectWidth;
 
   private final QuadMesh[] m_grids;
 
-  public ImportQuadMeshWorker( final CommandableWorkspace discretisationWorkspace, final double searchRectWidth, final QuadMesh... grids )
+  public ImportQuadMeshWorker( final CommandableWorkspace discretisationWorkspace, final QuadMesh... grids )
   {
     m_discretisationWorkspace = discretisationWorkspace;
-    m_searchRectWidth = searchRectWidth;
     m_grids = grids;
   }
 
@@ -81,7 +79,7 @@ public class ImportQuadMeshWorker implements ICoreRunnableWithProgress
       final List<GM_Ring> rings = new ArrayList<>();
       for( final QuadMesh mesh : m_grids )
       {
-        final List<GM_Ring> meshRings = mesh.toRings( m_searchRectWidth );
+        final List<GM_Ring> meshRings = mesh.toRings();
         rings.addAll( meshRings );
       }
 

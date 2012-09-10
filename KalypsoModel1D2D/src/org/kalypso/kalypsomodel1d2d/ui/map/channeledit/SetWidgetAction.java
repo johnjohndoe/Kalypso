@@ -47,7 +47,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.views.map.MapView;
 
@@ -66,8 +65,6 @@ public class SetWidgetAction extends Action
 
     m_data = data;
     m_widget = widget;
-
-    setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
   }
 
   @Override

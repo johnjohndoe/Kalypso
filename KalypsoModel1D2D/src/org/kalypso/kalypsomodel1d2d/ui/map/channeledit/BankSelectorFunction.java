@@ -93,13 +93,6 @@ public class BankSelectorFunction implements IRectangleMapFunction
   @Override
   public void execute( final IMapPanel mapPanel, final Rectangle rectangle )
   {
-    // FIXME
-    // if( m_data.getMeshStatus() )
-    // {
-    //      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-    // return;
-    // }
-
     final IKalypsoFeatureTheme bankTheme = getBankTheme();
     if( bankTheme == null )
       return;

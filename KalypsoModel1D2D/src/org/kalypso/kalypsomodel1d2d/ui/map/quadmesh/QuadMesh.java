@@ -46,10 +46,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * This class provide the mechanism to calculate the grid finit element model node and to display them. The point are
@@ -68,9 +70,9 @@ public class QuadMesh
   /**
    * Cache for grid computed grid points
    */
-  private final GM_Point[][] m_grid;
+  private final Coordinate[][] m_grid;
 
-  public QuadMesh( final GM_Point[][] grid, final String srsName )
+  public QuadMesh( final Coordinate[][] grid, final String srsName )
   {
     Assert.isNotNull( grid );
     Assert.isNotNull( srsName );
@@ -78,32 +80,35 @@ public class QuadMesh
     m_crs = srsName;
     m_grid = grid;
 
-    for( final GM_Point[] line : grid )
+    for( final Coordinate[] line : grid )
     {
       Assert.isNotNull( line );
 
-      for( final GM_Point point : line )
-      {
+      for( final Coordinate point : line )
         Assert.isNotNull( point );
-        Assert.isTrue( srsName.equals( point.getCoordinateSystem() ) );
-      }
     }
   }
 
-  public List<GM_Ring> toRings( final double searchRectWidth ) throws GM_Exception
+  public String getSRSName( )
   {
-    final List<GM_Ring> rings = new ArrayList<GM_Ring>();
+    return m_crs;
+  }
+
+  public List<GM_Ring> toRings( ) throws GM_Exception
+  {
+    final List<GM_Ring> rings = new ArrayList<>();
 
     for( int i = 0; i < m_grid.length - 1; i++ )
     {
       for( int j = 0; j < m_grid[i].length - 1; j++ )
       {
         final GM_Position[] poses = new GM_Position[5];
-        poses[0] = m_grid[i][j].getPosition();
-        poses[1] = m_grid[i + 1][j].getPosition();
-        poses[2] = m_grid[i + 1][j + 1].getPosition();
-        poses[3] = m_grid[i][j + 1].getPosition();
-        poses[4] = m_grid[i][j].getPosition();
+
+        poses[0] = JTSAdapter.wrap( m_grid[i][j] );
+        poses[1] = JTSAdapter.wrap( m_grid[i + 1][j] );
+        poses[2] = JTSAdapter.wrap( m_grid[i + 1][j + 1] );
+        poses[3] = JTSAdapter.wrap( m_grid[i][j + 1] );
+        poses[4] = JTSAdapter.wrap( m_grid[i][j] );
 
         // final GM_Position[] checkedPoses = checkPoses( poses, searchRectWidth );
         final GM_Position[] checkedPoses = poses;
@@ -116,43 +121,43 @@ public class QuadMesh
     return Collections.unmodifiableList( rings );
   }
 
-  // TODO: seems to delete consecutive that are too near to each other -> necessary? There are better ways to do that
-  private GM_Position[] checkPoses( final GM_Position[] poses, final double searchRectWidth )
-  {
-    final List<GM_Position> posToDeleteList = new ArrayList<GM_Position>();
-    final List<GM_Position> posList = new ArrayList<GM_Position>();
+//  // TODO: seems to delete consecutive that are too near to each other -> necessary? There are better ways to do that
+//  private GM_Position[] checkPoses( final GM_Position[] poses, final double searchRectWidth )
+//  {
+//    final List<GM_Position> posToDeleteList = new ArrayList<GM_Position>();
+//    final List<GM_Position> posList = new ArrayList<GM_Position>();
+//
+//    for( int i = 0; i < poses.length - 1; i++ )
+//    {
+//      posList.add( poses[i] );
+//
+//      /* check the distance to each other */
+//      for( int j = 0; j < poses.length - 1; j++ )
+//      {
+//        if( i != j )
+//        {
+//          // TODO: what is the meaning of this?
+//
+//          final double distance = poses[i].getDistance( poses[j] );
+//          if( distance < 2 * searchRectWidth && !posToDeleteList.contains( poses[j] ) )
+//          {
+//            posToDeleteList.add( poses[i] );
+//          }
+//        }
+//      }
+//    }
+//
+//    for( final GM_Position position : posToDeleteList )
+//    {
+//      posList.remove( position );
+//    }
+//
+//    final GM_Position[] positions = posList.toArray( new GM_Position[posList.size() + 1] );
+//    positions[posList.size()] = positions[0];
+//    return positions;
+//  }
 
-    for( int i = 0; i < poses.length - 1; i++ )
-    {
-      posList.add( poses[i] );
-
-      /* check the distance to each other */
-      for( int j = 0; j < poses.length - 1; j++ )
-      {
-        if( i != j )
-        {
-          // TODO: what is the meaning of this?
-
-          final double distance = poses[i].getDistance( poses[j] );
-          if( distance < 2 * searchRectWidth && !posToDeleteList.contains( poses[j] ) )
-          {
-            posToDeleteList.add( poses[i] );
-          }
-        }
-      }
-    }
-
-    for( final GM_Position position : posToDeleteList )
-    {
-      posList.remove( position );
-    }
-
-    final GM_Position[] positions = posList.toArray( new GM_Position[posList.size() + 1] );
-    positions[posList.size()] = positions[0];
-    return positions;
-  }
-
-  public GM_Point[][] getGrid( )
+  public Coordinate[][] getGrid( )
   {
     return m_grid;
   }

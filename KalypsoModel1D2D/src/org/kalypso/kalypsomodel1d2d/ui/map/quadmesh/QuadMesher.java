@@ -49,8 +49,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -93,7 +91,7 @@ public class QuadMesher
 
   public IStatus createMesh( final String srsName, final LineString leftLine, final LineString topLine, final LineString rightLine, final LineString bottomLine )
   {
-    final GM_Point[][] gridPoints = calculateMesh( srsName, leftLine, topLine, rightLine, bottomLine );
+    final Coordinate[][] gridPoints = calculateMesh( leftLine, topLine, rightLine, bottomLine );
 
     m_mesh = new QuadMesh( gridPoints, srsName );
 
@@ -119,7 +117,7 @@ public class QuadMesher
     return m_mesh;
   }
 
-  private GM_Point[][] calculateMesh( final String srsName, final LineString leftLine, final LineString topLine, final LineString rightLine, final LineString bottomLine )
+  private Coordinate[][] calculateMesh( final LineString leftLine, final LineString topLine, final LineString rightLine, final LineString bottomLine )
   {
     /* arrange the lines for the mesher */
     /*
@@ -137,25 +135,9 @@ public class QuadMesher
     final LineString fixedBottomLine = fixedLines2[2];
     final LineString fixedLeftLine = fixedLines2[3];
 
-    // FIXME!
-    // final JTSCoordsElevInterpol adjuster = new JTSCoordsElevInterpol( coords );
-    // final Coordinate[][] coords2 = adjuster.calculateElevations();
-
     // compute mesh points
     final JTSQuadMesher mesher = new JTSQuadMesher( fixedTopLine, fixedBottomLine, fixedLeftLine, fixedRightLine );
-    final Coordinate[][] coordinates = mesher.calculateMesh();
-    final GM_Point points2D[][] = new GM_Point[coordinates.length][];
-    for( int i = 0; i < coordinates.length; i++ )
-    {
-      final Coordinate[] line = coordinates[i];
-      points2D[i] = new GM_Point[line.length];
-      for( int j = 0; j < line.length; j++ )
-      {
-        final Coordinate coord = line[j];
-        points2D[i][j] = GeometryFactory.createGM_Point( coord.x, coord.y, coord.z, srsName );
-      }
-    }
-    return points2D;
+    return mesher.calculateMesh();
   }
 
   /** Fix the lines so the endpoints are really the same. */

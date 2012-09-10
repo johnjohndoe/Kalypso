@@ -44,16 +44,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
  * @author Gernot Belger
@@ -91,15 +97,98 @@ class BanklineIntersector
       final IProfileData downProfile = m_segment.getProfileDown();
       final IProfileData upProfile = m_segment.getProfileUp();
 
-      final LineString upProfileLine = ChannelEditUtil.convertProfilesToLineStrings( upProfile.getFeature() );
-      final LineString downProfileLine = ChannelEditUtil.convertProfilesToLineStrings( downProfile.getFeature() );
-
-      return intersectBankline( downProfileLine, upProfileLine );
+      return intersectBankline( downProfile, upProfile );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       return null;
+    }
+  }
+
+  private BankData intersectBankline( final IProfileData downProfile, final IProfileData upProfile )
+  {
+    final LineString upProfileLine = ChannelEditUtil.convertProfilesToLineStrings( upProfile.getFeature() );
+    final LineString downProfileLine = ChannelEditUtil.convertProfilesToLineStrings( downProfile.getFeature() );
+
+    final Pair<LineString, Pair<Point, Point>> intersection = findBankForProfiles( downProfileLine, upProfileLine );
+
+    if( intersection == null )
+      return null;
+
+    final Pair<Point, Point> points = intersection.getValue();
+
+    final Point downPoint = points.getLeft();
+    final Point upPoint = points.getRight();
+
+    final LineString bankLine = intersection.getKey();
+
+    /* extract line between start end end intersection */
+    final LineString croppedBankLine = (LineString)JTSUtilities.extractLineString( bankLine, downPoint, upPoint );
+
+    /* handle z values of start a<nd end point */
+    final double downZ = findIntersectionZ( downProfile, croppedBankLine.getStartPoint(), bankLine );
+    final double upZ = findIntersectionZ( upProfile, croppedBankLine.getEndPoint(), bankLine );
+
+    /* cropped line has z if bankLine has z; addionally, we want to force the profile height onto the endpoints */
+    final LineString croppedBankLineWithZEndPoints = replaceEndpointZ( croppedBankLine, downZ, upZ );
+
+    /* now make sure, we have z everywhere */
+    final LineString croppedBankLineWithZ = JTSUtilities.interpolateMissingZ( croppedBankLineWithZEndPoints );
+
+    final LineString segmentedGeometry = ChannelEditUtil.intersectLineString( croppedBankLineWithZ, m_numberOfBankSegments );
+
+    return new BankData( m_segment, bankLine, croppedBankLine, segmentedGeometry, false );
+  }
+
+  private LineString replaceEndpointZ( final LineString bankLine, final double startZ, final double endZ )
+  {
+    final Point startPoint = bankLine.getStartPoint();
+    final Point endPoint = bankLine.getEndPoint();
+
+    final Coordinate[] coordinates = bankLine.getCoordinates();
+    final Coordinate[] newCoordinates = new Coordinate[coordinates.length];
+
+    newCoordinates[0] = new Coordinate( startPoint.getX(), startPoint.getY(), startZ );
+    System.arraycopy( coordinates, 1, newCoordinates, 1, coordinates.length - 2 );
+    newCoordinates[coordinates.length - 1] = new Coordinate( endPoint.getX(), endPoint.getY(), endZ );
+
+    return bankLine.getFactory().createLineString( newCoordinates );
+  }
+
+  // TODO: fetch heights from profile at this points
+  // - either from bankline, if bankline has z
+  // -or from profile
+  private double findIntersectionZ( final IProfileData profileData, final Point intersection, final LineString bankLine )
+  {
+    try
+    {
+      /* original height from where ??? */
+      final double intersectionZ = intersection.getCoordinate().z;
+
+      if( !Double.isNaN( intersectionZ ) )
+        return intersectionZ;
+
+      final IProfil profilOrg = profileData.getProfilOrg();
+
+      final LengthIndexedLine bankIndex = new LengthIndexedLine( bankLine );
+      final double indexOnBankLine = bankIndex.project( intersection.getCoordinate() );
+      final Coordinate bankPoint = bankIndex.extractPoint( indexOnBankLine );
+
+      final Double width = WspmProfileHelper.getWidthPosition( intersection, profilOrg );
+      if( Doubles.isNaN( width ) )
+        return Double.NaN;
+
+      final Double profileHeight = WspmProfileHelper.getHeightByWidth( width, profilOrg );
+
+      // TODO: if both abk point and profile have height's: compute difference and show if too big
+
+      return profileHeight;
+    }
+    catch( GM_Exception | GeoTransformerException e )
+    {
+      e.printStackTrace();
+      return Double.NaN;
     }
   }
 
@@ -136,27 +225,6 @@ class BanklineIntersector
     }
 
     return null;
-  }
-
-  private BankData intersectBankline( final LineString downProfileLine, final LineString upProfileLine ) throws Exception
-  {
-    final Pair<LineString, Pair<Point, Point>> intersection = findBankForProfiles( downProfileLine, upProfileLine );
-
-    if( intersection == null )
-      return null;
-
-    final Pair<Point, Point> points = intersection.getValue();
-
-    final Point downPoint = points.getLeft();
-    final Point upPoint = points.getRight();
-
-    final LineString bankLine = intersection.getKey();
-
-    final LineString croppedBankLine = (LineString)JTSUtilities.extractLineString( bankLine, downPoint, upPoint );
-
-    final LineString segmentedGeometry = ChannelEditUtil.intersectLineString( croppedBankLine, m_numberOfBankSegments );
-
-    return new BankData( m_segment, bankLine, croppedBankLine, segmentedGeometry, false );
   }
 
   public BankData getBankline( )

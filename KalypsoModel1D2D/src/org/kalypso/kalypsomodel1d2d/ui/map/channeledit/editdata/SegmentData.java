@@ -44,6 +44,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
 import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesh;
@@ -211,9 +212,29 @@ class SegmentData implements ISegmentData
 
     final QuadMesher mesher = new QuadMesher();
     // TODO: validate mesh and also keep mesh status -> paint mesh accordingly
+
+    // REMARK: order of lines is important, mesher will interpolate from left to right (here the bank lines)
+    // The result is what we want, i.e. the interpolated profile lines are straight, the interpolated bank lines
+    // have the same curvature as the input bank lines.
     mesher.createMesh( srsName, leftLine, topLine, rightLine, bottomLine );
 
-    return mesher.getMesh();
+    // REMARK2: however, the interpolation order yields the wrong z-values, the z values should be interpolated
+    // between the top/bottom lines (i.e profiles) instead of left right.
+    // So we need to do it again ourselfs.
+
+    final QuadMesh mesh = mesher.getMesh();
+
+    final Coordinate[][] grid = mesh.getGrid();
+
+    final JTSCoordsElevInterpol adjuster = new JTSCoordsElevInterpol( grid );
+
+    for( int j = 1; j < grid.length - 1; j++ )
+      adjuster.calculateElevationsForColumn( j );
+
+    // REMARK: actually the z value are changed inline, so we could use the old mesh...
+    final Coordinate[][] reinterpolatedGrid = adjuster.calculateElevations();
+
+    return new QuadMesh( reinterpolatedGrid, srsName );
   }
 
   public void updateMesh( )
@@ -317,8 +338,6 @@ class SegmentData implements ISegmentData
       coordinates[coordinates.length - 1] = newEndpointLocation;
       return segmentedLine.getFactory().createLineString( coordinates );
     }
-
-    // TODO Auto-generated method stub
 
     /* ... or neither start nor end -> other bank was changed, so return old value ... */
     return segmentedLine;

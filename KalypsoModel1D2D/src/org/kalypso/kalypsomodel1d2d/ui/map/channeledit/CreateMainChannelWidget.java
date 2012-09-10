@@ -58,15 +58,11 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 /**
  * TODO:
  * <ul>
- * <li>show z value in tooltip</li>
- * <li>use z values of bank lines if they exist</li>
- * <li>FIXME editing segmented profile should change mesh</li>
- * <li>FIXME: elevations of mesh and elevation corretion</li>
- * <li>FIXME: profile view: set initial tool to profile edit</li>
  * <li>FIXME: consisting naming of all classes</li>
  * <li>discuss with Niloufar/Thoamas</li>
  * <li>general cleaup</li>
  * <li>decide naming of intersection points/segmentation</li>
+ * <li>TODO: let user toggle area auto adjustment</li>
  * </ul>
  *
  * @author Thomas Jung
@@ -80,6 +76,8 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
 
   private CreateMainChannelComposite m_composite;
 
+  private final IWidget m_infoWidget = new CreateMainChannelInfoWidget( m_data );
+
   public CreateMainChannelWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -92,7 +90,7 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
   {
     resetData();
 
-    m_composite = new CreateMainChannelComposite( parent, toolkit, SWT.NONE, m_data );
+    m_composite = new CreateMainChannelComposite( parent, toolkit, SWT.NONE, m_data, m_infoWidget );
 
     // REMARK: set specific shell to data, else model dialogs will be system model instead of model to this shell
     m_data.setShell( parent.getShell() );
@@ -157,7 +155,10 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
   @Override
   public void setDelegate( final IWidget delegate )
   {
-    super.setDelegate( delegate );
+    if( delegate == null )
+      super.setDelegate( m_infoWidget );
+    else
+      super.setDelegate( delegate );
   }
 
   @Override

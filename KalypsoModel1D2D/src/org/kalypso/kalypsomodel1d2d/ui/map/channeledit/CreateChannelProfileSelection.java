@@ -120,6 +120,8 @@ public class CreateChannelProfileSelection extends Composite
     final IWidget selectProfileWidget = new SelectionWidget( StringUtils.EMPTY, StringUtils.EMPTY, new ProfileSelectorFunction( data ) );
 
     final SetWidgetAction selectProfilesWidgetAction = new SetWidgetAction( data, selectProfileWidget );
+
+    setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
     selectProfilesWidgetAction.setImageDescriptor( KalypsoModel1D2DPlugin.getImageProvider().getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.SELECT ) );
 
     return ChannelEditUtil.createWidgetSelectionButton( toolkit, parent, data, binding, selectProfilesWidgetAction, CreateChannelData.PROPERTY_SELECT_PROFILE_WIDGET_ENABLED );

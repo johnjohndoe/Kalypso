@@ -58,8 +58,6 @@ final class CreateMainChannelConvertToOperation implements ICoreRunnableWithProg
 {
   private final CreateChannelData m_data;
 
-  private final double SEARCH_DISTANCE = 0.02;
-
   public CreateMainChannelConvertToOperation( final CreateChannelData data )
   {
     m_data = data;
@@ -74,7 +72,7 @@ final class CreateMainChannelConvertToOperation implements ICoreRunnableWithProg
 
     final CommandableWorkspace workspace = m_data.getDiscretisationWorkspace();
 
-    final ImportQuadMeshWorker worker = new ImportQuadMeshWorker( workspace, SEARCH_DISTANCE, meshes );
+    final ImportQuadMeshWorker worker = new ImportQuadMeshWorker( workspace, meshes );
     return worker.execute( monitor );
   }
 

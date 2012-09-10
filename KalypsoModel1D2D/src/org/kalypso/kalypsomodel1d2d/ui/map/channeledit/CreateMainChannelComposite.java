@@ -53,7 +53,10 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
  * @author Thomas Jung
@@ -68,7 +71,7 @@ public class CreateMainChannelComposite extends Composite
 
   private DatabindingForm m_binding;
 
-  public CreateMainChannelComposite( final Composite parent, final FormToolkit toolkit, final int style, final CreateChannelData data )
+  public CreateMainChannelComposite( final Composite parent, final FormToolkit toolkit, final int style, final CreateChannelData data, final IWidget infoWidget )
   {
     super( parent, style );
 
@@ -79,13 +82,13 @@ public class CreateMainChannelComposite extends Composite
 
     setLayout( new FillLayout() );
 
-    createContents();
+    createContents( infoWidget );
   }
 
   /**
    * initialisation
    */
-  private void createContents( )
+  private void createContents( final IWidget infoWidget )
   {
     final ScrolledForm form = m_toolkit.createScrolledForm( this );
     final Composite body = form.getBody();
@@ -110,12 +113,28 @@ public class CreateMainChannelComposite extends Composite
     profilSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* conversion to model composite */
+    final Control applySection = createApplySection( body, infoWidget );
+    applySection.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+  }
+
+  private Control createApplySection( final Composite body, final IWidget infoWidget )
+  {
     final Composite compConversion = m_toolkit.createComposite( body, SWT.NONE );
     compConversion.setLayout( new GridLayout( 2, false ) );
 
+    /* apply button and info widget */
     final CreateMainChannelApplyAction applyToAction = new CreateMainChannelApplyAction( m_data );
     final Button applyToButton = ActionButton.createButton( m_toolkit, compConversion, applyToAction );
-    applyToButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    applyToButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false, 1, 1 ) );
+
+    final SetWidgetAction infoWidgetAction = new SetWidgetAction( m_data, infoWidget );
+    infoWidgetAction.setToolTipText( "Info Werkzeug aktivieren" );
+    infoWidgetAction.setImageDescriptor( KalypsoModel1D2DPlugin.getImageProvider().getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.CHANNEL_EDIT_INFO ) );
+
+    // TODO: enable only if we have any meshes
+    ChannelEditUtil.createWidgetSelectionButton( m_toolkit, compConversion, m_data, m_binding, infoWidgetAction, null );
+
+    return compConversion;
   }
 
   /**
