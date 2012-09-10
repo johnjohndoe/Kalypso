@@ -233,12 +233,15 @@ public class ProfilOverlayLayer extends PointsLineLayer
       final ProfileOverlayMovePointOperation worker = new ProfileOverlayMovePointOperation( origProfil, segmentedProfile );
       final IProfil newSegmentedProfile = worker.moveRecord( draggedRecord, destinationWidth );
 
-      activeProfile.updateSegmentedProfile( newSegmentedProfile );
+      if( newSegmentedProfile != null )
+      {
+        activeProfile.updateSegmentedProfile( newSegmentedProfile );
 
-      // REMARK: the set segmented profile may have been further adjusted, so we need to get it from the data
-      final IProfil newAdjustedSegmentedProfile = activeProfile.getProfIntersProfile();
+        // REMARK: the set segmented profile may have been further adjusted, so we need to get it from the data
+        final IProfil newAdjustedSegmentedProfile = activeProfile.getProfIntersProfile();
 
-      setProfile( newAdjustedSegmentedProfile, m_data );
+        setProfile( newAdjustedSegmentedProfile, m_data );
+      }
     }
     catch( final GeoTransformerException | GM_Exception e )
     {
