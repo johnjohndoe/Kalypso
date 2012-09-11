@@ -2,6 +2,7 @@ package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
@@ -30,8 +30,10 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 /**
  * @author Gernot Belger
  */
-final class TrippleImportOperation implements ICoreRunnableWithProgress
+final class TrippleImportOperation extends AbstractImportProfileOperation
 {
+  private static final DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
+
   private final IRiverProfileNetworkCollection m_profNetworkColl;
 
   private final List<Feature> m_terrainModelAdds;
@@ -44,17 +46,19 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
 
   private IRiverProfileNetwork m_network;
 
-  TrippleImportOperation( final File trippelFile, final String separator, final String crs, final IRiverProfileNetworkCollection profNetworkColl, final List<Feature> terrainModelAdds )
+  TrippleImportOperation( final ImportProfileData data, final File trippelFile, final String separator, final String crs )
   {
+    super( data );
+
     m_trippelFile = trippelFile;
     m_separator = separator;
     m_crs = crs;
-    m_profNetworkColl = profNetworkColl;
-    m_terrainModelAdds = terrainModelAdds;
+    m_profNetworkColl = data.getProfNetworkColl();
+    m_terrainModelAdds = data.getTerrainModelAdds();
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
+  protected IStatus execute( final ImportProfileData data, final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.13" ), 2 ); //$NON-NLS-1$
 
@@ -90,6 +94,18 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
     }
   }
 
+  @Override
+  public Feature[] getTerrainModelAdds( )
+  {
+    return m_terrainModelAdds.toArray( new Feature[] {} );
+  }
+
+  @Override
+  public IRiverProfileNetwork getAddedRiverNetwork( )
+  {
+    return m_network;
+  }
+
   /**
    * Converts the profiles in GML (-> terrain model).
    * 
@@ -107,7 +123,7 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
     final String fileName = m_trippelFile.getName();
     final String filePath = m_trippelFile.getAbsolutePath();
 
-    final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.19", fileName, ImportTrippleWizard.DF.format( new Date() ), filePath ); //$NON-NLS-1$
+    final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.19", fileName, DF.format( new Date() ), filePath ); //$NON-NLS-1$
     network.setName( FileUtilities.nameWithoutExtension( fileName ) );
     network.setDescription( desc );
 
@@ -118,9 +134,9 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
 
     for( final IProfil profile : profiles )
     {
-      final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.addFeature( networkFeature, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, IProfileFeature.FEATURE_PROFILE );
+      final IProfileFeature profileFeature = (IProfileFeature)FeatureHelper.addFeature( networkFeature, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, IProfileFeature.FEATURE_PROFILE );
       profileFeature.setEnvelopesUpdated();
-      ((ProfileFeatureBinding) profileFeature).setProfile( profile );
+      ((ProfileFeatureBinding)profileFeature).setProfile( profile );
       profileFeature.setSrsName( m_crs );
       addedFeatures.add( profileFeature );
     }
@@ -132,10 +148,5 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
     m_network = network;
 
     return Status.OK_STATUS;
-  }
-
-  public IRiverProfileNetwork getNetwork( )
-  {
-    return m_network;
   }
 }

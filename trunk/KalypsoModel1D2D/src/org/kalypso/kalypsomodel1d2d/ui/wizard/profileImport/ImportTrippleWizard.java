@@ -41,46 +41,41 @@
 package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfilePage;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ui.views.map.MapView;
 
 /**
  * A wizard to import profile data (right now just as trippel) into a 1D2D Terrain Model.
  * 
  * @author Thomas Jung
  */
-public class ImportTrippleWizard extends Wizard implements IWizard
+public class ImportTrippleWizard extends AbstractImportProfileWizard
 {
-  static final DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
-
-  private final List<Feature> m_terrainModelAdds = new ArrayList<Feature>();
-
-  private final IRiverProfileNetworkCollection m_networkModel;
-
   protected ImportProfilePage m_profilePage;
 
-  private IRiverProfileNetwork m_network;
+  private TrippleImportOperation m_operation;
 
-  public ImportTrippleWizard( final IRiverProfileNetworkCollection networkModel )
+  public ImportTrippleWizard( )
   {
-    m_networkModel = networkModel;
+    m_profilePage = null;
+    m_operation = null;
+
     setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
+  }
 
-    /* Choose profile data */
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
     m_profilePage = new ImportProfilePage( "chooseProfileData", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_profilePage.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.3" ) ); //$NON-NLS-1$
 
@@ -93,38 +88,31 @@ public class ImportTrippleWizard extends Wizard implements IWizard
   @Override
   public boolean performFinish( )
   {
-    /* Collect page data */
-    final IRiverProfileNetworkCollection profNetworkColl = m_networkModel;
-    final List<Feature> terrainModelAdds = m_terrainModelAdds;
-
-    /* get file name from wizard */
+    final MapView mapView = findMapView();
+    final ImportProfileData data = new ImportProfileData( mapView );
     final File trippelFile = m_profilePage.getFile();
     final String separator = m_profilePage.getSeparator();
     final String crs = m_profilePage.getCoordinateSystem();
 
-    /* Do import */
-    final TrippleImportOperation op = new TrippleImportOperation( trippelFile, separator, crs, profNetworkColl, terrainModelAdds );
+    m_operation = new TrippleImportOperation( data, trippelFile, separator, crs );
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, m_operation );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-
-    m_network = op.getNetwork();
 
     ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.17" ), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }
 
-  public Feature[] getTerrainModelAdds( )
+  @Override
+  public AbstractImportProfileOperation getOperation( )
   {
-    return m_terrainModelAdds.toArray( new Feature[m_terrainModelAdds.size()] );
+    return m_operation;
   }
 
-  public IRiverProfileNetwork getAddedRiverNetwork( )
+  private MapView findMapView( )
   {
-    return m_network;
-
+    return (MapView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
   }
-
 }
