@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
+import java.math.BigDecimal;
+
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
@@ -115,7 +117,7 @@ public class RoughnessLayer extends AbstractProfilLayer
         continue;
 
       final Double px1 = point.getBreite();
-      final Double py1 = getValue( point );
+      final BigDecimal py1 = getValue( point );
 
       final Double px2 = next.getBreite();
       if( Objects.isNull( px1, py1, px2 ) )
@@ -136,7 +138,7 @@ public class RoughnessLayer extends AbstractProfilLayer
     final IComponent property = profil.getPointPropertyFor( getTargetProperty() );
     if( Objects.isNull( property ) )
     {
-      if( Objects.isNull( profil.getProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) ) )
+      if( Objects.isNull( profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) ) )
         return false;
     }
 
@@ -162,20 +164,21 @@ public class RoughnessLayer extends AbstractProfilLayer
     return super.getPointStyle();
   }
 
-  private Double getValue( final IProfileRecord point )
+  private BigDecimal getValue( final IProfileRecord point )
   {
     /**
      * TODO: 3 RoughnessLayer are initiated by default: ks, kst and roughness class layers. if a profile defines both ks
      * and kst values so we must show booth roughness class values, too. at the moment only roughness class ks values
-     * will be shown!
+     * will be shown! -> TODO: show two layers
      */
     /**
      * TODO 2: like calculation core, displaying / handling of roughness is configruated by a flag (use roughness
      * classes, use plain values)
      */
 
-    return WspmClassifications.getRoughnessValue( point, getTargetProperty() );
+    final boolean preferClasses = false;
 
+    return WspmClassifications.getRoughnessValue( point, getTargetProperty(), preferClasses );
   }
 
   @Override
@@ -190,11 +193,11 @@ public class RoughnessLayer extends AbstractProfilLayer
     final IProfileRecord[] points = profil.getPoints();
     for( final IProfileRecord point : points )
     {
-      final Double value = getValue( point );
+      final BigDecimal value = getValue( point );
       if( Objects.isNotNull( value ) )
       {
-        min = Math.min( min, value );
-        max = Math.max( max, value );
+        min = Math.min( min, value.doubleValue() );
+        max = Math.max( max, value.doubleValue() );
       }
     }
 

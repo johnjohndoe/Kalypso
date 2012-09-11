@@ -61,7 +61,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -87,12 +86,11 @@ import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
 /**
  * Exports one {@link org.kalypso.model.wspm.core.profil.IProfil} as {@link org.kalypso.wspwin.core.prf.DataBlockWriter}
  * .
- * 
+ *
  * @author Gernot Belger
  */
 public class PrfWriter implements IPrfConstants
 {
-
   private final Map<Integer, String[]> m_defaultPrfMetadata = new HashMap<Integer, String[]>();
 
   private final DataBlockWriter m_dbWriter = new DataBlockWriter();
@@ -105,19 +103,14 @@ public class PrfWriter implements IPrfConstants
 
   private final PrfVegetationWriter m_vegetationWriter;
 
-  public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels )
-  {
-    this( profil, waterlevels, "" ); //$NON-NLS-1$
-  }
-
-  public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels, final String defaultRoughnessType )
+  public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels, final String defaultRoughnessType, final boolean preferRoughnessClasses, final boolean preferVegetationClasses )
   {
     m_profil = profil;
     m_waterlevels = waterlevels;
     fillDefaultPrfMetadata();
 
-    m_roughnessWriter = new PrfRoughnessWriter( this, m_dbWriter, profil, defaultRoughnessType );
-    m_vegetationWriter = new PrfVegetationWriter( m_dbWriter, profil );
+    m_roughnessWriter = new PrfRoughnessWriter( m_dbWriter, profil, defaultRoughnessType, preferRoughnessClasses );
+    m_vegetationWriter = new PrfVegetationWriter( m_dbWriter, profil, preferVegetationClasses );
   }
 
   private void fillDefaultPrfMetadata( )
@@ -223,6 +216,7 @@ public class PrfWriter implements IPrfConstants
   {
     writePoints();
     writeDevider();
+
     m_roughnessWriter.writeRauheit();
 
     // FIXME: spezial Zeugs für Steiermark, aber wohin?
@@ -232,13 +226,13 @@ public class PrfWriter implements IPrfConstants
     {
       writeProfileObjects();
     }
+
     if( m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT ) != null )
     {
       writeHochRechts();
     }
 
-    if( Objects.isNotNull( m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) )
-      m_vegetationWriter.writeBewuchs();
+    m_vegetationWriter.writeBewuchs();
 
     if( m_profil.getComment() != null )
     {
@@ -300,7 +294,7 @@ public class PrfWriter implements IPrfConstants
     m_dbWriter.addDataBlock( db );
   }
 
-  void writeCoords( final IComponent prop, final CoordDataBlock db, final Double nullValue )
+  private void writeCoords( final IComponent prop, final CoordDataBlock db, final Double nullValue )
   {
     final IRecord[] points = m_profil.getPoints();
 
@@ -592,16 +586,4 @@ public class PrfWriter implements IPrfConstants
       IOUtils.closeQuietly( writer );
     }
   }
-
-  public void setPreferRoughnessClasses( final boolean preferRoughnessClasses )
-  {
-    m_roughnessWriter.setPreferClasses( preferRoughnessClasses );
-
-  }
-
-  public void setPreferVegetationClasses( final boolean preferVegetationClasses )
-  {
-    m_vegetationWriter.setPreferClasses( preferVegetationClasses );
-  }
-
 }

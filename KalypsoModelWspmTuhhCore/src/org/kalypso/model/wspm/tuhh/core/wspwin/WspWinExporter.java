@@ -309,9 +309,10 @@ public final class WspWinExporter
   {
     final String roughnessType = getRoughnessForFG( calculation.getFliessgesetz() );
 
-    final TuhhCalcZustandWriter zustandWriter = new TuhhCalcZustandWriter( calculation.getReach(), stationRange, roughnessType );
-    zustandWriter.setPreferRoughnessClasses( calculation.isPreferingRoughnessClasses() );
-    zustandWriter.setPreferVegetationClasses( calculation.isPreferingVegetationClasses() );
+    final boolean preferingRoughnessClasses = calculation.isPreferingRoughnessClasses();
+    final boolean preferingVegetationClasses = calculation.isPreferingVegetationClasses();
+
+    final TuhhCalcZustandWriter zustandWriter = new TuhhCalcZustandWriter( calculation.getReach(), stationRange, roughnessType, preferingRoughnessClasses, preferingVegetationClasses );
 
     zustandWriter.write( zustFile );
   }

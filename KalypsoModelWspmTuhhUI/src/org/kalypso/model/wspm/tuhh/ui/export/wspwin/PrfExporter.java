@@ -97,7 +97,12 @@ public class PrfExporter
       {
         // TODO: distinguish between waterlevel fixations and waterlevels
         final IWaterlevel[] waterlevels = m_callback.getWaterlevels( profil );
-        final PrfWriter prfWriter = new PrfWriter( profil, waterlevels );
+
+        final String defaultRoughnessType = m_callback.getDefaultRoughnessType();
+        final boolean preferRoughnessClasses = m_callback.getPreferRoughnessClasses();
+        final boolean preferVegetationClasses = m_callback.getPreferVegetationClasses();
+
+        final PrfWriter prfWriter = new PrfWriter( profil, waterlevels, defaultRoughnessType, preferRoughnessClasses, preferVegetationClasses );
 
         configurePrfWriterWithMetadata( water, profil, prfWriter );
 

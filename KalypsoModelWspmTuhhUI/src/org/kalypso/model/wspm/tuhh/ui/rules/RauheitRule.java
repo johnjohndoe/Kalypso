@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import java.math.BigDecimal;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
@@ -94,10 +97,9 @@ public class RauheitRule extends AbstractValidatorRule
   {
     for( final IProfileRecord point : points )
     {
-      final Object[] result = getValue( point );
+      final Pair<String, Double> result = getValue( point );
       if( result == null )
       {
-
         final String msg = String.format( "Fehlende Profilpunkt-Rauheit ab Profilpunkt: %.2f m", point.getBreite() );
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, stationId, 0, "", new AddRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS,
             IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS } ) );
@@ -105,22 +107,31 @@ public class RauheitRule extends AbstractValidatorRule
         return;
       }
 
-      final String id = (String) result[0];
-      final Double value = (Double) result[1];
+      final String id = result.getKey();
+      final Double value = result.getValue();
 
-      if( value.isNaN() || value <= 0.0 )
+      if( value == null || value.isNaN() )
       {
-        final String prefix = id + ": "; //$NON-NLS-1$
+        // FIXME: this prefix is nonsense -> use real label
+        // ComponentUtilities.getComponentLabel( null );
 
-        final String message;
-        if( value.isNaN() )
-        {
-          message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0" ); //$NON-NLS-1$
-        }
-        else
-        {
-          message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.1" ); //$NON-NLS-1$
-        }
+        final String prefix = StringUtils.EMPTY ;
+//        id + ": "; //$NON-NLS-1$
+
+        final String message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0" ); //$NON-NLS-1$
+
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, stationId, point.getIndex(), id ); //$NON-NLS-1$ //$NON-NLS-2$
+        return;
+      }
+
+      if( value <= 0.0 )
+      {
+        // FIXME: this prefix is nonsense -> use real label
+        // ComponentUtilities.getComponentLabel( null );
+        final String prefix = StringUtils.EMPTY ;
+//        final String prefix = id + ": "; //$NON-NLS-1$
+
+        final String message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.1" ); //$NON-NLS-1$
 
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, stationId, point.getIndex(), id ); //$NON-NLS-1$ //$NON-NLS-2$
         return;
@@ -128,15 +139,21 @@ public class RauheitRule extends AbstractValidatorRule
     }
   }
 
-  private Object[] getValue( final IProfileRecord point )
+  private Pair<String, Double> getValue( final IProfileRecord point )
   {
-    final Double ksValue = WspmClassifications.getRoughnessValue( point, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
-    if( Objects.isNotNull( ksValue ) )
-      return new Object[] { IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, ksValue };
+    // FIXME: ks preceedes over kst, why?
 
-    final Double kstValue = WspmClassifications.getRoughnessValue( point, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
-    if( Objects.isNotNull( kstValue ) )
-      return new Object[] { IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, kstValue };
+    // TODO: instead, we should independently validate ks and kst -> two rules
+
+    final boolean preferClasses = false;
+
+    final BigDecimal ksValue = WspmClassifications.getRoughnessValue( point, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, preferClasses );
+    if( ksValue != null )
+      return Pair.of( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, ksValue.doubleValue() );
+
+    final BigDecimal kstValue = WspmClassifications.getRoughnessValue( point, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, preferClasses );
+    if( kstValue != null )
+      return Pair.of( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, kstValue.doubleValue() );
 
     return null;
   }
