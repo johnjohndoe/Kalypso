@@ -116,7 +116,7 @@ public class EwawiPreviewProfilesPage extends WizardPage
     descriptionColumn.setLabelProvider( new EwawiProfileDescriptionLabelProvider() );
 
     final ViewerColumnItem descriptionItem = new ViewerColumnItem( descriptionColumn );
-    descriptionItem.setText( "Beschreibung" );
+    descriptionItem.setText( "GKZ" );
     descriptionItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( descriptionItem.getColumn() );
