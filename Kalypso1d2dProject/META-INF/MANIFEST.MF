@@ -32,6 +32,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.zml.ui;bundle-version="11.6.4"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.kalypso1d2d.extension,
+ org.kalypso.kalypso1d2d.pjt.wizards,
  org.kalypso.ui.wizards.imports.elevationmodel,
  org.kalypso.ui.wizards.imports.observation,
  org.kalypso.ui.wizards.imports.roughness,

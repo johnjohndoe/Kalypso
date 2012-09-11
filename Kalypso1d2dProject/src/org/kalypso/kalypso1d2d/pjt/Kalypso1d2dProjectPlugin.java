@@ -21,9 +21,8 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  */
 public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 {
-
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.eclipse.kalypso1d2d.pjt.Kalypso1d2dProject"; //$NON-NLS-1$
+  public static final String PLUGIN_ID = "org.kalypso.kalypso1d2d.pjt"; //$NON-NLS-1$
 
   // The shared instance
   private static Kalypso1d2dProjectPlugin plugin;
@@ -54,7 +53,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
     // Initialize this controller inside a job, else this plugin will not get loaded
     // if anything happens (was the case on some machines, probably due to race conditions)
-    final Job job = new Job( Messages.getString("org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin.0") ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString( "org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin.0" ) ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -95,7 +94,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   /**
    * Returns the shared instance
-   *
+   * 
    * @return the shared instance
    */
   public static Kalypso1d2dProjectPlugin getDefault( )

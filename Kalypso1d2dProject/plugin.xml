@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <extension-point id="importProfileWizards" name="importProfileWizards" schema="schema/importProfileWizards.exsd"/>
    <!-- Project extensions -->
    <extension
       point="org.eclipse.core.resources.natures"
@@ -510,5 +511,22 @@
       <module
             class="org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule">
       </module>
+   </extension>
+   <extension
+         point="org.kalypso.kalypso1d2d.pjt.importProfileWizards">
+      <category
+            id="org.kalypso.kalypso1d2d.categories.importProfilesCategory"
+            name="Profile Imports">
+      </category>
+      <wizard
+            category="org.kalypso.kalypso1d2d.categories.importProfilesCategory"
+            class="org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippleWizard"
+            icon="icons/obj16/repository.gif"
+            id="org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippleWizard"
+            name="Import Tripple Profiles">
+         <description>
+            Import Tripple Profiles
+         </description>
+      </wizard>
    </extension>
 </plugin>
