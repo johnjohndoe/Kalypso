@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
+package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.tripple;
 
 import java.io.File;
 
@@ -46,10 +46,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.AbstractImportProfileWizard;
+import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportProfileData;
 import org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfilePage;
 import org.kalypso.ui.views.map.MapView;
 
@@ -62,12 +63,9 @@ public class ImportTrippleWizard extends AbstractImportProfileWizard
 {
   protected ImportProfilePage m_profilePage;
 
-  private TrippleImportOperation m_operation;
-
   public ImportTrippleWizard( )
   {
     m_profilePage = null;
-    m_operation = null;
 
     setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
@@ -82,9 +80,6 @@ public class ImportTrippleWizard extends AbstractImportProfileWizard
     addPage( m_profilePage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
@@ -94,25 +89,14 @@ public class ImportTrippleWizard extends AbstractImportProfileWizard
     final String separator = m_profilePage.getSeparator();
     final String crs = m_profilePage.getCoordinateSystem();
 
-    m_operation = new TrippleImportOperation( data, trippelFile, separator, crs );
+    final TrippleImportOperation operation = new TrippleImportOperation( data, trippelFile, separator, crs );
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, m_operation );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
 
     ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.17" ), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
-  }
-
-  @Override
-  public AbstractImportProfileOperation getOperation( )
-  {
-    return m_operation;
-  }
-
-  private MapView findMapView( )
-  {
-    return (MapView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
   }
 }

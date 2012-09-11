@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
+package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ewawi;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
@@ -25,19 +25,23 @@ import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.AbstractImportProfileWizard;
+import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportProfileData;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.model.wspm.tuhh.ui.imports.WspmTuhhProjectSelection;
+import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiCreateProfilesOperation;
+import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportData;
+import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportFilesPage;
+import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiPreviewProfilesPage;
+import org.kalypso.ui.views.map.MapView;
 
 /**
  * @author Holger Albert
  */
-public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
+public class ImportEwawiWizard extends AbstractImportProfileWizard
 {
   private final IPageChangedListener m_pageListener = new IPageChangedListener()
   {
@@ -48,17 +52,14 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
     }
   };
 
-  private AbstractEwawiWorker m_worker;
-
   private EwawiImportData m_data;
 
   private EwawiImportFilesPage m_importFilesPage;
 
   private EwawiPreviewProfilesPage m_profilesPreviewPage;
 
-  public EwawiImportWizard( )
+  public ImportEwawiWizard( )
   {
-    m_worker = null;
     m_data = null;
     m_importFilesPage = null;
     m_profilesPreviewPage = null;
@@ -71,11 +72,6 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final WspmTuhhProjectSelection projectSelection = new WspmTuhhProjectSelection( selection );
-    if( !projectSelection.hasProject() )
-      throw new IllegalArgumentException( "Please select the 'Water bodies' section of a KalypsoWSPM project." );
-
-    m_worker = new EwawiWorker( projectSelection.getWorkspace(), projectSelection.getProject() );
     m_data = new EwawiImportData();
     m_data.init( getDialogSettings() );
   }
@@ -120,7 +116,9 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
     /* Save the dialog settings. */
     m_data.storeSettings( getDialogSettings() );
 
-    final EwawiImportOperation operation = new EwawiImportOperation( m_worker, m_data );
+    final MapView mapView = findMapView();
+    final ImportProfileData profileData = new ImportProfileData( mapView );
+    final ImportEwawiOperation operation = new ImportEwawiOperation( profileData, m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !result.isOK() )
       StatusDialog.open( getShell(), result, getWindowTitle() );

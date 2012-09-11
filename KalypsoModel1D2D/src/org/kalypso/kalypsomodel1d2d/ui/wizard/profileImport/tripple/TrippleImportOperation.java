@@ -1,4 +1,4 @@
-package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
+package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.tripple;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.AbstractImportProfileOperation;
+import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportProfileData;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -55,6 +57,7 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
     m_crs = crs;
     m_profNetworkColl = data.getProfNetworkColl();
     m_terrainModelAdds = data.getTerrainModelAdds();
+    m_network = null;
   }
 
   @Override
@@ -92,12 +95,6 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
     {
       monitor.done();
     }
-  }
-
-  @Override
-  public Feature[] getTerrainModelAdds( )
-  {
-    return m_terrainModelAdds.toArray( new Feature[] {} );
   }
 
   @Override

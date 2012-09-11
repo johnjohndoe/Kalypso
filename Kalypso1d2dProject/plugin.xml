@@ -520,12 +520,22 @@
       </category>
       <wizard
             category="org.kalypso.kalypso1d2d.categories.importProfilesCategory"
-            class="org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippleWizard"
+            class="org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.tripple.ImportTrippleWizard"
             icon="icons/obj16/repository.gif"
-            id="org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippleWizard"
+            id="org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.tripple.ImportTrippleWizard"
             name="Import Tripple Profiles">
          <description>
             Import Tripple Profiles
+         </description>
+      </wizard>
+      <wizard
+            category="org.kalypso.kalypso1d2d.categories.importProfilesCategory"
+            class="org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ewawi.ImportEwawiWizard"
+            icon="icons/obj16/repository.gif"
+            id="org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ewawi.ImportEwawiWizard"
+            name="Import Ewawi+ Profiles">
+         <description>
+            Import Ewawi+ Profiles
          </description>
       </wizard>
    </extension>

@@ -52,7 +52,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ThemeHelper;
+import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportProfileHelper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -71,7 +71,7 @@ public class AddProfileToMapHandler extends AbstractHandler
     {
       final Shell shell = HandlerUtil.getActiveShell( event );
 
-      final ITerrainModel terrainModel = ThemeHelper.getTerrainModel();
+      final ITerrainModel terrainModel = ImportProfileHelper.getTerrainModel();
       final IRiverProfileNetworkCollection riverProfileNetworkCollection = terrainModel.getRiverProfileNetworkCollection();
 
       /* Ask user and add everything to map. */
@@ -83,7 +83,7 @@ public class AddProfileToMapHandler extends AbstractHandler
 
       /* Add new layer to profile-collection-map and remove existing one with same path and source. */
       final MapView mapView = findMapView();
-      ThemeHelper.addTheme( mapView, terrainModel, network );
+      ImportProfileHelper.addTheme( mapView, terrainModel, network );
 
       return null;
     }

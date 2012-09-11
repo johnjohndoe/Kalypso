@@ -16,51 +16,63 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
+package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ewawi;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
-import org.kalypso.ui.views.map.MapView;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.ewawi.data.EwawiPro;
+import org.kalypso.model.wspm.ewawi.data.EwawiSta;
+import org.kalypso.model.wspm.ewawi.utils.GewShape;
+import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfile;
+import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.AbstractEwawiWorker;
+import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportData;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Holger Albert
  */
-public class ImportProfileData
+public class ImportEwawiWorker extends AbstractEwawiWorker
 {
-  private final MapView m_mapView;
-
   private final IRiverProfileNetworkCollection m_profNetworkColl;
 
   private final List<Feature> m_terrainModelAdds;
 
-  public ImportProfileData( final MapView mapView )
+  public ImportEwawiWorker( final IRiverProfileNetworkCollection profNetworkColl, final List<Feature> terrainModelAdds )
   {
-    m_mapView = mapView;
-    m_profNetworkColl = getRiverProfileNetworkCollection();
-    m_terrainModelAdds = new ArrayList<>();
+    m_profNetworkColl = profNetworkColl;
+    m_terrainModelAdds = terrainModelAdds;
   }
 
-  private IRiverProfileNetworkCollection getRiverProfileNetworkCollection( )
+  @Override
+  public void updateClassifications( )
   {
-    try
-    {
-      return ImportProfileHelper.getTerrainModel().getRiverProfileNetworkCollection();
-    }
-    catch( final ExecutionException e )
-    {
-      // FIXME Handle errors...
-      e.printStackTrace();
-      return null;
-    }
+    /* Nothing to do. */
   }
 
-  public MapView getMapView( )
+  @Override
+  public IProfileFeature createNewProfile( final EwawiImportData data, final GewShape gewShape, final EwawiSta staIndex, final EwawiProfile ewawiProfile ) throws CoreException
   {
-    return m_mapView;
+    return null;
+  }
+
+  @Override
+  public void createMarkers( final IProfileFeature profileFeature )
+  {
+  }
+
+  @Override
+  public void updateWaterLevelFixation( final EwawiSta staIndex, final EwawiPro proIndex )
+  {
+    /* Nothing to do. */
+  }
+
+  @Override
+  public void fireChangeEvents( )
+  {
   }
 
   public IRiverProfileNetworkCollection getProfNetworkColl( )
@@ -71,5 +83,11 @@ public class ImportProfileData
   public List<Feature> getTerrainModelAdds( )
   {
     return m_terrainModelAdds;
+  }
+
+  public IRiverProfileNetwork getNetwork( )
+  {
+    // TODO
+    return null;
   }
 }

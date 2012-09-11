@@ -19,56 +19,32 @@
 package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
 
 import java.io.File;
-import java.math.BigDecimal;
-import java.net.URI;
-import java.text.DateFormat;
-import java.util.Date;
 
-import org.apache.commons.io.FilenameUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.data.EwawiPro;
 import org.kalypso.model.wspm.ewawi.data.EwawiSta;
-import org.kalypso.model.wspm.ewawi.data.enums.EwawiObjectart;
-import org.kalypso.model.wspm.ewawi.data.enums.EwawiProfilart;
-import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfile;
-import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.shape.dbf.DBaseException;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.gml.binding.commons.Image;
 
 /**
  * @author Holger Albert
  */
 public class EwawiImportOperation implements ICoreRunnableWithProgress
 {
-  private final CommandableWorkspace m_workspace;
-
-  private final TuhhWspmProject m_targetProject;
+  private final AbstractEwawiWorker m_worker;
 
   private final EwawiImportData m_data;
 
-  public EwawiImportOperation( final CommandableWorkspace workspace, final TuhhWspmProject targetProject, final EwawiImportData data )
+  public EwawiImportOperation( final AbstractEwawiWorker worker, final EwawiImportData data )
   {
-    m_workspace = workspace;
-    m_targetProject = targetProject;
+    m_worker = worker;
     m_data = data;
   }
 
@@ -101,8 +77,7 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       monitor.subTask( "Creating point classes..." );
 
       /* Update the classifications. */
-      final EwawiClassificationUpdater classificationUpdater = new EwawiClassificationUpdater( m_targetProject );
-      classificationUpdater.updateClassification();
+      m_worker.updateClassifications();
 
       /* Monitor. */
       monitor.worked( 100 );
@@ -120,7 +95,8 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       for( final EwawiProfile profile : profiles )
       {
         /* Create the wspm profile. */
-        createNewProfile( gewShape, staIndex, profile );
+        final IProfileFeature newProfile = m_worker.createNewProfile( m_data, gewShape, staIndex, profile );
+        m_worker.createMarkers( newProfile );
 
         /* Monitor. */
         monitor.worked( 500 / profiles.length );
@@ -130,15 +106,14 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       monitor.subTask( "Creating water level fixations..." );
 
       /* Update the water level fixation. */
-      final EwawiWaterLevelFixationUpdater waterLevelFixationUpdater = new EwawiWaterLevelFixationUpdater( m_targetProject, staIndex, proIndex );
-      waterLevelFixationUpdater.updateWaterLevelFixation();
+      m_worker.updateWaterLevelFixation( staIndex, proIndex );
 
       /* Monitor. */
       monitor.worked( 100 );
       monitor.subTask( "Fireing events..." );
 
       /* Fire change events. */
-      fireChangeEvents();
+      m_worker.fireChangeEvents();
 
       /* Monitor. */
       monitor.worked( 100 );
@@ -153,180 +128,6 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
     {
       /* Monitor. */
       monitor.done();
-    }
-  }
-
-  private IProfileFeature createNewProfile( final GewShape gewShape, final EwawiSta staIndex, final EwawiProfile ewawiProfile ) throws CoreException
-  {
-    final BigDecimal station = ewawiProfile.getStation();
-
-    try
-    {
-      final EwawiProfilePart basePart = ewawiProfile.getBasePart();
-      if( basePart == null )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( "No base profile found at station %.4f", station.doubleValue() ) ) );
-
-      final String name = getName( staIndex, basePart );
-      final String description = getDescription( staIndex, basePart );
-      final String[] photos = basePart.getPhotos( staIndex );
-
-      final String riverId = getRiverId( basePart );
-      final String riverName = getRiverName( gewShape, basePart );
-      final GM_Curve riverGeometry = getRiverGeometry( gewShape, basePart );
-
-      final IProfileFeature profileFeature = createNewProfile( riverId, m_data.isDirectionUpstreams() );
-      profileFeature.setName( name );
-      profileFeature.setDescription( description );
-      profileFeature.setSrsName( m_data.getCoordinateSystem() );
-      profileFeature.setBigStation( station );
-
-      final WspmWaterBody water = profileFeature.getWater();
-      water.setName( riverName );
-      water.setCenterLine( riverGeometry );
-
-      for( final String foto : photos )
-      {
-        final File proFile = m_data.getProFile().getFile();
-        final File proParent = proFile.getParentFile();
-        final File fotoFile = new File( proParent, foto );
-        final URI fotoUrl = fotoFile.toURI();
-
-        final Image image = profileFeature.addImage( fotoUrl );
-        image.setName( FilenameUtils.removeExtension( foto ) );
-      }
-
-      final EwawiProfilePointCreator pointCreator = new EwawiProfilePointCreator( staIndex, basePart, profileFeature );
-      pointCreator.createProfilePoints();
-
-      /* HINT: The profile points must be created already. */
-      final EwawiProfilePointMarkerCreator markerCreator = new EwawiProfilePointMarkerCreator( profileFeature );
-      markerCreator.createProfilePointMarker();
-
-      return profileFeature;
-    }
-    catch( final GMLSchemaException | DBaseException | EwawiException e )
-    {
-      final String message = String.format( "Unable to create profile at %.4f", station.doubleValue() );
-      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message, e );
-      throw new CoreException( status );
-    }
-  }
-
-  private IProfileFeature createNewProfile( final String riverId, final boolean isDirectionUpstreams ) throws GMLSchemaException
-  {
-    final WspmWaterBody water = m_targetProject.createOrGetWaterBodyByRefNr( riverId, isDirectionUpstreams );
-
-    final IProfileFeature newProfile = water.createNewProfile();
-    newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-
-    return newProfile;
-  }
-
-  private String getName( final EwawiSta staIndex, final EwawiProfilePart basePart ) throws EwawiException
-  {
-    final Short profilNummer = basePart.getProfilNummer( staIndex );
-    final EwawiProfilart profilArt = basePart.getProfilArt( staIndex );
-
-    if( profilNummer != null )
-      return String.format( "%d (%s)", profilNummer, profilArt.getLabel() );
-
-    return String.format( "NNN (%s)", profilArt.getLabel() );
-  }
-
-  private String getDescription( final EwawiSta staIndex, final EwawiProfilePart basePart ) throws EwawiException
-  {
-    final StringBuilder description = new StringBuilder();
-
-    final EwawiObjectart objectArt = basePart.getObjectArt( staIndex );
-    if( objectArt != null && objectArt != EwawiObjectart._1100 )
-    {
-      final String objectArtText = String.format( "Objektart: %d, %s%n", objectArt.getKey(), objectArt.getLabel() );
-      description.append( objectArtText );
-    }
-
-    final Short zusatz = basePart.getZusatz( staIndex );
-    if( zusatz != null && zusatz != 0 )
-    {
-      final String zusatzText = String.format( "Zusatzkennzahl: %d%n", zusatz );
-      description.append( zusatzText );
-    }
-
-    final Date validity = basePart.getValidity( staIndex );
-    if( validity != null )
-    {
-      final DateFormat df = DateFormat.getDateInstance( DateFormat.MEDIUM );
-      final String validityText = String.format( "Gültigkeitsdatum: %s%n", df.format( validity ) );
-      description.append( validityText );
-    }
-
-    final EwawiProfilart profilArt = basePart.getProfilArt( staIndex );
-    if( profilArt != null )
-    {
-      final String profilArtText = String.format( "Profilart: %d, %s%n", profilArt.getKey(), profilArt.getLabel() );
-      description.append( profilArtText );
-    }
-
-    final String comment = basePart.getComment( staIndex );
-    if( comment != null && !comment.equals( "-" ) )
-    {
-      final String commentText = String.format( "Bemerkung: %s%n", comment );
-      description.append( commentText );
-    }
-
-    return description.toString();
-  }
-
-  private String getRiverId( final EwawiProfilePart basePart )
-  {
-    final Long gewKennzahl = basePart.getGewKennzahl();
-    if( gewKennzahl == null )
-      return "-1";
-
-    return String.format( "%d", gewKennzahl );
-  }
-
-  private String getRiverName( final GewShape gewShape, final EwawiProfilePart basePart ) throws DBaseException
-  {
-    if( gewShape == null )
-      return "Undefiniert";
-
-    final Long gewKennzahl = basePart.getGewKennzahl();
-    if( gewKennzahl == null )
-      return "Undefiniert";
-
-    final String name = (String)gewShape.getValue( gewKennzahl, m_data.getRiverShapeData().getRiverNameField() );
-    if( name == null )
-      return "Undefiniert";
-
-    return name;
-  }
-
-  private GM_Curve getRiverGeometry( final GewShape gewShape, final EwawiProfilePart basePart ) throws DBaseException
-  {
-    if( gewShape == null )
-      return null;
-
-    final Long gewKennzahl = basePart.getGewKennzahl();
-    if( gewKennzahl == null )
-      return null;
-
-    return (GM_Curve)gewShape.getValue( gewKennzahl, m_data.getRiverShapeData().getRiverGeometryField() );
-  }
-
-  private void fireChangeEvents( )
-  {
-    final IFeatureBindingCollection<WspmWaterBody> waterBodies = m_targetProject.getWaterBodies();
-    final WspmWaterBody[] wbs = waterBodies.toArray( new WspmWaterBody[] {} );
-
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_targetProject, wbs, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
-    try
-    {
-      m_workspace.postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
     }
   }
 }

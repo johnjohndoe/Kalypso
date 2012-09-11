@@ -20,6 +20,8 @@ package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.ui.views.map.MapView;
 
 /**
  * @author Holger Albert
@@ -30,5 +32,8 @@ public abstract class AbstractImportProfileWizard extends Wizard implements IWor
   {
   }
 
-  public abstract AbstractImportProfileOperation getOperation( );
+  protected MapView findMapView( )
+  {
+    return (MapView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
+  }
 }
