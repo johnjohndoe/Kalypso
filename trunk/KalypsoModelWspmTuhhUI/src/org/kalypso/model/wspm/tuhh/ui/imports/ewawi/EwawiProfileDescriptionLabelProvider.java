@@ -39,7 +39,7 @@ public class EwawiProfileDescriptionLabelProvider extends ColumnLabelProvider
       final EwawiProfile profile = (EwawiProfile)element;
       final EwawiProfilePart[] parts = profile.getParts();
       if( parts != null && parts.length > 0 )
-        return String.format( "GKZ: %d", parts[0].getGewKennzahl() );
+        return String.format( "%d", parts[0].getGewKennzahl() );
     }
 
     return super.getText( element );
