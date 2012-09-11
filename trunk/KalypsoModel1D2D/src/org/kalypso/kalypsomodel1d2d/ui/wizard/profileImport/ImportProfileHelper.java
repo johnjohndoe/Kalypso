@@ -56,14 +56,14 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * @author Holger Albert
  */
-public class ThemeHelper
+public class ImportProfileHelper
 {
   /**
    * Theme id of the cascading theme containing the cross section themes.
    */
   private static final String CONTAINER_THEME_ID = "crossSections"; //$NON-NLS-1$
 
-  private ThemeHelper( )
+  private ImportProfileHelper( )
   {
   }
 
@@ -88,7 +88,7 @@ public class ThemeHelper
     final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
     final URL terrainModelLocation = terrainModel.getWorkspace().getContext();
     final String absoluteTerrainPath = terrainModelLocation.toString();
-    final String relativeTerrainPath = ThemeHelper.createRelativeTerrainPath( mapModel.getContext(), terrainModelLocation );
+    final String relativeTerrainPath = ImportProfileHelper.createRelativeTerrainPath( mapModel.getContext(), terrainModelLocation );
 
     /* Remove themes with same path in map. */
     removeExistingThemes( mapView, mapModel, profilesPath, absoluteTerrainPath, relativeTerrainPath );

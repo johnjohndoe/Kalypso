@@ -34,7 +34,6 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypsodeegree.model.feature.Feature;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -123,7 +122,7 @@ public abstract class AbstractImportProfileOperation implements ICoreRunnableWit
     if( mapView == null )
       throw new ExecutionException( "Map view not opened. Themes could not be added." );
 
-    final ITerrainModel terrainModel = ThemeHelper.getTerrainModel();
+    final ITerrainModel terrainModel = ImportProfileHelper.getTerrainModel();
     if( terrainModel == null )
       return;
 
@@ -131,10 +130,8 @@ public abstract class AbstractImportProfileOperation implements ICoreRunnableWit
     if( network == null )
       return;
 
-    ThemeHelper.addTheme( mapView, terrainModel, network );
+    ImportProfileHelper.addTheme( mapView, terrainModel, network );
   }
-
-  public abstract Feature[] getTerrainModelAdds( );
 
   public abstract IRiverProfileNetwork getAddedRiverNetwork( );
 }
