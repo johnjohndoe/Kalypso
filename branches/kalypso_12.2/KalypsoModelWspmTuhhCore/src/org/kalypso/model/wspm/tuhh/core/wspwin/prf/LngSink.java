@@ -55,9 +55,6 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class LngSink implements IProfilSink
 {
-  /**
-   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(java.lang.Object, java.io.Writer)
-   */
   @Override
   public final boolean write( final IProfil[] profiles, final Writer writer ) throws IOException
   {
