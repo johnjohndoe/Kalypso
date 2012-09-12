@@ -96,7 +96,7 @@ class StatisticObservationBuilder
     fillResultWithData( result );
 
     /* add observation to workspace */
-    final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IObservation<TupleResult> obs = new Observation<>( "name", "description", result ); //$NON-NLS-1$ //$NON-NLS-2$
     // maybe set phenomenon?
     ObservationFeatureFactory.toFeature( obs, fObs );
   }

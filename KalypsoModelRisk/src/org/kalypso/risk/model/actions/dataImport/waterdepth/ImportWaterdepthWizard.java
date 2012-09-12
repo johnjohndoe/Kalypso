@@ -54,7 +54,6 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -115,9 +114,10 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.8" ) ); //$NON-NLS-1$
+      //StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.8" ) ); //$NON-NLS-1$
       return false;
     }
+
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
     final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();

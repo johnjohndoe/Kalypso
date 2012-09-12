@@ -4,15 +4,11 @@ import java.util.Formatter;
 import java.util.Properties;
 
 import org.kalypso.gml.ui.coverage.CoverageThemeInfo;
-import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
-public class DamagePotentialThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo
+public class DamagePotentialThemeInfo extends CoverageThemeInfo
 {
-  /**
-   * @see org.kalypso.gml.ui.map.CoverageThemeInfo#initFormatString(java.util.Properties)
-   */
   @Override
   protected String initFormatString( final Properties props )
   {
@@ -22,10 +18,6 @@ public class DamagePotentialThemeInfo extends CoverageThemeInfo implements IKaly
     return props.getProperty( PROP_FORMAT, i18Format.replaceAll( "\\[CUSTOM_PRECISION\\]", customPrecision ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.gml.ui.map.CoverageThemeInfo#appendQuickInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
@@ -36,11 +28,10 @@ public class DamagePotentialThemeInfo extends CoverageThemeInfo implements IKaly
         return;
       formatter.format( getFormatString(), Math.abs( value ) );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       formatter.format( Messages.getString( "org.kalypso.risk.plugin.RiskZonesThemeInfo.1" ), e.toString() ); //$NON-NLS-1$
     }
   }
-
 }

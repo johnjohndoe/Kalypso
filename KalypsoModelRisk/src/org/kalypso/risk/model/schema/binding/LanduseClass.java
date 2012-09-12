@@ -15,12 +15,12 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 public class LanduseClass extends Feature_Impl implements ILanduseClass
 {
+  private final List<IRiskLanduseStatistic> m_statList = new ArrayList<>();
+
   public LanduseClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
-
-  private final List<IRiskLanduseStatistic> m_statList = new ArrayList<IRiskLanduseStatistic>();
 
   @Override
   public void setName( final String name )
@@ -150,7 +150,7 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
   @Override
   public List<IRiskLanduseStatistic> getLanduseStatisticList( )
   {
-    final List<IRiskLanduseStatistic> statList = new ArrayList<IRiskLanduseStatistic>();
+    final List<IRiskLanduseStatistic> statList = new ArrayList<>();
 
     final FeatureList list = (FeatureList) getProperty( ILanduseClass.PROP_DAMAGE_STATISTIC_LIST );
     for( final Object object : list )

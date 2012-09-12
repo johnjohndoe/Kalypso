@@ -75,7 +75,6 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
       final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection = m_vectorModel.getLandusePolygonCollection().getLandusePolygonCollection();
 
-      @SuppressWarnings("unchecked")
       final List<AbstractShape> shapes = m_shapeCollection.getShapes().getFeatureList();
 
       /* create entries for landuse database */

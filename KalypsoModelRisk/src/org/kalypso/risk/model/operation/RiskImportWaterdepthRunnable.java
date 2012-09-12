@@ -73,7 +73,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
 
         // remove existing (invalid) coverage collections from the model
-        final List<IAnnualCoverageCollection> coveragesToRemove = new ArrayList<IAnnualCoverageCollection>();
+        final List<IAnnualCoverageCollection> coveragesToRemove = new ArrayList<>();
         for( final IAnnualCoverageCollection existingAnnualCoverage : waterdepthCoverageCollection )
           if( existingAnnualCoverage.getReturnPeriod() == asciiRasterInfo.getReturnPeriod() )
             coveragesToRemove.add( existingAnnualCoverage );

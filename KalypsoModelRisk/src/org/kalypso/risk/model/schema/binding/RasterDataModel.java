@@ -10,7 +10,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 public class RasterDataModel extends UnversionedModel implements IRasterDataModel
 {
-  public RasterDataModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RasterDataModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -43,7 +43,7 @@ public class RasterDataModel extends UnversionedModel implements IRasterDataMode
     if( m_specificDamageCoverageCollection == null )
     {
       final Feature f2 = (Feature) getProperty( IRasterDataModel.PROPERTY_SPECIFIC_DAMAGE_COVERAGE_COLLECTION );
-      m_specificDamageCoverageCollection = new FeatureBindingCollection<IAnnualCoverageCollection>( f2, IAnnualCoverageCollection.class, IRasterDataModel.PROPERTY_ANNUAL_COVERAGE_MEMBER );
+      m_specificDamageCoverageCollection = new FeatureBindingCollection<>( f2, IAnnualCoverageCollection.class, IRasterDataModel.PROPERTY_ANNUAL_COVERAGE_MEMBER );
     }
     return m_specificDamageCoverageCollection;
   }
@@ -55,7 +55,7 @@ public class RasterDataModel extends UnversionedModel implements IRasterDataMode
     if( m_waterlevelCoverageCollection == null )
     {
       final Feature f1 = (Feature) getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
-      m_waterlevelCoverageCollection = new FeatureBindingCollection<IAnnualCoverageCollection>( f1, IAnnualCoverageCollection.class, IRasterDataModel.PROPERTY_ANNUAL_COVERAGE_MEMBER );
+      m_waterlevelCoverageCollection = new FeatureBindingCollection<>( f1, IAnnualCoverageCollection.class, IRasterDataModel.PROPERTY_ANNUAL_COVERAGE_MEMBER );
     }
     return m_waterlevelCoverageCollection;
   }

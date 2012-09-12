@@ -91,13 +91,13 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     setTitle( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.2" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.3" ) ); //$NON-NLS-1$
 
-    m_fileExtensions = new LinkedList<String>();
+    m_fileExtensions = new LinkedList<>();
   }
 
   /**
    * Creates the top level control for this dialog page under the given parent composite, then calls
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
-   * 
+   *
    * @param parent
    *          the parent composite
    */
@@ -225,7 +225,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
 
   /**
    * Called by the wizard to initialize the receiver's cached selection.
-   * 
+   *
    * @param selection
    *          the selection or <code>null</code> if none
    * @param assetValueClassesList

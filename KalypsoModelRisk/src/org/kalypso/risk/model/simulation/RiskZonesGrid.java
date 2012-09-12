@@ -90,9 +90,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid
 
   private boolean m_produceZoneIdentifiers = false;
 
-  private final SortedMap<Double, IRiskZoneDefinition> m_urbanZonesDefinitions = new TreeMap<Double, IRiskZoneDefinition>();
+  private final SortedMap<Double, IRiskZoneDefinition> m_urbanZonesDefinitions = new TreeMap<>();
 
-  private final SortedMap<Double, IRiskZoneDefinition> m_nonUrbanZonesDefinitions = new TreeMap<Double, IRiskZoneDefinition>();
+  private final SortedMap<Double, IRiskZoneDefinition> m_nonUrbanZonesDefinitions = new TreeMap<>();
 
   private final Coordinate m_origin;
 
@@ -110,7 +110,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid
     m_resultGrid = resultGrid;
 
     /* we need a sorted list of the annual coverage collections */
-    final SortedMap<Double, IAnnualCoverageCollection> covMap = new TreeMap<Double, IAnnualCoverageCollection>();
+    final SortedMap<Double, IAnnualCoverageCollection> covMap = new TreeMap<>();
     for( final IAnnualCoverageCollection cov : annualCoverageCollection )
     {
       final IAnnualCoverageCollection previousValue = covMap.put( cov.getReturnPeriod().doubleValue(), cov );
@@ -121,7 +121,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid
     m_annualCoverageCollections = covMap.values().toArray( new IAnnualCoverageCollection[covMap.size()] );
 
     m_landusePolygonCollection = landusePolygonCollection.getLandusePolygonCollection();
-    m_gridMap = new HashMap<String, List<BinaryGeoGridReader>>();
+    m_gridMap = new HashMap<>();
 
     final ILandusePolygon landusePolygon = m_landusePolygonCollection.get( 0 );
     String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
@@ -138,7 +138,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid
 
     for( final IAnnualCoverageCollection collection : m_annualCoverageCollections )
     {
-      final List<BinaryGeoGridReader> gridList = new ArrayList<BinaryGeoGridReader>();
+      final List<BinaryGeoGridReader> gridList = new ArrayList<>();
       final IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
       for( final ICoverage coverage : coverages )
       {

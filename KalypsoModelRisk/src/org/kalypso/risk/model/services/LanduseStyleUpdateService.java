@@ -102,34 +102,38 @@ public class LanduseStyleUpdateService extends Job
       final PoolableObjectType poolKey = new PoolableObjectType( "gml", databaseUrl.toExternalForm(), databaseUrl ); //$NON-NLS-1$
 
       final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-      final GMLWorkspace workspace = (GMLWorkspace) pool.getObject( poolKey );
+      final GMLWorkspace workspace = (GMLWorkspace)pool.getObject( poolKey );
       if( workspace == null )
         return Status.OK_STATUS;
 
-      final IRasterizationControlModel model = (IRasterizationControlModel) workspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
+      final IRasterizationControlModel model = (IRasterizationControlModel)workspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
       final List<ILanduseClass> landuseClassesList = model.getLanduseClassesList();
       if( landuseClassesList != null && landuseClassesList.size() > 0 )
       {
-        final List<Layer> layers = new ArrayList<Layer>();
+        final List<Layer> layers = new ArrayList<>();
         layers.add( SLDHelper.polygonStyleLayer( null, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, monitor ) );
 
         SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolizerSldFile, layers.toArray( new Layer[0] ), monitor );
-        final HashMap<Double, String> values = new HashMap<Double, String>();
+        final HashMap<Double, String> values = new HashMap<>();
         for( final ILanduseClass landuseClass : landuseClassesList )
           values.put( new Double( landuseClass.getOrdinalNumber() ), landuseClass.getName() );
         RasterizedLanduseThemeInfo.updateClassesDefinition( values );
       }
       final List<IRiskZoneDefinition> riskZonesList = model.getRiskZoneDefinitionsList();
-      final List<Double> urbanZonesBoundaryList = new ArrayList<Double>();
+      final List<Double> urbanZonesBoundaryList = new ArrayList<>();
+
       for( final IRiskZoneDefinition riskZoneDefinition : riskZonesList )
+      {
         if( riskZoneDefinition.isUrbanLanduseType() )
           urbanZonesBoundaryList.add( riskZoneDefinition.getLowerBoundary() );
+      }
+
       urbanZonesBoundaryList.add( Double.MAX_VALUE );
       Collections.sort( urbanZonesBoundaryList );
 
-      if( riskZonesList != null && riskZonesList.size() > 0 )
+      if( riskZonesList.size() > 0 )
       {
-        final List<ColorMapEntry> riskZonesAdaptedList = new ArrayList<ColorMapEntry>();
+        final List<ColorMapEntry> riskZonesAdaptedList = new ArrayList<>();
         for( final IRiskZoneDefinition zoneDef : riskZonesList )
         {
           final double quantity;
@@ -137,13 +141,13 @@ public class LanduseStyleUpdateService extends Job
             quantity = urbanZonesBoundaryList.get( urbanZonesBoundaryList.indexOf( zoneDef.getLowerBoundary() ) + 1 );
           else
             quantity = zoneDef.getLowerBoundary() > 0.0 ? -zoneDef.getLowerBoundary() : 0.0;
-            final RGB rgb = zoneDef.getColorStyle();
-            final Color color = rgb == null ? Color.WHITE : new Color( rgb.red, rgb.green, rgb.blue );
-            riskZonesAdaptedList.add( new ColorMapEntry_Impl( color, 1.0, quantity, zoneDef.getName() ) );
+          final RGB rgb = zoneDef.getColorStyle();
+          final Color color = rgb == null ? Color.WHITE : new Color( rgb.red, rgb.green, rgb.blue );
+          riskZonesAdaptedList.add( new ColorMapEntry_Impl( color, 1.0, quantity, zoneDef.getName() ) );
         }
         SLDHelper.exportRasterSymbolyzerSLD( m_riskZonesSymbolizerSldFile, riskZonesAdaptedList, null, null, monitor );
 
-        final Map<Double, String> values = new HashMap<Double, String>();
+        final Map<Double, String> values = new HashMap<>();
         for( final IRiskZoneDefinition riskZoneDefinition : riskZonesList )
         {
           final Double key = new Double( riskZoneDefinition.getLowerBoundary() );

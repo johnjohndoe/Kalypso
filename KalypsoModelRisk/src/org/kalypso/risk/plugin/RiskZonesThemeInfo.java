@@ -23,7 +23,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gml.ui.coverage.CoverageThemeInfo;
-import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
@@ -31,9 +30,9 @@ import org.kalypso.risk.project.KalypsoRiskProjectNature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
-public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo
+public class RiskZonesThemeInfo extends CoverageThemeInfo
 {
-  protected static final SortedMap<Double, String> m_riskZonesMap = new TreeMap<Double, String>();
+  protected static final SortedMap<Double, String> m_riskZonesMap = new TreeMap<>();
 
   protected static boolean m_definitionsLoaded = false;
 
@@ -49,9 +48,6 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
       loadDefinitions( true );
   }
 
-  /**
-   * @see org.kalypso.gml.ui.map.CoverageThemeInfo#initFormatString(java.util.Properties)
-   */
   @Override
   protected String initFormatString( final Properties props )
   {
@@ -59,10 +55,6 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
     return props.getProperty( PROP_FORMAT, new StringBuffer( "%,." ).append( digits ).append( "f \u20ac/m\u00b2/a - %s" ).toString() ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.gml.ui.map.CoverageThemeInfo#appendQuickInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {

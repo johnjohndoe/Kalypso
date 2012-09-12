@@ -194,7 +194,7 @@ public class TestRiskModel extends TestCase
     final String[] fileNames = new String[] { raster2, raster5, raster10, raster20, raster50, raster100 };
 
     // create raster infos, in which the return period is set
-    final List<AsciiRasterInfo> rasterInfos = new ArrayList<AsciiRasterInfo>();
+    final List<AsciiRasterInfo> rasterInfos = new ArrayList<>();
     for( final String rasterFile : fileNames )
     {
       // TODO: handle coordinate Systems EPSG:31467)
