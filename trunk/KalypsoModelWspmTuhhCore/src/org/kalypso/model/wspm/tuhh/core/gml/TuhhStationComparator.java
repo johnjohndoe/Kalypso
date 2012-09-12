@@ -55,9 +55,6 @@ public class TuhhStationComparator implements Comparator<BigDecimal>
     m_isDirectionUpstreams = isDirectionUpstreams;
   }
 
-  /**
-   * @see java.util.Comparator#compare(T, T)
-   */
   @Override
   public int compare( final BigDecimal s1, final BigDecimal s2 )
   {
