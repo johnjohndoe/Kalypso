@@ -112,10 +112,6 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
 
     final IProfileRecord minPoint = ProfileVisitors.findLowestPoint( profil );
     if( minPoint == null )
-      return;
-
-
-    if( minPoint == null )
     {
       // empty profile, ignore
       return;

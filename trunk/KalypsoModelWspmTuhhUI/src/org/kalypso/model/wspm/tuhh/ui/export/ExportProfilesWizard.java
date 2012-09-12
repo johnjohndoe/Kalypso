@@ -133,16 +133,12 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
 
   private IProfileFeature[] getChosenProfiles( final Object[] profilFeatures )
   {
-    final Collection<IProfileFeature> profiles = new ArrayList<IProfileFeature>( profilFeatures.length );
+    final Collection<IProfileFeature> profiles = new ArrayList<>( profilFeatures.length );
     for( final Object profilFeature : profilFeatures )
     {
       if( profilFeature instanceof IProfileFeature )
       {
-        final IProfileFeature wspmProfil = (IProfileFeature) profilFeature;
-        if( wspmProfil != null )
-        {
-          profiles.add( wspmProfil );
-        }
+        profiles.add( (IProfileFeature)profilFeature );
       }
     }
 

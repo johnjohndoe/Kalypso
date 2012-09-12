@@ -153,7 +153,7 @@ public class WeirPanel extends AbstractProfilView
 
     final IProfilPointMarker[] devider = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     final IProfilPointMarker leftTF = devider.length < 1 ? null : devider[0];
-    final IProfilPointMarker rightTF = devider.length < 2 ? null : devider[1];
+    // final IProfilPointMarker rightTF = devider.length < 2 ? null : devider[1];
 
     m_wehrStart = new DeviderLine( m_toolkit, panel, 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, true, profile );
     m_parameterLine = new ParameterLine( m_toolkit, panel, leftTF, false, profile );

@@ -120,8 +120,6 @@ public class VariableBufferGeometryBuilder
 
   private Geometry bufferReducedPrecision( )
   {
-    final Geometry resultGeometry = null;
-
     // try and compute with decreasing precision
     for( int precDigits = MAX_PRECISION_DIGITS; precDigits >= 0; precDigits-- )
     {
@@ -135,8 +133,6 @@ public class VariableBufferGeometryBuilder
         saveException = ex;
         // don't propagate the exception - it will be detected by fact that resultGeometry is null
       }
-      if( resultGeometry != null )
-        return resultGeometry;
     }
 
     // tried everything - have to bail
@@ -227,7 +223,6 @@ public class VariableBufferGeometryBuilder
       final PolygonBuilder polyBuilder = new PolygonBuilder( m_factory );
       buildSubgraphs( subgraphList, polyBuilder );
 
-      @SuppressWarnings("unchecked")
       final List<Geometry> resultPolyList = polyBuilder.getPolygons();
 
       // just in case...
@@ -269,7 +264,6 @@ public class VariableBufferGeometryBuilder
   {
     noder.computeNodes( bufferSegStrList );
 
-    @SuppressWarnings("unchecked")
     final Collection<SegmentString> nodedSegStrings = noder.getNodedSubstrings();
 
     for( final SegmentString segmentString : nodedSegStrings )
@@ -348,8 +342,7 @@ public class VariableBufferGeometryBuilder
   {
     final List<BufferSubgraph> subgraphList = new ArrayList<>();
 
-    for( @SuppressWarnings("unchecked")
-    final Iterator<Node> i = graph.getNodes().iterator(); i.hasNext(); )
+    for( final Iterator<Node> i = graph.getNodes().iterator(); i.hasNext(); )
     {
       final Node node = i.next();
       if( !node.isVisited() )

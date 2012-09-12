@@ -72,18 +72,12 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
     m_shapePoint = new SobekShapePoint( profilesToExport, LOCATION );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return LOCATION;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekExportOperation#initTargetFile()
-   */
   @Override
   protected void initTargetFile( ) throws DBaseException, IOException
   {
@@ -91,18 +85,12 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
     m_shapePoint.create( dir );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekExportOperation#close()
-   */
   @Override
   protected void close( ) throws IOException
   {
     m_shapePoint.close();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekExportOperation#closeQuiet()
-   */
   @Override
   protected void closeQuiet( )
   {
@@ -119,9 +107,6 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
     final IProfil profil = profileFeature.getProfil();
 
     final IProfileRecord minPoint = ProfileVisitors.findLowestPoint( profil );
-    if( minPoint == null )
-      return;
-
     if( minPoint == null )
       return;
 
