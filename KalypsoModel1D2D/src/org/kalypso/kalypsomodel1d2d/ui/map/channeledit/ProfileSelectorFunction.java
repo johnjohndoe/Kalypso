@@ -73,11 +73,11 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author Thomas Jung
  */
-public class ProfileSelectorFunction implements IRectangleMapFunction
+class ProfileSelectorFunction implements IRectangleMapFunction
 {
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
-  public ProfileSelectorFunction( final CreateChannelData data )
+  public ProfileSelectorFunction( final ChannelEditData data )
   {
     m_data = data;
   }

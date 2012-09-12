@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata;
 
-import org.deegree.model.spatialschema.GeometryException;
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -51,11 +54,15 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -75,22 +82,35 @@ class ProfileData implements IProfileData
   /** Wether or not the area should be auto adjusted to the original profile */
   private final boolean m_doAreaAdjustment = true;
 
-  private final IProfileFeature m_feature;
+  // private final IProfileFeature m_feature;
+  private final IProfil m_originalProfile;
 
-  private IProfil m_segmentedProfile;
+  private IProfil m_workingProfile;
 
   private SegmentData m_upSegment;
 
   private SegmentData m_downSegment;
 
-  private final int m_numIntersections;
+  private final int m_numPoints;
 
   private boolean m_isUserChanged = false;
 
-  public ProfileData( final IProfileFeature feature, final int numIntersections )
+  private final String m_id;
+
+  private final IProfileFeature m_feature;
+
+  public ProfileData( final String id, final IProfileFeature feature, final IProfil originalProfile, final int numPoints )
   {
+    m_id = id;
     m_feature = feature;
-    m_numIntersections = numIntersections;
+    m_originalProfile = originalProfile;
+    m_numPoints = numPoints;
+  }
+
+  @Override
+  public String getId( )
+  {
+    return m_id;
   }
 
   @Override
@@ -100,21 +120,15 @@ class ProfileData implements IProfileData
   }
 
   @Override
-  public IProfileFeature getFeature( )
+  public IProfil getOriginalProfile( )
   {
-    return m_feature;
+    return m_originalProfile;
   }
 
   @Override
-  public IProfil getProfilOrg( )
+  public IProfil getWorkingProfile( )
   {
-    return m_feature.getProfil();
-  }
-
-  @Override
-  public IProfil getProfIntersProfile( )
-  {
-    return m_segmentedProfile;
+    return m_workingProfile;
   }
 
   /* Wraps profile features into this data class. */
@@ -123,7 +137,15 @@ class ProfileData implements IProfileData
     final ProfileData[] profiles = new ProfileData[features.length];
 
     for( int i = 0; i < profiles.length; i++ )
-      profiles[i] = new ProfileData( features[i], numIntersections );
+    {
+      final IProfileFeature feature = features[i];
+
+      final String id = feature.getId();
+
+      final IProfil transformedProfil = transformOriginalProfile( feature );
+
+      profiles[i] = new ProfileData( id, feature, transformedProfil, numIntersections );
+    }
 
     return profiles;
   }
@@ -162,14 +184,14 @@ class ProfileData implements IProfileData
     return m_downSegment;
   }
 
-  public LineString getSegmentedGeometry( )
+  public LineString getWorkingGeometry( )
   {
     try
     {
-      if( m_segmentedProfile == null )
+      if( m_workingProfile == null )
         return null;
 
-      final GM_Curve line = (GM_Curve)ProfilUtil.getLine( m_segmentedProfile ).transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Curve line = (GM_Curve)ProfilUtil.getLine( m_workingProfile ).transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       return (LineString)JTSAdapter.export( line );
     }
     catch( final GM_Exception | GeoTransformerException e )
@@ -179,11 +201,11 @@ class ProfileData implements IProfileData
     }
   }
 
-  public void recalculateSegmentedProfile( )
+  void recalculateWorkingProfile( )
   {
     try
     {
-      m_segmentedProfile = null;
+      m_workingProfile = null;
 
       /* crop the profile */
       final SegmentData segment = findSegmentWithBanks();
@@ -193,11 +215,11 @@ class ProfileData implements IProfileData
       final IProfil croppedProfile = createCroppedIProfile( segment );
 
       /* intersect the cropped profile */
-      final ProfileSegmenter segmenter = new ProfileSegmenter( m_numIntersections );
+      final ProfileIntersector segmenter = new ProfileIntersector( m_numPoints );
       final IProfil segmentedProfile = segmenter.execute( croppedProfile );
 
       /* Area adjustment */
-      m_segmentedProfile = autoAdjustArea( croppedProfile, segmentedProfile );
+      m_workingProfile = autoAdjustArea( croppedProfile, segmentedProfile );
     }
     catch( final Exception e )
     {
@@ -226,9 +248,9 @@ class ProfileData implements IProfileData
    * @param prof
    *          additional informations of the corresponding intersection points of that profile (upstream / downstream)
    */
-  private IProfil createCroppedIProfile( final SegmentData segment ) throws Exception
+  private IProfil createCroppedIProfile( final SegmentData segment ) throws GM_Exception, GeoTransformerException
   {
-    final GM_Curve profileLine = m_feature.getLine();
+    final GM_Curve profileLine = getOriginalProfileGeometry();
 
     final Point point1 = getIntersPoint( profileLine, segment, SIDE.LEFT );
     final Point point2 = getIntersPoint( profileLine, segment, SIDE.RIGHT );
@@ -238,16 +260,14 @@ class ProfileData implements IProfileData
 
   private IProfil cropProfile( final Point point1, final Point point2 ) throws GM_Exception, GeoTransformerException
   {
-    final IProfil originalProfile = m_feature.getProfil();
-
     final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     // REMARK: the new profile is in kalypso coordinates
     final GM_Point intersectionPoint1 = (GM_Point)JTSAdapter.wrap( point1, kalypsoSRS );
     final GM_Point intersectionPoint2 = (GM_Point)JTSAdapter.wrap( point2, kalypsoSRS );
 
-    final Double width1 = WspmProfileHelper.getWidthPosition( intersectionPoint1, originalProfile );
-    final Double width2 = WspmProfileHelper.getWidthPosition( intersectionPoint2, originalProfile );
+    final Double width1 = WspmProfileHelper.getWidthPosition( intersectionPoint1, m_originalProfile );
+    final Double width2 = WspmProfileHelper.getWidthPosition( intersectionPoint2, m_originalProfile );
 
     /* exchange left and right accoring to orientation of profile */
     final GM_Point startPoint;
@@ -274,13 +294,13 @@ class ProfileData implements IProfileData
     // convert WSPM-Profil into IProfil and add start, end and all points between those
 
     // calculate elevations
-    final double startHeight = WspmProfileHelper.getHeightByWidth( startWidth, originalProfile );
-    final double endHeight = WspmProfileHelper.getHeightByWidth( endWidth, originalProfile );
+    final double startHeight = WspmProfileHelper.getHeightByWidth( startWidth, m_originalProfile );
+    final double endHeight = WspmProfileHelper.getHeightByWidth( endWidth, m_originalProfile );
 
     /* Create new profile and fill with record */
-    final IProfil newProfil = ChannelEditUtil.createEmptyProfile( originalProfile );
+    final IProfil newProfil = ChannelEditUtil.createEmptyProfile( m_originalProfile );
 
-    final String profilSRS = originalProfile.getSrsName();
+    final String profilSRS = m_originalProfile.getSrsName();
 
     final IProfileRecord startRecord = newProfil.createProfilPoint();
     final IProfileRecord endRecord = newProfil.createProfilPoint();
@@ -300,7 +320,7 @@ class ProfileData implements IProfileData
     newProfil.addPoint( startRecord );
 
     /* Copy points between start/end into new profile */
-    final IProfileRecord[] profilPointList = originalProfile.getPoints();
+    final IProfileRecord[] profilPointList = m_originalProfile.getPoints();
 
     for( final IProfileRecord point : profilPointList )
     {
@@ -330,7 +350,7 @@ class ProfileData implements IProfileData
   private Point getIntersPoint( final GM_Curve profileLine, final SegmentData segment, final SIDE side ) throws GM_Exception
   {
     final BankData bank = segment.getBank( side );
-    final LineString segmentedBank = bank.getSegmented();
+    final LineString segmentedBank = bank.getWorkingGeometry();
 
     // get the intersection point for the profile
     return findIntersectionPoint( profileLine, segmentedBank );
@@ -368,9 +388,9 @@ class ProfileData implements IProfileData
    * The boundig box of the profile is the union of the boxes of the two adjacent segments and the real profile.
    */
   @Override
-  public GM_Envelope getSegmentMapExtent( final String srsName ) throws GeometryException
+  public GM_Envelope getMapExtent( final String srsName ) throws GM_Exception
   {
-    final GM_Envelope profileEnvelope = m_feature.getBoundedBy();
+    final GM_Envelope profileEnvelope = getOriginalProfileGeometry().getEnvelope();
 
     final GM_Envelope downEnvelpe = m_downSegment == null ? null : m_downSegment.getSegmentMapExtent( srsName );
     final GM_Envelope upEnvelpe = m_upSegment == null ? null : m_upSegment.getSegmentMapExtent( srsName );
@@ -379,33 +399,39 @@ class ProfileData implements IProfileData
   }
 
   @Override
-  public String toString( )
+  public GM_Curve getOriginalProfileGeometry( ) throws GM_Exception
   {
-    return getFeature().getBigStation().toString();
+    return ProfilUtil.getLine( m_originalProfile );
   }
 
   @Override
-  public void updateSegmentedProfile( final IProfil newSegmentedProfile ) throws GM_Exception, GeoTransformerException
+  public String toString( )
   {
-    Assert.isNotNull( newSegmentedProfile );
-    Assert.isTrue( newSegmentedProfile.getPoints().length == m_numIntersections );
+    return String.format( "%.4f", m_originalProfile.getStation() );
+  }
+
+  @Override
+  public void updateWorkingProfile( final IProfil newWorkingProfile ) throws GM_Exception, GeoTransformerException
+  {
+    Assert.isNotNull( newWorkingProfile );
+    Assert.isTrue( newWorkingProfile.getPoints().length == m_numPoints );
 
     m_isUserChanged = true;
 
     /* adjust area */
-    final LineString segmentedLine = ProfilUtil.getLineString( newSegmentedProfile );
+    final LineString segmentedLine = ProfilUtil.getLineString( newWorkingProfile );
     // REMARK: we know the segmented profile is in Kalypso srs, so no projection is needed
     final Point startPoint = segmentedLine.getStartPoint();
     final Point endPoint = segmentedLine.getEndPoint();
 
     final IProfil croppedProfile = cropProfile( startPoint, endPoint );
 
-    final IProfil adjustedsegmentedProfile = autoAdjustArea( croppedProfile, newSegmentedProfile );
+    final IProfil adjustedsegmentedProfile = autoAdjustArea( croppedProfile, newWorkingProfile );
 
     /* force endpoint of bank lines onto endpoints of profile */
-    adjustBanklineEndpoints( m_segmentedProfile, adjustedsegmentedProfile );
+    adjustBanklineEndpoints( m_workingProfile, adjustedsegmentedProfile );
 
-    m_segmentedProfile = adjustedsegmentedProfile;
+    m_workingProfile = adjustedsegmentedProfile;
 
     /* update meshes */
     if( m_downSegment != null )
@@ -440,5 +466,58 @@ class ProfileData implements IProfileData
 
     if( m_upSegment != null )
       m_upSegment.updateBankEndpoints( oldEndpointLocation, newEndpointLocation );
+  }
+
+  IProfileFeature getFeature( )
+  {
+    return m_feature;
+  }
+
+  private static IProfil transformOriginalProfile( final IProfileFeature feature )
+  {
+    try
+    {
+      /* we do not want to change the orignial profile, so we first have to clone it */
+      /* Get the feature type of the root feature of the workspace. */
+      final IFeatureType rootFeatureType = feature.getFeatureType();
+
+      /* Create temporary workspace. */
+      final IFeatureProviderFactory factory = feature.getWorkspace().getFeatureProviderFactory();
+      final GMLWorkspace tmpWorkspace = FeatureFactory.createGMLWorkspace( rootFeatureType, null, factory );
+      final IProfileFeature clonedProfile = (IProfileFeature)tmpWorkspace.getRootFeature();
+      FeatureHelper.copyProperties( feature, clonedProfile, (QName[])null );
+
+      /* change crs of the cloned profile */
+      final IProfil transformedProfile = clonedProfile.getProfil();
+
+      final String sourceSRS = transformedProfile.getSrsName();
+      final String targetSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+      final IProfileRecord[] records = transformedProfile.getPoints();
+      for( final IProfileRecord record : records )
+      {
+        final Double rw = record.getRechtswert();
+        final Double hw = record.getHochwert();
+
+        if( Objects.isNotNull( rw, hw ) )
+        {
+          final GM_Position pos = GeometryFactory.createGM_Position( rw, hw );
+          final GM_Position transformedPos = pos.transform( sourceSRS, targetSRS );
+
+          record.setRechtswert( transformedPos.getX() );
+          record.setHochwert( transformedPos.getY() );
+        }
+      }
+
+      transformedProfile.setSrsName( targetSRS );
+
+      return transformedProfile;
+    }
+    catch( final Exception e )
+    {
+      // sould never happen...
+      e.printStackTrace();
+      return null;
+    }
   }
 }

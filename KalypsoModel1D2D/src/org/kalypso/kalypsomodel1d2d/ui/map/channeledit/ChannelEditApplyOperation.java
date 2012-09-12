@@ -54,11 +54,11 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 /**
  * @author Gernot Belger
  */
-final class CreateMainChannelConvertToOperation implements ICoreRunnableWithProgress
+final class ChannelEditApplyOperation implements ICoreRunnableWithProgress
 {
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
-  public CreateMainChannelConvertToOperation( final CreateChannelData data )
+  public ChannelEditApplyOperation( final ChannelEditData data )
   {
     m_data = data;
   }

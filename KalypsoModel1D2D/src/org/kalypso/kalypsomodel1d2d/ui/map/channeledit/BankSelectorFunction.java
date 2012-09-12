@@ -52,7 +52,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
@@ -75,15 +75,15 @@ import com.vividsolutions.jts.geom.Polygon;
 /**
  * @author Thomas Jung
  */
-public class BankSelectorFunction implements IRectangleMapFunction
+class BankSelectorFunction implements IRectangleMapFunction
 {
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
   private final IObservableValue m_themeValue;
 
   private final SIDE m_side;
 
-  public BankSelectorFunction( final CreateChannelData data, final SIDE side, final IObservableValue themeValue )
+  public BankSelectorFunction( final ChannelEditData data, final SIDE side, final IObservableValue themeValue )
   {
     m_data = data;
     m_side = side;

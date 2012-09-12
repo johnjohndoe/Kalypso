@@ -50,7 +50,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 /**
  * @author Gernot Belger
  */
-public class CreateMainChannelInfoWidget extends AbstractWidget
+class ChannelEditInfoWidget extends AbstractWidget
 {
   private static final int SNAP_RADIUS = 10; //$NON-NLS-1$
 
@@ -64,13 +64,13 @@ public class CreateMainChannelInfoWidget extends AbstractWidget
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
   private GM_Point m_snappedVertex;
 
   private Point m_currentPoint;
 
-  public CreateMainChannelInfoWidget( final CreateChannelData data )
+  public ChannelEditInfoWidget( final ChannelEditData data )
   {
     super( "Info", "Info" ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -116,7 +116,7 @@ public class CreateMainChannelInfoWidget extends AbstractWidget
       final QuadMesh mesh = segment.getMesh();
       if( m_indexedMeshes.contains( mesh ) )
         meshesToRemoveFromIndex.remove( mesh );
-      else
+      else if( mesh != null )
         meshesToAddToIndex.add( mesh );
     }
 

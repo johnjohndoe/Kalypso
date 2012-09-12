@@ -46,7 +46,7 @@ import java.beans.PropertyChangeListener;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ChannelEditProfileData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ChannelMesh;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 
 /**
@@ -56,16 +56,16 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
  */
 class SwitchProfileAction extends Action
 {
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
   private final int m_offset;
 
-  public SwitchProfileAction( final CreateChannelData data, final int offset )
+  public SwitchProfileAction( final ChannelEditData data, final int offset )
   {
     m_data = data;
     m_offset = offset;
 
-    m_data.addPropertyChangeListener( CreateChannelData.PROPERTY_ACTIVE_PROFILE, new PropertyChangeListener()
+    m_data.addPropertyChangeListener( ChannelEditData.PROPERTY_ACTIVE_PROFILE, new PropertyChangeListener()
     {
       @Override
       public void propertyChange( final PropertyChangeEvent evt )
@@ -95,7 +95,7 @@ class SwitchProfileAction extends Action
     if( activeProfile == null )
       return null;
 
-    final ChannelEditProfileData editData = m_data.getEditData();
+    final ChannelMesh editData = m_data.getEditData();
     if( editData == null )
       return null;
 

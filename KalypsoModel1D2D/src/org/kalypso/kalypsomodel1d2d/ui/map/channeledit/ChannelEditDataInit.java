@@ -57,13 +57,13 @@ import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
  *
  * @author Gernot Belger
  */
-public class CreateMainChannelDataInit
+class ChannelEditDataInit
 {
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
   private final IMapPanel m_panel;
 
-  public CreateMainChannelDataInit( final CreateChannelData data, final IMapPanel panel )
+  public ChannelEditDataInit( final ChannelEditData data, final IMapPanel panel )
   {
     m_data = data;
     m_panel = panel;

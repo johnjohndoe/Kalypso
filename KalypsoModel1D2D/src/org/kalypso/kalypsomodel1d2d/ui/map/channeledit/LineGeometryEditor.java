@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Thomas Jung
  */
-public class LineGeometryEditor
+class LineGeometryEditor
 {
   private final SLDPainter2 m_linePainter = new SLDPainter2( getClass().getResource( "resources/bankEditLine.sld" ) );
 
@@ -113,7 +113,8 @@ public class LineGeometryEditor
 
   private void reinit( )
   {
-    final GM_Position[] positions = MainChannelHelper.getPositionsFromCurves( m_curves, m_positionMap );
+    final GM_Position[] positions = ChannelEditUtil.getPositionsFromCurves( m_curves, m_positionMap );
+
     m_pointSnapper = new GM_PointSnapper( positions, m_mapPanel );
 
     m_handles = collectHandles();

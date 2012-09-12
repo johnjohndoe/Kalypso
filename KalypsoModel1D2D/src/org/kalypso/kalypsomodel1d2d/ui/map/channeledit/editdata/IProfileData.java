@@ -18,10 +18,9 @@
  */
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata;
 
-import org.deegree.model.spatialschema.GeometryException;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.transformation.transformer.GeoTransformerException;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
@@ -32,20 +31,25 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
  */
 public interface IProfileData
 {
-  IProfileFeature getFeature( );
+  /**
+   * id of the profile, can be used to compare data objects. Data with same id denotes the same original profile (-feature).
+   */
+  String getId( );
 
-  IProfil getProfilOrg( );
+  IProfil getOriginalProfile( );
+
+  GM_Curve getOriginalProfileGeometry( ) throws GM_Exception;
 
   ISegmentData getDownSegment( );
 
   ISegmentData getUpSegment( );
 
   // TODO: rename
-  IProfil getProfIntersProfile( );
+  IProfil getWorkingProfile( );
 
-  GM_Envelope getSegmentMapExtent( String coordinatesSystem ) throws GeometryException;
+  GM_Envelope getMapExtent( String coordinatesSystem ) throws GM_Exception;
 
   boolean isUserChaned( );
 
-  void updateSegmentedProfile( IProfil newSegmentedProfile ) throws GM_Exception, GeoTransformerException;
+  void updateWorkingProfile( IProfil newWorkingProfile ) throws GM_Exception, GeoTransformerException;
 }

@@ -78,9 +78,6 @@ import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.dialog.compare.ProfileChartComposite;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
@@ -93,7 +90,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  * @author Gernot Belger
  * @author Thomas Jung
  */
-public class CreateChannelProfileSection extends Composite
+class ProfileSection extends Composite
 {
   private EmbeddedSourceToolbarManager m_sourceManager;
 
@@ -105,9 +102,9 @@ public class CreateChannelProfileSection extends Composite
 
   private Composite m_toolbarPanel;
 
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
-  public CreateChannelProfileSection( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding )
+  public ProfileSection( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding )
   {
     super( parent, SWT.NONE );
 
@@ -121,7 +118,7 @@ public class CreateChannelProfileSection extends Composite
 
     ControlUtils.addDisposeListener( this );
 
-    data.addPropertyChangeListener( CreateChannelData.PROPERTY_ACTIVE_PROFILE, new PropertyChangeListener()
+    data.addPropertyChangeListener( ChannelEditData.PROPERTY_ACTIVE_PROFILE, new PropertyChangeListener()
     {
       @Override
       public void propertyChange( final PropertyChangeEvent evt )
@@ -142,7 +139,7 @@ public class CreateChannelProfileSection extends Composite
       m_sourceManager.dispose();
   }
 
-  private void createControls( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding )
+  private void createControls( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding )
   {
     createNoProfileLabel( toolkit, parent );
 
@@ -151,7 +148,7 @@ public class CreateChannelProfileSection extends Composite
     createChart( toolkit, parent );
   }
 
-  private void createToolbarElements( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding )
+  private void createToolbarElements( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding )
   {
     m_toolbarPanel = toolkit.createComposite( parent );
 
@@ -179,7 +176,7 @@ public class CreateChannelProfileSection extends Composite
     m_noProfileLabel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
   }
 
-  private void createProfileSelector( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding )
+  private void createProfileSelector( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding )
   {
     /* prev button */
     final Action prevProfileAction = new SwitchProfileAction( data, -1 );
@@ -195,15 +192,15 @@ public class CreateChannelProfileSection extends Composite
     profileChooser.setLabelProvider( new LabelProvider() );
 
     final IObservableValue targetChooserInput = ViewersObservables.observeInput( profileChooser );
-    final IObservableValue modelChooserInput = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_PROFILE_DATA_CHOOSER_INPUT );
+    final IObservableValue modelChooserInput = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_PROFILE_DATA_CHOOSER_INPUT );
     binding.bindValue( targetChooserInput, modelChooserInput );
 
     final IObservableValue targetChooserEnabled = SWTObservables.observeEnabled( profileChooserControl );
-    final IObservableValue modelProfileEditingEnabled = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_PROFILE_EDITING_ENABLED );
+    final IObservableValue modelProfileEditingEnabled = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_PROFILE_EDITING_ENABLED );
     binding.bindValue( targetChooserEnabled, modelProfileEditingEnabled );
 
     final IObservableValue targetChooserSelection = ViewersObservables.observeSinglePostSelection( profileChooser );
-    final IObservableValue modelChooserSelection = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_ACTIVE_PROFILE );
+    final IObservableValue modelChooserSelection = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_ACTIVE_PROFILE );
     binding.bindValue( targetChooserSelection, modelChooserSelection );
 
     /* next button */
@@ -211,7 +208,7 @@ public class CreateChannelProfileSection extends Composite
     ActionButton.createButton( toolkit, parent, nextProfileAction, SWT.ARROW | SWT.RIGHT );
   }
 
-  private void createAutoZoomCheckbox( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding )
+  private void createAutoZoomCheckbox( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding )
   {
     /* zoom to extent button */
     final String checkboxAutoZoomLabel = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.2" ); //$NON-NLS-1$
@@ -220,11 +217,11 @@ public class CreateChannelProfileSection extends Composite
     checkboxAutoZoom.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.43" ) ); //$NON-NLS-1$
 
     final ISWTObservableValue targetAutoZoom = SWTObservables.observeSelection( checkboxAutoZoom );
-    final IObservableValue modelAutoZoom = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_PROFILE_AUTO_ZOOM );
+    final IObservableValue modelAutoZoom = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_PROFILE_AUTO_ZOOM );
     binding.bindValue( targetAutoZoom, modelAutoZoom );
 
     final IObservableValue targetAutoZoomEnabled = SWTObservables.observeEnabled( checkboxAutoZoom );
-    final IObservableValue modelProfileEditingEnabled = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_PROFILE_EDITING_ENABLED );
+    final IObservableValue modelProfileEditingEnabled = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_PROFILE_EDITING_ENABLED );
     binding.bindValue( targetAutoZoomEnabled, modelProfileEditingEnabled );
   }
 
@@ -248,12 +245,11 @@ public class CreateChannelProfileSection extends Composite
 
   protected void onProfileChanged( final IProfileData profileData )
   {
-    final IProfileFeature feature = profileData == null ? null : profileData.getFeature();
-    final IProfil profile = feature == null ? null : feature.getProfil();
-    final IProfil segmentedProfile = profileData == null ? null : profileData.getProfIntersProfile();
+    final IProfil originalProfile = profileData == null ? null : profileData.getOriginalProfile();
+    final IProfil segmentedProfile = profileData == null ? null : profileData.getWorkingProfile();
     final boolean hasSegmentedProfile = segmentedProfile != null;
 
-    m_profilComposite.setProfil( profile, null );
+    m_profilComposite.setProfil( originalProfile, null );
 
     /* set segmented profile to overlay */
     final IChartModel chartModel = m_profilComposite.getChartModel();
@@ -277,7 +273,7 @@ public class CreateChannelProfileSection extends Composite
       @Override
       public void run( )
       {
-        doUpdateControls( profile, hasSegmentedProfile );
+        doUpdateControls( originalProfile, hasSegmentedProfile );
       }
     };
 

@@ -27,7 +27,7 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public interface IBankData
 {
-  LineString getSegmented( );
+  LineString getWorkingGeometry( );
 
   ISegmentData getSegment( );
 }

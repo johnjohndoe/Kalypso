@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
+package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 /**
  * @author kimwerner
  */
-public class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
+class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
 {
   @Override
   public IProfilChartLayer[] createLayers( final IProfil profil, final Object result )

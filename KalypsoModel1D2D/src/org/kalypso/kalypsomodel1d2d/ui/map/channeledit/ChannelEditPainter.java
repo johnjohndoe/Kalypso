@@ -44,7 +44,7 @@ import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ChannelEditProfileData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ChannelMesh;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IBankData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
  *
  * @author Gernot Belger
  */
-class CreateChannelDataPainter
+class ChannelEditPainter
 {
   private final SLDPainter2 m_selectedProfilePainter = new SLDPainter2( getClass().getResource( "resources/selectedProfile.sld" ) );
 
@@ -92,11 +92,11 @@ class CreateChannelDataPainter
 
   private final SLDPainter2 m_bankPointPainter = new SLDPainter2( getClass().getResource( "resources/bankPoint.sld" ) );
 
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
   private final String m_srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-  public CreateChannelDataPainter( final CreateChannelData data )
+  public ChannelEditPainter( final ChannelEditData data )
   {
     m_data = data;
   }
@@ -107,8 +107,8 @@ class CreateChannelDataPainter
 
     final ISegmentData[] segments = m_data.getSegments();
 
-    paintBanks( g, projection, CreateChannelData.SIDE.RIGHT, m_leftBankPainter );
-    paintBanks( g, projection, CreateChannelData.SIDE.LEFT, m_rightBankPainter );
+    paintBanks( g, projection, ChannelEditData.SIDE.RIGHT, m_leftBankPainter );
+    paintBanks( g, projection, ChannelEditData.SIDE.LEFT, m_rightBankPainter );
 
     /* draw intersected profile */
     paintActiveIntersectionProfile( g, projection );
@@ -139,8 +139,15 @@ class CreateChannelDataPainter
 
     for( final IProfileData profile : selectedProfiles )
     {
-      final GM_Curve line = profile.getFeature().getLine();
-      m_selectedProfilePainter.paint( g, projection, line );
+      try
+      {
+        final GM_Curve line = profile.getOriginalProfileGeometry();
+        m_selectedProfilePainter.paint( g, projection, line );
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -150,7 +157,7 @@ class CreateChannelDataPainter
     if( activeProfile == null )
       return;
 
-    final IProfil intersectionProfile = activeProfile.getProfIntersProfile();
+    final IProfil intersectionProfile = activeProfile.getWorkingProfile();
     if( intersectionProfile == null )
       return;
 
@@ -161,7 +168,7 @@ class CreateChannelDataPainter
     paintPoints( g, projection, line, m_editProfilePointPainter );
   }
 
-  private void paintBanks( final Graphics g, final GeoTransform projection, final CreateChannelData.SIDE side, final SLDPainter2 painter )
+  private void paintBanks( final Graphics g, final GeoTransform projection, final ChannelEditData.SIDE side, final SLDPainter2 painter )
   {
     final GM_Curve curve = m_data.getBanklineForSide( side );
     painter.paint( g, projection, curve );
@@ -169,7 +176,7 @@ class CreateChannelDataPainter
 
   private void drawBankLines( final Graphics g, final GeoTransform projection, final ISegmentData[] segments ) throws GM_Exception
   {
-    final ChannelEditProfileData editData = m_data.getEditData();
+    final ChannelMesh editData = m_data.getEditData();
     if( editData == null )
       return;
 
@@ -223,7 +230,7 @@ class CreateChannelDataPainter
       return;
 
     // paint the line
-    final GM_Curve bankCurve = (GM_Curve)JTSAdapter.wrap( bank.getSegmented(), m_srsName );
+    final GM_Curve bankCurve = (GM_Curve)JTSAdapter.wrap( bank.getWorkingGeometry(), m_srsName );
 
     linePainter.paint( g, projection, bankCurve );
 

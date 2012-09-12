@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
+package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.util.Comparator;
 

@@ -55,11 +55,11 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 /**
  * @author Gernot Belger
  */
-public class CreateMainChannelApplyAction extends Action
+class ApplyAction extends Action
 {
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
-  public CreateMainChannelApplyAction( final CreateChannelData data )
+  public ApplyAction( final ChannelEditData data )
   {
     m_data = data;
 
@@ -73,7 +73,7 @@ public class CreateMainChannelApplyAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    final ICoreRunnableWithProgress operation = new CreateMainChannelConvertToOperation( m_data );
+    final ICoreRunnableWithProgress operation = new ChannelEditApplyOperation( m_data );
 
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
@@ -81,7 +81,7 @@ public class CreateMainChannelApplyAction extends Action
     if( status.isOK() == true )
     {
       // TODO: ugly
-      m_data.resetSelectedProfiles();
+      m_data.resetData();
       m_data.setDelegate( null );
     }
     else

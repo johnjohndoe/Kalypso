@@ -61,17 +61,17 @@ import org.kalypso.ogc.gml.widgets.IWidget;
 /**
  * @author Thomas Jung
  */
-public class CreateMainChannelComposite extends Composite
+class ChannelEditComposite extends Composite
 {
   private static final int SPINNER_WIDTH = 50;
 
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
   private final FormToolkit m_toolkit;
 
   private DatabindingForm m_binding;
 
-  public CreateMainChannelComposite( final Composite parent, final FormToolkit toolkit, final int style, final CreateChannelData data, final IWidget infoWidget )
+  public ChannelEditComposite( final Composite parent, final FormToolkit toolkit, final int style, final ChannelEditData data, final IWidget infoWidget )
   {
     super( parent, style );
 
@@ -123,7 +123,7 @@ public class CreateMainChannelComposite extends Composite
     compConversion.setLayout( new GridLayout( 2, false ) );
 
     /* apply button and info widget */
-    final CreateMainChannelApplyAction applyToAction = new CreateMainChannelApplyAction( m_data );
+    final ApplyAction applyToAction = new ApplyAction( m_data );
     final Button applyToButton = ActionButton.createButton( m_toolkit, compConversion, applyToAction );
     applyToButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false, 1, 1 ) );
 
@@ -148,7 +148,7 @@ public class CreateMainChannelComposite extends Composite
     profilSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.39" ) ); //$NON-NLS-1$
     profilSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.40" ) ); //$NON-NLS-1$
 
-    final Composite profileComposite = new CreateChannelProfileSection( m_toolkit, profilSection, m_data, m_binding );
+    final Composite profileComposite = new ProfileSection( m_toolkit, profilSection, m_data, m_binding );
     profilSection.setClient( profileComposite );
 
     return profilSection;
@@ -165,7 +165,7 @@ public class CreateMainChannelComposite extends Composite
     segmentSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.0" ) ); //$NON-NLS-1$
     segmentSection.setDescription( "Bearbeiten Sie die an das aktive Profil angrenzenden Uferlinien." );
 
-    final CreateBankOptionsSection optionsComposite = new CreateBankOptionsSection( m_toolkit, segmentSection, m_data, m_binding, SPINNER_WIDTH );
+    final BankOptionsSection optionsComposite = new BankOptionsSection( m_toolkit, segmentSection, m_data, m_binding, SPINNER_WIDTH );
     segmentSection.setClient( optionsComposite );
 
     return segmentSection;
@@ -181,7 +181,7 @@ public class CreateMainChannelComposite extends Composite
     bankSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.16" ) ); //$NON-NLS-1$
     bankSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.17" ) ); //$NON-NLS-1$
 
-    final Composite bankSelectionComposite = new CreateChannelBankSelectionComposite( m_toolkit, bankSection, m_data, m_binding, SPINNER_WIDTH );
+    final Composite bankSelectionComposite = new BankSelectionComposite( m_toolkit, bankSection, m_data, m_binding, SPINNER_WIDTH );
 
     bankSection.setClient( bankSelectionComposite );
 
@@ -200,7 +200,7 @@ public class CreateMainChannelComposite extends Composite
     selectionSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.30" ) ); //$NON-NLS-1$
     selectionSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.31" ) ); //$NON-NLS-1$
 
-    final CreateChannelProfileSelection selectionComposite = new CreateChannelProfileSelection( m_toolkit, selectionSection, m_data, m_binding, SPINNER_WIDTH );
+    final ProfileSelectionSection selectionComposite = new ProfileSelectionSection( m_toolkit, selectionSection, m_data, m_binding, SPINNER_WIDTH );
 
     selectionSection.setClient( selectionComposite );
 

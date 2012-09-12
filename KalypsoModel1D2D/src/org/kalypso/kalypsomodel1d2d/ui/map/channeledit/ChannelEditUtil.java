@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
@@ -56,7 +60,6 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
@@ -65,7 +68,7 @@ import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
@@ -82,27 +85,6 @@ public final class ChannelEditUtil
   }
 
   /**
-   * converts a WSPM profile into an linestring
-   *
-   * @param profile
-   *          Input profile to be converted.
-   */
-  public static LineString convertProfilesToLineStrings( final IProfileFeature profile )
-  {
-    // get the profile line
-    final GM_Curve profCurve = profile.getLine();
-    try
-    {
-      return (LineString) JTSAdapter.export( profCurve );
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  /**
    * intersects a specific linestring by a given number of intersections.<br>
    * the intersection is done by an equidistant approach. <BR>
    * this method is used for intersecting the banklines (Linestrings)
@@ -112,7 +94,7 @@ public final class ChannelEditUtil
    * @param numIntersects
    *          number of intersections of the linestring
    */
-  public static LineString intersectLineString( final LineString line, final int numIntersects )
+  public static LineString intersectLineString( final LineString line, final int numPoints )
   {
     if( line == null )
       return null;
@@ -123,9 +105,9 @@ public final class ChannelEditUtil
     // then compute the additional coodinates of the intersected profile linestring
     // by the given spinner data of the composite
     /* for now: equidistant points */
-    final double dDist = totaldistance / (numIntersects - 1); // equidistant widths
+    final double dDist = totaldistance / (numPoints - 1); // equidistant widths
 
-    final Coordinate[] points = new Coordinate[numIntersects];
+    final Coordinate[] points = new Coordinate[numPoints];
 
     points[0] = line.getStartPoint().getCoordinate();
 
@@ -171,16 +153,16 @@ public final class ChannelEditUtil
     return newProfil;
   }
 
-  public static Button createWidgetSelectionButton( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final IDataBinding binding, final SetWidgetAction action, final String enabledPropertyName )
+  public static Button createWidgetSelectionButton( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final IDataBinding binding, final SetWidgetAction action, final String enabledPropertyName )
   {
     final Button selectButton = ActionButton.createButton( toolkit, parent, action, SWT.TOGGLE );
 
     final IWidget delegate = action.getDelegate();
 
     final ISWTObservableValue targetActionSelection = SWTObservables.observeSelection( selectButton );
-    final IObservableValue modelActionSelection = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_DELEGATE );
+    final IObservableValue modelActionSelection = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_DELEGATE );
     final DataBinder selectionActionBinder = new DataBinder( targetActionSelection, modelActionSelection );
-    selectionActionBinder.setModelToTargetConverter( new DelagateActionSelectionConverter( delegate ) );
+    selectionActionBinder.setModelToTargetConverter( new DelegateActionSelectionConverter( delegate ) );
     binding.bindValue( selectionActionBinder );
 
     if( enabledPropertyName != null )
@@ -192,5 +174,29 @@ public final class ChannelEditUtil
     }
 
     return selectButton;
+  }
+
+  static GM_Position[] getPositionsFromCurves( final GM_Curve[] curves, final Map<GM_Position, GM_Curve> map )
+  {
+    final List<GM_Position> posList = new ArrayList<>();
+
+    for( final GM_Curve curve : curves )
+    {
+      try
+      {
+        final GM_Position[] positions = curve.getAsLineString().getPositions();
+        for( final GM_Position position : positions )
+        {
+          posList.add( position );
+          map.put( position, curve );
+        }
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+        return null;
+      }
+    }
+    return posList.toArray( new GM_Position[posList.size()] );
   }
 }

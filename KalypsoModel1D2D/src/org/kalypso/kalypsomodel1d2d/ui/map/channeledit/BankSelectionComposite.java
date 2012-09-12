@@ -61,16 +61,16 @@ import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
 import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
  * @author Gernot Belger
  */
-class CreateChannelBankSelectionComposite extends Composite
+class BankSelectionComposite extends Composite
 {
-  CreateChannelBankSelectionComposite( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding, final int spinnerWidth )
+  BankSelectionComposite( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding, final int spinnerWidth )
   {
     super( parent, SWT.NONE );
 
@@ -78,14 +78,14 @@ class CreateChannelBankSelectionComposite extends Composite
 
     GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( this );
 
-    createBankSelectionLine( toolkit, this, data, binding, SIDE.LEFT, CreateChannelData.PROPERTY_BANK_THEME_SELECTED_LEFT );
-    createBankSelectionLine( toolkit, this, data, binding, SIDE.RIGHT, CreateChannelData.PROPERTY_BANK_THEME_SELECTED_RIGHT );
+    createBankSelectionLine( toolkit, this, data, binding, SIDE.LEFT, ChannelEditData.PROPERTY_BANK_THEME_SELECTED_LEFT );
+    createBankSelectionLine( toolkit, this, data, binding, SIDE.RIGHT, ChannelEditData.PROPERTY_BANK_THEME_SELECTED_RIGHT );
 
     /* spinner for number for bank parts */
     createNumberSegmentsControl( toolkit, this, data, binding, spinnerWidth );
   }
 
-  private void createBankSelectionLine( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding, final SIDE side, final String selectedBankThemeProperty )
+  private void createBankSelectionLine( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding, final SIDE side, final String selectedBankThemeProperty )
   {
     final ComboViewer themeChooser = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     toolkit.adapt( themeChooser.getControl(), true, false );
@@ -95,7 +95,7 @@ class CreateChannelBankSelectionComposite extends Composite
     themeChooser.setLabelProvider( new LabelProvider() );
 
     final IObservableValue targetInput = ViewersObservables.observeInput( themeChooser );
-    final IObservableValue modelInput = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_BANK_THEME_INPUT );
+    final IObservableValue modelInput = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_BANK_THEME_INPUT );
     binding.bindValue( targetInput, modelInput );
 
     final IObservableValue targetSelection = ViewersObservables.observeSinglePostSelection( themeChooser );
@@ -103,7 +103,7 @@ class CreateChannelBankSelectionComposite extends Composite
     binding.bindValue( targetSelection, modelSelection );
 
     final IObservableValue targetEnabled = SWTObservables.observeEnabled( themeChooser.getControl() );
-    final IObservableValue modelEnabled = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_BANK_THEME_SELECTION_ENABLED );
+    final IObservableValue modelEnabled = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_BANK_THEME_SELECTION_ENABLED );
     binding.bindValue( targetEnabled, modelEnabled );
 
     /* Button for the bank selection */
@@ -111,7 +111,7 @@ class CreateChannelBankSelectionComposite extends Composite
     final SetWidgetAction selectFromThemeAction = new SetWidgetAction( data, selectFromThemeWidget );
     selectFromThemeAction.setImageDescriptor( KalypsoModel1D2DPlugin.getImageProvider().getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.SELECT ) );
 
-    final Button selectFromThemeButton = ChannelEditUtil.createWidgetSelectionButton( toolkit, parent, data, binding, selectFromThemeAction, CreateChannelData.PROPERTY_BANK_THEME_SELECTION_ENABLED );
+    final Button selectFromThemeButton = ChannelEditUtil.createWidgetSelectionButton( toolkit, parent, data, binding, selectFromThemeAction, ChannelEditData.PROPERTY_BANK_THEME_SELECTION_ENABLED );
     selectFromThemeButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.19" ) ); //$NON-NLS-1$
     selectFromThemeButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
 
@@ -124,7 +124,7 @@ class CreateChannelBankSelectionComposite extends Composite
     drawBankButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
   }
 
-  private void createNumberSegmentsControl( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding, final int spinnerWidth )
+  private void createNumberSegmentsControl( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding, final int spinnerWidth )
   {
     final Label label = toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.28" ) ); //$NON-NLS-1$
     label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -140,7 +140,7 @@ class CreateChannelBankSelectionComposite extends Composite
     spinNumberSegments.setValues( 1, 2, 99, 0, 1, 10 );
 
     final ISWTObservableValue targetNumBankSegments = SWTObservables.observeSelection( spinNumberSegments );
-    final IObservableValue modelNumBankSegments = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS );
+    final IObservableValue modelNumBankSegments = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_NUM_BANK_SEGMENTS );
     binding.bindValue( targetNumBankSegments, modelNumBankSegments );
   }
 }
