@@ -94,6 +94,9 @@ class ChannelEditComposite extends Composite
     final Composite body = form.getBody();
     GridLayoutFactory.fillDefaults().applyTo( body );
 
+    // REMARK: performance, message manager is main performance bottle neck...
+    form.getMessageManager().setAutoUpdate( false );
+
     m_binding = new DatabindingForm( form, m_toolkit );
 
     /* Create Profile control */
@@ -115,6 +118,8 @@ class ChannelEditComposite extends Composite
     /* conversion to model composite */
     final Control applySection = createApplySection( body, infoWidget );
     applySection.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    form.getMessageManager().setAutoUpdate( true );
   }
 
   private Control createApplySection( final Composite body, final IWidget infoWidget )
