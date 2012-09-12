@@ -106,13 +106,13 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private static final int WSP_EXTRAPOLATION_RANGE = 1;
 
-  private final Map<Integer, INodeResult> m_nodeIndex = new HashMap<Integer, INodeResult>();
+  private final Map<Integer, INodeResult> m_nodeIndex = new HashMap<>();
 
-  private final HashMap<Integer, ArcResult> m_arcIndex = new HashMap<Integer, ArcResult>();
+  private final HashMap<Integer, ArcResult> m_arcIndex = new HashMap<>();
 
-  private final HashMap<Integer, ElementResult> m_elemIndex = new HashMap<Integer, ElementResult>();
+  private final HashMap<Integer, ElementResult> m_elemIndex = new HashMap<>();
 
-  private final Set<String> m_lengthsection1dNodes = new HashSet<String>();
+  private final Set<String> m_lengthsection1dNodes = new HashSet<>();
 
   private final GMLWorkspace m_resultWorkspace;
 
@@ -666,14 +666,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     final String crs = curveList.get( 0 ).getCoordinateSystem();
 
-    final Set< GM_Position > lSetPositions = new HashSet<GM_Position>();
+    final Set<GM_Position> lSetPositions = new HashSet<>();
     for( final GM_Curve lCurve: curveList ){
 
       final GM_Position[] lPositions = lCurve.getAsLineString().getPositions();
       for( int i = 0; i < lPositions.length; ++i )
         lSetPositions.add( lPositions[ i ] );
     }
-    final List< GM_Position > lListPos = new ArrayList<GM_Position>();
+    final List<GM_Position> lListPos = new ArrayList<>();
     lListPos.addAll( lSetPositions );
     if( !lListPos.get( 0 ).equals( lListPos.get( lListPos.size() - 1 ) ) ){
       lListPos.add( lListPos.get( 0 ) );
@@ -724,7 +724,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final INodeResult node = new SimpleNodeResult();
       node.setLocation( x, y, z, crs );
 
-      final List<Double> velocity = new LinkedList<Double>();
+      final List<Double> velocity = new LinkedList<>();
       velocity.add( vx );
       velocity.add( vy );
       node.setVelocity( velocity );
@@ -819,9 +819,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   private void splitTriangle( final INodeResult[] nodes )
   {
-    final List<Integer> splitArcs = new LinkedList<Integer>();
+    final List<Integer> splitArcs = new LinkedList<>();
 
-    final List<INodeResult> nodesInserted = new ArrayList<INodeResult>( 6 );
+    final List<INodeResult> nodesInserted = new ArrayList<>( 6 );
     nodesInserted.add( nodes[0] );
     nodesInserted.add( nodes[1] );
     nodesInserted.add( nodes[2] );
@@ -1267,7 +1267,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final String crs = point1.getCoordinateSystem();
 
     insertedNode.setLocation( x3, y3, z3, crs );
-    final List<Double> velocity = new LinkedList<Double>();
+    final List<Double> velocity = new LinkedList<>();
     velocity.add( 0.0 );
     velocity.add( 0.0 );
     insertedNode.setVelocity( velocity );
@@ -1493,10 +1493,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dJunctionInformation(java.lang.String,
-   *      int, java.util.List)
-   */
   @Override
   public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList )
   {
@@ -1504,8 +1500,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     try
     {
       // get all junction profile curves
-      final List<GM_Curve> profileCurveList = new ArrayList<GM_Curve>();
-      final List<INodeResult> nodeList = new ArrayList<INodeResult>();
+      final List<GM_Curve> profileCurveList = new ArrayList<>();
+      final List<INodeResult> nodeList = new ArrayList<>();
 
       for( final Integer nodeID : junctionNodeIDList )
       {

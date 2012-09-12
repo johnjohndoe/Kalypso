@@ -81,7 +81,6 @@ import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 
 /**
  * @author kurzbach
- * 
  */
 public class RMAKalypsoSimulation implements ISimulation
 {

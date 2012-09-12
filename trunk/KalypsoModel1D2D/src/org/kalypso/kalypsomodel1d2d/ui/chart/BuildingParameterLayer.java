@@ -61,9 +61,9 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
 
   private Coordinate[] m_paintCrossPoints = null;
 
-  private final List<Coordinate[]> m_paintOkLines = new ArrayList<Coordinate[]>();
+  private final List<Coordinate[]> m_paintOkLines = new ArrayList<>();
 
-  private final List<Coordinate[]> m_paintCrossLines = new ArrayList<Coordinate[]>();
+  private final List<Coordinate[]> m_paintCrossLines = new ArrayList<>();
 
   private final int m_domainComponent;
 
@@ -121,7 +121,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   }
 
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
 
     for( final Coordinate[] okLine : m_paintOkLines )
@@ -154,7 +154,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     final String classLabel = m_result.getComponent( m_classComponent ).getName();
 
     // Create current edit infos from ok points
-    final Map<Rectangle, EditInfo> editInfos = new LinkedHashMap<Rectangle, EditInfo>( m_result.size() );
+    final Map<Rectangle, EditInfo> editInfos = new LinkedHashMap<>( m_result.size() );
     final IAxis xAxis = getDomainAxis();
     final IAxis yAxis = getTargetAxis();
     for( final IRecord record : m_result )
@@ -303,9 +303,9 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
 
     // sort into coordinate arrays!
     BigDecimal lastClass = null;
-    final List<Coordinate> crds = new ArrayList<Coordinate>();
+    final List<Coordinate> crds = new ArrayList<>();
 
-    final List<Coordinate> okPoints = new ArrayList<Coordinate>( m_result.size() );
+    final List<Coordinate> okPoints = new ArrayList<>( m_result.size() );
     for( final IRecord record : m_result )
     {
       final BigDecimal classValue = (BigDecimal) record.getValue( m_classComponent );
@@ -339,8 +339,8 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     // Determine intersections and intersecting lines
     // REMARK: brute force at the moment, we normally do not have too many lines. If performance problems occur, use
     // spatial-index for the lines
-    final Set<Coordinate[]> crossLines = new HashSet<Coordinate[]>();
-    final Set<Coordinate> crossPoints = new HashSet<Coordinate>();
+    final Set<Coordinate[]> crossLines = new HashSet<>();
+    final Set<Coordinate> crossPoints = new HashSet<>();
     for( final Coordinate[] line1 : m_paintOkLines )
     {
       for( final Coordinate[] line2 : m_paintOkLines )

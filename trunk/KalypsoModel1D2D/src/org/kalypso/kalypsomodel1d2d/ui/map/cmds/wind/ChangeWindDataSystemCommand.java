@@ -67,9 +67,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * Composite command used to change the wind data model command. This composite takes the responsibility to notifies the
  * commandable workspace about the changes introduced by its sub command
  *
- *
  * @author ig
- *
  */
 public class ChangeWindDataSystemCommand implements ICommand
 {
@@ -77,9 +75,9 @@ public class ChangeWindDataSystemCommand implements ICommand
 
   private final CommandableWorkspace m_commandableWorkspace;
 
-  private final List<IFeatureChangeCommand> m_commands = new ArrayList<IFeatureChangeCommand>();
+  private final List<IFeatureChangeCommand> m_commands = new ArrayList<>();
 
-  private final List<IFile> m_files = new ArrayList<IFile>();
+  private final List<IFile> m_files = new ArrayList<>();
 
   private int m_intEventType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD;
 
@@ -121,13 +119,10 @@ public class ChangeWindDataSystemCommand implements ICommand
     return isUndoable;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
-    final List<Feature> changedFeatures = new ArrayList<Feature>();
+    final List<Feature> changedFeatures = new ArrayList<>();
     for( final IFeatureChangeCommand command : m_commands )
     {
       try
@@ -140,12 +135,8 @@ public class ChangeWindDataSystemCommand implements ICommand
           {
             if( changedFeature != null )
             {
-              final Feature wrappedFeature = changedFeature;
-              if( wrappedFeature != null )
-              {
-                changedFeatures.add( wrappedFeature );
-                wrappedFeature.setEnvelopesUpdated();
-              }
+              changedFeatures.add( changedFeature );
+              changedFeature.setEnvelopesUpdated();
             }
           }
         }
@@ -215,7 +206,7 @@ public class ChangeWindDataSystemCommand implements ICommand
     m_commands.add( command );
     if( command instanceof DeleteWindDataSystem )
     {
-      for( final IWindDataProvider lWindDataWrapper : ((DeleteWindDataSystem) command).getWindDataModelSystem().getWindDataModels() )
+      for( final IWindDataProvider lWindDataWrapper : ((DeleteWindDataSystem)command).getWindDataModelSystem().getWindDataModels() )
       {
         lWindDataWrapper.getDataAsGrid().dispose();
         IFile lIFile;
@@ -248,7 +239,7 @@ public class ChangeWindDataSystemCommand implements ICommand
     {
       try
       {
-         lFile.delete( false, new NullProgressMonitor() );
+        lFile.delete( false, new NullProgressMonitor() );
 //        lFile.deleteOnExit();
       }
       catch( final Exception e )

@@ -10,6 +10,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.util.pool.IModelAdaptor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -36,8 +37,6 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
 {
   private static final String VERSION_1_0 = "1.0"; //$NON-NLS-1$
 
-  private static final String VERSION_2_0 = "2.0"; //$NON-NLS-1$
-
   private IStatus m_result = Status.OK_STATUS;
 
   @Override
@@ -63,7 +62,7 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
 
   protected IStatus execute( final GMLWorkspace workspace, final IProgressMonitor monitor )
   {
-    final List<IStatus> statusList = new ArrayList<IStatus>();
+    final List<IStatus> statusList = new ArrayList<>();
 
     final Feature model = workspace.getRootFeature();
     final IFeatureType modelFeatureType = model.getFeatureType();
@@ -103,7 +102,7 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
       mesh.setProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_MESH_SURFACE, surface );
 
       final int amountOfWork = 100;
-      final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>( 1 );
+      final List<FeatureChange> featureChanges = new ArrayList<>( 1 );
       monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.1" ), amountOfWork ); //$NON-NLS-1$
 
       // clear old values
@@ -125,11 +124,9 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
       monitor.done();
     }
 
-    final IStatus resultStatus;
     if( statusList.size() > 0 )
-      resultStatus = StatusUtilities.createStatus( statusList, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.12" ) ); //$NON-NLS-1$
+      return StatusUtilities.createStatus( statusList, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.12" ) ); //$NON-NLS-1$
     else
-      resultStatus = StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.13" ) ); //$NON-NLS-1$
-    return resultStatus;
+      return new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.13" ) ); //$NON-NLS-1$
   }
 }

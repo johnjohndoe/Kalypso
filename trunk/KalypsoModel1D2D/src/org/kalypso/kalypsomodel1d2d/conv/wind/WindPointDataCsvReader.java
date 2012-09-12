@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.wind;
 
@@ -81,17 +81,17 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * direction(deg) in next two positions separated by ";" this point data value will be set to all grid nodes of this
  * time step
  * </p>
- * 
+ *
  * One source file will be read and for each time step one binary grid of type {@link BinaryGeoGridPairsValues} will be
  * written in the target directory.
- * 
+ *
  * according to {@link IWindDataCollectionReader} interface this class provides the collection of read and written data
  * steps
- * 
- * 
- * 
+ *
+ *
+ *
  * @author ig
- * 
+ *
  */
 @SuppressWarnings("rawtypes")
 public class WindPointDataCsvReader implements IWindDataCollectionReader
@@ -190,7 +190,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
         lInputStream = lBufferedInputStream;
       }
 
-      InputStreamReader lInputStreamReader = new InputStreamReader( lInputStream );
+      final InputStreamReader lInputStreamReader = new InputStreamReader( lInputStream );
       m_inputReader = new BufferedReader( lInputStreamReader );
 
       lBoolRes = readHeader();
@@ -203,7 +203,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
       lUrlStream.close();
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       logger.warning( "cannot convert wind data source file to internal format" + e ); //$NON-NLS-1$
@@ -215,8 +215,9 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
   private boolean readContent( ) throws IOException
   {
     boolean lBoolRes = true;
-    m_mapAllSteps = new HashMap<Date, Pair[][]>();
-    m_listWindDataProviders = new ArrayList<IWindDataWrapper>();
+
+    m_mapAllSteps = new HashMap<>();
+    m_listWindDataProviders = new ArrayList<>();
 
     // the first time step line was read in the header reader block, else format error
     if( m_strTimeStepLine.equals( "" ) ) { //$NON-NLS-1$
@@ -227,7 +228,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
     {
       lStrActLine = m_inputReader.readLine().trim().toLowerCase();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
       lBoolRes = false;
@@ -236,7 +237,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
     {
       m_dateActStep = parseDateDataLine( lStrActLine );
       m_mapAllSteps.put( m_dateActStep, m_pairsActTimeStepWindData );
-      WindDataGenericGridConverter lActWindDataProvider = new WindDataGenericGridConverter( m_dateActStep, m_pairsActTimeStepWindData, m_gridDescriptor, m_urlOutputDir, m_strFileNameSuffix );
+      final WindDataGenericGridConverter lActWindDataProvider = new WindDataGenericGridConverter( m_dateActStep, m_pairsActTimeStepWindData, m_gridDescriptor, m_urlOutputDir, m_strFileNameSuffix );
       if( !lActWindDataProvider.convert() )
       {
         throw new IOException( Messages.WindPointDataCsvReader_1 );
@@ -253,7 +254,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
       {
         lStrActLine = m_inputReader.readLine().trim().toLowerCase();
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
         lBoolRes = false;
@@ -266,7 +267,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
   {
     SimpleDateFormat lDateFormatter;
     lDateFormatter = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
-    StringTokenizer lStringTokenizer = new StringTokenizer( strActLine, ";" ); //$NON-NLS-1$
+    final StringTokenizer lStringTokenizer = new StringTokenizer( strActLine, ";" ); //$NON-NLS-1$
     Date lDateRes = null;
     try
     {
@@ -283,7 +284,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
         lStrToken = lStringTokenizer.nextToken();
         lDoubleSecond = NumberUtils.parseQuietDouble( lStrToken );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         logger.warning( Messages.WindPointDataCsvReader_3 + strActLine );
       }
@@ -293,8 +294,8 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
       {
         lAng = 360 + lAng;
       }
-      double xComp = lDoubleFirst * Math.cos( lAng / 360 * 2 * Math.PI );
-      double yComp = lDoubleFirst * Math.sin( lAng / 360 * 2 * Math.PI );
+      final double xComp = lDoubleFirst * Math.cos( lAng / 360 * 2 * Math.PI );
+      final double yComp = lDoubleFirst * Math.sin( lAng / 360 * 2 * Math.PI );
       for( int i = 0; i < m_intNumberColumns; ++i )
       {
         for( int j = 0; j < m_intNumberRows; ++j )
@@ -304,7 +305,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
         }
       }
     }
-    catch( ParseException e )
+    catch( final ParseException e )
     {
       e.printStackTrace();
     }
@@ -316,12 +317,12 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
   {
     boolean lBoolRes = true;
 
-    m_listTimeAdditionalInfo = new ArrayList<String>();
-    m_listComments = new ArrayList<String>();
+    m_listTimeAdditionalInfo = new ArrayList<>();
+    m_listComments = new ArrayList<>();
     int lIntDataInputsCounter = 0;
     while( true )
     {
-      String lStrActLine = ""; //$NON-NLS-1$ 
+      String lStrActLine = ""; //$NON-NLS-1$
       try
       {
         lStrActLine = m_inputReader.readLine().trim().toLowerCase();
@@ -349,11 +350,11 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
               m_strStationName = lStrActLine;
               break;
             case 2:
-              StringTokenizer lStrTokenizerPositions = new StringTokenizer( lStrActLine, " \t" ); //$NON-NLS-1$
+              final StringTokenizer lStrTokenizerPositions = new StringTokenizer( lStrActLine, " \t" ); //$NON-NLS-1$
               setGmGridStartPoint( GeometryFactory.createGM_Point( Double.parseDouble( lStrTokenizerPositions.nextToken() ), Double.parseDouble( lStrTokenizerPositions.nextToken() ), m_strSourceCrs ) );
               break;
             case 3:
-              StringTokenizer lStrTokenizerGridData = new StringTokenizer( lStrActLine, " \t" ); //$NON-NLS-1$
+              final StringTokenizer lStrTokenizerGridData = new StringTokenizer( lStrActLine, " \t" ); //$NON-NLS-1$
               m_intNumberColumns = Integer.parseInt( lStrTokenizerGridData.nextToken() );
               m_intNumberRows = Integer.parseInt( lStrTokenizerGridData.nextToken() );
               m_doubleCellSizeX = Double.parseDouble( lStrTokenizerGridData.nextToken() );
@@ -367,7 +368,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
           lIntDataInputsCounter++;
         }
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
         lBoolRes = false;
@@ -388,7 +389,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
     {
       m_gridDescriptor = new RectifiedGridDomain( m_gmGridStartPoint, offsetX, offsetY, gridRange );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -402,7 +403,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
     {
       for( int j = 0; j < m_intNumberRows; ++j )
       {
-        m_pairsActTimeStepWindData[i][j] = new Pair<Double, Double>( Double.NaN, Double.NaN );
+        m_pairsActTimeStepWindData[i][j] = new Pair<>( Double.NaN, Double.NaN );
       }
     }
   }
@@ -417,7 +418,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
     return m_listTimeAdditionalInfo;
   }
 
-  private void setGmGridStartPoint( GM_Point gmGridStartPoint )
+  private void setGmGridStartPoint( final GM_Point gmGridStartPoint )
   {
     m_gmGridStartPoint = gmGridStartPoint;
   }

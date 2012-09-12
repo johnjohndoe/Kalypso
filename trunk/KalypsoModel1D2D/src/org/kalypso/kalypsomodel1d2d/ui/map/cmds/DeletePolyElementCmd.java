@@ -63,7 +63,7 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
 {
   private final Set<Feature> m_changedFeatures = new HashSet<>();
 
-  private final Set<Feature> m_setFeaturesToRemove = new HashSet<Feature>();
+  private final Set<Feature> m_setFeaturesToRemove = new HashSet<>();
 
   private final IFEDiscretisationModel1d2d m_model1d2d;
 

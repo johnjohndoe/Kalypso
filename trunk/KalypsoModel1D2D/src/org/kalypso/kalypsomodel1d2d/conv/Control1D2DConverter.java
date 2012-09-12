@@ -113,13 +113,13 @@ public class Control1D2DConverter
   /** Base filename name for RMA·Kalypso result files (Output...) files */
   public static final String RESULT_FILE_BASE = "Output"; //$NON-NLS-1$
 
-  private final List<IBoundaryCondition> m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
+  private final List<IBoundaryCondition> m_unitBoundaryConditions = new ArrayList<>();
 
   private final INativeIDProvider m_nativeIDProvider;
 
   private static IdMap m_staticInnerLinesIDProvider = null;
 
-  private final LinkedHashMap<Integer, IBoundaryCondition> m_WQboundaryConditionsIDProvider = new LinkedHashMap<Integer, IBoundaryCondition>();
+  private final LinkedHashMap<Integer, IBoundaryCondition> m_WQboundaryConditionsIDProvider = new LinkedHashMap<>();
 
   private final BuildingIDProvider m_buildingProvider;
 
@@ -127,7 +127,7 @@ public class Control1D2DConverter
 
   private final IRoughnessClsCollection m_roughnessModel;
 
-  private final Map<String, TupleResultIndex> m_BCTupleResultIndexCache = new HashMap<String, TupleResultIndex>();
+  private final Map<String, TupleResultIndex> m_BCTupleResultIndexCache = new HashMap<>();
 
   private boolean m_isBCTupleResultIndexCached = false;
 
@@ -167,7 +167,7 @@ public class Control1D2DConverter
           m_unitBoundaryConditions.add( boundaryCondition );
       }
     }
-    m_listDateSteps = new ArrayList<Date>();
+    m_listDateSteps = new ArrayList<>();
   }
 
   public void writeR10File( final OutputStream outputStream ) throws CoreException, IOException
@@ -843,8 +843,8 @@ public class Control1D2DConverter
 
   private List<Integer> getListParsedRelaxationFactor( final String pStrVal, final int pIntNumberIterations ) throws CoreException
   {
-    final List<Integer> lListFactorsRes = new ArrayList<Integer>();
-    final List<Float> lListFactors = new ArrayList<Float>();
+    final List<Integer> lListFactorsRes = new ArrayList<>();
+    final List<Float> lListFactors = new ArrayList<>();
     if( !isLoopFomatedFactor( pStrVal.trim(), lListFactors, pIntNumberIterations ) )
     {
       if( !isSeparatedValuesFormatedFactor( pStrVal.trim(), lListFactors, pIntNumberIterations ) )

@@ -68,7 +68,6 @@ import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -141,11 +140,11 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  *
  * @author Gernot Belger
  */
-public class ImportWspmWizard extends Wizard implements IWizard
+public class ImportWspmWizard extends Wizard
 {
   private static final DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
 
-  private final List<Feature> m_discModelAdds = new ArrayList<Feature>();
+  private final List<Feature> m_discModelAdds = new ArrayList<>();
 
   private ImportWspmWizardPage m_importPage;
 
@@ -207,12 +206,12 @@ public class ImportWspmWizard extends Wizard implements IWizard
   {
     final IWizardContainer currentContainer = getContainer();
     if( currentContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) currentContainer).removePageChangedListener( m_pageChangeListener );
+      ((IPageChangeProvider)currentContainer).removePageChangedListener( m_pageChangeListener );
 
     super.setContainer( wizardContainer );
 
     if( wizardContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageChangeListener );
+      ((IPageChangeProvider)wizardContainer).addPageChangedListener( m_pageChangeListener );
   }
 
   @Override
@@ -267,7 +266,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         {
           /* Check if its the right calculation and if results are present */
           if( calculation.getCalcMode() != TuhhCalculation.MODE.REIB_KONST )
-            return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.5" ) ); //$NON-NLS-1$
+            return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.5" ) ); //$NON-NLS-1$
 
           try
           {
@@ -346,7 +345,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
   {
     try
     {
-      final Set<BigDecimal> allowedStations = new HashSet<BigDecimal>();
+      final Set<BigDecimal> allowedStations = new HashSet<>();
       for( final TuhhReachProfileSegment segment : segments )
         allowedStations.add( segment.getStation() );
 
@@ -354,14 +353,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final URL calcContext = calcWorkspace.getContext();
       final URL qresultsUrl = new URL( calcContext, "Ergebnisse/" + calculation.getName() + "/_aktuell/Daten/qIntervallResults.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qresultsUrl, calcWorkspace.getFeatureProviderFactory() );
-      final QIntervallResultCollection qResultCollection = (QIntervallResultCollection) qresultsWorkspace.getRootFeature();
+      final QIntervallResultCollection qResultCollection = (QIntervallResultCollection)qresultsWorkspace.getRootFeature();
 
       final Feature flowRelParentFeature = flowRelModel;
       final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
 
       final IFeatureBindingCollection<QIntervallResult> resultList = qResultCollection.getQIntervalls();
 
-      final List<Feature> addedFeatures = new ArrayList<Feature>();
+      final List<Feature> addedFeatures = new ArrayList<>();
       for( final QIntervallResult qresult : resultList )
       {
         final BigDecimal station = qresult.getStation();
@@ -390,7 +389,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           final IFE1D2DNode upStreamNode = PolynomeProcessor.forStationAdjacent( elementsByStation, station, true );
           if( downStreamNode == null || upStreamNode == null )
           {
-            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.17" ), null ) ); //$NON-NLS-1$
+            throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.17" ), null ) ); //$NON-NLS-1$
           }
           else
             flowRel = addBuilding( flowRelModel, node, qresult, downStreamNode, upStreamNode );
@@ -420,7 +419,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       fnfe.printStackTrace();
 
       /* Results are not available, just inform user */
-      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.15" ) ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.15" ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -451,7 +450,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     {
       if( existingFlowrel instanceof IBuildingFlowRelation )
       {
-        existingRelation = (IBuildingFlowRelation) existingFlowrel;
+        existingRelation = (IBuildingFlowRelation)existingFlowrel;
         break;
       }
     }
@@ -477,7 +476,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     /* Direction goes from upstream to downstream */
     final double degrees = GeometryUtilities.directionFromPositions( upStreamPosition, downStreamPosition );
-    buildingRelation.setDirection( (int) degrees );
+    buildingRelation.setDirection( (int)degrees );
 
     FlowRelationshipCalcOperation.copyBuildingData( buildingRelation, qresult );
 
@@ -491,7 +490,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     final IFE1D2DElement[] elements = node.getElements();
     if( elements.length != 2 )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.16" ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.16" ) ) ); //$NON-NLS-1$
 
     /* Find upstream and downstream neighbours */
     final IFE1D2DNode neighbour0 = DiscretisationModelUtils.findOtherNode( node, elements[0] );
@@ -562,13 +561,13 @@ public class ImportWspmWizard extends Wizard implements IWizard
     // calculationUnit1D.setName( calcUnitName );
     // calculationUnit1D.setDescription( "Dieses Teilmodell wurde durch den Import automatisch angelegt." );
     /* add nodes to model */
-    final List<IFE1D2DEdge> edgeList = new ArrayList<IFE1D2DEdge>( segments.length - 1 );
-    final List<IFE1D2DNode> nodesList = new ArrayList<IFE1D2DNode>();
+    final List<IFE1D2DEdge> edgeList = new ArrayList<>( segments.length - 1 );
+    final List<IFE1D2DNode> nodesList = new ArrayList<>();
 
     /* add elements to model and sort by station in flow direction */
     // IMPORTANT: the right ordering (in flow direction) is later used by the building parameter stuff, so do not change
     // it!
-    final SortedMap<BigDecimal, IFE1D2DNode> nodesByStation = new TreeMap<BigDecimal, IFE1D2DNode>( new TuhhStationComparator( isDirectionUpstreams ) );
+    final SortedMap<BigDecimal, IFE1D2DNode> nodesByStation = new TreeMap<>( new TuhhStationComparator( isDirectionUpstreams ) );
     IFE1D2DNode lastNode = null;
     for( final TuhhReachProfileSegment segment : segments )
     {
@@ -600,7 +599,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         node.setDescription( desc );
 
         if( point == null )
-          throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.19", station ) ) ); //$NON-NLS-1$
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.19", station ) ) ); //$NON-NLS-1$
 
         node.setPoint( point );
       }
@@ -620,20 +619,17 @@ public class ImportWspmWizard extends Wizard implements IWizard
         {
           if( element instanceof IElement1D )
           {
-            final List<IFE1D2DNode> nodes = ((IElement1D) element).getNodes();
+            final List<IFE1D2DNode> nodes = ((IElement1D)element).getNodes();
             if( nodes == null )
             {
               System.out.println( element.getId() );
               continue;
             }
-            if( nodes != null )
-            {
 
-              if( nodes.contains( node ) && nodes.contains( lastNode ) )
-              {
-                found = true;
-                break;
-              }
+            if( nodes.contains( node ) && nodes.contains( lastNode ) )
+            {
+              found = true;
+              break;
             }
           }
         }
@@ -684,7 +680,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
    */
   protected static SortedMap<BigDecimal, IProfileFeature> doImportNetwork( final TuhhReach reach, final TuhhReachProfileSegment[] segments, final IRiverProfileNetworkCollection networkCollection, final IRiverProfileNetwork existingNetwork ) throws Exception
   {
-    final SortedMap<BigDecimal, IProfileFeature> result = new TreeMap<BigDecimal, IProfileFeature>();
+    final SortedMap<BigDecimal, IProfileFeature> result = new TreeMap<>();
 
     final IRiverProfileNetwork network;
     if( existingNetwork == null )
@@ -714,10 +710,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
       final BigDecimal station = segment.getStation();
 
-      final IRelationType wspmRelation = (IRelationType) networkFeature.getFeatureType().getProperty( IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
+      final IRelationType wspmRelation = (IRelationType)networkFeature.getFeatureType().getProperty( IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
       final Feature clonedProfileFeature = FeatureHelper.cloneFeature( networkFeature, wspmRelation, profileMember );
 
-      result.put( station, (IProfileFeature) clonedProfileFeature );
+      result.put( station, (IProfileFeature)clonedProfileFeature );
     }
 
     // We fire the add event, even if the network was not added, this should be enough to refresh anything with is
@@ -737,7 +733,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
   {
     if( event.getSelectedPage() == m_importPage )
     {
-      final TuhhCalculation calculation = (TuhhCalculation) m_gmlImportData.getSelectedElement();
+      final TuhhCalculation calculation = (TuhhCalculation)m_gmlImportData.getSelectedElement();
       m_importPage.setCalculation( calculation );
     }
   }

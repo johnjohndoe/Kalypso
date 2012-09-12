@@ -65,19 +65,17 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * Composite command used to change the discretisation command. This composite takes the responsibility to nodifies the
  * commandable workspace about the chnage introduced by its sub command
  *
- *
  * @author Patrice Congo
- *
  */
 public class ChangeTerrainElevationSystemCommand implements ICommand
 {
-  public static final String DEFAULT_DESCRIPTION = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.0"); //$NON-NLS-1$
+  public static final String DEFAULT_DESCRIPTION = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.0" ); //$NON-NLS-1$
 
   private final CommandableWorkspace m_commandableWorkspace;
 
-  private final List<IFeatureChangeCommand> m_commands = new ArrayList<IFeatureChangeCommand>();
+  private final List<IFeatureChangeCommand> m_commands = new ArrayList<>();
 
-  private final List<IFile> m_files = new ArrayList<IFile>();
+  private final List<IFile> m_files = new ArrayList<>();
 
   private boolean isUndoable = true;
 
@@ -101,8 +99,8 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
 
   public ChangeTerrainElevationSystemCommand( final CommandableWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d, final ITerrainElevationModelSystem terrainModel, final String description )
   {
-    Assert.throwIAEOnNullParam( model1d2d, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.1") ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( description, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.2") ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( model1d2d, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.1" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( description, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.2" ) ); //$NON-NLS-1$
     m_commandableWorkspace = commandableWorkspace;
     m_model1d2d = model1d2d;
     m_description = description;
@@ -133,13 +131,14 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   @Override
   public void process( ) throws Exception
   {
-    final List<Feature> changedFeatures = new ArrayList<Feature>();
+    final List<Feature> changedFeatures = new ArrayList<>();
     for( final IFeatureChangeCommand command : m_commands )
     {
       try
       {
         command.process();
-        if( command instanceof DeleteNativeTerrainElevationWrapper ){
+        if( command instanceof DeleteNativeTerrainElevationWrapper )
+        {
           m_toDelete = true;
         }
         final Feature[] changedFeatures2 = command.getChangedFeatures();
@@ -149,12 +148,8 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
           {
             if( changedFeature != null )
             {
-              final Feature wrappedFeature = changedFeature;
-              if( wrappedFeature != null )
-              {
-                changedFeatures.add( wrappedFeature );
-                wrappedFeature.setEnvelopesUpdated();
-              }
+              changedFeatures.add( changedFeature );
+              changedFeature.setEnvelopesUpdated();
             }
           }
         }
@@ -165,10 +160,12 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
       }
     }
 
-    if( m_toDelete ){
+    if( m_toDelete )
+    {
       fireElementsRemove( changedFeatures );
     }
-    else{
+    else
+    {
       fireStructureChange( changedFeatures );
 
       // why is this needed??
@@ -237,7 +234,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
 
   public void addCommand( final IFeatureChangeCommand command, final IFile file )
   {
-    Assert.throwIAEOnNullParam( command, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.3") ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( command, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.3" ) ); //$NON-NLS-1$
     m_commands.add( command );
     if( file != null )
       m_files.add( file );
@@ -248,7 +245,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
 
   public IStatus deleteFiles( )
   {
-    final MultiStatus status = new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.4"), null ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.4" ), null ); //$NON-NLS-1$
     for( final IFile file : m_files )
     {
       try

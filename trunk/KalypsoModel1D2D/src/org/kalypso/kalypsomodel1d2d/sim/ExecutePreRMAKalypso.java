@@ -73,7 +73,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author kurzbach
- * 
+ *
  */
 public class ExecutePreRMAKalypso
 {
@@ -161,7 +161,7 @@ public class ExecutePreRMAKalypso
       }
 
       // the delegate is not used for outputs
-      final List<String> outputs = new ArrayList<String>();
+      final List<String> outputs = new ArrayList<>();
       outputs.add( PreRMAKalypso.OUTPUT_MESH );
       outputs.add( PreRMAKalypso.OUTPUT_CONTROL );
       outputs.add( PreRMAKalypso.OUTPUT_BUILDINGS );
@@ -198,7 +198,7 @@ public class ExecutePreRMAKalypso
 
   private final Modeldata createInputs( final List<IRestartInfo> restartInfos )
   {
-    final Map<String, String> inputs = new HashMap<String, String>();
+    final Map<String, String> inputs = new HashMap<>();
     inputs.put( PreRMAKalypso.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$
     inputs.put( PreRMAKalypso.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
     inputs.put( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$
@@ -234,7 +234,7 @@ public class ExecutePreRMAKalypso
     {
       final File zipOutput = File.createTempFile( "kalypsoMultiRestartFile" + new Date().getTime(), ".zip" ); //$NON-NLS-1$  //$NON-NLS-2$
       zipOutput.delete();
-      final List<File> files = new ArrayList<File>();
+      final List<File> files = new ArrayList<>();
       for( final IRestartInfo restartInfo : restartInfos )
       {
         final IPath restartFilePath = restartInfo.getRestartFilePath();
@@ -317,5 +317,4 @@ public class ExecutePreRMAKalypso
   {
     return m_wpsRequest;
   }
-
 }

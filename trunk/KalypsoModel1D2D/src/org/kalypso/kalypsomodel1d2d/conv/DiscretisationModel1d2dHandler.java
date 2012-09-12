@@ -126,17 +126,17 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final IPositionProvider m_positionProvider;
 
-  private final Map<Integer, String> m_nodesNameConversionMap = new HashMap<Integer, String>();
+  private final Map<Integer, String> m_nodesNameConversionMap = new HashMap<>();
 
-  private final Map<Integer, String> m_edgesNameConversionMap = new HashMap<Integer, String>();
+  private final Map<Integer, String> m_edgesNameConversionMap = new HashMap<>();
 
-  private final Map<Integer, String> m_elementsNameConversionMap = new HashMap<Integer, String>();
+  private final Map<Integer, String> m_elementsNameConversionMap = new HashMap<>();
 
-  private final Map<Integer, SortedMap<Integer, Integer>> m_mapIdBuildingType = new HashMap<Integer, SortedMap<Integer, Integer>>();
+  private final Map<Integer, SortedMap<Integer, Integer>> m_mapIdBuildingType = new HashMap<>();
 
-  private final Map<Integer, Integer> m_mapIdBuildingDirection = new HashMap<Integer, Integer>();
+  private final Map<Integer, Integer> m_mapIdBuildingDirection = new HashMap<>();
 
-  private final Set<String> m_dirtyModels = new HashSet<String>();
+  private final Set<String> m_dirtyModels = new HashSet<>();
 
   private GM_Envelope m_gmExistingEnvelope;
 
@@ -162,11 +162,11 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final GMLWorkspace m_flowWorkspace;
 
-  private final List<Feature> m_listNewFlowElements = new ArrayList<Feature>();
+  private final List<Feature> m_listNewFlowElements = new ArrayList<>();
 
-  private final List<Feature> m_listNewPolysWithWeir = new ArrayList<Feature>();
+  private final List<Feature> m_listNewPolysWithWeir = new ArrayList<>();
 
-  private final Set<Integer> m_setMiddleNodeIDs = new HashSet<Integer>();
+  private final Set<Integer> m_setMiddleNodeIDs = new HashSet<>();
 
   private final RoughnessHandler m_roughnessHandler;
 
@@ -184,7 +184,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
     m_positionProvider = positionProvider;
     m_crs = m_positionProvider.getCoordinateSystem();
-    m_setNotInsertedNodes = new HashSet<Integer>();
+    m_setNotInsertedNodes = new HashSet<>();
 
     final IRoughnessClsCollection roughnessModel = szenarioDataProvider.getModel( IRoughnessClsCollection.class.getName() );
     m_roughnessHandler = new RoughnessHandler( roughnessModel );
@@ -269,7 +269,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private Set<Feature> getMidleNodeFeaturesToRemove( )
   {
-    final Set<Feature> lSetToRemove = new HashSet<Feature>();
+    final Set<Feature> lSetToRemove = new HashSet<>();
     for( final Integer lIntMidleNodeRMAId : m_setMiddleNodeIDs )
     {
       final IFE1D2DNode lNode = getNode( lIntMidleNodeRMAId );
@@ -291,7 +291,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     for( final Integer id : lSetKeys )
     {
       final SortedMap<Integer, Integer> lMapElements = m_mapIdBuildingType.get( id );
-      final List<Integer> lListElements = new ArrayList<Integer>();
+      final List<Integer> lListElements = new ArrayList<>();
       lListElements.addAll( lMapElements.values() );
       /* final IPolyElement lNewWeirPoly = */mergeElementsToWeir( lListElements, m_mapIdBuildingDirection.get( id ) );
     }
@@ -312,9 +312,10 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   private IPolyElement mergeElementsToWeir( final List<Integer> pListElementsIdsRma, final int pIntDegrees )
   {
-    final List<GM_Point> lListRes = new ArrayList<GM_Point>();
-    final List<GM_Point> lListResBck = new ArrayList<GM_Point>();
-    final List<Feature> lListElementsToRemove = new ArrayList<Feature>();
+    final List<GM_Point> lListRes = new ArrayList<>();
+    final List<GM_Point> lListResBck = new ArrayList<>();
+    final List<Feature> lListElementsToRemove = new ArrayList<>();
+
     PolyElement lPoly = null;
     PolyElement lPolyPrev = null;
     IFE1D2DNode lNodePrev = null;
@@ -487,7 +488,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       return 0;
 
     int lIntCountNew = 0;
-    final SortedMap<BigDecimal, IProfileFeature> profilesByStation = new TreeMap<BigDecimal, IProfileFeature>();
+    final SortedMap<BigDecimal, IProfileFeature> profilesByStation = new TreeMap<>();
     for( final Object element : m_set1dFlowNodes )
     {
       final Integer lId = (Integer) element;
@@ -538,7 +539,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private Feature[] getElementsWithoutGeometry( )
   {
-    final Set<Feature> lSetToRemove = new HashSet<Feature>();
+    final Set<Feature> lSetToRemove = new HashSet<>();
     for( final IFE1D2DElement lElement : m_model.getElements() )
     {
       if( lElement instanceof IPolyElement )
@@ -714,7 +715,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         SortedMap<Integer, Integer> lMapElements = m_mapIdBuildingType.get( currentRoughnessClassID );
         if( lMapElements == null )
         {
-          lMapElements = new TreeMap<Integer, Integer>();
+          lMapElements = new TreeMap<>();
           m_mapIdBuildingType.put( currentRoughnessClassID, lMapElements );
           m_mapIdBuildingDirection.put( currentRoughnessClassID, eleminationNumber );
         }
@@ -925,9 +926,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       m_qResWorkspace = FeatureFactory.createGMLWorkspace( QIntervallResultCollection.QNAME_F_QIntervallResultCollection, null, GmlSerializer.DEFAULT_FACTORY );
       m_qresultCollection = (QIntervallResultCollection) m_qResWorkspace.getRootFeature();
-      m_mapQResults = new HashMap<Integer, QIntervallResult>();
-      m_map1dPolynomial = new HashMap<String, IPolynomial1D>();
-      m_set1dFlowNodes = new HashSet<Integer>();
+      m_mapQResults = new HashMap<>();
+      m_map1dPolynomial = new HashMap<>();
+      m_set1dFlowNodes = new HashSet<>();
     }
     catch( final GMLSchemaException e )
     {

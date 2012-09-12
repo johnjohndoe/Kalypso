@@ -100,7 +100,7 @@ public class AddBoundaryConditionToCalcUnitCommand implements IFeatureChangeComm
     {
       if( !m_done )
       {
-        final List calculationUnitID = (List) m_boundaryConditionToAdd.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
+        final List calculationUnitID = (List)m_boundaryConditionToAdd.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
         calculationUnitID.add( m_calculationUnit.getId() );
         fireProcessChanges();
       }
@@ -115,7 +115,7 @@ public class AddBoundaryConditionToCalcUnitCommand implements IFeatureChangeComm
   private void fireProcessChanges( )
   {
     final Feature calcUnitFeature = m_calculationUnit;
-    final List<Feature> features = new ArrayList<Feature>();
+    final List<Feature> features = new ArrayList<>();
     features.add( calcUnitFeature );
     features.add( m_boundaryConditionToAdd );
 

@@ -59,7 +59,7 @@ import org.kalypso.observation.result.TupleResultUtilities;
 
 /**
  * A helper class that wraps the weir-observation and gives access to it in the sense of the weir-parameter philosophie.
- * 
+ *
  * @author Gernot Belger
  */
 public class BuildingParameters
@@ -72,17 +72,17 @@ public class BuildingParameters
 
   private static final BigDecimal UNKNOWN_DISCHARGE = new BigDecimal( "-999.999" ); //$NON-NLS-1$
 
-  private final Map<Object, BigDecimal> m_dischargeMap = new HashMap<Object, BigDecimal>();
+  private final Map<Object, BigDecimal> m_dischargeMap = new HashMap<>();
 
   /** Upstream waterlevels, sorted in ascending order. */
-  private final SortedSet<BigDecimal> m_upstreamWaterlevels = new TreeSet<BigDecimal>();
+  private final SortedSet<BigDecimal> m_upstreamWaterlevels = new TreeSet<>();
 
   /** Downstream waterlevels, sorted in ascending order. */
-  private final SortedSet<BigDecimal> m_downstreamWaterlevels = new TreeSet<BigDecimal>();
+  private final SortedSet<BigDecimal> m_downstreamWaterlevels = new TreeSet<>();
 
   private final IObservation<TupleResult> m_buildingObservation;
 
-  private final Set<BigDecimal> m_dischargeSet = new HashSet<BigDecimal>();
+  private final Set<BigDecimal> m_dischargeSet = new HashSet<>();
 
   public BuildingParameters( final IObservation<TupleResult> buildingObservation )
   {
@@ -112,7 +112,7 @@ public class BuildingParameters
 
   private Object createWaterlevelTupel( final BigDecimal upstream, final BigDecimal downstream )
   {
-    final ArrayList<BigDecimal> tuple = new ArrayList<BigDecimal>( 2 );
+    final ArrayList<BigDecimal> tuple = new ArrayList<>( 2 );
     tuple.add( upstream );
     tuple.add( downstream );
     return tuple;

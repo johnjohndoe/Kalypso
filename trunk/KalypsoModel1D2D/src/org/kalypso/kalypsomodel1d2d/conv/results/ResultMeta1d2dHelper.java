@@ -412,13 +412,13 @@ public class ResultMeta1d2dHelper
 
   public static IStatus deleteAllByID( final ICalcUnitResultMeta calcUnitMeta, final String[] idsToDelete, final IProgressMonitor monitor, final boolean includeOriginal )
   {
-    final Set<String> toDelete = new HashSet<String>( Arrays.asList( idsToDelete ) );
+    final Set<String> toDelete = new HashSet<>( Arrays.asList( idsToDelete ) );
 
     final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.3" ), children.size() ); //$NON-NLS-1$
 
-    final Set<IStatus> stati = new HashSet<IStatus>();
+    final Set<IStatus> stati = new HashSet<>();
 
     for( final IResultMeta child : children.toArray( new IResultMeta[children.size()] ) )
     {
@@ -437,13 +437,13 @@ public class ResultMeta1d2dHelper
 
   public static IStatus deleteResults( final ICalcUnitResultMeta calcUnitMeta, final Date[] stepsToDelete, final IProgressMonitor monitor )
   {
-    final Set<Date> toDelete = new HashSet<Date>( Arrays.asList( stepsToDelete ) );
+    final Set<Date> toDelete = new HashSet<>( Arrays.asList( stepsToDelete ) );
 
     final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.3" ), children.size() ); //$NON-NLS-1$
 
-    final Set<IStatus> stati = new HashSet<IStatus>();
+    final Set<IStatus> stati = new HashSet<>();
 
     for( final IResultMeta child : children.toArray( new IResultMeta[children.size()] ) )
     {
@@ -471,13 +471,13 @@ public class ResultMeta1d2dHelper
 
   public static IStatus deleteLogAndTins( final ICalcUnitResultMeta calcUnitMeta, final Date[] stepsToDelete, final IProgressMonitor monitor )
   {
-    final Set<Date> toDelete = new HashSet<Date>( Arrays.asList( stepsToDelete ) );
+    final Set<Date> toDelete = new HashSet<>( Arrays.asList( stepsToDelete ) );
 
     final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.3" ), children.size() ); //$NON-NLS-1$
 
-    final Set<IStatus> stati = new HashSet<IStatus>();
+    final Set<IStatus> stati = new HashSet<>();
 
     for( final IResultMeta child : children.toArray( new IResultMeta[children.size()] ) )
     {
@@ -530,7 +530,7 @@ public class ResultMeta1d2dHelper
   {
     final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
-    final Set<Date> dates = new HashSet<Date>();
+    final Set<Date> dates = new HashSet<>();
     for( final IResultMeta child : children )
     {
       if( child instanceof IStepResultMeta )
@@ -563,7 +563,7 @@ public class ResultMeta1d2dHelper
   {
     final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
-    final HashMap<String, Date> ids = new HashMap<String, Date>();
+    final HashMap<String, Date> ids = new HashMap<>();
     for( final IResultMeta child : children )
     {
       Date l_date = null;
@@ -994,7 +994,7 @@ public class ResultMeta1d2dHelper
 
   public static IDocumentResultMeta[] findDocumentsByType( final IResultMeta parent, final DOCUMENTTYPE searchType )
   {
-    final Collection<IDocumentResultMeta> documents = new ArrayList<IDocumentResultMeta>();
+    final Collection<IDocumentResultMeta> documents = new ArrayList<>();
 
     final IFeatureBindingCollection<IResultMeta> children = parent.getChildren();
     for( final IResultMeta child : children )

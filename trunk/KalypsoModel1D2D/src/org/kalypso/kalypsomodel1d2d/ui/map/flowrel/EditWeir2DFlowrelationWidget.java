@@ -94,7 +94,7 @@ import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
  * @author ig
  */
 @SuppressWarnings("unchecked")
-//public class EditWeir2DFlowrelationWidget extends AbstractWidget 
+//public class EditWeir2DFlowrelationWidget extends AbstractWidget
 public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
 {
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
@@ -114,7 +114,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
   public EditWeir2DFlowrelationWidget( )
   {
     super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IFlowRelation2D.QNAME //, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        ,IBuildingFlowRelation2D.QNAME 
+        ,IBuildingFlowRelation2D.QNAME
     }, IFlowRelationship.QNAME_PROP_POSITION ) );
 
     m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.4") ); //$NON-NLS-1$
@@ -123,7 +123,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
   //  public EditWeir2DFlowrelationWidget( )
   //  {
   //    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.0"), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-  //    
+  //
   //    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.1" ) ); //$NON-NLS-1$
   //    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   //  }
@@ -237,8 +237,8 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
     if( selectedFeatures.size() == 0 )
       selectionManager.clear();
 
-    final List<Feature> toRemove = new ArrayList<Feature>();
-    final List<EasyFeatureWrapper> toAdd = new ArrayList<EasyFeatureWrapper>();
+    final List<Feature> toRemove = new ArrayList<>();
+    final List<EasyFeatureWrapper> toAdd = new ArrayList<>();
 
     for( final IKalypsoFeatureTheme theme : themes )
     {
@@ -278,9 +278,6 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
     selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), selectionManager.getAllFeatures() );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final Point p )
   {
@@ -309,10 +306,6 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
   }
 
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -390,9 +383,6 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
   //    super.keyTyped( e );
   //  }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {

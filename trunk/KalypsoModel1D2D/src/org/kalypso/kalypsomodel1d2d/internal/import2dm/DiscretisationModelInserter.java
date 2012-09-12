@@ -70,7 +70,7 @@ import com.vividsolutions.jts.index.ItemVisitor;
  *
  * Wrapper around a {@link org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d} that allows to
  * insert new element into the model.
- * 
+ *
  * TODO: <br/>
  * <ul>
  * <li>monitor progress</li>
@@ -80,12 +80,12 @@ import com.vividsolutions.jts.index.ItemVisitor;
  * <li>- or, remove intersected from existing</li>
  * <li>- or, refine on intersection</li>
  * </ul>
- * 
+ *
  * @author Gernot Belger
  */
 public class DiscretisationModelInserter
 {
-  private Collection<IPolygonWithName> m_incoming = new LinkedList<IPolygonWithName>();
+  private Collection<IPolygonWithName> m_incoming = new LinkedList<>();
 
   private final CommandableWorkspace m_workspace;
 
@@ -221,7 +221,6 @@ public class DiscretisationModelInserter
     try
     {
       final Polygon polygon = item.getPolygon();
-      @SuppressWarnings("unchecked")
       final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrapWithSrid( polygon );
 
       final Feature parentFeature = m_workspace.getRootFeature();

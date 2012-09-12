@@ -115,7 +115,7 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IFeatureChang
   {
     final Feature calUnitFeature = m_calculationUnit;
     final Feature model1d2dFeature = m_model1d2d;
-    final List<Feature> features = new ArrayList<Feature>();
+    final List<Feature> features = new ArrayList<>();
     features.add( calUnitFeature );
     features.add( m_boundaryCondition );
 

@@ -83,9 +83,9 @@ public class SWANAdditionalDataConverter
 
   private String m_strStepLength = ""; //$NON-NLS-1$
 
-  private String m_strDefaulCurrentValue = "0.0"; //$NON-NLS-1$
+  private final String m_strDefaulCurrentValue = "0.0"; //$NON-NLS-1$
 
-  private Map<String, List<String>> m_mapWrittenFilesNames;
+  private final Map<String, List<String>> m_mapWrittenFilesNames;
 
   public SWANAdditionalDataConverter( final ResultManager pResultManager, final SimpleNodeResultsHandler pResultsSimpleHandler, final FileObject pFileObjWorkingDir, final Date[] pArrDatesToProceed )
   {
@@ -93,7 +93,7 @@ public class SWANAdditionalDataConverter
     m_resultsSimpleHandler = pResultsSimpleHandler;
     m_fileObjWorkingDir = pFileObjWorkingDir;
     m_arrDatesToProceed = pArrDatesToProceed;
-    m_mapWrittenFilesNames = new HashMap<String, List<String>>();
+    m_mapWrittenFilesNames = new HashMap<>();
 
     try
     {
@@ -104,7 +104,7 @@ public class SWANAdditionalDataConverter
         m_calculatedSteps = removeSteadyDates( m_calculatedSteps, null );
       }
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -116,13 +116,13 @@ public class SWANAdditionalDataConverter
 
   }
 
-  public static Date[] removeSteadyDates( Date[] pArrayDates, final Date pDate )
+  public static Date[] removeSteadyDates( final Date[] pArrayDates, final Date pDate )
   {
     if( pArrayDates == null || pArrayDates.length == 1 )
     {
       return null;
     }
-    List<Date> lListDatesToRemove = new ArrayList<Date>();
+    final List<Date> lListDatesToRemove = new ArrayList<>();
     if( pDate == null )
     {
       lListDatesToRemove.add( ISimulation1D2DConstants.STEADY_DATE );
@@ -132,7 +132,7 @@ public class SWANAdditionalDataConverter
     {
       lListDatesToRemove.add( pDate );
     }
-    List<Date> lListDatesRes = new ArrayList<Date>();
+    final List<Date> lListDatesRes = new ArrayList<>();
     for( int i = 0; i < pArrayDates.length; ++i )
     {
       if( !lListDatesToRemove.contains( pArrayDates[i] ) )
@@ -144,10 +144,10 @@ public class SWANAdditionalDataConverter
   }
 
   /**
-   * 
+   *
    * returns map with lists of written water files, associative keys are WATER_LEVEL_SERIES_NAMES_KEY and
    * CURRENTS_SERIES_NAMES_KEY
-   * 
+   *
    */
   public Map<String, List<String>> writeDataFiles( )
   {
@@ -159,8 +159,8 @@ public class SWANAdditionalDataConverter
   {
     String lStrFileNameWLData = ISimulation1D2DConstants.SIM_SWAN_WATER_LEVEL_DATA_FILE;
     String lStrFileNameCurrentData = ISimulation1D2DConstants.SIM_SWAN_CURRENT_DATA_FILE;
-    List<String> lListWLFilesNames = new ArrayList<String>();
-    List<String> lListCurrentFilesNames = new ArrayList<String>();
+    final List<String> lListWLFilesNames = new ArrayList<>();
+    final List<String> lListCurrentFilesNames = new ArrayList<>();
     FileObject lModelWLFile = null;
     FileObject lModelCurrentFile = null;
     try
@@ -179,8 +179,8 @@ public class SWANAdditionalDataConverter
       {
         for( int i = 0; i < m_arrDatesToProceed.length; ++i )
         {
-          String lStrActWLSeriesFileName = getActSeriesFileName( ISimulation1D2DConstants.SIM_SWAN_WATER_LEVEL_SERIES_FILE, m_arrDatesToProceed[i] ) + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT;
-          String lStrActCurrentSeriesFileName = getActSeriesFileName( ISimulation1D2DConstants.SIM_SWAN_CURRENT_SERIES_FILE, m_arrDatesToProceed[i] ) + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT;
+          final String lStrActWLSeriesFileName = getActSeriesFileName( ISimulation1D2DConstants.SIM_SWAN_WATER_LEVEL_SERIES_FILE, m_arrDatesToProceed[i] ) + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT;
+          final String lStrActCurrentSeriesFileName = getActSeriesFileName( ISimulation1D2DConstants.SIM_SWAN_CURRENT_SERIES_FILE, m_arrDatesToProceed[i] ) + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT;
           final FileObject lModelWLFileSerie = m_fileObjWorkingDir.resolveFile( lStrActWLSeriesFileName );
           final FileObject lModelCurrentFileSerie = m_fileObjWorkingDir.resolveFile( lStrActCurrentSeriesFileName );
 
@@ -202,7 +202,7 @@ public class SWANAdditionalDataConverter
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -213,33 +213,33 @@ public class SWANAdditionalDataConverter
 
   }
 
-  private void writeCurrentSeriesFile( Date pDate, FileObject modelCurrentFileSerie )
+  private void writeCurrentSeriesFile( final Date pDate, final FileObject modelCurrentFileSerie )
   {
     Formatter lFormatterCurrent = null;
     // put first the Y component of current into buffer to write it out after X-component according to SWAN formating
     // rules
-    StringBuffer lStrBuffY = new StringBuffer();
+    final StringBuffer lStrBuffY = new StringBuffer();
     try
     {
-      List<INodeResult> lListActResults = m_resultsSimpleHandler.getResultsForDate( pDate );
+      final List<INodeResult> lListActResults = m_resultsSimpleHandler.getResultsForDate( pDate );
       lFormatterCurrent = new Formatter( modelCurrentFileSerie.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
       if( lListActResults == null )
       {
         // TODO: debug output...
         return;
       }
-      double lDoubleExclNr = Double.parseDouble( ISimulation1D2DConstants.SIM_SWAN_EXCLUSION_NUMBER );
+      final double lDoubleExclNr = Double.parseDouble( ISimulation1D2DConstants.SIM_SWAN_EXCLUSION_NUMBER );
       for( final INodeResult lResultAct : lListActResults )
       {
         if( lDoubleExclNr != lResultAct.getWaterlevel() )
         {
           try
           {
-            List<Double> lListDoubleVelocity = lResultAct.getVelocity();// AbsoluteVelocity();
+            final List<Double> lListDoubleVelocity = lResultAct.getVelocity();// AbsoluteVelocity();
             lFormatterCurrent.format( "%.2f\n", lListDoubleVelocity.get( 0 ) ); //$NON-NLS-1$
             lStrBuffY.append( String.format( Locale.US, "%.2f\n", lListDoubleVelocity.get( 1 ) ) ); //$NON-NLS-1$
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             lFormatterCurrent.format( "%s\n", m_strDefaulCurrentValue ); //$NON-NLS-1$
             lStrBuffY.append( String.format( Locale.US, "%s\n", m_strDefaulCurrentValue ) ); //$NON-NLS-1$
@@ -255,7 +255,7 @@ public class SWANAdditionalDataConverter
 
       FormatterUtils.checkIoException( lFormatterCurrent );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -270,12 +270,12 @@ public class SWANAdditionalDataConverter
 
   }
 
-  private void writeWLSeriesFile( Date pDate, FileObject modelWLFileSerie )
+  private void writeWLSeriesFile( final Date pDate, final FileObject modelWLFileSerie )
   {
     Formatter lFormatterWL = null;
     try
     {
-      List<INodeResult> lListActResults = m_resultsSimpleHandler.getResultsForDate( pDate );
+      final List<INodeResult> lListActResults = m_resultsSimpleHandler.getResultsForDate( pDate );
       lFormatterWL = new Formatter( modelWLFileSerie.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
       if( lListActResults == null )
       {
@@ -294,7 +294,7 @@ public class SWANAdditionalDataConverter
       }
       FormatterUtils.checkIoException( lFormatterWL );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -308,7 +308,7 @@ public class SWANAdditionalDataConverter
     }
   }
 
-  public static String getActSeriesFileName( String simSwanActSeriesFile, Date pDate )
+  public static String getActSeriesFileName( final String simSwanActSeriesFile, final Date pDate )
   {
     if( pDate == null )
     {

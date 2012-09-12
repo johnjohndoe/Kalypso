@@ -26,7 +26,7 @@ public class Import2dmTest
     final String sourceSRS = "EPSG:31467"; //$NON-NLS-1$
     final int sourceSrid = JTSAdapter.toSrid( sourceSRS );
 
-    final List<File> inputFiles = new ArrayList<File>();
+    final List<File> inputFiles = new ArrayList<>();
 
     //    inputFiles.add( new File( "G:\\Projekte\\2DM\\dgmkorr.2dm" ) ); //$NON-NLS-1$
     inputFiles.add( new File( "G:\\Projekte\\2DM\\testhw99.2dm" ) ); //$NON-NLS-1$

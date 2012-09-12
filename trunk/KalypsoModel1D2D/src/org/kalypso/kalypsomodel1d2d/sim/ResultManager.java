@@ -75,7 +75,6 @@ import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
@@ -111,7 +110,7 @@ public class ResultManager implements ISimulation1D2DConstants
 {
   private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
 
-  private final List<ResultType.TYPE> m_parameters = new ArrayList<ResultType.TYPE>();
+  private final List<ResultType.TYPE> m_parameters = new ArrayList<>();
 
   private final IGeoLog m_geoLog;
 
@@ -200,7 +199,7 @@ public class ResultManager implements ISimulation1D2DConstants
             final FileObject swanResOutTabFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "_out.tab" ); //$NON-NLS-1$
             processSWANTabFile( swanResOutTabFile, swanResShiftFile );
             final File zipOutput = new File( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip" ); //$NON-NLS-1$
-            final List<File> lListFilesToZip = new ArrayList<File>();
+            final List<File> lListFilesToZip = new ArrayList<>();
             lListFilesToZip.add( new File( swanResFile.getURL().toURI() ) );
             lListFilesToZip.add( new File( swanResShiftFile.getURL().toURI() ) );
             lListFilesToZip.add( new File( swanResOutTabFile.getURL().toURI() ) );
@@ -243,10 +242,10 @@ public class ResultManager implements ISimulation1D2DConstants
 
       final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "", null ); //$NON-NLS-1$
       if( multiStatus.isOK() )
-        return StatusUtilities.createStatus( IStatus.OK, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.7" ), null ); //$NON-NLS-1$
+        return new Status( IStatus.OK, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.7" ), null ); //$NON-NLS-1$
 
       if( multiStatus.matches( IStatus.CANCEL ) )
-        return StatusUtilities.createStatus( IStatus.WARNING, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.8" ), null ); //$NON-NLS-1$
+        return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.8" ), null ); //$NON-NLS-1$
 
       if( multiStatus.matches( IStatus.WARNING ) )
         return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.9" ), null ); //$NON-NLS-1$
@@ -258,7 +257,7 @@ public class ResultManager implements ISimulation1D2DConstants
     }
     catch( final OperationCanceledException e )
     {
-      return StatusUtilities.createStatus( IStatus.CANCEL, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.12" ), e ); //$NON-NLS-1$
+      return new Status( IStatus.CANCEL, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.12" ), e ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -266,7 +265,7 @@ public class ResultManager implements ISimulation1D2DConstants
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.13" ), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.13" ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -466,7 +465,7 @@ public class ResultManager implements ISimulation1D2DConstants
       return null;
 
     // check if the given result file is already compressed
-    if( filename != null && filename.endsWith( ".2d.zip" ) ) //$NON-NLS-1$
+    if( filename.endsWith( ".2d.zip" ) ) //$NON-NLS-1$
       return ResultMeta1d2dHelper.resolveDateFromResultStep( file );
 
     final String name = FilenameUtils.removeExtension( filename );
@@ -480,7 +479,7 @@ public class ResultManager implements ISimulation1D2DConstants
   // FIXME: bad, use result-meta to access all files! This is just pfusch...!
   private FileObject[] find2dFiles( final FileObject remoteWorking ) throws IOException
   {
-    final List<FileObject> resultList = new ArrayList<FileObject>();
+    final List<FileObject> resultList = new ArrayList<>();
     if( remoteWorking == null )
       return null;
 
@@ -500,7 +499,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public Date[] findCalculatedSteps( ) throws IOException
   {
-    final Set<Date> dates = new TreeSet<Date>();
+    final Set<Date> dates = new TreeSet<>();
 
     final FileObject[] existing2dFiles = find2dFiles( m_resultDirRMA );
 
@@ -544,7 +543,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public void setStepsToProcess( final Date[] dates, final IControlModel1D2D controlModel ) throws IOException
   {
-    final List<FileObject> fileList = new ArrayList<FileObject>();
+    final List<FileObject> fileList = new ArrayList<>();
     if( m_mapDateFile == null )
       fillStepMap( controlModel );
 
@@ -560,7 +559,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private void fillStepMap( final IControlModel1D2D controlModel ) throws IOException
   {
-    m_mapDateFile = new HashMap<Date, FileObject>();
+    m_mapDateFile = new HashMap<>();
     final FileObject[] existing2dFiles = find2dFiles( m_resultDirRMA );
 
     for( final FileObject file : existing2dFiles )

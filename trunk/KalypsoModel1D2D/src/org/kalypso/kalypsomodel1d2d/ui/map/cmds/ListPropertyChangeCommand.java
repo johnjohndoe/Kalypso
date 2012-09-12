@@ -132,7 +132,7 @@ public class ListPropertyChangeCommand implements ICommand
 
   private void doChanges( final FeatureChange[] changes )
   {
-    final Set<Feature> changedFeaturesList = new HashSet<Feature>();
+    final Set<Feature> changedFeaturesList = new HashSet<>();
     Feature featureToChange;
     IPropertyType propType;
     List propList;

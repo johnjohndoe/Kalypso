@@ -110,7 +110,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
 
   private int m_numOfClasses = 0;
 
-  private final List<org.eclipse.swt.graphics.Color> m_colorList = new ArrayList<org.eclipse.swt.graphics.Color>();
+  private final List<org.eclipse.swt.graphics.Color> m_colorList = new ArrayList<>();
 
   private IElevationColorModel m_colorModel;
 
