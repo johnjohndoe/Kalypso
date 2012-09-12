@@ -14,7 +14,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Xmx2048m  -XX:PermSize=64M -XX:MaxPermSize=128M -Dkalypso.ask_for_pool_save=true -Dkalypso.model.product.expert=true</vmArgs>
+      <vmArgs>-Xmx2048m  -XX:PermSize=64M -XX:MaxPermSize=128M -XX:-UseSplitVerifier -Dkalypso.ask_for_pool_save=true -Dkalypso.model.product.expert=true</vmArgs>
    </launcherArgs>
 
    <windowImages i16="/KalypsoModelProduct/etc/applicationicons/icon_16.gif" i32="/KalypsoModelProduct/etc/applicationicons/icon_32.gif" i48="/KalypsoModelProduct/etc/applicationicons/icon_48.gif" i64="/KalypsoModelProduct/etc/applicationicons/icon_64.gif" i128="/KalypsoModelProduct/etc/applicationicons/icon_128.gif"/>
