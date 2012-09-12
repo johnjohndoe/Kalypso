@@ -16,10 +16,11 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   public RasterizationControlModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
-    m_landuseClasses = new FeatureBindingCollection<ILanduseClass>( this, ILanduseClass.class, IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
-    m_assetValueClasses = new FeatureBindingCollection<IAssetValueClass>( this, IAssetValueClass.class, IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
-    m_damageFunctions = new FeatureBindingCollection<IDamageFunction>( this, IDamageFunction.class, IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
-    m_riskZoneDefinitions = new FeatureBindingCollection<IRiskZoneDefinition>( this, IRiskZoneDefinition.class, IRasterizationControlModel.PROPERTY_RISKZONE_DEFINITION_MEMBER );
+
+    m_landuseClasses = new FeatureBindingCollection<>( this, ILanduseClass.class, IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
+    m_assetValueClasses = new FeatureBindingCollection<>( this, IAssetValueClass.class, IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
+    m_damageFunctions = new FeatureBindingCollection<>( this, IDamageFunction.class, IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
+    m_riskZoneDefinitions = new FeatureBindingCollection<>( this, IRiskZoneDefinition.class, IRasterizationControlModel.PROPERTY_RISKZONE_DEFINITION_MEMBER );
   }
 
   private final FeatureBindingCollection<ILanduseClass> m_landuseClasses;

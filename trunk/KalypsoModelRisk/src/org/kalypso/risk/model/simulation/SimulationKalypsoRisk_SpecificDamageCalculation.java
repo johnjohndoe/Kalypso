@@ -208,7 +208,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       specificDamageCoverageCollection.clear();
 
       // Put classes into list by, with index ordinal-number for faster access later
-      final List<ILanduseClass> landuseClasses = new ArrayList<ILanduseClass>();
+      final List<ILanduseClass> landuseClasses = new ArrayList<>();
       for( final ILanduseClass landuseClass : landuseClassesList )
       {
         landuseClass.clearStatisticEntries();
@@ -314,14 +314,14 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     fillResultWithData( result, controlModel, vectorModel );
 
     /* add observation to workspace */
-    final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IObservation<TupleResult> obs = new Observation<>( "name", "description", result ); //$NON-NLS-1$ //$NON-NLS-2$
     // maybe set phenomenon?
     ObservationFeatureFactory.toFeature( obs, fObs );
   }
 
   private static IRiskLanduseStatistic[] getEvents( final ILanduseClass[] classes )
   {
-    final Set<IRiskLanduseStatistic> mySet = new TreeSet<IRiskLanduseStatistic>();
+    final Set<IRiskLanduseStatistic> mySet = new TreeSet<>();
 
     for( final ILanduseClass member : classes )
     {
@@ -455,7 +455,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     /* name */
     lastRecord.setValue( 0, "Total" ); //$NON-NLS-1$
 
-    final Map<String, RiskStatisticTableValues> eventMap = new HashMap<String, RiskStatisticTableValues>();
+    final Map<String, RiskStatisticTableValues> eventMap = new HashMap<>();
 
     /* specific damage values per event */
     // At first we fill in the summation of total damage and flooded area to be sure that these values are present if we
@@ -549,7 +549,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
   private static final Map<Double, RiskStatisticTableValues> getPeriods( final int columnSize, final TupleResult result, final Map<String, RiskStatisticTableValues> eventMap )
   {
-    final Map<Double, RiskStatisticTableValues> periodSortedMap = new TreeMap<Double, RiskStatisticTableValues>();
+    final Map<Double, RiskStatisticTableValues> periodSortedMap = new TreeMap<>();
 
     // collect all Averaged Values for all events
     for( int index = 1; index < columnSize; index++ )

@@ -8,12 +8,12 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 public class LandusePolygonCollection extends Feature_Impl implements ILandusePolygonCollection
 {
-  public LandusePolygonCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  private final IFeatureBindingCollection<ILandusePolygon> m_landusePolygons = new FeatureBindingCollection<>( this, ILandusePolygon.class, ILandusePolygonCollection.PROPERTY_POLYGON_MEMBER );
+
+  public LandusePolygonCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
-
-  private final IFeatureBindingCollection<ILandusePolygon> m_landusePolygons = new FeatureBindingCollection<ILandusePolygon>( this, ILandusePolygon.class, ILandusePolygonCollection.PROPERTY_POLYGON_MEMBER );
 
   @Override
   public IFeatureBindingCollection<ILandusePolygon> getLandusePolygonCollection( )

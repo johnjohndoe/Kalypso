@@ -6,21 +6,17 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.kalypso.gml.ui.coverage.CoverageThemeInfo;
-import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
-public class RasterizedLanduseThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo
+public class RasterizedLanduseThemeInfo extends CoverageThemeInfo
 {
   public static final String DEFAULT_FORMAT_STRING = Messages.getString("org.kalypso.risk.plugin.RasterizedLanduseThemeInfo.0"); //$NON-NLS-1$
 
-  private static Map<Double, String> LANDUSE_CLASSES_MAP = new HashMap<Double, String>();
+  private static Map<Double, String> LANDUSE_CLASSES_MAP = new HashMap<>();
 
-  /**
-   * @see org.kalypso.gml.ui.map.CoverageThemeInfo#initFormatString(java.util.Properties)
-   */
   @Override
-  protected String initFormatString( Properties props )
+  protected String initFormatString( final Properties props )
   {
     return props.getProperty( PROP_FORMAT, DEFAULT_FORMAT_STRING );
   }
@@ -32,10 +28,6 @@ public class RasterizedLanduseThemeInfo extends CoverageThemeInfo implements IKa
       LANDUSE_CLASSES_MAP.put( key, values.get( key ) );
   }
 
-  /**
-   * @see org.kalypso.gml.ui.map.CoverageThemeInfo#appendQuickInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
@@ -46,11 +38,10 @@ public class RasterizedLanduseThemeInfo extends CoverageThemeInfo implements IKa
         return;
       formatter.format( getFormatString(), LANDUSE_CLASSES_MAP.get( value ) );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       formatter.format( Messages.getString("org.kalypso.risk.plugin.RasterizedLanduseThemeInfo.1"), e.toString() ); //$NON-NLS-1$
     }
   }
-
 }

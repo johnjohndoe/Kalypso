@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.actions.manageWaterdepthCollections;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -90,8 +91,9 @@ public class AddEventAction extends Action implements IUpdateable
       @Override
       public String isValid( final String newText )
       {
-        if( newText == null || newText.length() == 0 )
+        if( StringUtils.isEmpty( newText ) )
           return Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.25" ); //$NON-NLS-1$
+
         try
         {
           final int i = Integer.parseInt( newText );
@@ -105,8 +107,6 @@ public class AddEventAction extends Action implements IUpdateable
         {
           return Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.28" ); //$NON-NLS-1$
         }
-        if( newText == null || newText.length() == 0 )
-          return Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.29" ); //$NON-NLS-1$
 
         return null;
       }

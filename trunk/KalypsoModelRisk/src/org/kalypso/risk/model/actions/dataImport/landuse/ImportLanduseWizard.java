@@ -147,19 +147,18 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void addPages( )
   {
     m_wizardPage = new ImportLanduseWizardPage();
 
-    final List<String> damageFunctionNamesList = new ArrayList<String>();
-    final List<String> assetValueClassesList = new ArrayList<String>();
+    final List<String> damageFunctionNamesList = new ArrayList<>();
+    final List<String> assetValueClassesList = new ArrayList<>();
+
     for( final Feature feature : m_predefinedDamageFunctionsCollection )
     {
       final List<String> names = (List<String>) feature.getProperty( Feature.QN_NAME );
@@ -216,7 +215,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       final IFeatureBindingCollection<AbstractShape> shapeFeatureList = shapeCollection.getShapes();
 
       /* check for right user selection */
-      final Set<String> landuseTypeSet = new HashSet<String>();
+      final Set<String> landuseTypeSet = new HashSet<>();
 
       int count = 0;
       for( final AbstractShape shpFeature : shapeFeatureList )
@@ -282,7 +281,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
       final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
-      final List<Layer> layers = new ArrayList<Layer>();
+      final List<Layer> layers = new ArrayList<>();
       layers.add( SLDHelper.polygonStyleLayer( null, landuseClassesList, ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, new NullProgressMonitor() ) );
       SLDHelper.exportPolygonSymbolyzerSLD( polygonSldFile, layers.toArray( (new Layer[0]) ), new NullProgressMonitor() ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -294,11 +293,9 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
     return true;
   }
-
 }

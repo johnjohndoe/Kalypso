@@ -475,7 +475,7 @@ public class RiskModelHelper
 
   private static void deleteExistingMapLayers( final IKalypsoCascadingTheme parentKalypsoTheme, final List<AsciiRasterInfo> rasterInfos )
   {
-    final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
+    final List<IKalypsoTheme> themesToRemove = new ArrayList<>();
 
     for( int i = 0; i < rasterInfos.size(); i++ )
     {
@@ -644,7 +644,7 @@ public class RiskModelHelper
     final IKalypsoCascadingTheme wspThemes = mapModell != null ? getHQiTheme( mapModell ) : null;
 
     // get the result coverage collections (depth grids) from the events
-    final List<Feature> createdFeatures = new ArrayList<Feature>();
+    final List<Feature> createdFeatures = new ArrayList<>();
     for( int i = 0; i < names.length; i++ )
     {
       final IAnnualCoverageCollection annualCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );

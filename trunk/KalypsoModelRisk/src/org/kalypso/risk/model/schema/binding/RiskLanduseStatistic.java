@@ -51,9 +51,8 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * @author Thomas Jung
  *
  */
-public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseStatistic, Comparable<IRiskLanduseStatistic>
+public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseStatistic
 {
-
   public RiskLanduseStatistic( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );

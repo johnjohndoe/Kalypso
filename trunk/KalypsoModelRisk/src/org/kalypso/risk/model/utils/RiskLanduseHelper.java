@@ -121,7 +121,6 @@ public class RiskLanduseHelper
     return landuseClass.getStatistic( returnPeriod );
   }
 
-  @SuppressWarnings("unchecked")
   public static RGB getLanduseClassDefaultColor( final String landuseClassName, final List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
   {
     for( final Feature feature : predefinedLanduseColorsCollection )
@@ -163,8 +162,8 @@ public class RiskLanduseHelper
   {
     try
     {
-      final Map<String, String> landuseClassesGmlIDsMap = new HashMap<String, String>();
-      final Map<String, String> damageFunctionsGmlIDsMap = new HashMap<String, String>();
+      final Map<String, String> landuseClassesGmlIDsMap = new HashMap<>();
+      final Map<String, String> damageFunctionsGmlIDsMap = new HashMap<>();
       final URL url = new URL( scenarioFolder.getLocation().append( "/models/RasterizationControlModel.gml" ).toPortableString() ); //$NON-NLS-1$
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
       final List<Feature> landuseClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
@@ -230,7 +229,6 @@ public class RiskLanduseHelper
     createAssetValues( assetValuesCollectionName, controlModel, predefinedAssetValueClassesCollection, propName, propDataMember, propValue );
   }
 
-  @SuppressWarnings("unchecked")
   private static void createAssetValues( final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propValue )
   {
     // delete already existing asset values
@@ -278,7 +276,6 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked")
   private static void createDamageFunctions( final String damageFunctionsCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue )
   {
     // delete already existing damage functions
@@ -327,7 +324,7 @@ public class RiskLanduseHelper
   public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List<AbstractShape> shapeFeatureList, final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
   {
     monitor.subTask( Messages.getString( "org.kalypso.risk.model.utils.ImportLanduseWizard.9" ) ); //$NON-NLS-1$
-    final List<Feature> createdFeatures = new ArrayList<Feature>();
+    final List<Feature> createdFeatures = new ArrayList<>();
 
     for( final AbstractShape shpFeature : shapeFeatureList )
     {
@@ -389,7 +386,7 @@ public class RiskLanduseHelper
 
   public static Set<String> getLanduseTypeSet( final List<AbstractShape> shapeFeatureList, final String propertyLanduse )
   {
-    final Set<String> set = new HashSet<String>();
+    final Set<String> set = new HashSet<>();
 
     for( int i = 0; i < shapeFeatureList.size(); i++ )
     {
@@ -407,7 +404,7 @@ public class RiskLanduseHelper
   {
     final ILanduseClass[] classes = conrolModel.getLanduseClassesList().toArray( new ILanduseClass[] {} );
 
-    final Set<ILanduseClass> myTypes = new LinkedHashSet<ILanduseClass>();
+    final Set<ILanduseClass> myTypes = new LinkedHashSet<>();
     for( final ILandusePolygon polygon : vectorModel.getLandusePolygonCollection().getLandusePolygonCollection() )
     {
       final ILanduseClass landuse = polygon.getLanduseClass( conrolModel );
@@ -423,5 +420,4 @@ public class RiskLanduseHelper
 
     return myTypes.toArray( new ILanduseClass[] {} );
   }
-
 }

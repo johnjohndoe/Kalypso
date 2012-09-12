@@ -99,7 +99,7 @@ public class WaterdepthCollectionsManagementComposite extends Composite
   /** Needed, because the widget needs to access the selection in a non swt-thread. */
   private IStructuredSelection m_currentSelection = StructuredSelection.EMPTY;
 
-  private final Map<String, IAction> m_actionsMap = new HashMap<String, IAction>();
+  private final Map<String, IAction> m_actionsMap = new HashMap<>();
 
   private TreeViewer m_eventViewer;
 

@@ -101,21 +101,23 @@ public class ChangeEventAction extends Action implements IUpdateable
       {
         if( newText == null || newText.length() == 0 )
           return Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.38" ); //$NON-NLS-1$
+
         try
         {
           final int i = Integer.parseInt( newText );
           if( i <= 0 )
             return Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.39" ); //$NON-NLS-1$
+
           for( final IAnnualCoverageCollection collection : model.getWaterlevelCoverageCollection() )
+          {
             if( collection.getReturnPeriod() == i )
               return Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.40" ); //$NON-NLS-1$
+          }
         }
         catch( final NumberFormatException e )
         {
           return Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.41" ); //$NON-NLS-1$
         }
-        if( newText == null || newText.length() == 0 )
-          return Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.42" ); //$NON-NLS-1$
 
         return null;
       }

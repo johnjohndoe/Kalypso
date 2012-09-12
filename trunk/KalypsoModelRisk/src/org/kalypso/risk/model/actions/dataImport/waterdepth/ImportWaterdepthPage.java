@@ -41,7 +41,7 @@ public class ImportWaterdepthPage extends WizardPage
 
   protected String m_crs;
 
-  protected final List<AsciiRasterInfo> m_rasterInfos;
+  protected final List<AsciiRasterInfo> m_rasterInfos = new ArrayList<>();
 
   private Button m_btnAddNew;
 
@@ -59,14 +59,14 @@ public class ImportWaterdepthPage extends WizardPage
 
   private CRSSelectionPanel m_crsPanel;
 
-  private final List<Image> m_imageList = new ArrayList<Image>();
+  private final List<Image> m_imageList = new ArrayList<>();
 
   public ImportWaterdepthPage( )
   {
     super( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.0" ), "", ImageProvider.IMAGE_NEW_FILE ); //$NON-NLS-1$ //$NON-NLS-2$
     setTitle( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.2" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.3" ) ); //$NON-NLS-1$
-    m_rasterInfos = new ArrayList<AsciiRasterInfo>();
+
   }
 
   @Override
@@ -156,7 +156,6 @@ public class ImportWaterdepthPage extends WizardPage
     m_tableViewer.setLinesVisible( true );
     m_tableViewer.addSelectionListener( new SelectionAdapter()
     {
-
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -273,7 +272,6 @@ public class ImportWaterdepthPage extends WizardPage
     m_fldReturnPeriod.setEnabled( false );
     m_fldReturnPeriod.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -303,10 +301,6 @@ public class ImportWaterdepthPage extends WizardPage
     m_crsPanel.setSelectedCRS( m_crs );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
-
-      /**
-       * @see org.kalypso.transformation.ui.CRSSelectionListener#selectionChanged(java.lang.String)
-       */
       @Override
       protected void selectionChanged( final String selectedCRS )
       {
@@ -364,10 +358,14 @@ public class ImportWaterdepthPage extends WizardPage
     dialog.open();
     final String[] fileNames = dialog.getFileNames();
     final String filterPath = dialog.getFilterPath();
-    final List<String> resultList = new ArrayList<String>();
-    for( int i = 0; i < fileNames.length; i++ )
-      if( fileNames[i] != null && fileNames[i].length() != 0 )
-        resultList.add( filterPath + File.separator + fileNames[i] );
+
+    final List<String> resultList = new ArrayList<>();
+    for( final String fileName : fileNames )
+    {
+      if( fileName != null && fileName.length() != 0 )
+        resultList.add( filterPath + File.separator + fileName );
+    }
+
     return resultList;
   }
 
@@ -376,7 +374,8 @@ public class ImportWaterdepthPage extends WizardPage
   {
     if( m_rasterInfos == null || m_rasterInfos.size() == 0 )
       return false;
-    final List<Integer> returnPeriodsList = new ArrayList<Integer>();
+
+    final List<Integer> returnPeriodsList = new ArrayList<>();
     for( final AsciiRasterInfo rasterInfo : m_rasterInfos )
     {
       final Integer returnPeriod = rasterInfo.getReturnPeriod();
@@ -398,14 +397,11 @@ public class ImportWaterdepthPage extends WizardPage
     return m_rasterInfos;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.DialogPage#dispose()
-   */
   @Override
   public void dispose( )
   {
     // dispose all images and colors
-    for( Image image : m_imageList )
+    for( final Image image : m_imageList )
       image.dispose();
 
     m_crsPanel.dispose();
