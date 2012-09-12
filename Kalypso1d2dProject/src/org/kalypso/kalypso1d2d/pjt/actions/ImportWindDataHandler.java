@@ -63,6 +63,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
 
@@ -86,7 +87,7 @@ public class ImportWindDataHandler extends AbstractHandler
       final SelectWidgetHandler handler = new SelectWidgetHandler();
       final Map<String, String> newParameterMap = new HashMap<>();
       newParameterMap.put( SelectWidgetHandler.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget" ); //$NON-NLS-1$
-      newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" ); //$NON-NLS-1$
+      newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, KalypsoModel1D2DPlugin.PLUGIN_ID ); //$NON-NLS-1$
       handler.setInitializationData( null, null, newParameterMap );
       final ExecutionEvent exc = new ExecutionEvent( event.getCommand(), newParameterMap, event.getTrigger(), event.getApplicationContext() );
 
