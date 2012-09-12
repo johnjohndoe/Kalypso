@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilLayerUtils;
 import org.kalypso.model.wspm.ui.view.chart.ProfilePointHover;
 import org.kalypso.transformation.transformer.GeoTransformerException;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -239,7 +238,7 @@ class ProfilOverlayLayer extends PointsLineLayer
         setProfile( newAdjustedSegmentedProfile, m_data );
       }
     }
-    catch( final GeoTransformerException | GM_Exception e )
+    catch( final GeoTransformerException e )
     {
       e.printStackTrace();
     }

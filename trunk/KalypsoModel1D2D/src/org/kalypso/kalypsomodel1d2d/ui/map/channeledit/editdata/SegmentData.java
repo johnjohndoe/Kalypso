@@ -45,8 +45,8 @@ import java.util.Map;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesh;
 import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesher;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -251,7 +251,13 @@ class SegmentData implements ISegmentData
   @Override
   public boolean isBanksUserChanged( )
   {
-    return m_leftBank.isUserChanged() || m_rightBank.isUserChanged();
+    if( m_leftBank != null && m_leftBank.isUserChanged() )
+      return true;
+
+    if( m_rightBank != null && m_rightBank.isUserChanged() )
+      return true;
+
+    return false;
   }
 
   @Override
@@ -315,7 +321,7 @@ class SegmentData implements ISegmentData
     final LineString segmentedLine = bank.getWorkingGeometry();
     final LineString newSegmentedLine = updateBankEndpoint( segmentedLine, oldEndpointLocation, newEndpointLocation );
 
-    return new BankData( this, originalGeometry, croppedGeometry, newSegmentedLine, true );
+    return new BankData( this, originalGeometry, croppedGeometry, newSegmentedLine, bank.isUserChanged() );
   }
 
   private LineString updateBankEndpoint( final LineString segmentedLine, final Coordinate oldEndpointLocation, final Coordinate newEndpointLocation )

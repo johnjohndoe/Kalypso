@@ -56,12 +56,16 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
- * TODO:
+ * TODOs:
  * <ul>
- * <li>FIXME: consisting naming of all classes</li>
- * <li>general cleaup</li>
- * <li>TODO: let user toggle area auto adjustment</li>
- * <li>TODO: Allow for more than one bank line per side</li>
+ * <li>let user decide wether to use douglas peucker or equidistant segmentation</li>
+ * <li>let user toggle area auto adjustment</li>
+ * <li>allow for more than one bank line per side</li>
+ * <li>Vizualize bank line as profile</li>
+ * <li>validate meshes and show result in map (general tool for QuadMesh and IPolygonWithName))</li>
+ * <li>Implement a varying segmentation between segments (segments a,b,c: a has 4 points, c has 8 points, c should have a smoth transfer frmo 4 to 8</li>
+ * <li>Instead of selecting a profile, select the border of a 2D-mesh as a profile</li>
+ * <li>general: when adding mesh as 2d-elements: use z-values new mesh should replace z-values of existing nodes</li>
  * </ul>
  *
  * @author Thomas Jung
@@ -91,7 +95,7 @@ public class ChannelEditWidget extends AbstractDelegateWidget2 implements IWidge
 
     m_composite = new ChannelEditComposite( parent, toolkit, SWT.NONE, m_data, m_infoWidget );
 
-    // REMARK: set specific shell to data, else modal dialogs will be system modal instead of model to this shell
+    // REMARK: set specific shell to data, else modal dialogs will be system modal instead of modal to this shell
     m_data.setShell( parent.getShell() );
 
     return m_composite;

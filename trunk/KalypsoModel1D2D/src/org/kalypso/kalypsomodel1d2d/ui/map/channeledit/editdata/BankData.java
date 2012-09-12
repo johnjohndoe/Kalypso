@@ -77,11 +77,13 @@ class BankData implements IBankData
     return m_workingGeometry;
   }
 
+  @Override
   public boolean isUserChanged( )
   {
     return m_isUserChanged;
   }
 
+  @Override
   public LineString getCroppedOriginalGeometry( )
   {
     return m_croppedOriginalGeometry;

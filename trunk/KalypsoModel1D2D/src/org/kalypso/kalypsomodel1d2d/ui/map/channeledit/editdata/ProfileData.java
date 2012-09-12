@@ -45,8 +45,8 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -82,7 +82,6 @@ class ProfileData implements IProfileData
   /** Wether or not the area should be auto adjusted to the original profile */
   private final boolean m_doAreaAdjustment = true;
 
-  // private final IProfileFeature m_feature;
   private final IProfil m_originalProfile;
 
   private IProfil m_workingProfile;
@@ -114,7 +113,7 @@ class ProfileData implements IProfileData
   }
 
   @Override
-  public boolean isUserChaned( )
+  public boolean isUserChanged( )
   {
     return m_isUserChanged;
   }
@@ -258,7 +257,7 @@ class ProfileData implements IProfileData
     return cropProfile( point1, point2 );
   }
 
-  private IProfil cropProfile( final Point point1, final Point point2 ) throws GM_Exception, GeoTransformerException
+  private IProfil cropProfile( final Point point1, final Point point2 ) throws GeoTransformerException, GM_Exception
   {
     final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
@@ -411,27 +410,34 @@ class ProfileData implements IProfileData
   }
 
   @Override
-  public void updateWorkingProfile( final IProfil newWorkingProfile ) throws GM_Exception, GeoTransformerException
+  public void updateWorkingProfile( final IProfil newWorkingProfile )
   {
     Assert.isNotNull( newWorkingProfile );
     Assert.isTrue( newWorkingProfile.getPoints().length == m_numPoints );
 
     m_isUserChanged = true;
 
-    /* adjust area */
-    final LineString segmentedLine = ProfilUtil.getLineString( newWorkingProfile );
-    // REMARK: we know the segmented profile is in Kalypso srs, so no projection is needed
-    final Point startPoint = segmentedLine.getStartPoint();
-    final Point endPoint = segmentedLine.getEndPoint();
+    try
+    {
+      /* adjust area */
+      final LineString segmentedLine = ProfilUtil.getLineString( newWorkingProfile );
+      // REMARK: we know the segmented profile is in Kalypso srs, so no projection is needed
+      final Point startPoint = segmentedLine.getStartPoint();
+      final Point endPoint = segmentedLine.getEndPoint();
 
-    final IProfil croppedProfile = cropProfile( startPoint, endPoint );
+      final IProfil croppedProfile = cropProfile( startPoint, endPoint );
 
-    final IProfil adjustedsegmentedProfile = autoAdjustArea( croppedProfile, newWorkingProfile );
+      final IProfil adjustedsegmentedProfile = autoAdjustArea( croppedProfile, newWorkingProfile );
 
-    /* force endpoint of bank lines onto endpoints of profile */
-    adjustBanklineEndpoints( m_workingProfile, adjustedsegmentedProfile );
+      /* force endpoint of bank lines onto endpoints of profile */
+      adjustBanklineEndpoints( m_workingProfile, adjustedsegmentedProfile );
 
-    m_workingProfile = adjustedsegmentedProfile;
+      m_workingProfile = adjustedsegmentedProfile;
+    }
+    catch( GeoTransformerException | GM_Exception e )
+    {
+      e.printStackTrace();
+    }
 
     /* update meshes */
     if( m_downSegment != null )
@@ -442,6 +448,9 @@ class ProfileData implements IProfileData
 
   private void adjustBanklineEndpoints( final IProfil oldSegmentedProfile, final IProfil newSegmentedProfile )
   {
+    if( oldSegmentedProfile == null )
+      return;
+
     final IProfileRecord[] oldPoints = oldSegmentedProfile.getPoints();
     final IProfileRecord[] newPoints = newSegmentedProfile.getPoints();
 
