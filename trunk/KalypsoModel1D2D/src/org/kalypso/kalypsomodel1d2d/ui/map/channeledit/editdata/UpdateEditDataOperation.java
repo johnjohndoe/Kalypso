@@ -109,7 +109,7 @@ public class UpdateEditDataOperation implements ICoreRunnableWithProgress
     final IProfileData profileDown = segment.getProfileDown();
     final IProfileData profileUp = segment.getProfileUp();
 
-    return String.format( "%s#%s", profileDown.getId(), profileUp.getId() );
+    return String.format( "%s#%s", profileDown.getId(), profileUp.getId() ); //$NON-NLS-1$
   }
 
   private static Map<String, IProfileData> hashProfiles( final ChannelMesh data )

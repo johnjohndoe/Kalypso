@@ -80,6 +80,7 @@ import org.kalypso.kalypsomodel1d2d.sim.ProcessResult2DOperation;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -104,7 +105,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Importing external 2D results", 1 + m_files.length * 2 );
+    monitor.beginTask( Messages.getString("Import2DResultsOperation_0"), 1 + m_files.length * 2 ); //$NON-NLS-1$
 
     final File outputDir = FileUtilities.createNewTempDir( "resultImport2d" ); //$NON-NLS-1$
 
@@ -128,7 +129,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
     }
 
 
-    return m_stati.asMultiStatusOrOK( "Problem(s) during import", String.format( "%d file(s) imported", m_files.length ) );
+    return m_stati.asMultiStatusOrOK( Messages.getString("Import2DResultsOperation_1"), String.format( Messages.getString("Import2DResultsOperation_2"), m_files.length ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void importFiles( final IProgressMonitor monitor, final File outputDir, final ICalcUnitResultMeta calcMeta ) throws InvocationTargetException
@@ -138,7 +139,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
     for( final File file : m_files )
     {
       final String filename = file.getName();
-      monitor.subTask( String.format( "importing %s", filename ) );
+      monitor.subTask( String.format( Messages.getString("Import2DResultsOperation_3"), filename ) ); //$NON-NLS-1$
       try
       {
         final FileObject file2d = manager.resolveFile( file.toURI().toString() );
@@ -146,7 +147,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
       }
       catch( final FileSystemException e )
       {
-        m_stati.add( IStatus.ERROR, "Failed to import result file '%s'", e, filename );
+        m_stati.add( IStatus.ERROR, Messages.getString("Import2DResultsOperation_4"), e, filename ); //$NON-NLS-1$
       }
     }
   }
@@ -196,7 +197,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
 
     final IFeatureBindingCollection<IResultMeta> children = scenarioResultMeta.getChildren();
     final ICalcUnitResultMeta newMeta = children.addNew( ICalcUnitResultMeta.QNAME, calcUnitMetaName, ICalcUnitResultMeta.class );
-    final String description = String.format( "External .2d files imported from '%s'", calcUnitMetaName );
+    final String description = String.format( Messages.getString("Import2DResultsOperation_5"), calcUnitMetaName ); //$NON-NLS-1$
     newMeta.setDescription( description );
     newMeta.setName( calcUnitMetaName );
     newMeta.setPath( new Path( calcUnitMetaName ) );

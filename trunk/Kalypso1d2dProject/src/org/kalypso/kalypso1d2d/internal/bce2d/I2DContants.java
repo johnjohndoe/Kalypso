@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.internal.bce2d;
 
+import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
+
 /**
  * @author Gernot Belger
  */
@@ -47,5 +49,5 @@ public interface I2DContants
 {
   String EXTENSION_2D = "*.2d"; //$NON-NLS-1$
 
-  String STR_FILTERNAME_2D = "BCE-2D files";
+  String STR_FILTERNAME_2D = Messages.getString("I2DContants_0"); //$NON-NLS-1$
 }

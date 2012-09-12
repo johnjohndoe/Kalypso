@@ -7,17 +7,18 @@ import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.vfs.FileSystemManagerWrapper;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Building1D2DConverter;
@@ -56,7 +57,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Convert from GML to RMAKalypso format
- * 
+ *
  * @author kurzbach
  */
 public class PreRMAKalypso implements ISimulation
@@ -113,7 +114,7 @@ public class PreRMAKalypso implements ISimulation
     final SimulationMonitorAdaptor progressMonitor = new SimulationMonitorAdaptor( monitor );
     m_input = System.getProperty( "org.kalypso.service.wps.input" ); //$NON-NLS-1$
     IContainer scenarioFolder = null;
-    if( m_input == null || m_input.equals( "" ) || SERVER_INPUT_LOCAL.equals( m_input ) )
+    if( StringUtils.isEmpty( m_input ) || SERVER_INPUT_LOCAL.equals( m_input ) )
     {
       final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       scenarioFolder = caseDataProvider.getScenarioFolder();
@@ -236,7 +237,7 @@ public class PreRMAKalypso implements ISimulation
       if( controlModel.getRestart() )
       {
         URL restartPrefixURL = scenarioFolder.getLocationURI().toURL();
-        if( m_input != null && !m_input.equals( "" ) && !SERVER_INPUT_LOCAL.equals( m_input ) )
+        if( !StringUtils.isEmpty( m_input ) && !SERVER_INPUT_LOCAL.equals( m_input ) )
         {
           final URL restartFileUrl = (URL) inputProvider.getInputForID( INPUT_RESTART_FILE );
           ZipUtilities.unzip( restartFileUrl, tmpdir );
@@ -372,8 +373,7 @@ public class PreRMAKalypso implements ISimulation
     catch( final IOException e )
     {
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.14", e.getLocalizedMessage() ); //$NON-NLS-1$
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, ISimulation1D2DConstants.CODE_PRE, msg, e ) );
     }
   }
-
 }

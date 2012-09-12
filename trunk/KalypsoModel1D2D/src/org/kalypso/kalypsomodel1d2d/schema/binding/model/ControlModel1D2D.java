@@ -552,7 +552,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
       final URL context = workspace.getContext();
       final File file = new File( FileLocator.resolve( context ).getFile() );
       final String name = file.getName();
-      final String href = name + "#" + calUnit.getId();
+      final String href = name + "#" + calUnit.getId(); //$NON-NLS-1$
 
       setLink( ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT, href, calUnit.getFeatureType() );
     }

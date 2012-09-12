@@ -126,7 +126,7 @@ class ProfileAreaAdjuster
     final double diffArea = originalArea - areaNew;
     if( diffArea > 0.10 )
     {
-      final String s = String.format( "Schlauchgenerator: Station %.4f - Flächenausgleich nicht hinreichend genau: %f - %f", adjustingProfile.getStation(), originalArea, areaNew );
+      final String s = String.format( "Schlauchgenerator: Station %.4f - Flächenausgleich nicht hinreichend genau: %f - %f", adjustingProfile.getStation(), originalArea, areaNew ); //$NON-NLS-1$
       System.out.println( s );
     }
 

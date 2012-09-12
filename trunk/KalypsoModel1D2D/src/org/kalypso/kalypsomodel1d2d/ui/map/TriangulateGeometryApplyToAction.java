@@ -60,7 +60,7 @@ public class TriangulateGeometryApplyToAction extends Action implements IUpdatea
     m_data = data;
 
     setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridWidgetFace.9" ) ); //$NON-NLS-1$
-    setToolTipText( "Adds the triangulated elements to the 2D-mesh" );
+    setToolTipText( Messages.getString("TriangulateGeometryApplyToAction.0") ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.OK ) );

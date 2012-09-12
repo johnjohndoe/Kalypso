@@ -61,6 +61,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypso1d2d.internal.bce2d.I2DContants;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+import org.kalypso.ui.wizards.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -81,7 +82,7 @@ public class ImportResultAction extends Action
 
     m_modelProvider = modelProvider;
 
-    setToolTipText( "Import external result file(s)" );
+    setToolTipText( Messages.getString("ImportResultAction_0") ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.IMPORT_EXTERNAL_RESULT ) );

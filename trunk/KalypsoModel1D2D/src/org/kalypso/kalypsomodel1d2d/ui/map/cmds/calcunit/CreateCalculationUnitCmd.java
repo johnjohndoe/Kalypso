@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.Util;
@@ -155,7 +156,7 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
     m_calcUnitFeatureQName = calcUnitFeatureQName;
     m_model1d2d = model1d2d;
     m_calcUnitName = name;
-    m_calcUnitDescription = "";
+    m_calcUnitDescription = StringUtils.EMPTY;
     m_calculationUnitOrig = calcUnitToClone;
     initModelGroup();
   }

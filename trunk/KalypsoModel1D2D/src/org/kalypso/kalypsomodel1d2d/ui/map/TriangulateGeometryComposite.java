@@ -167,6 +167,6 @@ class TriangulateGeometryComposite extends Composite
     if( triangleExe != null && triangleExe.isFile() )
       return Status.OK_STATUS;
 
-    return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, "Triangle.exe not found. Using simple triangulation." );
+    return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString("TriangulateGeometryComposite.0") ); //$NON-NLS-1$
   }
 }

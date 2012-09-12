@@ -126,7 +126,7 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
       for( int i = 0; i < numRecords; i++ )
       {
         if( i % 100 == 0 )
-          monitor.subTask( String.format( "%d/%d", i + 1, numRecords ) );
+          monitor.subTask( String.format( "%d/%d", i + 1, numRecords ) ); //$NON-NLS-1$
 
         final ISHPGeometry shape = shapeFile.getShape( i );
         addPolygons( polygons, i, shape );
@@ -187,6 +187,6 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
     if( j == 0 )
       return Integer.toString( row );
 
-    return String.format( "%d_%d", row, j );
+    return String.format( "%d_%d", row, j ); //$NON-NLS-1$
   }
 }

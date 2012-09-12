@@ -147,7 +147,7 @@ public class PostRMAKalypso implements ISimulation
 
         resultEater.addResult( OUTPUT_RESULTS, unitFolder );
 
-        final File outScenarioResultMeta = new File( tmpdir, "scenarioResultMeta.gml" );
+        final File outScenarioResultMeta = new File( tmpdir, "scenarioResultMeta.gml" ); //$NON-NLS-1$
         GmlSerializer.serializeWorkspace( outScenarioResultMeta, scenarioResultMetaWorkspace, "UTF-8" ); //$NON-NLS-1$
         resultEater.addResult( OUTPUT_SCENARIO_RESULT_META, outScenarioResultMeta );
       }

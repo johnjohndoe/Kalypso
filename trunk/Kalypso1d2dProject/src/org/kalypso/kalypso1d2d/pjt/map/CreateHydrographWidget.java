@@ -65,7 +65,7 @@ public class CreateHydrographWidget extends AbstractCreateHydrographWidget
   @Override
   protected IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
   {
-    return HydrographUtils.createNewHydrographFeature( workspace, parentFeature, parentRelation, Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.1" ) );
+    return HydrographUtils.createNewHydrographFeature( workspace, parentFeature, parentRelation, Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

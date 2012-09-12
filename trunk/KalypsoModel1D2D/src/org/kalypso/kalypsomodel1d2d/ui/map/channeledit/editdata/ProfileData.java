@@ -406,7 +406,7 @@ class ProfileData implements IProfileData
   @Override
   public String toString( )
   {
-    return String.format( "%.4f", m_originalProfile.getStation() );
+    return String.format( "%.4f", m_originalProfile.getStation() ); //$NON-NLS-1$
   }
 
   @Override

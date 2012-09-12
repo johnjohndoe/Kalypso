@@ -80,7 +80,7 @@ public class ChannelEditData extends AbstractModelObject
 
   static final String STR_NO_BANK_THEMES = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.18" ); //$NON-NLS-1$
 
-  static final String STR_DIALOG_TITLE = "Flussschlauchgenerator";
+  static final String STR_DIALOG_TITLE = Messages.getString("ChannelEditData.0"); //$NON-NLS-1$
 
   static final String PROPERTY_PROFILE_THEME_INPUT = "profileThemeInput"; //$NON-NLS-1$
 
@@ -127,7 +127,7 @@ public class ChannelEditData extends AbstractModelObject
   /* hack: pseudo for triggering a map repaint: works, because any property change triggers a map repaint */
   static final String PROPERTY_MAP_REPAINT = "pseudoPropertyMapRepaint"; //$NON-NLS-1$
 
-  private static final Object[] EMPTY_PROFILE_SELECTION = new String[] { "<no profiles selected in map>" };
+  private static final Object[] EMPTY_PROFILE_SELECTION = new String[] { Messages.getString("ChannelEditData.1") }; //$NON-NLS-1$
 
   private final Object[] EMPTY_PROFILE_THEME_INPUT = new Object[] { STR_NO_PROFILE_THEMES };
 
@@ -641,7 +641,7 @@ public class ChannelEditData extends AbstractModelObject
 
   protected boolean askForUserEdits( )
   {
-    return MessageDialog.openQuestion( m_shell, STR_DIALOG_TITLE, "Vom Benutzer editierte Daten gehen verloren. Fortfahren?" );
+    return MessageDialog.openQuestion( m_shell, STR_DIALOG_TITLE, Messages.getString("ChannelEditData.2") ); //$NON-NLS-1$
   }
 
   void setEditData( final ChannelMesh newData, final IProfileData oldActiveProfile, final IProfileData newActiveProfile )

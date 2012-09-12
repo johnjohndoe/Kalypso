@@ -50,6 +50,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.deegree.framework.util.Pair;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
@@ -113,7 +114,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
 
   public ShowEditWindDataWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { NativeWindDataModelWrapper.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, IWindDataModelSystem.SIM_BASE_F_WIND_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL }, IFE1D2DNode.PROPERTY_POINT ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.1" ), new SelectFeatureWidget( StringUtils.EMPTY, StringUtils.EMPTY, new QName[] { NativeWindDataModelWrapper.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, IWindDataModelSystem.SIM_BASE_F_WIND_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL }, IFE1D2DNode.PROPERTY_POINT ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.2" ) );//$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );

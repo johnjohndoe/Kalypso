@@ -131,7 +131,7 @@ public class Building1D2DConverter
     final int totalCount = values.size();
 
     //    formatter.format( "DLI      %7d% 7d %7d%n", buildingID, qCount, totalCount ); //$NON-NLS-1$
-    formatter.format( "DLI      %7d% %s%n", buildingID, qSymmetry == true ? "t" : "f" ); //$NON-NLS-1$
+    formatter.format( "DLI      %7d% %s%n", buildingID, qSymmetry == true ? "t" : "f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final int qComp = TupleResultUtilities.indexOfComponent( values, BuildingParameters.COMPONENT_DISCHARGE );
     final int howComp = TupleResultUtilities.indexOfComponent( values, BuildingParameters.COMPONENT_WATERLEVEL_UPSTREAM );

@@ -409,7 +409,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 
     if( hydroPositionFromElement == null || m_hydrographCollection == null )
     {
-      m_errMsg += Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.4" );// "";
+      m_errMsg += Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.4" );// ""; //$NON-NLS-1$
       return null;
     }
     final CommandableWorkspace workspace = m_hydroTheme.getWorkspace();
@@ -420,7 +420,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 
     if( hydro == null )
     {
-      m_errMsg += "cannot create a new hydrograph";
+      m_errMsg += "failed to create new hydrograph";
       return null;
     }
 
