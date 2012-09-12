@@ -40,10 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.widget;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TableViewer;
@@ -51,22 +47,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDecimalHandler;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDoubleHandler;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiStringHandler;
-import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
-import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -90,7 +79,7 @@ public class StatisticResultComposite extends Composite
 
   private void createControl( final IRasterizationControlModel model )
   {
-    final IComponentUiHandlerProvider provider = createComponentProvider();
+    final IComponentUiHandlerProvider provider = new StatisticResultComponentProvider();
 
     m_viewer = new DefaultTableViewer( this, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
 
@@ -114,95 +103,6 @@ public class StatisticResultComposite extends Composite
     final ExcelTableCursor cursor = new ExcelTableCursor( m_viewer, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
     cursor.setVisible( true );
     cursor.setEnabled( true );
-  }
-
-  private IComponentUiHandlerProvider createComponentProvider( )
-  {
-    return new IComponentUiHandlerProvider()
-    {
-      @Override
-      public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
-      {
-        final Map<Integer, IComponentUiHandler> myMap = new LinkedHashMap<Integer, IComponentUiHandler>();
-
-        final IComponent[] components = tupleResult.getComponents();
-
-        final String NUMBER_FORMAT = "%,.02f "; //$NON-NLS-1$
-
-        int count = 0;
-        for( final IComponent component : components )
-        {
-          final String compName = component.getName();
-          final String[] compNameStrings = compName.split( "_" ); //$NON-NLS-1$
-
-          final String phenName = component.getPhenomenon().getName();
-
-          // Total Damage
-          if( phenName.equals( "TotalDamage" ) )//$NON-NLS-1$
-          {
-            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.1", compNameStrings[1] ); //$NON-NLS-1$
-
-            final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
-              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, NUMBER_FORMAT
-                  + Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.9" ), "", "%.00f" ) ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-            count++;
-          }
-          // Flooded Area
-          if( phenName.equals( "FloodedArea" ) )//$NON-NLS-1$
-          {
-            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.2", compNameStrings[1] ); //$NON-NLS-1$
-
-            final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
-              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, NUMBER_FORMAT
-                  + Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.10" ), "", "%.00f" ) ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-            count++;
-          }
-          // Averaged Damage
-          if( phenName.equals( "AveragedDamage" ) )//$NON-NLS-1$
-          {
-            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.3", compNameStrings[1] ); //$NON-NLS-1$
-
-            final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
-              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, NUMBER_FORMAT
-                  + Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.11" ), "", "%.02f" ) ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-            count++;
-          }
-          if( phenName.equals( "AnnualValue" ) )//$NON-NLS-1$
-          {
-            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.4" ); //$NON-NLS-1$
-
-            final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( XmlTypes.XS_DOUBLE ) )
-              myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, headerName, SWT.RIGHT, 190, 10, NUMBER_FORMAT
-                  + Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.12" ), "", "%.02f" ) ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-            count++;
-          }
-          if( phenName.equals( "Landuse" ) )//$NON-NLS-1$
-          {
-            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.5" ); //$NON-NLS-1$
-
-            final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( XmlTypes.XS_STRING ) )
-              myMap.put( count, new ComponentUiStringHandler( count, false, true, false, headerName, SWT.NONE, 120, 10, "%s", "", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            count++;
-          }
-          if( phenName.equals( "Group" ) )//$NON-NLS-1$
-          {
-            final String headerName = "Group"; //$NON-NLS-1$
-
-            final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( XmlTypes.XS_STRING ) )
-              myMap.put( count, new ComponentUiStringHandler( count, false, true, false, headerName, SWT.NONE, 120, 10, "%s", "", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            count++;
-          }
-        }
-
-        return myMap;
-      }
-    };
   }
 
   public TableViewer getTableViewer( )
