@@ -5,27 +5,18 @@
     <catalog class="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D" id="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D" />
   </extension>
   <extension point="org.kalypso.deegree.functionProperty">
-    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometryFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"
-      name="FE1D2DEdgeTypeGeometry" />
-    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry" id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
-      name="FE1D2D_2DElementTypeGeometry" />
-    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeElevationAvailabilityInfoFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeElevationAvailabilityInfoFunction"
-      name="NodeElevationAvailabilityInfoFunction" />
-    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry" id="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"
-      name="Element1DTypeGeometry" />
-    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction"
-      id="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction" name="AbstractJunctionGeometryPropertyFunction" />
-    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.ControlModelNamePropertyFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.ControlModelNamePropertyFunction"
-      name="ControlModelNamePropertyFunction" />
-    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
-      name="NodeResultVelocityFunction" />
-    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
-      name="NodeResultExtFunction" />
-    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction"
-      name="NodeResultDepthFunction" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometryFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"/>
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry" id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"/>
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeElevationAvailabilityInfoFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeElevationAvailabilityInfoFunction"/>
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry" id="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"/>
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.ControlModelNamePropertyFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.ControlModelNamePropertyFunction" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"/>
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction"/>
   </extension>
 
-  <extension id="org.kalypso.core.adapters" name="Kalypso Model 1D 2D Adapter Factory" point="org.eclipse.core.runtime.adapters">
+  <extension id="org.kalypso.core.adapters" point="org.eclipse.core.runtime.adapters">
     <factory adaptableType="org.kalypsodeegree.model.feature.Feature" class="org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoModel1D2DFeatureFactory">
       <adapter type="org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator" />
     </factory>
@@ -717,7 +708,7 @@
       featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl}ControlModelGroup" />
   </extension>
 
-  <extension name="1d2dChartCommands" point="org.eclipse.ui.commands">
+  <extension point="org.eclipse.ui.commands">
     <command categoryId="org.kalypso.chart.ui.commands.category" id="org.kalypso.model1d2d.removeBuildingParameter" name="%org.kalypso.model1d2d.removeBuildingParameter.name" description="%org.kalypso.model1d2d.removeBuildingParameter.description" />
     <command categoryId="org.kalypso.chart.ui.commands.category" id="org.kalypso.model1d2d.saveBuildingParameter"   name="%org.kalypso.model1d2d.saveBuildingParameter.name" description="%org.kalypso.model1d2d.saveBuildingParameter.description" />
   </extension>
