@@ -53,13 +53,13 @@ import org.kalypso.ui.views.map.MapView;
 /**
  * @author Gernot Belger
  */
-public class SetWidgetAction extends Action
+class SetWidgetAction extends Action
 {
   private final IWidget m_widget;
 
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
-  public SetWidgetAction( final CreateChannelData data, final IWidget widget )
+  public SetWidgetAction( final ChannelEditData data, final IWidget widget )
   {
     super( StringUtils.EMPTY, Action.AS_CHECK_BOX );
 

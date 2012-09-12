@@ -42,9 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata;
 
 import java.util.Comparator;
 
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
-
 /**
  * Compares {@link ProfileData} objects by its original profile's station.
  *
@@ -52,19 +49,12 @@ import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
  */
 class ProfileDataStationComparator implements Comparator<IProfileData>
 {
-  private final ProfileFeatureStationComparator m_profileComparator;
-
-  public ProfileDataStationComparator( final boolean isDirectionUpstreams )
-  {
-    m_profileComparator = new ProfileFeatureStationComparator( isDirectionUpstreams );
-  }
-
   @Override
   public int compare( final IProfileData o1, final IProfileData o2 )
   {
-    final IProfileFeature p1 = o1.getFeature();
-    final IProfileFeature p2 = o2.getFeature();
+    final double p1 = o1.getOriginalProfile().getStation();
+    final double p2 = o2.getOriginalProfile().getStation();
 
-    return m_profileComparator.compare( p1, p2 );
+    return Double.compare( p1, p2 );
   }
 }

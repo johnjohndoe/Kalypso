@@ -66,9 +66,9 @@ import org.kalypso.ogc.gml.widgets.IWidget;
  * @author Gernot Belger
  * @author Thomas Jung
  */
-public class CreateBankOptionsSection extends Composite
+class BankOptionsSection extends Composite
 {
-  public CreateBankOptionsSection( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding, final int spinnerWidth )
+  public BankOptionsSection( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding, final int spinnerWidth )
   {
     super( parent, SWT.NONE );
 
@@ -79,7 +79,7 @@ public class CreateBankOptionsSection extends Composite
     createControls( toolkit, this, data, binding, spinnerWidth );
   }
 
-  private void createControls( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding, final int spinnerWidth )
+  private void createControls( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding, final int spinnerWidth )
   {
     final String labelDown = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.4" ); //$NON-NLS-1$
     final String tooltipDown = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.5" ); //$NON-NLS-1$
@@ -90,8 +90,8 @@ public class CreateBankOptionsSection extends Composite
     final Color colorCyan = new Color( parent.getDisplay(), 128, 255, 255 );
     final Color colorMagenta = new Color( parent.getDisplay(), 255, 128, 255 );
 
-    createNumberOfSegmentsSpinner( toolkit, parent, data, binding, spinnerWidth, labelDown, tooltipDown, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_ENABLED_DOWN, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_DOWN, colorCyan );
-    createNumberOfSegmentsSpinner( toolkit, parent, data, binding, spinnerWidth, labelUp, tooltipUp, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_ENABLED_UP, CreateChannelData.PROPERTY_NUM_BANK_SEGMENTS_UP, colorMagenta );
+    createNumberOfSegmentsSpinner( toolkit, parent, data, binding, spinnerWidth, labelDown, tooltipDown, ChannelEditData.PROPERTY_NUM_BANK_SEGMENTS_ENABLED_DOWN, ChannelEditData.PROPERTY_NUM_BANK_SEGMENTS_DOWN, colorCyan );
+    createNumberOfSegmentsSpinner( toolkit, parent, data, binding, spinnerWidth, labelUp, tooltipUp, ChannelEditData.PROPERTY_NUM_BANK_SEGMENTS_ENABLED_UP, ChannelEditData.PROPERTY_NUM_BANK_SEGMENTS_UP, colorMagenta );
 
     createBankEditToggle( toolkit, parent, data, binding );
 
@@ -106,7 +106,7 @@ public class CreateBankOptionsSection extends Composite
     } );
   }
 
-  private void createNumberOfSegmentsSpinner( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding, final int spinnerWidth, final String label, final String tooltip, final String enabledProperty, final String numberProperty, final Color background )
+  private void createNumberOfSegmentsSpinner( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding, final int spinnerWidth, final String label, final String tooltip, final String enabledProperty, final String numberProperty, final Color background )
   {
     final Label labelNumIntersSegment = toolkit.createLabel( parent, label );
     labelNumIntersSegment.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -140,7 +140,7 @@ public class CreateBankOptionsSection extends Composite
     binding.bindValue( targetNumSegmentsValue, modelNumProfileSegments );
   }
 
-  private void createBankEditToggle( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding )
+  private void createBankEditToggle( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding )
   {
     /* edit button for bankline 1 */
     final Label labelBankline = toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.8" ) ); //$NON-NLS-1$
@@ -153,7 +153,7 @@ public class CreateBankOptionsSection extends Composite
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     editBankWidgetAction.setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.EDIT ) );
 
-    final Button buttonEditBank = ChannelEditUtil.createWidgetSelectionButton( toolkit, parent, data, binding, editBankWidgetAction, CreateChannelData.PROPERTY_PROFILE_EDITING_ENABLED );
+    final Button buttonEditBank = ChannelEditUtil.createWidgetSelectionButton( toolkit, parent, data, binding, editBankWidgetAction, ChannelEditData.PROPERTY_PROFILE_EDITING_ENABLED );
     buttonEditBank.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
   }
 }

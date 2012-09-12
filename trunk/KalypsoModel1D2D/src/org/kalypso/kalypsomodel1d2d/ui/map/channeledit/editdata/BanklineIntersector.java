@@ -47,7 +47,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.transformation.transformer.GeoTransformerException;
@@ -62,6 +62,8 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
+ * Intersects profiles with banklines and creates the segmented bank line.
+ *
  * @author Gernot Belger
  */
 class BanklineIntersector
@@ -72,16 +74,16 @@ class BanklineIntersector
 
   private final BankData m_bankData;
 
-  private final int m_numberOfBankSegments;
+  private final int m_numberOfBankPoints;
 
   private final ISegmentData m_segment;
 
-  public BanklineIntersector( final ISegmentData segment, final Map<GM_Curve, SIDE> banks, final SIDE side, final int numberOfBankSegments )
+  public BanklineIntersector( final ISegmentData segment, final Map<GM_Curve, SIDE> banks, final SIDE side, final int numberOfBankPoints )
   {
     m_segment = segment;
     m_banks = banks;
     m_side = side;
-    m_numberOfBankSegments = numberOfBankSegments;
+    m_numberOfBankPoints = numberOfBankPoints;
 
     m_bankData = calculateBanklines();
   }
@@ -99,17 +101,17 @@ class BanklineIntersector
 
       return intersectBankline( downProfile, upProfile );
     }
-    catch( final Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       return null;
     }
   }
 
-  private BankData intersectBankline( final IProfileData downProfile, final IProfileData upProfile )
+  private BankData intersectBankline( final IProfileData downProfile, final IProfileData upProfile ) throws GM_Exception
   {
-    final LineString upProfileLine = ChannelEditUtil.convertProfilesToLineStrings( upProfile.getFeature() );
-    final LineString downProfileLine = ChannelEditUtil.convertProfilesToLineStrings( downProfile.getFeature() );
+    final LineString upProfileLine = convertProfilesToLineStrings( upProfile );
+    final LineString downProfileLine = convertProfilesToLineStrings( downProfile );
 
     final Pair<LineString, Pair<Point, Point>> intersection = findBankForProfiles( downProfileLine, upProfileLine );
 
@@ -136,9 +138,21 @@ class BanklineIntersector
     /* now make sure, we have z everywhere */
     final LineString croppedBankLineWithZ = JTSUtilities.interpolateMissingZ( croppedBankLineWithZEndPoints );
 
-    final LineString segmentedGeometry = ChannelEditUtil.intersectLineString( croppedBankLineWithZ, m_numberOfBankSegments );
+    final LineString segmentedGeometry = ChannelEditUtil.intersectLineString( croppedBankLineWithZ, m_numberOfBankPoints );
 
     return new BankData( m_segment, bankLine, croppedBankLine, segmentedGeometry, false );
+  }
+
+  /**
+   * converts a WSPM profile into an linestring
+   *
+   * @param profile
+   *          Input profile to be converted.
+   */
+  private static LineString convertProfilesToLineStrings( final IProfileData upProfile ) throws GM_Exception
+  {
+      final GM_Curve profCurve = upProfile.getOriginalProfileGeometry();
+      return (LineString)JTSAdapter.export( profCurve );
   }
 
   private LineString replaceEndpointZ( final LineString bankLine, final double startZ, final double endZ )
@@ -169,7 +183,7 @@ class BanklineIntersector
       if( !Double.isNaN( intersectionZ ) )
         return intersectionZ;
 
-      final IProfil profilOrg = profileData.getProfilOrg();
+      final IProfil profilOrg = profileData.getOriginalProfile();
 
       final LengthIndexedLine bankIndex = new LengthIndexedLine( bankLine );
       final double indexOnBankLine = bankIndex.project( intersection.getCoordinate() );

@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
- * Represants a bank as part of a segment.
+ * Represents a bank as part of a segment.
  *
  * @author Gernot Belger
  */
@@ -56,25 +56,25 @@ class BankData implements IBankData
   private final LineString m_croppedOriginalGeometry;
 
   /* Segmented bank part with numberOfBankIntersections number of parts. Edited by the user */
-  private final LineString m_segmentedGeometry;
+  private final LineString m_workingGeometry;
 
   private final boolean m_isUserChanged;
 
   private final ISegmentData m_segment;
 
-  public BankData( final ISegmentData segment, final LineString bankLine, final LineString croppedBankLine, final LineString segmentedGeometry, final boolean isUserChanged )
+  public BankData( final ISegmentData segment, final LineString bankLine, final LineString croppedBankLine, final LineString workingGeometry, final boolean isUserChanged )
   {
     m_originalGeometry = bankLine;
     m_croppedOriginalGeometry = croppedBankLine;
-    m_segmentedGeometry = segmentedGeometry;
+    m_workingGeometry = workingGeometry;
     m_isUserChanged = isUserChanged;
     m_segment = segment;
   }
 
   @Override
-  public LineString getSegmented( )
+  public LineString getWorkingGeometry( )
   {
-    return m_segmentedGeometry;
+    return m_workingGeometry;
   }
 
   public boolean isUserChanged( )

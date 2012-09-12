@@ -53,7 +53,7 @@ import java.awt.event.MouseEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -68,7 +68,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  *
  * @author Thomas Jung
  */
-public class DrawBanklineWidget extends AbstractWidget
+class DrawBanklineWidget extends AbstractWidget
 {
   private LineGeometryBuilder m_lineBuilder = null;
 
@@ -83,7 +83,7 @@ public class DrawBanklineWidget extends AbstractWidget
 
   private final ToolTipRenderer m_warningRenderer = new ToolTipRenderer();
 
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
   private final SIDE m_side;
 
@@ -91,7 +91,7 @@ public class DrawBanklineWidget extends AbstractWidget
 
   private LineGeometryEditor m_lineEditor = null;
 
-  public DrawBanklineWidget( final CreateChannelData channeldata, final SIDE side )
+  public DrawBanklineWidget( final ChannelEditData channeldata, final SIDE side )
   {
     super( StringUtils.EMPTY, StringUtils.EMPTY );
 

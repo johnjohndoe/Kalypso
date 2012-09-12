@@ -37,7 +37,7 @@ public interface ISegmentData
 
   boolean hasBanks( );
 
-  int getNumberBankSegments( );
+  int getNumberBankPoints( );
 
   IProfileData getProfileUp( );
 
@@ -45,7 +45,7 @@ public interface ISegmentData
 
   boolean isBanksUserChanged( );
 
-  void updateNumberOfSegments( int segments );
+  void updateNumberOfBankPoints( int numberOfBankPoints );
 
-  void updateSegmentedGeometry( IBankData bank, LineString currentLine );
+  void updateWorkingGeometry( IBankData bank, LineString newWorkingGeometry );
 }

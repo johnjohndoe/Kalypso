@@ -46,7 +46,7 @@ import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
 import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesh;
 import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesher;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -117,23 +117,23 @@ class SegmentData implements ISegmentData
 
     if( m_upProfileData != null )
     {
-      final LineString segmentedProfileUp = m_upProfileData.getSegmentedGeometry();
+      final LineString segmentedProfileUp = m_upProfileData.getWorkingGeometry();
       if( segmentedProfileUp != null )
         boxes[0] = segmentedProfileUp.getEnvelopeInternal();
     }
 
     if( m_downProfileData != null )
     {
-      final LineString segmentedProfileDown = m_downProfileData.getSegmentedGeometry();
+      final LineString segmentedProfileDown = m_downProfileData.getWorkingGeometry();
       if( segmentedProfileDown != null )
         boxes[1] = segmentedProfileDown.getEnvelopeInternal();
     }
 
     if( m_leftBank != null )
-      boxes[2] = m_leftBank.getSegmented().getEnvelopeInternal();
+      boxes[2] = m_leftBank.getWorkingGeometry().getEnvelopeInternal();
 
     if( m_rightBank != null )
-      boxes[3] = m_rightBank.getSegmented().getEnvelopeInternal();
+      boxes[3] = m_rightBank.getWorkingGeometry().getEnvelopeInternal();
 
     final Envelope fullExtend = new Envelope();
     for( final Envelope box : boxes )
@@ -196,10 +196,10 @@ class SegmentData implements ISegmentData
     final BankData bankLeft = getBankLeft();
     final BankData bankRight = getBankRight();
 
-    final LineString topLine = upProfile.getSegmentedGeometry();
-    final LineString leftLine = bankLeft == null ? null : bankLeft.getSegmented();
-    final LineString bottomLine = downProfile.getSegmentedGeometry();
-    final LineString rightLine = bankRight == null ? null : bankRight.getSegmented();
+    final LineString topLine = upProfile.getWorkingGeometry();
+    final LineString leftLine = bankLeft == null ? null : bankLeft.getWorkingGeometry();
+    final LineString bottomLine = downProfile.getWorkingGeometry();
+    final LineString rightLine = bankRight == null ? null : bankRight.getWorkingGeometry();
 
     if( Objects.isNull( leftLine, topLine, rightLine, bottomLine ) )
       return null;
@@ -243,7 +243,7 @@ class SegmentData implements ISegmentData
   }
 
   @Override
-  public int getNumberBankSegments( )
+  public int getNumberBankPoints( )
   {
     return m_numBankSegments;
   }
@@ -255,31 +255,30 @@ class SegmentData implements ISegmentData
   }
 
   @Override
-  public void updateNumberOfSegments( final int segments )
+  public void updateNumberOfBankPoints( final int numberPoints )
   {
-    m_numBankSegments = segments;
+    m_numBankSegments = numberPoints;
 
-    m_leftBank = updateNumberOfSegments( m_leftBank, segments );
-    m_rightBank = updateNumberOfSegments( m_rightBank, segments );
+    m_leftBank = updateNumberOfPoints( m_leftBank, numberPoints );
+    m_rightBank = updateNumberOfPoints( m_rightBank, numberPoints );
 
     updateMesh();
   }
 
-  // FIXME: instead use current segmented line and change number of segments, so user edits do not get lost
-  private BankData updateNumberOfSegments( final BankData bank, final int segments )
+  private BankData updateNumberOfPoints( final BankData bank, final int numberOfBankPoints )
   {
     final LineString originalGeometry = bank.getOriginalGeometry();
     final LineString croppedGeometry = bank.getCroppedOriginalGeometry();
 
-    final LineString oldSegmentedGeometry = bank.getSegmented();
+    final LineString oldWorkingGeometry = bank.getWorkingGeometry();
 
-    final LineString segmentedGeometry = ChannelEditUtil.intersectLineString( oldSegmentedGeometry, segments );
+    final LineString workingGeometry = ChannelEditUtil.intersectLineString( oldWorkingGeometry, numberOfBankPoints );
 
-    return new BankData( this, originalGeometry, croppedGeometry, segmentedGeometry, bank.isUserChanged() );
+    return new BankData( this, originalGeometry, croppedGeometry, workingGeometry, bank.isUserChanged() );
   }
 
   @Override
-  public void updateSegmentedGeometry( final IBankData bank, final LineString newSegmentedLine )
+  public void updateWorkingGeometry( final IBankData bank, final LineString newSegmentedLine )
   {
     Assert.isTrue( bank == m_leftBank || bank == m_rightBank );
 
@@ -313,7 +312,7 @@ class SegmentData implements ISegmentData
     final LineString originalGeometry = bank.getOriginalGeometry();
     final LineString croppedGeometry = bank.getCroppedOriginalGeometry();
 
-    final LineString segmentedLine = bank.getSegmented();
+    final LineString segmentedLine = bank.getWorkingGeometry();
     final LineString newSegmentedLine = updateBankEndpoint( segmentedLine, oldEndpointLocation, newEndpointLocation );
 
     return new BankData( this, originalGeometry, croppedGeometry, newSegmentedLine, true );

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
+package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.awt.geom.Point2D;
 
@@ -47,7 +47,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -71,13 +70,13 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 /**
  * @author kimwerner, Thomas Jung
  */
-public class ProfilOverlayLayer extends PointsLineLayer
+class ProfilOverlayLayer extends PointsLineLayer
 {
-  public static String LAYER_OVERLAY = "org.kalypso.model.wspm.tuhh.ui.chart.overlay.LAYER_OVERLAY"; //$NON-NLS-1$
+  static String LAYER_OVERLAY = "org.kalypso.model.wspm.tuhh.ui.chart.overlay.LAYER_OVERLAY"; //$NON-NLS-1$
 
-  public static String LAYER_ID = "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay"; //$NON-NLS-1$
+  static String LAYER_ID = "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay"; //$NON-NLS-1$
 
-  private CreateChannelData m_data;
+  private ChannelEditData m_data;
 
   final private RGB COLOR_ALLOW = new RGB( 0, 255, 0 );
 
@@ -135,7 +134,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     final Point2D curserPoint = ProfilLayerUtils.toNumeric( getCoordinateMapper(), curserPos );
 
-    final IProfil profile = m_data.getActiveProfile().getProfilOrg();
+    final IProfil profile = m_data.getActiveProfile().getOriginalProfile();
     final IProfileRecord profilePoint = ProfileVisitors.findNearestPoint( profile, curserPoint.getX() );
     final IProfileRecord fePoint = ProfileVisitors.findNearestPoint( getProfil(), curserPoint.getX() );
 
@@ -199,8 +198,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
     final Integer index = (Integer)dragStartData.getData();
 
     final IProfileData activeProfile = m_data.getActiveProfile();
-    final IProfil origProfil = activeProfile.getProfilOrg();
-    final IProfil segmentedProfile = activeProfile.getProfIntersProfile();
+    final IProfil origProfil = activeProfile.getOriginalProfile();
+    final IProfil segmentedProfile = activeProfile.getWorkingProfile();
 
     /* data and my state should be the same, else something is wrong */
     final IProfil profilInternal = getProfil();
@@ -232,10 +231,10 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
       if( newSegmentedProfile != null )
       {
-        activeProfile.updateSegmentedProfile( newSegmentedProfile );
+        activeProfile.updateWorkingProfile( newSegmentedProfile );
 
         // REMARK: the set segmented profile may have been further adjusted, so we need to get it from the data
-        final IProfil newAdjustedSegmentedProfile = activeProfile.getProfIntersProfile();
+        final IProfil newAdjustedSegmentedProfile = activeProfile.getWorkingProfile();
 
         setProfile( newAdjustedSegmentedProfile, m_data );
       }
@@ -322,7 +321,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     }
   }
 
-  public void setProfile( final IProfil profile, final CreateChannelData data )
+  public void setProfile( final IProfil profile, final ChannelEditData data )
   {
     super.setProfil( profile );
 

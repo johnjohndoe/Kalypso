@@ -69,9 +69,9 @@ import org.kalypso.ogc.gml.widgets.IWidget;
  *
  * @author Gernot Belger
  */
-public class CreateChannelProfileSelection extends Composite
+class ProfileSelectionSection extends Composite
 {
-  public CreateChannelProfileSelection( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding, final int spinnerWidth )
+  public ProfileSelectionSection( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding, final int spinnerWidth )
   {
     super( parent, SWT.NONE );
 
@@ -91,7 +91,7 @@ public class CreateChannelProfileSelection extends Composite
     createSegmentSpinner( toolkit, this, data, binding, spinnerWidth );
   }
 
-  private Control createThemeCombo( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding )
+  private Control createThemeCombo( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding )
   {
     final ComboViewer themeChooser = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     toolkit.adapt( themeChooser.getControl(), true, false );
@@ -101,21 +101,21 @@ public class CreateChannelProfileSelection extends Composite
 
     /* Binding */
     final IObservableValue targetInput = ViewersObservables.observeInput( themeChooser );
-    final IObservableValue modelInput = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_PROFILE_THEME_INPUT );
+    final IObservableValue modelInput = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_PROFILE_THEME_INPUT );
     binding.bindValue( targetInput, modelInput );
 
     final IObservableValue targetSelection = ViewersObservables.observeSinglePostSelection( themeChooser );
-    final IObservableValue modelSelection = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_PROFILE_THEME_SELECTED );
+    final IObservableValue modelSelection = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_PROFILE_THEME_SELECTED );
     binding.bindValue( targetSelection, modelSelection );
 
     final IObservableValue targetEnablement = SWTObservables.observeEnabled( themeChooser.getCombo() );
-    final IObservableValue modelEnablement = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_PROFILE_THEME_SELECTION_ENABLED );
+    final IObservableValue modelEnablement = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_PROFILE_THEME_SELECTION_ENABLED );
     binding.bindValue( targetEnablement, modelEnablement );
 
     return themeChooser.getControl();
   }
 
-  private Control createProfileSelectionWidgetButton( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding )
+  private Control createProfileSelectionWidgetButton( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding )
   {
     final IWidget selectProfileWidget = new SelectionWidget( StringUtils.EMPTY, StringUtils.EMPTY, new ProfileSelectorFunction( data ) );
 
@@ -124,10 +124,10 @@ public class CreateChannelProfileSelection extends Composite
     setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
     selectProfilesWidgetAction.setImageDescriptor( KalypsoModel1D2DPlugin.getImageProvider().getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.SELECT ) );
 
-    return ChannelEditUtil.createWidgetSelectionButton( toolkit, parent, data, binding, selectProfilesWidgetAction, CreateChannelData.PROPERTY_SELECT_PROFILE_WIDGET_ENABLED );
+    return ChannelEditUtil.createWidgetSelectionButton( toolkit, parent, data, binding, selectProfilesWidgetAction, ChannelEditData.PROPERTY_SELECT_PROFILE_WIDGET_ENABLED );
   }
 
-  private void createSegmentSpinner( final FormToolkit toolkit, final Composite parent, final CreateChannelData data, final DatabindingForm binding, final int spinnerWidth )
+  private void createSegmentSpinner( final FormToolkit toolkit, final Composite parent, final ChannelEditData data, final DatabindingForm binding, final int spinnerWidth )
   {
     final Label spinnerLabel = toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.36" ) ); //$NON-NLS-1$
     spinnerLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -143,7 +143,7 @@ public class CreateChannelProfileSelection extends Composite
     spinNumProfIntersections.setValues( 1, 4, 99, 0, 1, 10 );
 
     final ISWTObservableValue targetNumProfileSegments = SWTObservables.observeSelection( spinNumProfIntersections );
-    final IObservableValue modelNumProfileSegments = BeansObservables.observeValue( data, CreateChannelData.PROPERTY_NUM_PROFILE_SEGMENTS );
+    final IObservableValue modelNumProfileSegments = BeansObservables.observeValue( data, ChannelEditData.PROPERTY_NUM_PROFILE_SEGMENTS );
     binding.bindValue( targetNumProfileSegments, modelNumProfileSegments );
   }
 }

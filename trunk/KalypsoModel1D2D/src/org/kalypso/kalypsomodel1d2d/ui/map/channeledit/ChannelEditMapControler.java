@@ -43,11 +43,11 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.deegree.model.spatialschema.GeometryException;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -57,11 +57,11 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  *
  * @author Gernot Belger
  */
-class CreateChannelMapControler implements PropertyChangeListener
+class ChannelEditMapControler implements PropertyChangeListener
 {
-  private final CreateMainChannelWidget m_widget;
+  private final ChannelEditWidget m_widget;
 
-  public CreateChannelMapControler( final CreateMainChannelWidget widget )
+  public ChannelEditMapControler( final ChannelEditWidget widget )
   {
     m_widget = widget;
   }
@@ -69,15 +69,15 @@ class CreateChannelMapControler implements PropertyChangeListener
   @Override
   public void propertyChange( final PropertyChangeEvent evt )
   {
-    final CreateChannelData data = (CreateChannelData)evt.getSource();
+    final ChannelEditData data = (ChannelEditData)evt.getSource();
 
     final String propertyName = evt.getPropertyName();
 
     switch( propertyName )
     {
     /* auto zoom, if active profile changes (or auto zoom changes to true ) */
-      case CreateChannelData.PROPERTY_ACTIVE_PROFILE:
-      case CreateChannelData.PROPERTY_PROFILE_AUTO_ZOOM:
+      case ChannelEditData.PROPERTY_ACTIVE_PROFILE:
+      case ChannelEditData.PROPERTY_PROFILE_AUTO_ZOOM:
         jumpToActiveProfile( data );
         break;
 
@@ -89,7 +89,7 @@ class CreateChannelMapControler implements PropertyChangeListener
     m_widget.repaintMap();
   }
 
-  private void jumpToActiveProfile( final CreateChannelData data )
+  private void jumpToActiveProfile( final ChannelEditData data )
   {
     if( !data.getProfileAutoZoom() )
       return;
@@ -108,14 +108,14 @@ class CreateChannelMapControler implements PropertyChangeListener
 
     try
     {
-      final GM_Envelope mapExtent = activeProfile.getSegmentMapExtent( modell.getCoordinatesSystem() );
+      final GM_Envelope mapExtent = activeProfile.getMapExtent( modell.getCoordinatesSystem() );
       if( mapExtent == null )
         return;
 
       final GM_Envelope scaledEnvelope = GeometryUtilities.scaleEnvelope( mapExtent, 1.20 );
       panel.setBoundingBox( scaledEnvelope );
     }
-    catch( final GeometryException e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }

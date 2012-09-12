@@ -16,14 +16,13 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
+package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -35,16 +34,16 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author Gernot Belger
  */
-public class ProfileOverlayMovePointOperation
+class ProfileOverlayMovePointOperation
 {
   private final IProfil m_originalProfil;
 
-  private final IProfil m_segmentedProfile;
+  private final IProfil m_workingProfile;
 
-  public ProfileOverlayMovePointOperation( final IProfil originalProfil, final IProfil segmentedProfile )
+  public ProfileOverlayMovePointOperation( final IProfil originalProfil, final IProfil workingProfile )
   {
     m_originalProfil = originalProfil;
-    m_segmentedProfile = segmentedProfile;
+    m_workingProfile = workingProfile;
   }
 
   public IProfil moveRecord( final IProfileRecord recordToChange, final double destinationWidth ) throws GeoTransformerException
@@ -71,12 +70,12 @@ public class ProfileOverlayMovePointOperation
 
   private IProfil createNewProfile( final IProfileRecord recordToChange, final double newWidth, final double newHeight, final double newRw, final double newHw )
   {
-    final IProfil newProfile = ChannelEditUtil.createEmptyProfile( m_segmentedProfile );
+    final IProfil newProfile = ChannelEditUtil.createEmptyProfile( m_workingProfile );
 
     final List<IProfileRecord> newRecords = new ArrayList<>();
 
     /* copy old points into new profile and change the dragged record */
-    for( final IProfileRecord oldRecord : m_segmentedProfile.getPoints() )
+    for( final IProfileRecord oldRecord : m_workingProfile.getPoints() )
     {
       final IProfileRecord newPoint = newProfile.createProfilPoint();
 

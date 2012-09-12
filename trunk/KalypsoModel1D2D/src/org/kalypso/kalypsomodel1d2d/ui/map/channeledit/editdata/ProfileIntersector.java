@@ -56,19 +56,19 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * - if there are more profile points than the wished number of intersection points, the intersection is done by
  * Douglas-Peucker<br>
  * - if there are not enough profile points, the intersection is done with an equidistant approach.
- * 
+ *
  * @param profile
  *          input profile to be intersected.
  * @author Gernot Belger
  * @author Thomas Jung
  */
-class ProfileSegmenter
+class ProfileIntersector
 {
-  private final int m_numIntersections;
+  private final int m_numPoints;
 
-  public ProfileSegmenter( final int numIntersections )
+  public ProfileIntersector( final int numPoints )
   {
-    m_numIntersections = numIntersections;
+    m_numPoints = numPoints;
   }
 
   public IProfil execute( final IProfil originalProfile )
@@ -78,7 +78,7 @@ class ProfileSegmenter
 
     final IProfil newProfile = ChannelEditUtil.createEmptyProfile( originalProfile );
 
-    if( m_numIntersections > numProfPoints )
+    if( m_numPoints > numProfPoints )
       equidistantSegmentation( originalProfile, originalRecords, newProfile );
     else
       douglasPeuckerSegmentation( originalRecords, newProfile );
@@ -108,9 +108,9 @@ class ProfileSegmenter
     /* do it by equidistant points */
     // keep in mind, that equidistant widths doesn't get equidistant georeferenced lengths!
     final double totalWidth = endWidth - startWidth;
-    final double dWidth = totalWidth / (m_numIntersections - 1); // equidistant widths
+    final double dWidth = totalWidth / (m_numPoints - 1); // equidistant widths
 
-    for( int i = 1; i < m_numIntersections - 1; i++ )
+    for( int i = 1; i < m_numPoints - 1; i++ )
     {
       /* get values */
       final double width = startWidth + i * dWidth;
@@ -143,7 +143,7 @@ class ProfileSegmenter
   /* do it by Douglas-Peucker */
   private void douglasPeuckerSegmentation( final IProfileRecord[] originalRecords, final IProfil newProfile )
   {
-    final IProfileRecord[] vipRecords = DouglasPeuckerHelper.findIProfileVIPPoints( originalRecords, m_numIntersections );
+    final IProfileRecord[] vipRecords = DouglasPeuckerHelper.findIProfileVIPPoints( originalRecords, m_numPoints );
 
     /* Build list of vip point in original order */
     final List<IProfileRecord> simplifiedRecords = new ArrayList<>( Arrays.asList( originalRecords ) );

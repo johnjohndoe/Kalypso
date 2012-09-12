@@ -58,7 +58,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ChannelEditProfileData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ChannelMesh;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.UpdateEditDataOperation;
@@ -74,7 +74,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  * @author Gernot Belger
  * @author Thomas Jung
  */
-public class CreateChannelData extends AbstractModelObject
+public class ChannelEditData extends AbstractModelObject
 {
   static final String STR_NO_PROFILE_THEMES = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.32" ); //$NON-NLS-1$
 
@@ -139,14 +139,14 @@ public class CreateChannelData extends AbstractModelObject
     RIGHT;
   }
 
-  private final CreateMainChannelWidget m_widget;
+  private final ChannelEditWidget m_widget;
 
   /* Profile selection data */
   private IKalypsoFeatureTheme m_profileTheme;
 
   private IKalypsoFeatureTheme[] m_profileThemes = new IKalypsoFeatureTheme[0];
 
-  private ChannelEditProfileData m_editData = new ChannelEditProfileData( new IProfileFeature[0], 6, new HashMap<GM_Curve, SIDE>(), 5 );
+  private ChannelMesh m_editData = new ChannelMesh( new IProfileFeature[0], 6, new HashMap<GM_Curve, SIDE>(), 5 );
 
   /* bankline selection data */
   private IKalypsoFeatureTheme[] m_bankThemes = new IKalypsoFeatureTheme[0];
@@ -161,7 +161,7 @@ public class CreateChannelData extends AbstractModelObject
 
   private Shell m_shell;
 
-  public CreateChannelData( final CreateMainChannelWidget widget )
+  public ChannelEditData( final ChannelEditWidget widget )
   {
     m_widget = widget;
   }
@@ -310,7 +310,7 @@ public class CreateChannelData extends AbstractModelObject
     firePropertyChange( PROPERTY_BANK_THEME_SELECTED_RIGHT, oldValue, getSelectedBankThemeRight() );
   }
 
-  public ChannelEditProfileData getEditData( )
+  public ChannelMesh getEditData( )
   {
     return m_editData;
   }
@@ -348,11 +348,11 @@ public class CreateChannelData extends AbstractModelObject
         newBanklines.put( entry.getKey(), entry.getValue() );
     }
 
-    final ChannelEditProfileData oldData = m_editData;
+    final ChannelMesh oldData = m_editData;
 
-    final ChannelEditProfileData newData = new ChannelEditProfileData( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), newBanklines, oldData.getNumberBanklineSegments() );
+    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), newBanklines, oldData.getNumberBanklineSegments() );
 
-    startUpdateEditData( newData );
+    startUpdateEditData( newData, true );
   }
 
   public void removeBank( final GM_Curve toRemove )
@@ -364,11 +364,11 @@ public class CreateChannelData extends AbstractModelObject
     /* remove obsolete curve */
     newBanklines.remove( toRemove );
 
-    final ChannelEditProfileData oldData = m_editData;
+    final ChannelMesh oldData = m_editData;
 
-    final ChannelEditProfileData newData = new ChannelEditProfileData( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), newBanklines, oldData.getNumberBanklineSegments() );
+    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), newBanklines, oldData.getNumberBanklineSegments() );
 
-    startUpdateEditData( newData );
+    startUpdateEditData( newData, true );
   }
 
   public IProfileData[] getSelectedProfiles( )
@@ -381,13 +381,13 @@ public class CreateChannelData extends AbstractModelObject
     return m_editData.getProfileFeatures();
   }
 
-  private void setSelectedProfiles( final IProfileFeature[] profiles )
+  private void setSelectedProfiles( final IProfileFeature[] profiles, final boolean checkUserEdits )
   {
-    final ChannelEditProfileData oldData = m_editData;
+    final ChannelMesh oldData = m_editData;
 
-    final ChannelEditProfileData newData = new ChannelEditProfileData( profiles, oldData.getNumberProfileSegments(), oldData.getBanklines(), oldData.getNumberBanklineSegments() );
+    final ChannelMesh newData = new ChannelMesh( profiles, oldData.getNumberProfileSegments(), oldData.getBanklines(), oldData.getNumberBanklineSegments() );
 
-    startUpdateEditData( newData );
+    startUpdateEditData( newData, checkUserEdits );
   }
 
   public void changeSelectedProfiles( final IProfileFeature[] profileFeaturesToRemove, final IProfileFeature[] profileFeaturesToAdd )
@@ -401,21 +401,21 @@ public class CreateChannelData extends AbstractModelObject
 
     final IProfileFeature[] newFeatures = featureHash.toArray( new IProfileFeature[featureHash.size()] );
 
-    setSelectedProfiles( newFeatures );
+    setSelectedProfiles( newFeatures, true );
   }
 
-  public void resetSelectedProfiles( )
+  public void resetData( )
   {
-    setSelectedProfiles( new IProfileFeature[0] );
+    setSelectedProfiles( new IProfileFeature[0], false );
   }
 
   public void setNumberProfileSegments( final int numProfileSegments )
   {
-    final ChannelEditProfileData oldData = m_editData;
+    final ChannelMesh oldData = m_editData;
 
-    final ChannelEditProfileData newData = new ChannelEditProfileData( oldData.getProfileFeatures(), numProfileSegments, oldData.getBanklines(), oldData.getNumberBanklineSegments() );
+    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), numProfileSegments, oldData.getBanklines(), oldData.getNumberBanklineSegments() );
 
-    startUpdateEditData( newData );
+    startUpdateEditData( newData, true );
   }
 
   public int getNumberProfileSegments( )
@@ -430,14 +430,14 @@ public class CreateChannelData extends AbstractModelObject
 
   public void setNumberBankSegments( final int numberBankSegments )
   {
-    final ChannelEditProfileData oldData = m_editData;
+    final ChannelMesh oldData = m_editData;
 
-    final ChannelEditProfileData newData = new ChannelEditProfileData( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), oldData.getBanklines(), numberBankSegments );
+    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), oldData.getBanklines(), numberBankSegments );
 
     /* reset widget, because some of them keep stale data */
     setDelegate( null );
 
-    startUpdateEditData( newData );
+    startUpdateEditData( newData, true );
   }
 
   public CommandableWorkspace getDiscretisationWorkspace( )
@@ -521,7 +521,7 @@ public class CreateChannelData extends AbstractModelObject
   {
     final Set<ISegmentData> segments = new LinkedHashSet<>();
 
-    final ChannelEditProfileData editData = m_editData;
+    final ChannelMesh editData = m_editData;
 
     if( editData != null )
     {
@@ -563,7 +563,7 @@ public class CreateChannelData extends AbstractModelObject
     if( segment == null )
       return 0;
 
-    return segment.getNumberBankSegments();
+    return segment.getNumberBankPoints();
   }
 
   public void setNumberBankSegmentsUp( final int segments )
@@ -579,7 +579,7 @@ public class CreateChannelData extends AbstractModelObject
     if( segment == null )
       return 0;
 
-    return segment.getNumberBankSegments();
+    return segment.getNumberBankPoints();
   }
 
   private ISegmentData getActiveSegmentDown( )
@@ -598,9 +598,9 @@ public class CreateChannelData extends AbstractModelObject
     return m_activeProfile.getUpSegment();
   }
 
-  private void startUpdateEditData( final ChannelEditProfileData newData )
+  private void startUpdateEditData( final ChannelMesh newData, final boolean checkUserEdits )
   {
-    final ChannelEditProfileData oldData = m_editData;
+    final ChannelMesh oldData = m_editData;
 
     final UpdateEditDataOperation operation = new UpdateEditDataOperation( oldData, newData );
 
@@ -623,7 +623,7 @@ public class CreateChannelData extends AbstractModelObject
         if( operation.hasDataLoss() )
         {
           /* ask user to apply anyways, else -> rollback */
-          if( !askForUserEdits() )
+          if( checkUserEdits && !askForUserEdits() )
             setEditData( oldData, newActiveProfile, oldActiveProfile );
         }
 
@@ -644,7 +644,7 @@ public class CreateChannelData extends AbstractModelObject
     return MessageDialog.openQuestion( m_shell, STR_DIALOG_TITLE, "Vom Benutzer editierte Daten gehen verloren. Fortfahren?" );
   }
 
-  void setEditData( final ChannelEditProfileData newData, final IProfileData oldActiveProfile, final IProfileData newActiveProfile )
+  void setEditData( final ChannelMesh newData, final IProfileData oldActiveProfile, final IProfileData newActiveProfile )
   {
     final int oldNumberBankSegments = getNumberBankSegments();
     final int oldNumberProfileSegments = getNumberProfileSegments();
@@ -681,10 +681,10 @@ public class CreateChannelData extends AbstractModelObject
       return firstNewProfile;
 
     /* search profile with same feature */
-    final IProfileFeature activeFeature = oldActiveProfile.getFeature();
+    final String activeId = oldActiveProfile.getId();
     for( final IProfileData newProfile : newProfiles )
     {
-      if( newProfile.getFeature() == activeFeature )
+      if( newProfile.getId() == activeId )
         return newProfile;
     }
 
@@ -693,14 +693,14 @@ public class CreateChannelData extends AbstractModelObject
 
   private void updateNumberOfBankSegments( final ISegmentData segment, final int segments, final String propertySegments )
   {
-    final ChannelEditProfileData data = m_editData;
+    final ChannelMesh data = m_editData;
     if( data == null )
       return;
 
     if( segment == null )
       return;
 
-    final int oldNumberOfSegments = segment.getNumberBankSegments();
+    final int oldNumberOfSegments = segment.getNumberBankPoints();
     if( oldNumberOfSegments == segments )
       return;
 
@@ -723,7 +723,7 @@ public class CreateChannelData extends AbstractModelObject
         // final boolean isUserChanged = segment.isUserChanged();
 
         /* really update, else rolback will fail */
-        segment.updateNumberOfSegments( segments );
+        segment.updateNumberOfBankPoints( segments );
 
         // REMARK: already fire change, so rollback will later be able to reset the ui
         firePropertyChange( propertySegments, oldNumberOfSegments, segments );

@@ -77,7 +77,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * @author Thomas Jung
  */
-public class DragBankLineWidget extends AbstractWidget
+class DragBankLineWidget extends AbstractWidget
 {
   private final SLDPainter2 m_handlePainter = new SLDPainter2( getClass().getResource( "resources/handleRect.sld" ) );
 
@@ -108,11 +108,11 @@ public class DragBankLineWidget extends AbstractWidget
    */
   private GM_Curve m_currentCurve;
 
-  private final CreateChannelData m_data;
+  private final ChannelEditData m_data;
 
   private GM_PointSnapper m_pointSnapper;
 
-  public DragBankLineWidget( final CreateChannelData channeldata )
+  public DragBankLineWidget( final ChannelEditData channeldata )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DragBankLineWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DragBankLineWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -202,7 +202,7 @@ public class DragBankLineWidget extends AbstractWidget
     final Coordinate handleCrd = JTSAdapter.export( oldPosition );
     final Coordinate newCrd = JTSAdapter.export( newPosition );
 
-    final LineString segmented = bank.getSegmented();
+    final LineString segmented = bank.getWorkingGeometry();
 
     final Coordinate[] oldCoordinates = segmented.getCoordinates();
     final Coordinate[] newCoordinates = new Coordinate[oldCoordinates.length];
@@ -272,7 +272,7 @@ public class DragBankLineWidget extends AbstractWidget
 
       final IBankData bank = m_handles.get( m_draggedHandle );
       final ISegmentData segment = bank.getSegment();
-      segment.updateSegmentedGeometry( bank, currentLine );
+      segment.updateWorkingGeometry( bank, currentLine );
     }
     catch( final GM_Exception e )
     {
@@ -306,7 +306,7 @@ public class DragBankLineWidget extends AbstractWidget
       {
         try
         {
-          final GM_Curve bankCurve = (GM_Curve)JTSAdapter.wrap( bank.getSegmented(), mapSRS );
+          final GM_Curve bankCurve = (GM_Curve)JTSAdapter.wrap( bank.getWorkingGeometry(), mapSRS );
           m_currentLinePainter.paint( g, projection, bankCurve );
         }
         catch( final GM_Exception e )
@@ -383,7 +383,7 @@ public class DragBankLineWidget extends AbstractWidget
     if( bank == null )
       return new GM_Position[0];
 
-    final Geometry segmented = bank.getSegmented();
+    final Geometry segmented = bank.getWorkingGeometry();
     if( segmented == null )
       return new GM_Position[0];
 

@@ -29,11 +29,11 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
  */
 public class UpdateEditDataOperation implements ICoreRunnableWithProgress
 {
-  private final ChannelEditProfileData m_oldData;
+  private final ChannelMesh m_oldData;
 
-  private final ChannelEditProfileData m_newData;
+  private final ChannelMesh m_newData;
 
-  public UpdateEditDataOperation( final ChannelEditProfileData oldData, final ChannelEditProfileData newData )
+  public UpdateEditDataOperation( final ChannelMesh oldData, final ChannelMesh newData )
   {
     m_oldData = oldData;
     m_newData = newData;

@@ -48,9 +48,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * Encapsulates all profile data the user works on for channel editing:
@@ -61,7 +62,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  *
  * @author Gernot Belger
  */
-public class ChannelEditProfileData
+public class ChannelMesh
 {
   /* null means: data not initalized */
   private List<SegmentData> m_segments = null;
@@ -74,7 +75,7 @@ public class ChannelEditProfileData
 
   private final int m_numberProfileIntersection;
 
-  public ChannelEditProfileData( final IProfileFeature[] profiles, final int numberProfileIntersection, final Map<GM_Curve, SIDE> banks, final int numberBankIntersection )
+  public ChannelMesh( final IProfileFeature[] profiles, final int numberProfileIntersection, final Map<GM_Curve, SIDE> banks, final int numberBankIntersection )
   {
     m_profiles = ProfileData.from( profiles, numberProfileIntersection );
     m_numberProfileIntersection = numberProfileIntersection;
@@ -82,9 +83,8 @@ public class ChannelEditProfileData
     m_banks = banks;
     m_numberBankIntersection = numberBankIntersection;
 
-    /* sort by station */
-    // Sort so that stations are in ascending order; this is nice in the combo viewer.
-    final ProfileDataStationComparator comparator = new ProfileDataStationComparator( true );
+    /* Sort so that stations are in ascending order; this is nice in the combo viewer. */
+    final ProfileDataStationComparator comparator = new ProfileDataStationComparator();
     Arrays.sort( m_profiles, comparator );
   }
 
@@ -142,7 +142,7 @@ public class ChannelEditProfileData
      */
     // FIXME: better management of update needed
     for( final IProfileData profile : m_profiles )
-      ((ProfileData)profile).recalculateSegmentedProfile();
+      ((ProfileData)profile).recalculateWorkingProfile();
 
     for( final SegmentData segment : m_segments )
       segment.updateMesh();
@@ -150,30 +150,38 @@ public class ChannelEditProfileData
 
   private boolean checkInteIntersectionWithBanks( final IProfileData profile )
   {
-    final Set<GM_Curve> curves = m_banks.keySet();
-
-    // TODO: bad test: profile should intersect one left-bank and one right-bank
-    // TODO: only works, because we have exactly one left and one right bank
-
-    for( final GM_Curve curve : curves )
+    try
     {
-      final GM_Curve line = profile.getFeature().getLine();
+      final Set<GM_Curve> curves = m_banks.keySet();
 
-      if( !curve.intersects( line ) )
-        return false;
+      // TODO: bad test: profile should intersect one left-bank and one right-bank
+      // TODO: only works, because we have exactly one left and one right bank
+
+      for( final GM_Curve curve : curves )
+      {
+        final GM_Curve line = profile.getOriginalProfileGeometry();
+
+        if( !curve.intersects( line ) )
+          return false;
+      }
+
+      return true;
     }
-
-    return true;
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+      return false;
+    }
   }
 
-  public IProfileData[] findProfiles( final IProfileFeature[] features )
+  public IProfileData[] findProfiles( final String[] ids )
   {
-    final Set<IProfileFeature> featureSet = new HashSet<>( Arrays.asList( features ) );
+    final Set<String> featureSet = new HashSet<>( Arrays.asList( ids ) );
 
     final Collection<IProfileData> foundData = new ArrayList<>();
     for( final IProfileData data : m_profiles )
     {
-      if( featureSet.contains( data.getFeature() ) )
+      if( featureSet.contains( data.getId() ) )
         foundData.add( data );
     }
 
@@ -208,12 +216,22 @@ public class ChannelEditProfileData
     return m_numberBankIntersection;
   }
 
+  public String[] getProfileIDs( )
+  {
+    final String[] ids = new String[m_profiles.length];
+
+    for( int i = 0; i < ids.length; i++ )
+      ids[i] = m_profiles[i].getId();
+
+    return ids;
+  }
+
   public IProfileFeature[] getProfileFeatures( )
   {
     final IProfileFeature[] features = new IProfileFeature[m_profiles.length];
 
     for( int i = 0; i < features.length; i++ )
-      features[i] = m_profiles[i].getFeature();
+      features[i] = ((ProfileData)m_profiles[i]).getFeature();
 
     return features;
   }

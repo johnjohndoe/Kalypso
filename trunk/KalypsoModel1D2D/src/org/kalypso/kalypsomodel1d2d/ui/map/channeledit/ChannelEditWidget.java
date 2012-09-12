@@ -59,30 +59,29 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
  * TODO:
  * <ul>
  * <li>FIXME: consisting naming of all classes</li>
- * <li>discuss with Niloufar/Thoamas</li>
  * <li>general cleaup</li>
- * <li>decide naming of intersection points/segmentation</li>
  * <li>TODO: let user toggle area auto adjustment</li>
+ * <li>TODO: Allow for more than one bank line per side</li>
  * </ul>
  *
  * @author Thomas Jung
  * @author Gernot Belger
  */
-public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements IWidgetWithOptions
+public class ChannelEditWidget extends AbstractDelegateWidget2 implements IWidgetWithOptions
 {
-  private final CreateChannelData m_data = new CreateChannelData( this );
+  private final ChannelEditData m_data = new ChannelEditData( this );
 
-  private final CreateChannelDataPainter m_painter = new CreateChannelDataPainter( m_data );
+  private final ChannelEditPainter m_painter = new ChannelEditPainter( m_data );
 
-  private CreateMainChannelComposite m_composite;
+  private ChannelEditComposite m_composite;
 
-  private final IWidget m_infoWidget = new CreateMainChannelInfoWidget( m_data );
+  private final IWidget m_infoWidget = new ChannelEditInfoWidget( m_data );
 
-  public CreateMainChannelWidget( )
+  public ChannelEditWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_data.addPropertyChangeListener( new CreateChannelMapControler( this ) );
+    m_data.addPropertyChangeListener( new ChannelEditMapControler( this ) );
   }
 
   @Override
@@ -90,9 +89,9 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
   {
     resetData();
 
-    m_composite = new CreateMainChannelComposite( parent, toolkit, SWT.NONE, m_data, m_infoWidget );
+    m_composite = new ChannelEditComposite( parent, toolkit, SWT.NONE, m_data, m_infoWidget );
 
-    // REMARK: set specific shell to data, else model dialogs will be system model instead of model to this shell
+    // REMARK: set specific shell to data, else modal dialogs will be system modal instead of model to this shell
     m_data.setShell( parent.getShell() );
 
     return m_composite;
@@ -100,7 +99,7 @@ public class CreateMainChannelWidget extends AbstractDelegateWidget2 implements 
 
   private void resetData( )
   {
-    final CreateMainChannelDataInit init = new CreateMainChannelDataInit( m_data, getMapPanel() );
+    final ChannelEditDataInit init = new ChannelEditDataInit( m_data, getMapPanel() );
     init.init();
   }
 
