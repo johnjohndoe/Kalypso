@@ -107,7 +107,7 @@ public class ChangeNodePositionCommand implements IFeatureChangeCommand
   {
     m_node.setPoint( position );
 
-    final List<Feature> changedFeatures = new ArrayList<Feature>( 10 );
+    final List<Feature> changedFeatures = new ArrayList<>( 10 );
     changedFeatures.add( m_node );
 
     if( m_fireEventsForDependendElements )

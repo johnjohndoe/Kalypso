@@ -85,7 +85,7 @@ public class LengthSectionHandler2d
   {
     // TODO: better monitoring
 
-    final Map<BigDecimal, GM_Point> pointList = new HashMap<BigDecimal, GM_Point>();
+    final Map<BigDecimal, GM_Point> pointList = new HashMap<>();
 
     final Feature[] riverFeatures = data.getSelectedRivers();
     final IValuePropertyType fromStationPropertyType = data.getStationFromProperty();

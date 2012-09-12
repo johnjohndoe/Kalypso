@@ -90,7 +90,7 @@ public class AddElementToCalculationUnitCmd implements IFeatureChangeCommand
   {
     if( added )
     {
-      final List<Feature> changed = new ArrayList<Feature>();
+      final List<Feature> changed = new ArrayList<>();
       changed.addAll( Arrays.asList( m_elementsToAdd ) );
       return changed.toArray( new Feature[changed.size()] );
     }
@@ -158,7 +158,7 @@ public class AddElementToCalculationUnitCmd implements IFeatureChangeCommand
 
   private final void fireProcessChanges( )
   {
-    final List<Feature> features = new ArrayList<Feature>( m_elementsToAdd.length * 2 );
+    final List<Feature> features = new ArrayList<>( m_elementsToAdd.length * 2 );
     features.add( m_calculationUnit );
     for( final IFE1D2DElement ele : m_elementsToAdd )
       features.add( ele );

@@ -61,7 +61,7 @@ import com.vividsolutions.jts.index.intervalrtree.SortedPackedIntervalRTree;
  */
 public class SimpleElevationColorModel implements IElevationColorModel
 {
-  private final List<ElevationColorEntry> m_entries = new ArrayList<ElevationColorEntry>();
+  private final List<ElevationColorEntry> m_entries = new ArrayList<>();
 
   private final SortedPackedIntervalRTree m_entryIndex = new SortedPackedIntervalRTree();
 
@@ -99,7 +99,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
   private final double m_maxBri;
 
-  private final List<Color> m_colorList = new ArrayList<Color>();
+  private final List<Color> m_colorList = new ArrayList<>();
 
   private final int m_numOfClasses;
 
@@ -213,7 +213,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
   /**
    * gets the corresponding color class for the given elevation
-   * 
+   *
    * @param elevation
    *          given elevation
    */

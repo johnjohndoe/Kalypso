@@ -101,7 +101,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * <p>
  * This result can then be used to pseudo-restart a 1d-instationary calculation.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class Restart1DImporter
@@ -167,7 +167,7 @@ public class Restart1DImporter
   {
     final boolean isDirectionUpstreams = reach.getWaterBody().isDirectionUpstreams();
     /* Sort with(!) flow direction in order to get vectors right */
-    final SortedMap<BigDecimal, GM_Point> map = new TreeMap<BigDecimal, GM_Point>( new TuhhStationComparator( !isDirectionUpstreams ) );
+    final SortedMap<BigDecimal, GM_Point> map = new TreeMap<>( new TuhhStationComparator( !isDirectionUpstreams ) );
 
     final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
@@ -301,7 +301,7 @@ public class Restart1DImporter
     final IComponent typeComp = ComponentUtilities.findComponentByID( components, lsComponentType );
 
     /* Sort record in same direction as profiles */
-    final SortedMap<BigDecimal, IRecord> recordsByStation = new TreeMap<BigDecimal, IRecord>( profilesByStation.comparator() );
+    final SortedMap<BigDecimal, IRecord> recordsByStation = new TreeMap<>( profilesByStation.comparator() );
 
     /* We also filter the interpolated profiles */
     for( final IRecord record : lsResult )

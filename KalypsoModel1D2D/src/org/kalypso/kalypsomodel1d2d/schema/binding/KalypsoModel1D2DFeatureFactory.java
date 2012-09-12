@@ -82,7 +82,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 
   private final Map<Class, AdapterConstructor> createConstructorMap( )
   {
-    final Map<Class, AdapterConstructor> cMap = new Hashtable<Class, AdapterConstructor>();
+    final Map<Class, AdapterConstructor> cMap = new Hashtable<>();
 
     AdapterConstructor cTor;
 

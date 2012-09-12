@@ -158,7 +158,7 @@ public class UtilMap
 
   private static List<IKalypsoFeatureTheme> loadKalypsoFeatureThemes( final IMapPanel panel )
   {
-    final List<IKalypsoFeatureTheme> result = new ArrayList<IKalypsoFeatureTheme>();
+    final List<IKalypsoFeatureTheme> result = new ArrayList<>();
 
     // PROBLEM: block the ui and freezes the application
     // PlatformUI.getWorkbench().getDisplay().syncExec( waitForFeaturesLoading( mapModel ) );
@@ -207,8 +207,8 @@ public class UtilMap
 
   public static int[][] getPointArrays( final Point currentPoint, final List<GM_Point> nodes, final GeoTransform projection )
   {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
+    final List<Integer> xArray = new ArrayList<>();
+    final List<Integer> yArray = new ArrayList<>();
 
     if( nodes != null && projection != null )
     {

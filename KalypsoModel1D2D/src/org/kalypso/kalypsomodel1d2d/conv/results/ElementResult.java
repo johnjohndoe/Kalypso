@@ -66,15 +66,15 @@ public class ElementResult
 
   private double m_lambda;
 
-  private final HashMap<Integer, ArcResult> m_arcResult = new HashMap<Integer, ArcResult>();
+  private final HashMap<Integer, ArcResult> m_arcResult = new HashMap<>();
 
-  private final List<INodeResult> m_cornerNodes = new LinkedList<INodeResult>();
+  private final List<INodeResult> m_cornerNodes = new LinkedList<>();
 
-  private final List<INodeResult> m_midsideNodes = new LinkedList<INodeResult>();
+  private final List<INodeResult> m_midsideNodes = new LinkedList<>();
 
   private SimpleNodeResult m_centerNode = null;
 
-  public ElementResult( int id, int currentRougthnessClass, int previousRoughnessClass, int eleminationNum )
+  public ElementResult( final int id, final int currentRougthnessClass, final int previousRoughnessClass, final int eleminationNum )
   {
     m_elemID = id;
     m_currentRougthnessClassID = currentRougthnessClass;
@@ -82,12 +82,12 @@ public class ElementResult
     m_eleminationNumber = eleminationNum;
   }
 
-  public void setArc( ArcResult arcresult )
+  public void setArc( final ArcResult arcresult )
   {
     m_arcResult.put( m_arcResult.size(), arcresult );
   }
 
-  public ArcResult getArc( int id )
+  public ArcResult getArc( final int id )
   {
     return m_arcResult.get( id );
   }
@@ -102,7 +102,7 @@ public class ElementResult
     return m_currentRougthnessClassID;
   }
 
-  public void setCurrentRougthnessClassID( int currentRougthnessClassID )
+  public void setCurrentRougthnessClassID( final int currentRougthnessClassID )
   {
     m_currentRougthnessClassID = currentRougthnessClassID;
   }
@@ -112,7 +112,7 @@ public class ElementResult
     return m_previousRoughnessClassID;
   }
 
-  public void setPreviousRoughnessClassID( int previousRoughnessClassID )
+  public void setPreviousRoughnessClassID( final int previousRoughnessClassID )
   {
     m_previousRoughnessClassID = previousRoughnessClassID;
   }
@@ -122,7 +122,7 @@ public class ElementResult
     return m_eleminationNumber;
   }
 
-  public void setEleminationNumber( int eleminationNumber )
+  public void setEleminationNumber( final int eleminationNumber )
   {
     m_eleminationNumber = eleminationNumber;
   }
@@ -132,22 +132,22 @@ public class ElementResult
     return m_elemID;
   }
 
-  public INodeResult getCornerNodes( int index )
+  public INodeResult getCornerNodes( final int index )
   {
     return m_cornerNodes.get( index );
   }
 
-  public void setCornerNodes( INodeResult nodeResult )
+  public void setCornerNodes( final INodeResult nodeResult )
   {
     m_cornerNodes.add( nodeResult );
   }
 
-  public INodeResult getMidsideNodes( int index )
+  public INodeResult getMidsideNodes( final int index )
   {
     return m_midsideNodes.get( index );
   }
 
-  public void setMidsideNodes( INodeResult nodeResult )
+  public void setMidsideNodes( final INodeResult nodeResult )
   {
     m_midsideNodes.add( nodeResult );
   }
@@ -219,8 +219,8 @@ public class ElementResult
     m_centerNode.setWaterlevel( waterlevel );
 
     // depth
-    double depth = waterlevel - z;
-    List<Double> velocity = new LinkedList<Double>();
+    final double depth = waterlevel - z;
+    final List<Double> velocity = new LinkedList<>();
 
     // velocity -> use all nodes by iso-parametric interpolation
     for( int i = 0; i < m_midsideNodes.size(); i++ )
@@ -251,8 +251,8 @@ public class ElementResult
       w2 = 1.0 / 2.0;
     }
 
-    double vx = sumVxMid * w2 + sumVxCorner * w1;
-    double vy = sumVyMid * w2 + sumVyCorner * w1;
+    final double vx = sumVxMid * w2 + sumVxCorner * w1;
+    final double vy = sumVyMid * w2 + sumVyCorner * w1;
 
     velocity.add( vx );
     velocity.add( vy );
@@ -263,7 +263,7 @@ public class ElementResult
   /**
    * assigns the water level to a dry node from the nearest wetted node connected to the current node by an arc.
    */
-  private void assignWaterlevel( INodeResult node, INodeResult minDistNode )
+  private void assignWaterlevel( final INodeResult node, final INodeResult minDistNode )
   {
     final double waterlevel = minDistNode.getWaterlevel();
     node.setWaterlevel( waterlevel );
@@ -285,7 +285,7 @@ public class ElementResult
       {
         /* node is dry */
         // search for wet neighboring nodes and add them to a list
-        List<INodeResult> neighborNodeList = new LinkedList<INodeResult>();
+        List<INodeResult> neighborNodeList = new LinkedList<>();
 
         // get the arcs of the dry node
         final List<ArcResult> arcs = node.getArcs();
@@ -300,7 +300,7 @@ public class ElementResult
           double distance;
           INodeResult minDistNode = null;
 
-          for( INodeResult currentNode : neighborNodeList )
+          for( final INodeResult currentNode : neighborNodeList )
           {
             if( isPartOfElement( currentNode ) )
             {
@@ -344,10 +344,10 @@ public class ElementResult
       // get the arc of the midside node
       final List<ArcResult> arcs = node.getArcs();
 
-      ArcResult arcResult = arcs.get( 0 );
+      final ArcResult arcResult = arcs.get( 0 );
 
-      INodeResult nodeDown = arcResult.getNodeDown();
-      INodeResult nodeUp = arcResult.getNodeUp();
+      final INodeResult nodeDown = arcResult.getNodeDown();
+      final INodeResult nodeUp = arcResult.getNodeUp();
 
       NodeResultHelper.checkMidsideNodeData( nodeDown, nodeUp, node );
     }
@@ -360,14 +360,14 @@ public class ElementResult
 
   /**
    * checks if a given node is part of the corner nodes of the element.
-   * 
+   *
    * @param currentNode
    *          the node to be checked
-   * 
+   *
    */
-  private boolean isPartOfElement( INodeResult currentNode )
+  private boolean isPartOfElement( final INodeResult currentNode )
   {
-    for( INodeResult node : m_cornerNodes )
+    for( final INodeResult node : m_cornerNodes )
     {
       if( node.equals( currentNode ) )
         return true;
@@ -377,9 +377,9 @@ public class ElementResult
 
   private List<INodeResult> getCornerNeighbors( final INodeResult node, final List<ArcResult> arcs )
   {
-    final List<INodeResult> neighborList = new LinkedList<INodeResult>();
+    final List<INodeResult> neighborList = new LinkedList<>();
 
-    for( ArcResult currentArc : arcs )
+    for( final ArcResult currentArc : arcs )
     {
       INodeResult neighboringNode;
 
@@ -405,13 +405,13 @@ public class ElementResult
     return m_lambda;
   }
 
-  public void setLambda( double lambda )
+  public void setLambda( final double lambda )
   {
     // add it to the element result
     m_lambda = lambda;
 
     // add it to each node of the element
-    for( INodeResult node : m_cornerNodes )
+    for( final INodeResult node : m_cornerNodes )
     {
       node.addLambda( lambda );
     }

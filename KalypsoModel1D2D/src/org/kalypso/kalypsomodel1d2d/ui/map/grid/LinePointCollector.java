@@ -78,7 +78,7 @@ public class LinePointCollector
    */
   private int m_cnt_points;
 
-  private final List<MutableGMPoint> m_points = new ArrayList<MutableGMPoint>();
+  private final List<MutableGMPoint> m_points = new ArrayList<>();
 
   private String m_crs;
 
@@ -205,8 +205,8 @@ public class LinePointCollector
 
   private int[][] getPointArrays( final GeoTransform projection, final GM_Point currentPoint )
   {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
+    final List<Integer> xArray = new ArrayList<>();
+    final List<Integer> yArray = new ArrayList<>();
 
     for( int i = 0; i < m_points.size(); i++ )
     {

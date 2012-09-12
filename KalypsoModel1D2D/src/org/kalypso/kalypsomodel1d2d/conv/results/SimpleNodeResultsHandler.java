@@ -73,11 +73,11 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
 {
-  private final Map<Integer, INodeResult> m_nodeIndex = new HashMap<Integer, INodeResult>();
+  private final Map<Integer, INodeResult> m_nodeIndex = new HashMap<>();
 
   private final String m_crs;
 
-  private final Map<Date, List<INodeResult>> m_mapSortedResults = new HashMap<Date, List<INodeResult>>();
+  private final Map<Date, List<INodeResult>> m_mapSortedResults = new HashMap<>();
 
   private final Map<GM_Position, Integer> m_mapInitialPoints;
 
@@ -96,15 +96,12 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#end()
-   */
   @Override
   public void end( )
   {
-    final List<INodeResult> lListActResults = new ArrayList<INodeResult>( m_mapInitialPoints.size() );
+    final List<INodeResult> lListActResults = new ArrayList<>( m_mapInitialPoints.size() );
     fillListWithDefaults( lListActResults, m_mapInitialPoints.size() );
-    final Set<Integer> lSetIdsDone = new HashSet<Integer>();
+    final Set<Integer> lSetIdsDone = new HashSet<>();
     final Set<Integer> lSetKeys = m_nodeIndex.keySet();
     final Iterator<Integer> lIterSetKeys = lSetKeys.iterator();
 
@@ -140,7 +137,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
       }
     }
 
-    m_listActResults = new ArrayList<INodeResult>( m_mapInitialPoints.size() );
+    m_listActResults = new ArrayList<>( m_mapInitialPoints.size() );
     m_listActResults.addAll( lListActResults );
   }
 
@@ -155,7 +152,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
 
   private void fillListWithDefaults( final List<INodeResult> listActResults, final int pIntSize )
   {
-    final List<GM_Position> lListPositions = new ArrayList<GM_Position>( m_mapInitialPoints.keySet() );
+    final List<GM_Position> lListPositions = new ArrayList<>( m_mapInitialPoints.keySet() );
     for( int i = 0; i < pIntSize; ++i )
     {
       final SimpleNodeResult lDefaultNodeResult = new SimpleNodeResult();
@@ -165,9 +162,6 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#getCreatedFeatures()
-   */
   public List<Feature> getCreatedFeatures( )
   {
     return null;
@@ -263,7 +257,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
 
     // set actual values to result node
     result.setResultValues( vx, vy, virtualDepth, waterlevel );
-    final List<Double> velocity = new LinkedList<Double>();
+    final List<Double> velocity = new LinkedList<>();
     velocity.add( vx );
     velocity.add( vy );
     result.setVelocity( velocity );

@@ -108,7 +108,7 @@ public class RemoveElementFromCalculationUnitCmd implements IFeatureChangeComman
 
   private final void fireProcessChanges( )
   {
-    final List<Feature> features = new ArrayList<Feature>( m_elementsToRemove.length * 2 );
+    final List<Feature> features = new ArrayList<>( m_elementsToRemove.length * 2 );
     features.add( m_calculationUnit );
     for( final IFE1D2DElement ele : m_elementsToRemove )
     {

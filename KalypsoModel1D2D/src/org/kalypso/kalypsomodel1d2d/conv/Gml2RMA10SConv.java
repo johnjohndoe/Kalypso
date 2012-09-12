@@ -139,7 +139,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
   private final IdMap m_linesIDProvider = new IdMap();
 
   // TODO probably identical to m_nodesProvider (its key set))
-  private final Set<String> m_writtenNodesIDs = new HashSet<String>();
+  private final Set<String> m_writtenNodesIDs = new HashSet<>();
 
   private final BuildingIDProvider m_buildingIDProvider = new BuildingIDProvider();
 
@@ -157,13 +157,13 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
   private final IGeoLog m_log;
 
-  private final List<PseudoEdge> m_listNonExistingPseudoEdges = new ArrayList<PseudoEdge>();
+  private final List<PseudoEdge> m_listNonExistingPseudoEdges = new ArrayList<>();
 
-  private final Map<Integer, List<PseudoEdge>> m_mapPolyWeir2DSubElement = new HashMap<Integer, List<PseudoEdge>>();
+  private final Map<Integer, List<PseudoEdge>> m_mapPolyWeir2DSubElement = new HashMap<>();
 
-  private final Map<Integer, String> m_mapTmpElementToPolyWeir = new HashMap<Integer, String>();
+  private final Map<Integer, String> m_mapTmpElementToPolyWeir = new HashMap<>();
 
-  private final Map<IPolyElement, IFlowRelation2D> m_mapPolyElementsWithWeir = new HashMap<IPolyElement, IFlowRelation2D>();
+  private final Map<IPolyElement, IFlowRelation2D> m_mapPolyElementsWithWeir = new HashMap<>();
 
   private final Set<String> m_calculationUnitIndex;
 
@@ -914,10 +914,10 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
     final List<IFE1D2DElement> elementsInBBox = m_discretisationModel1d2d.getElements();
 
-    final List<IFE1D2DElement> lListAllElements = new ArrayList<IFE1D2DElement>();
+    final List<IFE1D2DElement> lListAllElements = new ArrayList<>();
     lListAllElements.addAll( elementsInBBox );
 
-    final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<IFE1D2DEdge>( lListAllElements.size() * 2 );
+    final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<>( lListAllElements.size() * 2 );
 
     int lIntWeirDirection = 0;
     if( lListAllElements.size() == 0 )
@@ -1013,7 +1013,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
             int lIntLastId = 0;
             for( int lIntIter = 0; lIntIter < lListElementNodesSize / 2 - 1; ++lIntIter )
             {
-              final List<PseudoEdge> lListEdges = new ArrayList<PseudoEdge>();
+              final List<PseudoEdge> lListEdges = new ArrayList<>();
               boolean lBoolLastEdgeExists = false;
               if( building instanceof IWeirFlowRelation2D )
               {
@@ -1105,7 +1105,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         final IFE1D2DNode middleNode = edge.getMiddleNode();
         if( middleNode != null )
         {
-          final List<IFE1D2DNode> list = new ArrayList<IFE1D2DNode>();
+          final List<IFE1D2DNode> list = new ArrayList<>();
           list.add( middleNode );
           writeNodes( formatter, list );
         }
@@ -1118,7 +1118,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
   private Set<String> buildExistingElementIndex( )
   {
-    final Set<String> index = new HashSet<String>();
+    final Set<String> index = new HashSet<>();
 
     if( m_calculationUnit == null )
       return index;
@@ -1145,7 +1145,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
   private List<IFE1D2DNode> getOrderedListOfNodes( final IFE1D2DElement element )
   {
-    final List<IFE1D2DNode> lOrderedListRes = new ArrayList<IFE1D2DNode>();
+    final List<IFE1D2DNode> lOrderedListRes = new ArrayList<>();
 
     final int lIntEdgesSize = ((IPolyElement) element).getEdges().size();
     for( int lIntCounter = 0; lIntCounter < lIntEdgesSize - 1; ++lIntCounter )
@@ -1238,9 +1238,9 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     // ---------------------------
     double velXComp = 0;
     double velYComp = 0;
-    List<Double> velTotal = new ArrayList<Double>();
+    List<Double> velTotal = new ArrayList<>();
     double virtDepth = 0;
-    final List<LINE_CASES> restartCases = new ArrayList<LINE_CASES>();
+    final List<LINE_CASES> restartCases = new ArrayList<>();
 
     restartCases.add( LINE_CASES.VA );
     restartCases.add( LINE_CASES.GA );
@@ -1281,8 +1281,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         velXComp = 0.0;
         velYComp = 0.0;
       }
-
-      else if( velTotal != null )
+      else
       {
         // System.out.print( "velTotal: " + velTotal );
         if( velTotal.get( 0 ) == null )

@@ -119,7 +119,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IFeatureChangeComman
 
   private final void fireProcessChanges( )
   {
-    final List<Feature> features = new ArrayList<Feature>();
+    final List<Feature> features = new ArrayList<>();
     features.add( m_calculationUnit );
     features.add( m_feLine );
     final GMLWorkspace workspace = m_calculationUnit.getWorkspace();

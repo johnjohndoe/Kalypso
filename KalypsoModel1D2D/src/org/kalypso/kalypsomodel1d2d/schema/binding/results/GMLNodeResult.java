@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class GMLNodeResult extends Feature_Impl implements INodeResult
 {
-  public GMLNodeResult( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public GMLNodeResult( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -72,7 +72,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   /*
    * the virtual depth is calculated by the calculation core RMA·Kalypso and can differ from the true depth defined by
    * water level minus node elevation! (Marsh-Algorithm).
-   * 
+   *
    * for that reason the true depth is computed separately.
    */
   private static final QName QNAME_PROP_VIRTUALDEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtualdepth" ); //$NON-NLS-1$
@@ -107,13 +107,11 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
 
   private static final QName QNAME_PROP_WAVE_PER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "wavePer" ); //$NON-NLS-1$
 
-  public final List<ArcResult> m_arcs = new LinkedList<ArcResult>();
+  public final List<ArcResult> m_arcs = new LinkedList<>();
 
-  public final List<Double> m_lambdas = new LinkedList<Double>();
+  public final List<Double> m_lambdas = new LinkedList<>();
 
   private boolean m_nodeAssigned;
-
-  
 
   @Override
   public List<ArcResult> getArcs( )
@@ -168,7 +166,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
     setVirtualDepth( virtualDepth );
     setWaterlevel( waterlevel );
 
-    final List<Double> veloList = new ArrayList<Double>();
+    final List<Double> veloList = new ArrayList<>();
     veloList.clear();
     veloList.add( vx );
     veloList.add( vy );
@@ -181,7 +179,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   {
     setProperty( QNAME_PROP_VIRTDEPOVERTIME, virtDepWRTt );
 
-    final List<Double> veloList = new ArrayList<Double>();
+    final List<Double> veloList = new ArrayList<>();
     veloList.clear();
     veloList.add( vxWRTt );
     veloList.add( vyWRTt );
@@ -194,7 +192,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   {
     setProperty( QNAME_PROP_VIRTDEPPREVSTEP, virtDepPrevStep );
 
-    final List<Double> velPrevStepList = new ArrayList<Double>();
+    final List<Double> velPrevStepList = new ArrayList<>();
     velPrevStepList.clear();
     velPrevStepList.add( vxPrevStep );
     velPrevStepList.add( vyPrevStep );
@@ -207,7 +205,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   {
     setProperty( QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP, virtDepWRTtPrevStep );
 
-    final List<Double> veloList = new ArrayList<Double>();
+    final List<Double> veloList = new ArrayList<>();
     veloList.clear();
     veloList.add( vxWRTtPrevStep );
     veloList.add( vyWRTtPrevStep );
@@ -238,7 +236,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
       return getVirtualVelocity();
     else
     {
-      final List<Double> veloList = new ArrayList<Double>();
+      final List<Double> veloList = new ArrayList<>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
       return veloList;
@@ -246,7 +244,6 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public List<Double> getVirtualVelocity( )
   {
     return (List<Double>) getProperty( GMLNodeResult.QNAME_PROP_VELOCITY );
@@ -424,10 +421,6 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
     setProperty( GMLNodeResult.QNAME_PROP_DISCHARGE, new Double( discharge ) );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTime()
-   */
-  @SuppressWarnings("unchecked")
   @Override
   public List<Double> getVelOverTime( )
   {
@@ -441,7 +434,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
 
     if( veloList == null )
     {
-      veloList = new ArrayList<Double>();
+      veloList = new ArrayList<>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
     }
@@ -453,11 +446,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
     return veloList;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTimePrevStep()
-   */
   @Override
-  @SuppressWarnings("unchecked")
   public List<Double> getVelOverTimePrevStep( )
   {
     // Try to get the velocity over time derivative
@@ -470,7 +459,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
 
     if( veloList == null )
     {
-      veloList = new ArrayList<Double>();
+      veloList = new ArrayList<>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
     }
@@ -482,10 +471,6 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
     return veloList;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelPrevStep()
-   */
-  @SuppressWarnings("unchecked")
   @Override
   public List<Double> getVelPrevStep( )
   {
@@ -499,7 +484,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
 
     if( veloList == null )
     {
-      veloList = new ArrayList<Double>();
+      veloList = new ArrayList<>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
     }
@@ -590,7 +575,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public void setWaveDirection( final double direction )
   {
-    setProperty( QNAME_PROP_WAVE_DIR, direction ); 
+    setProperty( QNAME_PROP_WAVE_DIR, direction );
   }
 
   /**

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.wind;
 
@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
  * @author ig
- * 
+ *
  */
 abstract public class AbstractWindDataWriter implements IWindDataWriter
 {
@@ -83,7 +83,7 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
 
   protected AbstractWindDataWriter( final FileObject pOutputDirectory, final GM_Envelope pGmEnvelopeTarget, final Date[] pDates, final List<IWindDataModelSystem> pListSystemsToWrite )
   {
-    m_listWrittenDates = new ArrayList<Date>();
+    m_listWrittenDates = new ArrayList<>();
     m_gmEnvelope = pGmEnvelopeTarget;
     m_dates = pDates;
     m_fileOutputDir = pOutputDirectory;
@@ -102,17 +102,17 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
     {
       return false;
     }
-    List<IWindDataModelSystem> lListSystems = m_windDataModel.getWindDataModelSystems();
+    final List<IWindDataModelSystem> lListSystems = m_windDataModel.getWindDataModelSystems();
     Collections.sort( lListSystems, new Comparator<IWindDataModelSystem>()
     {
       @Override
-      public int compare( IWindDataModelSystem o1, IWindDataModelSystem o2 )
+      public int compare( final IWindDataModelSystem o1, final IWindDataModelSystem o2 )
       {
         try
         {
           return o1.getOrder() - o2.getOrder();
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           return -1;
         }
@@ -129,7 +129,7 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
 
       for( final Object lWindDataObject : lWindSystem.getWindDataModels() )
       {
-        IWindDataProvider lWindData = (IWindDataProvider) lWindDataObject;
+        final IWindDataProvider lWindData = (IWindDataProvider) lWindDataObject;
         if( lWindData.getDateStep().getTime() >= m_dates[0].getTime() && lWindData.getDateStep().getTime() <= m_dates[m_dates.length - 1].getTime() )
         {
           writeWindFile( lWindData );
@@ -189,7 +189,7 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
    * @see org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter#setOutputDirectory(org.apache.commons.vfs.FileObject)
    */
   @Override
-  public void setOutputDirectory( FileObject outputDirectory )
+  public void setOutputDirectory( final FileObject outputDirectory )
   {
     m_fileOutputDir = outputDirectory;
 
@@ -199,7 +199,7 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
    * @see org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter#setWindDataProvider(org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataCollectionProvider)
    */
   @Override
-  public void setWindDataModel( IWindModel pWindModel ) throws IllegalArgumentException
+  public void setWindDataModel( final IWindModel pWindModel ) throws IllegalArgumentException
   {
     m_windDataModel = pWindModel;
   }
@@ -209,7 +209,7 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
     return m_hasWritten;
   }
 
-  protected final void setHasWritten( boolean pHasWritten )
+  protected final void setHasWritten( final boolean pHasWritten )
   {
     this.m_hasWritten = pHasWritten;
   }

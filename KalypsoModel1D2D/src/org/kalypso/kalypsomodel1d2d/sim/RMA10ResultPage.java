@@ -53,6 +53,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -65,7 +66,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.IWizardContainer;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -87,6 +87,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.core.status.StatusComposite;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
@@ -97,7 +98,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * @author Gernot Belger
  */
-public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulation1D2DConstants
+public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConstants
 {
   private final ResultManager m_resultManager;
 
@@ -163,7 +164,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     m_statusComp = new StatusComposite( statusGroup, StatusComposite.DETAILS );
     m_statusComp.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
-    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.4" ), null ) ); //$NON-NLS-1$
+    m_statusComp.setStatus( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.4" ) ) ); //$NON-NLS-1$
 
     /* Control flags */
     final Group tweakGroup = new Group( composite, SWT.NONE );
@@ -381,7 +382,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
   {
     final Object[] selection = m_resultProcessViewer.getCheckedElements();
 
-    final List<Date> dateList = new ArrayList<Date>();
+    final List<Date> dateList = new ArrayList<>();
     for( final Object element : selection )
     {
       if( element instanceof Date )
@@ -487,7 +488,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   public void runResultProcessing( )
   {
-    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.13" ), null ) ); //$NON-NLS-1$
+    m_statusComp.setStatus( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.13" ) ) ); //$NON-NLS-1$
     setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.14" ) ); //$NON-NLS-1$
 
     final ProcessResultsBean bean = new ProcessResultsBean();

@@ -172,7 +172,7 @@ public class ExecutePreSWANKalypso
       }
 
       // the delegate is not used for outputs
-      final List<String> outputs = new ArrayList<String>();
+      final List<String> outputs = new ArrayList<>();
       outputs.add( PreSWANKalypso.OUTPUT_PATH_SWAN );
 
       // run the preprocessing, this will create references to ascii files from gml files
@@ -204,7 +204,7 @@ public class ExecutePreSWANKalypso
 
   private final Modeldata createInputs( )
   {
-    final Map<String, String> inputs = new HashMap<String, String>();
+    final Map<String, String> inputs = new HashMap<>();
     inputs.put( PreRMAKalypso.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$
     inputs.put( PreRMAKalypso.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
     inputs.put( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$
@@ -226,7 +226,7 @@ public class ExecutePreSWANKalypso
     }
     else
     {
-      final List<File> lListFilesToZip = new ArrayList<File>();
+      final List<File> lListFilesToZip = new ArrayList<>();
       final String additionalDataFileName = "models/native_tem/" + PreSWANKalypso.ADDITIONAL_DATA_FILE + ".zip"; //$NON-NLS-1$ //$NON-NLS-2$
       final File zipOutput = new File( additionalDataFileName );
       if( zipOutput.exists() )
@@ -249,7 +249,7 @@ public class ExecutePreSWANKalypso
 
       getWindBinaryFilesAsList( lListFilesToZip, m_windRelationshipModel );
 
-      if( lListFilesToZip != null && lListFilesToZip.size() > 0 )
+      if( lListFilesToZip.size() > 0 )
       {
         try
         {

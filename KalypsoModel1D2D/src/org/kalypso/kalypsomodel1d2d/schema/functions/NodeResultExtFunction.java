@@ -77,11 +77,11 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
 
   private String m_kind;
 
-  private Color m_maxColor = new Color( 0xCBFDFE );
+  private final Color m_maxColor = new Color( 0xCBFDFE );
 
-  private Color m_minColor = new Color( 0x22375C );
+  private final Color m_minColor = new Color( 0x22375C );
 
-  private int m_intClasses = 100;
+  private final int m_intClasses = 100;
 
   private String m_typeName;
 
@@ -114,18 +114,13 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
     m_amountClasses = m_intClasses;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
-   */
   @Override
-  @SuppressWarnings("unchecked")
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     m_typeName = pt.getQName().getLocalPart().toLowerCase().replace( m_kind, "" ); //$NON-NLS-1$
-    String context = feature.getWorkspace().getContext().toExternalForm();
-    int beginIndex = context.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
-    String stepName = context.substring( beginIndex, beginIndex + 16 );
+    final String context = feature.getWorkspace().getContext().toExternalForm();
+    final int beginIndex = context.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
+    final String stepName = context.substring( beginIndex, beginIndex + 16 );
     m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepName );
     final Double resultValue = (Double) feature.getProperty( m_resultTypeProperty );
 
@@ -134,7 +129,7 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
     {
       if( resultValue == null )
       {
-        Object lLastValidResValue = m_mapSldSettingsIntern.get( LAST_VALID_VALUE );
+        final Object lLastValidResValue = m_mapSldSettingsIntern.get( LAST_VALID_VALUE );
         if( lLastValidResValue != null ){
           return lLastValidResValue;
         }
@@ -147,7 +142,7 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
       }
       else if( resultValue == 0.0 ){
         //filter evaluation of size awaits some value bigger then 0.0 :) also for direction
-          double lPseudoZeroValue = 0.000001;
+          final double lPseudoZeroValue = 0.000001;
           m_mapSldSettingsIntern.put( LAST_VALID_VALUE, lPseudoZeroValue );
           return lPseudoZeroValue;
       }
@@ -160,7 +155,7 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
         }
         if( m_resultTypeProperty.getLocalPart().toLowerCase().contains( DEPTH_TYPE ) )
         {
-          double depth = resultValue.doubleValue() - point.getZ();
+          final double depth = resultValue.doubleValue() - point.getZ();
           m_mapSldSettingsIntern.put( LAST_VALID_VALUE, depth );
           return depth;
         }
@@ -175,8 +170,8 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
     {
       if( resultValue == null )
       {
-        //we set the last value for valid color based on the assumption that we are painting on the screen in sequential way: e.g. from left to right 
-        String lNullRes = (String) m_mapSldSettingsIntern.get( LAST_VALID_COLOR );
+        //we set the last value for valid color based on the assumption that we are painting on the screen in sequential way: e.g. from left to right
+        final String lNullRes = (String) m_mapSldSettingsIntern.get( LAST_VALID_COLOR );
         if( lNullRes == null )
         {
           return DEFAULT_COLOR;
@@ -195,18 +190,18 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
           m_mapActualColorsCache = (Map<Integer, String>) m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MAP_PREFIX + m_typeName );
           if( m_mapActualColorsCache == null )
           {
-            m_mapActualColorsCache = new HashMap<Integer, String>();
+            m_mapActualColorsCache = new HashMap<>();
             m_mapSldSettingsIntern.put( NodeResultHelper.COLOR_MAP_PREFIX + m_typeName, m_mapActualColorsCache );
           }
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
         double localValue = 0;
         if( m_typeName.contains( DEPTH_TYPE ) )
         {
-          double depth = resultValue.doubleValue() - point.getZ();
+          final double depth = resultValue.doubleValue() - point.getZ();
           localValue = depth;
         }
         else
@@ -218,7 +213,7 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
         String lColorFormatedStringCached = m_mapActualColorsCache.get( localValue );
         if( lColorFormatedStringCached == null )
         {
-          Color lActColor = SldHelper.interpolateColor( m_fromColor, m_toColor, (int) localValue, m_amountClasses );
+          final Color lActColor = SldHelper.interpolateColor( m_fromColor, m_toColor, (int) localValue, m_amountClasses );
           lColorFormatedStringCached = formatColor( lActColor );
           m_mapActualColorsCache.put( (int) localValue, lColorFormatedStringCached );
         }
@@ -229,16 +224,16 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
     }
   }
 
-  private String formatColor( Color c )
+  private String formatColor( final Color c )
   {
     try
     {
-      String r = (c.getRed() < 16) ? "0" + Integer.toHexString( c.getRed() ) : Integer.toHexString( c.getRed() ); //$NON-NLS-1$
-      String g = (c.getGreen() < 16) ? "0" + Integer.toHexString( c.getGreen() ) : Integer.toHexString( c.getGreen() ); //$NON-NLS-1$
-      String b = (c.getBlue() < 16) ? "0" + Integer.toHexString( c.getBlue() ) : Integer.toHexString( c.getBlue() ); //$NON-NLS-1$
+      final String r = (c.getRed() < 16) ? "0" + Integer.toHexString( c.getRed() ) : Integer.toHexString( c.getRed() ); //$NON-NLS-1$
+      final String g = (c.getGreen() < 16) ? "0" + Integer.toHexString( c.getGreen() ) : Integer.toHexString( c.getGreen() ); //$NON-NLS-1$
+      final String b = (c.getBlue() < 16) ? "0" + Integer.toHexString( c.getBlue() ) : Integer.toHexString( c.getBlue() ); //$NON-NLS-1$
       return "#" + r + g + b; //$NON-NLS-1$
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return DEFAULT_COLOR;
     }

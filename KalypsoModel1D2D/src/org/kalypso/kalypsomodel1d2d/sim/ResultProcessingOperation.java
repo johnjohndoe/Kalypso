@@ -52,8 +52,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -64,7 +64,7 @@ import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 
 /**
  * @author barbarins
- * 
+ *
  *         This part of result processing should be cancelable We only process the results, but do not move it into the
  *         database nor delete the old results
  */
@@ -151,7 +151,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     }
     catch( final Throwable t )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.6" ) + t.toString(), t ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.6" ) + t.toString(), t ); //$NON-NLS-1$
     }
   }
 
@@ -167,7 +167,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     if( processBean.deleteAll )
       return existingSteps.keySet().toArray( new String[existingSteps.size()] );
 
-    final SortedSet<Date> allCalculatedDates = new TreeSet<Date>();
+    final SortedSet<Date> allCalculatedDates = new TreeSet<>();
 
     /* Always delete all calculated steps */
     for( final Date dateTest : processBean.userCalculatedSteps )
@@ -180,7 +180,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     if( allCalculatedDates.isEmpty() )
       return new String[0];
 
-    final List<String> ids = new ArrayList<String>();
+    final List<String> ids = new ArrayList<>();
 
     if( processBean.deleteFollowers )
     {

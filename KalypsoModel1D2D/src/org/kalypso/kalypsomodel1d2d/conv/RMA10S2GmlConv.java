@@ -62,7 +62,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 
 /**
  * Provides algorithm to convert from a bce2d model to a 1d2d discretisation model
- * 
+ *
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
  * @author ig
@@ -171,7 +171,7 @@ public class RMA10S2GmlConv
       final String lStrPolyKind = lStringParser.getSub( 0 );
       final int lIntNodeId = Integer.parseInt( lStringParser.getSub( 1 ) );
       final int lIntAmountRanges = Integer.parseInt( lStringParser.getSub( 2 ) );
-      final List<Double> lListPolyAreaMaxRanges = new ArrayList<Double>();
+      final List<Double> lListPolyAreaMaxRanges = new ArrayList<>();
       Double lDoubleSlope = null;
       if( lStrPolyKind.equalsIgnoreCase( "QP" ) ) { //$NON-NLS-1$
         try
@@ -205,7 +205,7 @@ public class RMA10S2GmlConv
       final String lStrPolyKind = lStringParser.getSub( 0 );
       final int lIntNodeId = Integer.parseInt( lStringParser.getSub( 1 ) );
       final int lIntAmountRanges = Integer.parseInt( lStringParser.getSub( 2 ) );
-      final List<Double> lListPolyAreaMaxRanges = new ArrayList<Double>();
+      final List<Double> lListPolyAreaMaxRanges = new ArrayList<>();
 
       for( int i = 3; i < lStringParser.getIntSepCounter(); ++i )
       {
@@ -444,7 +444,7 @@ public class RMA10S2GmlConv
     try
     {
       final int junctionId = Integer.parseInt( lStringParser.getSub( 1 ) );
-      final List<Integer> junctionNodeIDList = new ArrayList<Integer>();
+      final List<Integer> junctionNodeIDList = new ArrayList<>();
 
       for( int i = 2; i < lStringParser.getIntSepCounter(); ++i )
       {

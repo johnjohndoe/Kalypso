@@ -73,18 +73,16 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  *
  * @author Dejan Antanaskovic
- *
  */
-
 public class GeometryRecalculator
 {
   private boolean m_nodesAdded = false;
 
-  private final List<Feature> m_nodeList = new ArrayList<Feature>();
+  private final List<Feature> m_nodeList = new ArrayList<>();
 
-  private final List<Feature> m_discretisationModelChanges = new ArrayList<Feature>();
+  private final List<Feature> m_discretisationModelChanges = new ArrayList<>();
 
-  private final List<Feature> m_flowRelationshipsModelChanges = new ArrayList<Feature>();
+  private final List<Feature> m_flowRelationshipsModelChanges = new ArrayList<>();
 
   private final IFlowRelationshipModel m_flowRelCollection;
 

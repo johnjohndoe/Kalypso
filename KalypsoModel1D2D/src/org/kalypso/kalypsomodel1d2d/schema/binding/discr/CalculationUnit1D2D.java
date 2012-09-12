@@ -54,19 +54,18 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * Default implementation of {@link ICalculationUnit2D}
- * 
+ *
  * @author Patrice Congo
  * @author Dejan Antanaskovic
- * 
  */
 public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalculationUnit1D2D
 {
-  public CalculationUnit1D2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public CalculationUnit1D2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  private final IFeatureBindingCollection<ICalculationUnit> m_subCalculationUnits = new FeatureBindingCollection<ICalculationUnit>( this, ICalculationUnit.class, WB1D2D_PROP_CALC_UNIT );
+  private final IFeatureBindingCollection<ICalculationUnit> m_subCalculationUnits = new FeatureBindingCollection<>( this, ICalculationUnit.class, WB1D2D_PROP_CALC_UNIT );
 
   private List<IFENetItem> m_virtualElements;
 
@@ -90,7 +89,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
         return;
       }
     }
-    m_virtualElements = new ArrayList<IFENetItem>();
+    m_virtualElements = new ArrayList<>();
     for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
       m_virtualElements.addAll( calculationUnit.getElements() );
 
@@ -113,20 +112,17 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
     if( m_virtualMemberIDs == null )
     {
       refreshVirtualElements();
-      m_virtualMemberIDs = new HashSet<String>();
+      m_virtualMemberIDs = new HashSet<>();
       for( final IFENetItem element : m_virtualElements )
         m_virtualMemberIDs.add( element.getId() );
     }
     return m_virtualMemberIDs;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit#getContinuityLines()
-   */
   @Override
   public List<IFELine> getContinuityLines( )
   {
-    final List<IFELine> lines = new ArrayList<IFELine>();
+    final List<IFELine> lines = new ArrayList<>();
     for( final ICalculationUnit subUnit : m_subCalculationUnits )
     {
       final List<IFELine> continuityLines = subUnit.getContinuityLines();
@@ -137,9 +133,6 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
     return lines;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit#contains(org.kalypsodeegree.model.feature.binding.Feature)
-   */
   @Override
   public boolean contains( final IFENetItem member )
   {
@@ -163,16 +156,12 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
 
   private void calculate1DElements( )
   {
-    m_list1DElements = new ArrayList<IElement1D>();
+    m_list1DElements = new ArrayList<>();
     for( final IFENetItem element : m_virtualElements )
       if( element instanceof IElement1D )
         m_list1DElements.add( (IElement1D) element );
-
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit#getElements2D()
-   */
   @Override
   public List<IPolyElement> getElements2D( )
   {
@@ -185,20 +174,17 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
 
   private void calculate2DElements( )
   {
-    m_list2DElements = new ArrayList<IPolyElement>();
+    m_list2DElements = new ArrayList<>();
     for( final IFENetItem element : m_virtualElements )
       if( element instanceof IPolyElement )
         m_list2DElements.add( (IPolyElement) element );
 
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D#query(org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
   @Override
   public List<IFENetItem> query( final GM_Envelope envelope )
   {
-    final List<IFENetItem> selectedElements = new ArrayList<IFENetItem>();
+    final List<IFENetItem> selectedElements = new ArrayList<>();
     for( final ICalculationUnit subUnit : m_subCalculationUnits )
       selectedElements.addAll( subUnit.getElements().query( envelope ) );
     return selectedElements;

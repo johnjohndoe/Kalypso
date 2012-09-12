@@ -145,7 +145,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
   private boolean m_warning;
 
-  private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
+  private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<>();
 
   private GM_Object m_geom;
 
@@ -379,7 +379,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
       // add remove element command
       final DeletePolyElementCmd deleteCmdPolyElement = new DeletePolyElementCmd( discModel );
-      final List<Feature> elementsToRemove = new ArrayList<Feature>();
+      final List<Feature> elementsToRemove = new ArrayList<>();
       for( final Feature feature : refineList )
       {
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
@@ -405,7 +405,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
       // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
       m_nodesNameConversionMap.clear();
 
-      final List<Feature> lListAdded = new ArrayList<Feature>();
+      final List<Feature> lListAdded = new ArrayList<>();
       /* create new elements */
       for( final GM_Object object : m_objects )
       {
@@ -439,12 +439,12 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
   // FIXME: use the Add2DElementsCommand instead
   private List<Feature> createPolyElement( final GM_Surface<GM_SurfacePatch> surface, final IFEDiscretisationModel1d2d discModel )
   {
-    final List<Feature> lListRes = new ArrayList<Feature>();
-    final List<IFE1D2DEdge> lListEdges = new ArrayList<IFE1D2DEdge>();
+    final List<Feature> lListRes = new ArrayList<>();
+    final List<IFE1D2DEdge> lListEdges = new ArrayList<>();
     for( final GM_SurfacePatch surfacePatch : surface )
     {
       final GM_Position[] poses = surfacePatch.getExteriorRing();
-      final List<GM_Point> lListPoints = new ArrayList<GM_Point>();
+      final List<GM_Point> lListPoints = new ArrayList<>();
       for( int i = 0; i < poses.length - 1; i++ )
         lListPoints.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], surface.getCoordinateSystem() ) );
 
@@ -466,7 +466,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
   private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge> lListEdges, final List<GM_Point> lListPoses )
   {
-    final List<Feature> lListRes = new ArrayList<Feature>();
+    final List<Feature> lListRes = new ArrayList<>();
     IFE1D2DNode lastNode = null;
     int iCountNodes = 0;
     if( lListPoses.size() > 0 && !lListPoses.get( lListPoses.size() - 1 ).equals( lListPoses.get( 0 ) ) )
@@ -487,7 +487,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
         actNode = discModel.createNode( lPoint, -1, new boolean[1] );
         if( actNode == null )
         {
-          return new ArrayList<Feature>();
+          return new ArrayList<>();
         }
         m_nodesNameConversionMap.put( lPoint.getPosition(), actNode );
         lListRes.add( actNode );
@@ -518,7 +518,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
   @SuppressWarnings({ "unchecked", "rawtypes" })
   private List<Feature> reselectFeatures( final List<GM_Point> centroidList )
   {
-    final List<Feature> refineList = new ArrayList<Feature>();
+    final List<Feature> refineList = new ArrayList<>();
     for( final Feature feature : m_featuresToRefine )
     {
       if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
@@ -542,7 +542,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
   @SuppressWarnings({ "unchecked" })
   private List<GM_Point> getCentroids( final GM_Object[] objects )
   {
-    final List<GM_Point> centroidList = new ArrayList<GM_Point>();
+    final List<GM_Point> centroidList = new ArrayList<>();
 
     for( final GM_Object object : objects )
     {
@@ -587,7 +587,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
     m_warning = false;
 
-    m_featuresToRefine = new ArrayList<Feature>();
+    m_featuresToRefine = new ArrayList<>();
 
     if( m_featureList == null )
       return;
@@ -597,7 +597,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
     final List<Feature> selectedFeatures = doSelect( m_geom, m_featureList );
 
-    final List<GM_Surface> surfaceList = new ArrayList<GM_Surface>();
+    final List<GM_Surface> surfaceList = new ArrayList<>();
 
     for( final Feature feature : selectedFeatures )
     {
@@ -625,7 +625,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
     final GM_Object[] refinements = refinement.doRefine( multiSurfaces, m_geom );
 
-    final List<GM_Surface> refinementList = new ArrayList<GM_Surface>();
+    final List<GM_Surface> refinementList = new ArrayList<>();
 
     for( final GM_Object refineGeom : refinements )
     {
@@ -672,7 +672,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     if( featureList == null )
       return null;
 
-    final List<Feature> selectedFeatures = new ArrayList<Feature>();
+    final List<Feature> selectedFeatures = new ArrayList<>();
 
     final List<Feature> selectedSubList = selectFeatures( featureList, selectGeometry );
     if( selectedSubList != null )
@@ -684,7 +684,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
   @SuppressWarnings({ "unchecked", "rawtypes" })
   private static List<Feature> selectFeatures( final FeatureList featureList, final GM_Object theGeom )
   {
-    final List<Feature> selectedFeatures = new ArrayList<Feature>();
+    final List<Feature> selectedFeatures = new ArrayList<>();
 
     // *** Why this??
     GM_Object selectGeometry = theGeom;

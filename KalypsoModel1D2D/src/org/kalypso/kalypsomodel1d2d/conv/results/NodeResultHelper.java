@@ -114,9 +114,9 @@ public class NodeResultHelper
 
   public static final String NODE_TYPE = "Node"; //$NON-NLS-1$
 
-  private static Map<String, Map<String, Map<String, Object>>> m_styleSettings = new HashMap<String, Map<String, Map<String, Object>>>();
+  private static Map<String, Map<String, Map<String, Object>>> m_styleSettings = new HashMap<>();
 
-  private static Map<String, Map<String, Object>> m_stepStyleSettings = new HashMap<String, Map<String, Object>>();
+  private static Map<String, Map<String, Object>> m_stepStyleSettings = new HashMap<>();
 
   public static final String[] NodeStyleTypes = new String[] { VELO_TYPE, WATERLEVEL_TYPE, DEPTH_TYPE, WAVE_HSIG_TYPE, WAVE_PERIOD_TYPE, WAVE_DIRECTION_TYPE };
 
@@ -188,7 +188,7 @@ public class NodeResultHelper
    */
   private static void interpolateMidsideNodeData( final INodeResult nodeDown, final INodeResult nodeUp, final INodeResult midsideNode )
   {
-    final List<Double> waterlevels = new LinkedList<Double>();
+    final List<Double> waterlevels = new LinkedList<>();
 
     waterlevels.add( nodeDown.getWaterlevel() );
     waterlevels.add( nodeUp.getWaterlevel() );
@@ -467,7 +467,7 @@ public class NodeResultHelper
 
   private static Map<String, Map<String, Object>> createMapStep( final String styleType )
   {
-    final Map<String, Map<String, Object>> mapStep = new HashMap<String, Map<String, Object>>();
+    final Map<String, Map<String, Object>> mapStep = new HashMap<>();
     final Map<String, Object> mapStyle = createMapStyle();
     mapStep.put( styleType.toLowerCase(), mapStyle );
     return mapStep;
@@ -475,7 +475,7 @@ public class NodeResultHelper
 
   private static Map<String, Object> createMapStyle( )
   {
-    final Map<String, Object> mapStyle = new HashMap<String, Object>();
+    final Map<String, Object> mapStyle = new HashMap<>();
     fillMapStyleWithDefaults( mapStyle );
     return mapStyle;
   }
@@ -517,12 +517,11 @@ public class NodeResultHelper
   /**
    * creating list of simplified curves as "normal" segments to given profiles, this segments are placed "outside"
    * corresponding to 1d-junctions based on this profiles
-   *
    */
   public static List<GM_CurveSegment> createOuterNormalSegmentsToJunctionsProfiles( final List<IProfileFeature> profilesList, final String crs )
   {
-    final List<GM_CurveSegment> listRes = new ArrayList<GM_CurveSegment>();
-    final List<IProfileFeature> profilesDone = new ArrayList<IProfileFeature>();
+    final List<GM_CurveSegment> listRes = new ArrayList<>();
+    final List<IProfileFeature> profilesDone = new ArrayList<>();
     for( final IProfileFeature profile : profilesList )
     {
       try
@@ -537,7 +536,7 @@ public class NodeResultHelper
         final IProfileFeature profileOnSameParent = findProfileWithSameParent( profile, profilesList );
 
         IProfileFeature nextProfile = null;
-        final List<GM_Position> points = new ArrayList<GM_Position>();
+        final List<GM_Position> points = new ArrayList<>();
 
         if( profileOnSameParent != null )
         {

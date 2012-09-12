@@ -45,19 +45,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 
 /**
  * Saves informations about buildings and creates there IDs.
- * 
+ *
  * @author Gernot Belger
- * 
  */
 public class BuildingIDProvider
 {
-  private final Map<Integer, IFlowRelationship> m_ids = new HashMap<Integer, IFlowRelationship>();
+  private final Map<Integer, IFlowRelationship> m_ids = new HashMap<>();
 
   private final Map<Integer, IFlowRelationship> m_unmodifiableIds = Collections.unmodifiableMap( m_ids );
 
@@ -68,7 +69,7 @@ public class BuildingIDProvider
     if( m_currentID > 999 )
     {
       final String msg =  Messages.getString("org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider.0", 1000 - 904 ); //$NON-NLS-1$
-      throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
     }
 
     final Integer newID = new Integer( m_currentID );

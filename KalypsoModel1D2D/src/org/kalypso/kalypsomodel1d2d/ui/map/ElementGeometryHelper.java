@@ -168,8 +168,8 @@ public class ElementGeometryHelper
    */
   public static int[][] getPolygonAsPointArrays( final GeoTransform projection, final GM_Point[] nodes )
   {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
+    final List<Integer> xArray = new ArrayList<>();
+    final List<Integer> yArray = new ArrayList<>();
 
     for( final GM_Point node : nodes )
     {
@@ -198,8 +198,8 @@ public class ElementGeometryHelper
    */
   public static int[][] getLineAsPointArrays( final GeoTransform projection, final GM_Point node1, final Point currentPos )
   {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
+    final List<Integer> xArray = new ArrayList<>();
+    final List<Integer> yArray = new ArrayList<>();
 
     final int x = (int) projection.getDestX( node1.getX() );
     final int y = (int) projection.getDestY( node1.getY() );

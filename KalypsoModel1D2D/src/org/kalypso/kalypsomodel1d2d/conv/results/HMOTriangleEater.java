@@ -56,13 +56,13 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class HMOTriangleEater implements ITriangleEater
 {
-  private final Map<INodeResult, Integer> m_nodes = new LinkedHashMap<INodeResult, Integer>();
+  private final Map<INodeResult, Integer> m_nodes = new LinkedHashMap<>();
 
-  private final List<Integer[]> m_triangles = new LinkedList<Integer[]>();
+  private final List<Integer[]> m_triangles = new LinkedList<>();
 
   private int m_nodeIndex = 0;
 

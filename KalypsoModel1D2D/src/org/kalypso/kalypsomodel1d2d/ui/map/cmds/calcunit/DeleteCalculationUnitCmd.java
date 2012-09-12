@@ -301,7 +301,7 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
 
   private final Feature[] getChangedFeatureArray( )
   {
-    final List<Feature> changedFeatures = new ArrayList<Feature>();
+    final List<Feature> changedFeatures = new ArrayList<>();
 
     if( m_calcUnitToDelete != null )
       changedFeatures.add( m_calcUnitToDelete );
@@ -371,7 +371,7 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
     // set subunits
     if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
     {
-      final IFeatureBindingCollection subUnits = ((ICalculationUnit1D2D) m_calcUnitToDelete).getChangedSubUnits();
+      final IFeatureBindingCollection<ICalculationUnit> subUnits = ((ICalculationUnit1D2D)m_calcUnitToDelete).getChangedSubUnits();
       for( final ICalculationUnit subUnit : m_undoChildUnits )
         subUnits.addRef( subUnit );
     }

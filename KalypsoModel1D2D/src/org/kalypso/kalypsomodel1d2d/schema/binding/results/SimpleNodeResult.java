@@ -97,9 +97,9 @@ public class SimpleNodeResult extends AbstractEmptyFeature implements INodeResul
 
   private List<Double> m_dVelDtPrevStep;
 
-  public final List<Double> m_lambdas = new LinkedList<Double>();
+  public final List<Double> m_lambdas = new LinkedList<>();
 
-  public final List<ArcResult> m_arcs = new LinkedList<ArcResult>();
+  public final List<ArcResult> m_arcs = new LinkedList<>();
 
   private boolean m_nodeAssigned;
 
@@ -219,7 +219,7 @@ public class SimpleNodeResult extends AbstractEmptyFeature implements INodeResul
       return m_velocity;
     else
     {
-      final List<Double> veloList = new ArrayList<Double>();
+      final List<Double> veloList = new ArrayList<>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
       return veloList;
