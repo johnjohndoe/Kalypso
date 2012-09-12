@@ -83,7 +83,7 @@ public class AddProfileToMapHandler extends AbstractHandler
 
       /* Add new layer to profile-collection-map and remove existing one with same path and source. */
       final MapView mapView = findMapView();
-      ImportProfileHelper.addTheme( mapView, terrainModel, network );
+      ImportProfileHelper.addTheme( mapView, terrainModel, new IRiverProfileNetwork[] { network } );
 
       return null;
     }

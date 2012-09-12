@@ -52,9 +52,9 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class RiverProfileNetwork extends Feature_Impl implements IRiverProfileNetwork
 {
-  final IFeatureBindingCollection<IProfileFeature> m_profiles = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, QNAME_PROP_RIVER_PROFILE );
+  final IFeatureBindingCollection<IProfileFeature> m_profiles = new FeatureBindingCollection<>( this, IProfileFeature.class, QNAME_PROP_RIVER_PROFILE );
 
-  public RiverProfileNetwork( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RiverProfileNetwork( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }

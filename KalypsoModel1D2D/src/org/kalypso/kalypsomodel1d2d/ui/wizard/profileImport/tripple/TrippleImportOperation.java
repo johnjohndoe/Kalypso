@@ -4,7 +4,6 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,13 +20,8 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * @author Gernot Belger
@@ -37,8 +31,6 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
   private static final DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
 
   private final IRiverProfileNetworkCollection m_profNetworkColl;
-
-  private final List<Feature> m_terrainModelAdds;
 
   private final File m_trippelFile;
 
@@ -56,7 +48,6 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
     m_separator = separator;
     m_crs = crs;
     m_profNetworkColl = data.getProfNetworkColl();
-    m_terrainModelAdds = data.getTerrainModelAdds();
     m_network = null;
   }
 
@@ -77,7 +68,7 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
       /* Convert Trippel Data */
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.16" ) ); //$NON-NLS-1$
 
-      final IStatus status = doImportNetwork( m_profNetworkColl, m_terrainModelAdds, profiles );
+      final IStatus status = doImportNetwork( m_profNetworkColl, profiles );
 
       monitor.worked( 1 );
 
@@ -98,9 +89,9 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
   }
 
   @Override
-  public IRiverProfileNetwork getAddedRiverNetwork( )
+  public IRiverProfileNetwork[] getAddedRiverNetworks( )
   {
-    return m_network;
+    return new IRiverProfileNetwork[] { m_network };
   }
 
   /**
@@ -110,11 +101,10 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
    *          the GML river network, in which the profiles will be stored
    * @param addedFeatures
    */
-  protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures, final IProfil[] profiles ) throws Exception
+  protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final IProfil[] profiles ) throws Exception
   {
     final IRiverProfileNetwork network = networkCollection.getRiverProfileNetworks().addNew( IRiverProfileNetwork.QNAME );
     final Feature networkFeature = network;
-    addedFeatures.add( networkFeature );
 
     /* Set user friendly name and description */
     final String fileName = m_trippelFile.getName();
@@ -124,10 +114,10 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
     network.setName( FileUtilities.nameWithoutExtension( fileName ) );
     network.setDescription( desc );
 
-    final GMLWorkspace workspace = networkFeature.getWorkspace();
+    // final GMLWorkspace workspace = networkFeature.getWorkspace();
 
-    final String coordinatesSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    workspace.accept( new TransformVisitor( coordinatesSystem ), networkFeature, FeatureVisitor.DEPTH_INFINITE );
+    // final String coordinatesSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    // workspace.accept( new TransformVisitor( coordinatesSystem ), networkFeature, FeatureVisitor.DEPTH_INFINITE );
 
     for( final IProfil profile : profiles )
     {
@@ -135,12 +125,11 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
       profileFeature.setEnvelopesUpdated();
       ((ProfileFeatureBinding)profileFeature).setProfile( profile );
       profileFeature.setSrsName( m_crs );
-      addedFeatures.add( profileFeature );
     }
 
-    final GMLWorkspace workspace2 = networkFeature.getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace2, networkFeature, networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
-    workspace.fireModellEvent( event );
+    // final GMLWorkspace workspace2 = networkFeature.getWorkspace();
+    // final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace2, networkFeature, networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+    // workspace.fireModellEvent( event );
 
     m_network = network;
 

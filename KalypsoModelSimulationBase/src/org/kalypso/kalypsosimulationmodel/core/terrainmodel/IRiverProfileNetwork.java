@@ -35,7 +35,6 @@ public interface IRiverProfileNetwork extends Feature
    * @return the river profile situated after the specified one
    */
   public IProfileFeature getNext( final IProfileFeature riverProfile );
-  
-  public IFeatureBindingCollection<IProfileFeature> getProfiles( );
 
+  public IFeatureBindingCollection<IProfileFeature> getProfiles( );
 }

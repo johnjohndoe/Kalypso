@@ -18,13 +18,9 @@
  */
 package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Holger Albert
@@ -35,13 +31,10 @@ public class ImportProfileData
 
   private final IRiverProfileNetworkCollection m_profNetworkColl;
 
-  private final List<Feature> m_terrainModelAdds;
-
   public ImportProfileData( final MapView mapView )
   {
     m_mapView = mapView;
     m_profNetworkColl = getRiverProfileNetworkCollection();
-    m_terrainModelAdds = new ArrayList<>();
   }
 
   private IRiverProfileNetworkCollection getRiverProfileNetworkCollection( )
@@ -66,10 +59,5 @@ public class ImportProfileData
   public IRiverProfileNetworkCollection getProfNetworkColl( )
   {
     return m_profNetworkColl;
-  }
-
-  public List<Feature> getTerrainModelAdds( )
-  {
-    return m_terrainModelAdds;
   }
 }
