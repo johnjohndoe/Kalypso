@@ -139,9 +139,6 @@ public class WProfPropertyPage extends WizardPage
     button.setText( Messages.getString( "WProfPropertyPage_6" ) ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {

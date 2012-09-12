@@ -115,7 +115,7 @@ public class ExportColumnsComposite
   public ExportColumnsComposite( final PatternReplacementColumn[] columns, final ProfileSelection profileSelection )
   {
     m_profileSelection = profileSelection;
-    m_columns = new ArrayList<PatternReplacementColumn>( Arrays.asList( columns ) );
+    m_columns = new ArrayList<>( Arrays.asList( columns ) );
 
     initReplacer();
   }
