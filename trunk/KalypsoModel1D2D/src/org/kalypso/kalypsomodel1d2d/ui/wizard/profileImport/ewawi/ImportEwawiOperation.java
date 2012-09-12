@@ -40,7 +40,7 @@ public class ImportEwawiOperation extends AbstractImportProfileOperation
     super( profileData );
 
     m_data = data;
-    m_worker = new ImportEwawiWorker( profileData.getProfNetworkColl(), profileData.getTerrainModelAdds() );
+    m_worker = new ImportEwawiWorker( profileData.getProfNetworkColl() );
   }
 
   @Override
@@ -51,8 +51,8 @@ public class ImportEwawiOperation extends AbstractImportProfileOperation
   }
 
   @Override
-  public IRiverProfileNetwork getAddedRiverNetwork( )
+  public IRiverProfileNetwork[] getAddedRiverNetworks( )
   {
-    return m_worker.getNetwork();
+    return m_worker.getNetworks();
   }
 }

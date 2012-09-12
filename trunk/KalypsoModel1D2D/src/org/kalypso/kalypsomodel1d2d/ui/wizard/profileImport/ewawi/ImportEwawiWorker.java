@@ -21,12 +21,15 @@ package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ewawi;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -36,18 +39,16 @@ import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfile;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.AbstractEwawiWorker;
 import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportData;
 import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiProfilePointCreator;
 import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiProfilePointMarkerCreator;
 import org.kalypso.shape.dbf.DBaseException;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Holger Albert
@@ -56,12 +57,12 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
 {
   private final IRiverProfileNetworkCollection m_profNetworkColl;
 
-  private final List<Feature> m_terrainModelAdds;
+  private final List<IRiverProfileNetwork> m_addedNetworks;
 
-  public ImportEwawiWorker( final IRiverProfileNetworkCollection profNetworkColl, final List<Feature> terrainModelAdds )
+  public ImportEwawiWorker( final IRiverProfileNetworkCollection profNetworkColl )
   {
     m_profNetworkColl = profNetworkColl;
-    m_terrainModelAdds = terrainModelAdds;
+    m_addedNetworks = new ArrayList<>();
   }
 
   @Override
@@ -87,16 +88,13 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
 
       final String riverId = getRiverId( basePart );
       final String riverName = getRiverName( data, gewShape, basePart );
-      final GM_Curve riverGeometry = getRiverGeometry( data, gewShape, basePart );
 
-      // TODO Create the profile...
-      final IProfileFeature profileFeature = null;
+      final IRiverProfileNetwork network = createOrGetNetwork( data, riverId, riverName );
+      final IProfileFeature profileFeature = createNewProfile( network );
       profileFeature.setName( name );
       profileFeature.setDescription( description );
       profileFeature.setSrsName( data.getCoordinateSystem() );
       profileFeature.setBigStation( station );
-
-      // TODO Update the profile network with the river values...
 
       for( final String foto : photos )
       {
@@ -114,10 +112,10 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
 
       return profileFeature;
     }
-    catch( final DBaseException | EwawiException e )
+    catch( final DBaseException | EwawiException | GMLSchemaException e )
     {
       final String message = String.format( "Unable to create profile at %.4f", station.doubleValue() );
-      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message, e );
+      final Status status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
   }
@@ -139,10 +137,34 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
   @Override
   public void fireChangeEvents( )
   {
+    /* Nothing to do. */
+  }
+
+  private IRiverProfileNetwork createOrGetNetwork( final EwawiImportData data, final String riverId, final String riverName )
+  {
+    final String networkName = String.format( "%s (%s)", riverName, riverId );
+
     final IFeatureBindingCollection<IRiverProfileNetwork> networks = m_profNetworkColl.getRiverProfileNetworks();
-    final IRiverProfileNetwork[] nws = networks.toArray( new IRiverProfileNetwork[] {} );
-    final GMLWorkspace workspace = m_profNetworkColl.getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_profNetworkColl, nws, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    for( final IRiverProfileNetwork network : networks )
+    {
+      if( networkName.equals( network.getName() ) )
+        return network;
+    }
+
+    final IRiverProfileNetwork network = networks.addNew( IRiverProfileNetwork.QNAME );
+    network.setName( networkName );
+    network.setDescription( data.getProFile().getFile().getName() );
+    m_addedNetworks.add( network );
+
+    return network;
+  }
+
+  private IProfileFeature createNewProfile( final IRiverProfileNetwork network ) throws GMLSchemaException
+  {
+    final IProfileFeature newProfile = (IProfileFeature)FeatureHelper.addFeature( network, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, IProfileFeature.FEATURE_PROFILE );
+    newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+
+    return newProfile;
   }
 
   public IRiverProfileNetworkCollection getProfNetworkColl( )
@@ -150,14 +172,8 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
     return m_profNetworkColl;
   }
 
-  public List<Feature> getTerrainModelAdds( )
+  public IRiverProfileNetwork[] getNetworks( )
   {
-    return m_terrainModelAdds;
-  }
-
-  public IRiverProfileNetwork getNetwork( )
-  {
-    // TODO
-    return null;
+    return m_addedNetworks.toArray( new IRiverProfileNetwork[] {} );
   }
 }

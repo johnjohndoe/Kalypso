@@ -80,24 +80,27 @@ public class ImportProfileHelper
     }
   }
 
-  public static void addTheme( final MapView mapView, final ITerrainModel terrainModel, final IRiverProfileNetwork network )
+  public static void addTheme( final MapView mapView, final ITerrainModel terrainModel, final IRiverProfileNetwork[] networks )
   {
     final GisTemplateMapModell mapModel = (GisTemplateMapModell)mapView.getMapPanel().getMapModell();
 
-    final FeaturePath networkPath = new FeaturePath( network );
-    final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
-    final URL terrainModelLocation = terrainModel.getWorkspace().getContext();
-    final String absoluteTerrainPath = terrainModelLocation.toString();
-    final String relativeTerrainPath = ImportProfileHelper.createRelativeTerrainPath( mapModel.getContext(), terrainModelLocation );
+    for( final IRiverProfileNetwork network : networks )
+    {
+      final FeaturePath networkPath = new FeaturePath( network );
+      final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
+      final URL terrainModelLocation = terrainModel.getWorkspace().getContext();
+      final String absoluteTerrainPath = terrainModelLocation.toString();
+      final String relativeTerrainPath = ImportProfileHelper.createRelativeTerrainPath( mapModel.getContext(), terrainModelLocation );
 
-    /* Remove themes with same path in map. */
-    removeExistingThemes( mapView, mapModel, profilesPath, absoluteTerrainPath, relativeTerrainPath );
+      /* Remove themes with same path in map. */
+      removeExistingThemes( mapView, mapModel, profilesPath, absoluteTerrainPath, relativeTerrainPath );
 
-    /* Add as new theme. */
-    addNewTheme( mapView, mapModel, network, profilesPath, relativeTerrainPath );
+      /* Add as new theme. */
+      addNewTheme( mapView, mapModel, network, profilesPath, relativeTerrainPath );
+    }
 
-    /* Zoom to the profiles. */
-    zoomToProfiles( mapView, network.getProfiles() );
+    /* Zoom to the networks. */
+    zoomToNetworks( mapView, networks );
   }
 
   private static String createRelativeTerrainPath( final URL mapLocation, final URL terrainLocation )
@@ -175,10 +178,23 @@ public class ImportProfileHelper
     mapView.postCommand( cascadingCommand, null );
   }
 
-  private static void zoomToProfiles( final MapView mapView, final IFeatureBindingCollection<IProfileFeature> profiles )
+  private static void zoomToNetworks( final MapView mapView, final IRiverProfileNetwork[] networks )
   {
-    final GM_Envelope envelope = profiles.getBoundingBox();
-    if( envelope != null )
-      mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
+    GM_Envelope mergedEnvelope = null;
+    for( final IRiverProfileNetwork network : networks )
+    {
+      final IFeatureBindingCollection<IProfileFeature> profiles = network.getProfiles();
+      final GM_Envelope envelope = profiles.getBoundingBox();
+      if( mergedEnvelope == null )
+      {
+        mergedEnvelope = envelope;
+        continue;
+      }
+
+      mergedEnvelope = mergedEnvelope.getMerged( envelope );
+    }
+
+    if( mergedEnvelope != null )
+      mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), mergedEnvelope ), null );
   }
 }

@@ -113,7 +113,7 @@ public class EwawiWorker extends AbstractEwawiWorker
 
       return profileFeature;
     }
-    catch( final GMLSchemaException | DBaseException | EwawiException e )
+    catch( final DBaseException | EwawiException | GMLSchemaException e )
     {
       final String message = String.format( "Unable to create profile at %.4f", station.doubleValue() );
       final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message, e );

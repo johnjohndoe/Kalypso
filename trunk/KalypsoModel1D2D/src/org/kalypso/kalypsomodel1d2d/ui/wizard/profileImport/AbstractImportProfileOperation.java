@@ -34,6 +34,8 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.views.map.MapView;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -106,6 +108,15 @@ public abstract class AbstractImportProfileOperation implements ICoreRunnableWit
   {
     try
     {
+      /* Fire change events. */
+      final IRiverProfileNetwork[] networks = getAddedRiverNetworks();
+      if( networks.length > 0 )
+      {
+        final GMLWorkspace workspace = networks[0].getWorkspace();
+        final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, networks[0].getOwner(), networks, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+        workspace.fireModellEvent( event );
+      }
+
       /* Post empty command in order to make pool dirty. */
       final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       modelProvider.postCommand( ITerrainModel.class.getName(), new EmptyCommand( "Import Profiles", false ) );
@@ -126,12 +137,12 @@ public abstract class AbstractImportProfileOperation implements ICoreRunnableWit
     if( terrainModel == null )
       return;
 
-    final IRiverProfileNetwork network = getAddedRiverNetwork();
-    if( network == null )
+    final IRiverProfileNetwork[] networks = getAddedRiverNetworks();
+    if( networks == null || networks.length == 0 )
       return;
 
-    ImportProfileHelper.addTheme( mapView, terrainModel, network );
+    ImportProfileHelper.addTheme( mapView, terrainModel, networks );
   }
 
-  public abstract IRiverProfileNetwork getAddedRiverNetwork( );
+  public abstract IRiverProfileNetwork[] getAddedRiverNetworks( );
 }
