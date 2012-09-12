@@ -44,14 +44,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * Encapsulates all profile data the user works on for channel editing:
@@ -65,23 +64,23 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 public class ChannelMesh
 {
   /* null means: data not initalized */
-  private List<SegmentData> m_segments = null;
+  private SegmentData[] m_segments = null;
 
   private final IProfileData[] m_profiles;
 
   private final Map<GM_Curve, SIDE> m_banks;
 
-  private final int m_numberBankIntersection;
+  private final int m_numberBankPoints;
 
-  private final int m_numberProfileIntersection;
+  private final int m_numberProfilePoints;
 
   public ChannelMesh( final IProfileFeature[] profiles, final int numberProfileIntersection, final Map<GM_Curve, SIDE> banks, final int numberBankIntersection )
   {
     m_profiles = ProfileData.from( profiles, numberProfileIntersection );
-    m_numberProfileIntersection = numberProfileIntersection;
+    m_numberProfilePoints = numberProfileIntersection;
 
     m_banks = banks;
-    m_numberBankIntersection = numberBankIntersection;
+    m_numberBankPoints = numberBankIntersection;
 
     /* Sort so that stations are in ascending order; this is nice in the combo viewer. */
     final ProfileDataStationComparator comparator = new ProfileDataStationComparator();
@@ -93,84 +92,26 @@ public class ChannelMesh
     return m_profiles;
   }
 
-  void initData( )
+  void setSegments( final SegmentData[] segments )
   {
-    m_segments = new ArrayList<>();
+    m_segments = segments;
 
-    // there must be at least two selected profiles and one selected bank.
-
-    // FIXME: we need one bank PER SIDE: this is not guarantueed by this code
-    // TODO: works only, because we only keep exactly one bank per side
-    if( m_banks.size() < 2 )
+    /* special case, we do not have any segments (mising ban klines) */
+    if( segments.length == 0 )
       return;
 
-    //monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.9" ), profiles.length ); //$NON-NLS-1$
+    /* check consistency */
+    Assert.isTrue( segments.length == m_profiles.length - 1 );
 
-    // loop over all profiles
-    // take two neighbouring profiles create a segment for them
-
-    IProfileData lastProfile = null;
-    for( final IProfileData profile : m_profiles )
+    for( int i = 0; i < segments.length; i++ )
     {
-      //monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.10" ) + profile.getStation() ); //$NON-NLS-1$
+      final SegmentData segment = segments[i];
 
-      if( !checkInteIntersectionWithBanks( profile ) )
-        continue;
+      final ProfileData profileDown = segment.getProfileDown();
+      final ProfileData profileUp = segment.getProfileUp();
 
-      if( lastProfile != null )
-      {
-        final ProfileData upProfile = (ProfileData)profile;
-        final ProfileData downProfile = (ProfileData)lastProfile;
-
-        final SegmentData segment = new SegmentData( upProfile, downProfile, m_banks, m_numberBankIntersection );
-        m_segments.add( segment );
-      }
-
-      lastProfile = profile;
-
-      // if( monitor.isCanceled() )
-      // throw new OperationCanceledException();
-
-      // monitor.worked( 1 );
-    }
-
-    /**
-     * Intersects the two WSPM profiles (upstream/downstream) with the allready intersected bank lines (left/right) of
-     * the current segment.<br>
-     * The two profiles will be cropped at the intersection points and intersected by a specific number of points. <br>
-     * Afterwards an area adjustment for the intersected profiles will be done .
-     */
-    // FIXME: better management of update needed
-    for( final IProfileData profile : m_profiles )
-      ((ProfileData)profile).recalculateWorkingProfile();
-
-    for( final SegmentData segment : m_segments )
-      segment.updateMesh();
-  }
-
-  private boolean checkInteIntersectionWithBanks( final IProfileData profile )
-  {
-    try
-    {
-      final Set<GM_Curve> curves = m_banks.keySet();
-
-      // TODO: bad test: profile should intersect one left-bank and one right-bank
-      // TODO: only works, because we have exactly one left and one right bank
-
-      for( final GM_Curve curve : curves )
-      {
-        final GM_Curve line = profile.getOriginalProfileGeometry();
-
-        if( !curve.intersects( line ) )
-          return false;
-      }
-
-      return true;
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-      return false;
+      Assert.isTrue( profileDown == m_profiles[i] );
+      Assert.isTrue( profileUp == m_profiles[i + 1] );
     }
   }
 
@@ -206,14 +147,14 @@ public class ChannelMesh
     return m_banks;
   }
 
-  public int getNumberProfileSegments( )
+  public int getNumberProfilePoints( )
   {
-    return m_numberProfileIntersection;
+    return m_numberProfilePoints;
   }
 
-  public int getNumberBanklineSegments( )
+  public int getNumberBanklinePoints( )
   {
-    return m_numberBankIntersection;
+    return m_numberBankPoints;
   }
 
   public String[] getProfileIDs( )
@@ -234,5 +175,10 @@ public class ChannelMesh
       features[i] = ((ProfileData)m_profiles[i]).getFeature();
 
     return features;
+  }
+
+  ISegmentData[] getSegments( )
+  {
+    return m_segments;
   }
 }

@@ -30,4 +30,8 @@ public interface IBankData
   LineString getWorkingGeometry( );
 
   ISegmentData getSegment( );
+
+  boolean isUserChanged( );
+
+  LineString getCroppedOriginalGeometry( );
 }

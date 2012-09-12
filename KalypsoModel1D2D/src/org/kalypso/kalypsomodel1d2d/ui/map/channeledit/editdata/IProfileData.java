@@ -19,7 +19,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -49,7 +48,7 @@ public interface IProfileData
 
   GM_Envelope getMapExtent( String coordinatesSystem ) throws GM_Exception;
 
-  boolean isUserChaned( );
+  boolean isUserChanged( );
 
-  void updateWorkingProfile( IProfil newWorkingProfile ) throws GM_Exception, GeoTransformerException;
+  void updateWorkingProfile( IProfil newWorkingProfile );
 }

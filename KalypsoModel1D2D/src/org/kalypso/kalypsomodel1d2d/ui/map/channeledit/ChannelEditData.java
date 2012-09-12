@@ -350,7 +350,7 @@ public class ChannelEditData extends AbstractModelObject
 
     final ChannelMesh oldData = m_editData;
 
-    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), newBanklines, oldData.getNumberBanklineSegments() );
+    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), oldData.getNumberProfilePoints(), newBanklines, oldData.getNumberBanklinePoints() );
 
     startUpdateEditData( newData, true );
   }
@@ -366,7 +366,7 @@ public class ChannelEditData extends AbstractModelObject
 
     final ChannelMesh oldData = m_editData;
 
-    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), newBanklines, oldData.getNumberBanklineSegments() );
+    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), oldData.getNumberProfilePoints(), newBanklines, oldData.getNumberBanklinePoints() );
 
     startUpdateEditData( newData, true );
   }
@@ -385,7 +385,7 @@ public class ChannelEditData extends AbstractModelObject
   {
     final ChannelMesh oldData = m_editData;
 
-    final ChannelMesh newData = new ChannelMesh( profiles, oldData.getNumberProfileSegments(), oldData.getBanklines(), oldData.getNumberBanklineSegments() );
+    final ChannelMesh newData = new ChannelMesh( profiles, oldData.getNumberProfilePoints(), oldData.getBanklines(), oldData.getNumberBanklinePoints() );
 
     startUpdateEditData( newData, checkUserEdits );
   }
@@ -413,26 +413,26 @@ public class ChannelEditData extends AbstractModelObject
   {
     final ChannelMesh oldData = m_editData;
 
-    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), numProfileSegments, oldData.getBanklines(), oldData.getNumberBanklineSegments() );
+    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), numProfileSegments, oldData.getBanklines(), oldData.getNumberBanklinePoints() );
 
     startUpdateEditData( newData, true );
   }
 
   public int getNumberProfileSegments( )
   {
-    return m_editData.getNumberProfileSegments();
+    return m_editData.getNumberProfilePoints();
   }
 
   public int getNumberBankSegments( )
   {
-    return m_editData.getNumberBanklineSegments();
+    return m_editData.getNumberBanklinePoints();
   }
 
   public void setNumberBankSegments( final int numberBankSegments )
   {
     final ChannelMesh oldData = m_editData;
 
-    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), oldData.getNumberProfileSegments(), oldData.getBanklines(), numberBankSegments );
+    final ChannelMesh newData = new ChannelMesh( oldData.getProfileFeatures(), oldData.getNumberProfilePoints(), oldData.getBanklines(), numberBankSegments );
 
     /* reset widget, because some of them keep stale data */
     setDelegate( null );
