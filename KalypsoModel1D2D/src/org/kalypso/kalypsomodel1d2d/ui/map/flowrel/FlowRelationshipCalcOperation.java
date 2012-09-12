@@ -236,7 +236,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       final IProfileFeature teschkeProfile = ((ITeschkeFlowRelation) flowRel).getProfile();
       if( teschkeProfile == null )
       {
-        final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.5" );
+        final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.5" ); //$NON-NLS-1$
         throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) ); //$NON-NLS-1$
       }
 

@@ -146,9 +146,6 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
     } );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyTyped( final KeyEvent e )
   {
@@ -157,7 +154,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
       e.consume();
 
       final EasyFeatureWrapper[] features = getMapPanel().getSelectionManager().getAllFeatures();
-      final List<IFlowRelationship> flowRels = new ArrayList<IFlowRelationship>( features.length );
+      final List<IFlowRelationship> flowRels = new ArrayList<>( features.length );
       for( final EasyFeatureWrapper feature : features )
       {
         final IFlowRelationship adapter = (IFlowRelationship) feature.getFeature().getAdapter( IFlowRelationship.class );

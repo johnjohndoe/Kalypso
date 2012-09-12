@@ -87,7 +87,7 @@ public class SwanResultProcessor
   {
     try
     {
-      if( m_swanResultDir.getName().getBaseName().endsWith( "zip" ) )
+      if( m_swanResultDir.getName().getBaseName().endsWith( "zip" ) ) //$NON-NLS-1$
       {
         // swan mat file should be unpacked for using in within JMatIO-Reader, so we put the uncompressed version in
         // to the working directory.

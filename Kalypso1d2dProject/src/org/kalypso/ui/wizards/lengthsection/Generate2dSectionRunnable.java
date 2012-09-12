@@ -168,7 +168,7 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
           // allow multiple lengthsections
           // how to delete them?
           final String riverName = m_parameters.getSelectedRiverName();
-          final String lengthSecionFileName = "section_" + riverName + ".gml";
+          final String lengthSecionFileName = "section_" + riverName + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
           final String sectionName = riverName;
 
           final IFile lsFile = folder.getFile( lengthSecionFileName ); //$NON-NLS-1$

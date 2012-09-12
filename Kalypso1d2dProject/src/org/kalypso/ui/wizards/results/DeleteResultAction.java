@@ -85,7 +85,7 @@ public class DeleteResultAction extends Action
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     // FIXME: show real list of selected element -> if none selected, show user what to do
-    if( !MessageDialog.openConfirm( shell, m_page.getWizard().getWindowTitle(), "Selektierte Ergebnisse löschen?" ) )
+    if( !MessageDialog.openConfirm( shell, m_page.getWizard().getWindowTitle(), Messages.getString("DeleteResultAction.0") ) ) //$NON-NLS-1$
       return;
 
     final CheckboxTreeViewer treeViewer = m_page.getTreeViewer();

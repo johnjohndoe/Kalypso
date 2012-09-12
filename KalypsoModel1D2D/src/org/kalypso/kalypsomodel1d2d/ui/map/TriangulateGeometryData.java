@@ -46,6 +46,7 @@ import java.util.List;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.Add2DElementsCommand;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -227,7 +228,7 @@ class TriangulateGeometryData extends AbstractModelObject
     catch( final Exception e1 )
     {
       e1.printStackTrace();
-      SWT_AWT_Utilities.showSwtMessageBoxError( m_widget.getName(), "Failed to create 2D-Elements: " + e1.toString() );
+      SWT_AWT_Utilities.showSwtMessageBoxError( m_widget.getName(), Messages.getString("TriangulateGeometryData_0") + e1.toString() ); //$NON-NLS-1$
     }
     finally
     {

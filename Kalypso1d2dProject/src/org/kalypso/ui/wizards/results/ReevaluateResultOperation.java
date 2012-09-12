@@ -233,7 +233,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
       }
     }
 
-    return stati.asMultiStatusOrOK( "Problems during result reevaluation" );
+    return stati.asMultiStatusOrOK( Messages.getString("ReevaluateResultOperation.0") ); //$NON-NLS-1$
   }
 
   private List<String> removeAllOthersStepWithDate( final List<String> lListResultsToRemove, final String stepId )

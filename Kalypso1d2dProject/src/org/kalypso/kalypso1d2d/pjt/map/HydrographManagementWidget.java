@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
@@ -103,7 +104,6 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
@@ -185,7 +185,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     }
   };
 
-  private final AbstractThemeInfoWidget m_infoWidget = new AbstractThemeInfoWidget( "", "" ) //$NON-NLS-1$ //$NON-NLS-2$
+  private final AbstractThemeInfoWidget m_infoWidget = new AbstractThemeInfoWidget( StringUtils.EMPTY, StringUtils.EMPTY )
   {
   };
 
@@ -507,9 +507,9 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         if( m_theme == null )
-          return StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.11" ) ); //$NON-NLS-1$
+          return new Status( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.11" ) ); //$NON-NLS-1$
 
-        m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable ); //$NON-NLS-1$
+        m_theme.postCommand( new EmptyCommand( StringUtils.EMPTY, false ), refreshRunnable );
 
         try
         {
@@ -642,7 +642,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable ); //$NON-NLS-1$
+        m_theme.postCommand( new EmptyCommand( StringUtils.EMPTY, false ), refreshRunnable );
 
         try
         {
@@ -728,7 +728,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     };
     selectAction.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.25" ) ); //$NON-NLS-1$
 
-    final Action importAction = new Action( "Import Hydrographs", importID )
+    final Action importAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.0" ), importID ) //$NON-NLS-1$
     {
       @Override
       public void runWithEvent( final Event event )
@@ -736,7 +736,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         handleHydrographImport( event );
       }
     };
-    importAction.setDescription( Messages.getString( "Import Hydrographs" ) );
+    importAction.setDescription( Messages.getString( Messages.getString("HydrographManagementWidget.0") ) ); //$NON-NLS-1$
 
     final Action exportAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.28" ), exportID ) //$NON-NLS-1$
     {
@@ -793,7 +793,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     dialog.setRememberSize( true );
     dialog.open();
     final String errMsg = importHydrographWizard.getErrMsg();
-    if( errMsg != null && errMsg != "" )
+    if( !StringUtils.isEmpty( errMsg ) )
     {
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
@@ -803,7 +803,8 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         {
           final Shell shell2 = display.getActiveShell();
           final IStatus lStatus = Status.CANCEL_STATUS;
-          ErrorDialog.openError( shell2, "Import Hydrographs Warnings", errMsg, lStatus ); //$NON-NLS-1$
+          final String title = Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.0" ); //$NON-NLS-1$;
+          ErrorDialog.openError( shell2, title, errMsg, lStatus );
         }
       } );
     }

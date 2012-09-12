@@ -79,9 +79,9 @@ import com.vividsolutions.jts.geom.LineString;
  */
 class DragBankLineWidget extends AbstractWidget
 {
-  private final SLDPainter2 m_handlePainter = new SLDPainter2( getClass().getResource( "resources/handleRect.sld" ) );
+  private final SLDPainter2 m_handlePainter = new SLDPainter2( getClass().getResource( "resources/handleRect.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_currentLinePainter = new SLDPainter2( getClass().getResource( "resources/draggedBankLine.sld" ) );
+  private final SLDPainter2 m_currentLinePainter = new SLDPainter2( getClass().getResource( "resources/draggedBankLine.sld" ) ); //$NON-NLS-1$
 
   /**
    * This list stores all handles of the selected feature.

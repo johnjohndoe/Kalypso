@@ -70,27 +70,27 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
  */
 class ChannelEditPainter
 {
-  private final SLDPainter2 m_selectedProfilePainter = new SLDPainter2( getClass().getResource( "resources/selectedProfile.sld" ) );
+  private final SLDPainter2 m_selectedProfilePainter = new SLDPainter2( getClass().getResource( "resources/selectedProfile.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_leftBankPainter = new SLDPainter2( getClass().getResource( "resources/bankLeft.sld" ) );
+  private final SLDPainter2 m_leftBankPainter = new SLDPainter2( getClass().getResource( "resources/bankLeft.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_rightBankPainter = new SLDPainter2( getClass().getResource( "resources/bankRight.sld" ) );
+  private final SLDPainter2 m_rightBankPainter = new SLDPainter2( getClass().getResource( "resources/bankRight.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_editProfileLinePainter = new SLDPainter2( getClass().getResource( "resources/editProfileLine.sld" ) );
+  private final SLDPainter2 m_editProfileLinePainter = new SLDPainter2( getClass().getResource( "resources/editProfileLine.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_editProfilePointPainter = new SLDPainter2( getClass().getResource( "resources/editProfilePoint.sld" ) );
+  private final SLDPainter2 m_editProfilePointPainter = new SLDPainter2( getClass().getResource( "resources/editProfilePoint.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_meshEdgePainter = new SLDPainter2( getClass().getResource( "resources/meshEdge.sld" ) );
+  private final SLDPainter2 m_meshEdgePainter = new SLDPainter2( getClass().getResource( "resources/meshEdge.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_meshVertexPainter = new SLDPainter2( getClass().getResource( "resources/meshVertex.sld" ) );
+  private final SLDPainter2 m_meshVertexPainter = new SLDPainter2( getClass().getResource( "resources/meshVertex.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_bankLinePainter = new SLDPainter2( getClass().getResource( "resources/bankLine.sld" ) );
+  private final SLDPainter2 m_bankLinePainter = new SLDPainter2( getClass().getResource( "resources/bankLine.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_bankLineDownPainter = new SLDPainter2( getClass().getResource( "resources/bankLineDown.sld" ) );
+  private final SLDPainter2 m_bankLineDownPainter = new SLDPainter2( getClass().getResource( "resources/bankLineDown.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_bankLineUpPainter = new SLDPainter2( getClass().getResource( "resources/bankLineUp.sld" ) );
+  private final SLDPainter2 m_bankLineUpPainter = new SLDPainter2( getClass().getResource( "resources/bankLineUp.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_bankPointPainter = new SLDPainter2( getClass().getResource( "resources/bankPoint.sld" ) );
+  private final SLDPainter2 m_bankPointPainter = new SLDPainter2( getClass().getResource( "resources/bankPoint.sld" ) ); //$NON-NLS-1$
 
   private final ChannelEditData m_data;
 

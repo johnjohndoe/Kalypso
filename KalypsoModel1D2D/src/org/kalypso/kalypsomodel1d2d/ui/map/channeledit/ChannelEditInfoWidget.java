@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.jts.JTSEnvelopeProvider;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
 import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesh;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -54,9 +55,9 @@ class ChannelEditInfoWidget extends AbstractWidget
 {
   private static final int SNAP_RADIUS = 10; //$NON-NLS-1$
 
-  private final SLDPainter2 m_heightVertexPainter = new SLDPainter2( getClass().getResource( "resources/meshInfoWithHeight.sld" ) );
+  private final SLDPainter2 m_heightVertexPainter = new SLDPainter2( getClass().getResource( "resources/meshInfoWithHeight.sld" ) ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_missingHeightVertexPainter = new SLDPainter2( getClass().getResource( "resources/meshInfoNoHeight.sld" ) );
+  private final SLDPainter2 m_missingHeightVertexPainter = new SLDPainter2( getClass().getResource( "resources/meshInfoNoHeight.sld" ) ); //$NON-NLS-1$
 
   private final Collection<QuadMesh> m_indexedMeshes = new HashSet<>();
 
@@ -199,7 +200,7 @@ class ChannelEditInfoWidget extends AbstractWidget
     {
       if( m_index.size() == 0 && m_currentPoint != null )
       {
-        m_toolTipRenderer.setTooltip( "<no mesh available>" );
+        m_toolTipRenderer.setTooltip( Messages.getString("ChannelEditInfoWidget_2") ); //$NON-NLS-1$
         m_toolTipRenderer.paintToolTip( new Point( m_currentPoint.x + 5, m_currentPoint.y - 5 ), g, screenRect );
       }
 
@@ -210,12 +211,12 @@ class ChannelEditInfoWidget extends AbstractWidget
     if( Double.isNaN( z ) )
     {
       m_missingHeightVertexPainter.paint( g, projection, m_snappedVertex );
-      m_toolTipRenderer.setTooltip( "<missing z value>" );
+      m_toolTipRenderer.setTooltip( Messages.getString("ChannelEditInfoWidget_3") ); //$NON-NLS-1$
     }
     else
     {
       m_heightVertexPainter.paint( g, projection, m_snappedVertex );
-      m_toolTipRenderer.setTooltip( String.format( "z = %.2f [mNN]", z ) );
+      m_toolTipRenderer.setTooltip( String.format( Messages.getString("ChannelEditInfoWidget_4"), z ) ); //$NON-NLS-1$
     }
 
     final Point snappedLocation = MapUtilities.retransform( panel, m_snappedVertex );

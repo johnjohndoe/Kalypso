@@ -77,7 +77,7 @@ public class LengthSectionHandler2dTest extends TestCase
       // Demo river line file (Stör)
       final URL resourceShape = getClass().getResource( "resources/stoer_kompl2.shp" ); //$NON-NLS-1$
 
-      final ShapeCollection shapeWorkspace = ShapeSerializer.deserialize( resourceShape.toString(), "EPSG:31467" );
+      final ShapeCollection shapeWorkspace = ShapeSerializer.deserialize( resourceShape.toString(), "EPSG:31467" ); //$NON-NLS-1$
 
       final BigDecimal max = new BigDecimal( 62000 );
       final BigDecimal min = new BigDecimal( 58000 );

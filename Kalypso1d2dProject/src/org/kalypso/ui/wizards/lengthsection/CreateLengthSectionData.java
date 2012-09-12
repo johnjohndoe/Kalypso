@@ -51,6 +51,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -80,7 +81,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 class CreateLengthSectionData extends AbstractModelObject
 {
   /* pseudo type handler as placeholder for null */
-  static final IValuePropertyType NO_RPOPERTY_SELECTED = GMLSchemaFactory.createValuePropertyType( new QName( "", "" ), MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) ), 0, 0, false ); //$NON-NLS-1$
+  static final IValuePropertyType NO_RPOPERTY_SELECTED = GMLSchemaFactory.createValuePropertyType( new QName( StringUtils.EMPTY, StringUtils.EMPTY ), MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) ), 0, 0, false ); //$NON-NLS-1$
 
   static final String PROPERTY_STATUS = "status"; //$NON-NLS-1$
 

@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
@@ -96,13 +97,13 @@ public class SurfaceModelChecker
 
     m_incoming.query( fullExtent, visitor );
 
-    return m_stati.asMultiStatusOrOK( "Found inconsistent element(s)", "No inconsistent elements found" );
+    return m_stati.asMultiStatusOrOK( Messages.getString("SurfaceModelChecker_0"), Messages.getString("SurfaceModelChecker_1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected void validateItem( final IPolygonWithName item )
   {
     final String message = m_validator.validate( item );
     if( message != null )
-      m_stati.add( IStatus.WARNING, "Element %s: %s", null, item.getName(), message );
+      m_stati.add( IStatus.WARNING, Messages.getString("SurfaceModelChecker_2"), null, item.getName(), message ); //$NON-NLS-1$
   }
 }

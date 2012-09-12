@@ -128,7 +128,7 @@ public class ImportHydrographWizardPage extends WizardPage
     if( file == null ){
       return;
     }
-    if( file.getName() != null && ( file.getName().toLowerCase().endsWith( "csv" ) || file.getName().toLowerCase().endsWith( "txt" ) ) ){
+    if( file.getName() != null && ( file.getName().toLowerCase().endsWith( "csv" ) || file.getName().toLowerCase().endsWith( "txt" ) ) ){ //$NON-NLS-1$ //$NON-NLS-2$
       m_sSeparator.setEnabled( true );
 //      m_boolValidateSeparator = true;
     }

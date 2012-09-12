@@ -224,7 +224,7 @@ public class AssignNodeElevationFaceComponent extends Composite
       }
     } );
 
-    final Button selectAllWithoutElevation = toolkit.createButton( buttonPanel, "Knoten ohne Höhen selektieren", SWT.PUSH );
+    final Button selectAllWithoutElevation = toolkit.createButton( buttonPanel, Messages.getString("AssignNodeElevationFaceComponent.2"), SWT.PUSH ); //$NON-NLS-1$
     selectAllWithoutElevation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     selectAllWithoutElevation.addSelectionListener( new SelectionAdapter()
     {
@@ -384,7 +384,7 @@ public class AssignNodeElevationFaceComponent extends Composite
         name = StringUtils.join( names, ", " ); //$NON-NLS-1$
       }
       else
-        name = "<none - use all models at once>";
+        name = Messages.getString("AssignNodeElevationFaceComponent.3"); //$NON-NLS-1$
 
       m_inputText.setText( name );
     }
