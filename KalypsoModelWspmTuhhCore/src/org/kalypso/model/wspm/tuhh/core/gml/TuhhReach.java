@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -56,7 +57,6 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileSelectionProvider;
 import org.kalypso.model.wspm.core.gml.WspmProfileComparator;
@@ -75,12 +75,14 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.commons.Image;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
  */
-public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhConstants, IProfileSelectionProvider
+public class TuhhReach extends WspmReach implements IWspmTuhhConstants, IProfileSelectionProvider
 {
   public static final QName QNAME_MEMBER_WATER_BODY_LINK = new QName( NS_WSPM_TUHH, "waterBodyLinkMember" ); //$NON-NLS-1$
 
@@ -89,6 +91,10 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   public static final QName QNAME_MEMBER_MARKER = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "markerMember" ); //$NON-NLS-1$
 
   public static final QName QNAME_MEMBER_REACHSEGMENT = new QName( NS_WSPM_TUHH, "reachSegmentMember" ); //$NON-NLS-1$
+
+  public static final QName MEMBER_IMAGE = new QName( NS_WSPM_TUHH, "imageMember" ); //$NON-NLS-1$
+
+  private IFeatureBindingCollection<Image> m_images = null;
 
   public TuhhReach( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -103,7 +109,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     try
     {
       final Feature feature = FeatureHelper.addFeature( this, QNAME_MEMBER_REACHSEGMENT, new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ); //$NON-NLS-1$
-      final TuhhReachProfileSegment tuhhProfilesegment = (TuhhReachProfileSegment) feature;
+      final TuhhReachProfileSegment tuhhProfilesegment = (TuhhReachProfileSegment)feature;
 
       // set default values
       tuhhProfilesegment.setProfileMember( profileReference );
@@ -126,10 +132,10 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     final List<TuhhReachProfileSegment> profilesegments = new ArrayList<TuhhReachProfileSegment>();
     for( final Object object : reachSegmentList )
     {
-      final Feature segmentFeature = (Feature) object;
+      final Feature segmentFeature = (Feature)object;
       if( GMLSchemaUtilities.substitutes( segmentFeature.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) ) //$NON-NLS-1$
       {
-        final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) segmentFeature;
+        final TuhhReachProfileSegment segment = (TuhhReachProfileSegment)segmentFeature;
         final IProfileFeature profileMember = segment.getProfileMember();
         if( profileMember != null )
         {
@@ -151,20 +157,20 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   {
     final Object body = getProperty( QNAME_MEMBER_WATER_BODY_LINK );
 
-    return (WspmWaterBody) FeatureHelper.resolveLinkedFeature( getWorkspace(), body );
+    return (WspmWaterBody)FeatureHelper.resolveLinkedFeature( getWorkspace(), body );
   }
 
   public FeatureList getReachSegmentList( )
   {
-    return (FeatureList) getProperty( QNAME_MEMBER_REACHSEGMENT );
+    return (FeatureList)getProperty( QNAME_MEMBER_REACHSEGMENT );
   }
 
   public void recreateMarkerList( )
   {
     final IFeatureType featureType = getFeatureType();
-    final IRelationType markerRT = (IRelationType) featureType.getProperty( QNAME_MEMBER_MARKER );
+    final IRelationType markerRT = (IRelationType)featureType.getProperty( QNAME_MEMBER_MARKER );
 
-    final FeatureList list = (FeatureList) getProperty( markerRT );
+    final FeatureList list = (FeatureList)getProperty( markerRT );
     list.clear();
 
     final TuhhReachProfileSegment[] reachProfileSegments = getReachProfileSegments();
@@ -216,7 +222,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     final IFeatureType markerFT = markerRelation.getTargetFeatureType();
     final Feature markerFeature = workspace.createFeature( this, markerRelation, markerFT );
 
-    return (TuhhMarker) markerFeature;
+    return (TuhhMarker)markerFeature;
   }
 
   /**
@@ -230,10 +236,10 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 
     for( final Object object : reachSegmentList )
     {
-      final Feature segmentFeature = (Feature) object;
+      final Feature segmentFeature = (Feature)object;
       if( GMLSchemaUtilities.substitutes( segmentFeature.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) ) //$NON-NLS-1$
       {
-        final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) segmentFeature;
+        final TuhhReachProfileSegment segment = (TuhhReachProfileSegment)segmentFeature;
         final IProfileFeature profileMember = segment.getProfileMember();
         if( profileMember != null )
         {
@@ -258,7 +264,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
       final WspmProject project = waterBody.getProject();
       if( project instanceof TuhhWspmProject )
       {
-        final TuhhWspmProject tuhhProject = (TuhhWspmProject) project;
+        final TuhhWspmProject tuhhProject = (TuhhWspmProject)project;
         final IFeatureBindingCollection<TuhhCalculation> calculations = tuhhProject.getCalculations();
         for( final TuhhCalculation tuhhCalculation : calculations )
         {
@@ -291,12 +297,37 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     return getWaterBody().isDirectionUpstreams();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#toString()
-   */
   @Override
   public String toString( )
   {
     return String.format( "%s\n%s", super.toString(), getName() ); //$NON-NLS-1$
+  }
+
+  public synchronized IFeatureBindingCollection<Image> getImages( )
+  {
+    if( m_images == null )
+      m_images = new FeatureBindingCollection<>( this, Image.class, MEMBER_IMAGE, true );
+
+    return m_images;
+  }
+
+  public Image addImage( final URI imageURI )
+  {
+    final IFeatureType featureType = getFeatureType();
+    final IFeatureType ft = featureType.getGMLSchema().getFeatureType( Image.FEATURE_IMAGE );
+    final IRelationType rt = (IRelationType)featureType.getProperty( MEMBER_IMAGE );
+    final Image imageFeature = (Image)getWorkspace().createFeature( this, rt, ft );
+
+    try
+    {
+      getWorkspace().addFeatureAsComposition( this, rt, -1, imageFeature );
+      imageFeature.setUri( imageURI == null ? null : imageURI );
+    }
+    catch( final Exception e )
+    {
+      KalypsoModelWspmTuhhCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return imageFeature;
   }
 }
