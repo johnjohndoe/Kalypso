@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -125,15 +126,23 @@ class ChannelEditComposite extends Composite
   private Control createApplySection( final Composite body, final IWidget infoWidget )
   {
     final Composite compConversion = m_toolkit.createComposite( body, SWT.NONE );
-    compConversion.setLayout( new GridLayout( 2, false ) );
+    compConversion.setLayout( new GridLayout( 3, false ) );
 
     /* apply button and info widget */
     final ApplyAction applyToAction = new ApplyAction( m_data );
     final Button applyToButton = ActionButton.createButton( m_toolkit, compConversion, applyToAction );
     applyToButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false, 1, 1 ) );
 
+    /* Experimantel: show mesh in OpenGL window. */
+    final Action show3DAction = new Show3DMeshAction( m_data );
+    final Button show3DButton = ActionButton.createButton( m_toolkit, compConversion, show3DAction );
+
+    final boolean openGlTest = false;
+    show3DButton.setVisible( openGlTest );
+
+    /* info widget */
     final SetWidgetAction infoWidgetAction = new SetWidgetAction( m_data, infoWidget );
-    infoWidgetAction.setToolTipText( Messages.getString("ChannelEditComposite.0") ); //$NON-NLS-1$
+    infoWidgetAction.setToolTipText( Messages.getString( "ChannelEditComposite.0" ) ); //$NON-NLS-1$
     infoWidgetAction.setImageDescriptor( KalypsoModel1D2DPlugin.getImageProvider().getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.CHANNEL_EDIT_INFO ) );
 
     // TODO: enable only if we have any meshes
@@ -168,7 +177,7 @@ class ChannelEditComposite extends Composite
     final Section segmentSection = m_toolkit.createSection( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR | Section.EXPANDED );
 
     segmentSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.0" ) ); //$NON-NLS-1$
-    segmentSection.setDescription( Messages.getString("ChannelEditComposite.1") ); //$NON-NLS-1$
+    segmentSection.setDescription( Messages.getString( "ChannelEditComposite.1" ) ); //$NON-NLS-1$
 
     final BankOptionsSection optionsComposite = new BankOptionsSection( m_toolkit, segmentSection, m_data, m_binding, SPINNER_WIDTH );
     segmentSection.setClient( optionsComposite );
