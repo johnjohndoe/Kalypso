@@ -68,15 +68,15 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 @SuppressWarnings("unchecked")
 public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDiscretisationModel1d2d
 {
-  private final IFeatureBindingCollection<IFE1D2DElement> m_elements = new FeatureBindingCollection<IFE1D2DElement>( this, IFE1D2DElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
+  private final IFeatureBindingCollection<IFE1D2DElement> m_elements = new FeatureBindingCollection<>( this, IFE1D2DElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
 
-  private final IFeatureBindingCollection<IFE1D2DEdge> m_edges = new FeatureBindingCollection<IFE1D2DEdge>( this, IFE1D2DEdge.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
+  private final IFeatureBindingCollection<IFE1D2DEdge> m_edges = new FeatureBindingCollection<>( this, IFE1D2DEdge.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
 
-  private final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<IFE1D2DNode>( this, IFE1D2DNode.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
+  private final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<>( this, IFE1D2DNode.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
 
-  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<IFELine>( this, IFELine.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
+  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<>( this, IFELine.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
 
-  private final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = new FeatureBindingCollection<IFE1D2DComplexElement>( this, IFE1D2DComplexElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
+  private final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = new FeatureBindingCollection<>( this, IFE1D2DComplexElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
 
   public FE1D2DDiscretisationModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizardContainer;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -64,6 +63,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.core.status.StatusComposite;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit.TYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -76,7 +76,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 /**
  * @author Gernot Belger
  */
-public class RMA10CalculationPage extends WizardPage implements IWizardPage
+public class RMA10CalculationPage extends WizardPage
 {
   private static final String SETTING_START_RESULT_PROCESSING = "startResultProcessing"; //$NON-NLS-1$
 
@@ -143,7 +143,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     statusGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.3" ) ); //$NON-NLS-1$
     m_statusComp = new StatusComposite( statusGroup, StatusComposite.DETAILS );
     m_statusComp.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.4" ), null ) ); //$NON-NLS-1$
+    m_statusComp.setStatus( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.4" ) ) ); //$NON-NLS-1$
 
     final Group tweakGroup = new Group( composite, SWT.NONE );
     final GridLayout tweakLayout = new GridLayout( 3, false );
@@ -328,7 +328,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
   {
     setTitle( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0" ), calculationUnit.getName() ) ); //$NON-NLS-1$
 
-    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.12" ), null ) ); //$NON-NLS-1$
+    m_statusComp.setStatus( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.12" ) ) ); //$NON-NLS-1$
     setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.13" ) ); //$NON-NLS-1$
 
     // default to local simulation
@@ -358,7 +358,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
         m_calculationSWANRunner = null;
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -383,7 +383,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
             {
               m_calculationSWANRunner.setRMACalculationOutputPath( m_calculationRMARunner.getTempDir().getURL().toURI() );
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               e.printStackTrace();
             }
@@ -393,7 +393,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
             lStatusAll = m_simulationStatusSWAN;
           }
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           m_geoLog.log( StatusUtilities.statusFromThrowable( e ) );
         }
@@ -423,7 +423,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
        */
       if( container instanceof WizardDialog2 )
       {
-        IStatus cancelDone = m_calculationRMARunner.cancelJob();
+        final IStatus cancelDone = m_calculationRMARunner.cancelJob();
         if( m_simulationStatusRMA.matches( IStatus.ERROR ) && !cancelDone.matches( IStatus.CANCEL ) )
         {
           setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.18" ), ERROR ); //$NON-NLS-1$
@@ -459,7 +459,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
        */
       if( container instanceof WizardDialog2 )
       {
-        IStatus cancelDone = m_calculationSWANRunner.cancelJob();
+        final IStatus cancelDone = m_calculationSWANRunner.cancelJob();
         if( m_simulationStatusSWAN.matches( IStatus.ERROR ) && !cancelDone.matches( IStatus.CANCEL ) )
         {
           setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.18" ), ERROR ); //$NON-NLS-1$

@@ -60,7 +60,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -318,7 +317,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       wspmTuhhCalcJob.run( tmpDir, inputProvider, resultEater, simMonitor );
 
       if( simMonitor.getFinishStatus() != IStatus.OK )
-        throw new CoreException( StatusUtilities.createStatus( simMonitor.getFinishStatus(), simMonitor.getFinishText(), null ) );
+        throw new CoreException( new Status( simMonitor.getFinishStatus(), KalypsoModel1D2DPlugin.PLUGIN_ID, simMonitor.getFinishText() ) );
 
       // read simulation log
       final File logFile = (File) resultEater.getResult( WspmTuhhCalcJob.OUTPUT_SIMULATION_LOG );
@@ -515,7 +514,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     final TupleResult qresultResult = qresultBuildingObs.getResult();
     final TupleResult buildingResult = buildingObservation.getResult();
     buildingResult.clear(); // Clear in case if relation already existed
-    final Map<String, String> componentMap = new HashMap<String, String>();
+    final Map<String, String> componentMap = new HashMap<>();
     componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
     componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
@@ -543,12 +542,8 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       FlowRelationshipCalcOperation.copyBuildingData( (IBuildingFlowRelation) m_flowRel, m_result );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes")
-  final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IStatus.class )
       return m_status;

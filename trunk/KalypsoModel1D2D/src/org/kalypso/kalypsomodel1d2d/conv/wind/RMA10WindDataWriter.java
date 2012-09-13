@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.wind;
 
@@ -60,7 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * @author ig
- * 
+ *
  */
 public class RMA10WindDataWriter extends AbstractWindDataWriter
 {
@@ -83,24 +83,24 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
     try
     {
       lRMA10Walker = new RMA10WindBinaryGeoGridWalker( m_gmEnvelope, m_formatter, windData.getGridDescriptor() );
-      Object lResulWalk = windData.getDataAsGrid().getWalkingStrategy().walk( windData.getDataAsGrid(), lRMA10Walker, null, null );
+      final Object lResulWalk = windData.getDataAsGrid().getWalkingStrategy().walk( windData.getDataAsGrid(), lRMA10Walker, null, null );
       if( !hasWritten() )
       {
         m_descriptorWrittenGrid = lRMA10Walker.getGridDescriptorVisited();
-        m_listRMA10Nodes = new ArrayList<GM_Position>();
+        m_listRMA10Nodes = new ArrayList<>();
         m_listRMA10Nodes.addAll( (List<GM_Position>) lResulWalk );
         setHasWritten( true );
       }
     }
-    catch( OperationCanceledException e2 )
+    catch( final OperationCanceledException e2 )
     {
       e2.printStackTrace();
     }
-    catch( GeoGridException e2 )
+    catch( final GeoGridException e2 )
     {
       e2.printStackTrace();
     }
-    catch( Exception e2 )
+    catch( final Exception e2 )
     {
       e2.printStackTrace();
     }
@@ -108,7 +108,7 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
 
   private void writeStepTimeLine( final Formatter formatterWindData, final Date actDate )
   {
-    Calendar lCal = Calendar.getInstance();
+    final Calendar lCal = Calendar.getInstance();
     lCal.setTime( actDate );
     double lDoubleTime = lCal.get( Calendar.HOUR_OF_DAY );
     lDoubleTime += ((double) lCal.get( Calendar.MINUTE )) / 60;
@@ -127,7 +127,7 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
       lFormatter = getFormatter( null );
       lFormatter.format( "ENDDATA\n" ); //$NON-NLS-1$
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -141,9 +141,9 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
   private void writeRMA10WindNodes( )
   {
     Formatter lFormatter = null;
-    int lIntSecondCorner = m_descriptorWrittenGrid == null ? 0 : m_descriptorWrittenGrid.getNumColumns();
-    int lIntThirdCorner = m_descriptorWrittenGrid == null ? 0 : m_descriptorWrittenGrid.getNumColumns() * (m_descriptorWrittenGrid.getNumRows() - 1) + 1;
-    int lIntSize = m_listRMA10Nodes == null ? 0 : m_listRMA10Nodes.size();
+    final int lIntSecondCorner = m_descriptorWrittenGrid == null ? 0 : m_descriptorWrittenGrid.getNumColumns();
+    final int lIntThirdCorner = m_descriptorWrittenGrid == null ? 0 : m_descriptorWrittenGrid.getNumColumns() * (m_descriptorWrittenGrid.getNumRows() - 1) + 1;
+    final int lIntSize = m_listRMA10Nodes == null ? 0 : m_listRMA10Nodes.size();
     int lIntCount = 1;
     try
     {
@@ -160,7 +160,7 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
 
       lFormatter.format( "ENDDATA\n" );//$NON-NLS-1$
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -182,10 +182,10 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
   {
     try
     {
-      Formatter lFormatter = getFormatter( null );
+      final Formatter lFormatter = getFormatter( null );
       lFormatter.format( "TI      Winddata for RMA10\n" ); //$NON-NLS-1$
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -205,9 +205,9 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
         m_formatter = new Formatter( lFileWindData.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
       }
     }
-    else if( pObject != null && pObject instanceof String )
+    else if( pObject instanceof String )
     {
-      FileObject lFileWindDataAdditional = m_fileOutputDir.resolveFile( (String) pObject );
+      final FileObject lFileWindDataAdditional = m_fileOutputDir.resolveFile( (String) pObject );
       m_formatter = new Formatter( lFileWindDataAdditional.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
     }
     else

@@ -158,7 +158,7 @@ public class VeloDiff2DTest extends TestCase
     final File outputDir2 = FileUtilities.createNewTempDir( "output2" ); //$NON-NLS-1$
 
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final List<TYPE> parameters = new ArrayList<TYPE>();
+    final List<TYPE> parameters = new ArrayList<>();
 
     parameters.add( TYPE.VELOCITY_X );
     parameters.add( TYPE.VELOCITY_Y );

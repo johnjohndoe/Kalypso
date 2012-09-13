@@ -124,7 +124,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
   private FeatureList m_featureList;
 
-  private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
+  private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<>();
 
   private IFEDiscretisationModel1d2d m_discModel;
 

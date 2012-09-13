@@ -53,7 +53,7 @@ import com.bce.gis.io.zweidm.SmsElement;
  */
 public class SmsConverter
 {
-  private final Collection<ISmsConversionTarget> m_targets = new ArrayList<ISmsConversionTarget>();
+  private final Collection<ISmsConversionTarget> m_targets = new ArrayList<>();
 
   private final ISmsModel m_model;
 

@@ -52,12 +52,12 @@ public class IdMap
 
   public IdMap( final int initialSize )
   {
-    m_map = new LinkedHashMap<String, Integer>( initialSize );
+    m_map = new LinkedHashMap<>( initialSize );
   }
 
   public IdMap( )
   {
-    m_map = new LinkedHashMap<String, Integer>();
+    m_map = new LinkedHashMap<>();
   }
 
   public int getOrAdd( final String id )

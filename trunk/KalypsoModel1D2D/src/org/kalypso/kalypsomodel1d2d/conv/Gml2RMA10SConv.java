@@ -1450,9 +1450,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       m_intRightParent = intRightParent;
     }
 
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getMiddleNodePoint()
-     */
     public GM_Point getMiddleNodePoint( )
     {
       final GM_Point point1 = getFirstNode().getPoint();
@@ -1468,6 +1465,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         return GeometryFactory.createGM_Point( x, y, point1.getCoordinateSystem() );
     }
 
+    // FIXME: equals is probably never called: see uses of PseudoEdge; we should remove it because it is not correctly implemented
     @Override
     public boolean equals( final Object pPseudoEdge )
     {
@@ -1492,18 +1490,12 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#supportFlowResistanceClasses()
-   */
   @Override
   public boolean supportFlowResistanceClasses( )
   {
     return SUPPORT_FLOW_RESISTANCE_CLASSES;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#supportMidsideNodes()
-   */
   @Override
   public boolean supportMidsideNodes( )
   {

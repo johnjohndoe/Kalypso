@@ -60,12 +60,12 @@ public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
   public CreateFEContinuityLineWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_nodeList = new ArrayList<IFE1D2DNode>();
+
+    m_nodeList = new ArrayList<>();
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
@@ -109,11 +109,11 @@ public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
     final Object newNode = checkNewNode( p );
     if( newNode instanceof IFE1D2DNode )
     {
-      final IFE1D2DNode candidateNode = (IFE1D2DNode) newNode;
+      final IFE1D2DNode candidateNode = (IFE1D2DNode)newNode;
       m_currentMapPoint = MapUtilities.retransform( getMapPanel(), candidateNode.getPoint() );
 
       if( m_lineType == null )
-        m_currentNode = (IFE1D2DNode) newNode;
+        m_currentNode = (IFE1D2DNode)newNode;
       else
       {
         if( m_lineType.equals( IContinuityLine1D.QNAME ) )
@@ -161,9 +161,6 @@ public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
     return newNode;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
   @Override
   public void leftClicked( final Point p )
   {
@@ -196,9 +193,6 @@ public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
     getMapPanel().repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
-   */
   @Override
   public void doubleClickedLeft( final Point p )
   {
@@ -251,7 +245,7 @@ public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
       // TODO: check if there is already a boundary line
 
       final IKalypsoTheme theme = UtilMap.findEditableTheme( getMapPanel(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-      final CommandableWorkspace workspace = ((IKalypsoFeatureTheme) theme).getWorkspace();
+      final CommandableWorkspace workspace = ((IKalypsoFeatureTheme)theme).getWorkspace();
 
       final CreateContinuityLineCommand command = new CreateContinuityLineCommand( m_discModel, m_nodeList, m_lineType );
       workspace.postCommand( command );

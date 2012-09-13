@@ -214,7 +214,8 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
     log.add( IStatus.INFO, "validate edge / element relations" );
 
     elements = m_discModel.getElements();
-    final Map<IFE1D2DEdge, List<IFE1D2DElement>> edgeMap = new HashMap<IFE1D2DEdge, List<IFE1D2DElement>>();
+
+    final Map<IFE1D2DEdge, List<IFE1D2DElement>> edgeMap = new HashMap<>();
 
     // calculate element / edge relations
     checkEdgeEntries( elements, edgeMap, log );
@@ -279,7 +280,7 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
             }
             else
             {
-              final List<IFE1D2DElement> elementList = new ArrayList<IFE1D2DElement>();
+              final List<IFE1D2DElement> elementList = new ArrayList<>();
               elementList.add( element );
               edgeMap.put( edge, elementList );
             }

@@ -59,9 +59,9 @@ import org.kalypso.observation.result.TupleResultUtilities;
 
 /**
  * Helper class to write the building file of a RMA·Kalypso calculation.
- * 
+ *
  * @author Gernot Belger
- * 
+ *
  */
 public class Building1D2DConverter
 {
@@ -127,8 +127,8 @@ public class Building1D2DConverter
   {
     final TupleResult values = buildingParameters.getValues();
 
-    final int qCount = buildingParameters.getDischargeCount();
-    final int totalCount = values.size();
+    // final int qCount = buildingParameters.getDischargeCount();
+    // final int totalCount = values.size();
 
     //    formatter.format( "DLI      %7d% 7d %7d%n", buildingID, qCount, totalCount ); //$NON-NLS-1$
     formatter.format( "DLI      %7d% %s%n", buildingID, qSymmetry == true ? "t" : "f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -151,38 +151,37 @@ public class Building1D2DConverter
     FormatterUtils.checkIoException( formatter );
   }
 
-  private void formatBlock( final Formatter formatter, final String name, final BigDecimal[] values ) throws IOException
-  {
-    for( int i = 0; i < values.length; )
-    {
-      formatter.format( "%3s     ", name ); //$NON-NLS-1$
+//  private void formatBlock( final Formatter formatter, final String name, final BigDecimal[] values ) throws IOException
+//  {
+//    for( int i = 0; i < values.length; )
+//    {
+//      formatter.format( "%3s     ", name ); //$NON-NLS-1$
+//
+//      for( int j = 0; j < 9; j++, i++ )
+//      {
+//        if( i < values.length )
+//          formatter.format( Locale.US, "%8.3f", values[i] ); // write decimals with '.' //$NON-NLS-1$
+//      }
+//      formatter.format( "%n" ); //$NON-NLS-1$
+//
+//      FormatterUtils.checkIoException( formatter );
+//    }
+//  }
 
-      for( int j = 0; j < 9; j++, i++ )
-      {
-        if( i < values.length )
-          formatter.format( Locale.US, "%8.3f", values[i] ); // write decimals with '.' //$NON-NLS-1$
-      }
-      formatter.format( "%n" ); //$NON-NLS-1$
-
-      FormatterUtils.checkIoException( formatter );
-    }
-  }
-
-  private void formatDischarges( final Formatter formatter, final BigDecimal[] upstreamWaterlevels, final BigDecimal[] downstreamWaterlevels, final BuildingParameters buildingParameters ) throws IOException
-  {
-    for( final BigDecimal upstreamWaterlevel : upstreamWaterlevels )
-    {
-      final BigDecimal[] discharges = new BigDecimal[downstreamWaterlevels.length];
-      for( int i = 0; i < downstreamWaterlevels.length; i++ )
-      {
-        final BigDecimal downstreamWaterlevel = downstreamWaterlevels[i];
-        discharges[i] = buildingParameters.interpolateDischarge( upstreamWaterlevel, downstreamWaterlevel );
-      }
-
-      formatBlock( formatter, "FLW", discharges ); //$NON-NLS-1$
-
-      FormatterUtils.checkIoException( formatter );
-    }
-  }
-
+//  private void formatDischarges( final Formatter formatter, final BigDecimal[] upstreamWaterlevels, final BigDecimal[] downstreamWaterlevels, final BuildingParameters buildingParameters ) throws IOException
+//  {
+//    for( final BigDecimal upstreamWaterlevel : upstreamWaterlevels )
+//    {
+//      final BigDecimal[] discharges = new BigDecimal[downstreamWaterlevels.length];
+//      for( int i = 0; i < downstreamWaterlevels.length; i++ )
+//      {
+//        final BigDecimal downstreamWaterlevel = downstreamWaterlevels[i];
+//        discharges[i] = buildingParameters.interpolateDischarge( upstreamWaterlevel, downstreamWaterlevel );
+//      }
+//
+//      formatBlock( formatter, "FLW", discharges ); //$NON-NLS-1$
+//
+//      FormatterUtils.checkIoException( formatter );
+//    }
+//  }
 }

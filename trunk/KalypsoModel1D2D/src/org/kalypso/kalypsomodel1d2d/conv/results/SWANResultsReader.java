@@ -166,7 +166,6 @@ public class SWANResultsReader
   }
 
   // debug only: raw text output of results
-  @SuppressWarnings("unused")
   private static void printDebugParsedSWANRawData( final MatFileReader mfr, final String outputPath ) throws IOException, MatlabIOException
   {
     String outputPathTmp = "d:/temp/MatReaderOut-"; //$NON-NLS-1$
@@ -187,7 +186,6 @@ public class SWANResultsReader
   }
 
   // debug only: raw text output of results
-  @SuppressWarnings("unused")
   private static void printDebugResultData( final Map<String, Map<GM_Position, Double>> pRes, final String outputPath ) throws IOException, MatlabIOException
   {
     String outputPathTmp = "d:/temp/MatReaderOutRes-"; //$NON-NLS-1$
@@ -226,7 +224,7 @@ public class SWANResultsReader
    */
   private static Map<String, Map<GM_Position, Double>> getValuesFormatedNameDatePosition( final Map<String, MLArray> pMLArrayData ) throws Exception
   {
-    final Map<String, Map<GM_Position, Double>> lMapResult = new HashMap<String, Map<GM_Position, Double>>();
+    final Map<String, Map<GM_Position, Double>> lMapResult = new HashMap<>();
     List<Double> lListX;
     List<Double> lListY;
     List<GM_Position> lListGM_Positions;
@@ -268,7 +266,7 @@ public class SWANResultsReader
    */
   private static List<GM_Position> createListOfPositions( final List<Double> pListX, final List<Double> pListY )
   {
-    final List<GM_Position> lListRes = new ArrayList<GM_Position>();
+    final List<GM_Position> lListRes = new ArrayList<>();
     final int lIntAmountCoordinates = pListX.size();
 
     for( int i = 0; i < lIntAmountCoordinates; ++i )
@@ -286,7 +284,7 @@ public class SWANResultsReader
    */
   private static Map<GM_Position, Double> createMapWithCoordinates( final List<GM_Position> pListPostitions, final List<Double> pListValuesAct )
   {
-    final Map<GM_Position, Double> lMapResult = new HashMap<GM_Position, Double>();
+    final Map<GM_Position, Double> lMapResult = new HashMap<>();
     final int lIntAmountCoordinates = pListPostitions.size();
 
     for( int i = 0; i < lIntAmountCoordinates; ++i )
@@ -308,6 +306,7 @@ public class SWANResultsReader
     {
       throw new Exception( "Incorrect SWAN output as matlab array class(Level4): data information has incorrect precision " ); //$NON-NLS-1$
     }
+
     final MLNumericArray lMLArray = (MLNumericArray) pMLArray;
 
     for( int m = 0; m < lMLArray.getM(); m++ )

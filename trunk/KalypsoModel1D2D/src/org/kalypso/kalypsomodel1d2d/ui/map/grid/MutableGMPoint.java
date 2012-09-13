@@ -227,8 +227,7 @@ class MutableGMPoint implements GM_Point
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes")
-  final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     return null;
   }

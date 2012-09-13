@@ -132,7 +132,7 @@ public class MarshallPolyhedralSurfaceTest extends TestCase
     final GM_Position[] ring1 = new GM_Position[] { pos1, pos2, pos3, pos1 };
     final GM_Position[] ring2 = new GM_Position[] { pos3, pos4, pos5, pos6, pos3 };
 
-    final List<GM_Polygon> list = new ArrayList<GM_Polygon>( 2 );
+    final List<GM_Polygon> list = new ArrayList<>( 2 );
 
     list.add( (GM_Polygon) GeometryFactory.createGM_SurfacePatch( ring1, null, crs ) );
     list.add( (GM_Polygon) GeometryFactory.createGM_SurfacePatch( ring2, null, crs ) );

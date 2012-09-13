@@ -23,9 +23,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge
 {
-  private final IFeatureBindingCollection<IFE1D2DElement> m_containers = new FeatureBindingCollection<IFE1D2DElement>( this, IFE1D2DElement.class, WB1D2D_PROP_EDGE_CONTAINERS );
+  private final IFeatureBindingCollection<IFE1D2DElement> m_containers = new FeatureBindingCollection<>( this, IFE1D2DElement.class, WB1D2D_PROP_EDGE_CONTAINERS );
 
-  protected final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<IFE1D2DNode>( this, IFE1D2DNode.class, WB1D2D_PROP_DIRECTEDNODE );
+  protected final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<>( this, IFE1D2DNode.class, WB1D2D_PROP_DIRECTEDNODE );
 
   public FE1D2DEdge( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

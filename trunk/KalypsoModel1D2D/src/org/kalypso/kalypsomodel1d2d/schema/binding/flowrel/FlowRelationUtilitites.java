@@ -151,7 +151,7 @@ public class FlowRelationUtilitites
 
   public static GM_Position getFlowPositionFromElement( final Feature modelElement, final int numberOfPositions, final int currentPosition )
   {
-    final List<GM_Point> pointList = new ArrayList<GM_Point>();
+    final List<GM_Point> pointList = new ArrayList<>();
     if( numberOfPositions < 2 )
       return getFlowPositionFromElement( modelElement );
     if( modelElement instanceof IFELine )
@@ -240,7 +240,7 @@ public class FlowRelationUtilitites
 
   private static List<IFlowRelationship> findFlowrelationshipsForPosition( final GM_Position pPosition, final IFlowRelationshipModel model )
   {
-    final List<IFlowRelationship> lListRes = new ArrayList<IFlowRelationship>();
+    final List<IFlowRelationship> lListRes = new ArrayList<>();
 
     final IFlowRelationship[] flowRels = model.findFlowrelationships( pPosition, 0.01 );
     for( final IFlowRelationship flowRel : flowRels )
@@ -258,9 +258,9 @@ public class FlowRelationUtilitites
   // FIXME: wrong method name: fnds ALL parameters (teschke, buildings, etc) on that element
   public static Set<IFlowRelationship> findBuildingElements1D( final IElement1D element, final IFlowRelationshipModel model )
   {
-    final Set<IFlowRelationship> lSetRes = new HashSet<IFlowRelationship>();
-    final List<GM_Position> lListPositions = new ArrayList<GM_Position>();
-    final List nodes = element.getNodes();
+    final Set<IFlowRelationship> lSetRes = new HashSet<>();
+    final List<GM_Position> lListPositions = new ArrayList<>();
+    final List<IFE1D2DNode> nodes = element.getNodes();
 
     if( nodes.size() < 2 )
     {
@@ -268,8 +268,8 @@ public class FlowRelationUtilitites
     }
     else
     {
-      lListPositions.add( ((IFE1D2DNode) nodes.get( 0 )).getPoint().getPosition() );
-      lListPositions.add( ((IFE1D2DNode) nodes.get( 1 )).getPoint().getPosition() );
+      lListPositions.add( nodes.get( 0 ).getPoint().getPosition() );
+      lListPositions.add( nodes.get( 1 ).getPoint().getPosition() );
     }
 
     for( final GM_Position lPos : lListPositions )
@@ -326,12 +326,12 @@ public class FlowRelationUtilitites
       return null;
 
     /* find neighbour nodes */
-    final List nodes = element1d.getNodes();
+    final List<IFE1D2DNode> nodes = element1d.getNodes();
     if( nodes.size() != 2 )
       return null;
 
-    final IFE1D2DNode startNode = (IFE1D2DNode) nodes.get( 0 );
-    final IFE1D2DNode endNode = (IFE1D2DNode) nodes.get( 1 );
+    final IFE1D2DNode startNode = nodes.get( 0 );
+    final IFE1D2DNode endNode = nodes.get( 1 );
 
     // find node which is in the right direction
     final GM_Position startPos = startNode.getPoint().getPosition();
@@ -465,7 +465,7 @@ public class FlowRelationUtilitites
     final IFeatureBindingCollection<IFE1D2DElement> elements = discModel.getElements();
     final List<IFE1D2DElement> query = elements.query( pos );
 
-    final List<IFE1D2DElement> hits = new ArrayList<IFE1D2DElement>();
+    final List<IFE1D2DElement> hits = new ArrayList<>();
 
     for( final IFE1D2DElement element : query )
     {

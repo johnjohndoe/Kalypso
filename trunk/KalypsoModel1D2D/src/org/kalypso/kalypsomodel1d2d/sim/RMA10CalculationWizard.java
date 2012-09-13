@@ -55,7 +55,6 @@ import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -79,7 +78,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  *
  * @author Gernot Belger
  */
-public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulation1D2DConstants
+public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DConstants
 {
   public static final String STRING_DLG_TITLE_RMA10S = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.0" ); //$NON-NLS-1$
 

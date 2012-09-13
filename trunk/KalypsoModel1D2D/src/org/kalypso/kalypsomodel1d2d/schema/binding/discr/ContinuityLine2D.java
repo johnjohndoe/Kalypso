@@ -47,11 +47,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -70,7 +71,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
   public IFeatureBindingCollection<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
   {
     if( nodes.size() < 2 )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.0" ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.0" ) ) ); //$NON-NLS-1$
 
     final List<IFE1D2DNode> fullNodeList;
     try
@@ -79,7 +80,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     }
     catch( final GM_Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
 
     final FeatureList nodeList = getNodes().getFeatureList();
@@ -98,7 +99,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
   {
     try
     {
-      final List<IFE1D2DNode> list = new ArrayList<IFE1D2DNode>();
+      final List<IFE1D2DNode> list = new ArrayList<>();
       list.addAll( getNodes() );
       recalculateGeometry( list );
     }
@@ -115,9 +116,12 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     final GM_Position[] nodePositions = new GM_Position[recalculatedNodes.size()];
     for( int i = 0; i < nodePositions.length; i++ )
       nodePositions[i] = recalculatedNodes.get( i ).getPoint().getPosition();
+
     String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+
     if( crs == null )
-      crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
     setGeometry( GeometryFactory.createGM_Curve( nodePositions, crs ) );
     return recalculatedNodes;
   }
@@ -127,7 +131,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     final Iterator<IFE1D2DNode> iterator = nodes.iterator();
     final IFE1D2DNode startNode = iterator.next();
     // final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) startNode.getWorkspace().getRootFeature();
-    final List<IFE1D2DNode> curveNodes = new ArrayList<IFE1D2DNode>();
+    final List<IFE1D2DNode> curveNodes = new ArrayList<>();
     curveNodes.add( startNode );
     IFE1D2DNode currentNode = startNode;
     for( ; iterator.hasNext(); )
@@ -139,7 +143,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
         final Collection<IFE1D2DNode> neighbourNodes = currentNode.getNeighbours();
         if( neighbourNodes.size() == 0 )
         {
-          final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.2" ) + currentNode.getId() ); //$NON-NLS-1$
+          final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.2" ) + currentNode.getId() ); //$NON-NLS-1$
           throw new CoreException( status );
         }
         IFE1D2DNode bestCandidateNode = null;

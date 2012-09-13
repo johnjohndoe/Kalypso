@@ -80,7 +80,7 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
-  private List<IContinuityLine1D> m_lines = new ArrayList<IContinuityLine1D>();
+  private List<IContinuityLine1D> m_lines = new ArrayList<>();
 
   private final SelectFeatureWidget m_selDelegateWidget;
 
@@ -174,7 +174,7 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
 
       final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
       final EasyFeatureWrapper[] features = selectionManager.getAllFeatures();
-      m_lines = new ArrayList<IContinuityLine1D>( features.length );
+      m_lines = new ArrayList<>( features.length );
       for( final EasyFeatureWrapper feature : features )
       {
         final IContinuityLine1D adapter = (IContinuityLine1D) feature.getFeature().getAdapter( IContinuityLine1D.class );

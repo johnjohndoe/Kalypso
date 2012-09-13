@@ -80,11 +80,11 @@ public class ElevationModelDisplayElementFactory
           public ISurfacePatchVisitor<GM_Polygon> createVisitor( final Graphics g, final GeoTransform projection )
           {
             final IElevationColorModel colorModel = createColorModel( elevationProvider, projection );
-            return new SurfacePaintPlainTriangleVisitor<GM_Polygon>( g, colorModel );
+            return new SurfacePaintPlainTriangleVisitor<>( g, colorModel );
           }
         };
 
-        return new SurfacePatchVisitableDisplayElement<GM_Polygon>( feature, (ISurfacePatchVisitable<GM_Polygon>) elevationProvider, visitorFactory );
+        return new SurfacePatchVisitableDisplayElement<>( feature, (ISurfacePatchVisitable<GM_Polygon>)elevationProvider, visitorFactory );
       }
       else
       {

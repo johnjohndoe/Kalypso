@@ -76,6 +76,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -137,7 +138,7 @@ public class DeleteFeElementsHelper
       final FeatureList flowRelationsList = lFlowTheme.getFeatureList();
       final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) flowRelationsList.getOwner();
 
-      final List<IFE1D2DElement> element1DtoRemove = new ArrayList<IFE1D2DElement>();
+      final List<IFE1D2DElement> element1DtoRemove = new ArrayList<>();
       for( final EasyFeatureWrapper easyFeatureWrapper : selected )
       {
         final Feature feature = easyFeatureWrapper.getFeature();
@@ -179,7 +180,7 @@ public class DeleteFeElementsHelper
 
   protected static void deleteParameters( final IMapPanel mapPanel, final EasyFeatureWrapper[] selected, final IKalypsoFeatureTheme lFlowTheme, final IFlowRelationshipModel lFlowRelCollection, final List<IFE1D2DElement> element1DtoRemove, final IFEDiscretisationModel1d2d discModel ) throws Exception
   {
-    final List<IFlowRelationship> parametersToDelete = new ArrayList<IFlowRelationship>();
+    final List<IFlowRelationship> parametersToDelete = new ArrayList<>();
 
     for( final EasyFeatureWrapper easyFeatureWrapper : selected )
     {
@@ -254,11 +255,14 @@ public class DeleteFeElementsHelper
           }
           if( element instanceof IElement1D )
           {
-            final IFeatureBindingCollection containers = node.getContainers();
+            final IFeatureBindingCollection<IFENetItem> containers = node.getContainers();
             int numberOfEdgeContainers = 0;
             for( final Object container : containers )
+            {
               if( container instanceof IFE1D2DEdge ) // container can be also a line
                 numberOfEdgeContainers++;
+            }
+
             if( numberOfEdgeContainers < 2 )
             {
               SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.7" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -281,7 +285,7 @@ public class DeleteFeElementsHelper
 
   private static IFlowRelationship[] deleteParameter1D( final IFE1D2DElement element, final IFlowRelationshipModel lFlowRelCollection, final List<IFE1D2DElement> element1DtoRemove, final IFEDiscretisationModel1d2d discModel ) throws Exception
   {
-    final List<IFlowRelationship> parametersToRemove = new ArrayList<IFlowRelationship>();
+    final List<IFlowRelationship> parametersToRemove = new ArrayList<>();
     if( element instanceof IElement1D )
     {
       final IElement1D element1D = (IElement1D) element;
@@ -291,7 +295,7 @@ public class DeleteFeElementsHelper
       for( final IFlowRelationship flowRel : flowRelsOfElement )
       {
         final IFE1D2DElement[] elementsOfFlowRelArray = FlowRelationUtilitites.findElementsForFlowRelation( flowRel, discModel );
-        final Collection<IFE1D2DElement> elementsOfFlowRel = new ArrayList<IFE1D2DElement>( Arrays.asList( elementsOfFlowRelArray ) );
+        final Collection<IFE1D2DElement> elementsOfFlowRel = new ArrayList<>( Arrays.asList( elementsOfFlowRelArray ) );
 
         elementsOfFlowRel.removeAll( element1DtoRemove );
         if( elementsOfFlowRel.size() == 0 )

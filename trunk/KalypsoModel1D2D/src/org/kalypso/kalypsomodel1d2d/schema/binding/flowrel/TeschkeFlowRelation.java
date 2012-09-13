@@ -56,43 +56,31 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITeschkeFlowRelation
 {
-  private final IFeatureBindingCollection<IPolynomial1D> m_polynomes = new FeatureBindingCollection<IPolynomial1D>( this, IPolynomial1D.class, QNAME_PROP_POLYNOMES );
+  private final IFeatureBindingCollection<IPolynomial1D> m_polynomes = new FeatureBindingCollection<>( this, IPolynomial1D.class, QNAME_PROP_POLYNOMES );
 
   public TeschkeFlowRelation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getStation()
-   */
   @Override
   public BigDecimal getStation( )
   {
     return (BigDecimal) getProperty( QNAME_PROP_STATION );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setStation(java.math.BigDecimal)
-   */
   @Override
   public void setStation( final BigDecimal station )
   {
     setProperty( QNAME_PROP_STATION, station );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getPolynomials()
-   */
   @Override
   public List<IPolynomial1D> getPolynomials( )
   {
     return m_polynomes;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getSlope()
-   */
   @Override
   public double getSlope( )
   {

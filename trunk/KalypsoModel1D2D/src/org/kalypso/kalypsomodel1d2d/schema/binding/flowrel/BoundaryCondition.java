@@ -247,37 +247,24 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     // TODO consider what to do if parentElement is something else
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getParentElementID()
-   */
   @Override
   public String getParentElementID( )
   {
     return getProperty( IBoundaryCondition.PROP_PARENT_MODEL_ELEMENT ).toString();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getType()
-   */
   @Override
   public String getTypeByLocation( )
   {
     return getProperty( IBoundaryCondition.PROP_PARENT_TYPE ).toString();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getParentCalculationUnits()
-   */
-  @SuppressWarnings("unchecked")
   @Override
   public List<String> getParentCalculationUnitIDs( )
   {
     return (List<String>) getProperty( PROP_PARENT_CALCULATION_UNIT );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#isMemberOf(java.lang.String)
-   */
   @Override
   public boolean isMemberOf( final String calculationUnitId )
   {
@@ -291,18 +278,12 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     return false;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#isAbsolute()
-   */
   @Override
   public Boolean isAbsolute( )
   {
     return (Boolean) getProperty( QNAME_P_ISABSOLUTE );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setIsAbsolute(java.lang.Boolean)
-   */
   @Override
   public void setIsAbsolute( final Boolean value )
   {

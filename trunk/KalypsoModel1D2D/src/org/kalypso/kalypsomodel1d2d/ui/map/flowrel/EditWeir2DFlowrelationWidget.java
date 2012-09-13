@@ -93,7 +93,6 @@ import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 /**
  * @author ig
  */
-@SuppressWarnings("unchecked")
 //public class EditWeir2DFlowrelationWidget extends AbstractWidget
 public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
 {
@@ -148,9 +147,6 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
   //    }
   //  }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -213,7 +209,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
         selectionManager.clear();
 
-        final List< Feature > lListToSelect = new ArrayList< Feature >();
+        final List<Feature> lListToSelect = new ArrayList<>();
         lListToSelect.add( lFoundFlowRel );
 
         changeSelection( selectionManager, lListToSelect, m_themes, false, false );

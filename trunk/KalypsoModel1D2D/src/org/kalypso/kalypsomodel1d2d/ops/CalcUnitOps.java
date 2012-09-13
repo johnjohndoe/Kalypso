@@ -79,7 +79,7 @@ public class CalcUnitOps
 
   public static final IFE1D2DElement[] toAddableElements( final ICalculationUnit calculationUnit, final IFE1D2DElement[] elementsToAdd )
   {
-    final ArrayList<IFE1D2DElement> eleList = new ArrayList<IFE1D2DElement>( elementsToAdd.length );
+    final ArrayList<IFE1D2DElement> eleList = new ArrayList<>( elementsToAdd.length );
 
     if( calculationUnit instanceof ICalculationUnit1D )
     {
@@ -118,7 +118,7 @@ public class CalcUnitOps
 
   public static final IFE1D2DElement[] toAddableElements( final ICalculationUnit calculationUnit, final Feature[] elementsToAdd )
   {
-    final ArrayList<IFE1D2DElement> eleList = new ArrayList<IFE1D2DElement>( elementsToAdd.length );
+    final ArrayList<IFE1D2DElement> eleList = new ArrayList<>( elementsToAdd.length );
     final Class< ? > adapterCls;
     if( calculationUnit instanceof ICalculationUnit1D )
     {
@@ -162,7 +162,7 @@ public class CalcUnitOps
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
     final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
-    final Collection<ICalculationUnit1D2D> parents = new ArrayList<ICalculationUnit1D2D>();
+    final Collection<ICalculationUnit1D2D> parents = new ArrayList<>();
     for( final IFE1D2DComplexElement ce : complexElements )
     {
       if( ce instanceof ICalculationUnit1D2D )
@@ -189,7 +189,7 @@ public class CalcUnitOps
   public static final List<ICalculationUnit> getModelCalculationUnits( final IFEDiscretisationModel1d2d model1d2d ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
-    final List<ICalculationUnit> calUnits = new ArrayList<ICalculationUnit>();
+    final List<ICalculationUnit> calUnits = new ArrayList<>();
     final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
     for( final IFE1D2DComplexElement ce : complexElements )
     {
@@ -226,13 +226,13 @@ public class CalcUnitOps
   public static final GM_Envelope getBoundingBox( final ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" ); //$NON-NLS-1$
-    final LinkedList<GM_Envelope> contributingBBox = new LinkedList<GM_Envelope>();
+    final LinkedList<GM_Envelope> contributingBBox = new LinkedList<>();
 
     // collect all contributing bboxes
     contributingBBox.add( calUnit.getElements().getFeatureList().getBoundingBox() );
     if( calUnit instanceof ICalculationUnit1D2D )
     {
-      final LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>( ((ICalculationUnit1D2D) calUnit).getChangedSubUnits() );
+      final LinkedList<ICalculationUnit> subUnits = new LinkedList<>( ((ICalculationUnit1D2D)calUnit).getChangedSubUnits() );
       while( !subUnits.isEmpty() )
       {
         final ICalculationUnit removed = subUnits.remove( 0 );
@@ -281,13 +281,14 @@ public class CalcUnitOps
   {
     Assert.throwIAEOnNullParam( unit, "unit" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
+
     final IFeatureBindingCollection<IFE1D2DComplexElement> containers = element.getContainers();
-    final List list = new ArrayList<String>();
+
+    final List<String> list = new ArrayList<>();
     for( int i = 0; i < containers.size(); i++ )
       list.add( (containers.get( i )).getId() );
-    // return containers.contains( unit );
 
-    final LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>();
+    final LinkedList<ICalculationUnit> subUnits = new LinkedList<>();
     subUnits.add( unit );
     while( !subUnits.isEmpty() )
     {
@@ -314,7 +315,7 @@ public class CalcUnitOps
    */
   public static final boolean isBoundaryConditionOf( final ICalculationUnit unit, final IBoundaryCondition bCondition )
   {
-    final List parents = (List) bCondition.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
+    final List< ? > parents = (List< ? >)bCondition.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
     return parents.contains( unit.getId() );
   }
 
@@ -331,10 +332,13 @@ public class CalcUnitOps
    */
   public static final List<IBoundaryCondition> getBoundaryConditions( final Collection<IFlowRelationship> conditions, final ICalculationUnit unit )
   {
-    final List<IBoundaryCondition> assignedConditions = new ArrayList<IBoundaryCondition>();
+    final List<IBoundaryCondition> assignedConditions = new ArrayList<>();
     for( final IFlowRelationship condition : conditions )
+    {
       if( condition instanceof IBoundaryCondition && isBoundaryConditionOf( unit, (IBoundaryCondition) condition ) )
         assignedConditions.add( (IBoundaryCondition) condition );
+    }
+
     return assignedConditions;
   }
 

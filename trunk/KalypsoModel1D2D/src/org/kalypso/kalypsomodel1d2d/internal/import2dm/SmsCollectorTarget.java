@@ -51,7 +51,7 @@ import com.bce.gis.io.zweidm.IPolygonWithName;
  */
 public class SmsCollectorTarget implements ISmsConversionTarget
 {
-  private final Collection<IPolygonWithName> m_polygons = new ArrayList<IPolygonWithName>();
+  private final Collection<IPolygonWithName> m_polygons = new ArrayList<>();
 
   @Override
   public void addElement( final IPolygonWithName surface )

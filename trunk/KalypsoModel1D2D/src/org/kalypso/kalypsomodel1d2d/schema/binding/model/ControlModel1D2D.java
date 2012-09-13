@@ -83,7 +83,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  private final IFeatureBindingCollection<IRestartInfo> m_restartInfos = new FeatureBindingCollection<IRestartInfo>( this, IRestartInfo.class, QNAME_PROPERTY_RESTART_INFO );
+  private final IFeatureBindingCollection<IRestartInfo> m_restartInfos = new FeatureBindingCollection<>( this, IRestartInfo.class, QNAME_PROPERTY_RESTART_INFO );
 
   public final static QName WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "timestepsMember" ); //$NON-NLS-1$
 
@@ -199,11 +199,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
 
   public final static QName WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANInputAdditionalCmds" ); //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getTimeSteps()
-   */
   @Override
-  @SuppressWarnings("unchecked")
   public IObservation<TupleResult> getTimeSteps( )
   {
     try
@@ -225,9 +221,6 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     return (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDNOPT );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getVersion()
-   */
   @Override
   public String getVersion( )
   {

@@ -60,8 +60,10 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileUtil;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.SWANDataConverterHelper;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
@@ -112,9 +114,9 @@ public class IterationInfoSWAN implements IIterationInfo
   /** The observations of time steps */
   // private final IObservation<TupleResult> m_timeSteps;
 
-  private final Map<String, IComponent> m_components = new HashMap<String, IComponent>();
+  private final Map<String, IComponent> m_components = new HashMap<>();
 
-  private final List<IterationBean> m_iterations = new ArrayList<IterationBean>();
+  private final List<IterationBean> m_iterations = new ArrayList<>();
 
   /** The underlying workspace of the current observation */
   private GMLWorkspace m_workspace;
@@ -190,11 +192,12 @@ public class IterationInfoSWAN implements IIterationInfo
     }
     catch( final FileNotFoundException e )
     {
-      if( lnr == null )
-        StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.1" ), e ); //$NON-NLS-1$
-
-      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.2", lnr.getLineNumber() ); //$NON-NLS-1$
-      StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, msg, e );
+      // FIXME: these stati are never used; what happened here?
+//      if( lnr == null )
+//        StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.1" ), e ); //$NON-NLS-1$
+//
+//      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.2", lnr.getLineNumber() ); //$NON-NLS-1$
+//      StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, msg, e );
     }
     finally
     {
@@ -214,7 +217,7 @@ public class IterationInfoSWAN implements IIterationInfo
     if( line == null || line.trim().length() == 0 || (line.length() > 0 && (line.charAt( 0 ) == '#' || line.trim().startsWith( "**" ))) ) //$NON-NLS-1$  //$NON-NLS-2$
       return;
 
-    if( line != null && line.trim().startsWith( "Time of computation" ) ) //$NON-NLS-1$
+    if( line.trim().startsWith( "Time of computation" ) ) //$NON-NLS-1$
     {
       final String lStrDate = line.substring( line.indexOf( "->" ) + 3 ); //$NON-NLS-1$
 
@@ -228,7 +231,7 @@ public class IterationInfoSWAN implements IIterationInfo
     }
     else
     {
-      if( line != null && line.trim().startsWith( "Number of active points" ) ) //$NON-NLS-1$
+      if( line.trim().startsWith( "Number of active points" ) ) //$NON-NLS-1$
       {
         m_boolInResBlock = false;
       }
@@ -354,11 +357,11 @@ public class IterationInfoSWAN implements IIterationInfo
       ObservationFeatureFactory.toFeature( m_obs, obsFeature );
       GmlSerializer.serializeWorkspace( obsFile, m_workspace, "UTF-8" ); //$NON-NLS-1$
 
-      status = StatusUtilities.createStatus( IStatus.OK, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.18", obsName ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+      status = new Status( IStatus.OK, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.18", obsName ) ); //$NON-NLS-1$
     }
     catch( final Throwable e )
     {
-      status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.20", obsName ), e ); //$NON-NLS-1$
+      status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.20", obsName ), e ); //$NON-NLS-1$
     }
 
     m_iterations.add( new IterationBean( obsName, obsFile, status ) );

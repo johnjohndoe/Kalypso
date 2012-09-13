@@ -46,7 +46,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -94,7 +93,7 @@ public class Import2dImport2dmOperation extends AbstractImport2DImportOperation
       final IStatus parseStatus = parser.parse( url, new NullProgressMonitor() );
 
       if( parseStatus.matches( IStatus.ERROR ) )
-        return new ImmutablePair<IStatus, IPolygonWithName[]>( parseStatus, null );
+        return Pair.of( parseStatus, null );
 
       final ISmsModel model = parser.getModel();
       final SmsConverter converter = new SmsConverter( model );
@@ -106,7 +105,7 @@ public class Import2dImport2dmOperation extends AbstractImport2DImportOperation
 
       final IPolygonWithName[] elements = target.getElements();
 
-      return new ImmutablePair<IStatus, IPolygonWithName[]>( parseStatus, elements );
+      return Pair.of( parseStatus, elements );
     }
     catch( final MalformedURLException e )
     {

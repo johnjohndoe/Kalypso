@@ -115,7 +115,7 @@ public class DifferenceResultTinHandler
           monitorValue = updateMonitor( monitor, val, monitorValue );
         }
 
-        final List<GM_Point> nodeList = new LinkedList<GM_Point>();
+        final List<GM_Point> nodeList = new LinkedList<>();
 
         final GM_Position[] ring = triangle.getExteriorRing();
 

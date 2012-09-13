@@ -40,7 +40,7 @@ public class WindDataWizardMainPage extends WizardPage
 
   private IPath m_initialSourcePath;
 
-  private List<String> m_fileExtensions = new ArrayList<String>();
+  private List<String> m_fileExtensions = new ArrayList<>();
 
   public Text m_tileTitle;
 

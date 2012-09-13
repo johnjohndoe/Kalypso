@@ -64,8 +64,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  */
 public class ControlModel1D2DCollection extends Feature_Impl implements IControlModel1D2DCollection
 {
-
-  private final FeatureBindingCollection<IControlModel1D2D> m_controlModels = new FeatureBindingCollection<IControlModel1D2D>( this, IControlModel1D2D.class, WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
+  private final FeatureBindingCollection<IControlModel1D2D> m_controlModels = new FeatureBindingCollection<>( this, IControlModel1D2D.class, WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
 
   public final static QName WB1D2DCONTROL_XP_ACTIVE_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "activeModelID" ); //$NON-NLS-1$
 

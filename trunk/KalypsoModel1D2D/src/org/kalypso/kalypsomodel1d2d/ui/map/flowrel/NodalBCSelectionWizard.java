@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -76,7 +75,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class NodalBCSelectionWizard extends Wizard implements IWizard
+public class NodalBCSelectionWizard extends Wizard
 {
   protected static final DateFormat DF = new SimpleDateFormat( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.0" ) ); //$NON-NLS-1$
 

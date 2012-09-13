@@ -99,11 +99,11 @@ public class TestWorkspaces
 
   static
   {
-    final Map<String, URL> urlMap = new Hashtable<String, URL>();
+    final Map<String, URL> urlMap = new Hashtable<>();
     Throwable th1 = null;
+
     try
     {
-
       urlMap.put( REL_RES_EMPTY_GML, TestWorkspaces.class.getResource( REL_RES_EMPTY_GML ) );
 
       urlMap.put( REL_RES_FE1D2DNODE, TestWorkspaces.class.getResource( REL_RES_FE1D2DNODE ) );
