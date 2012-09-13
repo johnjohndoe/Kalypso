@@ -39,6 +39,7 @@ import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -77,7 +78,7 @@ public class EwawiWorker extends AbstractEwawiWorker
     {
       final EwawiProfilePart basePart = ewawiProfile.getBasePart();
       if( basePart == null )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( "No base profile found at station %.4f", station.doubleValue() ) ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( Messages.getString("EwawiWorker.0"), station.doubleValue() ) ) ); //$NON-NLS-1$
 
       final String name = getName( staIndex, basePart );
       final String description = getDescription( staIndex, basePart );
@@ -115,7 +116,7 @@ public class EwawiWorker extends AbstractEwawiWorker
     }
     catch( final DBaseException | EwawiException | GMLSchemaException e )
     {
-      final String message = String.format( "Unable to create profile at %.4f", station.doubleValue() );
+      final String message = String.format( Messages.getString("EwawiWorker.1"), station.doubleValue() ); //$NON-NLS-1$
       final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message, e );
       throw new CoreException( status );
     }

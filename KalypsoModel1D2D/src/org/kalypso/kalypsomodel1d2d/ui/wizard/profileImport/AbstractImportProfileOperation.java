@@ -31,6 +31,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.views.map.MapView;
@@ -61,8 +62,8 @@ public abstract class AbstractImportProfileOperation implements ICoreRunnableWit
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Importing profiles", 1000 );
-      monitor.subTask( "Importing profiles..." );
+      monitor.beginTask( Messages.getString("AbstractImportProfileOperation.0"), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("AbstractImportProfileOperation.1") ); //$NON-NLS-1$
 
       /* Execute the operation. */
       final IStatus executeStatus = execute( m_data, new SubProgressMonitor( monitor, 800 ) );
@@ -70,14 +71,14 @@ public abstract class AbstractImportProfileOperation implements ICoreRunnableWit
         return executeStatus;
 
       /* Monitor. */
-      monitor.subTask( "Making workspace dirty..." );
+      monitor.subTask( Messages.getString("AbstractImportProfileOperation.2") ); //$NON-NLS-1$
 
       /* Make the pool dirty. */
       makeDirty();
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Adding theme..." );
+      monitor.subTask( Messages.getString("AbstractImportProfileOperation.3") ); //$NON-NLS-1$
 
       /* Add theme. */
       addTheme( m_data.getMapView() );
@@ -119,7 +120,7 @@ public abstract class AbstractImportProfileOperation implements ICoreRunnableWit
 
       /* Post empty command in order to make pool dirty. */
       final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-      modelProvider.postCommand( ITerrainModel.class.getName(), new EmptyCommand( "Import Profiles", false ) );
+      modelProvider.postCommand( ITerrainModel.class.getName(), new EmptyCommand( Messages.getString("AbstractImportProfileOperation.4"), false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -131,7 +132,7 @@ public abstract class AbstractImportProfileOperation implements ICoreRunnableWit
   private void addTheme( final MapView mapView ) throws ExecutionException
   {
     if( mapView == null )
-      throw new ExecutionException( "Map view not opened. Themes could not be added." );
+      throw new ExecutionException( Messages.getString("AbstractImportProfileOperation.5") ); //$NON-NLS-1$
 
     final ITerrainModel terrainModel = ImportProfileHelper.getTerrainModel();
     if( terrainModel == null )

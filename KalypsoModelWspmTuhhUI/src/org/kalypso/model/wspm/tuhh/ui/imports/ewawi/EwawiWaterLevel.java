@@ -26,6 +26,7 @@ import org.kalypso.model.wspm.ewawi.data.EwawiSta;
 import org.kalypso.model.wspm.ewawi.data.EwawiStaLine;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiPunktart;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -52,7 +53,7 @@ public class EwawiWaterLevel
     {
       final EwawiStaLine leftFixPoint = m_staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._1, proLine.getGewKennzahl(), proLine.getStation() );
       if( leftFixPoint == null )
-        throw new EwawiException( "Der linke Festpunkt wurde nicht gefunden." );
+        throw new EwawiException( Messages.getString("EwawiWaterLevel.0") ); //$NON-NLS-1$
 
       final double height = leftFixPoint.getHoehe().doubleValue() + proLine.getHoehe().doubleValue();
 
@@ -67,7 +68,7 @@ public class EwawiWaterLevel
   public String getComment( ) throws EwawiException
   {
     if( m_proLines == null || m_proLines.length == 0 )
-      return "";
+      return ""; //$NON-NLS-1$
 
     if( m_proLines.length == 1 )
       return getCommentSinglePoint();
@@ -79,16 +80,16 @@ public class EwawiWaterLevel
   {
     final Date aufnahmeDatum = m_proLines[0].getAufnahmeDatum();
     if( aufnahmeDatum == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final DateFormat df = DateFormat.getDateInstance( DateFormat.MEDIUM );
-    return String.format( "Aufnahmedatum: %s", df.format( aufnahmeDatum ) );
+    return String.format( Messages.getString("EwawiWaterLevel.3"), df.format( aufnahmeDatum ) ); //$NON-NLS-1$
   }
 
   private String getCommentMultiplePoints( ) throws EwawiException
   {
     final StringBuilder comment = new StringBuilder();
-    comment.append( String.format( "%d Punkte (", m_proLines.length ) );
+    comment.append( String.format( Messages.getString("EwawiWaterLevel.4"), m_proLines.length ) ); //$NON-NLS-1$
 
     for( int i = 0; i < m_proLines.length; i++ )
     {
@@ -96,22 +97,22 @@ public class EwawiWaterLevel
 
       final EwawiStaLine leftFixPoint = m_staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._1, proLine.getGewKennzahl(), proLine.getStation() );
       if( leftFixPoint == null )
-        throw new EwawiException( "Der linke Festpunkt wurde nicht gefunden." );
+        throw new EwawiException( Messages.getString("EwawiWaterLevel.0") ); //$NON-NLS-1$
 
       final double height = leftFixPoint.getHoehe().doubleValue() + proLine.getHoehe().doubleValue();
 
-      comment.append( String.format( "%.2f", height ) );
+      comment.append( String.format( "%.2f", height ) ); //$NON-NLS-1$
       if( i < m_proLines.length - 1 )
-        comment.append( ", " );
+        comment.append( ", " ); //$NON-NLS-1$
     }
 
-    comment.append( ")" );
+    comment.append( Messages.getString("EwawiWaterLevel.8") ); //$NON-NLS-1$
 
     final Date aufnahmeDatum = m_proLines[0].getAufnahmeDatum();
     if( aufnahmeDatum != null )
     {
       final DateFormat df = DateFormat.getDateInstance( DateFormat.MEDIUM );
-      return String.format( "%nAufnahmedatum: %s", df.format( aufnahmeDatum ) );
+      return String.format( Messages.getString("EwawiWaterLevel.9"), df.format( aufnahmeDatum ) ); //$NON-NLS-1$
     }
 
     return comment.toString();

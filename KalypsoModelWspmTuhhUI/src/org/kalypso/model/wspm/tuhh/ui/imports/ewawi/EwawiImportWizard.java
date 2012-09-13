@@ -32,6 +32,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.imports.WspmTuhhProjectSelection;
 
 /**
@@ -64,7 +65,7 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
     m_profilesPreviewPage = null;
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "ewawiImportWizard" ) ); //$NON-NLS-1$
-    setWindowTitle( "EWAWI+ Import" );
+    setWindowTitle( Messages.getString("EwawiImportWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -73,7 +74,7 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
   {
     final WspmTuhhProjectSelection projectSelection = new WspmTuhhProjectSelection( selection );
     if( !projectSelection.hasProject() )
-      throw new IllegalArgumentException( "Please select the 'Water bodies' section of a KalypsoWSPM project." );
+      throw new IllegalArgumentException( Messages.getString("EwawiImportWizard.1") ); //$NON-NLS-1$
 
     m_worker = new EwawiWorker( projectSelection.getWorkspace(), projectSelection.getProject() );
     m_data = new EwawiImportData();

@@ -40,7 +40,7 @@ public class EwawiProfileStationLabelProvider extends ColumnLabelProvider
       final EwawiProfile profile = (EwawiProfile)element;
       final BigDecimal station = profile.getStation();
       if( station != null )
-        return String.format( "%.4f", station.doubleValue() );
+        return String.format( "%.4f", station.doubleValue() ); //$NON-NLS-1$
     }
 
     return super.getText( element );

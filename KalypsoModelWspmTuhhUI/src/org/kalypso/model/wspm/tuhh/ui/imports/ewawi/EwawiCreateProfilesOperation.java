@@ -30,6 +30,7 @@ import org.kalypso.model.wspm.ewawi.data.reader.EwawiProReader;
 import org.kalypso.model.wspm.ewawi.data.reader.EwawiStaReader;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -53,8 +54,8 @@ public class EwawiCreateProfilesOperation implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Importing EWAWI+ profiles", 1000 );
-      monitor.subTask( "Reading input data..." );
+      monitor.beginTask( Messages.getString("EwawiCreateProfilesOperation.0"), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("EwawiCreateProfilesOperation.1") ); //$NON-NLS-1$
 
       /* Create the ewawi data object. */
       final EwawiKey key = new EwawiKey( "", "ALIAS", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -74,7 +75,7 @@ public class EwawiCreateProfilesOperation implements ICoreRunnableWithProgress
       staReader.read( staFile );
 
       /* Create a ok status. */
-      final Status okStatus = new Status( IStatus.OK, KalypsoModelWspmTuhhUIPlugin.getID(), "EWAWI+ Daten wurden erfolgreich gelesen." );
+      final Status okStatus = new Status( IStatus.OK, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("EwawiCreateProfilesOperation.2") ); //$NON-NLS-1$
 
       /* Store the ewawi data object. */
       m_data.setEwawiData( data );

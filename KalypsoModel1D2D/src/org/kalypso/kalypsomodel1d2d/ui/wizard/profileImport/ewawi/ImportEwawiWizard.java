@@ -29,6 +29,7 @@ import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.AbstractImportProfileWizard;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportProfileData;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -65,7 +66,7 @@ public class ImportEwawiWizard extends AbstractImportProfileWizard
     m_profilesPreviewPage = null;
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "ewawiImportWizard" ) ); //$NON-NLS-1$
-    setWindowTitle( "EWAWI+ Import" );
+    setWindowTitle( Messages.getString("ImportEwawiWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 

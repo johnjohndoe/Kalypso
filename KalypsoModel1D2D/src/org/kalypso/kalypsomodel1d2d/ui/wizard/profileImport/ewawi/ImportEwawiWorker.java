@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -80,7 +81,7 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
     {
       final EwawiProfilePart basePart = ewawiProfile.getBasePart();
       if( basePart == null )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( "No base profile found at station %.4f", station.doubleValue() ) ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( Messages.getString("ImportEwawiWorker.0"), station.doubleValue() ) ) ); //$NON-NLS-1$
 
       final String name = getName( staIndex, basePart );
       final String description = getDescription( staIndex, basePart );
@@ -114,7 +115,7 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
     }
     catch( final DBaseException | EwawiException | GMLSchemaException e )
     {
-      final String message = String.format( "Unable to create profile at %.4f", station.doubleValue() );
+      final String message = String.format( Messages.getString("ImportEwawiWorker.1"), station.doubleValue() ); //$NON-NLS-1$
       final Status status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
@@ -142,7 +143,7 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
 
   private IRiverProfileNetwork createOrGetNetwork( final EwawiImportData data, final String riverId, final String riverName )
   {
-    final String networkName = String.format( "%s (%s)", riverName, riverId );
+    final String networkName = String.format( "%s (%s)", riverName, riverId ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<IRiverProfileNetwork> networks = m_profNetworkColl.getRiverProfileNetworks();
     for( final IRiverProfileNetwork network : networks )

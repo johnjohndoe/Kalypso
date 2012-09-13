@@ -29,6 +29,7 @@ import org.kalypso.model.wspm.ewawi.data.EwawiProLine;
 import org.kalypso.model.wspm.ewawi.data.EwawiSta;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -39,7 +40,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class EwawiWaterLevelFixationUpdater
 {
-  private static final String EWAWI_WATER_LEVEL_FIXATION = "EWAWI Water Level Fixation";
+  private static final String EWAWI_WATER_LEVEL_FIXATION = Messages.getString("EwawiWaterLevelFixationUpdater.0"); //$NON-NLS-1$
 
   private final TuhhWspmProject m_targetProject;
 
@@ -88,7 +89,7 @@ public class EwawiWaterLevelFixationUpdater
     {
       final EwawiWaterLevelPointCache pointCache = wlPointCache.get( gewKennzahl );
 
-      final WspmWaterBody waterBody = m_targetProject.findWaterByRefNr( String.format( "%d", gewKennzahl ) );
+      final WspmWaterBody waterBody = m_targetProject.findWaterByRefNr( String.format( "%d", gewKennzahl ) ); //$NON-NLS-1$
       if( waterBody != null )
       {
         updateWaterLevelFixation( pointCache, waterBody );

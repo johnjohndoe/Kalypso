@@ -42,7 +42,7 @@ public class EwawiClassificationUpdater
     final EwawiPunktart[] values = EwawiPunktart.values();
     for( final EwawiPunktart value : values )
     {
-      final String code = String.format( "EWAWI_%d", value.getKey() );
+      final String code = String.format( "EWAWI_%d", value.getKey() ); //$NON-NLS-1$
       final ICodeClass codeClass = classification.findCodeClass( code );
       if( codeClass == null )
       {
