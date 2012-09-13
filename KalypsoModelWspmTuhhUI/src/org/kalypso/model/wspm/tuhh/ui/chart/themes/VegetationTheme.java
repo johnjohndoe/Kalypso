@@ -117,8 +117,17 @@ public class VegetationTheme extends AbstractProfilTheme
 
     if( segmenthasVegetation( point1 ) )
     {
-      final Point p1 = new Point( getDomainAxis().numericToScreen( point1.getBreite() ), getTargetAxis().numericToScreen( point1.getHoehe() ) - 3 );
-      final Point p2 = new Point( getDomainAxis().numericToScreen( point2.getBreite() ), getTargetAxis().numericToScreen( point2.getHoehe() ) - 3 );
+      final Double breite1 = point1.getBreite();
+      final Double hoehe1 = point1.getHoehe();
+
+      final Double breite2 = point2.getBreite();
+      final Double hoehe2 = point2.getHoehe();
+
+      if( Objects.isNull( breite1, hoehe1, breite2, hoehe2 ) )
+        return null;
+
+      final Point p1 = new Point( getDomainAxis().numericToScreen( breite1 ), getTargetAxis().numericToScreen( hoehe1 ) - 3 );
+      final Point p2 = new Point( getDomainAxis().numericToScreen( breite2 ), getTargetAxis().numericToScreen( hoehe2 ) - 3 );
 
       final int width = p2.x - p1.x;
       final int midX = p1.x + width / 2;
