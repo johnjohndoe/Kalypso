@@ -33,5 +33,13 @@
         <gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
     	<gft:param name="hallo" value="gernot"/>
     </gft:extensioncontrol>
+    
+  <gft:group property="tuhh:imageMember" style="SWT.NONE">
+    <gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="4" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+    <gft:gridLayout numColumns="1" />
+    
+    <gft:dynamicTabFolder property="tuhh:imageMember" style="SWT.CLOSE">
+      <gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+    </gft:dynamicTabFolder>
+  </gft:group>
 </gft:featureview>
-
