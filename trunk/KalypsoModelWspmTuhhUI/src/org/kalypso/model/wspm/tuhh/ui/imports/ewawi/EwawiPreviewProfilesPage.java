@@ -32,6 +32,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.data.EwawiPro;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -46,14 +47,14 @@ public class EwawiPreviewProfilesPage extends WizardPage
 
   public EwawiPreviewProfilesPage( final EwawiImportData data )
   {
-    super( "ewawiPreviewProfilesPage" );
+    super( "ewawiPreviewProfilesPage" ); //$NON-NLS-1$
 
     m_data = data;
     m_statusComposite = null;
     m_profileViewer = null;
 
-    setTitle( "Profilvorschau" );
-    setDescription( "Vorschau der zu importierenden Profile." );
+    setTitle( Messages.getString("EwawiPreviewProfilesPage.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("EwawiPreviewProfilesPage.2") ); //$NON-NLS-1$
   }
 
   @Override
@@ -68,7 +69,7 @@ public class EwawiPreviewProfilesPage extends WizardPage
 
     /* Create a group. */
     final Group statusGroup = new Group( main, SWT.NONE );
-    statusGroup.setText( "Dateiinfo" );
+    statusGroup.setText( Messages.getString("EwawiPreviewProfilesPage.3") ); //$NON-NLS-1$
     statusGroup.setLayout( new GridLayout( 1, false ) );
     statusGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
@@ -78,7 +79,7 @@ public class EwawiPreviewProfilesPage extends WizardPage
 
     /* Create a group. */
     final Group profileGroup = new Group( main, SWT.NONE );
-    profileGroup.setText( "Profilvorschau" );
+    profileGroup.setText( Messages.getString("EwawiPreviewProfilesPage.4") ); //$NON-NLS-1$
     profileGroup.setLayout( new GridLayout( 1, false ) );
     profileGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -106,7 +107,7 @@ public class EwawiPreviewProfilesPage extends WizardPage
     stationColumn.setLabelProvider( new EwawiProfileStationLabelProvider() );
 
     final ViewerColumnItem stationItem = new ViewerColumnItem( stationColumn );
-    stationItem.setText( "Station" );
+    stationItem.setText( Messages.getString("EwawiPreviewProfilesPage.5") ); //$NON-NLS-1$
     stationItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( stationItem.getColumn() );
@@ -116,7 +117,7 @@ public class EwawiPreviewProfilesPage extends WizardPage
     descriptionColumn.setLabelProvider( new EwawiProfileDescriptionLabelProvider() );
 
     final ViewerColumnItem descriptionItem = new ViewerColumnItem( descriptionColumn );
-    descriptionItem.setText( "GKZ" );
+    descriptionItem.setText( Messages.getString("EwawiPreviewProfilesPage.6") ); //$NON-NLS-1$
     descriptionItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( descriptionItem.getColumn() );

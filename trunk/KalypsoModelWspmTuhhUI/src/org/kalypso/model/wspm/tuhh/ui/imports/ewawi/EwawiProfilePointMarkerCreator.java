@@ -80,11 +80,11 @@ public class EwawiProfilePointMarkerCreator
   private String findMarkerID( final String code )
   {
     // BUK
-    if( code.equals( "EWAWI_8" ) )
+    if( code.equals( "EWAWI_8" ) ) //$NON-NLS-1$ 
       return IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
 
     // BOK
-    if( code.equals( "EWAWI_9" ) )
+    if( code.equals( "EWAWI_9" ) ) //$NON-NLS-1$
       return IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE;
 
     return null;

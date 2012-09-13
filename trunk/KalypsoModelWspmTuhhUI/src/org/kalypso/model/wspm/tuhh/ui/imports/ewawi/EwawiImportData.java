@@ -30,6 +30,7 @@ import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -92,7 +93,7 @@ public class EwawiImportData extends AbstractModelObject
     m_coordinateSystem = null;
     m_directionUpstreams = false;
     m_ewawiData = null;
-    m_ewawiDataStatus = new Status( IStatus.INFO, KalypsoModelWspmTuhhUIPlugin.getID(), "Keine Daten geladen." );
+    m_ewawiDataStatus = new Status( IStatus.INFO, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("EwawiImportData.0") ); //$NON-NLS-1$
   }
 
   public void init( final IDialogSettings settings )

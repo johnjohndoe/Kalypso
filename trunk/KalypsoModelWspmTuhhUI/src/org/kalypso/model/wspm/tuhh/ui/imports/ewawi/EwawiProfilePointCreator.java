@@ -32,6 +32,7 @@ import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePoint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.shape.geometry.SHPPoint;
 
@@ -79,7 +80,7 @@ public class EwawiProfilePointCreator
       final EwawiProfilePoint profilePoint = createProfilePoint( proLine );
       final SHPPoint shape = profilePoint.getShape();
 
-      final String id = String.format( "%d", proLine.getPunktNummer() );
+      final String id = String.format( "%d", proLine.getPunktNummer() ); //$NON-NLS-1$
       final String comment = getRecordDescription( proLine );
       final double rechtswert = shape.getX();
       final double hochwert = shape.getY();
@@ -105,7 +106,7 @@ public class EwawiProfilePointCreator
     final EwawiStaLine leftFixPoint = m_staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._1, proLine.getGewKennzahl(), proLine.getStation() );
     final EwawiStaLine rightFixPoint = m_staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._2, proLine.getGewKennzahl(), proLine.getStation() );
     if( leftFixPoint == null || rightFixPoint == null )
-      throw new EwawiException( "Einer der Festpunkte wurde nicht gefunden." );
+      throw new EwawiException( Messages.getString("EwawiProfilePointCreator.1") ); //$NON-NLS-1$
 
     return new EwawiProfilePoint( leftFixPoint, rightFixPoint, proLine );
   }
@@ -115,9 +116,9 @@ public class EwawiProfilePointCreator
     final StringBuilder description = new StringBuilder();
 
     final String comment = proLine.getComment();
-    if( comment != null && !comment.equals( "-" ) )
+    if( comment != null && !comment.equals( "-" ) ) //$NON-NLS-1$
     {
-      final String commentText = String.format( "%s", comment );
+      final String commentText = String.format( "%s", comment ); //$NON-NLS-1$
       description.append( commentText );
     }
 
@@ -127,6 +128,6 @@ public class EwawiProfilePointCreator
   private String getRecordCode( final EwawiProLine proLine )
   {
     final EwawiPunktart punktArt = proLine.getPunktArt();
-    return String.format( "EWAWI_%d", punktArt.getKey() );
+    return String.format( "EWAWI_%d", punktArt.getKey() ); //$NON-NLS-1$
   }
 }

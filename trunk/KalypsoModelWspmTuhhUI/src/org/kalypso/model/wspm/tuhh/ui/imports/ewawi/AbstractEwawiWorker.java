@@ -31,6 +31,7 @@ import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfile;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
@@ -59,9 +60,9 @@ public abstract class AbstractEwawiWorker
     final EwawiProfilart profilArt = basePart.getProfilArt( staIndex );
 
     if( profilNummer != null )
-      return String.format( "%d (%s)", profilNummer, profilArt.getLabel() );
+      return String.format( "%d (%s)", profilNummer, profilArt.getLabel() ); //$NON-NLS-1$
 
-    return String.format( "NNN (%s)", profilArt.getLabel() );
+    return String.format( "NNN (%s)", profilArt.getLabel() ); //$NON-NLS-1$
   }
 
   protected String getDescription( final EwawiSta staIndex, final EwawiProfilePart basePart ) throws EwawiException
@@ -71,14 +72,14 @@ public abstract class AbstractEwawiWorker
     final EwawiObjectart objectArt = basePart.getObjectArt( staIndex );
     if( objectArt != null && objectArt != EwawiObjectart._1100 )
     {
-      final String objectArtText = String.format( "Objektart: %d, %s%n", objectArt.getKey(), objectArt.getLabel() );
+      final String objectArtText = String.format( Messages.getString("AbstractEwawiWorker.2"), objectArt.getKey(), objectArt.getLabel() ); //$NON-NLS-1$
       description.append( objectArtText );
     }
 
     final Short zusatz = basePart.getZusatz( staIndex );
     if( zusatz != null && zusatz != 0 )
     {
-      final String zusatzText = String.format( "Zusatzkennzahl: %d%n", zusatz );
+      final String zusatzText = String.format( Messages.getString("AbstractEwawiWorker.3"), zusatz ); //$NON-NLS-1$
       description.append( zusatzText );
     }
 
@@ -86,21 +87,21 @@ public abstract class AbstractEwawiWorker
     if( validity != null )
     {
       final DateFormat df = DateFormat.getDateInstance( DateFormat.MEDIUM );
-      final String validityText = String.format( "Gültigkeitsdatum: %s%n", df.format( validity ) );
+      final String validityText = String.format( Messages.getString("AbstractEwawiWorker.4"), df.format( validity ) ); //$NON-NLS-1$
       description.append( validityText );
     }
 
     final EwawiProfilart profilArt = basePart.getProfilArt( staIndex );
     if( profilArt != null )
     {
-      final String profilArtText = String.format( "Profilart: %d, %s%n", profilArt.getKey(), profilArt.getLabel() );
+      final String profilArtText = String.format( Messages.getString("AbstractEwawiWorker.5"), profilArt.getKey(), profilArt.getLabel() ); //$NON-NLS-1$
       description.append( profilArtText );
     }
 
     final String comment = basePart.getComment( staIndex );
-    if( comment != null && !comment.equals( "-" ) )
+    if( comment != null && !comment.equals( "-" ) ) //$NON-NLS-1$
     {
-      final String commentText = String.format( "Bemerkung: %s%n", comment );
+      final String commentText = String.format( Messages.getString("AbstractEwawiWorker.7"), comment ); //$NON-NLS-1$
       description.append( commentText );
     }
 
@@ -111,23 +112,23 @@ public abstract class AbstractEwawiWorker
   {
     final Long gewKennzahl = basePart.getGewKennzahl();
     if( gewKennzahl == null )
-      return "-1";
+      return "-1"; //$NON-NLS-1$
 
-    return String.format( "%d", gewKennzahl );
+    return String.format( "%d", gewKennzahl ); //$NON-NLS-1$
   }
 
   protected String getRiverName( final EwawiImportData data, final GewShape gewShape, final EwawiProfilePart basePart ) throws DBaseException
   {
     if( gewShape == null )
-      return "Undefiniert";
+      return Messages.getString("AbstractEwawiWorker.10"); //$NON-NLS-1$
 
     final Long gewKennzahl = basePart.getGewKennzahl();
     if( gewKennzahl == null )
-      return "Undefiniert";
+      return Messages.getString("AbstractEwawiWorker.10"); //$NON-NLS-1$
 
     final String name = (String)gewShape.getValue( gewKennzahl, data.getRiverShapeData().getRiverNameField() );
     if( name == null )
-      return "Undefiniert";
+      return Messages.getString("AbstractEwawiWorker.10"); //$NON-NLS-1$
 
     return name;
   }

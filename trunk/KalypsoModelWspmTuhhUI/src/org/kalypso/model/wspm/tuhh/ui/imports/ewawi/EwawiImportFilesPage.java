@@ -41,6 +41,7 @@ import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.java.io.FileExtensions;
 import org.kalypso.contribs.java.io.FilePattern;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 
 /**
@@ -56,8 +57,8 @@ public class EwawiImportFilesPage extends WizardPage
 
     m_data = data;
 
-    setTitle( "Quellenauswahl" );
-    setDescription( "Auswahl von .pro und .sta Dateien sowie dem Foto- und dem Dokumentenvereichnis." );
+    setTitle( Messages.getString("EwawiImportFilesPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("EwawiImportFilesPage.1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -77,12 +78,12 @@ public class EwawiImportFilesPage extends WizardPage
     final Group filesGroup = new Group( main, SWT.NONE );
     filesGroup.setLayout( new GridLayout( 2, false ) );
     filesGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    filesGroup.setText( "Quellen" );
+    filesGroup.setText( Messages.getString("EwawiImportFilesPage.2") ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label proFileLabel = new Label( filesGroup, SWT.NONE );
     proFileLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    proFileLabel.setText( ".pro Datei:" );
+    proFileLabel.setText( Messages.getString("EwawiImportFilesPage.3") ); //$NON-NLS-1$
 
     /* Create the .pro file controls. */
     createProFileControls( filesGroup, dataBinding );
@@ -90,7 +91,7 @@ public class EwawiImportFilesPage extends WizardPage
     /* Create a label. */
     final Label staFileLabel = new Label( filesGroup, SWT.NONE );
     staFileLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    staFileLabel.setText( ".sta Datei:" );
+    staFileLabel.setText( Messages.getString("EwawiImportFilesPage.4") ); //$NON-NLS-1$
 
     /* Create the .sta file controls. */
     createStaFileControls( filesGroup, dataBinding );
@@ -98,7 +99,7 @@ public class EwawiImportFilesPage extends WizardPage
     /* Create a label. */
     final Label fotoDirectoryLabel = new Label( filesGroup, SWT.NONE );
     fotoDirectoryLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    fotoDirectoryLabel.setText( "Bilderverzeichnis [optional]:" );
+    fotoDirectoryLabel.setText( Messages.getString("EwawiImportFilesPage.5") ); //$NON-NLS-1$
 
     /* Create the foto directory controls. */
     createFotoDirectoryControls( filesGroup, dataBinding );
@@ -106,7 +107,7 @@ public class EwawiImportFilesPage extends WizardPage
     /* Create a label. */
     final Label documentDirectoryLabel = new Label( filesGroup, SWT.NONE );
     documentDirectoryLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    documentDirectoryLabel.setText( "Dokumentenverzeichnis [optional]:" );
+    documentDirectoryLabel.setText( Messages.getString("EwawiImportFilesPage.6") ); //$NON-NLS-1$
 
     /* Create the document directory controls. */
     createDocumentDirectoryControls( filesGroup, dataBinding );
@@ -114,7 +115,7 @@ public class EwawiImportFilesPage extends WizardPage
     /* Create a label. */
     final Label shpFileLabel = new Label( filesGroup, SWT.NONE );
     shpFileLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    shpFileLabel.setText( "Gewässershape [optional]:" );
+    shpFileLabel.setText( Messages.getString("EwawiImportFilesPage.7") ); //$NON-NLS-1$
 
     /* Create the .shp file controls. */
     createShpFileControls( filesGroup, dataBinding );
@@ -126,7 +127,7 @@ public class EwawiImportFilesPage extends WizardPage
     final Group optionsGroup = new Group( main, SWT.NONE );
     optionsGroup.setLayout( new GridLayout( 1, false ) );
     optionsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    optionsGroup.setText( "Optionen" );
+    optionsGroup.setText( Messages.getString("EwawiImportFilesPage.8") ); //$NON-NLS-1$
 
     /* Create the direction upstreams controls. */
     createDirectionUpstreamsControls( optionsGroup, dataBinding );
@@ -138,7 +139,7 @@ public class EwawiImportFilesPage extends WizardPage
   private void createProFileControls( final Composite main, final DatabindingWizardPage dataBinding )
   {
     final FileAndHistoryData sourceFile = m_data.getProFile();
-    final FilePattern filePattern = new FilePattern( "*.pro", "EWAWI+ .pro Datei" ); //$NON-NLS-1$
+    final FilePattern filePattern = new FilePattern( "*.pro", Messages.getString("EwawiImportFilesPage.9") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IObservableValue modelFile = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_FILE );
     final FileChooserDelegateOpen delegate = createFileChooserDelegate( filePattern, false );
@@ -155,7 +156,7 @@ public class EwawiImportFilesPage extends WizardPage
   private void createStaFileControls( final Composite main, final DatabindingWizardPage dataBinding )
   {
     final FileAndHistoryData sourceFile = m_data.getStaFile();
-    final FilePattern filePattern = new FilePattern( "*.sta", "EWAWI+ .sta Datei" ); //$NON-NLS-1$
+    final FilePattern filePattern = new FilePattern( "*.sta", Messages.getString("EwawiImportFilesPage.10") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IObservableValue modelFile = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_FILE );
     final FileChooserDelegateOpen delegate = createFileChooserDelegate( filePattern, false );
@@ -178,7 +179,7 @@ public class EwawiImportFilesPage extends WizardPage
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( main, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Button directoryButton = directoryBinding.createDirectorySearchButton( main, historyControl, "Auswahl Verzeichnis", "Verzeichnis auswählen" );
+    final Button directoryButton = directoryBinding.createDirectorySearchButton( main, historyControl, Messages.getString("EwawiImportFilesPage.11"), Messages.getString("EwawiImportFilesPage.12") ); //$NON-NLS-1$ //$NON-NLS-2$
     directoryButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     directoryBinding.applyBinding( dataBinding );
@@ -193,7 +194,7 @@ public class EwawiImportFilesPage extends WizardPage
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( main, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Button directoryButton = directoryBinding.createDirectorySearchButton( main, historyControl, "Auswahl Verzeichnis", "Verzeichnis auswählen" );
+    final Button directoryButton = directoryBinding.createDirectorySearchButton( main, historyControl, Messages.getString("EwawiImportFilesPage.13"), Messages.getString("EwawiImportFilesPage.14") ); //$NON-NLS-1$ //$NON-NLS-2$
     directoryButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     directoryBinding.applyBinding( dataBinding );
@@ -202,7 +203,7 @@ public class EwawiImportFilesPage extends WizardPage
   private void createShpFileControls( final Composite main, final DatabindingWizardPage dataBinding )
   {
     final FileAndHistoryData sourceFile = m_data.getRiverShapeData().getShpFile();
-    final FilePattern filePattern = new FilePattern( "*.shp", "ESRI .shp Datei" ); //$NON-NLS-1$
+    final FilePattern filePattern = new FilePattern( "*.shp", Messages.getString("EwawiImportFilesPage.15") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IObservableValue modelFile = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_FILE );
     final FileChooserDelegateOpen delegate = createFileChooserDelegate( filePattern, true );
@@ -224,7 +225,7 @@ public class EwawiImportFilesPage extends WizardPage
     final IObservableValue model = BeansObservables.observeValue( m_data, EwawiImportData.PROPERTY_COORDINATE_SYSTEM );
 
     final DataBinder binder = new DataBinder( target, model );
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "Bitte wählen Sie ein Koordinaten-System aus." ) );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString("EwawiImportFilesPage.16") ) ); //$NON-NLS-1$
     dataBinding.bindValue( binder );
   }
 
@@ -232,7 +233,7 @@ public class EwawiImportFilesPage extends WizardPage
   {
     final Button directionUpstreamsButton = new Button( optionsGroup, SWT.CHECK );
     directionUpstreamsButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    directionUpstreamsButton.setText( "Stationierung beginnt an der Mündung" );
+    directionUpstreamsButton.setText( Messages.getString("EwawiImportFilesPage.17") ); //$NON-NLS-1$
 
     final IObservableValue target = SWTObservables.observeSelection( directionUpstreamsButton );
     final IObservableValue model = BeansObservables.observeValue( m_data, EwawiImportData.PROPERTY_DIRECTION_UPSTREAMS );

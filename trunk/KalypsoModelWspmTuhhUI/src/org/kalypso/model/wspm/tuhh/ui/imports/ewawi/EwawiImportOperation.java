@@ -32,6 +32,7 @@ import org.kalypso.model.wspm.ewawi.data.EwawiSta;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfile;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -58,8 +59,8 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Importing EWAWI+ profiles", 1000 );
-      monitor.subTask( "Reading river shape..." );
+      monitor.beginTask( Messages.getString("EwawiImportOperation.0"), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("EwawiImportOperation.1") ); //$NON-NLS-1$
 
       /* The river shape. */
       GewShape gewShape = null;
@@ -74,14 +75,14 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
 
       /* Monitor. */
       monitor.worked( 200 );
-      monitor.subTask( "Creating point classes..." );
+      monitor.subTask( Messages.getString("EwawiImportOperation.2") ); //$NON-NLS-1$
 
       /* Update the classifications. */
       m_worker.updateClassifications();
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Creating profiles..." );
+      monitor.subTask( Messages.getString("EwawiImportOperation.3") ); //$NON-NLS-1$
 
       /* Get the ewawi data object. */
       final EwawiPlus ewawiData = m_data.getEwawiData();
@@ -103,14 +104,14 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       }
 
       /* Monitor. */
-      monitor.subTask( "Creating water level fixations..." );
+      monitor.subTask( Messages.getString("EwawiImportOperation.4") ); //$NON-NLS-1$
 
       /* Update the water level fixation. */
       m_worker.updateWaterLevelFixation( staIndex, proIndex );
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Fireing events..." );
+      monitor.subTask( Messages.getString("EwawiImportOperation.5") ); //$NON-NLS-1$
 
       /* Fire change events. */
       m_worker.fireChangeEvents();
@@ -118,7 +119,7 @@ public class EwawiImportOperation implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.worked( 100 );
 
-      return new Status( IStatus.OK, KalypsoModelWspmTuhhUIPlugin.getID(), "Profiles successfully created." );
+      return new Status( IStatus.OK, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("EwawiImportOperation.6") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {

@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -76,7 +77,7 @@ public class ImportProfileHelper
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( "Model data file (terrain.gml) could not be loaded.", e );
+      throw new ExecutionException( Messages.getString("ImportProfileHelper.0"), e ); //$NON-NLS-1$
     }
   }
 
@@ -164,7 +165,7 @@ public class ImportProfileHelper
     }
 
     /* Container theme does not yet exist (needs special handling, as commands are posted in jobs). */
-    final String name = "Cross Sections";
+    final String name = Messages.getString("ImportProfileHelper.1"); //$NON-NLS-1$
 
     final AddCascadingThemeCommand cascadingCommand = new AddCascadingThemeCommand( mapModell, name, ADD_THEME_POSITION.eFront );
 

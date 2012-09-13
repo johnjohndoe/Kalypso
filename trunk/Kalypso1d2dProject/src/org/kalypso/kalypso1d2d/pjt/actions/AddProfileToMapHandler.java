@@ -133,7 +133,7 @@ public class AddProfileToMapHandler extends AbstractHandler
   {
     final MapView mapView = (MapView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( "Map view not opened. Themes could not be added." );
+      throw new ExecutionException( Messages.getString("AddProfileToMapHandler.0") ); //$NON-NLS-1$
 
     return mapView;
   }
