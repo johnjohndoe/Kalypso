@@ -238,8 +238,11 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
   public void paint( final Graphics g )
   {
     final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
     final GeoTransform projection = mapPanel.getProjection();
-    if( mapPanel == null || projection == null )
+    if( projection == null )
       return;
 
     /* always paint a small rectangle of current position */

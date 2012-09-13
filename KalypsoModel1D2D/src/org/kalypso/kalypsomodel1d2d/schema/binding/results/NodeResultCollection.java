@@ -51,7 +51,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class NodeResultCollection extends Feature_Impl implements INodeResultCollection
 {
-  private final IFeatureBindingCollection<INodeResult> m_nodeResults = new FeatureBindingCollection<INodeResult>( this, INodeResult.class, QNAME_PROP_NODERESULT_MEMBER );
+  private final IFeatureBindingCollection<INodeResult> m_nodeResults = new FeatureBindingCollection<>( this, INodeResult.class, QNAME_PROP_NODERESULT_MEMBER );
 
   public NodeResultCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

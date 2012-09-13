@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -113,7 +112,7 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
       {
         final String message = String.format( "Illegal shape type (''%s), only %s or %s allowed.", shapeType, ShapeType.POLYGON, ShapeType.POLYGONZ );
         final IStatus readStatus = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message );
-        return new ImmutablePair<IStatus, IPolygonWithName[]>( readStatus, null );
+        return Pair.of( readStatus, null );
       }
 
       final int numRecords = shapeFile.getNumRecords();
@@ -121,7 +120,7 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
       monitor.beginTask( String.format( "Reading %s", filePath ), numRecords );
 
       // TODO: potential heap exception here -> handle!
-      final Collection<IPolygonWithName> polygons = new ArrayList<IPolygonWithName>( numRecords );
+      final Collection<IPolygonWithName> polygons = new ArrayList<>( numRecords );
 
       for( int i = 0; i < numRecords; i++ )
       {
@@ -136,7 +135,7 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
 
       shapeFile.close();
 
-      return new ImmutablePair<IStatus, IPolygonWithName[]>( Status.OK_STATUS, polygons.toArray( new IPolygonWithName[polygons.size()] ) );
+      return Pair.of( Status.OK_STATUS, polygons.toArray( new IPolygonWithName[polygons.size()] ) );
     }
     catch( final IOException e )
     {

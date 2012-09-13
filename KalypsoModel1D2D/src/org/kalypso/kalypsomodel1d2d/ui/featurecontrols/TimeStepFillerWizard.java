@@ -84,9 +84,6 @@ public class TimeStepFillerWizard extends Wizard
     m_result = m_observation.getResult();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
@@ -97,8 +94,9 @@ public class TimeStepFillerWizard extends Wizard
     final IComponent ordinalNumberComponent = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_ORDINAL_NUMBER );
     final IComponent timeComponent = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
     final IComponent relaxFactorComponent = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_UNDER_RELAXATION_FACTOR );
+
     // get record list of new defined time steps
-    final List<IRecord> records = new ArrayList<IRecord>();
+    final List<IRecord> records = new ArrayList<>();
     final GregorianCalendar calendarFrom = new GregorianCalendar();
     final GregorianCalendar calendarTo = new GregorianCalendar();
     calendarFrom.setTime( m_timeStepFillerWizardPage.getStartDate() );

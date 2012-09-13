@@ -51,12 +51,12 @@ import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.junit.Test;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.vfs.FileSystemManagerWrapper;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.sim.ProcessResult2DOperation;
@@ -75,7 +75,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class NodeResultsHandler2DTest
 {
@@ -89,7 +89,7 @@ public class NodeResultsHandler2DTest
     try
     {
       final ILog log = KalypsoModel1D2DPlugin.getDefault().getLog();
-      log.log( StatusUtilities.createStatus( IStatus.INFO, "Start Result Processing Test (2D only)", null ) ); //$NON-NLS-1$
+      log.log( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "Start Result Processing Test (2D only)" ) ); //$NON-NLS-1$
 
       final URL zipLocation = getClass().getResource( "resources/original.2d.zip" ); //$NON-NLS-1$
       ZipUtilities.unzip( zipLocation, tempDir );
@@ -100,10 +100,11 @@ public class NodeResultsHandler2DTest
       final File outputDir = new File( tempDir, "output" ); //$NON-NLS-1$
       outputDir.mkdir();
 
-      log.log( StatusUtilities.createStatus( IStatus.INFO, "calling ProcessResultsJob", null ) ); //$NON-NLS-1$
-      final List<TYPE> parameters = new ArrayList<TYPE>();
+      log.log( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "calling ProcessResultsJob" ) ); //$NON-NLS-1$
+      final List<TYPE> parameters = new ArrayList<>();
       parameters.add( TYPE.DEPTH );
       parameters.add( TYPE.WATERLEVEL );
+
       final ProcessResult2DOperation job = new ProcessResult2DOperation( resultFileObject, outputDir, null, null, null, parameters, ResultManager.STEADY_DATE, null );
       final IStatus result = job.execute( new NullProgressMonitor() );
       log.log( result );

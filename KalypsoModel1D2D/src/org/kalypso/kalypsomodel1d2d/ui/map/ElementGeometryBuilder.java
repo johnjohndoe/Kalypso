@@ -96,7 +96,7 @@ public class ElementGeometryBuilder
   private final int m_cnt_points;
 
   /** A list of locations for new nodes. */
-  private final List<GM_Point> m_nodes = new ArrayList<GM_Point>();
+  private final List<GM_Point> m_nodes = new ArrayList<>();
 
   private final IKalypsoFeatureTheme m_nodeTheme;
 
@@ -217,7 +217,7 @@ public class ElementGeometryBuilder
    */
   public IStatus checkNewNode( final GM_Point newNode, final boolean pBoolFinalPoint )
   {
-    final List<GM_Point> list = new ArrayList<GM_Point>( m_nodes );
+    final List<GM_Point> list = new ArrayList<>( m_nodes );
     list.add( newNode );
 
     removeDuplicates( list );

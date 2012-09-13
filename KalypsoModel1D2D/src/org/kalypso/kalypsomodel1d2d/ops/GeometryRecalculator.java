@@ -47,7 +47,6 @@ import java.util.List;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -59,6 +58,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -157,7 +157,7 @@ public class GeometryRecalculator
     if( m_flowRelationshipsModelChanges.contains( feature ) )
       return;
     feature.setEnvelopesUpdated();
-    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     if( element instanceof IFELine )
     {
       int countBCs = 0;

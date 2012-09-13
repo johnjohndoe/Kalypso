@@ -65,7 +65,7 @@ public class SurfaceModelChecker
 {
   private final IStatusCollector m_stati = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
 
-  private final Collection< ? extends IPolygonWithName> m_badElement = new LinkedList<IPolygonWithName>();
+  private final Collection< ? extends IPolygonWithName> m_badElement = new LinkedList<>();
 
   private final SpatialIndexExt m_incoming;
 

@@ -349,7 +349,7 @@ public class PreSWANKalypso implements ISimulation
 
   private List<GM_Position> readAdditionalCoordinates( final InputStream lAdditionalCoordInputStream )
   {
-    final List<GM_Position> lListPositions = new ArrayList<GM_Position>();
+    final List<GM_Position> lListPositions = new ArrayList<>();
     try
     {
       final Scanner scannerFile = new Scanner( lAdditionalCoordInputStream );

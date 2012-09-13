@@ -175,7 +175,7 @@ class TriangulateGeometryData extends AbstractModelObject
     try
     {
       // FIXME: encapsulate into a triangle.exe wrapper!
-      final List<String> args = new ArrayList<String>();
+      final List<String> args = new ArrayList<>();
       if( m_maxArea != null && m_maxArea > 0 )
         args.add( "-a" + m_maxArea ); //$NON-NLS-1$
 

@@ -55,25 +55,19 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class TransitionElement extends Feature_Impl implements ITransitionElement
 {
-  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<IFELine>( this, IFELine.class, PROP_CONTI_LINES );
+  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<>( this, IFELine.class, PROP_CONTI_LINES );
 
-  public TransitionElement( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public TransitionElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine#getContinuityLine()
-   */
   @Override
   public List<IFELine> getContinuityLines( )
   {
     return m_continuityLines;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine#recalculateElementGeometry()
-   */
   @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {

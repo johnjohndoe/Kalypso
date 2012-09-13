@@ -52,11 +52,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
  */
 public class MultiTriangleEater implements ITriangleEater
 {
-  private final List<ITriangleEater> m_eaters = new LinkedList<ITriangleEater>();
+  private final List<ITriangleEater> m_eaters = new LinkedList<>();
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
-   */
   @Override
   public void add( final INodeResult... nodes )
   {
@@ -64,9 +61,6 @@ public class MultiTriangleEater implements ITriangleEater
       eater.add( nodes );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#finished()
-   */
   @Override
   public void finished( ) throws CoreException
   {

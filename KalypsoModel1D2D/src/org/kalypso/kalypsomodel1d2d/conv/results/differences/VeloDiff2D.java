@@ -77,7 +77,7 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
  * necessary arguments are:<br>
  * <br>
  * result file 1, result file 2, template file, output file, parameter<br>
- * 
+ *
  * @author Thomas Jung
  */
 public class VeloDiff2D
@@ -107,7 +107,7 @@ public class VeloDiff2D
       }
 
       /* process results and generate result tins */
-      final List<TYPE> parameters = new ArrayList<TYPE>();
+      final List<TYPE> parameters = new ArrayList<>();
 
       if( args[4].equals( "velo" ) ) //$NON-NLS-1$
       {

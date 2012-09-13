@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -51,7 +51,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -64,6 +63,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.io.VFSUtilities;
@@ -71,7 +71,6 @@ import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.IProcessFactory;
 import org.kalypso.commons.process.ProcessTimeoutException;
 import org.kalypso.commons.vfs.FileSystemManagerWrapper;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.contribs.java.lang.ProgressCancelable;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -87,7 +86,7 @@ import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 
 /**
  * @author ig
- * 
+ *
  */
 public class SWANKalypsoSimulation implements ISimulation, ISimulation1D2DConstants
 {
@@ -117,7 +116,7 @@ public class SWANKalypsoSimulation implements ISimulation, ISimulation1D2DConsta
    * <li>execute the swan.exe</li>
    * <li>read results files and process them to the output directory</li>
    * </ul>
-   * 
+   *
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
@@ -194,7 +193,7 @@ public class SWANKalypsoSimulation implements ISimulation, ISimulation1D2DConsta
       if( errorFile == null || !errorFile.exists() || errorFile.getContent().getSize() == 0 )
       {
         /* Successfully finished simulation */
-        progressMonitor.done( StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.20" ) ) ); //$NON-NLS-1$
+        progressMonitor.done( new Status( IStatus.OK, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.20" ) ) ); //$NON-NLS-1$
       }
       else
       {
@@ -202,7 +201,7 @@ public class SWANKalypsoSimulation implements ISimulation, ISimulation1D2DConsta
         final byte[] content = FileUtil.getContent( errorFile );
         final String charset = Charset.defaultCharset().name();
         final String errorMessage = new String( content, charset );
-        final IStatus status = StatusUtilities.createErrorStatus( errorMessage );
+        final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, errorMessage );
         progressMonitor.done( status );
       }
       // TODO: implement the results eater
@@ -213,7 +212,9 @@ public class SWANKalypsoSimulation implements ISimulation, ISimulation1D2DConsta
     }
     catch( final OperationCanceledException e )
     {
-      throw new SimulationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.1" ), new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.2" ), e ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      final CoreException ce = new CoreException( new Status( IStatus.CANCEL, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.2" ), e ) ); //$NON-NLS-1$
+
+      throw new SimulationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.1" ), ce ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -235,22 +236,21 @@ public class SWANKalypsoSimulation implements ISimulation, ISimulation1D2DConsta
 
   private void copyFilesToWorkDir( final FileObject tmpDir, final FileObject targetDir ) throws FileSystemException, IOException
   {
-    List<FileObject> lListFilesToRemove = new ArrayList<FileObject>();
-    Set<String> exclusionFileNamesToMove = new HashSet<String>();
+    final List<FileObject> lListFilesToRemove = new ArrayList<>();
+    final Set<String> exclusionFileNamesToMove = new HashSet<>();
     exclusionFileNamesToMove.add( EXECUTE_RESPONSE_XML );
     // copy input files
     for( int i = 0; i < tmpDir.getChildren().length; i++ )
     {
-      FileObject actFile = tmpDir.getChildren()[i];
+      final FileObject actFile = tmpDir.getChildren()[i];
       if( !exclusionFileNamesToMove.contains( actFile.getName().getBaseName().toLowerCase().trim() ) )
       {
         VFSUtilities.copyFileTo( actFile, targetDir );
         lListFilesToRemove.add( actFile );
       }
     }
-    for( Iterator<FileObject> iterator = lListFilesToRemove.iterator(); iterator.hasNext(); )
+    for( final FileObject actFile : lListFilesToRemove )
     {
-      FileObject actFile = iterator.next();
       actFile.delete();
     }
 
@@ -278,7 +278,7 @@ public class SWANKalypsoSimulation implements ISimulation, ISimulation1D2DConsta
       return exeFile;
 
     final String exeMissingMsg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.26" ), exeFile.getAbsolutePath() ); //$NON-NLS-1$
-    throw new CoreException( StatusUtilities.createErrorStatus( exeMissingMsg ) );
+    throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, exeMissingMsg ) );
   }
 
 }

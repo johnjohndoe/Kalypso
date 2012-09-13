@@ -50,9 +50,9 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 public abstract class FELine extends Feature_Impl implements IFELine
 {
-  protected final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<IFE1D2DNode>( this, IFE1D2DNode.class, PROP_NODES );
+  protected final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<>( this, IFE1D2DNode.class, PROP_NODES );
 
-  private final IFeatureBindingCollection<IFE1D2DComplexElement> m_containers = new FeatureBindingCollection<IFE1D2DComplexElement>( this, IFE1D2DComplexElement.class, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
+  private final IFeatureBindingCollection<IFE1D2DComplexElement> m_containers = new FeatureBindingCollection<>( this, IFE1D2DComplexElement.class, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
 
   public FELine( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

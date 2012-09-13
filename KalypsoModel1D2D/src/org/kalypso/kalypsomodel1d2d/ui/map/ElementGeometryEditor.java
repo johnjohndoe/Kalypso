@@ -138,7 +138,7 @@ public class ElementGeometryEditor
     final IFE1D2DElement[] elements = m_elementList.toArray( new IFE1D2DElement[m_elementList.size()] );
     for( final IFE1D2DElement element : elements )
     {
-      final List<GM_Point> pointsToDraw = new ArrayList<GM_Point>();
+      final List<GM_Point> pointsToDraw = new ArrayList<>();
 
       final List<IFE1D2DNode> nodes = element.getNodes();
       for( int i = 0; i < nodes.size(); i++ )
@@ -284,7 +284,7 @@ public class ElementGeometryEditor
    */
   private GM_Ring[] getNewGeometries( ) throws GM_Exception
   {
-    final List<GM_Ring> ringList = new ArrayList<GM_Ring>();
+    final List<GM_Ring> ringList = new ArrayList<>();
     for( final IFE1D2DElement element : m_elementList )
     {
       if( element instanceof IPolyElement )
@@ -310,7 +310,7 @@ public class ElementGeometryEditor
    */
   private GM_Position[] getEditedNodesPositions( final IFE1D2DElement element )
   {
-    final List<GM_Position> posList = new ArrayList<GM_Position>();
+    final List<GM_Position> posList = new ArrayList<>();
     final List<IFE1D2DNode> nodes = element.getNodes();
     for( int i = 0; i < nodes.size(); i++ )
     {

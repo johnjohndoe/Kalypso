@@ -92,7 +92,7 @@ public class ApplyElevationHelper
   public static IFE1D2DNode[] getAllNonElevationNodes( final ApplyElevationWidgetDataModel dataModel )
   {
     final List<IFE1D2DNode> allNodes = dataModel.getDiscretisationModel().getNodes();
-    final List<IFE1D2DNode> noElevationNodes = new ArrayList<IFE1D2DNode>();
+    final List<IFE1D2DNode> noElevationNodes = new ArrayList<>();
 
     for( int i = 0; i < allNodes.size(); i++ )
     {

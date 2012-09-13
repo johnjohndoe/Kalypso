@@ -63,32 +63,26 @@ import com.vividsolutions.jts.geom.Geometry;
 public class JunctionElement extends Feature_Impl implements IJunctionElement
 {
 
-  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<IFELine>( this, IFELine.class, PROP_CONTI_LINES );
+  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<>( this, IFELine.class, PROP_CONTI_LINES );
 
-  public JunctionElement( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public JunctionElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IAbstractJunction#getContinuityLines()
-   */
   @Override
   public List<IFELine> getContinuityLines( )
   {
     return m_continuityLines;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine#recalculateElementGeometry()
-   */
   @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
     if( m_continuityLines.size() < 2 )
       return null;
 
-    final List<GM_Position> elementPositions = new ArrayList<GM_Position>();
+    final List<GM_Position> elementPositions = new ArrayList<>();
 
     if( m_continuityLines.size() > 2 )
       for( int i = 0; i < m_continuityLines.size(); i++ )
@@ -110,9 +104,6 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
     return JTSAdapter.wrap( convexHull );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
-   */
   @Override
   public boolean addElementAsRef( final IFENetItem element )
   {

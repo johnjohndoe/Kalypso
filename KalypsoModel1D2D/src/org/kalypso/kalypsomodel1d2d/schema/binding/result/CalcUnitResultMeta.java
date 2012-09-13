@@ -56,12 +56,12 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMeta
 {
 
-  public CalcUnitResultMeta( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public CalcUnitResultMeta( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -117,11 +117,11 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
   public boolean containsChildType( final DOCUMENTTYPE type )
   {
     final IFeatureBindingCollection<IResultMeta> children = getChildren();
-    for( IResultMeta child : children )
+    for( final IResultMeta child : children )
     {
       if( child instanceof IDocumentResultMeta )
       {
-        IDocumentResultMeta docResult = (IDocumentResultMeta) child;
+        final IDocumentResultMeta docResult = (IDocumentResultMeta) child;
         if( docResult.getDocumentType() == type )
         {
           return true;
@@ -135,14 +135,14 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta#getChild(org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE)
    */
   @Override
-  public IDocumentResultMeta getDocument( DOCUMENTTYPE type )
+  public IDocumentResultMeta getDocument( final DOCUMENTTYPE type )
   {
     final IFeatureBindingCollection<IResultMeta> children = getChildren();
-    for( IResultMeta child : children )
+    for( final IResultMeta child : children )
     {
       if( child instanceof IDocumentResultMeta )
       {
-        IDocumentResultMeta docResult = (IDocumentResultMeta) child;
+        final IDocumentResultMeta docResult = (IDocumentResultMeta) child;
         if( docResult.getDocumentType() == type )
         {
           return docResult;
@@ -157,26 +157,26 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
    * returns all document children of the calc unit with specified type
    */
   @Override
-  public IDocumentResultMeta[] getDocuments( DOCUMENTTYPE documenttype )
+  public IDocumentResultMeta[] getDocuments( final DOCUMENTTYPE documenttype )
   {
-    List<IResultMeta> documentList = new LinkedList<IResultMeta>();
+    final List<IResultMeta> documentList = new LinkedList<>();
 
     /* get all Node Documents */
-    IFeatureBindingCollection<IResultMeta> calcUnitChildren = getChildren();
+    final IFeatureBindingCollection<IResultMeta> calcUnitChildren = getChildren();
 
-    for( IResultMeta calcUnitChild : calcUnitChildren )
+    for( final IResultMeta calcUnitChild : calcUnitChildren )
     {
       if( calcUnitChild instanceof IStepResultMeta )
       {
-        IStepResultMeta stepResult = (IStepResultMeta) calcUnitChild;
+        final IStepResultMeta stepResult = (IStepResultMeta) calcUnitChild;
 
-        IFeatureBindingCollection<IResultMeta> StepChildren = stepResult.getChildren();
-        for( IResultMeta StepChild : StepChildren )
+        final IFeatureBindingCollection<IResultMeta> StepChildren = stepResult.getChildren();
+        for( final IResultMeta StepChild : StepChildren )
         {
           if( StepChild instanceof IDocumentResultMeta )
           {
-            IDocumentResultMeta documentResult = (IDocumentResultMeta) StepChild;
-            DOCUMENTTYPE docType = documentResult.getDocumentType();
+            final IDocumentResultMeta documentResult = (IDocumentResultMeta) StepChild;
+            final DOCUMENTTYPE docType = documentResult.getDocumentType();
 
             if( docType.equals( documenttype ) )
             {
@@ -187,8 +187,8 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
       }
       else if( calcUnitChild instanceof IDocumentResultMeta )
       {
-        IDocumentResultMeta documentResult = (IDocumentResultMeta) calcUnitChild;
-        DOCUMENTTYPE docType = documentResult.getDocumentType();
+        final IDocumentResultMeta documentResult = (IDocumentResultMeta) calcUnitChild;
+        final DOCUMENTTYPE docType = documentResult.getDocumentType();
 
         if( docType.equals( documenttype ) )
         {

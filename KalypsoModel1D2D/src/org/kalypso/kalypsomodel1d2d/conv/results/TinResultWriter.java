@@ -51,8 +51,9 @@ import javax.xml.namespace.QName;
 import org.apache.xml.serializer.ToXMLStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.transformation.CRSHelper;
@@ -94,7 +95,7 @@ public class TinResultWriter
 
   private final String m_crs;
 
-  private final List<QNameAndString> m_props = new ArrayList<QNameAndString>();
+  private final List<QNameAndString> m_props = new ArrayList<>();
 
   public TinResultWriter( final OutputStream os, final String crs, final QNameAndString[] props ) throws CoreException
   {
@@ -154,7 +155,7 @@ public class TinResultWriter
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.0" ), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.0" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -196,7 +197,7 @@ public class TinResultWriter
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.1" ), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.1" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

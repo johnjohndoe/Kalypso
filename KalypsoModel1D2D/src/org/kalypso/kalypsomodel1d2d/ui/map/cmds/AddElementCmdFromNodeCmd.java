@@ -109,7 +109,7 @@ public class AddElementCmdFromNodeCmd implements IFeatureChangeCommand
   {
     if( m_addedElement == null )
     {
-      final List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>();
+      final List<IFE1D2DEdge> edges = new ArrayList<>();
       IFE1D2DEdge curEdge;
       final int MAX_INDEX = m_elementNodeCmds.length - 2;
       for( int i = 0; i <= MAX_INDEX; i++ )

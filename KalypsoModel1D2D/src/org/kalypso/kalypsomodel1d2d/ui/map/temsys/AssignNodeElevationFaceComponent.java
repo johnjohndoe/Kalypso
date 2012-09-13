@@ -316,7 +316,7 @@ public class AssignNodeElevationFaceComponent extends Composite
       if( !(selection instanceof IStructuredSelection) )
         return;
 
-      final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
+      final List<IFE1D2DNode> nodeList = new ArrayList<>();
 
       for( final Object selected : ((IStructuredSelection) selection).toList() )
       {

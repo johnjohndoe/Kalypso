@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
@@ -246,8 +246,8 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
     {
       case VECTOR_DIFFERENCE:
 
-        vx = diffVx == null ? vx : diffVx;
-        vy = diffVy == null ? vy : diffVy;
+        vx = diffVx;
+        vy = diffVy;
 
         break;
 
@@ -260,16 +260,16 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
           final Double diffMainOrthoX = diffVx - diffMainParallelX;
           final Double diffMainOrthoY = diffVy - diffMainParallelY;
 
-          vx = diffMainOrthoX == null ? vx : diffMainOrthoX;
-          vy = diffMainOrthoY == null ? vx : diffMainOrthoY;
+          vx = diffMainOrthoX;
+          vy = diffMainOrthoY;
         }
 
         break;
 
       case VECTOR_DIFFERENCE_PARALLEL:
 
-        vx = diffMainParallelX == null ? vx : diffMainParallelX;
-        vy = diffMainParallelY == null ? vy : diffMainParallelY;
+        vx = diffMainParallelX;
+        vy = diffMainParallelY;
 
         break;
 
@@ -299,7 +299,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   /**
    * Calculates the difference values of all given result types for the current position and returns them as a map. The
    * differences is computed as follows: minuend - subtrahent
-   * 
+   *
    * @param minuendSurfaces
    *          the tins from which it will be substracted
    * @param subtrahentSurfaces
@@ -311,7 +311,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   private static Map<TYPE, Double> calculateDifferences( final GM_TriangulatedSurface[] minuendSurfaces, final GM_TriangulatedSurface[] subtrahentSurfaces, final GM_Position pos, final TYPE[] resultTypes )
   {
-    final Map<TYPE, Double> valueMap = new HashMap<TYPE, Double>();
+    final Map<TYPE, Double> valueMap = new HashMap<>();
 
     for( int i = 0; i < resultTypes.length; i++ )
     {

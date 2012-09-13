@@ -65,7 +65,6 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -108,7 +107,7 @@ import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 /**
  * @author Gernot Belger
  */
-public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
+public class FlowRelCalcSimulationPage extends WizardPage
 {
   private static final String URN_QRESULT_GFT = "urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:QIntervallResult:featureview:default"; //$NON-NLS-1$
 
@@ -145,7 +144,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
     }
   }
 
-  private final List<FlowRelationshipCalcOperation> m_operations = new ArrayList<FlowRelationshipCalcOperation>();
+  private final List<FlowRelationshipCalcOperation> m_operations = new ArrayList<>();
 
   private StatusComposite m_statusComposite;
 
@@ -385,7 +384,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
   {
     m_console.getDocument().addDocumentListener( m_documentListener );
 
-    m_statusComposite.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.8"), null ) ); //$NON-NLS-1$
+    m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.8" ) ) ); //$NON-NLS-1$
 
     final List<FlowRelationshipCalcOperation> operations = m_operations;
     final IOConsole console = m_console;
@@ -478,7 +477,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
   public void reset( final TuhhCalculation templateCalculation, final IFlowRelation1D[] flowRels, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel )
   {
     m_simulationWasRun = false;
-    m_statusComposite.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.16"), null ) ); //$NON-NLS-1$
+    m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.16" ) ) ); //$NON-NLS-1$
     m_console.clearConsole();
     m_operations.clear();
 

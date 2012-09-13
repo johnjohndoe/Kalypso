@@ -44,9 +44,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -68,7 +70,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   public IFeatureBindingCollection<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
   {
     if( nodes.size() != 1 )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.0" ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.0" ) ) ); //$NON-NLS-1$
 
     final IFE1D2DNode continuityLineNode = nodes.get( 0 );
 
@@ -102,7 +104,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     }
     catch( final GM_Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
 
     // nodeList.invalidate();
@@ -116,7 +118,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   {
     try
     {
-      final ArrayList<IFE1D2DNode> list = new ArrayList<IFE1D2DNode>();
+      final ArrayList<IFE1D2DNode> list = new ArrayList<>();
       list.addAll( getNodes() );
       createFullNodesList( list );
     }
@@ -130,7 +132,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   private void recalculateGeometry( final IFE1D2DNode node, final IFE1D2DNode neighbour1, final IFE1D2DNode neighbour2 ) throws CoreException, GM_Exception
   {
     if( neighbour1 == null && neighbour2 == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.2" ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.2" ) ) ); //$NON-NLS-1$
     final GM_Object geometry;
     if( neighbour1 == null )
       geometry = getGeometry( node, neighbour2 );

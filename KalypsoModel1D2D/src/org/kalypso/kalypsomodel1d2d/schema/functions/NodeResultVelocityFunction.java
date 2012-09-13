@@ -60,9 +60,6 @@ public class NodeResultVelocityFunction extends FeaturePropertyFunction
 
   private String m_kind;
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
-   */
   @Override
   public void init( final Map<String, String> properties )
   {
@@ -70,11 +67,6 @@ public class NodeResultVelocityFunction extends FeaturePropertyFunction
     m_kind = properties.get( "resultKind" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
-   */
-  @SuppressWarnings("unchecked")
   @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
@@ -92,14 +84,9 @@ public class NodeResultVelocityFunction extends FeaturePropertyFunction
     // return Math.toDegrees( Math.atan2( vx, vy ) - Math.PI);
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
-   */
   @Override
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     return valueToSet;
   }
-
 }

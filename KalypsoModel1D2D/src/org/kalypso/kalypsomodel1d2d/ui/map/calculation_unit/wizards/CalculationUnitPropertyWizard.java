@@ -168,6 +168,7 @@ public class CalculationUnitPropertyWizard extends Wizard
     final List<ICalculationUnit> connectedUnits = new ArrayList<>();
     connectedUnits.add( inputListCalSubUnits[0] );
 
+    // FIXME: iteration variable not used?!?
     for( final ICalculationUnit subUnitsToGoThrough : inputListCalSubUnits )
     {
       for( final ICalculationUnit currentUnit : inputListCalSubUnits )
@@ -185,6 +186,7 @@ public class CalculationUnitPropertyWizard extends Wizard
         }
       }
     }
+
     if( connectedUnits.size() == inputListCalSubUnits.length )
       return true;
     else

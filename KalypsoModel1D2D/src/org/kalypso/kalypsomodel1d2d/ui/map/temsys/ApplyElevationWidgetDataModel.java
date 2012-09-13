@@ -157,7 +157,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setData( ITerrainElevationModelSystem.class.toString(), elevationModelSystem );
   }
 
-  @SuppressWarnings("unchecked")
   public List<IFE1D2DNode> getSelectedNode( )
   {
     return (List<IFE1D2DNode>) getData( SELECTED_NODE_KEY );
@@ -211,7 +210,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     {
       return;
     }
-    final List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>();
+    final List<IFE1D2DNode> nodes = new ArrayList<>();
     for( final EasyFeatureWrapper wrapper : selection.getAllFeatures() )
     {
       final Feature feature = wrapper.getFeature();

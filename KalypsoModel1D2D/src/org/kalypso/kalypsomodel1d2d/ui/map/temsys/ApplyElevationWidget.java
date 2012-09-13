@@ -196,7 +196,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       if( features.length == 0 )
         return;
 
-      final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
+      final List<IFE1D2DNode> nodeList = new ArrayList<>();
       for( final Feature feature : features )
       {
         if( feature != null )
@@ -212,7 +212,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       }
       catch( final Exception e1 )
       {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
         super.keyPressed( e );
       }
@@ -355,7 +354,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   }
 
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public synchronized boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
   }

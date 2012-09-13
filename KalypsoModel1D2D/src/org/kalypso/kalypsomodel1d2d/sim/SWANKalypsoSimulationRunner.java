@@ -57,6 +57,7 @@ import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -68,7 +69,6 @@ import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.refactoring.DefaultWpsObserver;
-import org.kalypso.service.wps.refactoring.IWPSObserver;
 import org.kalypso.service.wps.refactoring.IWPSProcess;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -78,7 +78,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * Represents a calculation with a swan.exe. Helps generation of the ASCII input files and to start the process.
  */
-public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements ISimulation1D2DConstants, IWPSObserver, IKalypsoSimulationRunnerComposite
+public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements ISimulation1D2DConstants, IKalypsoSimulationRunnerComposite
 {
   private final IControlModel1D2D m_controlModel;
 
@@ -209,10 +209,10 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
     // - choose, which results to be deleted
 
     if( simulationStatus.isOK() )
-      return StatusUtilities.createStatus( IStatus.OK, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), null ); //$NON-NLS-1$
+      return new Status( IStatus.OK, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), null ); //$NON-NLS-1$
 
     if( simulationStatus.matches( IStatus.CANCEL ) )
-      return StatusUtilities.createStatus( IStatus.CANCEL, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2" ), null ); //$NON-NLS-1$
+      return new Status( IStatus.CANCEL, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2" ), null ); //$NON-NLS-1$
 
     if( simulationStatus.matches( IStatus.ERROR ) )
       return simulationStatus;
@@ -305,7 +305,7 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
     final String[] lines = errorMessage.split( "\n" ); //$NON-NLS-1$
     if( lines.length != 7 )
     {
-      return StatusUtilities.createStatus( IStatus.WARNING, CODE_RMA10S, errorMessage, null );
+      return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RMA10S, errorMessage, null );
     }
 
     final int severity = IStatus.WARNING;

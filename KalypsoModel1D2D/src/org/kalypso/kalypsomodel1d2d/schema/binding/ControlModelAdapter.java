@@ -12,6 +12,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.util.pool.IModelAdaptor;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
@@ -28,7 +29,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Adapter from original 1d2d control model without ordinal number column and wrong sorting to version 1.0.
- * 
+ *
  */
 public class ControlModelAdapter implements IModelAdaptor
 {
@@ -59,7 +60,7 @@ public class ControlModelAdapter implements IModelAdaptor
 
   public IStatus execute( final GMLWorkspace workspace, final IProgressMonitor monitor )
   {
-    final List<IStatus> statusList = new ArrayList<IStatus>();
+    final List<IStatus> statusList = new ArrayList<>();
 
     final Feature controlModelGroup = workspace.getRootFeature();
 
@@ -112,6 +113,6 @@ public class ControlModelAdapter implements IModelAdaptor
     if( statusList.size() > 0 )
       return StatusUtilities.createStatus( statusList, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.4" ) ); //$NON-NLS-1$
 
-    return StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.5" ) ); //$NON-NLS-1$
+    return new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.5" ) ); //$NON-NLS-1$
   }
 }

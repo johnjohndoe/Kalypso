@@ -109,7 +109,7 @@ public class Control1D2DConverterSWAN
   /** Base filename name for RMA-Kalypso result files (Output...) files */
   public static final String RESULT_FILE_BASE = "Output"; //$NON-NLS-1$
 
-  private final List<IBoundaryCondition> m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
+  private final List<IBoundaryCondition> m_unitBoundaryConditions = new ArrayList<>();
 
   private final IControlModel1D2D m_controlModel;
 
@@ -268,7 +268,7 @@ public class Control1D2DConverterSWAN
         m_strTimeTo = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( calculatedSteps[calculatedSteps.length - 1] );
         m_strStepLength = "" + lLongStepLen; //$NON-NLS-1$
       }
-      m_strStationary = m_controlModel.isUnsteadySelected() ? "NONSTATIONARY " : ""; //$NON-NLS-1$ //$NON-NLS-2$ //STATIONARY  
+      m_strStationary = m_controlModel.isUnsteadySelected() ? "NONSTATIONARY " : ""; //$NON-NLS-1$ //$NON-NLS-2$ //STATIONARY
       m_strSeries = (m_controlModel.isUnsteadySelected() ? "SERIES " : ""); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
@@ -277,17 +277,17 @@ public class Control1D2DConverterSWAN
       m_log.formatLog( 1, 1, e.getLocalizedMessage() );
     }
     m_strTimeFromToFormated = "" + (m_controlModel.isUnsteadySelected() ? m_strTimeFrom : "") + " " + m_strStepLength + " " + m_strStepLengthUnit + " " + //$NON-NLS-1$    //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-        (m_controlModel.isUnsteadySelected() ? m_strTimeTo : ""); //$NON-NLS-1$  
+        (m_controlModel.isUnsteadySelected() ? m_strTimeTo : ""); //$NON-NLS-1$
     m_strTimeZeroFromToFormated = "" + (m_controlModel.isUnsteadySelected() ? m_strTimeFromZero : "") + " " + m_strStepLength + " " + m_strStepLengthUnit + " " + //$NON-NLS-1$    //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-        (m_controlModel.isUnsteadySelected() ? m_strTimeTo : ""); //$NON-NLS-1$  
+        (m_controlModel.isUnsteadySelected() ? m_strTimeTo : ""); //$NON-NLS-1$
 
     m_strTimeZeroFromFormated = "" + (m_controlModel.isUnsteadySelected() ? m_strTimeFromZero : "") + " " + m_strStepLength + " " + m_strStepLengthUnit; //$NON-NLS-1$    //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
   private String getSeriesFileNameFormated( final String pStrInitialFileName )
   {
-    //    return pStrInitialFileName + (m_controlModel.isUnsteadySelected() ? ISimulation1D2DConstants.SIM_SWAN_TIME_SUFFIX + m_strStepLength : "") + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT; //$NON-NLS-1$    
-    return pStrInitialFileName + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT; //$NON-NLS-1$    
+    //    return pStrInitialFileName + (m_controlModel.isUnsteadySelected() ? ISimulation1D2DConstants.SIM_SWAN_TIME_SUFFIX + m_strStepLength : "") + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT; //$NON-NLS-1$
+    return pStrInitialFileName + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT; //$NON-NLS-1$
   }
 
   /**
@@ -354,7 +354,7 @@ public class Control1D2DConverterSWAN
   private void formateWaterLevelData( final Formatter formatter )
   {
     // format the water levels
-    formatter.format( "INPGRID WLEVEL UNSTRUCTURED %s %s\n" + //$NON-NLS-1$ 
+    formatter.format( "INPGRID WLEVEL UNSTRUCTURED %s %s\n" + //$NON-NLS-1$
         "READINP WLEVEL 1. %s'%s' 1 0 FREE\n" + //$NON-NLS-1$
         "$\n", m_strStationary, m_strTimeFromToFormated, m_strSeries, getSeriesFileNameFormated( ISimulation1D2DConstants.SIM_SWAN_WATER_LEVEL_DATA_FILE ) ); //$NON-NLS-1$
   }
@@ -381,16 +381,16 @@ public class Control1D2DConverterSWAN
         final String lStrEndTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( m_listWritenDatesWind.size() - 1 ) );
         if( m_listWritenDatesWind.size() == 1 )
         {
-          formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s\n", //$NON-NLS-1$ 
+          formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s\n", //$NON-NLS-1$
               ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getX() - m_doubleShiftX)).intValue(), ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getY() - m_doubleShiftY)).intValue(), m_gridDescriptor.getNumColumns() - 1, m_gridDescriptor.getNumRows() - 1, Math.abs( m_gridDescriptor.getOffsetX( lStrCRS ) ), Math.abs( m_gridDescriptor.getOffsetY( lStrCRS ) ), m_strStationary, lStrStartTimeWind );
         }
         else
         {
-          final String lStrTimeStepLen = "" + (m_listWritenDatesWind.get( 1 ).getTime() - m_listWritenDatesWind.get( 0 ).getTime()) / m_intMilisecInMinute; //$NON-NLS-1$  
-          formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s %s %s %s\n", //$NON-NLS-1$ 
+          final String lStrTimeStepLen = "" + (m_listWritenDatesWind.get( 1 ).getTime() - m_listWritenDatesWind.get( 0 ).getTime()) / m_intMilisecInMinute; //$NON-NLS-1$
+          formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s %s %s %s\n", //$NON-NLS-1$
               ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getX() - m_doubleShiftX)).intValue(), ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getY() - m_doubleShiftY)).intValue(), m_gridDescriptor.getNumColumns() - 1, m_gridDescriptor.getNumRows() - 1, Math.abs( m_gridDescriptor.getOffsetX( lStrCRS ) ), Math.abs( m_gridDescriptor.getOffsetY( lStrCRS ) ), m_strStationary, lStrStartTimeWind, lStrTimeStepLen, m_strStepLengthUnit, lStrEndTimeWind );
         }
-        formatter.format( "READINP WIND 1. SERIES '%s' 3 0 FREE\n$\n", //$NON-NLS-1$ 
+        formatter.format( "READINP WIND 1. SERIES '%s' 3 0 FREE\n$\n", //$NON-NLS-1$
             ISimulation1D2DConstants.SIM_SWAN_WIND_FILE + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT );
       }
     }
@@ -515,7 +515,7 @@ public class Control1D2DConverterSWAN
 
   /**
    * writes the output specification block for current simulation into the SWAN-Kalypso controlFile (INPUT)
-   * 
+   *
    * //HSIG === significant wave height(m), WLEN === Average wave length (m) //RTP === peak period (in s) of the
    * variance density spectrum (relative frequency spectrum), //DIR === mean wave direction, WATLEV === water level (in
    * m), //VEL === current velocity (vector; in m/s), //FORCE === wave-induced force per unit surface area (vector; in
@@ -528,9 +528,9 @@ public class Control1D2DConverterSWAN
         "$\n" + //$NON-NLS-1$
         "BLOCK 'COMPGRID' NOHEAD '%s.mat' XP YP HSIG TM01 DIR WATLEV WLEN FORCE VEL WIND %s \n" + //$NON-NLS-1$
         "POINTS 'P_%s' FILE '%s.txt'\n" + //$NON-NLS-1$
-        "TABLE 'P_%s' HEAD '%s_out.tab' %s XP YP HSIG DIR TM01 WATLEV WIND VEL %s \n" + //$NON-NLS-1$   
+        "TABLE 'P_%s' HEAD '%s_out.tab' %s XP YP HSIG DIR TM01 WATLEV WIND VEL %s \n" + //$NON-NLS-1$
         "TEST 1,0\n" + //$NON-NLS-1$
-        "COMPUTE %s %s\n" + //$NON-NLS-1$ 
+        "COMPUTE %s %s\n" + //$NON-NLS-1$
         "STOP\n" + //$NON-NLS-1$
         "$\n", //$NON-NLS-1$
 
@@ -635,7 +635,7 @@ public class Control1D2DConverterSWAN
   }
 
   /**
-   * 
+   *
    */
   protected Formatter getFormatter( final String pStrFileName ) throws IOException
   {

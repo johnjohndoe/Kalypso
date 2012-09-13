@@ -127,7 +127,7 @@ public class Create1DElementCommand implements ICommand
         final GM_Point startPoint = GeometryFactory.createGM_Point( startPosition, crs );
         final GM_Point endPoint = GeometryFactory.createGM_Point( endPosition, crs );
 
-        final List<GM_Point> nodes = new ArrayList<GM_Point>( 2 );
+        final List<GM_Point> nodes = new ArrayList<>( 2 );
         nodes.add( startPoint );
         nodes.add( endPoint );
 

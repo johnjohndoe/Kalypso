@@ -67,7 +67,7 @@ public class SurfacePlaneChecker
   /**
    * name -> item
    */
-  private final Map<String, IPolygonWithName> m_badElements = new HashMap<String, IPolygonWithName>();
+  private final Map<String, IPolygonWithName> m_badElements = new HashMap<>();
 
   private final IStatusCollector m_stati = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
 

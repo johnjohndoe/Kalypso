@@ -69,7 +69,6 @@ import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -187,7 +186,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
 
     if( m_parameters == null )
     {
-      m_parameters = new LinkedList<ResultType.TYPE>();
+      m_parameters = new LinkedList<>();
       m_parameters.add( ResultType.TYPE.DEPTH );
       m_parameters.add( ResultType.TYPE.TERRAIN );
       m_parameters.add( ResultType.TYPE.VELOCITY );
@@ -289,7 +288,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
     {
       final FileObject lResFile = getOrUnzipSwanResult();
 
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString( "ProcessResultsJob.0" ) + lResFile ) ); //$NON-NLS-1$
+      KalypsoModel1D2DPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "ProcessResultsJob.0" ) + lResFile ) ); //$NON-NLS-1$
 
       // only read the *.mat files
       if( lResFile.getName().getFriendlyURI().endsWith( ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ) )
@@ -297,7 +296,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
         final SWANResultsReader lSWANResultsReader = new SWANResultsReader( lResFile );
         final String timeStringFormatedForSWANOutput = SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate );
         m_mapResults = lSWANResultsReader.readMatResultsFile( timeStringFormatedForSWANOutput );
-        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString( "ProcessResultsJob.1" ) + timeStringFormatedForSWANOutput ) ); //$NON-NLS-1$
+        KalypsoModel1D2DPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "ProcessResultsJob.1" ) + timeStringFormatedForSWANOutput ) ); //$NON-NLS-1$
 
         ResultMeta1d2dHelper.addDocument( m_stepResultMeta, ResultMeta1d2dHelper.SWAN_RAW_DATA_META_NAME, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.13" ), IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "../" + ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
       }
@@ -522,7 +521,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
 
   private ITriangleEater createTinEater( final File tinResultFile, final TYPE parameter, final String crs ) throws CoreException
   {
-    final List<QNameAndString> properties = new ArrayList<QNameAndString>();
+    final List<QNameAndString> properties = new ArrayList<>();
 
     switch( parameter )
     {

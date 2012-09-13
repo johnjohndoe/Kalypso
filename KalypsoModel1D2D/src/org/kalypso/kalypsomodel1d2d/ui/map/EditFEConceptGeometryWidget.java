@@ -270,7 +270,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
   private Map<String, IFlowRelationship> collectFlowrelationsInformation( final IFE1D2DNode startNode )
   {
-    final Map<String, IFlowRelationship> elementWithFlowRelationship = new HashMap<String, IFlowRelationship>();
+    final Map<String, IFlowRelationship> elementWithFlowRelationship = new HashMap<>();
 
     for( final IFE1D2DElement element : startNode.getElements() )
     {

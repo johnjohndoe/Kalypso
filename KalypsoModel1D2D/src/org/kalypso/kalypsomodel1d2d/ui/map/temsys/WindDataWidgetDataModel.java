@@ -172,7 +172,7 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel
       return lWindDataModelSystem.getWindDataModels();
   }
 
-  private static Map<String, Map<String, Object>> m_mapProperiesData = new HashMap<String, Map<String, Object>>();
+  private static Map<String, Map<String, Object>> m_mapProperiesData = new HashMap<>();
 
   private static IWindDataModelSystem m_selectedWindSystem;
 
@@ -209,11 +209,10 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel
 
   public static synchronized void setActualWindDataModel( final String pStrWindSystemId, final IWindDataModel pActualWindDataModel )
   {
-
     Map<String, Object> lMapActualWindProps = m_mapProperiesData.get( pStrWindSystemId );
     if( lMapActualWindProps == null )
     {
-      lMapActualWindProps = new HashMap<String, Object>();
+      lMapActualWindProps = new HashMap<>();
       m_mapProperiesData.put( pStrWindSystemId, lMapActualWindProps );
     }
     lMapActualWindProps.put( STR_WIND_STEP_PROP_NAME, pActualWindDataModel );

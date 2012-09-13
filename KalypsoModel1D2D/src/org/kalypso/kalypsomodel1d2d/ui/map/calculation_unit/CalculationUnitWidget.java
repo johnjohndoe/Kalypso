@@ -174,7 +174,7 @@ public class CalculationUnitWidget extends AbstractDelegateWidget implements IWi
   }
 
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public synchronized boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
   }

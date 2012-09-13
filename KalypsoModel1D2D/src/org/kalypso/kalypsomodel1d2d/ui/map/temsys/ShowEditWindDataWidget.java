@@ -184,14 +184,11 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
+
     checkWindTheme( commandPoster );
     /* set data to data model */
     if( mapPanel == null )
@@ -273,9 +270,6 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
     m_dataModel.setWindDataModel( pWindModel );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final Point p )
   {
@@ -313,12 +307,9 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
       if( mapPanel == null || mapPanel.getProjection() == null )
         return;
 
-      GM_Point nodePoint = null;
+      final GM_Point nodePoint = MapUtilities.transform( mapPanel, p );
 
       final StringBuffer tooltipText = new StringBuffer();
-
-      if( nodePoint == null )
-        nodePoint = MapUtilities.transform( mapPanel, p );
 
       final IWindDataProvider windProvider = m_dataModel.getWindDataModel();
       if( windProvider != null && nodePoint != null )
@@ -353,23 +344,19 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#doubleClickedLeft(java.awt.Point)
-   */
   @Override
   public void doubleClickedLeft( final Point p )
   {
     super.doubleClickedLeft( p );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
     final Graphics2D g2 = (Graphics2D) g;
+
     super.paint( g2 );
+
     paintWindDataTooltip( g2, m_point );
 
     final IMapPanel mapPanel = m_dataModel.getMapPanel();
@@ -390,19 +377,12 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
     m_toolTipRendererDesc.paintToolTip( new Point( 5, bounds.height - 5 ), g2, bounds );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public synchronized boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
-   */
   @Override
   public String getPartName( )
   {
