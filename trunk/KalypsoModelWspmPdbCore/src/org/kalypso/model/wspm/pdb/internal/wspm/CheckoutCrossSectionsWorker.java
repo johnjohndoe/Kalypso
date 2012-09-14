@@ -41,13 +41,6 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.net.URI;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -58,7 +51,6 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
-import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
@@ -66,13 +58,9 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.gml.binding.commons.Image;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Gernot Belger
@@ -143,77 +131,9 @@ public class CheckoutCrossSectionsWorker
     final CrossSectionConverter converter = new CrossSectionConverter( section, profile );
     converter.execute();
 
-    convertDocuments( section, newProfile );
+    final DocumentConverter documentConverter = new DocumentConverter( m_documentBase );
+    documentConverter.convertDocuments( section, newProfile );
 
     return newProfile;
-  }
-
-  private void convertDocuments( final CrossSection section, final IProfileFeature profile )
-  {
-    final Set<Document> documents = section.getDocuments();
-
-    // Sort documents, so pictures come first.
-    // Avoids, that the user looks at a warning when looking at a cross section first time
-    final Comparator<Document> documentComparator = new DocumentPictureComparator();
-    final SortedSet<Document> sortedDocuments = new TreeSet<Document>( documentComparator );
-    sortedDocuments.addAll( documents );
-
-    for( final Document document : sortedDocuments )
-    {
-      final String documentPath = document.getFilename();
-      final URI documentURL = org.eclipse.core.runtime.URIUtil.append( m_documentBase, documentPath );
-      final Image newImage = profile.addImage( documentURL );
-
-      // TODO: convert other data as well
-      // document.getCreationDate();
-      // document.getCrossSection();
-      // document.getMeasurementDate();
-      // document.getEditingDate();
-      // document.getEditingUser();
-
-      final GM_Object location = convertGeometry( document.getLocation() );
-      final String description = document.getDescription();
-      final MimeType mimeType = convertMimeType( document.getMimetype() );
-      final String name = document.getName();
-      // document.getShotdirection();
-      // document.getState();
-      // document.getViewangle();
-      // document.getWaterBody();
-
-      newImage.setLocation( location );
-      newImage.setName( name );
-      newImage.setDescription( description );
-      newImage.setMimeType( mimeType );
-    }
-  }
-
-  private MimeType convertMimeType( final String mimeType )
-  {
-    try
-    {
-      return new MimeType( mimeType );
-    }
-    catch( final MimeTypeParseException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  private GM_Object convertGeometry( final Point location )
-  {
-    try
-    {
-      if( location == null )
-        return null;
-
-      final String srs = JTSAdapter.toSrs( location.getSRID() );
-      return JTSAdapter.wrap( location, srs );
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
   }
 }

@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
+import java.net.URI;
+
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants.STATIONING_DIRECTION;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.internal.wspm.DocumentConverter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree_impl.gml.binding.commons.Image;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
@@ -55,9 +60,12 @@ public class SaveWaterBodyHelper
 {
   private final WspmProject m_project;
 
-  public SaveWaterBodyHelper( final WspmProject project )
+  private final URI m_documentBase;
+
+  public SaveWaterBodyHelper( final WspmProject project, final URI documentBase )
   {
     m_project = project;
+    m_documentBase = documentBase;
   }
 
   public WspmWaterBody updateOrCreateWspmWaterBody( final WaterBody waterBody, final WspmWaterBody wspmWater ) throws Exception
@@ -94,11 +102,19 @@ public class SaveWaterBodyHelper
     wspmWater.setDirectionUpstreams( isDirectionUpstreams );
 
     final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    final GM_Curve centerLine = (GM_Curve) JTSAdapter.wrapWithSrid( waterBody.getRiverlineAsLine() );
+    final GM_Curve centerLine = (GM_Curve)JTSAdapter.wrapWithSrid( waterBody.getRiverlineAsLine() );
     if( centerLine != null )
     {
-      final GM_Curve transformedCenterline = (GM_Curve) centerLine.transform( kalypsoSRS );
+      final GM_Curve transformedCenterline = (GM_Curve)centerLine.transform( kalypsoSRS );
       wspmWater.setCenterLine( transformedCenterline );
     }
+
+    /* Remove old pictures. */
+    final IFeatureBindingCollection<Image> images = wspmWater.getImages();
+    if( images.size() > 0 )
+      images.clear();
+
+    final DocumentConverter documentConverter = new DocumentConverter( m_documentBase );
+    documentConverter.convertDocuments( waterBody, wspmWater );
   }
 }

@@ -104,12 +104,13 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
       final GafCodes gafCodes = new GafCodes();
       final WaterBody[] waterBodies = m_data.getExistingWaterBodies();
       final State state = m_data.getState();
+      final TuhhReach reach = m_data.getReach();
       final String dbSrs = m_data.getDatabaseSrs();
       final ICoefficients coefficients = m_data.getCoefficients();
       state.setEditingUser( connection.getSettings().getUsername() );
       final URI documentBase = m_data.getDocumentBase();
 
-      final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, dbSrs, documentBase, true, new SubProgressMonitor( monitor, 90 ) );
+      final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, reach, profiles, dbSrs, documentBase, true, new SubProgressMonitor( monitor, 90 ) );
       new Executor( session, operation ).execute();
       final IStatus status = operation.getStatus();
 
@@ -159,7 +160,7 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
 
     final TuhhReach reach = m_data.getReach();
 
-    final FeatureChange nameChange = new FeatureChange( reach, Feature.QN_NAME, new ArrayList<String>( Collections.singletonList( name ) ) );
+    final FeatureChange nameChange = new FeatureChange( reach, Feature.QN_NAME, new ArrayList<>( Collections.singletonList( name ) ) );
     final FeatureChange descChange = new FeatureChange( reach, Feature.QN_DESCRIPTION, description );
 
     final CommandableWorkspace workspace = m_data.getWorkspace();
@@ -171,7 +172,7 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
   {
     final TuhhReach reach = m_data.getReach();
 
-    final LinkedHashSet<IProfileFeature> profiles = new LinkedHashSet<IProfileFeature>();
+    final LinkedHashSet<IProfileFeature> profiles = new LinkedHashSet<>();
     final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
     for( final TuhhReachProfileSegment segment : segments )
     {

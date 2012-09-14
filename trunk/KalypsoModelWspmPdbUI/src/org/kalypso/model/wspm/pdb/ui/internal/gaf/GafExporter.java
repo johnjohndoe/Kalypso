@@ -183,7 +183,7 @@ public class GafExporter
     final State state = new State();
     final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, coordinateSystem, null, false, monitor );
+    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, null, profiles, coordinateSystem, null, false, monitor );
     operation.execute( null );
 
     return state.getCrossSections();
@@ -191,7 +191,7 @@ public class GafExporter
 
   private WaterBody[] getWaterBodies( final IProfileFeature[] profiles )
   {
-    final List<WaterBody> waterBodies = new ArrayList<WaterBody>();
+    final List<WaterBody> waterBodies = new ArrayList<>();
 
     for( final IProfileFeature profile : profiles )
     {

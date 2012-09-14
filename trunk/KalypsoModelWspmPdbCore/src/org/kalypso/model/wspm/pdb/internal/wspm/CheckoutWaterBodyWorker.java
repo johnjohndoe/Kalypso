@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
+import java.net.URI;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -60,9 +62,12 @@ public class CheckoutWaterBodyWorker
 {
   private final CheckoutDataMapping m_mapping;
 
-  public CheckoutWaterBodyWorker( final CheckoutDataMapping mapping )
+  private final URI m_documentBase;
+
+  public CheckoutWaterBodyWorker( final CheckoutDataMapping mapping, final URI documentBase )
   {
     m_mapping = mapping;
+    m_documentBase = documentBase;
   }
 
   public void execute( final IProgressMonitor monitor ) throws CoreException
@@ -78,7 +83,7 @@ public class CheckoutWaterBodyWorker
         final WspmProject project = m_mapping.getProject();
         final WspmWaterBody wspmWater = m_mapping.getWspmWaterBody( waterBody );
 
-        final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( project );
+        final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( project, m_documentBase );
         final WspmWaterBody newWspmWater = helper.updateOrCreateWspmWaterBody( waterBody, wspmWater );
 
         m_mapping.set( waterBody, newWspmWater );
