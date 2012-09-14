@@ -47,12 +47,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.activation.MimeType;
-
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.URIUtil;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -64,7 +60,6 @@ import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
-import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -81,14 +76,11 @@ import org.kalypso.model.wspm.pdb.internal.wspm.OKPartBuilder;
 import org.kalypso.model.wspm.pdb.internal.wspm.PPPartBuilder;
 import org.kalypso.model.wspm.pdb.internal.wspm.UKPartBuilder;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.gml.binding.commons.Image;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -105,13 +97,15 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
-  private final Map<String, WaterBody> m_waterBodies = new HashMap<String, WaterBody>();
+  private final Map<String, WaterBody> m_waterBodies = new HashMap<>();
 
   private final PDBNameGenerator m_sectionNames = new PDBNameGenerator();
 
   private final IProgressMonitor m_monitor;
 
   private final State m_state;
+
+  private final TuhhReach m_reach;
 
   private final IProfileFeature[] m_profiles;
 
@@ -133,12 +127,13 @@ public class CheckinStatePdbOperation implements IPdbOperation
    * @param dbSrs
    *          The coordinate system of the database
    */
-  public CheckinStatePdbOperation( final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody[] waterBodies, final State state, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final boolean checkSectionNames, final IProgressMonitor monitor )
+  public CheckinStatePdbOperation( final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody[] waterBodies, final State state, final TuhhReach reach, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final boolean checkSectionNames, final IProgressMonitor monitor )
   {
     m_gafCodes = gafCodes;
     m_coefficients = coefficients;
     m_classChecker = new ClassChecker( profiles );
     m_state = state;
+    m_reach = reach;
     m_profiles = profiles;
     m_documentBase = documentBase;
     m_checkSectionNames = checkSectionNames;
@@ -168,6 +163,9 @@ public class CheckinStatePdbOperation implements IPdbOperation
     m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.3" ) ); //$NON-NLS-1$
     Gaf2Db.addState( session, m_state );
     m_monitor.worked( 10 );
+
+    final CheckinDocumentWorker worker = new CheckinDocumentWorker( m_documentBase );
+    worker.createDocuments( session, m_state, m_reach );
 
     for( final IProfileFeature feature : m_profiles )
     {
@@ -225,7 +223,8 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
     saveSection( session, section );
 
-    createDocuments( session, section, feature );
+    final CheckinDocumentWorker worker = new CheckinDocumentWorker( m_documentBase );
+    worker.createDocuments( session, section, feature );
   }
 
   private void saveSection( final Session session, final CrossSection section )
@@ -271,7 +270,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     try
     {
       final GM_Object transformedCurve = m_transformer.transform( curve );
-      return (LineString) JTSAdapter.export( transformedCurve );
+      return (LineString)JTSAdapter.export( transformedCurve );
     }
     catch( final Exception e )
     {
@@ -282,7 +281,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private void createParts( final CrossSection section, final IProfil profil, final String profilSRS ) throws PdbConnectException
   {
-    final Set<CrossSectionPart> parts = new HashSet<CrossSectionPart>();
+    final Set<CrossSectionPart> parts = new HashSet<>();
 
     /* Extract profile line */
     final CrossSectionPart pPart = builtPart( profil, profilSRS, new PPPartBuilder( profil ) );
@@ -372,76 +371,4 @@ public class CheckinStatePdbOperation implements IPdbOperation
     return m_transformer;
   }
 
-  private void createDocuments( final Session session, final CrossSection section, final IProfileFeature profile )
-  {
-    final IFeatureBindingCollection<Image> images = profile.getImages();
-    for( final Image image : images )
-    {
-      final MimeType mimeType = image.getMimeType();
-      final URI uri = image.getUri();
-
-      final Document document = new Document();
-
-      document.setCreationDate( section.getCreationDate() );
-      document.setCrossSection( section );
-      document.setDescription( image.getDescription() );
-      document.setEditingDate( section.getEditingDate() );
-      document.setEditingUser( section.getEditingUser() );
-      document.setFilename( asFilename( uri ) );
-      document.setLocation( asPoint( image.getLocation() ) );
-      document.setMeasurementDate( section.getMeasurementDate() ); // bad, should come from image
-      document.setMimetype( mimeType == null ? null : mimeType.toString() );
-      document.setName( asName( uri ) );
-      // document.setShotdirection( null );
-      // document.setViewangle( null );
-
-      // REMARK: we set state + water body to null here: this is a profile document!
-      // I.e. if the profile is removed, also this document will be destroyed which is ok.
-      document.setState( null );
-      document.setWaterBody( null );
-
-      if( session != null )
-        session.save( document );
-    }
-  }
-
-  private String asName( final URI uri )
-  {
-    final String unencoded = URIUtil.toUnencodedString( uri );
-    return FilenameUtils.getName( unencoded );
-  }
-
-  /**
-   * Makes the absolute local uri relative to the document server
-   */
-  private String asFilename( final URI uri )
-  {
-    if( uri == null )
-      return null;
-
-    final String fullLocation = uri.toString();
-    if( m_documentBase == null )
-      return fullLocation;
-
-    final URI relative = URIUtil.makeRelative( uri, m_documentBase );
-    return URIUtil.toUnencodedString( relative );
-  }
-
-  private com.vividsolutions.jts.geom.Point asPoint( final GM_Object location )
-  {
-    if( location == null )
-      return null;
-
-    try
-    {
-      final GM_Point centroid = location.getCentroid();
-      return (com.vividsolutions.jts.geom.Point) JTSAdapter.export( centroid );
-    }
-    catch( final GM_Exception e )
-    {
-      // will never happen
-      e.printStackTrace();
-      return null;
-    }
-  }
 }

@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * A wizard for importing water bodies into wspm.
- *
+ * 
  * @author Holger Albert
  */
 public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
@@ -83,7 +83,7 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
 
   public WspmImportWaterBodiesWizard( )
   {
-    m_features = new HashMap<String, WspmWaterBody>();
+    m_features = new HashMap<>();
     m_workspace = null;
     m_wspmProject = null;
   }
@@ -103,7 +103,7 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
       throw new IllegalStateException( "No WSPM project was found..." ); //$NON-NLS-1$
 
     int cnt = 0;
-    final List<WaterBody> waterBodies = new ArrayList<WaterBody>();
+    final List<WaterBody> waterBodies = new ArrayList<>();
     final IFeatureBindingCollection<WspmWaterBody> wspmWaterBodies = m_wspmProject.getWaterBodies();
     for( final WspmWaterBody wspmWaterBody : wspmWaterBodies )
     {
@@ -130,7 +130,7 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
 
     /* Get the water bodies. */
     final WritableSet selectedWaterBodies = data.getSelectedWaterBodies();
-    final WaterBody[] waterBodies = (WaterBody[]) selectedWaterBodies.toArray( new WaterBody[selectedWaterBodies.size()] );
+    final WaterBody[] waterBodies = (WaterBody[])selectedWaterBodies.toArray( new WaterBody[selectedWaterBodies.size()] );
 
     /* Create the operation. */
     final ICoreRunnableWithProgress operation = new WspmImportWaterBodiesOperation( m_workspace, waterBodies, data, m_wspmProject, m_features );
@@ -151,14 +151,14 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     if( !(selection instanceof IFeatureSelection) )
       return null;
 
-    final IFeatureSelection featureSelection = (IFeatureSelection) selection;
+    final IFeatureSelection featureSelection = (IFeatureSelection)selection;
 
     final Object[] elements = selection.toArray();
     for( final Object element : elements )
     {
       if( element instanceof FeatureAssociationTypeElement )
       {
-        final FeatureAssociationTypeElement featureAssociationTypeElement = (FeatureAssociationTypeElement) element;
+        final FeatureAssociationTypeElement featureAssociationTypeElement = (FeatureAssociationTypeElement)element;
         final Feature feature = featureAssociationTypeElement.getOwner();
         final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
         if( workspace != null )
@@ -168,7 +168,7 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
 
       if( element instanceof Feature )
       {
-        final Feature feature = (Feature) element;
+        final Feature feature = (Feature)element;
         final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
         if( workspace != null )
           return workspace;
@@ -181,7 +181,7 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
   /**
    * This function inspects all elements in the selection and returns the WSPM project of first element which is a
    * feature of a WSPM project.
-   *
+   * 
    * @param selection
    *          The selection to inspect.
    * @return A WSPM project or null.
@@ -193,21 +193,21 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     {
       if( element instanceof FeatureAssociationTypeElement )
       {
-        final FeatureAssociationTypeElement featureAssociationTypeElement = (FeatureAssociationTypeElement) element;
+        final FeatureAssociationTypeElement featureAssociationTypeElement = (FeatureAssociationTypeElement)element;
         final Feature feature = featureAssociationTypeElement.getOwner();
         final GMLWorkspace workspace = feature.getWorkspace();
         final Feature rootFeature = workspace.getRootFeature();
         if( rootFeature instanceof WspmProject )
-          return (WspmProject) rootFeature;
+          return (WspmProject)rootFeature;
       }
 
       if( element instanceof Feature )
       {
-        final Feature feature = (Feature) element;
+        final Feature feature = (Feature)element;
         final GMLWorkspace workspace = feature.getWorkspace();
         final Feature rootFeature = workspace.getRootFeature();
         if( rootFeature instanceof WspmProject )
-          return (WspmProject) rootFeature;
+          return (WspmProject)rootFeature;
       }
     }
 

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
+import java.net.URI;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -66,9 +68,12 @@ public class CheckoutStateWorker
 {
   private final CheckoutDataMapping m_mapping;
 
-  public CheckoutStateWorker( final CheckoutDataMapping mapping )
+  private final URI m_documentBase;
+
+  public CheckoutStateWorker( final CheckoutDataMapping mapping, final URI documentBase )
   {
     m_mapping = mapping;
+    m_documentBase = documentBase;
   }
 
   public void execute( final IProgressMonitor monitor ) throws CoreException
@@ -85,7 +90,6 @@ public class CheckoutStateWorker
         final TuhhReach newReach = createOrReplaceReach( state, reach );
 
         m_mapping.set( state, newReach );
-
         m_mapping.addAddedFeatures( newReach );
 
         monitor.worked( 1 );
@@ -156,6 +160,9 @@ public class CheckoutStateWorker
     final TuhhReach newReach = TuhhWspmProject.createNewReachForWaterBody( waterBody );
     newReach.setName( name );
     newReach.setDescription( state.getDescription() );
+
+    final DocumentConverter documentConverter = new DocumentConverter( m_documentBase );
+    documentConverter.convertDocuments( state, newReach );
 
     return newReach;
   }

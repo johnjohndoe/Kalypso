@@ -98,7 +98,7 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   private String[] m_zipHistory = new String[0];
 
-  private final Collection<Document> m_selectedDocuments = new HashSet<Document>();
+  private final Collection<Document> m_selectedDocuments = new HashSet<>();
 
   private int m_selectionCount = 0;
 
@@ -134,7 +134,7 @@ public class ImportAttachmentsData extends AbstractModelObject
 
     final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof State )
-      return (State) firstElement;
+      return (State)firstElement;
 
     return null;
   }
@@ -208,7 +208,7 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   private String[] updateHistory( final String[] history, final File file )
   {
-    final Set<String> historySet = new LinkedHashSet<String>();
+    final Set<String> historySet = new LinkedHashSet<>();
     // New entry on, top; avoid duplicate entries
     if( file != null )
     {
@@ -327,7 +327,7 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   public Document[] getImportDocuments( )
   {
-    final Collection<Document> selected = new ArrayList<Document>();
+    final Collection<Document> selected = new ArrayList<>();
 
     for( final Document document : m_selectedDocuments )
     {

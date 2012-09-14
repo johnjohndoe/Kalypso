@@ -93,10 +93,10 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
     final CheckoutClassesWorker classesWorker = new CheckoutClassesWorker( codes, coefficients, mapping );
     classesWorker.execute( new SubProgressMonitor( monitor, 5 ) );
 
-    final CheckoutWaterBodyWorker waterBodyWorker = new CheckoutWaterBodyWorker( mapping );
+    final CheckoutWaterBodyWorker waterBodyWorker = new CheckoutWaterBodyWorker( mapping, documentBase );
     waterBodyWorker.execute( new SubProgressMonitor( monitor, 5 ) );
 
-    final CheckoutStateWorker stateWorker = new CheckoutStateWorker( mapping );
+    final CheckoutStateWorker stateWorker = new CheckoutStateWorker( mapping, documentBase );
     stateWorker.execute( new SubProgressMonitor( monitor, 5 ) );
 
     final CheckoutCrossSectionsWorker crossSectionsWorker = new CheckoutCrossSectionsWorker( mapping, documentBase );
@@ -122,16 +122,16 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
     for( final Feature feature : changedFeatures )
       checkForClassChange( stati, feature );
 
-    return stati.asMultiStatusOrOK( Messages.getString("CheckoutPdbOperation.1") ); //$NON-NLS-1$
+    return stati.asMultiStatusOrOK( Messages.getString( "CheckoutPdbOperation.1" ) ); //$NON-NLS-1$
   }
 
   private void checkForClassChange( final IStatusCollector stati, final Feature feature )
   {
     if( feature instanceof IClassificationClass )
     {
-      final IClassificationClass cc = (IClassificationClass) feature;
+      final IClassificationClass cc = (IClassificationClass)feature;
       final String typeName = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
-      stati.add( IStatus.WARNING, Messages.getString("CheckoutPdbOperation.2"), null, typeName, cc.getDescription(), cc.getName() ); //$NON-NLS-1$
+      stati.add( IStatus.WARNING, Messages.getString( "CheckoutPdbOperation.2" ), null, typeName, cc.getDescription(), cc.getName() ); //$NON-NLS-1$
     }
   }
 }

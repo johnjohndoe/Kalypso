@@ -300,6 +300,26 @@
             %wizard.description.4
          </description>
       </wizard>
+      <wizard
+            category="pdbWizardsCategory"
+            class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportDocumentAttachmentsWizard"
+            icon="icons/attachment.png"
+            id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportStateAttachmentsWizard"
+            name="%wizard.name.7">
+         <description>
+            %wizard.description.7
+         </description>
+      </wizard>
+      <wizard
+            category="pdbWizardsCategory"
+            class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportDocumentAttachmentsWizard"
+            icon="icons/attachment.png"
+            id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportWaterBodyAttachmentsWizard"
+            name="%wizard.name.8">
+         <description>
+            %wizard.description.8
+         </description>
+      </wizard>
       
       <wizard
           id="org.kalypso.model.wspm.pdb.ui.internal.checkout.CheckoutWspmWizard"
@@ -362,6 +382,36 @@
                    <count value="1"/>
                    <iterate>
                       <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.State"/>
+                   </iterate>
+                </and>
+             </with>
+          </and></enablement>
+    </wizardEnablement>
+    <wizardEnablement
+          wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportStateAttachmentsWizard">
+       <enablement>
+          <and>
+             <reference definitionId="isPdbAdminAndPdbViewVisible"/>
+             <with variable="selection">
+                <and>
+                   <count value="1"/>
+                   <iterate>
+                      <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.State"/>
+                   </iterate>
+                </and>
+             </with>
+          </and></enablement>
+    </wizardEnablement>
+    <wizardEnablement
+          wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportWaterBodyAttachmentsWizard">
+       <enablement>
+          <and>
+             <reference definitionId="isPdbAdminAndPdbViewVisible"/>
+             <with variable="selection">
+                <and>
+                   <count value="1"/>
+                   <iterate>
+                      <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.WaterBody"/>
                    </iterate>
                 </and>
              </with>

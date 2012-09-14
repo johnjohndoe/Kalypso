@@ -126,13 +126,10 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
     m_data = data;
     m_wspmProject = wspmProject;
     m_existingWaterBodies = existingWaterBodies;
-    m_added = new ArrayList<Feature>();
-    m_changed = new ArrayList<Feature>();
+    m_added = new ArrayList<>();
+    m_changed = new ArrayList<>();
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( IProgressMonitor monitor ) throws InvocationTargetException
   {
@@ -210,14 +207,14 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
 
   private void insert( final WaterBody waterBody ) throws Exception
   {
-    final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( m_wspmProject );
+    final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( m_wspmProject, null );
     final WspmWaterBody feature = helper.updateOrCreateWspmWaterBody( waterBody, null );
     m_added.add( feature );
   }
 
   private void update( final WaterBody waterBody, final WspmWaterBody existingWaterBody ) throws Exception
   {
-    final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( m_wspmProject );
+    final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( m_wspmProject, null );
     final WspmWaterBody feature = helper.updateOrCreateWspmWaterBody( waterBody, existingWaterBody );
     m_changed.add( feature );
   }
@@ -232,7 +229,7 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
     final Feature[] added = m_added.toArray( new Feature[] {} );
     final Feature[] changed = m_changed.toArray( new Feature[] {} );
 
-    /* Get the üarents. */
+    /* Get the parents. */
     final Feature[] addedParents = findParents( added );
     for( final Feature changedParent : addedParents )
     {
@@ -252,7 +249,7 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
 
   private Feature[] findParents( final Feature[] features )
   {
-    final Collection<Feature> parents = new ArrayList<Feature>();
+    final Collection<Feature> parents = new ArrayList<>();
 
     for( final Feature feature : features )
     {
@@ -266,7 +263,7 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
 
   private Feature[] findChildren( final Feature parent, final Feature[] removedFeatures )
   {
-    final Collection<Feature> children = new ArrayList<Feature>();
+    final Collection<Feature> children = new ArrayList<>();
 
     for( final Feature feature : removedFeatures )
     {

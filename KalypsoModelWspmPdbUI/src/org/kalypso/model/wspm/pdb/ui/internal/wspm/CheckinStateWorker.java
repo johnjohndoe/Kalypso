@@ -84,7 +84,7 @@ public class CheckinStateWorker implements ICheckInWorker
   @Override
   public IStatus checkPreconditions( )
   {
-    final Map<String, BigDecimal> profileNames = new HashMap<String, BigDecimal>();
+    final Map<String, BigDecimal> profileNames = new HashMap<>();
 
     final Set<String> existingWaterCodes = hashWaterCodes( m_data.getExistingWaterBodies() );
 
@@ -138,7 +138,7 @@ public class CheckinStateWorker implements ICheckInWorker
 
   static Set<String> hashWaterCodes( final WaterBody[] waterBodies )
   {
-    final Set<String> codes = new HashSet<String>();
+    final Set<String> codes = new HashSet<>();
 
     for( final WaterBody waterBody : waterBodies )
       codes.add( waterBody.getName() );
