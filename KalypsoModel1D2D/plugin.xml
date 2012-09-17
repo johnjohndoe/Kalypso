@@ -601,7 +601,7 @@
               icon="icons/elcl16/exportProfilLine.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard1D2D"
               name="%org.kalypso.model1d2d.exportProfiles.name">
-           <description>sjam</description>
+           <description>%org.kalypso.model1d2d.exportProfiles.description</description>
         </wizard>
   </extension>
 
