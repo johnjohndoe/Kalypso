@@ -74,7 +74,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  * das netz fuer die zu generierenden ergebnisse erstellt.<br/>
  * vorhandene ergebnisse oberhalb der zu berechneneden knoten werden als zufluss gerechnet. Wobei zu generierende
  * Ergebnisse stets neu berechnet werden und niemals als Zufluss dienen.
- * 
+ *
  * @author doemming
  */
 public class NetFileAnalyser
@@ -99,7 +99,7 @@ public class NetFileAnalyser
    * Generate NetElements for rrm model: also defines the relation between channels (upstream/downstream). This defines
    * in what order the net is written later.<br/>
    * IMPORTANT: if any relation in the gml-model is changed/added, this methods needs to be updated as well.
-   * 
+   *
    * @param workspace
    *          the rrm workspace
    * @param synthNWorkspace
@@ -118,7 +118,7 @@ public class NetFileAnalyser
 
     // REMARK: Fix: using LinkedHashMap, so net generation is independent of current gml-id of channel.
     // Else, the net was generated differently for every simulation (due to the fact that the gml-ids change....)
-    final Map<String, NetElement> netElements = new LinkedHashMap<String, NetElement>();
+    final Map<String, NetElement> netElements = new LinkedHashMap<>();
     // generate net elements, each channel represents a netelement
     for( final Channel channelFE : channels )
     {
@@ -279,7 +279,7 @@ public class NetFileAnalyser
 
   private Node[] findRelatedNodes( final Node upStreamNode )
   {
-    final Collection<Node> relatedNodes = new ArrayList<Node>( 2 );
+    final Collection<Node> relatedNodes = new ArrayList<>( 2 );
 
     final Branching branching = upStreamNode.getBranching();
     if( branching != null )
