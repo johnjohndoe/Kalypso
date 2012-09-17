@@ -176,7 +176,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
   {
     // FIXME: theses nodes do not contain the branching nodes
 
-    final Map<Node, ZuflussBean> nodeInfos = new LinkedHashMap<Node, ZuflussBean>();
+    final Map<Node, ZuflussBean> nodeInfos = new LinkedHashMap<>();
 
     /* First collect info and potentially add branching nodes */
     for( final Node node : nodes )
@@ -381,5 +381,4 @@ public class NetFileWriter extends AbstractCoreFileWriter
     final int asciiID = m_idManager.getAsciiID( nodeFE );
     return "Z_" + Integer.toString( asciiID ).trim() + ".zufluss"; //$NON-NLS-1$ //$NON-NLS-2$
   }
-
 }
