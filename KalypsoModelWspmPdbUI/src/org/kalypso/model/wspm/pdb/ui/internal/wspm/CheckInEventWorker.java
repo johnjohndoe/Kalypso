@@ -68,7 +68,7 @@ public class CheckInEventWorker implements ICheckInWorker
 
   public CheckInEventWorker( final CommandableWorkspace workspace, final WspmFixation fixation )
   {
-    m_data = new CheckInEventData<WspmFixation>( workspace, fixation );
+    m_data = new CheckInEventData<>( workspace, fixation );
     m_operation = new CheckInEventOperation( m_data );
   }
 

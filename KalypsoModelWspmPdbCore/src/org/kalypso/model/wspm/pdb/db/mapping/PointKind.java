@@ -23,9 +23,9 @@ public class PointKind implements java.io.Serializable
 
   private String m_description;
 
-  private Set<Roughness> m_roughnesses = new HashSet<Roughness>( 0 );
+  private Set<Roughness> m_roughnesses = new HashSet<>( 0 );
 
-  private Set<Vegetation> m_vegetations = new HashSet<Vegetation>( 0 );
+  private Set<Vegetation> m_vegetations = new HashSet<>( 0 );
 
   public PointKind( )
   {

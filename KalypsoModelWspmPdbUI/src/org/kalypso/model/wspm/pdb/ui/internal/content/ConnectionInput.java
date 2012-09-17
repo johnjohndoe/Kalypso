@@ -86,7 +86,7 @@ public class ConnectionInput
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new ArrayList<WaterBody>();
+      return new ArrayList<>();
     }
   }
 

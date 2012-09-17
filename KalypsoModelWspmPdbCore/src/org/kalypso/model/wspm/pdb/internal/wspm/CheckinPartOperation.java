@@ -130,7 +130,7 @@ public class CheckinPartOperation
     final String heightComponentID = m_partBuilder.getHeightComponent();
 
     final IProfileRecord[] records = m_profil.getPoints();
-    final List<Coordinate> lineCrds = new ArrayList<Coordinate>( records.length );
+    final List<Coordinate> lineCrds = new ArrayList<>( records.length );
     for( int i = 0; i < records.length; i++ )
     {
       final IRecord record = records[i];

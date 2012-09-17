@@ -94,7 +94,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
   {
     m_waterLevelStatus.clear();
 
-    final Collection<WaterlevelFixation> wbs = new ArrayList<WaterlevelFixation>();
+    final Collection<WaterlevelFixation> wbs = new ArrayList<>();
 
     ShapeFile shapeFile = null;
     try

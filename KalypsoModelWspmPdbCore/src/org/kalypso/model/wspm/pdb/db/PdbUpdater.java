@@ -251,7 +251,7 @@ public class PdbUpdater
     {
       final PatternInputReplacer<Object> inputReplacer = configurePatternReplacer( variables );
 
-      final Collection<String> sql = new ArrayList<String>();
+      final Collection<String> sql = new ArrayList<>();
       for( final UpdateScript script : scripts )
       {
         final String[] sqlStatements = script.loadSQL();
@@ -272,7 +272,7 @@ public class PdbUpdater
 
   private PatternInputReplacer<Object> configurePatternReplacer( final Properties variables )
   {
-    final PatternInputReplacer<Object> inputReplacer = new PatternInputReplacer<Object>( "${", "}" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final PatternInputReplacer<Object> inputReplacer = new PatternInputReplacer<>( "${", "}" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Set<String> names = variables.stringPropertyNames();
     for( final String name : names )
@@ -340,7 +340,7 @@ public class PdbUpdater
 
     // TRICKY: the page name serves as id for the page: if two scripts have pages with the same name,
     // the more recent script should win. Altogether the order of pages should be preserved.
-    final Map<String, IWizardPage> pages = new LinkedHashMap<String, IWizardPage>();
+    final Map<String, IWizardPage> pages = new LinkedHashMap<>();
 
     for( final UpdateScript updateScript : scripts )
     {

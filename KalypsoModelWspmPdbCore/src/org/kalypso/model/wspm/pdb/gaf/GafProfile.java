@@ -61,7 +61,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Represent point of a gaf file with the same station.
- * 
+ *
  * @author Gernot Belger
  */
 public class GafProfile implements IGafConstants
@@ -69,7 +69,7 @@ public class GafProfile implements IGafConstants
   private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
   /** Linked in order to preserve original order from graf file */
-  private final Map<CATEGORY, GafPart> m_parts = new LinkedHashMap<CATEGORY, GafPart>();
+  private final Map<CATEGORY, GafPart> m_parts = new LinkedHashMap<>();
 
   private final BigDecimal m_station;
 

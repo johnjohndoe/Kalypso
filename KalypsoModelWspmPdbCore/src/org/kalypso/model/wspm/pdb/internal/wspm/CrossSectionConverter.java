@@ -230,7 +230,7 @@ public class CrossSectionConverter
 
   private List<Point> sortPoints( final Set<Point> points )
   {
-    final ArrayList<Point> sortedPoints = new ArrayList<Point>( points );
+    final ArrayList<Point> sortedPoints = new ArrayList<>( points );
     Collections.sort( sortedPoints, new ConsecutiveNumComparator() );
     return sortedPoints;
   }

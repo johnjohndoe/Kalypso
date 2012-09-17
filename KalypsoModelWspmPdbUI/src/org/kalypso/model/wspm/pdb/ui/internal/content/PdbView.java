@@ -233,7 +233,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final String settingsName = m_autoConnectData.getAutoConnectName();
     final IStatus result = doConnect( settingsName );
     if( !result.isOK() )
-      new StatusDialog( getSite().getShell(), result, Messages.getString( "PdbView.4" ) ); //$NON-NLS-1$
+      StatusDialog.open( getSite().getShell(), result, Messages.getString( "PdbView.4" ) ); //$NON-NLS-1$
   }
 
   private IStatus doConnect( final String settingsName )
@@ -400,7 +400,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
   public static void updateView( final IWorkbenchWindow window )
   {
     /* Do not restore, do not update if not created yet */
-    final FindViewRunnable<PdbView> runnable = new FindViewRunnable<PdbView>( PdbView.ID, window, false );
+    final FindViewRunnable<PdbView> runnable = new FindViewRunnable<>( PdbView.ID, window, false );
     final PdbView view = runnable.execute();
     if( view == null )
       return;
@@ -419,7 +419,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
   public static void reloadViewAndBringtoTop( final IWorkbenchWindow window, final ElementSelector selector )
   {
     /* Do not restore, do not update if not created yet */
-    final FindViewRunnable<PdbView> runnable = new FindViewRunnable<PdbView>( PdbView.ID, window, false );
+    final FindViewRunnable<PdbView> runnable = new FindViewRunnable<>( PdbView.ID, window, false );
     final PdbView view = runnable.execute();
     if( view == null )
       return;

@@ -75,7 +75,6 @@ public class FindViewRunnable<T extends IViewPart> implements Runnable
     return m_view;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void run( )
   {

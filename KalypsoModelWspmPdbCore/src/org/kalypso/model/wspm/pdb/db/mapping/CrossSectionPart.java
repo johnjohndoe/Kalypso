@@ -45,11 +45,11 @@ public class CrossSectionPart extends AbstractModelObject implements Serializabl
 
   private String m_description;
 
-  private Set<Point> m_points = new HashSet<Point>( 0 );
+  private Set<Point> m_points = new HashSet<>( 0 );
 
   private Event m_event;
 
-  private Set<CrossSectionPartParameter> m_crossSectionPartParameters = new HashSet<CrossSectionPartParameter>( 0 );
+  private Set<CrossSectionPartParameter> m_crossSectionPartParameters = new HashSet<>( 0 );
 
   private CrossSectionPartType m_crossSectionPartType;
 
