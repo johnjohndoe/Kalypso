@@ -54,7 +54,7 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
  */
 public class PDBNameGenerator
 {
-  private final Set<String> m_names = new HashSet<String>();
+  private final Set<String> m_names = new HashSet<>();
 
   public String createUniqueName( final String protoName )
   {

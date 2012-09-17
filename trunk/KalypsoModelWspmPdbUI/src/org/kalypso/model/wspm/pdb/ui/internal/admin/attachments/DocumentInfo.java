@@ -74,7 +74,7 @@ public class DocumentInfo
    * filename).<br/>
    * New document -> existing document
    */
-  private final Set<Document> m_existingDocuments = new HashSet<Document>();
+  private final Set<Document> m_existingDocuments = new HashSet<>();
 
   public DocumentInfo( final Document document, final BigDecimal station, final File file )
   {

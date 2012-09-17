@@ -55,13 +55,13 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
 
   private String m_description;
 
-  private Set<WaterlevelFixation> m_waterlevelFixations = new HashSet<WaterlevelFixation>( 0 );
+  private Set<WaterlevelFixation> m_waterlevelFixations = new HashSet<>( 0 );
 
   private State m_state;
 
   private StyleArray m_styleArray;
 
-  private Set<CrossSectionPart> m_crossSectionParts = new HashSet<CrossSectionPart>( 0 );
+  private Set<CrossSectionPart> m_crossSectionParts = new HashSet<>( 0 );
 
   public Event( )
   {

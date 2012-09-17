@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
@@ -59,7 +59,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
  */
 class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
 {
-  private final SortedSet<WaterBodyTreeNode> m_waterChildren = new TreeSet<WaterBodyTreeNode>();
+  private final SortedSet<WaterBodyTreeNode> m_waterChildren = new TreeSet<>();
 
   private Object[] m_allChildren = null;
 
@@ -115,7 +115,7 @@ class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     if( m_allChildren == null )
     {
       final Object[] realChildren = getRealChildren();
-      final Collection<Object> all = new ArrayList<Object>( m_waterChildren.size() + realChildren.length );
+      final Collection<Object> all = new ArrayList<>( m_waterChildren.size() + realChildren.length );
 
       for( final WaterBodyTreeNode childNode : m_waterChildren )
         all.add( childNode.getWaterBody() );
@@ -134,7 +134,7 @@ class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
       return ArrayUtils.EMPTY_OBJECT_ARRAY;
 
     final Set<CrossSection> crossSections = m_water.getCrossSections();
-    final Set<Object> children = new HashSet<Object>();
+    final Set<Object> children = new HashSet<>();
     for( final CrossSection crossSection : crossSections )
       children.add( crossSection.getState() );
 
@@ -168,7 +168,7 @@ class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
   public static WaterBodyTreeNode buildTree( final List<WaterBody> waterBodies )
   {
     /* Build flat structure in order to sort the elements */
-    final SortedSet<WaterBodyTreeNode> allNodes = new TreeSet<WaterBodyTreeNode>();
+    final SortedSet<WaterBodyTreeNode> allNodes = new TreeSet<>();
     for( final WaterBody water : waterBodies )
       allNodes.add( new WaterBodyTreeNode( water ) );
 

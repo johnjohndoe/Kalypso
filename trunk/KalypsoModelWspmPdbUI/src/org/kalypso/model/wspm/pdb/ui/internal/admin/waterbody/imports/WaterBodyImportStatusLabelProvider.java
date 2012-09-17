@@ -60,7 +60,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
  */
 public class WaterBodyImportStatusLabelProvider extends ColumnLabelProvider
 {
-  private final Set<String> m_names = new HashSet<String>();
+  private final Set<String> m_names = new HashSet<>();
 
   private final Map<WaterBody, IStatus> m_waterBodyStatus;
 

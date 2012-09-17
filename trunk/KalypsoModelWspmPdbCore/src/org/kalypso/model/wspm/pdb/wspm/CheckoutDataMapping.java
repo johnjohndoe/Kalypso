@@ -78,17 +78,17 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
  */
 public class CheckoutDataMapping
 {
-  private final List<Feature> m_changedFeatures = new ArrayList<Feature>();
+  private final List<Feature> m_changedFeatures = new ArrayList<>();
 
-  private final List<Feature> m_addedFeatures = new ArrayList<Feature>();
+  private final List<Feature> m_addedFeatures = new ArrayList<>();
 
-  private final List<Feature> m_removedFeatures = new ArrayList<Feature>();
+  private final List<Feature> m_removedFeatures = new ArrayList<>();
 
-  private final Map<WaterBody, WspmWaterBody> m_waterMapping = new HashMap<WaterBody, WspmWaterBody>();
+  private final Map<WaterBody, WspmWaterBody> m_waterMapping = new HashMap<>();
 
-  private final Map<State, TuhhReach> m_stateMapping = new HashMap<State, TuhhReach>();
+  private final Map<State, TuhhReach> m_stateMapping = new HashMap<>();
 
-  private final Map<Event, Object> m_eventMapping = new HashMap<Event, Object>();
+  private final Map<Event, Object> m_eventMapping = new HashMap<>();
 
   private final CrossSection[] m_crossSections;
 
@@ -282,7 +282,7 @@ public class CheckoutDataMapping
 
   private Feature[] findChildren( final Feature parent, final Feature[] removedFeatures )
   {
-    final Collection<Feature> children = new ArrayList<Feature>();
+    final Collection<Feature> children = new ArrayList<>();
 
     for( final Feature feature : removedFeatures )
     {
@@ -296,7 +296,7 @@ public class CheckoutDataMapping
 
   private Feature[] findParents( final List<Feature> features )
   {
-    final Collection<Feature> parents = new ArrayList<Feature>();
+    final Collection<Feature> parents = new ArrayList<>();
 
     for( final Feature feature : features )
     {
@@ -330,7 +330,7 @@ public class CheckoutDataMapping
 
   public Set<Object> getAllPdbElements( )
   {
-    final Set<Object> all = new HashSet<Object>();
+    final Set<Object> all = new HashSet<>();
 
     all.addAll( Arrays.asList( m_crossSections ) );
     all.addAll( m_eventMapping.keySet() );
@@ -345,7 +345,7 @@ public class CheckoutDataMapping
    */
   public Set<Object> getAllPdbElementsWithWspm( )
   {
-    final Set<Object> all = new HashSet<Object>();
+    final Set<Object> all = new HashSet<>();
 
     CollectionUtils.forAllDo( m_eventMapping.keySet(), new AddKeysWithMappingClosure( m_eventMapping, all ) );
     // REMAR: for the moment, we ignore rivers, as overwriting causes them now problem (because they are not editable).

@@ -86,7 +86,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 @SuppressWarnings("restriction")
 public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdateable
 {
-  private final Map<WaterBody, IStatus> m_waterBodyStatus = new HashMap<WaterBody, IStatus>();
+  private final Map<WaterBody, IStatus> m_waterBodyStatus = new HashMap<>();
 
   private final ImportWaterBodiesData m_data;
 

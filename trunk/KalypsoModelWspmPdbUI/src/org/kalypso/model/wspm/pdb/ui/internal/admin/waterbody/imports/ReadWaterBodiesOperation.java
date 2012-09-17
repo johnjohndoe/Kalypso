@@ -94,7 +94,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
   {
     m_waterBodyStatus.clear();
 
-    final Collection<WaterBody> wbs = new ArrayList<WaterBody>();
+    final Collection<WaterBody> wbs = new ArrayList<>();
 
     ShapeFile shapeFile = null;
     try

@@ -42,7 +42,7 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
 
   private String m_color;
 
-  private Set<Point> m_points = new HashSet<Point>( 0 );
+  private Set<Point> m_points = new HashSet<>( 0 );
 
   public Vegetation( )
   {

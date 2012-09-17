@@ -218,10 +218,9 @@ public class PdbInfo
     return Path.fromOSString( property );
   }
 
-  @SuppressWarnings("unchecked")
   public Entry<String, String>[] getEntries( )
   {
-    final Collection<Entry<String, String>> entries = new ArrayList<Entry<String, String>>();
+    final Collection<Entry<String, String>> entries = new ArrayList<>();
 
     final Set<String> names = m_properties.stringPropertyNames();
     for( final String name : names )
