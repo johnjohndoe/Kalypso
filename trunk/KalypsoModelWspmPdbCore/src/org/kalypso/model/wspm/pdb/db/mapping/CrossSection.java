@@ -129,6 +129,7 @@ public class CrossSection implements java.io.Serializable, IDocumentContainer
     m_state = state;
   }
 
+  @Override
   @Column( name = "name", nullable = false, length = 50 )
   public String getName( )
   {

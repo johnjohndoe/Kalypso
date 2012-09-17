@@ -98,6 +98,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     firePropertyChange( PROPERTY_ID, oldValue, id );
   }
 
+  @Override
   @Column( name = "name", unique = true, nullable = false, length = 100 )
   public String getName( )
   {

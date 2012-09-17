@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles;
 
 import java.math.BigDecimal;
 
@@ -71,7 +71,7 @@ public class DocumentsStationProvider extends ColumnLabelProvider
   {
     if( element instanceof Document )
     {
-      final DocumentInfo info = m_documentData.getInfo( (Document) element );
+      final DocumentInfo info = (DocumentInfo)m_documentData.getInfo( (Document)element );
       final BigDecimal station = info.getStation();
       if( station == null )
         return station;

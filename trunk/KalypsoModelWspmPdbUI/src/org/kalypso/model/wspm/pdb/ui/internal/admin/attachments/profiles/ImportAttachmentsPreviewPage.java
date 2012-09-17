@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -77,16 +77,26 @@ import org.kalypso.contribs.eclipse.swt.widgets.ColumnSortListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsDocumentsData.ImportMode;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.AbstractDocumentInfo;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.DocumentsCheckstateHandler;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.DocumentsNameComparator;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.DocumentsNameProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.DocumentsStatusComparator;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.DocumentsStatusProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.DocumentsTypeComparator;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.DocumentsTypeProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportMode;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdateable
 {
   private final ImportAttachmentsData m_data;
+
+  private final ImportAttachmentsDocumentsData m_documentData;
 
   private CheckboxTableViewer m_viewer;
 
@@ -94,14 +104,12 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
 
   private DatabindingWizardPage m_binding;
 
-  private final ImportAttachmentsDocumentsData m_documentData;
-
   public ImportAttachmentsPreviewPage( final String pageName, final ImportAttachmentsData data )
   {
     super( pageName );
 
     m_data = data;
-    m_documentData = m_data.getDocumentData();
+    m_documentData = (ImportAttachmentsDocumentsData)m_data.getDocumentData();
 
     setTitle( Messages.getString( "ImportAttachmentsPreviewPage.0" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "ImportAttachmentsPreviewPage.1" ) ); //$NON-NLS-1$
@@ -173,7 +181,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
       @Override
       public void open( final OpenEvent event )
       {
-        handleShowDocumentStatus( (IStructuredSelection) event.getSelection() );
+        handleShowDocumentStatus( (IStructuredSelection)event.getSelection() );
       }
     } );
 
@@ -195,7 +203,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof Document )
     {
-      final DocumentInfo info = m_documentData.getInfo( (Document) firstElement );
+      final AbstractDocumentInfo info = m_documentData.getInfo( (Document)firstElement );
       final IStatus status = info.getStatus();
       new StatusDialog( getShell(), status, getWizard().getWindowTitle() ).open();
     }

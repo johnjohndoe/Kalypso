@@ -61,7 +61,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
  */
 public class ImportAttachmentsOperation implements IPdbOperation
 {
-  private final ImportAttachmentsData m_data;
+  private final AbstractAttachmentsData m_data;
 
   private ZipOutputStream m_zipStream;
 
@@ -69,7 +69,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
 
   private final String m_username;
 
-  public ImportAttachmentsOperation( final ImportAttachmentsData data )
+  public ImportAttachmentsOperation( final AbstractAttachmentsData data )
   {
     m_data = data;
     m_creationDate = new Date();
@@ -92,9 +92,9 @@ public class ImportAttachmentsOperation implements IPdbOperation
       createZip();
 
       for( final Document document : documents )
-        addDcoument( session, document );
+        addDocument( session, document );
 
-          closeZip();
+      closeZip();
     }
     finally
     {
@@ -102,18 +102,18 @@ public class ImportAttachmentsOperation implements IPdbOperation
     }
   }
 
-  private void addDcoument( final Session session, final Document document ) throws PdbConnectException
+  private void addDocument( final Session session, final Document document ) throws PdbConnectException
   {
     addToZip( document );
 
-    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
-    final DocumentInfo info = documentData.getInfo( document );
+    final AbstractAttachmentsDocumentsData documentData = m_data.getDocumentData();
+    final AbstractDocumentInfo info = documentData.getInfo( document );
 
     /* Delete any documents with the same file -> we overwrite them all with the new information */
-    final Document[] existingDocuments = info.getExistingDcouments();
-    for( final Document existingDcoument : existingDocuments )
+    final Document[] existingDocuments = info.getExistingDocuments();
+    for( final Document existingDocument : existingDocuments )
     {
-      session.delete( existingDcoument );
+      session.delete( existingDocument );
     }
 
     /* Save the new document */
@@ -146,8 +146,8 @@ public class ImportAttachmentsOperation implements IPdbOperation
     if( m_zipStream == null )
       return;
 
-    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
-    final DocumentInfo info = documentData.getInfo( document );
+    final AbstractAttachmentsDocumentsData documentData = m_data.getDocumentData();
+    final AbstractDocumentInfo info = documentData.getInfo( document );
     final File file = info.getFile();
     try
     {

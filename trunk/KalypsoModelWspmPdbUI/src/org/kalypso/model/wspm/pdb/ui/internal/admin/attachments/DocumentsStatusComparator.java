@@ -50,9 +50,9 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
  */
 public class DocumentsStatusComparator extends ViewerComparator
 {
-  private final ImportAttachmentsDocumentsData m_documentData;
+  private final AbstractAttachmentsDocumentsData m_documentData;
 
-  public DocumentsStatusComparator( final ImportAttachmentsDocumentsData documentData )
+  public DocumentsStatusComparator( final AbstractAttachmentsDocumentsData documentData )
   {
     m_documentData = documentData;
   }
@@ -60,8 +60,8 @@ public class DocumentsStatusComparator extends ViewerComparator
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final DocumentInfo info1 = m_documentData.getInfo( (Document) e1 );
-    final DocumentInfo info2 = m_documentData.getInfo( (Document) e2 );
+    final AbstractDocumentInfo info1 = m_documentData.getInfo( (Document)e1 );
+    final AbstractDocumentInfo info2 = m_documentData.getInfo( (Document)e2 );
 
     final IStatus s1 = info1.getStatus();
     final IStatus s2 = info2.getStatus();

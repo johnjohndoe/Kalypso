@@ -51,9 +51,9 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
  */
 public class DocumentsStatusProvider extends ColumnLabelProvider
 {
-  private final ImportAttachmentsDocumentsData m_documentData;
+  private final AbstractAttachmentsDocumentsData m_documentData;
 
-  public DocumentsStatusProvider( final ImportAttachmentsDocumentsData documentData )
+  public DocumentsStatusProvider( final AbstractAttachmentsDocumentsData documentData )
   {
     m_documentData = documentData;
   }
@@ -82,7 +82,7 @@ public class DocumentsStatusProvider extends ColumnLabelProvider
   {
     if( element instanceof Document )
     {
-      final DocumentInfo info = m_documentData.getInfo( (Document) element );
+      final AbstractDocumentInfo info = m_documentData.getInfo( (Document)element );
       return info.getStatus();
     }
 

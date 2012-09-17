@@ -1,4 +1,4 @@
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents;
 
 import java.io.File;
 
@@ -23,55 +23,59 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
-public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
+/**
+ * @author Gernot Belger
+ * @author Holger Albert
+ */
+public class ImportDocumentAttachmentsWizard extends Wizard implements IWorkbenchWizard
 {
   private final IPageChangedListener m_pageListener = new IPageChangedListener()
   {
     @Override
     public void pageChanged( final PageChangedEvent event )
     {
-      handlePageChange( (IWizardPage) event.getSelectedPage() );
+      handlePageChange( (IWizardPage)event.getSelectedPage() );
     }
   };
 
-  private ImportAttachmentsData m_data;
+  private ImportDocumentAttachmentsData m_data;
 
   private IConnectionViewer m_viewer;
 
-  public ImportAttachmentsWizard( )
+  public ImportDocumentAttachmentsWizard( )
   {
     setNeedsProgressMonitor( true );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
-    setWindowTitle( Messages.getString( "ImportAttachmentsWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( "Import Attachments" );
   }
 
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final IWorkbenchPart activePart = workbench.getActiveWorkbenchWindow().getActivePage().getActivePart();
-    m_viewer = (IConnectionViewer) activePart;
+    m_viewer = (IConnectionViewer)activePart;
 
     final IPdbConnection connection = m_viewer.getConnection();
 
-    m_data = new ImportAttachmentsData( connection );
+    m_data = new ImportDocumentAttachmentsData( connection );
     m_data.init( selection, getDialogSettings() );
   }
 
   @Override
   public void addPages( )
   {
-    addPage( new ImportAttachmentsOptionsPage( "optionsPage", m_data ) ); //$NON-NLS-1$
-    addPage( new ImportAttachmentsPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
+    addPage( new ImportDocumentAttachmentsOptionsPage( "optionsPage", m_data ) ); //$NON-NLS-1$
+    addPage( new ImportDocumentAttachmentsPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
   }
 
   @Override
   public boolean canFinish( )
   {
-    /* Only finish on last page */
+    /* Only finish on last page. */
     final IWizardPage currentPage = getContainer().getCurrentPage();
     if( currentPage.getNextPage() != null )
       return false;
@@ -85,18 +89,18 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
     final IWizardContainer oldContainer = getContainer();
 
     if( oldContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageListener );
+      ((IPageChangeProvider)oldContainer).removePageChangedListener( m_pageListener );
 
     super.setContainer( wizardContainer );
 
     if( wizardContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageListener );
+      ((IPageChangeProvider)wizardContainer).addPageChangedListener( m_pageListener );
   }
 
   protected void handlePageChange( final IWizardPage page )
   {
     if( page instanceof IUpdateable )
-      ((IUpdateable) page).update();
+      ((IUpdateable)page).update();
   }
 
   @Override
@@ -125,7 +129,7 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
       new StatusDialog( getShell(), status, getWindowTitle() ).open();
 
     final ElementSelector selector = new ElementSelector();
-    selector.addStateName( m_data.getState().getName() );
+    selector.addStateName( m_data.getDocumentContainer().getName() );
     m_viewer.reload( selector );
 
     return !status.matches( IStatus.ERROR );
@@ -137,7 +141,7 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
     if( zipFile == null || !zipFile.exists() )
       return true;
 
-    final String message = String.format( Messages.getString( "ImportAttachmentsWizard.1" ), zipFile.getName() ); //$NON-NLS-1$
+    final String message = String.format( "Overwrite existing file %s?", zipFile.getName() );
     return MessageDialog.openConfirm( getShell(), getWindowTitle(), message );
   }
 

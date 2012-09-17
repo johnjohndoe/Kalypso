@@ -1,4 +1,4 @@
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles;
 
 import java.io.File;
 
@@ -23,21 +23,19 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
-/**
- * @author Gernot Belger
- * @author Holger Albert
- */
-public class ImportDocumentAttachmentsWizard extends Wizard implements IWorkbenchWizard
+public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
 {
   private final IPageChangedListener m_pageListener = new IPageChangedListener()
   {
     @Override
     public void pageChanged( final PageChangedEvent event )
     {
-      handlePageChange( (IWizardPage)event.getSelectedPage() );
+      handlePageChange( (IWizardPage) event.getSelectedPage() );
     }
   };
 
@@ -45,18 +43,18 @@ public class ImportDocumentAttachmentsWizard extends Wizard implements IWorkbenc
 
   private IConnectionViewer m_viewer;
 
-  public ImportDocumentAttachmentsWizard( )
+  public ImportAttachmentsWizard( )
   {
     setNeedsProgressMonitor( true );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
-    setWindowTitle( "Import Attachments" );
+    setWindowTitle( Messages.getString( "ImportAttachmentsWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final IWorkbenchPart activePart = workbench.getActiveWorkbenchWindow().getActivePage().getActivePart();
-    m_viewer = (IConnectionViewer)activePart;
+    m_viewer = (IConnectionViewer) activePart;
 
     final IPdbConnection connection = m_viewer.getConnection();
 
@@ -88,18 +86,18 @@ public class ImportDocumentAttachmentsWizard extends Wizard implements IWorkbenc
     final IWizardContainer oldContainer = getContainer();
 
     if( oldContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider)oldContainer).removePageChangedListener( m_pageListener );
+      ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageListener );
 
     super.setContainer( wizardContainer );
 
     if( wizardContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider)wizardContainer).addPageChangedListener( m_pageListener );
+      ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageListener );
   }
 
   protected void handlePageChange( final IWizardPage page )
   {
     if( page instanceof IUpdateable )
-      ((IUpdateable)page).update();
+      ((IUpdateable) page).update();
   }
 
   @Override
@@ -140,7 +138,7 @@ public class ImportDocumentAttachmentsWizard extends Wizard implements IWorkbenc
     if( zipFile == null || !zipFile.exists() )
       return true;
 
-    final String message = String.format( "Overwrite existing file %s?", zipFile.getName() );
+    final String message = String.format( Messages.getString( "ImportAttachmentsWizard.1" ), zipFile.getName() ); //$NON-NLS-1$
     return MessageDialog.openConfirm( getShell(), getWindowTitle(), message );
   }
 

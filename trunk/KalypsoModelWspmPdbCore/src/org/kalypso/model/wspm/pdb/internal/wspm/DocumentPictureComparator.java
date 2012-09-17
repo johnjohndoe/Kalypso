@@ -79,7 +79,7 @@ public class DocumentPictureComparator implements Comparator<Document>
    */
   private int findCategory( final Document doc )
   {
-    final MimeType mt = MimeTypeUtils.createQuit( doc.getMimetype() );
+    final MimeType mt = MimeTypeUtils.createQuietly( doc.getMimetype() );
 
     if( mt == null )
       return CATEGORY_NO_IMAGE;

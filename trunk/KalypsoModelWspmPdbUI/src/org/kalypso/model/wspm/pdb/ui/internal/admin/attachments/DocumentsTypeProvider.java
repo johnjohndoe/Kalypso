@@ -57,7 +57,7 @@ public class DocumentsTypeProvider extends ColumnLabelProvider
     if( element instanceof Document )
     {
       final String mimetype = ((Document) element).getMimetype();
-      final MimeType type = MimeTypeUtils.createQuit( mimetype );
+      final MimeType type = MimeTypeUtils.createQuietly( mimetype );
       if( type == null )
         return null;
 

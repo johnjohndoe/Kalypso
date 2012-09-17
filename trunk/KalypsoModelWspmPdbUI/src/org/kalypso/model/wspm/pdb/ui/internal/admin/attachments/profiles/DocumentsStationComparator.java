@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles;
 
 import java.math.BigDecimal;
 
@@ -61,8 +61,8 @@ public class DocumentsStationComparator extends ViewerComparator
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final DocumentInfo info1 = m_documentData.getInfo( (Document) e1 );
-    final DocumentInfo info2 = m_documentData.getInfo( (Document) e2 );
+    final DocumentInfo info1 = (DocumentInfo)m_documentData.getInfo( (Document)e1 );
+    final DocumentInfo info2 = (DocumentInfo)m_documentData.getInfo( (Document)e2 );
 
     final BigDecimal s1 = info1.getStation();
     final BigDecimal s2 = info2.getStation();

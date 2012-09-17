@@ -25,6 +25,8 @@ import java.util.Set;
  */
 public interface IDocumentContainer
 {
+  public String getName( );
+
   public Set<Document> getDocuments( );
 
   public void setDocuments( final Set<Document> documents );
