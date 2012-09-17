@@ -46,7 +46,6 @@ import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsDocumentsData.ImportMode;
 
 /**
  * @author Gernot Belger
@@ -55,9 +54,9 @@ public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckSt
 {
   private final CheckboxTableViewer m_viewer;
 
-  private final ImportAttachmentsData m_data;
+  private final AbstractAttachmentsData m_data;
 
-  public DocumentsCheckstateHandler( final CheckboxTableViewer viewer, final ImportAttachmentsData data )
+  public DocumentsCheckstateHandler( final CheckboxTableViewer viewer, final AbstractAttachmentsData data )
   {
     m_viewer = viewer;
     m_data = data;
@@ -66,7 +65,7 @@ public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckSt
   @Override
   public boolean isChecked( final Object element )
   {
-    final Document doc = (Document) element;
+    final Document doc = (Document)element;
     if( cannotImport( doc ) )
       return true;
 
@@ -76,14 +75,14 @@ public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckSt
   @Override
   public boolean isGrayed( final Object element )
   {
-    final Document doc = (Document) element;
+    final Document doc = (Document)element;
     return cannotImport( doc );
   }
 
   @Override
   public void checkStateChanged( final CheckStateChangedEvent event )
   {
-    final Document doc = (Document) event.getElement();
+    final Document doc = (Document)event.getElement();
     if( cannotImport( doc ) )
     {
       // Update in order to undo check state change
@@ -99,10 +98,10 @@ public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckSt
 
   protected boolean cannotImport( final Document doc )
   {
-    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
-    final DocumentInfo info = documentData.getInfo( doc );
+    final AbstractAttachmentsDocumentsData documentData = m_data.getDocumentData();
+    final AbstractDocumentInfo info = documentData.getInfo( doc );
 
-    final Document[] existingDcouments = info.getExistingDcouments();
+    final Document[] existingDcouments = info.getExistingDocuments();
     final ImportMode importMode = m_data.getImportMode();
     /* If existing docs will be skipped we ignore elements with counterparts */
     if( importMode == ImportMode.skip && !ArrayUtils.isEmpty( existingDcouments ) )

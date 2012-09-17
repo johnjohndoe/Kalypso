@@ -38,11 +38,9 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents;
 
 import java.io.File;
-import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.activation.MimeType;
@@ -51,85 +49,56 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.activation.MimeTypeUtils;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
+import org.kalypso.model.wspm.pdb.db.mapping.IDocumentContainer;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.AbstractDocumentInfo;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
+ * @author Holger Albert
  */
-public class DocumentInfo
+public class ImportDocumentInfo extends AbstractDocumentInfo
 {
-  private final IStatus m_status;
+  private final IDocumentContainer m_documentContainer;
 
-  private final BigDecimal m_station;
-
-  private boolean m_importable = true;
-
-  private final File m_file;
-
-  /**
-   * All documents that have a counterpart in the database (i.e. a document on the same cross section with the same
-   * filename).<br/>
-   * New document -> existing document
-   */
-  private final Set<Document> m_existingDocuments = new HashSet<>();
-
-  public DocumentInfo( final Document document, final BigDecimal station, final File file )
+  public ImportDocumentInfo( final Document document, final File file, final IDocumentContainer documentContainer )
   {
-    m_station = station;
-    m_file = file;
+    super( document, file );
 
-    /* Find if document already exists in database */
-    checkDocumentExists( document );
+    m_documentContainer = documentContainer;
 
-    m_status = validate( document, station );
+    initialize();
   }
 
-  private void checkDocumentExists( final Document newDocument )
+  @Override
+  protected void checkDocumentExists( final Document newDocument )
   {
-    final CrossSection crossSection = newDocument.getCrossSection();
-    if( crossSection == null )
-    {
-      /* We cannot import anyways, so no counterpart can exist */
-      return;
-    }
-
     final String newFilename = newDocument.getFilenameName();
 
-    final Set<Document> documents = crossSection.getDocuments();
+    final Set<Document> documents = m_documentContainer.getDocuments();
     for( final Document document : documents )
     {
       final String existingFilename = document.getFilenameName();
       if( existingFilename != null )
       {
         if( existingFilename.equals( newFilename ) )
-          m_existingDocuments.add( document );
+          addExistingDocument( document );
       }
     }
   }
 
-  private IStatus validate( final Document document, final BigDecimal station )
+  @Override
+  protected IStatus validate( final Document document )
   {
     final IStatusCollector stati = new StatusCollector( WspmPdbUiPlugin.PLUGIN_ID );
 
-    if( station == null )
-    {
-      stati.add( IStatus.ERROR, Messages.getString( "ImportAttachmentsDocumentsData.3" ) ); //$NON-NLS-1$
-      m_importable = false;
-    }
-    else if( document.getCrossSection() == null )
-    {
-      stati.add( IStatus.ERROR, Messages.getString( "ImportAttachmentsDocumentsData.4" ) ); //$NON-NLS-1$
-      m_importable = false;
-    }
-
-    final MimeType mimetype = MimeTypeUtils.createQuit( document.getMimetype() );
+    final MimeType mimetype = MimeTypeUtils.createQuietly( document.getMimetype() );
     if( mimetype == null )
       stati.add( IStatus.WARNING, Messages.getString( "ImportAttachmentsDocumentsData.5" ) ); //$NON-NLS-1$
 
-    /* Already in database ? */
+    /* Already in database? */
     if( hasExistingInDatabase() )
       stati.add( IStatus.INFO, Messages.getString( "ImportAttachmentsDocumentsData.6" ) ); //$NON-NLS-1$
 
@@ -137,35 +106,5 @@ public class DocumentInfo
       return stati.getAllStati()[0];
     else
       return stati.asMultiStatusOrOK( Messages.getString( "ImportAttachmentsDocumentsData.7" ) ); //$NON-NLS-1$
-  }
-
-  public boolean hasExistingInDatabase( )
-  {
-    return !m_existingDocuments.isEmpty();
-  }
-
-  public boolean isImportable( )
-  {
-    return m_importable;
-  }
-
-  public IStatus getStatus( )
-  {
-    return m_status;
-  }
-
-  public BigDecimal getStation( )
-  {
-    return m_station;
-  }
-
-  public File getFile( )
-  {
-    return m_file;
-  }
-
-  public Document[] getExistingDcouments( )
-  {
-    return m_existingDocuments.toArray( new Document[m_existingDocuments.size()] );
   }
 }
