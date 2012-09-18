@@ -43,7 +43,6 @@ package org.kalypso.kalypsosimulationmodel.core.wind;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -118,7 +117,7 @@ public class NativeWindDataModelHelper
     {
       return new RectifiedGridDomain( pGMPointOrigin, offsetX, offsetY, gridRange );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return null;
@@ -135,10 +134,10 @@ public class NativeWindDataModelHelper
     {
       return null;
     }
-    double lDoubleSpeedValue = Math.sqrt( windAsVector.first * windAsVector.first + windAsVector.second * windAsVector.second );
+    final double lDoubleSpeedValue = Math.sqrt( windAsVector.first * windAsVector.first + windAsVector.second * windAsVector.second );
     // double lDoubleSpeedAngle = GeometryUtilities.directionFromVector( windAsVector.first, windAsVector.second );
-    double lDoubleSpeedAngle = (180 / Math.PI) * Math.atan2( windAsVector.second, windAsVector.first );
-    return new Pair<Double, Double>( lDoubleSpeedValue, lDoubleSpeedAngle );
+    final double lDoubleSpeedAngle = (180 / Math.PI) * Math.atan2( windAsVector.second, windAsVector.first );
+    return new Pair<>( lDoubleSpeedValue, lDoubleSpeedAngle );
   }
 
   public static Pair<Double, Double> getInterpolatedPair( final GM_Point pPointToInterpolateAt, final Map<GM_Point, Pair<Double, Double>> pMapPointsValues )
@@ -147,14 +146,13 @@ public class NativeWindDataModelHelper
     GM_Triangle lTriSecond = null;
     try
     {
-      List<GM_Point> lListAllPoints = new ArrayList<GM_Point>();
-      List<Double> lListAllFirsts = new ArrayList<Double>();
-      List<Double> lListAllSeconds = new ArrayList<Double>();
+      final List<GM_Point> lListAllPoints = new ArrayList<>();
+      final List<Double> lListAllFirsts = new ArrayList<>();
+      final List<Double> lListAllSeconds = new ArrayList<>();
 
-      Set<GM_Point> lSetPoints = pMapPointsValues.keySet();
-      for( Iterator<GM_Point> iterator = lSetPoints.iterator(); iterator.hasNext(); )
+      final Set<GM_Point> lSetPoints = pMapPointsValues.keySet();
+      for( final GM_Point gmPoint : lSetPoints )
       {
-        GM_Point gmPoint = iterator.next();
         lListAllPoints.add( gmPoint );
         lListAllFirsts.add( pMapPointsValues.get( gmPoint ).first );
         lListAllSeconds.add( pMapPointsValues.get( gmPoint ).second );
@@ -163,9 +161,9 @@ public class NativeWindDataModelHelper
       lTriFirst = GeometryUtilities.createTriangleForBilinearInterpolation( lMapFirst );
       if( lTriFirst.contains( pPointToInterpolateAt ) )
       {
-        Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints.subList( 0, 3 ), lListAllSeconds.subList( 0, 3 ) );
+        final Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints.subList( 0, 3 ), lListAllSeconds.subList( 0, 3 ) );
         lTriSecond = GeometryUtilities.createTriangleForBilinearInterpolation( lMapSecond );
-        return new Pair<Double, Double>( lTriFirst.getValue( pPointToInterpolateAt.getPosition() ), lTriSecond.getValue( pPointToInterpolateAt.getPosition() ) );
+        return new Pair<>( lTriFirst.getValue( pPointToInterpolateAt.getPosition() ), lTriSecond.getValue( pPointToInterpolateAt.getPosition() ) );
       }
       else
       {
@@ -174,12 +172,12 @@ public class NativeWindDataModelHelper
         lListAllSeconds.remove( 1 );
         lMapFirst = CollectionsHelper.joinListsToMap( lListAllPoints, lListAllFirsts );
         lTriFirst = GeometryUtilities.createTriangleForBilinearInterpolation( lMapFirst );
-        Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints, lListAllSeconds );
+        final Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints, lListAllSeconds );
         lTriSecond = GeometryUtilities.createTriangleForBilinearInterpolation( lMapSecond );
-        return new Pair<Double, Double>( lTriFirst.getValue( pPointToInterpolateAt.getPosition() ), lTriSecond.getValue( pPointToInterpolateAt.getPosition() ) );
+        return new Pair<>( lTriFirst.getValue( pPointToInterpolateAt.getPosition() ), lTriSecond.getValue( pPointToInterpolateAt.getPosition() ) );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return null;
     }

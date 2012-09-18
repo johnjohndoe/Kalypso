@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.wind;
 
@@ -66,25 +66,25 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author ig
- * 
+ *
  */
 public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitable<GM_Curve>
 {
   private static final int INT_CONST_SCALE_VECTOR_LEN_PRESENTATION = 20;
 
-  private double m_doubleEps = 0.01;
+  private final double m_doubleEps = 0.01;
 
-  private IGeoGrid m_geoGrid;
+  private final IGeoGrid m_geoGrid;
 
-  private RectifiedGridDomain m_gridDescriptor;
+  private final RectifiedGridDomain m_gridDescriptor;
 
   private GM_Envelope m_gmEnvelope = null;
 
   private String m_strCRS = ""; //$NON-NLS-1$
 
-  private URL m_urlFile;
+  private final URL m_urlFile;
 
-  private boolean m_boolIsRegular = true;
+  private final boolean m_boolIsRegular = true;
 
   private double m_cellSizeX = 0;
 
@@ -92,11 +92,11 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
 
   private GM_Point m_gmPointOrigin = null;
 
-  private Date m_date = null;
+  private final Date m_date = null;
 
   private int m_intScale = 1;
 
-  private boolean m_boolDoInterpolate = true;
+  private final boolean m_boolDoInterpolate = true;
 
   public final static int MIN_VECTOR_SCALE = 1;
 
@@ -107,21 +107,21 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
     m_gridDescriptor = pGridDescriptor;
     m_urlFile = pUrlFile;
     m_strCRS = m_gridDescriptor.getCoordinateSystem();
-    Coordinate lCoordOrigin = new Coordinate( m_gridDescriptor.getOrigin( m_strCRS ).getX(), m_gridDescriptor.getOrigin( m_strCRS ).getY() );
+    final Coordinate lCoordOrigin = new Coordinate( m_gridDescriptor.getOrigin( m_strCRS ).getX(), m_gridDescriptor.getOrigin( m_strCRS ).getY() );
     try
     {
       m_cellSizeX = m_gridDescriptor.getOffsetX( m_strCRS );
       m_cellSizeY = m_gridDescriptor.getOffsetY( m_strCRS );
       m_gmPointOrigin = m_gridDescriptor.getOrigin( m_strCRS );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
-    Coordinate lOffsetX = new Coordinate( m_gridDescriptor.getOffsetX().getGeoX(), m_gridDescriptor.getOffsetX().getGeoY() );
-    Coordinate lOffsetY = new Coordinate( m_gridDescriptor.getOffsetY().getGeoX(), m_gridDescriptor.getOffsetY().getGeoY() );
+    final Coordinate lOffsetX = new Coordinate( m_gridDescriptor.getOffsetX().getGeoX(), m_gridDescriptor.getOffsetX().getGeoY() );
+    final Coordinate lOffsetY = new Coordinate( m_gridDescriptor.getOffsetY().getGeoX(), m_gridDescriptor.getOffsetY().getGeoY() );
     m_geoGrid = BinaryGeoGridWrapperForPairsModel.openGrid( pUrlFile, lCoordOrigin, lOffsetX, lOffsetY, m_strCRS, false );
-    GM_Position lGMPositionMAX = GeometryFactory.createGM_Position( m_gmPointOrigin.getX() + m_gridDescriptor.getNumColumns() * m_cellSizeX, m_gmPointOrigin.getY() + m_gridDescriptor.getNumRows()
+    final GM_Position lGMPositionMAX = GeometryFactory.createGM_Position( m_gmPointOrigin.getX() + m_gridDescriptor.getNumColumns() * m_cellSizeX, m_gmPointOrigin.getY() + m_gridDescriptor.getNumRows()
         * m_cellSizeY );
     m_gmEnvelope = GeometryFactory.createGM_Envelope( m_gmPointOrigin.getPosition(), lGMPositionMAX, m_strCRS );
 
@@ -184,17 +184,17 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
     }
     else
     {
-      List<GM_Point> lListNeiboursPositions = geNeiboursPositions( location );
-      Map<GM_Point, Pair<Double, Double>> lMapNeiboursValues = getNeiboursValues( lListNeiboursPositions );
+      final List<GM_Point> lListNeiboursPositions = geNeiboursPositions( location );
+      final Map<GM_Point, Pair<Double, Double>> lMapNeiboursValues = getNeiboursValues( lListNeiboursPositions );
       return NativeWindDataModelHelper.getInterpolatedPair( location, lMapNeiboursValues );//, lListNeiboursPositions );
     }
   }
 
-  private List<GM_Point> geNeiboursPositions( GM_Point location )
+  private List<GM_Point> geNeiboursPositions( final GM_Point location )
   {
-    List<GM_Point> lListRes = new ArrayList<GM_Point>();
+    final List<GM_Point> lListRes = new ArrayList<>();
 
-    int col = (int) Math.floor( (location.getX() - m_gmEnvelope.getMin().getX()) / m_cellSizeX );
+    final int col = (int) Math.floor( (location.getX() - m_gmEnvelope.getMin().getX()) / m_cellSizeX );
     int row = (int) Math.floor( (location.getY() - m_gmEnvelope.getMin().getY()) / m_cellSizeY );
     if( row < 0 )
       row = 0;
@@ -219,7 +219,7 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
   {
     if( m_gmEnvelope != null && location != null )
     {
-      int col = (int) Math.floor( (location.getX() - m_gmEnvelope.getMin().getX()) / m_cellSizeX );
+      final int col = (int) Math.floor( (location.getX() - m_gmEnvelope.getMin().getX()) / m_cellSizeX );
       int row = (int) Math.floor( (location.getY() - m_gmEnvelope.getMin().getY()) / m_cellSizeY );
       if( row < 0 )
         row = 0;
@@ -227,10 +227,10 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
       {
         try
         {
-          Pair<Double, Double> lPairData = ((BinaryGeoGridWrapperForPairsModel) m_geoGrid).getPairValue( col, row );
+          final Pair<Double, Double> lPairData = ((BinaryGeoGridWrapperForPairsModel) m_geoGrid).getPairValue( col, row );
           return lPairData;
         }
-        catch( GeoGridException e )
+        catch( final GeoGridException e )
         {
           e.printStackTrace();
         }
@@ -245,7 +245,8 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
     {
       return null;
     }
-    Map<GM_Point, Pair<Double, Double>> lMapRes = new HashMap<GM_Point, Pair<Double, Double>>();
+
+    final Map<GM_Point, Pair<Double, Double>> lMapRes = new HashMap<>();
     for( final GM_Point lPoint : listNeiboursPositions )
     {
       lMapRes.put( lPoint, getWindValuesFromGrid( lPoint ) );
@@ -261,7 +262,7 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
           && ((location.getY() - m_gmPointOrigin.getY()) / m_cellSizeY - (int) Math.floor( (location.getY() - m_gmPointOrigin.getY()) / m_cellSizeY )) <= m_doubleEps )
         return true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
     }
     return false;
@@ -299,7 +300,7 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
    *      org.kalypsodeegree.model.geometry.IPlainGridVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void acceptVisits( GM_Envelope envToVisit, IPlainGridVisitor<GM_Curve> gridVisitor, IProgressMonitor monitor )
+  public void acceptVisits( final GM_Envelope envToVisit, final IPlainGridVisitor<GM_Curve> gridVisitor, final IProgressMonitor monitor )
   {
     if( envToVisit == null || envToVisit.getMin().equals( envToVisit.getMax() ) )
     {
@@ -312,7 +313,7 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
     int row = (int) Math.floor( (ymin - m_gmPointOrigin.getY()) / m_cellSizeY );
     if( row < 0 )
       row = 0;
-    double lDoubleActScale = Math.min( envToVisit.getHeight(), envToVisit.getWidth() ) / Math.min( m_cellSizeX, m_cellSizeY );
+    final double lDoubleActScale = Math.min( envToVisit.getHeight(), envToVisit.getWidth() ) / Math.min( m_cellSizeX, m_cellSizeY );
 
     m_intScale = (int) (1 + lDoubleActScale / INT_CONST_SCALE_VECTOR_LEN_PRESENTATION);
 
@@ -339,16 +340,16 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
           {
             // the values are saved in binary grid per default in vector representation of wind.
             // it is also needed as vector for painting of wind layer
-            Pair<Double, Double> lPairWindValues = ((BinaryGeoGridWrapperForPairsModel) m_geoGrid).getPairValue( j, i );
+            final Pair<Double, Double> lPairWindValues = ((BinaryGeoGridWrapperForPairsModel) m_geoGrid).getPairValue( j, i );
             if( Double.isNaN( lPairWindValues.first ) || Double.isNaN( lPairWindValues.second ) )
             {
               continue;
             }
-            GM_Curve lMeanCurve = createMeanVectorPartCurveForWind( i, j, lPairWindValues, m_intScale );
+            final GM_Curve lMeanCurve = createMeanVectorPartCurveForWind( i, j, lPairWindValues, m_intScale );
 
             gridVisitor.visit( lMeanCurve );
           }
-          catch( GeoGridException e )
+          catch( final GeoGridException e )
           {
             e.printStackTrace();
           }
@@ -362,8 +363,8 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
 
   private GM_Curve createMeanVectorPartCurveForWind( final int j, final int i, final Pair<Double, Double> pPairVectorWindValues, final int pIntScale )
   {
-    int intScale = pIntScale * INT_CONST_SCALE_VECTOR_LEN_PRESENTATION;
-    GM_Position[] lRes = new GM_Position[2];
+    final int intScale = pIntScale * INT_CONST_SCALE_VECTOR_LEN_PRESENTATION;
+    final GM_Position[] lRes = new GM_Position[2];
 
     lRes[0] = GeometryFactory.createGM_Position( m_gmPointOrigin.getPosition().getX() + (i) * m_cellSizeX, m_gmPointOrigin.getPosition().getY() + (j) * m_cellSizeY );
     lRes[1] = GeometryFactory.createGM_Position( (m_gmPointOrigin.getPosition().getX() + (i) * m_cellSizeX + pPairVectorWindValues.first * (intScale + 1.1)), (m_gmPointOrigin.getPosition().getY()
@@ -373,7 +374,7 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
     {
       return GeometryFactory.createGM_Curve( lRes, m_strCRS );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       return null;
@@ -394,7 +395,7 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
     return m_intScale;
   }
 
-  public final void setIntScale( int intScale )
+  public final void setIntScale( final int intScale )
   {
     m_intScale = intScale;
   }

@@ -151,11 +151,11 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
           currentValueY = NumberUtils.parseDouble( lStrPairOfValues.substring( lIntSeparatorPos + 1 ) );
           if( currentValueX != noDataValue && currentValueY != noDataValue )
           {
-            m_arrayWinds[y][x] = new Pair< Double, Double >( currentValueX, currentValueY );
+            m_arrayWinds[y][x] = new Pair<>( currentValueX, currentValueY );
           }
           else
           {
-            m_arrayWinds[y][x] = new Pair< Double, Double >( Double.NaN, Double.NaN );
+            m_arrayWinds[y][x] = new Pair<>( Double.NaN, Double.NaN );
           }
 
         }
@@ -254,27 +254,18 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
     return cellSize;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IWindDataProvider#getCoordinateSystem()
-   */
   @Override
   public String getCoordinateSystem( )
   {
     return this.crs;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IWindDataProvider#setCoordinateSystem(java.lang.String)
-   */
   @Override
   public void setCoordinateSystem( final String coordinateSystem )
   {
     crs = coordinateSystem;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IWindDataProvider#getWindAsSpeedAndDirection(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public Pair< Double, Double > getWindAsSpeedAndDirection( final GM_Point location )
   {
@@ -283,12 +274,9 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
     if( col < N_COLS && row < N_ROWS && col >= 0 && row >= 0 )
       return m_arrayWinds[row][col];
 
-    return new Pair< Double, Double >( Double.NaN, Double.NaN );
+    return new Pair<>( Double.NaN, Double.NaN );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IWindDataProvider#getWindAsVector(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public Pair< Double, Double > getWindAsVector( final GM_Point location )
   {
@@ -297,12 +285,9 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
     if( col < N_COLS && row < N_ROWS && col >= 0 && row >= 0 )
       return m_arrayWinds[row][col];
 
-    return new Pair< Double, Double >( Double.NaN, Double.NaN );
+    return new Pair<>( Double.NaN, Double.NaN );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider#getDataAsGrid()
-   */
   @Override
   public IGeoGrid getDataAsGrid( )
   {
@@ -310,9 +295,6 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
     return null;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider#getGridDescriptor()
-   */
   @Override
   public RectifiedGridDomain getGridDescriptor( )
   {
@@ -320,9 +302,6 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
     return null;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider#isRegularGrid()
-   */
   @Override
   public boolean isRegularGrid( )
   {

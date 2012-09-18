@@ -19,20 +19,18 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  */
 public class RoughnessClsCollection extends UnversionedModel implements IRoughnessClsCollection
 {
+  private final IFeatureBindingCollection<IRoughnessCls> m_roughnessClasses = new FeatureBindingCollection<>( this, IRoughnessCls.class, WBR_PROP_ROUGHNESS_CLS_MEMBER );
 
-  private final IFeatureBindingCollection<IRoughnessCls> m_roughnessClasses = new FeatureBindingCollection<IRoughnessCls>( this, IRoughnessCls.class, WBR_PROP_ROUGHNESS_CLS_MEMBER );
-
-  public RoughnessClsCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RoughnessClsCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
-
   }
 
   @Override
   public List<IRoughnessCls> selectRoughnessByName( final String nameRegExp )
   {
     final Pattern p = Pattern.compile( nameRegExp );
-    final List<IRoughnessCls> rcList = new ArrayList<IRoughnessCls>( m_roughnessClasses.size() );
+    final List<IRoughnessCls> rcList = new ArrayList<>( m_roughnessClasses.size() );
     String name;
     Matcher matcher;
 
@@ -50,7 +48,7 @@ public class RoughnessClsCollection extends UnversionedModel implements IRoughne
     }
     return rcList;
   }
-  
+
   @Override
   public IFeatureBindingCollection<IRoughnessCls> getRoughnessClasses( )
   {

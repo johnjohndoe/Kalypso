@@ -61,7 +61,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class FlowRelationshipModel extends UnversionedModel implements IFlowRelationshipModel
 {
-  private final IFeatureBindingCollection<IFlowRelationship> m_flowRelationsShips = new FeatureBindingCollection<IFlowRelationship>( this, IFlowRelationship.class, QNAME_PROP_FLOW_REL_MEMBER );
+  private final IFeatureBindingCollection<IFlowRelationship> m_flowRelationsShips = new FeatureBindingCollection<>( this, IFlowRelationship.class, QNAME_PROP_FLOW_REL_MEMBER );
 
   public FlowRelationshipModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -74,9 +74,6 @@ public class FlowRelationshipModel extends UnversionedModel implements IFlowRela
     return m_flowRelationsShips;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth )
   {
@@ -100,16 +97,12 @@ public class FlowRelationshipModel extends UnversionedModel implements IFlowRela
     return nearest;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationships(org.kalypsodeegree.model.geometry.GM_Position,
-   *      double)
-   */
   @Override
   public IFlowRelationship[] findFlowrelationships( final GM_Position position, final double searchRectWidth )
   {
     final List<Feature> foundFeatures = findFeatures( position, searchRectWidth );
 
-    final List<IFlowRelationship> result = new ArrayList<IFlowRelationship>();
+    final List<IFlowRelationship> result = new ArrayList<>();
     for( int i = 0; i < foundFeatures.size(); i++ )
     {
       final Feature feature = foundFeatures.get( i );
@@ -130,10 +123,6 @@ public class FlowRelationshipModel extends UnversionedModel implements IFlowRela
     return result.toArray( new IFlowRelationship[result.size()] );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Position,
-   *      double, javax.xml.namespace.QName[])
-   */
   @Override
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchDistance, final Class< ? extends IFlowRelationshipModel>[] flowRelationTypes )
   {
