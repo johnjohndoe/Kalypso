@@ -41,11 +41,8 @@
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -57,6 +54,7 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
@@ -86,7 +84,7 @@ public class CheckinStateWorker implements ICheckInWorker
   {
     final Map<String, BigDecimal> profileNames = new HashMap<>();
 
-    final Set<String> existingWaterCodes = hashWaterCodes( m_data.getExistingWaterBodies() );
+    final Map<String, WaterBody> existingWaterCodes = WaterBodyUtils.hashWaterCodes( m_data.getExistingWaterBodies() );
 
     final TuhhReach reach = m_data.getReach();
 
@@ -94,7 +92,7 @@ public class CheckinStateWorker implements ICheckInWorker
     final String waterCode = wspmWaterBody.getRefNr();
 
     /* Water Body must exist */
-    if( !existingWaterCodes.contains( waterCode ) )
+    if( !existingWaterCodes.containsKey( waterCode ) )
     {
       final String waterName = wspmWaterBody.getName();
       final String message = CheckInEventWorker.formatMissingWaterBody( waterCode, waterName );
@@ -134,16 +132,6 @@ public class CheckinStateWorker implements ICheckInWorker
     }
 
     return Status.OK_STATUS;
-  }
-
-  static Set<String> hashWaterCodes( final WaterBody[] waterBodies )
-  {
-    final Set<String> codes = new HashSet<>();
-
-    for( final WaterBody waterBody : waterBodies )
-      codes.add( waterBody.getName() );
-
-    return Collections.unmodifiableSet( codes );
   }
 
   @Override

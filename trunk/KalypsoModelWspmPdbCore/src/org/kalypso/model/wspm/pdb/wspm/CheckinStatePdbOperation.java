@@ -58,8 +58,10 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -123,12 +125,15 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final ClassChecker m_classChecker;
 
+  private final CrossSectionPartType[] m_partTypes;
+
   /**
    * @param dbSrs
    *          The coordinate system of the database
    */
-  public CheckinStatePdbOperation( final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody[] waterBodies, final State state, final TuhhReach reach, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final boolean checkSectionNames, final IProgressMonitor monitor )
+  public CheckinStatePdbOperation( final CrossSectionPartType[] partTypes, final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody[] waterBodies, final State state, final TuhhReach reach, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final boolean checkSectionNames, final IProgressMonitor monitor )
   {
+    m_partTypes = partTypes;
     m_gafCodes = gafCodes;
     m_coefficients = coefficients;
     m_classChecker = new ClassChecker( profiles );
@@ -317,7 +322,8 @@ public class CheckinStatePdbOperation implements IPdbOperation
     for( final CrossSectionPart part : parts )
     {
       /* Instead of preserving the existing part name, we recreate it by the same system as when importing gaf */
-      final String uniquePartName = partNameGenerator.createUniqueName( part.getCategory().toString() );
+      final CATEGORY category = part.getCrossSectionPartType().getCategory();
+      final String uniquePartName = partNameGenerator.createUniqueName( category.toString() );
       part.setName( uniquePartName );
       part.setCrossSection( section );
       section.getCrossSectionParts().add( part );
@@ -341,8 +347,25 @@ public class CheckinStatePdbOperation implements IPdbOperation
       m_stati.add( result );
 
     final CrossSectionPart part = partOperation.getPart();
-    part.setCategory( partBuilder.getCategory() );
+
+    final CrossSectionPartType type = findPartType( partBuilder.getCategory() );
+    part.setCrossSectionPartType( type );
+
     return part;
+  }
+
+  private CrossSectionPartType findPartType( final CATEGORY category )
+  {
+    if( m_partTypes == null )
+      return null;
+
+    for( final CrossSectionPartType type : m_partTypes )
+    {
+      if( type.getCategory().equals( category ) )
+        return type;
+    }
+
+    throw new IllegalArgumentException( String.format( "Unknown part category: %s", category ) );
   }
 
   private CrossSectionPart[] createAdditionalParts( )

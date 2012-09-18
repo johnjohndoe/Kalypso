@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
@@ -68,22 +69,35 @@ public class CheckInEventWorker implements ICheckInWorker
 
   public CheckInEventWorker( final CommandableWorkspace workspace, final WspmFixation fixation )
   {
-    m_data = new CheckInEventData<>( workspace, fixation );
+    m_data = new CheckInEventData<WspmFixation>( workspace, fixation )
+    {
+      @Override
+      public WaterBody findWaterBody( )
+      {
+        final Map<String, WaterBody> waterHash = getWaterHash();
+
+        final WspmWaterBody wspmWaterBody = fixation.getOwner();
+        final String waterCode = wspmWaterBody.getRefNr();
+
+        return waterHash.get( waterCode );
+      }
+    };
+
     m_operation = new CheckInEventOperation( m_data );
   }
 
   @Override
   public IStatus checkPreconditions( )
   {
-    final Set<String> existingWaterCodes = CheckinStateWorker.hashWaterCodes( m_data.getExistingWaterBodies() );
-
-    final WspmFixation fixation = m_data.getWspmObject();
-
-    final WspmWaterBody wspmWaterBody = fixation.getOwner();
-    final String waterCode = wspmWaterBody.getRefNr();
     /* Water Body must exist */
-    if( !existingWaterCodes.contains( waterCode ) )
+    final WaterBody waterBody = m_data.findWaterBody();
+    if( waterBody == null )
     {
+      final WspmFixation fixation = m_data.getWspmObject();
+
+      final WspmWaterBody wspmWaterBody = fixation.getOwner();
+      final String waterCode = wspmWaterBody.getRefNr();
+
       final String waterName = wspmWaterBody.getName();
       final String message = formatMissingWaterBody( waterCode, waterName );
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );

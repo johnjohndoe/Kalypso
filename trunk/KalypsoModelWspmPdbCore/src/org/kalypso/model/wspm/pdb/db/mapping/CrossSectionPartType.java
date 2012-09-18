@@ -52,6 +52,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.kalypso.commons.java.util.AbstractModelObject;
@@ -61,7 +62,7 @@ import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants;
  * @author Monika Thuel
  */
 @Entity
-@Table(name = "cs_part_type", schema = "pdb")
+@Table( name = "cs_part_type", schema = "pdb" )
 public class CrossSectionPartType extends AbstractModelObject implements Serializable, CategoryConstants
 {
   private CATEGORY m_category;
@@ -85,8 +86,8 @@ public class CrossSectionPartType extends AbstractModelObject implements Seriali
   }
 
   @Id
-  @Column(name = "id", unique = true, nullable = false, length = 50)
-  @Enumerated(EnumType.STRING)
+  @Column( name = "category", unique = true, nullable = false, length = 50 )
+  @Enumerated( EnumType.STRING )
   public CATEGORY getCategory( )
   {
     return m_category;
@@ -101,7 +102,7 @@ public class CrossSectionPartType extends AbstractModelObject implements Seriali
     firePropertyChange( PROPERTY_CATEGORY, oldValue, category );
   }
 
-  @Column(name = "description", length = 255)
+  @Column( name = "description", length = 255 )
   public String getDescription( )
   {
     return m_description;
@@ -112,8 +113,8 @@ public class CrossSectionPartType extends AbstractModelObject implements Seriali
     m_description = description;
   }
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "style_array_id", nullable = false)
+  @ManyToOne( fetch = FetchType.LAZY )
+  @JoinColumn( name = "style_array_id", nullable = false )
   public StyleArray getStyleArray( )
   {
     return m_styleArray;
@@ -124,16 +125,14 @@ public class CrossSectionPartType extends AbstractModelObject implements Seriali
     m_styleArray = styleArray;
   }
 
-  // TODO
+  @OneToMany( fetch = FetchType.LAZY, mappedBy = "crossSectionPartType" )//$NON-NLS-1$
+  public Set<CrossSectionPart> getCrossSectionParts( )
+  {
+    return m_crossSectionParts;
+  }
 
-// @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSectionPartType")
-// public Set<CrossSectionPart> getCrossSectionParts( )
-// {
-// return m_crossSectionParts;
-// }
-//
-// public void setCrossSectionParts( final Set<CrossSectionPart> crossSectionParts )
-// {
-// m_crossSectionParts = crossSectionParts;
-// }
+  public void setCrossSectionParts( final Set<CrossSectionPart> crossSectionParts )
+  {
+    m_crossSectionParts = crossSectionParts;
+  }
 }

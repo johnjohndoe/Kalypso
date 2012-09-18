@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.wspm;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -91,13 +92,14 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
       final IPdbConnection connection = m_data.getConnection();
       session = connection.openSession();
 
-      final WaterBody[] waterBodies = m_data.getExistingWaterBodies();
       final Event event = m_data.getEvent();
       event.setEditingUser( connection.getSettings().getUsername() );
 
       final WspmFixation fixation = m_data.getWspmObject();
 
-      final CheckinEventPdbOperation operation = new CheckinEventPdbOperation( event, waterBodies, fixation, new SubProgressMonitor( monitor, 90 ) );
+      final Map<String, WaterBody> waterHash = m_data.getWaterHash();
+
+      final CheckinEventPdbOperation operation = new CheckinEventPdbOperation( waterHash, event, fixation, new SubProgressMonitor( monitor, 90 ) );
       new Executor( session, operation ).execute();
 
       session.close();

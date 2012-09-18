@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -48,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
@@ -67,18 +69,21 @@ public class ByStateContentProvider implements IConnectionContentProvider
   {
     if( inputElement instanceof ConnectionInput )
     {
-      final State[] states = ((ConnectionInput) inputElement).getState();
+      final State[] states = ((ConnectionInput)inputElement).getState();
       if( ArrayUtils.isEmpty( states ) )
         return new Object[] { PdbLabelProvider.EMPTY_STATES };
 
       return states;
     }
 
+    if( inputElement instanceof State )
+      return getChildren( inputElement );
+
     if( inputElement instanceof Object[] )
-      return (Object[]) inputElement;
+      return (Object[])inputElement;
 
     if( inputElement instanceof Collection )
-      return ((Collection< ? >) inputElement).toArray();
+      return ((Collection< ? >)inputElement).toArray();
 
     if( inputElement != null )
       return new Object[] { inputElement };
@@ -91,11 +96,15 @@ public class ByStateContentProvider implements IConnectionContentProvider
   {
     if( element instanceof State )
     {
-      if( !m_showCrossSections )
-        return false;
+      final State state = (State)element;
 
-      final Set<CrossSection> children = ((State) element).getCrossSections();
-      return !children.isEmpty();
+      final Set<Event> events = state.getEvents();
+      final Set<CrossSection> crossSections = state.getCrossSections();
+
+      if( !m_showCrossSections )
+        return !events.isEmpty();
+
+      return !(crossSections.isEmpty() && events.isEmpty());
     }
 
     return false;
@@ -106,11 +115,18 @@ public class ByStateContentProvider implements IConnectionContentProvider
   {
     if( parentElement instanceof State )
     {
+      final State state = (State)parentElement;
+
+      final Set<CrossSection> crossSections = state.getCrossSections();
+      final Set<Event> events = state.getEvents();
+
+      final Set<Object> allChildren = new LinkedHashSet<>();
+      allChildren.addAll( events );
+
       if( m_showCrossSections )
-      {
-        final Set<CrossSection> children = ((State) parentElement).getCrossSections();
-        return children.toArray( new CrossSection[children.size()] );
-      }
+        allChildren.addAll( crossSections );
+
+      return allChildren.toArray();
     }
 
     return ArrayUtils.EMPTY_OBJECT_ARRAY;
@@ -120,7 +136,10 @@ public class ByStateContentProvider implements IConnectionContentProvider
   public Object getParent( final Object element )
   {
     if( element instanceof CrossSection )
-      return ((CrossSection) element).getState();
+      return ((CrossSection)element).getState();
+
+    if( element instanceof Event )
+      return ((Event)element).getState();
 
     return null;
   }

@@ -138,6 +138,10 @@ public class ChooseWaterPage extends WizardPage
 
   private Control createWaterBodyTable( final DatabindingWizardPage binding, final Composite parent )
   {
+    // TRICKY: we like to preserve a pre-selected water
+    final WaterBody selectedWater = (WaterBody)m_waterValue.getValue();
+    final String selectedWaterName = selectedWater == null ? null : selectedWater.getName();
+
     final TableViewer waterBodiesViewer = m_waterBodyViewer.createTableViewer( parent );
 
     /* selection -> data */
@@ -147,6 +151,8 @@ public class ChooseWaterPage extends WizardPage
 
     dataBinder.addTargetAfterGetValidator( new NotNullValidator<>( WaterBody.class, IStatus.ERROR, Messages.getString( "ChooseWaterPage.1" ) ) ); //$NON-NLS-1$
     binding.bindValue( dataBinder );
+
+    m_waterBodyViewer.refreshWaterBody( selectedWaterName );
 
     return m_waterBodyViewer.getControl();
   }

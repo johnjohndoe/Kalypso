@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.commons.java.lang.Arrays;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
@@ -90,6 +91,9 @@ public class ByWaterBodyContentProvider implements IConnectionContentProvider
       return !Arrays.isEmpty( allChildren );
     }
 
+    if( element instanceof State )
+      return !((State)element).getEvents().isEmpty();
+
     return false;
   }
 
@@ -101,6 +105,9 @@ public class ByWaterBodyContentProvider implements IConnectionContentProvider
       final WaterBody waterBody = (WaterBody) parentElement;
       return m_input.getChildren( waterBody );
     }
+
+    if( parentElement instanceof State )
+      return ((State)parentElement).getEvents().toArray();
 
     return ArrayUtils.EMPTY_OBJECT_ARRAY;
   }

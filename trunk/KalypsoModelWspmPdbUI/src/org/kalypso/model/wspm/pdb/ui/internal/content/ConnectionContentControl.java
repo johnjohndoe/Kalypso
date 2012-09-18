@@ -125,6 +125,7 @@ public class ConnectionContentControl extends Composite
     ControlUtils.addDisposeListener( this );
 
     m_manager = new ToolBarManager( SWT.FLAT | SWT.SHADOW_OUT );
+
     createToolbar( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createStatusBar( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createTreeViewer( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -181,12 +182,12 @@ public class ConnectionContentControl extends Composite
 
   public static TreeViewer createContentTree( final FormToolkit toolkit, final Composite parent, final ILabelDecorator nameDecorator )
   {
-    final Tree tree;
-    tree = new Tree( parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER );
+    final Tree tree = new Tree( parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER );
     if( toolkit != null )
       toolkit.adapt( tree, false, false );
 
     tree.setHeaderVisible( true );
+
     final TreeViewer viewer = new TreeViewer( tree );
     viewer.setUseHashlookup( true );
     viewer.setContentProvider( new ByWaterBodyContentProvider() );
