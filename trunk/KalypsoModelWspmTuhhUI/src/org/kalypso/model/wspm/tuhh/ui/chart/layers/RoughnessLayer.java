@@ -140,7 +140,8 @@ public class RoughnessLayer extends AbstractProfilLayer
     final IComponent property = profil.getPointPropertyFor( getTargetProperty() );
     if( Objects.isNull( property ) )
     {
-      if( Objects.isNull( profil.getProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) ) )
+      // nonsense...
+//      if( Objects.isNull( profil.getProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) ) )
         return false;
     }
 
