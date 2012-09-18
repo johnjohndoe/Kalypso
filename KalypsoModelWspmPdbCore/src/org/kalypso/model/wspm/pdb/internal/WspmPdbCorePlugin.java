@@ -61,9 +61,15 @@ public class WspmPdbCorePlugin extends Plugin
 
   private final PdbSettingsRegistry m_registry = new PdbSettingsRegistry();
 
+  public WspmPdbCorePlugin( )
+  {
+  }
+
   @Override
   public void start( final BundleContext bundleContext ) throws Exception
   {
+    super.start( bundleContext );
+
     plugin = this;
   }
 
@@ -71,11 +77,13 @@ public class WspmPdbCorePlugin extends Plugin
   public void stop( final BundleContext bundleContext ) throws Exception
   {
     plugin = null;
+
+    super.stop( bundleContext );
   }
 
   /**
    * Returns the shared instance
-   *
+   * 
    * @return the shared instance
    */
   public static WspmPdbCorePlugin getDefault( )
@@ -86,7 +94,7 @@ public class WspmPdbCorePlugin extends Plugin
   /**
    * Returns the configured connections for pdb.<br/>
    * Changes to these connection will not take effect until {@link #setConnections(IPdbSettings[])} is called.
-   *
+   * 
    * @return The currently configured connections for pdb.
    */
   public IPdbSettings[] getSettings( ) throws PdbConnectException
