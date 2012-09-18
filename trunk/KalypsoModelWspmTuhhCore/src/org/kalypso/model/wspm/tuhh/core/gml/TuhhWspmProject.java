@@ -65,7 +65,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  * <br/>
  * FIXME: tricky, this thing is actually not a real abstraction of WspmProject (on gml-level), but is used to mark a
  * project of kind 'tuhh'. We will probably get problems as soon as we introduce a WSPMProject of another kind.
- * 
+ *
  * @author Gernot Belger
  */
 public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
@@ -128,7 +128,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
   public IFeatureBindingCollection<TuhhCalculation> getCalculations( )
   {
     if( m_calculation == null )
-      m_calculation = new FeatureBindingCollection<TuhhCalculation>( this, TuhhCalculation.class, QNAME_PROP_CALC_MEMBER );
+      m_calculation = new FeatureBindingCollection<>( this, TuhhCalculation.class, QNAME_PROP_CALC_MEMBER );
 
     return m_calculation;
   }

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.results.view.tree.filter;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -47,12 +48,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * Search control - for displaying only last calculation result
- * 
+ *
  * @author Dirk kuch
  */
 public class ResultTreeFilterControl extends Composite
@@ -67,7 +67,8 @@ public class ResultTreeFilterControl extends Composite
   {
     super( parent, SWT.NULL );
 
-    setLayout( Layouts.createGridLayout( 2, true ) );
+    setLayout( GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( true ).create() );
+
     doRenderControl( toolkit );
 
     layout();

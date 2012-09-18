@@ -58,7 +58,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
@@ -133,10 +133,7 @@ public class EditTimeseriesAction extends Action
           final TimeseriesReferencesUpdater updater = new TimeseriesReferencesUpdater( dataProvider.getScenario(), oldUrl, newHref );
           final IStatus status = updater.execute( new NullProgressMonitor() );
           if( !status.isOK() )
-          {
-            final StatusDialog2 dialog2 = new StatusDialog2( shell, status, Messages.getString( "EditTimeseriesAction.0" ), Messages.getString( "EditTimeseriesAction.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-            dialog2.open();
-          }
+            StatusDialog.open( shell, status, Messages.getString( "EditTimeseriesAction.0" ) ); //$NON-NLS-1$
 
           /* Get the new file. */
           final IFile newFile = timeseries.getDataLink().getFile();

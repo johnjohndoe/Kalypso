@@ -79,7 +79,7 @@ public final class TuhhLayerCreator
 
   public static IProfilChartLayer[] create2DWaterLevelLayers( final IProfil profile, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
   {
-    final Set<IProfilChartLayer> layers = new LinkedHashSet<IProfilChartLayer>();
+    final Set<IProfilChartLayer> layers = new LinkedHashSet<>();
 
     final IComponent[] pointProperties = profile.getPointProperties();
     for( final IComponent property : pointProperties )

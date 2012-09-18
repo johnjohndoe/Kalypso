@@ -66,7 +66,7 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
  */
 public class WProfMarkerOptions
 {
-  private final Map<String, int[]> m_markerMap = new HashMap<String, int[]>();
+  private final Map<String, int[]> m_markerMap = new HashMap<>();
 
   private final WProfOptionsPage m_page;
 

@@ -134,7 +134,7 @@ public class WspmTuhhUiPreferencePage extends PreferencePage implements IWorkben
       }
     } );
 
-    final Collection<String> input = new ArrayList<String>();
+    final Collection<String> input = new ArrayList<>();
     input.add( StringUtils.EMPTY );
     input.add( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
 

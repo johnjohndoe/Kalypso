@@ -82,7 +82,7 @@ public class Waterlevel2DCreator
 {
   private static final double WPROF_WATERLEVEL_MINIMAL_NODATA = -999999.999;
 
-  private final Map<String, SortedSet<Point2D>> m_waterlevels = new HashMap<String, SortedSet<Point2D>>();
+  private final Map<String, SortedSet<Point2D>> m_waterlevels = new HashMap<>();
 
   public void findWaterlevel( final IWProfPoint[] soilPoints )
   {
@@ -120,7 +120,7 @@ public class Waterlevel2DCreator
   {
     if( !m_waterlevels.containsKey( name ) )
     {
-      m_waterlevels.put( name, new TreeSet<Point2D>( new Point2DXComparator() ) );
+      m_waterlevels.put( name, new TreeSet<>( new Point2DXComparator() ) );
     }
 
     return m_waterlevels.get( name );

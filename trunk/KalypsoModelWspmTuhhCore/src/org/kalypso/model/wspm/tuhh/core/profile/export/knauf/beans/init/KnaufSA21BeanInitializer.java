@@ -95,5 +95,4 @@ public class KnaufSA21BeanInitializer extends KnaufBeanInitializer
     bean.setIDP( 31 );
     bean.setKZD( 5 );
   }
-
 }

@@ -182,9 +182,6 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     return String.format( "%5s", riverId ).replaceAll( " ", "0" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getRiverName()
-   */
   @Override
   public String getRiverName( )
   {

@@ -126,7 +126,7 @@ public class QIntervallResult extends Feature_Impl
 
     final TupleResult tupleResult = new TupleResult();
 
-    return new Observation<TupleResult>( "", "", tupleResult ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new Observation<>( "", "", tupleResult ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void setPointsObservation( final IObservation<TupleResult> observation )
@@ -212,7 +212,7 @@ public class QIntervallResult extends Feature_Impl
     // Sort by discharge and then downstream waterlevel
     tupleResult.setSortComponents( new IComponent[] { pointsComponents[0], pointsComponents[1] } );
 
-    return new Observation<TupleResult>( "", "", tupleResult ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new Observation<>( "", "", tupleResult ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void setWeirObservation( final IObservation<TupleResult> observation )

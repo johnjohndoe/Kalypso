@@ -52,7 +52,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.observation.result.IRecord;
@@ -61,7 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author Gernot Belger
  */
-class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhhConstants
+class GelaendeProfileCreator extends AbstractProfileCreator
 {
   private final String m_soilPointsID;
 

@@ -88,14 +88,12 @@ import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
 
 /**
  * Exports one {@link org.kalypso.model.wspm.core.profil.IProfil} as {@link org.kalypso.wspwin.core.prf.DataBlockWriter}
- * .
- * 
+ *
  * @author Gernot Belger
  */
 public class PrfWriter implements IPrfConstants
 {
-
-  private final Map<Integer, String[]> m_defaultPrfMetadata = new HashMap<Integer, String[]>();
+  private final Map<Integer, String[]> m_defaultPrfMetadata = new HashMap<>();
 
   private final DataBlockWriter m_dbWriter = new DataBlockWriter();
 
@@ -306,8 +304,8 @@ public class PrfWriter implements IPrfConstants
   {
     final IRecord[] points = m_profil.getPoints();
 
-    final List<Double> xs = new ArrayList<Double>( points.length );
-    final List<Double> ys = new ArrayList<Double>( points.length );
+    final List<Double> xs = new ArrayList<>( points.length );
+    final List<Double> ys = new ArrayList<>( points.length );
 
     final int iBreite = m_profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
     final int iProp = m_profil.indexOfProperty( prop );
@@ -408,7 +406,7 @@ public class PrfWriter implements IPrfConstants
 
   private void writeProfileObjects( )
   {
-    final List<IProfileBuilding> buildings = new ArrayList<IProfileBuilding>();
+    final List<IProfileBuilding> buildings = new ArrayList<>();
 
     final AbstractProfileObject[] profileObjects = m_profil.getProfileObjects( AbstractProfileObject.class );
     for( final AbstractProfileObject profileObject : profileObjects )

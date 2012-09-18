@@ -79,14 +79,14 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Writes the state for calculation with kalypso-1d.exe (which is different from wspwin format!).
- * 
+ *
  * @author Gernot Belger
  */
 public class WspWinProjectWriter
 {
   private final WspCfg m_wspCfg;
 
-  private final Map<Integer, IProfil> m_profiles = new HashMap<Integer, IProfil>();
+  private final Map<Integer, IProfil> m_profiles = new HashMap<>();
 
   private final String m_roughnessType;
 
@@ -108,7 +108,7 @@ public class WspWinProjectWriter
       Assert.isTrue( tuhhReach.getWaterBody() == waterBody );
 
     /* Add all profiles of water body */
-    final Map<IProfileFeature, ProfileBean> profileIndex = new HashMap<IProfileFeature, ProfileBean>();
+    final Map<IProfileFeature, ProfileBean> profileIndex = new HashMap<>();
     final IFeatureBindingCollection<IProfileFeature> profiles = waterBody.getProfiles();
     for( final IProfileFeature profileFeature : profiles )
     {
@@ -171,9 +171,9 @@ public class WspWinProjectWriter
     final IProfil profile = profileMember.getProfil();
     final IEnergylossProfileObject[] losses = profile.getProfileObjects( IEnergylossProfileObject.class );
     final BigDecimal station = profileMember.getBigStation();
-    for( int i = 0; i < losses.length; i++ )
+    for( final IEnergylossProfileObject losse : losses )
     {
-      final LocalEnergyLossBean bean = convertToEnergylossBean( station, losses[i] );
+      final LocalEnergyLossBean bean = convertToEnergylossBean( station, losse );
       zustand.addLoss( bean );
     }
   }
@@ -187,10 +187,10 @@ public class WspWinProjectWriter
       try
       {
         final String id = rec.getValue( iType ).toString();
-        LOSSKIND lk = LOSSKIND.valueOf( id.replace( "ü", "UE" ).toUpperCase() ); //$NON-NLS-1$ //$NON-NLS-2$
+        final LOSSKIND lk = LOSSKIND.valueOf( id.replace( "ü", "UE" ).toUpperCase() ); //$NON-NLS-1$ //$NON-NLS-2$
         return lk;
       }
-      catch( IllegalArgumentException e )
+      catch( final IllegalArgumentException e )
       {
         // do nothing, just catch IllegalArgumentException
       }
@@ -200,7 +200,7 @@ public class WspWinProjectWriter
 
   private final LocalEnergyLossBean convertToEnergylossBean( final BigDecimal station, final IEnergylossProfileObject loss )
   {
-    final Map<LocalEnergyLossBean.LOSSKIND, Double> lossMap = new HashMap<LocalEnergyLossBean.LOSSKIND, Double>();
+    final Map<LocalEnergyLossBean.LOSSKIND, Double> lossMap = new HashMap<>();
     final TupleResult res = loss.getObservation().getResult();
     for( int i = 0; i < res.size(); i++ )
     {
@@ -273,7 +273,7 @@ public class WspWinProjectWriter
 
   private String[] getZustandNames( )
   {
-    final Set<String> names = new HashSet<String>();
+    final Set<String> names = new HashSet<>();
 
     final WspWinZustand[] zustaende = m_wspCfg.getZustaende();
     for( final WspWinZustand zustand : zustaende )

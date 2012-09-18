@@ -59,7 +59,7 @@ public class ProfileFeatureSorter
 
   public static IProfil[] extractProfiles( final Object[] profilFeatures, final IProgressMonitor monitor )
   {
-    final SortedMap<Double, IProfil> profiles = new TreeMap<Double, IProfil>();
+    final SortedMap<Double, IProfil> profiles = new TreeMap<>();
 
     for( final Object objProfileFeature : profilFeatures )
     {

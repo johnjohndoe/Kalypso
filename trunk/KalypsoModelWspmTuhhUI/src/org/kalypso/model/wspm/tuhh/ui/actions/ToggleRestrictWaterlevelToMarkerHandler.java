@@ -97,7 +97,7 @@ public class ToggleRestrictWaterlevelToMarkerHandler extends AbstractHandler imp
   }
 
   @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  public void updateElement( final UIElement element, final Map parameters )
   {
     final boolean isOn = Preferences.getWaterlevelRestrictionMarker() != null;
     element.setChecked( isOn );

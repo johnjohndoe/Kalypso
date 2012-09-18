@@ -85,15 +85,11 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
     addPage( m_profileFileChooserPage );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.export.ExportProfilesWizard#exportProfiles(org.kalypso.model.wspm.core.profil.IProfil[],
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final ISobekProfileExportOperation[] operations = m_profileFileChooserPage.getOperations( profiles );
-    final Collection<IStatus> problems = new ArrayList<IStatus>( operations.length );
+    final Collection<IStatus> problems = new ArrayList<>( operations.length );
 
     monitor.beginTask( Messages.getString( "SobekExportProfilesWizard_0" ), operations.length ); //$NON-NLS-1$
 

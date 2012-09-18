@@ -163,7 +163,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     if( m_componentChooser == null )
       return null;
 
-    final Collection<WspmResultLengthSectionColumn> columns = new ArrayList<WspmResultLengthSectionColumn>();
+    final Collection<WspmResultLengthSectionColumn> columns = new ArrayList<>();
 
     final IComponent[] components = m_componentChooser.getSelectedComponents();
 
@@ -197,7 +197,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
 
   public IWspmResult[] getSelectedResults( )
   {
-    final Collection<IWspmResult> lengthSections = new ArrayList<IWspmResult>();
+    final Collection<IWspmResult> lengthSections = new ArrayList<>();
 
     final IWspmResultNode[] results = m_resultChooser.getSelectedResults();
     for( final IWspmResultNode result : results )

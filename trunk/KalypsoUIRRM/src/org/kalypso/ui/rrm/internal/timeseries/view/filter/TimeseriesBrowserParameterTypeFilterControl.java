@@ -50,6 +50,7 @@ import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -60,7 +61,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.hydrology.binding.timeseries.IHydrologicalStation;
 import org.kalypso.model.hydrology.binding.timeseries.IMeteorologicalStation;
@@ -96,7 +96,8 @@ public class TimeseriesBrowserParameterTypeFilterControl extends Composite
     Collections.addAll( m_parameterTypes, StationClassesCatalog.findAllowedParameterTypes( IMeteorologicalStation.class ) );
     Collections.addAll( m_parameterTypes, StationClassesCatalog.findAllowedParameterTypes( IHydrologicalStation.class ) );
 
-    setLayout( Layouts.createGridLayout() );
+    setLayout( GridLayoutFactory.fillDefaults().create() );
+
     createContents( this );
   }
 

@@ -87,7 +87,7 @@ public class WspTinProvider implements IGmlSourceProvider
 
   private final ITreeContentProvider m_contentProvider = new ITreeContentProvider()
   {
-    private final Map<IProject, IGmlSource[]> m_sources = new HashMap<IProject, IGmlSource[]>();
+    private final Map<IProject, IGmlSource[]> m_sources = new HashMap<>();
 
     @Override
     public Object[] getChildren( final Object parentElement )
@@ -109,7 +109,7 @@ public class WspTinProvider implements IGmlSourceProvider
         if( m_sources.containsKey( project ) )
           return m_sources.get( project );
 
-        final List<IGmlSource> tins = new ArrayList<IGmlSource>();
+        final List<IGmlSource> tins = new ArrayList<>();
 
         final IFolder resultsFolder = project.getFolder( IWspmTuhhConstants.FOLDER_RESULTS ); //$NON-NLS-1$
         if( resultsFolder.exists() )
@@ -154,7 +154,7 @@ public class WspTinProvider implements IGmlSourceProvider
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       final IProject[] projects = root.getProjects();
 
-      final List<IProject> result = new ArrayList<IProject>( projects.length );
+      final List<IProject> result = new ArrayList<>( projects.length );
 
       for( final IProject project : projects )
       {

@@ -191,7 +191,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
   private IProfileRecord[] findFirstLast( final IProfil profile, final int heightComponent, final int bridgeComponent )
   {
-    final Collection<IProfileRecord> firstLast = new ArrayList<IProfileRecord>( 2 );
+    final Collection<IProfileRecord> firstLast = new ArrayList<>( 2 );
 
     final List<IProfileRecord> points = Arrays.asList( profile.getPoints() );
     final IProfileRecord firstPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );

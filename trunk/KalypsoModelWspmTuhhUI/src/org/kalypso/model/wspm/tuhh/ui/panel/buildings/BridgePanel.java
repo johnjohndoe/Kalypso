@@ -75,7 +75,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class BridgePanel extends AbstractProfilView
 {
-  protected ArrayList<PropertyLine> m_lines = new ArrayList<PropertyLine>( 8 );
+  protected ArrayList<PropertyLine> m_lines = new ArrayList<>( 8 );
 
   private FormToolkit m_toolkit = null;
 
@@ -200,7 +200,7 @@ public class BridgePanel extends AbstractProfilView
       line.dispose();
     }
 
-    m_lines = new ArrayList<PropertyLine>( 8 );
+    m_lines = new ArrayList<>( 8 );
 
     final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
     if( building == null )

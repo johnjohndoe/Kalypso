@@ -60,7 +60,7 @@ import org.kalypso.model.wspm.tuhh.core.wspwin.prf.Waterlevel;
 
 public abstract class PrfExportWizardCallback implements IPrfExporterCallback
 {
-  private final Set<String> m_filenames = new HashSet<String>();
+  private final Set<String> m_filenames = new HashSet<>();
 
   private final File m_exportDirectory;
 
@@ -118,7 +118,7 @@ public abstract class PrfExportWizardCallback implements IPrfExporterCallback
     final double station = profil.getStation();
     final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
 
-    final Collection<IWaterlevel> waterlevels = new ArrayList<IWaterlevel>( m_results.length );
+    final Collection<IWaterlevel> waterlevels = new ArrayList<>( m_results.length );
 
     for( final WspmResultLengthSection result : m_results )
     {

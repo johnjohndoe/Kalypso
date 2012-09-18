@@ -63,7 +63,7 @@ public class WspmResultReachNode extends AbstractWspmResultNode
   @Override
   public IWspmResultNode[] getChildResults( )
   {
-    final Collection<IWspmResultNode> results = new ArrayList<IWspmResultNode>();
+    final Collection<IWspmResultNode> results = new ArrayList<>();
 
     final TuhhCalculation[] calculations = m_reach.findCalculations();
     for( final TuhhCalculation calculation : calculations )

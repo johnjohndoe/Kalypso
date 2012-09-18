@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.imports;
 
@@ -45,6 +45,7 @@ import java.nio.charset.Charset;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -60,13 +61,12 @@ import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Hyperlink;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.CharsetViewer;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.gml.ui.jface.ShapeCharsetUI;
 import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextPatternReplacer;
@@ -101,14 +101,11 @@ public class WProfImportFilePage extends WizardPage
     super( pageName, title, titleImage );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.fillDefaults().applyTo( panel );
 
     final Control fileControl = createFileControl( panel );
     fileControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -181,7 +178,7 @@ public class WProfImportFilePage extends WizardPage
     contextChooser.setLabel( null );
 
     final IDialogSettings dialogSettings = getDialogSettings();
-    final IDialogSettings shapeSection = PluginUtilities.getSection( dialogSettings, settings );
+    final IDialogSettings shapeSection = DialogSettingsUtils.getSection( dialogSettings, settings );
     contextChooser.setDialogSettings( shapeSection );
     contextChooser.addFileChangedListener( new FileChangedListener()
     {
@@ -251,7 +248,7 @@ public class WProfImportFilePage extends WizardPage
     m_shapeChooser.setLabel( null );
 
     final IDialogSettings dialogSettings = getDialogSettings();
-    final IDialogSettings shapeSection = PluginUtilities.getSection( dialogSettings, "shapeFile" ); //$NON-NLS-1$
+    final IDialogSettings shapeSection = DialogSettingsUtils.getSection( dialogSettings, "shapeFile" ); //$NON-NLS-1$
     m_shapeChooser.setDialogSettings( shapeSection );
     m_shapeChooser.addFileChangedListener( new FileChangedListener()
     {

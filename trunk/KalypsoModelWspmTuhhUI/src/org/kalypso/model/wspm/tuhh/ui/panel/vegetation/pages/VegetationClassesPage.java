@@ -63,7 +63,6 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.SimpleDataBinding;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
-import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
@@ -83,7 +82,7 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author Dirk Kuch
  */
-public class VegetationClassesPage extends AbstractElementPage implements IElementPage
+public class VegetationClassesPage extends AbstractElementPage
 {
   protected final IProfil m_profile;
 
@@ -210,7 +209,7 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
     if( Objects.isNull( classification ) )
       return new IVegetationClass[] {};
 
-    final Set<IVegetationClass> vegetations = new TreeSet<IVegetationClass>( new WspmClassificationClassesComparator() );
+    final Set<IVegetationClass> vegetations = new TreeSet<>( new WspmClassificationClassesComparator() );
     Collections.addAll( vegetations, classification.getVegetationClasses() );
     m_vegetations = vegetations.toArray( new IVegetationClass[] {} );
 

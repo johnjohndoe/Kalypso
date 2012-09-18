@@ -102,14 +102,13 @@ public class LengthSectionLayerProvider extends TupleResultLineLayerProvider
     // try to find loaded observation (from GFT)
     final IObservation<TupleResult> obs = getObservation();
     if( obs != null )
-      return new TupleResultDomainValueData<Object, Object>( obs, domainComponentName, targetComponentId );
+      return new TupleResultDomainValueData<>( obs, domainComponentName, targetComponentId );
 
     final String href = pc.getParameterValue( "href", null ); //$NON-NLS-1$
     final String observationId = pc.getParameterValue( "observationId", null ); //$NON-NLS-1$
     if( href != null && observationId != null )
-      return new TupleResultDomainValueData<Object, Object>( getContext(), href, observationId, domainComponentName, targetComponentId );
+      return new TupleResultDomainValueData<>( getContext(), href, observationId, domainComponentName, targetComponentId );
 
     return null;
   }
-
 }

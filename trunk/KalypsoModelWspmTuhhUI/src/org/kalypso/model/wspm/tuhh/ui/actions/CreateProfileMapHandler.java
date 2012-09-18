@@ -76,7 +76,7 @@ public class CreateProfileMapHandler extends AbstractHandler
     final IFeatureSelection featureSelection = (IFeatureSelection) selection;
 
     /* retrieve selected profile-collections, abort if none */
-    final Map<Feature, IRelationType> selectedProfiles = new HashMap<Feature, IRelationType>();
+    final Map<Feature, IRelationType> selectedProfiles = new HashMap<>();
 
     for( final Object selectedObject : featureSelection.toList() )
     {

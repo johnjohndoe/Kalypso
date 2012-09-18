@@ -171,7 +171,7 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
   @Override
   public IProfileSecondaryCreator[] createSecondaryCreators( final ProfileData[] data )
   {
-    final Collection<IProfileSecondaryCreator> result = new ArrayList<IProfileSecondaryCreator>();
+    final Collection<IProfileSecondaryCreator> result = new ArrayList<>();
     result.add( new KreisOWCreator( data ) );
 
     return result.toArray( new IProfileSecondaryCreator[result.size()] );

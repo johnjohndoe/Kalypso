@@ -214,7 +214,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
 
   private TuhhReachProfileSegment[] findSegments( final TuhhReach reach, final IProfileFeature[] profileFeatures )
   {
-    final Collection<TuhhReachProfileSegment> segments = new ArrayList<TuhhReachProfileSegment>( profileFeatures.length );
+    final Collection<TuhhReachProfileSegment> segments = new ArrayList<>( profileFeatures.length );
 
     final FeatureList segmentList = (FeatureList) reach.getProperty( TuhhReach.QNAME_MEMBER_REACHSEGMENT );
 

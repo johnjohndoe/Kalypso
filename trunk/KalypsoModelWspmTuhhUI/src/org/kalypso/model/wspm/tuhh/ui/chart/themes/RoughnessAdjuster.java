@@ -57,7 +57,7 @@ import org.kalypso.observation.result.IComponent;
  * Helper class for displacementof trennflaechen. If active, the mover will also change the roughness values of the
  * corresponding channel.<br>
  * TODO: we should use this from the flow zone panel as well...
- * 
+ *
  * @author Gernot Belger
  */
 public class RoughnessAdjuster
@@ -138,7 +138,7 @@ public class RoughnessAdjuster
 
   private IComponent[] findRoughnessComponents( )
   {
-    final Collection<IComponent> roughnessComponents = new ArrayList<IComponent>();
+    final Collection<IComponent> roughnessComponents = new ArrayList<>();
 
     final IComponent cmpKS = m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
     if( cmpKS != null )
