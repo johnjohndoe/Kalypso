@@ -68,13 +68,13 @@ import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternValidator;
 /**
  * @author Gernot Belger
  */
-public class ImportAttachmentsOptionsPage extends WizardPage
+public class ProfilesAttachmentsOptionsPage extends WizardPage
 {
-  private final ImportAttachmentsData m_data;
+  private final ProfilesAttachmentsData m_data;
 
   private DatabindingWizardPage m_binding;
 
-  public ImportAttachmentsOptionsPage( final String pageName, final ImportAttachmentsData data )
+  public ProfilesAttachmentsOptionsPage( final String pageName, final ProfilesAttachmentsData data )
   {
     super( pageName );
 
@@ -115,8 +115,8 @@ public class ImportAttachmentsOptionsPage extends WizardPage
   {
     new Label( parent, SWT.NONE ).setText( Messages.getString( "ImportAttachmentsOptionsPage.3" ) ); //$NON-NLS-1$
 
-    final IObservableValue modelDir = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_DIR );
-    final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_DIR_HISTORY );
+    final IObservableValue modelDir = BeansObservables.observeValue( m_data, ProfilesAttachmentsData.PROPERTY_IMPORT_DIR );
+    final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ProfilesAttachmentsData.PROPERTY_IMPORT_DIR_HISTORY );
 
     final DirectoryBinding directoryBinding = new DirectoryBinding( modelDir, SWT.OPEN );
 
@@ -147,7 +147,7 @@ public class ImportAttachmentsOptionsPage extends WizardPage
 
     /* binding */
     final ISWTObservableValue targetField = SWTObservables.observeText( patternField, SWT.Modify );
-    final IObservableValue modelField = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_PATTERN );
+    final IObservableValue modelField = BeansObservables.observeValue( m_data, ProfilesAttachmentsData.PROPERTY_IMPORT_PATTERN );
 
     final DataBinder binder = new DataBinder( targetField, modelField );
     binder.addTargetAfterConvertValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString( "ImportAttachmentsOptionsPage.9" ) ) ); //$NON-NLS-1$
@@ -169,8 +169,8 @@ public class ImportAttachmentsOptionsPage extends WizardPage
 
     new Label( group, SWT.NONE ).setText( Messages.getString( "ImportAttachmentsOptionsPage.12" ) ); //$NON-NLS-1$
 
-    final IObservableValue modelFile = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_ZIP_FILE );
-    final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_ZIP_HISTORY );
+    final IObservableValue modelFile = BeansObservables.observeValue( m_data, ProfilesAttachmentsData.PROPERTY_ZIP_FILE );
+    final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ProfilesAttachmentsData.PROPERTY_ZIP_HISTORY );
 
     final FileChooserDelegateSave delegate = new FileChooserDelegateSave();
     delegate.addFilter( Messages.getString( "ImportAttachmentsOptionsPage.13" ), "*.zip" ); //$NON-NLS-1$//$NON-NLS-2$

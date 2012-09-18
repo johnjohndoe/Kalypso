@@ -171,8 +171,8 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     configuration.setProperty( Environment.CACHE_PROVIDER, "org.hibernate.cache.NoCacheProvider" ); //$NON-NLS-1$
 
     // TODO: via tracing
-    configuration.setProperty( Environment.SHOW_SQL, Boolean.FALSE.toString() );
-    configuration.setProperty( Environment.FORMAT_SQL, Boolean.FALSE.toString() );
+    configuration.setProperty( Environment.SHOW_SQL, Boolean.TRUE.toString() );
+    configuration.setProperty( Environment.FORMAT_SQL, Boolean.TRUE.toString() );
 
 // configuration.setProperty( "hibernate.c3p0.min_size", "5" );
 // configuration.setProperty( "hibernate.c3p0.max_size", "20" );

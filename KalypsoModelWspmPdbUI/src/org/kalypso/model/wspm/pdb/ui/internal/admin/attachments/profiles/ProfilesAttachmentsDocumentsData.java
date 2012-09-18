@@ -44,6 +44,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,15 +60,19 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.AbstractAttachme
 /**
  * @author Gernot Belger
  */
-public class ImportAttachmentsDocumentsData extends AbstractAttachmentsDocumentsData
+public class ProfilesAttachmentsDocumentsData extends AbstractAttachmentsDocumentsData
 {
-  private Map<BigDecimal, CrossSection> m_csHash = null;
-
   private final State m_state;
 
-  public ImportAttachmentsDocumentsData( final State state )
+  private Map<BigDecimal, List<Document>> m_dbHash;
+
+  private Map<BigDecimal, CrossSection> m_csHash;
+
+  public ProfilesAttachmentsDocumentsData( final State state )
   {
     m_state = state;
+    m_dbHash = null;
+    m_csHash = null;
   }
 
   public Document addDocument( final BigDecimal station, final File file )
@@ -97,7 +102,8 @@ public class ImportAttachmentsDocumentsData extends AbstractAttachmentsDocuments
     document.setCrossSection( findCrossSection( station ) );
 
     /* Create and hash the import document info. */
-    addInfo( new DocumentInfo( document, file, station ) );
+    final Document[] dbDocuments = findDbDocuments( station );
+    addInfo( new ProfilesDocumentInfo( document, file, station, dbDocuments ) );
 
     return document;
   }
@@ -115,19 +121,39 @@ public class ImportAttachmentsDocumentsData extends AbstractAttachmentsDocuments
   private CrossSection findCrossSection( final BigDecimal station )
   {
     if( m_csHash == null )
-      createCsHash();
+      m_csHash = createCsHash();
 
     return m_csHash.get( station );
   }
 
-  private void createCsHash( )
+  private Map<BigDecimal, CrossSection> createCsHash( )
   {
-    m_csHash = new HashMap<>();
+    final Map<BigDecimal, CrossSection> csHash = new HashMap<>();
+
     final Set<CrossSection> crossSections = m_state.getCrossSections();
     for( final CrossSection crossSection : crossSections )
     {
       final BigDecimal station = crossSection.getStation().setScale( 1, BigDecimal.ROUND_HALF_UP );
-      m_csHash.put( station, crossSection );
+      csHash.put( station, crossSection );
     }
+
+    return csHash;
+  }
+
+  public void setDbHash( final Map<BigDecimal, List<Document>> dbHash )
+  {
+    m_dbHash = dbHash;
+  }
+
+  private Document[] findDbDocuments( final BigDecimal station )
+  {
+    if( m_dbHash == null )
+      return new Document[] {};
+
+    final List<Document> dbDocuments = m_dbHash.get( station );
+    if( dbDocuments == null )
+      return new Document[] {};
+
+    return dbDocuments.toArray( new Document[] {} );
   }
 }

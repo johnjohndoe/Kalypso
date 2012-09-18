@@ -58,11 +58,11 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.AbstractAttachme
  * @author Gernot Belger
  * @author Holger Albert
  */
-public class ImportDocumentAttachmentsDocumentsData extends AbstractAttachmentsDocumentsData
+public class DocumentsAttachmentsDocumentsData extends AbstractAttachmentsDocumentsData
 {
   private final IDocumentContainer m_documentContainer;
 
-  public ImportDocumentAttachmentsDocumentsData( final IDocumentContainer documentContainer )
+  public DocumentsAttachmentsDocumentsData( final IDocumentContainer documentContainer )
   {
     m_documentContainer = documentContainer;
   }
@@ -101,7 +101,7 @@ public class ImportDocumentAttachmentsDocumentsData extends AbstractAttachmentsD
       document.setCrossSection( (CrossSection)m_documentContainer );
 
     /* Create and hash the import document info. */
-    addInfo( new ImportDocumentInfo( document, file, m_documentContainer ) );
+    addInfo( new DocumentsDocumentInfo( document, file, m_documentContainer ) );
 
     return document;
   }

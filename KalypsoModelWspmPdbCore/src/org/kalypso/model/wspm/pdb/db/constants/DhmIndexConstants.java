@@ -55,14 +55,6 @@ public interface DhmIndexConstants
 
   String PROPERTY_MIMETYPE = "mimeType"; //$NON-NLS-1$
 
-  String PROPERTY_CREATIONDATE = "creationDate"; //$NON-NLS-1$
-
-  String PROPERTY_EDITINGDATE = "editingDate"; //$NON-NLS-1$
-
-  String PROPERTY_EDITINGUSER = "editingUser"; //$NON-NLS-1$
-
-  String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
-
   String PROPERTY_SOURCE = "source"; //$NON-NLS-1$
 
   String PROPERTY_EDITOR = "editor"; //$NON-NLS-1$

@@ -55,14 +55,6 @@ public interface StateConstants
 
   String PROPERTY_ISSTATEZERO = "isstatezero"; //$NON-NLS-1$
 
-  String PROPERTY_CREATIONDATE = "creationDate"; //$NON-NLS-1$
-
-  String PROPERTY_EDITINGDATE = "editingDate"; //$NON-NLS-1$
-
-  String PROPERTY_EDITINGUSER = "editingUser"; //$NON-NLS-1$
-
-  String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
-
   int NAME_LIMIT = 100;
 
   int COMMENT_LIMIT = 256;

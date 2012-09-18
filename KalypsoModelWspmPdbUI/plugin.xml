@@ -292,9 +292,9 @@
       </wizard>
       <wizard
             category="pdbWizardsCategory"
-            class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles.ImportAttachmentsWizard"
+            class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles.ProfilesAttachmentsWizard"
             icon="icons/attachment.png"
-            id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles.ImportAttachmentsWizard"
+            id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles.ProfilesAttachmentsWizard"
             name="%wizard.name.4">
          <description>
             %wizard.description.4
@@ -302,9 +302,9 @@
       </wizard>
       <wizard
             category="pdbWizardsCategory"
-            class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.ImportDocumentAttachmentsWizard"
+            class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.DocumentsAttachmentsWizard"
             icon="icons/attachment.png"
-            id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.ImportStateAttachmentsWizard"
+            id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.StateAttachmentsWizard"
             name="%wizard.name.7">
          <description>
             %wizard.description.7
@@ -312,9 +312,9 @@
       </wizard>
       <wizard
             category="pdbWizardsCategory"
-            class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.ImportDocumentAttachmentsWizard"
+            class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.DocumentsAttachmentsWizard"
             icon="icons/attachment.png"
-            id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.ImportWaterBodyAttachmentsWizard"
+            id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.WaterBodyAttachmentsWizard"
             name="%wizard.name.8">
          <description>
             %wizard.description.8
@@ -373,7 +373,7 @@
        </enablement>
     </wizardEnablement>
     <wizardEnablement
-          wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles.ImportAttachmentsWizard">
+          wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles.ProfilesAttachmentsWizard">
        <enablement>
           <and>
              <reference definitionId="isPdbAdminAndPdbViewVisible"/>
@@ -388,7 +388,7 @@
           </and></enablement>
     </wizardEnablement>
     <wizardEnablement
-          wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.ImportStateAttachmentsWizard">
+          wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.StateAttachmentsWizard">
        <enablement>
           <and>
              <reference definitionId="isPdbAdminAndPdbViewVisible"/>
@@ -403,7 +403,7 @@
           </and></enablement>
     </wizardEnablement>
     <wizardEnablement
-          wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.ImportWaterBodyAttachmentsWizard">
+          wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents.WaterBodyAttachmentsWizard">
        <enablement>
           <and>
              <reference definitionId="isPdbAdminAndPdbViewVisible"/>

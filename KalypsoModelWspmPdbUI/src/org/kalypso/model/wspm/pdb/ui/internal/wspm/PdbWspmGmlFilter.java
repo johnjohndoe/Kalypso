@@ -56,10 +56,11 @@ import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.part.LinkedFeatureElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.commons.Image;
 
 /**
  * Filters everything that should not be seen in the gml viewer.
- *
+ * 
  * @author Gernot Belger
  */
 public class PdbWspmGmlFilter extends ViewerFilter
@@ -79,6 +80,8 @@ public class PdbWspmGmlFilter extends ViewerFilter
 
     m_filteredElements.add( TuhhReachProfileSegment.MEMBER_PROFILE );
     m_filteredElements.add( TuhhReachProfileSegment.PROPERTY_PROFILE_LOCATION );
+
+    m_filteredElements.add( Image.FEATURE_IMAGE );
   }
 
   @Override
@@ -108,7 +111,7 @@ public class PdbWspmGmlFilter extends ViewerFilter
   {
     if( element instanceof Feature )
     {
-      final Feature feature = (Feature) element;
+      final Feature feature = (Feature)element;
       final IRelationType parentRelation = feature.getParentRelation();
       if( parentRelation == null )
         return null;
@@ -118,7 +121,7 @@ public class PdbWspmGmlFilter extends ViewerFilter
 
     if( element instanceof LinkedFeatureElement )
     {
-      final LinkedFeatureElement linkedElement = (LinkedFeatureElement) element;
+      final LinkedFeatureElement linkedElement = (LinkedFeatureElement)element;
       return linkedElement.getParentElement().getPropertyType().getQName();
     }
 

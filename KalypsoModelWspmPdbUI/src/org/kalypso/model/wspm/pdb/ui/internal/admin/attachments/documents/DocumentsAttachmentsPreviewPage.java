@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -90,13 +90,14 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
+ * @author Holger Albert
  */
 @SuppressWarnings( "restriction" )
-public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdateable
+public class DocumentsAttachmentsPreviewPage extends WizardPage implements IUpdateable
 {
-  private final ImportAttachmentsData m_data;
+  private final DocumentsAttachmentsData m_data;
 
-  private final ImportAttachmentsDocumentsData m_documentData;
+  private final DocumentsAttachmentsDocumentsData m_documentData;
 
   private CheckboxTableViewer m_viewer;
 
@@ -104,12 +105,12 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
 
   private DatabindingWizardPage m_binding;
 
-  public ImportAttachmentsPreviewPage( final String pageName, final ImportAttachmentsData data )
+  public DocumentsAttachmentsPreviewPage( final String pageName, final DocumentsAttachmentsData data )
   {
     super( pageName );
 
     m_data = data;
-    m_documentData = (ImportAttachmentsDocumentsData)m_data.getDocumentData();
+    m_documentData = (DocumentsAttachmentsDocumentsData)m_data.getDocumentData();
 
     setTitle( Messages.getString( "ImportAttachmentsPreviewPage.0" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "ImportAttachmentsPreviewPage.1" ) ); //$NON-NLS-1$
@@ -139,15 +140,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     m_checkStateHandler = new DocumentsCheckstateHandler( m_viewer, m_data );
     m_viewer.setCheckStateProvider( m_checkStateHandler );
 
-    // station
-    final TableViewerColumn stationColumn = new TableViewerColumn( m_viewer, SWT.RIGHT );
-    stationColumn.setLabelProvider( new DocumentsStationProvider( m_documentData ) );
-    stationColumn.getColumn().setText( Messages.getString( "ImportAttachmentsPreviewPage.3" ) ); //$NON-NLS-1$
-    stationColumn.getColumn().setResizable( false );
-    ColumnViewerSorter.registerSorter( stationColumn, new DocumentsStationComparator( m_documentData ) );
-    ColumnsResizeControlListener.setMinimumPackWidth( stationColumn.getColumn() );
-
-    /* name */
+    /* Name. */
     final TableViewerColumn nameColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     nameColumn.setLabelProvider( new DocumentsNameProvider() );
     nameColumn.getColumn().setText( Messages.getString( "ImportAttachmentsPreviewPage.4" ) ); //$NON-NLS-1$
@@ -155,7 +148,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     ColumnViewerSorter.registerSorter( nameColumn, new DocumentsNameComparator() );
     ColumnsResizeControlListener.setMinimumPackWidth( nameColumn.getColumn() );
 
-    /* mime/type */
+    /* Mime type. */
     final TableViewerColumn typeColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     typeColumn.setLabelProvider( new DocumentsTypeProvider() );
     typeColumn.getColumn().setText( Messages.getString( "ImportAttachmentsPreviewPage.5" ) ); //$NON-NLS-1$
@@ -163,7 +156,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     ColumnViewerSorter.registerSorter( typeColumn, new DocumentsTypeComparator() );
     ColumnsResizeControlListener.setMinimumPackWidth( typeColumn.getColumn() );
 
-    // status
+    /* Status. */
     final TableViewerColumn statusColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     statusColumn.setLabelProvider( new DocumentsStatusProvider( m_documentData ) );
     statusColumn.getColumn().setText( Messages.getString( "ImportAttachmentsPreviewPage.2" ) ); //$NON-NLS-1$
@@ -173,7 +166,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
 
     table.addControlListener( new ColumnsResizeControlListener() );
 
-    ColumnSortListener.setSortState( stationColumn, Boolean.TRUE );
+    ColumnSortListener.setSortState( nameColumn, Boolean.TRUE );
 
     /* Double-click shows status */
     m_viewer.addOpenListener( new IOpenListener()
@@ -188,7 +181,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     m_viewer.addCheckStateListener( m_checkStateHandler );
 
     final IObservableValue target = new WritableValue();
-    final IObservableValue model = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_SELECTION_COUNT );
+    final IObservableValue model = BeansObservables.observeValue( m_data, DocumentsAttachmentsData.PROPERTY_SELECTION_COUNT );
 
     final DataBinder countBinder = new DataBinder( target, model );
     countBinder.addModelAfterGetValidator( new NumberNotExactValidator( Integer.valueOf( 0 ), IStatus.ERROR, Messages.getString( "ImportAttachmentsPreviewPage.6" ) ) ); //$NON-NLS-1$
@@ -231,7 +224,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     viewer.setInput( ImportMode.values() );
 
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
-    final IObservableValue model = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_MODE );
+    final IObservableValue model = BeansObservables.observeValue( m_data, DocumentsAttachmentsData.PROPERTY_IMPORT_MODE );
     m_binding.bindValue( target, model );
 
     // TRICKY: we need to refresh the table when the import mode changes, in order
@@ -292,7 +285,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
 
   private void readDocuments( )
   {
-    final SearchDocumentsOperation operation = new SearchDocumentsOperation( m_data, m_documentData );
+    final DocumentsSearchDocumentsOperation operation = new DocumentsSearchDocumentsOperation( m_data, m_documentData );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
