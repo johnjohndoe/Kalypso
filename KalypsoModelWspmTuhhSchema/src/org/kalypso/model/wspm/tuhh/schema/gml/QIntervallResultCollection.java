@@ -68,7 +68,7 @@ public class QIntervallResultCollection extends Feature_Impl
   public synchronized IFeatureBindingCollection<QIntervallResult> getQIntervalls( )
   {
     if( m_intervals == null )
-      m_intervals = new FeatureBindingCollection<QIntervallResult>( this, QIntervallResult.class, QNAME_P_QIntervallResultCollection_resultMember, true );
+      m_intervals = new FeatureBindingCollection<>( this, QIntervallResult.class, QNAME_P_QIntervallResultCollection_resultMember, true );
 
     return m_intervals;
   }

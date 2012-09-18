@@ -51,7 +51,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
@@ -95,7 +94,7 @@ public class TimeseriesBrowserSearchViewer extends Composite implements IRrmDiag
     m_parameterTypeFilterControl.setViewer( viewer );
 
     final Composite control = toolkit.createComposite( this );
-    control.setLayout( Layouts.createGridLayout( 2 ) );
+    control.setLayout( GridLayoutFactory.fillDefaults().numColumns( 2 ).create() );
     control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
 
     final ImageHyperlink lnkExpandAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new ExpandAllTreeItemsAction( viewer ) );

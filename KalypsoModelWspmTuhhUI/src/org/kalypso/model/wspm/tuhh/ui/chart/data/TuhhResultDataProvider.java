@@ -20,10 +20,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public final class TuhhResultDataProvider implements IWspLayerData
 {
-
   private final IWspmResultNode m_results;
 
-  private final Set<TuhhResultDataElement> m_activeElements = new LinkedHashSet<TuhhResultDataElement>();
+  private final Set<TuhhResultDataElement> m_activeElements = new LinkedHashSet<>();
 
   private final IDialogSettings m_settings;
 

@@ -96,7 +96,7 @@ public class BreakLinesHelper implements IWspmConstants
     if( wspIndex == -1 )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", componentWaterlevel ) ); //$NON-NLS-1$
 
-    final Map<Double, Double> wspMap = new TreeMap<Double, Double>();
+    final Map<Double, Double> wspMap = new TreeMap<>();
     for( final IRecord record : result )
       wspMap.put( ((BigDecimal) record.getValue( statIndex )).doubleValue(), ((BigDecimal) record.getValue( wspIndex )).doubleValue() );
 
@@ -108,8 +108,8 @@ public class BreakLinesHelper implements IWspmConstants
   {
     final Map<Double, Double> wspMap = createWspMap( result, strStationierung, strWsp );
 
-    final LinkedList<GM_Point> leftPoints = new LinkedList<GM_Point>();
-    final LinkedList<GM_Point> rightPoints = new LinkedList<GM_Point>();
+    final LinkedList<GM_Point> leftPoints = new LinkedList<>();
+    final LinkedList<GM_Point> rightPoints = new LinkedList<>();
 
     if( reachProfileSegments.length > 0 )
     {
@@ -158,7 +158,7 @@ public class BreakLinesHelper implements IWspmConstants
         }
       }
 
-      final List<GM_Position> posList = new ArrayList<GM_Position>();
+      final List<GM_Position> posList = new ArrayList<>();
 
       for( final GM_Point pos : leftPoints )
         posList.add( pos.getPosition() );

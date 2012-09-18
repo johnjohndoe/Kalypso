@@ -32,7 +32,7 @@ public class LengthSectionRunOffLayer extends TupleResultLineLayer
     if( valueData == null )
       return;
 
-    final List<Point> path = new ArrayList<Point>();
+    final List<Point> path = new ArrayList<>();
 
     valueData.open();
 

@@ -78,9 +78,6 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
     m_calculation = calculation;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getChildResults()
-   */
   @Override
   public IWspmResultNode[] getChildResults( )
   {
@@ -88,7 +85,7 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
     if( Objects.isNull( resultFolder ) )
       return new IWspmResultNode[] {};
 
-    final Set<IWspmResultNode> result = new LinkedHashSet<IWspmResultNode>();
+    final Set<IWspmResultNode> result = new LinkedHashSet<>();
 
     /* Collect all results with length sections. */
     try

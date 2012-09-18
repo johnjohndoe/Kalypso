@@ -209,7 +209,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
 
     final IWspmClassification classification = WspmClassifications.getClassification( getProfile() );
 
-    final Set<IRoughnessClass> roughnesses = new TreeSet<IRoughnessClass>( new WspmClassificationClassesComparator() );
+    final Set<IRoughnessClass> roughnesses = new TreeSet<>( new WspmClassificationClassesComparator() );
     Collections.addAll( roughnesses, classification.getRoughnessClasses() );
 
     m_roughnesses = roughnesses.toArray( new IRoughnessClass[] {} );

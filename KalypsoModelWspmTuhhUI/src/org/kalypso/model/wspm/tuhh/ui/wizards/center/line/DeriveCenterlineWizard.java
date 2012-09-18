@@ -59,7 +59,7 @@ import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 
 /**
  * A tool that derives the centerline of a river from a set of cross sections, using the lowest point of each section.
- * 
+ *
  * @author Gernot Belger
  */
 public class DeriveCenterlineWizard extends Wizard implements IWorkbenchWizard
@@ -74,7 +74,7 @@ public class DeriveCenterlineWizard extends Wizard implements IWorkbenchWizard
     m_data.init( getDialogSettings() );
 
     /* Find selected water bodies */
-    final SelectionFeatureExtractor<WspmWaterBody> extractor = new SelectionFeatureExtractor<WspmWaterBody>( WspmWaterBody.class );
+    final SelectionFeatureExtractor<WspmWaterBody> extractor = new SelectionFeatureExtractor<>( WspmWaterBody.class );
     extractor.addSelection( selection );
 
     final WspmWaterBody[] availableWaterBodies = extractor.getAvailableElements();

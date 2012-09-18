@@ -155,7 +155,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
 
   private IDBFValue[] fillMapping( final PatternReplacementColumn[] exportColumns )
   {
-    final Collection<IDBFValue> fields = new ArrayList<IDBFValue>();
+    final Collection<IDBFValue> fields = new ArrayList<>();
     try
     {
       for( final PatternReplacementColumn column : exportColumns )

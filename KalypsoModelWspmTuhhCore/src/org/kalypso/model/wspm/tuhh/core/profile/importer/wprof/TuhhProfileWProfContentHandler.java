@@ -45,10 +45,11 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
@@ -63,7 +64,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  */
 public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 {
-  private final Map<String, ProfileData> m_data = new LinkedHashMap<String, ProfileData>();
+  private final Map<String, ProfileData> m_data = new LinkedHashMap<>();
 
   private final PunktattributMapping m_punktattribute = new PunktattributMapping();
 
@@ -131,9 +132,6 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
     }
   }
 
-  /**
-   * @see org.kalypso.gernot.tools.wprof.IWProfContentHandler#newPoint(org.kalypso.gernot.tools.wprof.IWProfPoint)
-   */
   @Override
   public void newPoint( final IWProfPoint wprofPoint ) throws CoreException
   {
@@ -146,12 +144,12 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to create profile", e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, "Failed to create profile", e ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to add new point", e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, "Failed to add new point", e ) ); //$NON-NLS-1$
     }
   }
 

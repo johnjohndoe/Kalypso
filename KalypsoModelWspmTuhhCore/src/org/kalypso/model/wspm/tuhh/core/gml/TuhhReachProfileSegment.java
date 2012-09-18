@@ -131,7 +131,7 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( IProfileFeature.class == adapter )
       return getProfileMember();

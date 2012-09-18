@@ -59,7 +59,6 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.SimpleDataBinding;
 import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
-import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
@@ -76,7 +75,7 @@ import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
 /**
  * @author Dirk Kuch
  */
-public class VegetationPropertiesPage extends AbstractElementPage implements IElementPage
+public class VegetationPropertiesPage extends AbstractElementPage
 {
   private static final String EMPTY_STRING = Messages.getString( "VegetationPropertiesPage.0" ); //$NON-NLS-1$
 

@@ -65,9 +65,9 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
  */
 public class ProfileExportResultChooser
 {
-  private final Collection<ICheckStateListener> m_listeners = new HashSet<ICheckStateListener>();
+  private final Collection<ICheckStateListener> m_listeners = new HashSet<>();
 
-  private final Set<IWspmResultNode> m_results = new HashSet<IWspmResultNode>();
+  private final Set<IWspmResultNode> m_results = new HashSet<>();
 
   private final IWspmResultNode m_rootNode;
 

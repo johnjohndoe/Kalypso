@@ -72,9 +72,6 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     super( "Result", Messages.getString( "ProfileResultPattern_0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getType(java.lang.String)
-   */
   @Override
   public Class< ? extends Object> getType( final String params )
   {

@@ -167,13 +167,13 @@ public class ProfileAltitudeValidator
   public final Map<Integer, Double> getInterpolatedValues( final int begin, final int end, final String componentID )
   {
     if( begin < 0 || end < 0 )
-      return new HashMap<Integer, Double>();
+      return new HashMap<>();
 
     final int startPos = Math.min( begin, end );
     final int lastPos = Math.max( begin, end );
 
     final IProfileRecord[] points = m_profil.getPoints();
-    final Map<Integer, Double> result = new HashMap<Integer, Double>( lastPos - startPos + 1 );
+    final Map<Integer, Double> result = new HashMap<>( lastPos - startPos + 1 );
     Double m = Double.NaN;
     for( int i = startPos; i <= lastPos; i++ )
     {

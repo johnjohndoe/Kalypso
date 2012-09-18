@@ -62,13 +62,10 @@ public class WspmResultWaterNode extends AbstractWspmResultNode
     m_water = water;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getChildResults()
-   */
   @Override
   public IWspmResultNode[] getChildResults( )
   {
-    final Collection<IWspmResultNode> results = new ArrayList<IWspmResultNode>();
+    final Collection<IWspmResultNode> results = new ArrayList<>();
 
     final IFeatureBindingCollection<WspmReach> reaches = m_water.getReaches();
     for( final WspmReach reach : reaches )
@@ -83,9 +80,6 @@ public class WspmResultWaterNode extends AbstractWspmResultNode
     return results.toArray( new IWspmResultNode[results.size()] );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getLabel()
-   */
   @Override
   public String getLabel( )
   {

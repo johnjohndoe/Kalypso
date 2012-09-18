@@ -129,7 +129,7 @@ public class TuhhReach extends WspmReach implements IWspmTuhhConstants, IProfile
   public TuhhReachProfileSegment[] getReachProfileSegments( )
   {
     final FeatureList reachSegmentList = getReachSegmentList();
-    final List<TuhhReachProfileSegment> profilesegments = new ArrayList<TuhhReachProfileSegment>();
+    final List<TuhhReachProfileSegment> profilesegments = new ArrayList<>();
     for( final Object object : reachSegmentList )
     {
       final Feature segmentFeature = (Feature)object;
@@ -225,14 +225,11 @@ public class TuhhReach extends WspmReach implements IWspmTuhhConstants, IProfile
     return (TuhhMarker)markerFeature;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileSelectionProvider#getSelectedProfiles(org.kalypso.gmlschema.property.relation.IRelationType)
-   */
   @Override
   public IProfileFeature[] getSelectedProfiles( final IRelationType selectionHint )
   {
     final FeatureList reachSegmentList = getReachSegmentList();
-    final SortedSet<IProfileFeature> profile = new TreeSet<IProfileFeature>( new WspmProfileComparator( isDirectionUpstreams() ) );
+    final SortedSet<IProfileFeature> profile = new TreeSet<>( new WspmProfileComparator( isDirectionUpstreams() ) );
 
     for( final Object object : reachSegmentList )
     {
@@ -256,7 +253,7 @@ public class TuhhReach extends WspmReach implements IWspmTuhhConstants, IProfile
    */
   public TuhhCalculation[] findCalculations( )
   {
-    final Collection<TuhhCalculation> result = new ArrayList<TuhhCalculation>();
+    final Collection<TuhhCalculation> result = new ArrayList<>();
 
     final WspmWaterBody waterBody = getWaterBody();
     if( waterBody != null )

@@ -89,7 +89,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class CulvertPanel extends AbstractProfilView
 {
-  protected ArrayList<PropertyLine> m_lines = new ArrayList<PropertyLine>( 8 );
+  protected ArrayList<PropertyLine> m_lines = new ArrayList<>( 8 );
 
   private FormToolkit m_toolkit = null;
 
@@ -97,7 +97,7 @@ public class CulvertPanel extends AbstractProfilView
 
   private ComboViewer m_cmb = null;
 
-  private final Map<String, IProfileBuilding> m_culverts = new HashMap<String, IProfileBuilding>();
+  private final Map<String, IProfileBuilding> m_culverts = new HashMap<>();
 
   public CulvertPanel( final IProfil profile )
   {
@@ -298,13 +298,12 @@ public class CulvertPanel extends AbstractProfilView
 
   protected void createPropertyPanel( )
   {
-
     for( final PropertyLine line : m_lines )
     {
       line.dispose();
     }
 
-    m_lines = new ArrayList<PropertyLine>( 8 );
+    m_lines = new ArrayList<>( 8 );
 
     final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
     if( building == null )

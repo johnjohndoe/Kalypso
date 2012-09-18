@@ -76,7 +76,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Represents a result (in form of a lengthsection/table) of WSPM.<br/>
- * 
+ *
  * @author Gernot Belger
  */
 public class ResultLengthSection
@@ -87,7 +87,7 @@ public class ResultLengthSection
 
   private final StringBuffer m_buffer = new StringBuffer();
 
-  private final Collection<IResultLSFile> m_resultFiles = new ArrayList<IResultLSFile>();
+  private final Collection<IResultLSFile> m_resultFiles = new ArrayList<>();
 
   private final File m_outDir;
 
@@ -159,7 +159,7 @@ public class ResultLengthSection
     /* Some handlers need access to the reach/profiles, fetch 'em! */
     final TuhhReach reach = m_calculation.getReach();
     final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-    
+
     /* sort the segments */
     final WspmWaterBody waterBody = reach.getWaterBody();
     final boolean isDirectionUpstreams = waterBody.isDirectionUpstreams();
@@ -214,7 +214,7 @@ public class ResultLengthSection
     return m_titlePattern.replaceAll( PATTERN_RUNOFF, m_runoff.toString() ).replaceAll( PATTERN_CALCNAME, calcname );
   }
 
-  private GMLWorkspace createLengthSection( final String title, boolean isDirectionUpstreams ) throws Exception
+  private GMLWorkspace createLengthSection( final String title, final boolean isDirectionUpstreams ) throws Exception
   {
     final String description = String.format( Messages.getString( "ResultLengthSection.1" ), title ); //$NON-NLS-1$
 

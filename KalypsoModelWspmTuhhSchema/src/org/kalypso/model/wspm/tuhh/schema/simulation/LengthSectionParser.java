@@ -67,7 +67,7 @@ import org.kalypso.simulation.core.util.LogHelper;
 
 /**
  * This class is used to process a kalypso1d.exe length-section file.
- * 
+ *
  * @author Gernot Belger
  */
 public class LengthSectionParser
@@ -80,7 +80,7 @@ public class LengthSectionParser
 
   private final String m_epsThinning;
 
-  private final List<ResultLengthSection> m_lengthSections = new ArrayList<ResultLengthSection>();
+  private final List<ResultLengthSection> m_lengthSections = new ArrayList<>();
 
   private final String m_titlePattern;
 
@@ -124,7 +124,7 @@ public class LengthSectionParser
 
   private IStatus processLSFile( final String header, final String footer, final LogHelper log ) throws Exception
   {
-    final Collection<IStatus> result = new ArrayList<IStatus>();
+    final Collection<IStatus> result = new ArrayList<>();
     final WspmWaterBody waterBody = m_calculation.getReach().getWaterBody();
     final TuhhStationComparator stationComparator = new TuhhStationComparator( waterBody.isDirectionUpstreams() );
 

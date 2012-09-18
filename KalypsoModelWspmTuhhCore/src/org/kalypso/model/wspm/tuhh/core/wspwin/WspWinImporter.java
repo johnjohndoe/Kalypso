@@ -198,7 +198,7 @@ public final class WspWinImporter
       // /////////////// //
       // import profiles //
       // /////////////// //
-      final Map<String, IProfileFeature> importedProfiles = new HashMap<String, IProfileFeature>();
+      final Map<String, IProfileFeature> importedProfiles = new HashMap<>();
       final ProfileBean[] commonProfiles = wspCfgBean.getProfiles();
 
       final File profDir = wspWinProject.getProfDir();
@@ -446,8 +446,8 @@ public final class WspWinImporter
     // ////////////////////////////////////////////////////// //
 
     // map is used to remember position of runoff: used later by calculation to find reference
-    final Map<Integer, String> runOffEventsByCount = new HashMap<Integer, String>();
-    final Map<String, String> runOffEventsByName = new HashMap<String, String>();
+    final Map<Integer, String> runOffEventsByCount = new HashMap<>();
+    final Map<String, String> runOffEventsByName = new HashMap<>();
     try
     {
       final RunOffEventBean[] runOffEventBeans = zustand.getRunOffEvents();
@@ -492,7 +492,7 @@ public final class WspWinImporter
     // /////////////////////////////////////////// //
 
     // map is used to remember station of local energy loss (Einzelverlust/Verlustbeiwert)
-    final Map<BigDecimal, Integer> readLocEnergyLosses = new HashMap<BigDecimal, Integer>();
+    final Map<BigDecimal, Integer> readLocEnergyLosses = new HashMap<>();
     try
     {
       final LocalEnergyLossBean[] locEnergyLossBeans = zustand.getLosses();

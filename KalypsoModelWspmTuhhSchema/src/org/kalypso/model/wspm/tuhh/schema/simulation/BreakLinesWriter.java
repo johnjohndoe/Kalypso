@@ -66,6 +66,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -73,13 +74,12 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Triangulates the given profile (segments) suing the indicated waterlevel as height. // * @return The min/max range of
  * the waterlevel. <code>null</code>, if no triangulation has been created.
- * 
+ *
  * @author Monika Thül
  */
 public class BreakLinesWriter implements IWspmConstants
@@ -200,7 +200,7 @@ public class BreakLinesWriter implements IWspmConstants
       }
       else
       {
-        final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GMLConstants.QN_LINE_STRING );
+        final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GM_LineString.LINE_STRING_ELEMENT );
         final Object cloneObject = lineStringTypeHandler.cloneObject( curve, gmlVersion );
         return (GM_Curve) cloneObject;
       }

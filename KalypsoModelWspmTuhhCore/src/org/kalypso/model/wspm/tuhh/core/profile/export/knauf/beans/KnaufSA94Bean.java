@@ -49,7 +49,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
  */
 public class KnaufSA94Bean extends AbstractKnaufProjectBean
 {
-
   private final KnaufCalculation m_calculation;
 
   public KnaufSA94Bean( final KnaufCalculation calculation )

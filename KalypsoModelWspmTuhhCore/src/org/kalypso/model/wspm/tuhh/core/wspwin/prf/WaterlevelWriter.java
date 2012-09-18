@@ -69,7 +69,7 @@ public class WaterlevelWriter
 
   public IDataBlock[] createDataBlocks( )
   {
-    final Collection<IDataBlock> datablocks = new ArrayList<IDataBlock>();
+    final Collection<IDataBlock> datablocks = new ArrayList<>();
 
     for( final IWaterlevel waterlevel : m_waterlevels )
     {

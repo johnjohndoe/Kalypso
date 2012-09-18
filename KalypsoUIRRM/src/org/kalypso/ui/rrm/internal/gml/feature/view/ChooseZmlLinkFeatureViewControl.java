@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.gml.feature.view;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -49,7 +50,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.timeseries.ITimeseries;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
@@ -83,10 +83,10 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
   public Control createControl( final FormToolkit toolkit, final Composite parent, final int style )
   {
     final Composite body = new Composite( parent, SWT.NULL );
-    body.setLayout( Layouts.createGridLayout( 2 ) );
+    body.setLayout( GridLayoutFactory.fillDefaults().numColumns( 2 ).create() );
 
     m_text = new Text( body, SWT.BORDER | SWT.READ_ONLY );
-    m_text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    m_text.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     final Action action = new ChooseZmlLinkAction( this, "..." ); //$NON-NLS-1$
     ActionButton.createButton( null, body, action );

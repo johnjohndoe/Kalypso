@@ -44,6 +44,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -69,7 +70,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTrayDialog;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
@@ -162,7 +162,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     getShell().setText( Messages.getString( "ChooseTimeseriesDialog_0" ) ); //$NON-NLS-1$
 
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
-    base.setLayout( Layouts.createGridLayout() );
+    base.setLayout( GridLayoutFactory.fillDefaults().create() );
 
     final Point screen = getScreenSize( DIALOG_SCREEN_SIZE );
 
@@ -184,12 +184,12 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
     final Composite leftPane = toolkit.createComposite( form );
-    final GridLayout layout = Layouts.createGridLayout();
+    final GridLayout layout = GridLayoutFactory.fillDefaults().create();
     layout.verticalSpacing = 0;
     leftPane.setLayout( layout );
 
     final Composite rightPane = toolkit.createComposite( form );
-    rightPane.setLayout( Layouts.createGridLayout() );
+    rightPane.setLayout( GridLayoutFactory.fillDefaults().create() );
 
     createTreeViewer( leftPane, toolkit ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     createSearchPanel( leftPane, toolkit ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

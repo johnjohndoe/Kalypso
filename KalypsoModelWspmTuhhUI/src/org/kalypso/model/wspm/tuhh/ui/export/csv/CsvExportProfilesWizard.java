@@ -161,7 +161,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
   private static IProfileExportColumn[] createColumns( final IProfileExportColumn[] userDefinedColumns, final IComponent[] components, final OUTPUT_TYPE type )
   {
-    final Collection<IProfileExportColumn> columns = new ArrayList<IProfileExportColumn>();
+    final Collection<IProfileExportColumn> columns = new ArrayList<>();
 
     for( final IProfileExportColumn column : userDefinedColumns )
     {

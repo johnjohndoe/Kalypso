@@ -213,7 +213,7 @@ public class ProfileInterpolation
 
     final int xScale = ComponentUtilities.getScale( widthComponent );
 
-    final Set<BigDecimal> newXValues = new TreeSet<BigDecimal>();
+    final Set<BigDecimal> newXValues = new TreeSet<>();
     for( final Double prevWidth : prevWidths )
     {
       final double newx = new LinearEquation( startPrevWidth, startWidth, endPrevWidth, endWidth ).computeY( prevWidth );
@@ -241,7 +241,7 @@ public class ProfileInterpolation
   {
     final int heightComponent = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
-    final Collection<IRecord> goodPoints = new ArrayList<IRecord>( points.length );
+    final Collection<IRecord> goodPoints = new ArrayList<>( points.length );
     for( final IRecord record : points )
     {
       if( record.getValue( heightComponent ) != null )

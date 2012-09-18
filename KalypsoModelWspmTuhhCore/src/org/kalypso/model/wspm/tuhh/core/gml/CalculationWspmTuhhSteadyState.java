@@ -60,9 +60,6 @@ public class CalculationWspmTuhhSteadyState extends TuhhCalculation
     return FeatureHelper.resolveLinkedFeature( getWorkspace(), getProperty( QN_PROPERTY_WATER_LEVEL_FIXATION_MEMBER ) );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#toString()
-   */
   @Override
   public String toString( )
   {

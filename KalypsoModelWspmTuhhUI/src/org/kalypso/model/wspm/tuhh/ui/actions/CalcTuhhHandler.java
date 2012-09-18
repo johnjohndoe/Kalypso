@@ -148,7 +148,7 @@ public class CalcTuhhHandler extends AbstractHandler
               return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
             }
 
-            final Map<String, Object> properties = new HashMap<String, Object>();
+            final Map<String, Object> properties = new HashMap<>();
             properties.put( "calc.xpath", calcxpath ); //$NON-NLS-1$
             properties.put( "result.path", resultPath ); //$NON-NLS-1$
 
@@ -183,7 +183,7 @@ public class CalcTuhhHandler extends AbstractHandler
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
-    final Set<CommandableWorkspace> objectsToSave = new HashSet<CommandableWorkspace>( features.length );
+    final Set<CommandableWorkspace> objectsToSave = new HashSet<>( features.length );
     for( final Feature feature : features )
     {
       final CommandableWorkspace workspace = selection.getWorkspace( feature );
