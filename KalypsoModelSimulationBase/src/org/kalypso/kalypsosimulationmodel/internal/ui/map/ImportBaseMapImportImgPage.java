@@ -149,7 +149,7 @@ public class ImportBaseMapImportImgPage extends WizardPage implements IImportBas
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    final List<String> fileExtensions = new LinkedList<String>();
+    final List<String> fileExtensions = new LinkedList<>();
 
     final WorldFileFormat[] availableFormats = WorldFileFormat.getAvailableFormats();
     for( final WorldFileFormat worldFileFormat : availableFormats )

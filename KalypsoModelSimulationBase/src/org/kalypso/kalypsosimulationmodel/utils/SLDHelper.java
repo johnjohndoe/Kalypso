@@ -100,9 +100,9 @@ import org.xml.sax.SAXException;
 
 /**
  * TODO: move this into the deegree plug-in.
- * 
+ *
  * @author Dejan Antanaskovic
- * 
+ *
  */
 public class SLDHelper
 {
@@ -225,7 +225,7 @@ public class SLDHelper
    */
   private static StyledLayerDescriptor createRasterSLD( final double minValue, final double maxValue, final int numberOfIntervals, final Color lightestColor, final Color darkestColor, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
   {
-    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
+    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<>();
     final FeatureTypeStyle style = StyleFactory.createFeatureTypeStyle();
 
     final int rd = darkestColor.getRed();
@@ -262,7 +262,7 @@ public class SLDHelper
 
   private static StyledLayerDescriptor createRasterSLD( final List< ? > collection, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
   {
-    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
+    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<>();
     final FeatureTypeStyle style = StyleFactory.createFeatureTypeStyle();
 
     //    colorMap.put( -Double.MAX_VALUE, new ColorMapEntry_Impl( Color.WHITE, DEFAULT_RASTER_FILLOPACITY, -Double.MAX_VALUE, Messages.getString( "org.kalypso.kalypsosimulationmodel.utils.SLDHelper.1" ) ) ); //$NON-NLS-1$

@@ -57,17 +57,17 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Default {@link AbstractFeatureBinder} based implementation of {@link IWindDataModelSystem}
- * 
+ *
  * @author ig
  */
 public class WindDataModelSystem extends Feature_Impl implements IWindDataModelSystem
 {
-  public WindDataModelSystem( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public WindDataModelSystem( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  private final IFeatureBindingCollection<IWindDataModel> m_windModels = new FeatureBindingCollection<IWindDataModel>( this, IWindDataModel.class, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_MODEL );
+  private final IFeatureBindingCollection<IWindDataModel> m_windModels = new FeatureBindingCollection<>( this, IWindDataModel.class, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_MODEL );
 
   private RectifiedGridDomain m_gridDescriptor;
 
@@ -76,20 +76,20 @@ public class WindDataModelSystem extends Feature_Impl implements IWindDataModelS
    */
   public static final IWindDataModelSystem createWindSystemForWindModel( final IWindModel pWindModel, final RectifiedGridDomain pGridDescriptor, final String strModelSystemName, final String strFileDescription ) throws Exception
   {
-    String lStrCoordinateSystem = pGridDescriptor.getCoordinateSystem();
-    Double lDoubleOriginX = pGridDescriptor.getOrigin( lStrCoordinateSystem ).getPosition().getX();
-    Double lDoubleOriginY = pGridDescriptor.getOrigin( lStrCoordinateSystem ).getPosition().getY();
+    final String lStrCoordinateSystem = pGridDescriptor.getCoordinateSystem();
+    final Double lDoubleOriginX = pGridDescriptor.getOrigin( lStrCoordinateSystem ).getPosition().getX();
+    final Double lDoubleOriginY = pGridDescriptor.getOrigin( lStrCoordinateSystem ).getPosition().getY();
 
     final Feature parentFeature = pWindModel;
 
     final IFeatureBindingCollection<IWindDataModelSystem> lWindDataModelSystem = pWindModel.getWindDataModelSystems();
-    int lIntOrder = lWindDataModelSystem.size();
+    final int lIntOrder = lWindDataModelSystem.size();
     Feature lFeature = null;
     try
     {
       lFeature = lWindDataModelSystem.getParentFeature();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
     }
     if( lFeature != null && lFeature.getName().equalsIgnoreCase( strModelSystemName ) )
@@ -132,8 +132,8 @@ public class WindDataModelSystem extends Feature_Impl implements IWindDataModelS
   private GM_Point getOrigin( )
   {
     final String strCrs = (String) getProperty( QNAME_PROP_CRS );
-    Double lDoubleOriginX = (Double) getProperty( QNAME_PROP_ORIGIN_X );
-    Double lDoubleOriginY = (Double) getProperty( QNAME_PROP_ORIGIN_Y );
+    final Double lDoubleOriginX = (Double) getProperty( QNAME_PROP_ORIGIN_X );
+    final Double lDoubleOriginY = (Double) getProperty( QNAME_PROP_ORIGIN_Y );
     return GeometryFactory.createGM_Point( lDoubleOriginX, lDoubleOriginY, strCrs );
   }
 
@@ -170,7 +170,7 @@ public class WindDataModelSystem extends Feature_Impl implements IWindDataModelS
    * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem#setOrder(int)
    */
   @Override
-  public void setOrder( int pOrder )
+  public void setOrder( final int pOrder )
   {
     setProperty( QNAME_PROP_ORDER, pOrder );
   }

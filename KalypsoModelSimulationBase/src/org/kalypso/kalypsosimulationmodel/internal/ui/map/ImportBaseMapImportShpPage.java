@@ -46,7 +46,7 @@ public class ImportBaseMapImportShpPage extends WizardPage implements IImportBas
 
   private IPath m_sourcePath = null;
 
-  private final List<String> fileExtensions = new LinkedList<String>();
+  private final List<String> fileExtensions = new LinkedList<>();
 
   protected String m_crs;
 

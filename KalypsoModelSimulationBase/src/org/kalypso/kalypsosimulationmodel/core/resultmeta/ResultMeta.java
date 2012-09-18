@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  */
 public abstract class ResultMeta extends UnversionedModel implements IResultMeta
 {
-  private final IFeatureBindingCollection<IResultMeta> m_children = new FeatureBindingCollection<IResultMeta>( this, IResultMeta.class, QNAME_PROP_CHILDREN );
+  private final IFeatureBindingCollection<IResultMeta> m_children = new FeatureBindingCollection<>( this, IResultMeta.class, QNAME_PROP_CHILDREN );
 
   public ResultMeta( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -143,9 +143,6 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
     return parentPath.append( path );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#deleteChild(org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta)
-   */
   @Override
   public void removeChild( final IResultMeta result )
   {
@@ -153,5 +150,4 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
     if( children != null )
       children.remove( result );
   }
-
 }

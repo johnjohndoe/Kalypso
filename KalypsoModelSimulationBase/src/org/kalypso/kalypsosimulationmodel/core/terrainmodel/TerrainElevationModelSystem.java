@@ -64,7 +64,7 @@ public class TerrainElevationModelSystem extends Feature_Impl implements ITerrai
 
   public static final QName SIM_BASE_PROP_TERRAIN_ELE_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "terrainElevationModel" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<ITerrainElevationModel> m_terrainElevationModels = new FeatureBindingCollection<ITerrainElevationModel>( this, ITerrainElevationModel.class, SIM_BASE_PROP_TERRAIN_ELE_MODEL );
+  private final IFeatureBindingCollection<ITerrainElevationModel> m_terrainElevationModels = new FeatureBindingCollection<>( this, ITerrainElevationModel.class, SIM_BASE_PROP_TERRAIN_ELE_MODEL );
 
   public TerrainElevationModelSystem( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

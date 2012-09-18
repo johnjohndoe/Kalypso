@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
@@ -16,13 +16,13 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class RiverProfileNetworkCollection extends Feature_Impl implements IRiverProfileNetworkCollection
 {
-  private final IFeatureBindingCollection<IRiverProfileNetwork> m_riverProfileNetworks = new FeatureBindingCollection<IRiverProfileNetwork>( this, IRiverProfileNetwork.class, IRiverProfileNetworkCollection.QNAME_PROP_PROFILE_NETWORK );
+  private final IFeatureBindingCollection<IRiverProfileNetwork> m_riverProfileNetworks = new FeatureBindingCollection<>( this, IRiverProfileNetwork.class, IRiverProfileNetworkCollection.QNAME_PROP_PROFILE_NETWORK );
 
   public RiverProfileNetworkCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
-  
+
   @Override
   public IFeatureBindingCollection<IRiverProfileNetwork> getRiverProfileNetworks( )
   {
@@ -35,5 +35,4 @@ public class RiverProfileNetworkCollection extends Feature_Impl implements IRive
     // TODO implement it
     return null;
   }
-
 }

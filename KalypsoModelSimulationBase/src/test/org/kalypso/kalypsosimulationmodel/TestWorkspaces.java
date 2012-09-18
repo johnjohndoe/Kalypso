@@ -164,7 +164,7 @@ public class TestWorkspaces
 
   static
   {
-    final Map<String, URL> urlMap = new Hashtable<String, URL>();
+    final Map<String, URL> urlMap = new Hashtable<>();
     Throwable th1 = null;
     try
     {
