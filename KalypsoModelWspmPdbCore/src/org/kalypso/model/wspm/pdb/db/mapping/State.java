@@ -33,6 +33,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
 
   private String m_name;
 
+  // TODO: strange -> map to an enum instead
   private char m_isstatezero;
 
   private Date m_creationDate;
@@ -51,6 +52,8 @@ public class State extends AbstractModelObject implements Serializable, StateCon
 
   private Set<Document> m_documents = new HashSet<>( 0 );
 
+  private Set<Event> m_events = new HashSet<>( 0 );
+
   public State( )
   {
   }
@@ -65,7 +68,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
     m_editingUser = editingUser;
   }
 
-  public State( final BigDecimal id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections, final Set<Document> documents )
+  public State( final BigDecimal id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections, final Set<Document> documents, final Set<Event> events )
   {
     m_id = id;
     m_name = name;
@@ -78,6 +81,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
     m_description = description;
     m_crossSections = crossSections;
     m_documents = documents;
+    m_events = events;
   }
 
   @Id
@@ -248,5 +252,22 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   public void setDocuments( final Set<Document> documents )
   {
     m_documents = documents;
+  }
+
+  @OneToMany( fetch = FetchType.LAZY, mappedBy = "state" )
+  public Set<Event> getEvents( )
+  {
+    return m_events;
+  }
+
+  public void setEvents( final Set<Event> events )
+  {
+    m_events = events;
+  }
+
+  @Override
+  public String toString( )
+  {
+    return getName();
   }
 }

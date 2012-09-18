@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -53,6 +52,7 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.constants.EventConstants.TYPE;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
@@ -81,7 +81,20 @@ public class CheckinCalculationWorker implements ICheckInWorker
 
   public CheckinCalculationWorker( final CommandableWorkspace workspace, final CalculationWspmTuhhSteadyState calculation )
   {
-    m_data = new CheckInEventData<>( workspace, calculation );
+    m_data = new CheckInEventData<CalculationWspmTuhhSteadyState>( workspace, calculation )
+    {
+      @Override
+      public WaterBody findWaterBody( )
+      {
+        final Map<String, WaterBody> existingWaterCodes = getWaterHash();
+
+        final WspmWaterBody wspmWaterBody = calculation.getReach().getWaterBody();
+        final String waterCode = wspmWaterBody.getRefNr();
+
+        return existingWaterCodes.get( waterCode );
+      }
+    };
+
     m_data.getEvent().setType( TYPE.Simulation );
     m_operation = new CheckinCalculationOperation( m_data );
   }
@@ -114,13 +127,13 @@ public class CheckinCalculationWorker implements ICheckInWorker
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
     }
 
-    final Set<String> existingWaterCodes = CheckinStateWorker.hashWaterCodes( m_data.getExistingWaterBodies() );
-
-    final WspmWaterBody wspmWaterBody = calculation.getReach().getWaterBody();
-    final String waterCode = wspmWaterBody.getRefNr();
     /* Water Body must exist */
-    if( !existingWaterCodes.contains( waterCode ) )
+    final WaterBody waterBody = m_data.findWaterBody();
+    if( waterBody == null )
     {
+      final WspmWaterBody wspmWaterBody = calculation.getReach().getWaterBody();
+      final String waterCode = wspmWaterBody.getRefNr();
+
       final String waterName = wspmWaterBody.getName();
       final String message = CheckInEventWorker.formatMissingWaterBody( waterCode, waterName );
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );

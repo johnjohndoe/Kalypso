@@ -252,7 +252,8 @@ public class CrossSection implements java.io.Serializable, IDocumentContainer
     final Set<CrossSectionPart> parts = getCrossSectionParts();
     for( final CrossSectionPart part : parts )
     {
-      if( category.equals( part.getCategory() ) )
+      final CATEGORY partCategory = part.getCrossSectionPartType().getCategory();
+      if( category.equals( partCategory ) )
         return part;
     }
 

@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.internal.gaf;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,6 +52,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
@@ -72,7 +74,7 @@ import com.vividsolutions.jts.linearref.LocationIndexedLine;
 
 /**
  * Writes a gaf profile into the database.
- * 
+ *
  * @author Gernot Belger
  */
 public class Gaf2Db implements IPdbOperation
@@ -91,13 +93,16 @@ public class Gaf2Db implements IPdbOperation
 
   private final Event m_waterlevelEvent;
 
-  public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final Event waterlevelEvent, final IProgressMonitor monitor )
+  private final List<CrossSectionPartType> m_knownTypes;
+
+  public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final Event waterlevelEvent, final List<CrossSectionPartType> knownTypes, final IProgressMonitor monitor )
   {
     m_dbType = dbType;
     m_waterBody = waterBody;
     m_state = state;
     m_profiles = profiles;
     m_waterlevelEvent = waterlevelEvent;
+    m_knownTypes = knownTypes;
     m_monitor = monitor;
   }
 
@@ -114,6 +119,9 @@ public class Gaf2Db implements IPdbOperation
     {
       final GafProfile[] profiles = m_profiles.getProfiles();
       m_monitor.beginTask( Messages.getString( "Gaf2Db.1" ), profiles.length ); //$NON-NLS-1$
+
+      if( m_waterlevelEvent != null )
+        m_state.getEvents().add( m_waterlevelEvent );
 
       addState( session, m_state );
       commitWaterLevel( session );
@@ -212,7 +220,10 @@ public class Gaf2Db implements IPdbOperation
 
     csPart.setName( name );
     csPart.setDescription( StringUtils.EMPTY );
-    csPart.setCategory( partKind );
+
+    final CrossSectionPartType partType = findPartType( partKind );
+    csPart.setCrossSectionPartType( partType );
+
     final Geometry line = part.getLine( dbType );
     csPart.setLine( line );
 
@@ -222,6 +233,17 @@ public class Gaf2Db implements IPdbOperation
     csPart.setCrossSection( crossSection );
     session.save( csPart );
     return csPart;
+  }
+
+  private CrossSectionPartType findPartType( final CATEGORY partKind )
+  {
+    for( final CrossSectionPartType type : m_knownTypes )
+    {
+      if( type.getCategory().equals( partKind ) )
+        return type;
+    }
+
+    throw new IllegalArgumentException( String.format( "Unknown part category: %s", partKind ) );
   }
 
   private void commitPoint( final GafPart gafPart, final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index, final PDBNameGenerator nameGenerator, final GafPart projectionPart )
@@ -295,7 +317,7 @@ public class Gaf2Db implements IPdbOperation
       if( !(line instanceof LineString) || line.getNumPoints() < 2 )
         return calculateWidthFromDistance( gafPart, location );
 
-      final LineString ls = (LineString) line;
+      final LineString ls = (LineString)line;
 
       final LocationIndexedLine lineRef = new LocationIndexedLine( line );
       final LinearLocation loc = lineRef.project( location.getCoordinate() );
@@ -362,6 +384,7 @@ public class Gaf2Db implements IPdbOperation
       m_waterlevelEvent.setMeasurementDate( m_state.getMeasurementDate() );
 
       m_waterlevelEvent.setWaterBody( m_waterBody );
+      m_waterlevelEvent.setState( m_state );
 
       session.save( m_waterlevelEvent );
     }

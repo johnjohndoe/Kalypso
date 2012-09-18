@@ -77,7 +77,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     m_editingUser = editingUser;
   }
 
-  public Event( final BigDecimal id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final TYPE type, final WL_TYPE wl_type, final String description, final Set<WaterlevelFixation> waterlevelFixations )
+  public Event( final BigDecimal id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final TYPE type, final WL_TYPE wl_type, final String description, final Set<WaterlevelFixation> waterlevelFixations, final State state, final StyleArray styles, final Set<CrossSectionPart> crossSectionParts )
   {
     m_id = id;
     m_waterBody = waterBody;
@@ -91,6 +91,9 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     m_wlType = wl_type;
     m_description = description;
     m_waterlevelFixations = waterlevelFixations;
+    m_state = state;
+    m_styleArray = styles;
+    m_crossSectionParts = crossSectionParts;
   }
 
   @Id
@@ -267,7 +270,11 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
 
   public void setState( final State state )
   {
+    final State oldValue = m_state;
+
     m_state = state;
+
+    firePropertyChange( PROPERTY_STATE, oldValue, state );
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -293,5 +300,4 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   {
     m_crossSectionParts = crossSectionParts;
   }
-
 }

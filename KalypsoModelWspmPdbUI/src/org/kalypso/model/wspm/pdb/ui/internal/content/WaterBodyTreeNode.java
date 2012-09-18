@@ -52,6 +52,8 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
@@ -133,12 +135,20 @@ class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     if( m_water == null )
       return ArrayUtils.EMPTY_OBJECT_ARRAY;
 
-    final Set<CrossSection> crossSections = m_water.getCrossSections();
     final Set<Object> children = new HashSet<>();
+
+    final Set<CrossSection> crossSections = m_water.getCrossSections();
     for( final CrossSection crossSection : crossSections )
       children.add( crossSection.getState() );
 
-    children.addAll( m_water.getEvents() );
+    /* Only add events not contained in a state */
+    final Set<Event> events = m_water.getEvents();
+    for( final Event event : events )
+    {
+      final State state = event.getState();
+      if( state == null )
+        children.add( event );
+    }
 
     return children.toArray( new Object[children.size()] );
   }
@@ -175,6 +185,7 @@ class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     final WaterBodyTreeNode rootNode = new WaterBodyTreeNode( null );
     for( final WaterBodyTreeNode node : allNodes )
       rootNode.addChild( node );
+
     return rootNode;
   }
 

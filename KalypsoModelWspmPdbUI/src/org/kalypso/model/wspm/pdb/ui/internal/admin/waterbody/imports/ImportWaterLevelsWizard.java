@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.beans.BeansObservables;
@@ -52,6 +53,7 @@ import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -66,6 +68,9 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.PdbUiUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -86,7 +91,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     @Override
     public void pageChanged( final PageChangedEvent event )
     {
-      handlePageChange( (IWizardPage) event.getSelectedPage() );
+      handlePageChange( (IWizardPage)event.getSelectedPage() );
     }
   };
 
@@ -97,6 +102,8 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   private IConnectionViewer m_viewer;
 
   private EditEventPage m_eventPage;
+
+  private IObservableValue m_waterValue;
 
   public ImportWaterLevelsWizard( )
   {
@@ -134,14 +141,21 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     /* Page to choose a water body */
     final Event event = m_data.getEvent();
 
-    final IObservableValue waterValue = BeansObservables.observeValue( event, Event.PROPERTY_WATER_BODY );
+    /* guess water and/or state from current selection */
+    final WaterBody preferredWater = findPreferredWater( m_viewer.getSelection() );
+    final State preferredState = findPreferredState( m_viewer.getSelection() );
+
+    event.setWaterBody( preferredWater );
+    event.setState( preferredState );
+
+    m_waterValue = BeansObservables.observeValue( event, Event.PROPERTY_WATER_BODY );
 
     addPage( new ImportWaterlevelsSelectAttributesPage( "selectAttributes", m_data ) ); //$NON-NLS-1$
     addPage( new ImportWaterlevelsPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
 
     /* Choose water body */
     final IPdbConnection connection = m_data.getConnection();
-    final ChooseWaterPage waterPage = new ChooseWaterPage( "waterPage", connection, waterValue ); //$NON-NLS-1$
+    final ChooseWaterPage waterPage = new ChooseWaterPage( "waterPage", connection, m_waterValue );
     waterPage.setDescription( Messages.getString( "ImportWaterLevelsWizard.3" ) ); //$NON-NLS-1$
     addPage( waterPage );
 
@@ -186,12 +200,12 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     final IWizardContainer oldContainer = getContainer();
 
     if( oldContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageListener );
+      ((IPageChangeProvider)oldContainer).removePageChangedListener( m_pageListener );
 
     super.setContainer( wizardContainer );
 
     if( wizardContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageListener );
+      ((IPageChangeProvider)wizardContainer).addPageChangedListener( m_pageListener );
   }
 
   protected void handlePageChange( final IWizardPage page )
@@ -200,8 +214,21 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     final String srs = m_shapeFilePage.getSoureCRS();
     m_data.setShapeInput( shapeFile, srs );
 
+    if( page instanceof EditEventPage )
+    {
+      /* set collection of possible states to this page */
+      final Collection<State> possibleStates = getPossibleStates();
+      m_data.setStates( possibleStates );
+    }
+
     if( page instanceof IUpdateable )
-      ((IUpdateable) page).update();
+      ((IUpdateable)page).update();
+  }
+
+  private Collection<State> getPossibleStates( )
+  {
+    final WaterBody value = (WaterBody)m_waterValue.getValue();
+    return WaterBodyUtils.getPossibleStates( value );
   }
 
   @Override
@@ -217,7 +244,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
     if( !status.isOK() )
-      new StatusDialog( getShell(), status, getWindowTitle() ).open();
+      StatusDialog.open( getShell(), status, getWindowTitle() );
 
     /* Select new element in tree */
     final ElementSelector selector = new ElementSelector();
@@ -225,5 +252,38 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     m_viewer.reload( selector );
 
     return !status.matches( IStatus.ERROR );
+  }
+
+  private WaterBody findPreferredWater( final IStructuredSelection selection )
+  {
+    final Object firstElement = selection.getFirstElement();
+
+    if( firstElement instanceof WaterBody )
+      return (WaterBody)firstElement;
+
+    if( firstElement instanceof State )
+    {
+      /* Recurse into parent via viewer structure */
+      final Object parent = m_viewer.getStructure().getParent( firstElement );
+      return findPreferredWater( new StructuredSelection( parent ) );
+    }
+
+    if( firstElement instanceof Event )
+      return ((Event)firstElement).getWaterBody();
+
+    return null;
+  }
+
+  private State findPreferredState( final IStructuredSelection selection )
+  {
+    final Object firstElement = selection.getFirstElement();
+
+    if( firstElement instanceof State )
+      return (State)firstElement;
+
+    if( firstElement instanceof Event )
+      return ((Event)firstElement).getState();
+
+    return null;
   }
 }

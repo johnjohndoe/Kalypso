@@ -1,6 +1,8 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -114,6 +116,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     firePropertyChange( PROPERTY_NAME, oldValue, name );
   }
 
+  // TODO: get lazy?
   @Column( name = "riverline", columnDefinition = "Geometry" )
   public Geometry getRiverline( )
   {
@@ -260,5 +263,21 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   public String toString( )
   {
     return String.format( "%s [%s]", getLabel(), getName() );
+  }
+
+  /**
+   * Find all states of this water body.<br/>
+   * This is the set of all states referenced by any cross section of this water.
+   */
+  @Transient
+  public Collection<State> getStates( )
+  {
+    final Set<State> states = new HashSet<>();
+
+    final Set<CrossSection> crossSections = getCrossSections();
+    for( final CrossSection crossSection : crossSections )
+      states.add( crossSection.getState() );
+
+    return Collections.unmodifiableCollection( states );
   }
 }

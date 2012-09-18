@@ -60,6 +60,8 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
@@ -110,7 +112,9 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
       state.setEditingUser( connection.getSettings().getUsername() );
       final URI documentBase = m_data.getDocumentBase();
 
-      final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, reach, profiles, dbSrs, documentBase, true, new SubProgressMonitor( monitor, 90 ) );
+      final CrossSectionPartType[] partTypes = GetPdbList.getArray( session, CrossSectionPartType.class );
+
+      final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( partTypes, gafCodes, coefficients, waterBodies, state, reach, profiles, dbSrs, documentBase, true, new SubProgressMonitor( monitor, 90 ) );
       new Executor( session, operation ).execute();
       final IStatus status = operation.getStatus();
 

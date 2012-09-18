@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -66,7 +65,7 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
 {
   static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "AbstractCheckinEventOperation.0" ); //$NON-NLS-1$
 
-  private final Map<String, WaterBody> m_waterBodies = new HashMap<>();
+  private final Map<String, WaterBody> m_waterBodies;
 
   private final IProgressMonitor m_monitor;
 
@@ -74,13 +73,11 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
 
   private final WspmWaterBody m_wspmWaterBody;
 
-  public AbstractCheckinEventOperation( final Event event, final WaterBody[] waterBodies, final IProgressMonitor monitor, final WspmWaterBody wspmWaterBody )
+  public AbstractCheckinEventOperation( final Map<String, WaterBody> waterHash, final WspmWaterBody wspmWaterBody, final Event event, final IProgressMonitor monitor )
   {
     m_event = event;
     m_wspmWaterBody = wspmWaterBody;
-
-    for( final WaterBody waterBody : waterBodies )
-      m_waterBodies.put( waterBody.getName(), waterBody );
+    m_waterBodies = waterHash;
 
     m_monitor = monitor;
   }

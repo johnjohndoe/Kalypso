@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
@@ -54,9 +56,9 @@ public class CheckinEventPdbOperation extends AbstractCheckinEventOperation
 {
   private final WspmFixation m_fixation;
 
-  public CheckinEventPdbOperation( final Event event, final WaterBody[] waterBodies, final WspmFixation fixation, final IProgressMonitor monitor )
+  public CheckinEventPdbOperation( final Map<String, WaterBody> waterHash, final Event event, final WspmFixation fixation, final IProgressMonitor monitor )
   {
-    super( event, waterBodies, monitor, fixation.getOwner() );
+    super( waterHash, fixation.getOwner(), event, monitor );
 
     m_fixation = fixation;
   }

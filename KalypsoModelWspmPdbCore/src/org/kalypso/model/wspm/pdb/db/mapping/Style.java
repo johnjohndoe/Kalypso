@@ -62,10 +62,7 @@ import javax.persistence.UniqueConstraint;
  * @author Monika Thuel
  */
 @Entity
-// TODO add second uniqueConstraint to annotation
-// @Table(name = "style", schema = "pdb", uniqueConstraints = { @UniqueConstraint(columnNames = "name"),
-// @UniqueConstraint(columnNames = "consecutive_num, style_array_id") })
-@Table(name = "style", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table( name = "style", schema = "pdb", uniqueConstraints = { @UniqueConstraint( columnNames = "name" ), @UniqueConstraint( columnNames = { "consecutive_num", "style_array_id" } ) } )
 public class Style implements Serializable
 {
   private BigDecimal m_id;

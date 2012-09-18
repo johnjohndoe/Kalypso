@@ -43,9 +43,11 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 
@@ -56,7 +58,7 @@ public class WaterBodyStructure implements IWaterBodyTreeVisitor, IWaterBodyStru
 {
   private final Map<WaterBody, WaterBodyTreeNode> m_waterToNodes = new IdentityHashMap<>();
 
-  private final Map<Object, WaterBody> m_parents = new IdentityHashMap<>();
+  private final Map<Object, Object> m_parents = new IdentityHashMap<>();
 
   private final WaterBodyTreeNode m_rootNode;
 
@@ -117,6 +119,16 @@ public class WaterBodyStructure implements IWaterBodyTreeVisitor, IWaterBodyStru
 
     final Object[] children = node.getAllChildren();
     for( final Object child : children )
+    {
       m_parents.put( child, waterBody );
+
+      /* special case for states that contain event children */
+      if( child instanceof State )
+      {
+        final Set<Event> events = ((State)child).getEvents();
+        for( final Event event : events )
+          m_parents.put( event, child );
+      }
+    }
   }
 }
