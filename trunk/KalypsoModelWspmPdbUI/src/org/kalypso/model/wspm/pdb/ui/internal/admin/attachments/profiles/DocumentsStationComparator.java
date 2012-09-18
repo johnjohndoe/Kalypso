@@ -51,9 +51,9 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
  */
 public class DocumentsStationComparator extends ViewerComparator
 {
-  private final ImportAttachmentsDocumentsData m_documentData;
+  private final ProfilesAttachmentsDocumentsData m_documentData;
 
-  public DocumentsStationComparator( final ImportAttachmentsDocumentsData documentData )
+  public DocumentsStationComparator( final ProfilesAttachmentsDocumentsData documentData )
   {
     m_documentData = documentData;
   }
@@ -61,8 +61,8 @@ public class DocumentsStationComparator extends ViewerComparator
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final DocumentInfo info1 = (DocumentInfo)m_documentData.getInfo( (Document)e1 );
-    final DocumentInfo info2 = (DocumentInfo)m_documentData.getInfo( (Document)e2 );
+    final ProfilesDocumentInfo info1 = (ProfilesDocumentInfo)m_documentData.getInfo( (Document)e1 );
+    final ProfilesDocumentInfo info2 = (ProfilesDocumentInfo)m_documentData.getInfo( (Document)e2 );
 
     final BigDecimal s1 = info1.getStation();
     final BigDecimal s2 = info2.getStation();

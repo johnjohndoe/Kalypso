@@ -38,35 +38,42 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationContext;
+import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternReplacer;
 
 /**
  * @author Gernot Belger
- * @author Holger Albert
  */
-public class SearchDocumentsOperation implements ICoreRunnableWithProgress
+public class ProfilesSearchDocumentsOperation implements ICoreRunnableWithProgress
 {
-  private final ImportDocumentAttachmentsData m_data;
+  private final GuessStationContext[] m_searchContexts = GuessStationContext.DEFAULT_SEARCH_CONTEXTS;
 
-  private final ImportDocumentAttachmentsDocumentsData m_documentData;
+  private final ProfilesAttachmentsData m_data;
 
-  public SearchDocumentsOperation( final ImportDocumentAttachmentsData data, final ImportDocumentAttachmentsDocumentsData documentData )
+  private final ProfilesAttachmentsDocumentsData m_documentData;
+
+  public ProfilesSearchDocumentsOperation( final ProfilesAttachmentsData data, final ProfilesAttachmentsDocumentsData documentData )
   {
     m_data = data;
     m_documentData = documentData;
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     m_documentData.clear();
 
@@ -84,14 +91,26 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
       return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
     }
 
+    final String searchRegex = GuessStationPatternReplacer.getSearchRegex( m_data.getImportPattern() );
+    final Pattern[] stationPatterns = GuessStationPatternReplacer.preparePatterns( m_searchContexts, searchRegex );
+    final Pattern searchPattern = GuessStationPatternReplacer.asSearchPattern( searchRegex );
+
     for( final File file : allFiles )
-      readFile( file );
+      readFile( file, searchPattern, stationPatterns );
 
     return Status.OK_STATUS;
   }
 
-  private void readFile( final File file )
+  private void readFile( final File file, final Pattern searchPattern, final Pattern[] stationPatterns )
   {
-    m_documentData.addDocument( file );
+    /* Skip all files that do not match the general search pattern */
+    final Matcher matcher = searchPattern.matcher( file.getName() );
+    if( !matcher.matches() )
+      return;
+
+    /* Read station */
+    final BigDecimal station = GuessStationPatternReplacer.findStation( file.getName(), m_searchContexts, stationPatterns );
+
+    m_documentData.addDocument( station, file );
   }
 }

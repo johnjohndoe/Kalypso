@@ -50,9 +50,9 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
  */
 public class DocumentsStationProvider extends ColumnLabelProvider
 {
-  private final ImportAttachmentsDocumentsData m_documentData;
+  private final ProfilesAttachmentsDocumentsData m_documentData;
 
-  public DocumentsStationProvider( final ImportAttachmentsDocumentsData documentData )
+  public DocumentsStationProvider( final ProfilesAttachmentsDocumentsData documentData )
   {
     m_documentData = documentData;
   }
@@ -71,7 +71,7 @@ public class DocumentsStationProvider extends ColumnLabelProvider
   {
     if( element instanceof Document )
     {
-      final DocumentInfo info = (DocumentInfo)m_documentData.getInfo( (Document)element );
+      final ProfilesDocumentInfo info = (ProfilesDocumentInfo)m_documentData.getInfo( (Document)element );
       final BigDecimal station = info.getStation();
       if( station == null )
         return station;

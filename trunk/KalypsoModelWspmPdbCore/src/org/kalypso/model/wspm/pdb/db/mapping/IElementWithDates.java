@@ -49,6 +49,14 @@ import java.util.Date;
  */
 public interface IElementWithDates
 {
+  String PROPERTY_CREATIONDATE = "creationDate"; //$NON-NLS-1$
+
+  String PROPERTY_EDITINGDATE = "editingDate"; //$NON-NLS-1$
+
+  String PROPERTY_EDITINGUSER = "editingUser"; //$NON-NLS-1$
+
+  String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
+
   Date getCreationDate( );
 
   Date getEditingDate( );

@@ -38,10 +38,9 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.Set;
 
 import javax.activation.MimeType;
@@ -50,24 +49,25 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.activation.MimeTypeUtils;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
+import org.kalypso.model.wspm.pdb.db.mapping.IDocumentContainer;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.AbstractDocumentInfo;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
+ * @author Holger Albert
  */
-public class DocumentInfo extends AbstractDocumentInfo
+public class DocumentsDocumentInfo extends AbstractDocumentInfo
 {
-  private final BigDecimal m_station;
+  private final IDocumentContainer m_documentContainer;
 
-  public DocumentInfo( final Document document, final File file, final BigDecimal station )
+  public DocumentsDocumentInfo( final Document document, final File file, final IDocumentContainer documentContainer )
   {
     super( document, file );
 
-    m_station = station;
+    m_documentContainer = documentContainer;
 
     initialize();
   }
@@ -75,16 +75,9 @@ public class DocumentInfo extends AbstractDocumentInfo
   @Override
   protected void checkDocumentExists( final Document newDocument )
   {
-    final CrossSection crossSection = newDocument.getCrossSection();
-    if( crossSection == null )
-    {
-      /* We cannot import anyways, so no counterpart can exist */
-      return;
-    }
-
     final String newFilename = newDocument.getFilenameName();
 
-    final Set<Document> documents = crossSection.getDocuments();
+    final Set<Document> documents = m_documentContainer.getDocuments();
     for( final Document document : documents )
     {
       final String existingFilename = document.getFilenameName();
@@ -101,17 +94,6 @@ public class DocumentInfo extends AbstractDocumentInfo
   {
     final IStatusCollector stati = new StatusCollector( WspmPdbUiPlugin.PLUGIN_ID );
 
-    if( m_station == null )
-    {
-      stati.add( IStatus.ERROR, Messages.getString( "ImportAttachmentsDocumentsData.3" ) ); //$NON-NLS-1$
-      setImportable( false );
-    }
-    else if( document.getCrossSection() == null )
-    {
-      stati.add( IStatus.ERROR, Messages.getString( "ImportAttachmentsDocumentsData.4" ) ); //$NON-NLS-1$
-      setImportable( false );
-    }
-
     final MimeType mimetype = MimeTypeUtils.createQuietly( document.getMimetype() );
     if( mimetype == null )
       stati.add( IStatus.WARNING, Messages.getString( "ImportAttachmentsDocumentsData.5" ) ); //$NON-NLS-1$
@@ -124,10 +106,5 @@ public class DocumentInfo extends AbstractDocumentInfo
       return stati.getAllStati()[0];
     else
       return stati.asMultiStatusOrOK( Messages.getString( "ImportAttachmentsDocumentsData.7" ) ); //$NON-NLS-1$
-  }
-
-  public BigDecimal getStation( )
-  {
-    return m_station;
   }
 }

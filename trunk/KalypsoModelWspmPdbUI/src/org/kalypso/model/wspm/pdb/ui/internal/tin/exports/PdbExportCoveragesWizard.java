@@ -104,12 +104,12 @@ public class PdbExportCoveragesWizard extends Wizard
   {
     final IWizardContainer oldContainer = getContainer();
     if( oldContainer instanceof WizardDialog )
-      ((WizardDialog) oldContainer).removePageChangingListener( m_pageListener );
+      ((WizardDialog)oldContainer).removePageChangingListener( m_pageListener );
 
     super.setContainer( container );
 
     if( container instanceof WizardDialog )
-      ((WizardDialog) container).addPageChangingListener( m_pageListener );
+      ((WizardDialog)container).addPageChangingListener( m_pageListener );
   }
 
   @Override
@@ -128,7 +128,7 @@ public class PdbExportCoveragesWizard extends Wizard
     final PdbExportOperation operation = new PdbExportOperation( m_settingsData );
     final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, runnable );
-    if( result.isOK() )
+    if( !result.isOK() )
       StatusDialog.open( getShell(), result, getWindowTitle() );
 
     return true;
@@ -161,6 +161,6 @@ public class PdbExportCoveragesWizard extends Wizard
 
     /* Set a message to the current page. */
     final IMessage message = MessageUtilitites.convertStatus( result );
-    ((WizardPage) event.getCurrentPage()).setMessage( message.getMessage(), message.getMessageType() );
+    ((WizardPage)event.getCurrentPage()).setMessage( message.getMessage(), message.getMessageType() );
   }
 }

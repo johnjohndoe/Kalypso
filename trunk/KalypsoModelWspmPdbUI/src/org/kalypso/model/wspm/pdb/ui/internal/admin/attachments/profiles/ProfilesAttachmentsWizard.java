@@ -1,8 +1,15 @@
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.documents;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.profiles;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
@@ -18,20 +25,20 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
-/**
- * @author Gernot Belger
- * @author Holger Albert
- */
-public class ImportDocumentAttachmentsWizard extends Wizard implements IWorkbenchWizard
+public class ProfilesAttachmentsWizard extends Wizard implements IWorkbenchWizard, IGenericWizard
 {
   private final IPageChangedListener m_pageListener = new IPageChangedListener()
   {
@@ -42,15 +49,15 @@ public class ImportDocumentAttachmentsWizard extends Wizard implements IWorkbenc
     }
   };
 
-  private ImportDocumentAttachmentsData m_data;
+  private ProfilesAttachmentsData m_data;
 
   private IConnectionViewer m_viewer;
 
-  public ImportDocumentAttachmentsWizard( )
+  public ProfilesAttachmentsWizard( )
   {
     setNeedsProgressMonitor( true );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
-    setWindowTitle( "Import Attachments" );
+    setWindowTitle( Messages.getString( "ImportAttachmentsWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -61,21 +68,43 @@ public class ImportDocumentAttachmentsWizard extends Wizard implements IWorkbenc
 
     final IPdbConnection connection = m_viewer.getConnection();
 
-    m_data = new ImportDocumentAttachmentsData( connection );
+    m_data = new ProfilesAttachmentsData( connection );
     m_data.init( selection, getDialogSettings() );
+  }
+
+  @Override
+  public IStatus postInit( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  {
+    final Map<BigDecimal, List<Document>> dbHash = getDbDocuments( monitor );
+    m_data.setDbHash( dbHash );
+    return Status.OK_STATUS;
+  }
+
+  private Map<BigDecimal, List<Document>> getDbDocuments( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  {
+    /* HINT: The name of the state is used as path. */
+    final State state = m_data.getState();
+    final String path = state.getName();
+    final QueryDocumentsOperation operation = new QueryDocumentsOperation( path );
+    final ExecutorRunnable runnable = new ExecutorRunnable( m_data.getConnection(), operation );
+    final IStatus result = runnable.execute( monitor );
+    if( !result.isOK() )
+      throw new CoreException( result );
+
+    return operation.getResult();
   }
 
   @Override
   public void addPages( )
   {
-    addPage( new ImportDocumentAttachmentsOptionsPage( "optionsPage", m_data ) ); //$NON-NLS-1$
-    addPage( new ImportDocumentAttachmentsPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
+    addPage( new ProfilesAttachmentsOptionsPage( "optionsPage", m_data ) ); //$NON-NLS-1$
+    addPage( new ProfilesAttachmentsPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
   }
 
   @Override
   public boolean canFinish( )
   {
-    /* Only finish on last page. */
+    /* Only finish on last page */
     final IWizardPage currentPage = getContainer().getCurrentPage();
     if( currentPage.getNextPage() != null )
       return false;
@@ -129,7 +158,7 @@ public class ImportDocumentAttachmentsWizard extends Wizard implements IWorkbenc
       new StatusDialog( getShell(), status, getWindowTitle() ).open();
 
     final ElementSelector selector = new ElementSelector();
-    selector.addStateName( m_data.getDocumentContainer().getName() );
+    selector.addStateName( m_data.getState().getName() );
     m_viewer.reload( selector );
 
     return !status.matches( IStatus.ERROR );
@@ -141,7 +170,7 @@ public class ImportDocumentAttachmentsWizard extends Wizard implements IWorkbenc
     if( zipFile == null || !zipFile.exists() )
       return true;
 
-    final String message = String.format( "Overwrite existing file %s?", zipFile.getName() );
+    final String message = String.format( Messages.getString( "ImportAttachmentsWizard.1" ), zipFile.getName() ); //$NON-NLS-1$
     return MessageDialog.openConfirm( getShell(), getWindowTitle(), message );
   }
 

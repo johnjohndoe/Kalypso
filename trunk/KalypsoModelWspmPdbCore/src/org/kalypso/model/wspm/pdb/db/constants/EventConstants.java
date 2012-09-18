@@ -52,8 +52,8 @@ public interface EventConstants
     /**
      * Default
      */
-    Measurement(Messages.getString( "EventConstants.0" )), //$NON-NLS-1$
-    Simulation(Messages.getString( "EventConstants.1" )); //$NON-NLS-1$
+    Measurement( Messages.getString( "EventConstants.0" ) ), //$NON-NLS-1$
+    Simulation( Messages.getString( "EventConstants.1" ) ); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -73,8 +73,8 @@ public interface EventConstants
   {
     // TODO will it work? naming the enumeration element '1D' didn't work
     // translation?!?
-    WL_1D(Messages.getString( "EventConstants.2" )), //$NON-NLS-1$
-    WL_2D(Messages.getString( "EventConstants.3" )); //$NON-NLS-1$
+    WL_1D( Messages.getString( "EventConstants.2" ) ), //$NON-NLS-1$
+    WL_2D( Messages.getString( "EventConstants.3" ) ); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -104,12 +104,9 @@ public interface EventConstants
 
   String PROPERTY_WL_TYPE = "wlType"; //$NON-NLS-1$
 
-  String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
-
   String PROPERTY_WATER_BODY = "waterBody"; //$NON-NLS-1$
 
   String PROPERTY_STATE = "state"; //$NON-NLS-1$
 
   String PROPERTY_STYLE_ARRAY = "styleArray"; //$NON-NLS-1$
-
 }

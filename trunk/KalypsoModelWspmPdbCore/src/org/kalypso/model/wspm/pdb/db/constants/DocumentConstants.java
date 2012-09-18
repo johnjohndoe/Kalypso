@@ -45,11 +45,7 @@ package org.kalypso.model.wspm.pdb.db.constants;
  */
 public interface DocumentConstants
 {
-  String PROPERTY_CREATIONDATE = "creationDate"; //$NON-NLS-1$
+  String PROPERTY_NAME = "name"; //$NON-NLS-1$
 
-  String PROPERTY_EDITINGDATE = "editingDate"; //$NON-NLS-1$
-
-  String PROPERTY_EDITINGUSER = "editingUser"; //$NON-NLS-1$
-
-  String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
+  String PROPERTY_FILENAME = "filename"; //$NON-NLS-1$
 }

@@ -63,13 +63,13 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
  * @author Gernot Belger
  * @author Holger Albert
  */
-public class ImportDocumentAttachmentsOptionsPage extends WizardPage
+public class DocumentsAttachmentsOptionsPage extends WizardPage
 {
-  private final ImportDocumentAttachmentsData m_data;
+  private final DocumentsAttachmentsData m_data;
 
   private DatabindingWizardPage m_binding;
 
-  public ImportDocumentAttachmentsOptionsPage( final String pageName, final ImportDocumentAttachmentsData data )
+  public DocumentsAttachmentsOptionsPage( final String pageName, final DocumentsAttachmentsData data )
   {
     super( pageName );
 
@@ -109,8 +109,8 @@ public class ImportDocumentAttachmentsOptionsPage extends WizardPage
   {
     new Label( parent, SWT.NONE ).setText( Messages.getString( "ImportAttachmentsOptionsPage.3" ) ); //$NON-NLS-1$
 
-    final IObservableValue modelDir = BeansObservables.observeValue( m_data, ImportDocumentAttachmentsData.PROPERTY_IMPORT_DIR );
-    final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ImportDocumentAttachmentsData.PROPERTY_IMPORT_DIR_HISTORY );
+    final IObservableValue modelDir = BeansObservables.observeValue( m_data, DocumentsAttachmentsData.PROPERTY_IMPORT_DIR );
+    final IObservableValue modelHistory = BeansObservables.observeValue( m_data, DocumentsAttachmentsData.PROPERTY_IMPORT_DIR_HISTORY );
 
     final DirectoryBinding directoryBinding = new DirectoryBinding( modelDir, SWT.OPEN );
 
@@ -140,8 +140,8 @@ public class ImportDocumentAttachmentsOptionsPage extends WizardPage
 
     new Label( group, SWT.NONE ).setText( Messages.getString( "ImportAttachmentsOptionsPage.12" ) ); //$NON-NLS-1$
 
-    final IObservableValue modelFile = BeansObservables.observeValue( m_data, ImportDocumentAttachmentsData.PROPERTY_ZIP_FILE );
-    final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ImportDocumentAttachmentsData.PROPERTY_ZIP_HISTORY );
+    final IObservableValue modelFile = BeansObservables.observeValue( m_data, DocumentsAttachmentsData.PROPERTY_ZIP_FILE );
+    final IObservableValue modelHistory = BeansObservables.observeValue( m_data, DocumentsAttachmentsData.PROPERTY_ZIP_HISTORY );
 
     final FileChooserDelegateSave delegate = new FileChooserDelegateSave();
     delegate.addFilter( Messages.getString( "ImportAttachmentsOptionsPage.13" ), "*.zip" ); //$NON-NLS-1$//$NON-NLS-2$

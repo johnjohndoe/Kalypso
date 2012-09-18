@@ -306,7 +306,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
 
     /* Problem: set status and show dialog */
     if( !checkResult.matches( IStatus.CANCEL ) )
-      StatusDialog.open( shell, checkResult, Messages.getString("PdbView.3") ); //$NON-NLS-1$
+      StatusDialog.open( shell, checkResult, Messages.getString( "PdbView.3" ) ); //$NON-NLS-1$
 
     PdbUtils.closeQuietly( connection );
     return null;
@@ -344,7 +344,6 @@ public class PdbView extends ViewPart implements IConnectionViewer
     if( m_wspmProject == null )
       createNoWspmProjectControl( m_toolkit, body );
     else if( isConnected )
-      // FIXME
       m_connectionViewer = new ConnectionViewer( PlatformUI.getWorkbench(), m_toolkit, body, m_pdbConnection, m_wspmProject );
     else
       new NonConnectedControl( m_toolkit, body, m_autoConnectData, this );
@@ -363,7 +362,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     // 2) the context men uon the pdb works correctly (evaluation context was not correctly set)
     activateMapView();
 
-    final IEvaluationService es = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
+    final IEvaluationService es = (IEvaluationService)PlatformUI.getWorkbench().getService( IEvaluationService.class );
     es.requestEvaluation( "pdbTester.hasRole" ); //$NON-NLS-1$
 
 // final ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
