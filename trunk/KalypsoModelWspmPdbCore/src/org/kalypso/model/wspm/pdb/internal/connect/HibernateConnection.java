@@ -74,6 +74,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.mapping.VegetationId;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreDebug;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
@@ -170,14 +171,21 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     configuration.setProperty( Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread" ); //$NON-NLS-1$
     configuration.setProperty( Environment.CACHE_PROVIDER, "org.hibernate.cache.NoCacheProvider" ); //$NON-NLS-1$
 
-    // TODO: via tracing
-    configuration.setProperty( Environment.SHOW_SQL, Boolean.TRUE.toString() );
-    configuration.setProperty( Environment.FORMAT_SQL, Boolean.TRUE.toString() );
+    if( WspmPdbCoreDebug.SHOW_SQL_STATEMENTS.isEnabled() )
+    {
+      configuration.setProperty( Environment.SHOW_SQL, Boolean.TRUE.toString() );
+      configuration.setProperty( Environment.FORMAT_SQL, Boolean.TRUE.toString() );
+    }
+    else
+    {
+      configuration.setProperty( Environment.SHOW_SQL, Boolean.FALSE.toString() );
+      configuration.setProperty( Environment.FORMAT_SQL, Boolean.FALSE.toString() );
+    }
 
-// configuration.setProperty( "hibernate.c3p0.min_size", "5" );
-// configuration.setProperty( "hibernate.c3p0.max_size", "20" );
-// configuration.setProperty( "hibernate.c3p0.timeout", "1800" );
-// configuration.setProperty( "hibernate.c3p0.max_statements", "50" );
+    // configuration.setProperty( "hibernate.c3p0.min_size", "5" );
+    // configuration.setProperty( "hibernate.c3p0.max_size", "20" );
+    // configuration.setProperty( "hibernate.c3p0.timeout", "1800" );
+    // configuration.setProperty( "hibernate.c3p0.max_statements", "50" );
   }
 
   private void configureMappings( final Configuration configuration )
