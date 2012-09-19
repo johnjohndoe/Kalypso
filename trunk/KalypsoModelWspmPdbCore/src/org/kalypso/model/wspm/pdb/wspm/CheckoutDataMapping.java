@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.EventByNameComparator;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.wspm.AddKeysWithMappingClosure;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -229,7 +230,12 @@ public class CheckoutDataMapping
 
   public Event[] getEvents( )
   {
-    return m_eventMapping.keySet().toArray( new Event[m_eventMapping.size()] );
+    final Event[] unsortedEvents = m_eventMapping.keySet().toArray( new Event[m_eventMapping.size()] );
+
+    // REMARK: sort for checkout, so they are nicely sorted in the wspm tree
+    Arrays.sort( unsortedEvents, new EventByNameComparator() );
+
+    return unsortedEvents;
   }
 
   public Object getWaterlevel( final Event event )
