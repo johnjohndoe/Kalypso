@@ -99,6 +99,7 @@ public class CheckoutDataSearcher
       final State state = (State) element;
       addElements( state.getCrossSections() );
       m_states.add( state );
+      m_events.addAll( state.getEvents() );
     }
     else if( element instanceof WaterBody )
     {
@@ -114,6 +115,7 @@ public class CheckoutDataSearcher
     {
       final Event event = (Event) element;
       m_events.add( event );
+      m_states.add( event.getState() );
       m_waterBodies.add( event.getWaterBody() );
     }
     else if( element instanceof WaterBody )
