@@ -1,4 +1,4 @@
-﻿-- Version setzen auf "creating" oder "updating"
+-- Version setzen auf "creating" oder "updating"
 UPDATE INFO set value='updating 0.0.4 to 0.0.5'  where key ='Version';
 
 
