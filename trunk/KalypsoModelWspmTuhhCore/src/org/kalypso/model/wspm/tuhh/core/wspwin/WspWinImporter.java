@@ -76,9 +76,9 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
-import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.serializer.IProfileSource;
+import org.kalypso.model.wspm.core.profil.serializer.ProfileSerializerUtilitites;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -355,8 +355,8 @@ public final class WspWinImporter
 
     final String profiletype = IWspmTuhhConstants.PROFIL_TYPE_PASCHE;
 
-    final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
-    final IProfil[] profile = ProfilSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
+    final IProfileSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
+    final IProfile[] profile = ProfileSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
 
     ((ProfileFeatureBinding) prof).setProfile( profile[0] );
 

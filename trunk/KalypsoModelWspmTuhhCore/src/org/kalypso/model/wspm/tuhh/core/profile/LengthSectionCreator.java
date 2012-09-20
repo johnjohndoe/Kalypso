@@ -48,10 +48,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -69,9 +69,9 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class LengthSectionCreator
 {
-  private final IProfil[] m_profiles;
+  private final IProfile[] m_profiles;
 
-  public LengthSectionCreator( final IProfil[] profiles )
+  public LengthSectionCreator( final IProfile[] profiles )
   {
     m_profiles = profiles;
   }
@@ -79,22 +79,22 @@ public class LengthSectionCreator
   public final IObservation<TupleResult> toLengthSection( )
   {
     final TupleResult lsResult = new TupleResult();
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_RE ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_H_BV ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_RE ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT ) );
+    lsResult.addComponent( ProfileUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_H_BV ) );
 
     final Double precision = lsResult.getComponent( 7 ).getPrecision();
 
-    for( final IProfil profil : m_profiles )
+    for( final IProfile profil : m_profiles )
     {
       addProfile( profil, lsResult, precision );
     }
@@ -102,7 +102,7 @@ public class LengthSectionCreator
     return new Observation<>( "LengthSectionResult", Messages.getString( "LengthSectionCreator_0" ), lsResult ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  private void addProfile( final IProfil profil, final TupleResult lsResult, final Double precision )
+  private void addProfile( final IProfile profil, final TupleResult lsResult, final Double precision )
   {
 // final IComponent compHeight = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     final int indexHeight = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
@@ -118,15 +118,15 @@ public class LengthSectionCreator
     // Kennung
     // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE
     final Double minHeightValue = ProfileVisitors.findLowestPoint( profil ).getBreite();
-    final BigDecimal minHeightDecimal = minHeightValue == null ? null : ProfilUtil.stationToBigDecimal( minHeightValue );
+    final BigDecimal minHeightDecimal = minHeightValue == null ? null : ProfileUtil.stationToBigDecimal( minHeightValue );
     station.setValue( 2, minHeightDecimal ); // Ground
-    final IProfilPointMarker[] mbv = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
-    final IProfilPointMarker[] mtf = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilePointMarker[] mbv = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    final IProfilePointMarker[] mtf = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
 
     profil.doTransaction( new IProfileTransaction()
     {
       @Override
-      public IStatus execute( final IProfil profile )
+      public IStatus execute( final IProfile profile )
       {
         // Devider
         if( mbv.length == 2 )
@@ -181,9 +181,9 @@ public class LengthSectionCreator
     lsResult.add( station );
   }
 
-  protected static Double getMaxValueFor( final IProfil profil, final int indexHeight, final String component, final double precision )
+  protected static Double getMaxValueFor( final IProfile profil, final int indexHeight, final String component, final double precision )
   {
-    final Double[] values = ProfilUtil.getInterpolatedValues( profil, component );
+    final Double[] values = ProfileUtil.getInterpolatedValues( profil, component );
     final IRecord[] points = profil.getPoints();
 
     double maxValue = Double.NEGATIVE_INFINITY;
@@ -212,9 +212,9 @@ public class LengthSectionCreator
     return maxValue;
   }
 
-  protected static Double getMinValueFor( final IProfil profil, final int indexHeight, final String component, final double precision )
+  protected static Double getMinValueFor( final IProfile profil, final int indexHeight, final String component, final double precision )
   {
-    final Double[] values = ProfilUtil.getInterpolatedValues( profil, component );
+    final Double[] values = ProfileUtil.getInterpolatedValues( profil, component );
     final IRecord[] points = profil.getPoints();
 
     double minValue = Double.POSITIVE_INFINITY;

@@ -62,9 +62,9 @@ import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.util.vegetation.GuessVegetationClassesRunnable;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessDataModel;
@@ -79,11 +79,11 @@ public class VegetationPropertiesPage extends AbstractElementPage
 {
   private static final String EMPTY_STRING = Messages.getString( "VegetationPropertiesPage.0" ); //$NON-NLS-1$
 
-  protected final IProfil m_profile;
+  protected final IProfile m_profile;
 
   private IDataBinding m_binding;
 
-  public VegetationPropertiesPage( final IProfil profile )
+  public VegetationPropertiesPage( final IProfile profile )
   {
     super( VegetationPropertiesPage.class.getName() );
     m_profile = profile;
@@ -150,10 +150,10 @@ public class VegetationPropertiesPage extends AbstractElementPage
           final GuessVegetationClassesRunnable worker = new GuessVegetationClassesRunnable( m_profile, overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );
 
-          final ProfilOperation operation = new ProfilOperation( "Guessing vegetation classes", m_profile, overwriteValues ); //$NON-NLS-1$
+          final ProfileOperation operation = new ProfileOperation( "Guessing vegetation classes", m_profile, overwriteValues ); //$NON-NLS-1$
           operation.addChange( worker.getChanges() );
 
-          new ProfilOperationJob( operation ).schedule();
+          new ProfileOperationJob( operation ).schedule();
         }
       } );
 

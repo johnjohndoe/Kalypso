@@ -54,8 +54,8 @@ import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
@@ -111,13 +111,13 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
   }
 
   @Override
-  public final IProfil addProfile( final TuhhWspmProject project ) throws CoreException
+  public final IProfile addProfile( final TuhhWspmProject project ) throws CoreException
   {
     final IProfileFeature profileFeature = createNewProfile( project );
     if( profileFeature == null )
       return null;
 
-    final IProfil profile = profileFeature.getProfil();
+    final IProfile profile = profileFeature.getProfil();
 
     final IProfileTransaction transaction = new AddProfileTransaction( this );
     final IStatus status = profile.doTransaction( transaction );
@@ -173,7 +173,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     return anyPoint.getStation();
   }
 
-  void addData( final IProfil profile ) throws CoreException
+  void addData( final IProfile profile ) throws CoreException
   {
     addBasicData( profile );
 
@@ -183,7 +183,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     configure( profile );
   }
 
-  private void addBasicData( final IProfil profile )
+  private void addBasicData( final IProfile profile )
   {
     final IWProfPoint wprofPoint = m_data.getProfilePolygones().getAnyPoint();
 
@@ -206,7 +206,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     }
 
     profile.setStation( Objects.firstNonNull( station, -999.999 ).doubleValue() );
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_RECHTSWERT ) );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_HOCHWERT ) );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_COMMENT ) );
@@ -248,6 +248,6 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     return foundPoints.toArray( new IWProfPoint[foundPoints.size()] );
   }
 
-  protected abstract void configure( IProfil profile ) throws CoreException;
+  protected abstract void configure( IProfile profile ) throws CoreException;
 
 }

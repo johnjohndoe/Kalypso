@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
 import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.observation.IObservation;
@@ -57,7 +57,7 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_BRUECKE;
 
-  public BuildingBruecke( final IProfil profil )
+  public BuildingBruecke( final IProfile profil )
   {
     this( profil, buildTupleResult() );
   }
@@ -96,13 +96,13 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
     return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
   }
 
-  public BuildingBruecke( final IProfil profil, final IObservation<TupleResult> observation )
+  public BuildingBruecke( final IProfile profil, final IObservation<TupleResult> observation )
   {
     super( observation );
     addPointProperties( profil );
   }
 
-  private void addPointProperties( final IProfil profil )
+  private void addPointProperties( final IProfile profil )
   {
     final IComponent uk = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
     if( !profil.hasPointProperty( uk ) )

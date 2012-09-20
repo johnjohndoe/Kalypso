@@ -44,9 +44,9 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -79,12 +79,12 @@ public class BrueckeRule extends AbstractValidatorRule
     return true;
   }
 
-  private boolean validateBankfullPoints( final ProfileAltitudeValidator pav, final IProfil profil ) throws CoreException
+  private boolean validateBankfullPoints( final ProfileAltitudeValidator pav, final IProfile profil ) throws CoreException
   {
-    final IProfilPointMarker[] brdvp = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
+    final IProfilePointMarker[] brdvp = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
     if( brdvp.length > 0 )
     {
-      final IProfilMarkerResolution delRes = new DelDeviderResolution( -1, IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+      final IProfileMarkerResolution delRes = new DelDeviderResolution( -1, IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
       pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.19" ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, delRes );//$NON-NLS-1$
       return false;
     }
@@ -92,7 +92,7 @@ public class BrueckeRule extends AbstractValidatorRule
   }
 
   @Override
-  public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  public void validate( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profil == null )
       return;
@@ -112,7 +112,7 @@ public class BrueckeRule extends AbstractValidatorRule
 
     // Brückengeometrie ermitteln
 
-    final IProfilPointMarker[] trenner = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    final IProfilePointMarker[] trenner = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     final int markerLeft = trenner.length > 1 ? trenner[0].getPoint().getIndex() : -1;
     final int markerRight = trenner.length > 1 ? trenner[trenner.length - 1].getPoint().getIndex() : -1;
     // Trennflächen vorhanden

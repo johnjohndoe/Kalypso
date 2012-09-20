@@ -60,7 +60,7 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.DoubleNaNValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.dialog.compare.ProfileChartComposite;
@@ -172,7 +172,7 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
   private void createProfileViewer( final Composite parent )
   {
-    final IProfil profile = m_data.getProfile();
+    final IProfile profile = m_data.getProfile();
 
     final IProfilLayerProvider lp = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() );
 

@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
@@ -91,14 +91,14 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
   }
 
   @Override
-  public boolean resolve( final IProfil profil )
+  public boolean resolve( final IProfile profil )
   {
     if( m_initialized )
     {
       final IComponent comp = profil.hasPointProperty( m_deviderTyp );
       final IComponent cBreite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-      final IProfilPointMarker[] markers = profil.getPointMarkerFor( comp );
-      final IProfilPointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
+      final IProfilePointMarker[] markers = profil.getPointMarkerFor( comp );
+      final IProfilePointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
       final IProfileRecord[] points = profil.getPoints();
       if( marker == null || cBreite == null || m_pointIndex < 0 || m_pointIndex >= points.length )
         return false;

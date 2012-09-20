@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -62,7 +62,7 @@ class ProfileData
 
   private IProfileCreator m_profileCreator;
 
-  private IProfil m_profile;
+  private IProfile m_profile;
 
   private final String m_wprofPath;
 
@@ -103,7 +103,7 @@ class ProfileData
     m_profile = profileCreator.addProfile( project );
   }
 
-  public IProfil getProfile( )
+  public IProfile getProfile( )
   {
     return m_profile;
   }

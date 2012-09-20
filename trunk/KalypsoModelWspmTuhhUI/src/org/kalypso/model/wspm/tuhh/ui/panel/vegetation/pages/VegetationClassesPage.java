@@ -68,9 +68,9 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.AbstractClassificationLabelProvider;
@@ -84,7 +84,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class VegetationClassesPage extends AbstractElementPage
 {
-  protected final IProfil m_profile;
+  protected final IProfile m_profile;
 
   private IDataBinding m_binding;
 
@@ -92,7 +92,7 @@ public class VegetationClassesPage extends AbstractElementPage
 
   private IVegetationClass[] m_vegetations;
 
-  public VegetationClassesPage( final IProfil profile, final IComponent component )
+  public VegetationClassesPage( final IProfile profile, final IComponent component )
   {
     super( VegetationClassesPage.class.getName() );
     m_profile = profile;
@@ -169,10 +169,10 @@ public class VegetationClassesPage extends AbstractElementPage
         final UpdateVegetationProperties worker = new UpdateVegetationProperties( m_profile, overwriteValues );
         ProgressUtilities.busyCursorWhile( worker );
 
-        final ProfilOperation operation = new ProfilOperation( "updating vegatation  values", m_profile, true ); //$NON-NLS-1$
+        final ProfileOperation operation = new ProfileOperation( "updating vegatation  values", m_profile, true ); //$NON-NLS-1$
         operation.addChange( worker.getChanges() );
 
-        new ProfilOperationJob( operation ).schedule();
+        new ProfileOperationJob( operation ).schedule();
       }
     } );
 

@@ -57,13 +57,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
@@ -95,7 +95,7 @@ public class WeirPanel extends AbstractProfilView
 
   protected final WeirLabelProvider m_labelProvider = new WeirLabelProvider();
 
-  public WeirPanel( final IProfil profile )
+  public WeirPanel( final IProfile profile )
   {
     super( profile );
 
@@ -111,7 +111,7 @@ public class WeirPanel extends AbstractProfilView
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
     m_toolkit = toolkit;
-    final IProfil profile = getProfile();
+    final IProfile profile = getProfile();
     final Composite panel = toolkit.createComposite( parent );
     panel.setLayout( new GridLayout( 2, false ) );
 
@@ -145,14 +145,14 @@ public class WeirPanel extends AbstractProfilView
 
         if( id.equals( building.getValue( cWehr ) ) )
           return;
-        final IProfilChange change = new ProfileObjectEdit( building, cWehr, id );
-        final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.32" ), getProfile(), change, true ); //$NON-NLS-1$
-        new ProfilOperationJob( operation ).schedule();
+        final IProfileChange change = new ProfileObjectEdit( building, cWehr, id );
+        final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.32" ), getProfile(), change, true ); //$NON-NLS-1$
+        new ProfileOperationJob( operation ).schedule();
       }
     } );
 
-    final IProfilPointMarker[] devider = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final IProfilPointMarker leftTF = devider.length < 1 ? null : devider[0];
+    final IProfilePointMarker[] devider = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilePointMarker leftTF = devider.length < 1 ? null : devider[0];
     // final IProfilPointMarker rightTF = devider.length < 2 ? null : devider[1];
 
     m_wehrStart = new DeviderLine( m_toolkit, panel, 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, true, profile );
@@ -173,7 +173,7 @@ public class WeirPanel extends AbstractProfilView
     if( m_wehrart.getCombo().isDisposed() )
       return;
 
-    final IProfil profile = getProfile();
+    final IProfile profile = getProfile();
     final BuildingWehr building = WspmSohlpunkte.getBuilding( profile, BuildingWehr.class );
     if( building == null )
       return;
@@ -191,7 +191,7 @@ public class WeirPanel extends AbstractProfilView
     m_deviderGroup.getParent().layout( true, true );
   }
 
-  private void updateDeviderGroup( final IProfil profile )
+  private void updateDeviderGroup( final IProfile profile )
   {
     final Control[] ctrls = m_deviderGroup.getChildren();
     for( final Control ctrl : ctrls )
@@ -202,9 +202,9 @@ public class WeirPanel extends AbstractProfilView
       }
     }
     final IComponent cmpWehrTrenner = profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
-    final IProfilPointMarker[] deviders = profile.getPointMarkerFor( cmpWehrTrenner );
+    final IProfilePointMarker[] deviders = profile.getPointMarkerFor( cmpWehrTrenner );
     int i = 0;
-    for( final IProfilPointMarker devider : deviders )
+    for( final IProfilePointMarker devider : deviders )
     {
       final DeviderLine devLine = new DeviderLine( m_toolkit, m_deviderGroup, i++, IWspmTuhhConstants.MARKER_TYP_WEHR, true, profile );
       devLine.refresh();
@@ -213,7 +213,7 @@ public class WeirPanel extends AbstractProfilView
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isObjectDataChanged() || hint.isProfilPropertyChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() )
     {

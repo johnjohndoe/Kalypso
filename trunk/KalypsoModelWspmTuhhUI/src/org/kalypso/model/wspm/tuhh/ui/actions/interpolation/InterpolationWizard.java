@@ -53,7 +53,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.util.ProfileInterpolation;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -134,13 +134,13 @@ public class InterpolationWizard extends Wizard implements IWorkbenchWizard
     try
     {
       final IProfileFeature previousProfileFeature = interpolationData.getPreviousProfile();
-      final IProfil previousProfile = previousProfileFeature.getProfil();
-      final IProfil nextProfile = interpolationData.getNextProfile().getProfil();
+      final IProfile previousProfile = previousProfileFeature.getProfil();
+      final IProfile nextProfile = interpolationData.getNextProfile().getProfil();
       final BigDecimal newStation = interpolationData.getNewStation();
       final boolean onlyRiverChannel = interpolationData.getOnlyChannel();
 
       final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile, nextProfile, onlyRiverChannel );
-      final IProfil newProfile = interpolation.interpolate( newStation, previousProfile.getType() );
+      final IProfile newProfile = interpolation.interpolate( newStation, previousProfile.getType() );
 
       /* TODO we should select this new feature... but in order to this, we need access to the selection provider */
       /* final Feature featureForSelection = */ProfileUiUtils.addNewProfileAndFireEvents( newProfile, waterBody, reach, previousProfileFeature );

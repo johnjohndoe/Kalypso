@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
 import java.util.Locale;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 
@@ -67,7 +67,7 @@ public class SobekStructDatExportOperation extends AbstractSobekStructExportOper
   }
 
   @Override
-  protected boolean writeBuilding( final String structId, final IProfil profil, final String profileName, final IProfileObject profileObject )
+  protected boolean writeBuilding( final String structId, final IProfile profil, final String profileName, final IProfileObject profileObject )
   {
     // todo: maybe use ca/cj/cm for controlled elements
 

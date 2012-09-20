@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
@@ -66,7 +66,7 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.0" ); //$NON-NLS-1$
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isSelectionChanged() )
     {
@@ -74,7 +74,7 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
     }
   }
 
-  public BuildingBridgeTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public BuildingBridgeTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( profil, IWspmTuhhConstants.LAYER_BRUECKE, TITLE, chartLayers, cm );
   }
@@ -88,16 +88,16 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
   @Override
   public void removeYourself( )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
 
     final IProfileBuilding building = WspmSohlpunkte.getBuilding( profil, IProfileBuilding.class );
     if( building == null )
       return;
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.1" ), profil, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.1" ), profil, true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectRemove( profil, building ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 }

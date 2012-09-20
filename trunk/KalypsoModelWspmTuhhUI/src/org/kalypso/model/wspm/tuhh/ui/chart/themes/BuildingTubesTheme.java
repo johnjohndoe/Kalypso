@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
@@ -67,13 +67,13 @@ public class BuildingTubesTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.0" ); //$NON-NLS-1$
 
-  public BuildingTubesTheme( final IProfil profil, final ICoordinateMapper cm, final LayerStyleProviderTuhh styleProvider )
+  public BuildingTubesTheme( final IProfile profil, final ICoordinateMapper cm, final LayerStyleProviderTuhh styleProvider )
   {
     super( profil, IWspmTuhhConstants.LAYER_TUBES, TITLE, new IProfilChartLayer[] { new CulvertLayer( profil, styleProvider ) }, cm );
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isObjectDataChanged() || hint.isObjectChanged() )
     {
@@ -90,15 +90,15 @@ public class BuildingTubesTheme extends AbstractProfilTheme
   @Override
   public void removeYourself( )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
 
     final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfil(), IProfileBuilding.class );
     if( building == null )
       return;
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.1" ), profil, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.1" ), profil, true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectRemove( profil, building ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 
   @Override

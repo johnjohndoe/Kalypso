@@ -49,11 +49,11 @@ import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -83,14 +83,14 @@ public class VegetationTheme extends AbstractProfilTheme
 
   private ILegendEntry[] m_legendEntries;
 
-  public VegetationTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
+  public VegetationTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
     super( profil, IWspmTuhhConstants.LAYER_BEWUCHS, TITLE, chartLayers, cm );
     setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) ); //$NON-NLS-1$
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isSelectionChanged() || hint.isPointValuesChanged() )
     {
@@ -137,7 +137,7 @@ public class VegetationTheme extends AbstractProfilTheme
   @Override
   public EditInfo getHover( final Point pos )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     final IProfileRecord[] points = profil.getPoints();
 
     for( final IProfileRecord p1 : points )
@@ -185,12 +185,12 @@ public class VegetationTheme extends AbstractProfilTheme
   @Override
   public void removeYourself( )
   {
-    final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.1" ), getProfil(), true ); //$NON-NLS-1$
+    final IProfile profil = getProfil();
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.1" ), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY ) ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP ) ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 
   @Override
@@ -203,7 +203,7 @@ public class VegetationTheme extends AbstractProfilTheme
   @Override
   public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     if( profil == null )
       return;
 

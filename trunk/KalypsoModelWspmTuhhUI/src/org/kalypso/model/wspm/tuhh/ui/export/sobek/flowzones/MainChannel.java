@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
@@ -64,19 +64,19 @@ public class MainChannel extends AbstractFlowZoneType
    * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType#createFlowZone(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  public FlowZone createFlowZone( final IProfil profile )
+  public FlowZone createFlowZone( final IProfile profile )
   {
-    final IProfilPointMarker[] markers = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilePointMarker[] markers = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( markers == null || markers.length != 2 )
       return null;
 
-    final IProfilPointMarker leftMarker = markers[0];
-    final IProfilPointMarker rightMarker = markers[1];
+    final IProfilePointMarker leftMarker = markers[0];
+    final IProfilePointMarker rightMarker = markers[1];
 
     return createZone( profile, leftMarker, rightMarker, getLabel() );
   }
 
-  public static FlowZone createZone( final IProfil profile, final IProfilPointMarker leftMarker, final IProfilPointMarker rightMarker, final String label )
+  public static FlowZone createZone( final IProfile profile, final IProfilePointMarker leftMarker, final IProfilePointMarker rightMarker, final String label )
   {
     final int indexWidth = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final double left = ((Number) leftMarker.getPoint().getValue( indexWidth )).doubleValue();

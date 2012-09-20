@@ -66,11 +66,11 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.SimpleDataBinding;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ComboMessageFocusListener;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.ENERGYLOSS_TYPE;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
@@ -95,7 +95,7 @@ public class EnergylossPanel extends AbstractProfilView
 
   private ComboMessageFocusListener m_comboFocusListener = null;
 
-  public EnergylossPanel( final IProfil profile )
+  public EnergylossPanel( final IProfile profile )
   {
     super( profile );
   }
@@ -156,9 +156,9 @@ public class EnergylossPanel extends AbstractProfilView
     final IRecord rec = res.size() > 0 ? res.get( 0 ) : null;
     if( rec == null || val.equals( rec.getValue( i ) ) )
       return;
-    final ProfilOperation operation = new ProfilOperation( cmp.getDescription(), getProfile(), true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( cmp.getDescription(), getProfile(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectEdit( getEnergyloss(), cmp, val ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
 
   }
 
@@ -292,7 +292,7 @@ public class EnergylossPanel extends AbstractProfilView
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isObjectDataChanged() )
     {

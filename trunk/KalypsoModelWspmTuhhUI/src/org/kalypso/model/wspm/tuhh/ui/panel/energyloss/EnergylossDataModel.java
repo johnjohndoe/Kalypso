@@ -45,10 +45,10 @@ import java.math.BigDecimal;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
 import org.kalypso.observation.result.IComponent;
@@ -66,7 +66,7 @@ public class EnergylossDataModel extends AbstractModelObject
 
   private final IEnergylossProfileObject m_energylossObject;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final int m_index;
 
@@ -74,7 +74,7 @@ public class EnergylossDataModel extends AbstractModelObject
 
   private String m_type;
 
-  public EnergylossDataModel( final IProfil profile, final int index )
+  public EnergylossDataModel( final IProfile profile, final int index )
   {
     m_profile = profile;
     IEnergylossProfileObject[] obs = profile.getProfileObjects( EnergylossProfileObject.class );
@@ -101,9 +101,9 @@ public class EnergylossDataModel extends AbstractModelObject
       result.add( newRec );
     }
     final ProfileObjectEdit changes = new ProfileObjectEdit( m_energylossObject, cmpVal, index, newValue.doubleValue() );
-    final ProfilOperation operation = new ProfilOperation( "updating energyloss", m_profile, changes, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( "updating energyloss", m_profile, changes, true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectEdit( m_energylossObject, cmpTyp, index, type ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 
   public String getEnergylossType( )

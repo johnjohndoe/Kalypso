@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineDistanceBuilder.SIDE;
 import org.opengis.referencing.FactoryException;
 
@@ -56,7 +56,7 @@ public interface IBanklineMarkerProvider
 {
   String getId( );
 
-  Coordinate getMarkerLocation( String profileSRS, IProfil profile, SIDE side ) throws FactoryException, Exception;
+  Coordinate getMarkerLocation( String profileSRS, IProfile profile, SIDE side ) throws FactoryException, Exception;
 
-  boolean checkSanity( LineString riverLine, String profileSRS, IProfil profile, SIDE side ) throws Exception;
+  boolean checkSanity( LineString riverLine, String profileSRS, IProfile profile, SIDE side ) throws Exception;
 }

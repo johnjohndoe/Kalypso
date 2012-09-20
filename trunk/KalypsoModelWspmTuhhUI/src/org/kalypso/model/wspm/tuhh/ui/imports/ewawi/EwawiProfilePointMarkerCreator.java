@@ -21,9 +21,9 @@ package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
@@ -42,10 +42,10 @@ public class EwawiProfilePointMarkerCreator
   public void createProfilePointMarker( )
   {
     /* Get the profile point property provider. */
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
 
     /* Get the profile. */
-    final IProfil profil = m_profileFeature.getProfil();
+    final IProfile profil = m_profileFeature.getProfil();
 
     /* Create the point marker for all points using the code property. */
     createPointMarker( provider, profil );
@@ -53,13 +53,13 @@ public class EwawiProfilePointMarkerCreator
     /* Create the point marker for the first and last point. */
     final IProfileRecord firstPoint = profil.getFirstPoint();
     final IProfileRecord lastPoint = profil.getLastPoint();
-    final IProfilPointMarker firstMarker = profil.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, firstPoint );
-    final IProfilPointMarker lastMarker = profil.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, lastPoint );
+    final IProfilePointMarker firstMarker = profil.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, firstPoint );
+    final IProfilePointMarker lastMarker = profil.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, lastPoint );
     firstMarker.setValue( provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
     lastMarker.setValue( provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
   }
 
-  private void createPointMarker( final IProfilPointPropertyProvider provider, final IProfil profil )
+  private void createPointMarker( final IProfilePointPropertyProvider provider, final IProfile profil )
   {
     final IProfileRecord[] points = profil.getPoints();
     for( final IProfileRecord point : points )
@@ -71,7 +71,7 @@ public class EwawiProfilePointMarkerCreator
       final String markerID = findMarkerID( code );
       if( markerID != null && markerID.length() > 0 )
       {
-        final IProfilPointMarker marker = profil.createPointMarker( markerID, point );
+        final IProfilePointMarker marker = profil.createPointMarker( markerID, point );
         marker.setValue( provider.getDefaultValue( markerID ) );
       }
     }

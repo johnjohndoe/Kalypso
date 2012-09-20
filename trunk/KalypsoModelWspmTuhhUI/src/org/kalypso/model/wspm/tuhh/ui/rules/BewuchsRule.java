@@ -47,8 +47,8 @@ import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -69,7 +69,7 @@ import org.kalypso.observation.result.IComponent;
 public class BewuchsRule extends AbstractValidatorRule
 {
   @Override
-  public void validate( final IProfil profile, final IValidatorMarkerCollector collector ) throws CoreException
+  public void validate( final IProfile profile, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( Objects.isNull( profile ) )
       return;
@@ -83,7 +83,7 @@ public class BewuchsRule extends AbstractValidatorRule
      * Bewuchs im Fluﬂschlauch ?
      */
     final IComponent cTrennF = profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final IProfilPointMarker[] devider = profile.getPointMarkerFor( cTrennF );
+    final IProfilePointMarker[] devider = profile.getPointMarkerFor( cTrennF );
     if( devider.length < 2 )
       return;
 
@@ -145,7 +145,7 @@ public class BewuchsRule extends AbstractValidatorRule
     }
   }
 
-  private boolean validateArea( final IProfil profil, final IValidatorMarkerCollector collector, final IProfileRecord[] subList ) throws CoreException
+  private boolean validateArea( final IProfile profil, final IValidatorMarkerCollector collector, final IProfileRecord[] subList ) throws CoreException
   {
     boolean hasValues = false;
     boolean hasErrors = false;
@@ -222,7 +222,7 @@ public class BewuchsRule extends AbstractValidatorRule
     return hasValues;
   }
 
-  private String getVegetationPointProperty( final IProfil profil )
+  private String getVegetationPointProperty( final IProfile profil )
   {
     if( WspmClassifications.hasVegetationProperties( profil ) )
       return IWspmConstants.POINT_PROPERTY_BEWUCHS_AX;

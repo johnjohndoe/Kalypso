@@ -46,12 +46,12 @@ import java.util.Set;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
@@ -64,7 +64,7 @@ public final class RoughnessPanelHelper
   {
   }
 
-  public static IComponent[] fromProfile( final IProfil profile )
+  public static IComponent[] fromProfile( final IProfile profile )
   {
     final Set<IComponent> found = new LinkedHashSet<>();
 
@@ -84,7 +84,7 @@ public final class RoughnessPanelHelper
     return found.toArray( new IComponent[] {} );
   }
 
-  public static String[] findMissing( final IProfil profile )
+  public static String[] findMissing( final IProfile profile )
   {
     final Set<String> missing = new LinkedHashSet<>();
     if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
@@ -102,23 +102,23 @@ public final class RoughnessPanelHelper
     return missing.toArray( new String[] {} );
   }
 
-  public static void addRoughness( final IProfil profile, final String componentId )
+  public static void addRoughness( final IProfile profile, final String componentId )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent component = provider.getPointProperty( componentId );
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString("RoughnessPanelHelper.0"), profile, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( Messages.getString("RoughnessPanelHelper.0"), profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyAdd( profile, component ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 
-  public static void removeRoughness( final IProfil profile, final String componentId )
+  public static void removeRoughness( final IProfile profile, final String componentId )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent component = provider.getPointProperty( componentId );
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString("RoughnessPanelHelper.1"), profile, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( Messages.getString("RoughnessPanelHelper.1"), profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profile, component ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 }

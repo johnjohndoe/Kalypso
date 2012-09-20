@@ -47,7 +47,7 @@ import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
@@ -63,9 +63,9 @@ import org.kalypso.wspwin.core.prf.datablock.IDataBlockNames;
  */
 public class ProfileWaterlevelWriter
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
-  public ProfileWaterlevelWriter( final IProfil profile )
+  public ProfileWaterlevelWriter( final IProfile profile )
   {
     m_profile = profile;
   }
@@ -104,7 +104,7 @@ public class ProfileWaterlevelWriter
     return writeCoords( m_profile, property, creator );
   }
 
-  private IDataBlock writeCoords( final IProfil profil, final IComponent waterlevelProperty, final CoordDataBlockCreator creator )
+  private IDataBlock writeCoords( final IProfile profil, final IComponent waterlevelProperty, final CoordDataBlockCreator creator )
   {
     final IRecord[] points = profil.getPoints();
     if( points.length < 2 )

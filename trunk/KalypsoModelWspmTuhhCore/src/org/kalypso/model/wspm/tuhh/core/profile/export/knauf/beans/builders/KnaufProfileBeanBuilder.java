@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.base.interpolation.FillMissingProfileGeocoordinatesRunnable;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
@@ -77,7 +77,7 @@ public final class KnaufProfileBeanBuilder extends AbstractKnaufProfileBeanBuild
   {
     final Set<IStatus> stati = new LinkedHashSet<>();
 
-    final IProfil profile = m_profile.getProfile();
+    final IProfile profile = m_profile.getProfile();
     final IProfileObject[] objects = profile.getProfileObjects();
 
     final FillMissingProfileGeocoordinatesRunnable runnable = new FillMissingProfileGeocoordinatesRunnable( profile );

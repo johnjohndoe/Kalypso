@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -111,7 +111,7 @@ public class ExtendProfileJob extends AbstractDemProfileJob
 
     /* Add line into profile. */
     final IProfileFeature profile = m_info.getProfile();
-    final IProfil profil = profile.getProfil();
+    final IProfile profil = profile.getProfil();
     WspmProfileHelper.extendPoints( profil, m_insertSign, newPoints, getSimplifyDistance(), curve.getCoordinateSystem() );
 
     final Feature profileOwner = m_info.getProfileOwner();

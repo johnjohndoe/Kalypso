@@ -55,7 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
@@ -194,7 +194,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException
   {
-    final IProfil profil = feature.getProfil();
+    final IProfile profil = feature.getProfil();
 
     final WaterBody waterBody = findWaterBody( feature );
 
@@ -284,7 +284,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     }
   }
 
-  private void createParts( final CrossSection section, final IProfil profil, final String profilSRS ) throws PdbConnectException
+  private void createParts( final CrossSection section, final IProfile profil, final String profilSRS ) throws PdbConnectException
   {
     final Set<CrossSectionPart> parts = new HashSet<>();
 
@@ -338,7 +338,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     return part.getPoints().isEmpty();
   }
 
-  private CrossSectionPart builtPart( final IProfil profil, final String profilSRS, final IPartBuilder partBuilder ) throws PdbConnectException
+  private CrossSectionPart builtPart( final IProfile profil, final String profilSRS, final IPartBuilder partBuilder ) throws PdbConnectException
   {
     final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, partBuilder, m_classChecker );
 

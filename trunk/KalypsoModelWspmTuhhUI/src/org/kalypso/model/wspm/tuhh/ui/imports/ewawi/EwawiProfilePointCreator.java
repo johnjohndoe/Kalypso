@@ -21,8 +21,8 @@ package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ewawi.data.EwawiProLine;
 import org.kalypso.model.wspm.ewawi.data.EwawiSta;
@@ -56,7 +56,7 @@ public class EwawiProfilePointCreator
 
   public void createProfilePoints( ) throws EwawiException
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
     final IComponent idComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_ID );
     final IComponent commentComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_COMMENT );
     final IComponent rechtswertComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
@@ -65,7 +65,7 @@ public class EwawiProfilePointCreator
     final IComponent hoeheComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent codeComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_CODE );
 
-    final IProfil profil = m_profileFeature.getProfil();
+    final IProfile profil = m_profileFeature.getProfil();
     profil.addPointProperty( idComponent );
     profil.addPointProperty( commentComponent );
     profil.addPointProperty( rechtswertComponent );

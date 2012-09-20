@@ -45,7 +45,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
@@ -71,12 +71,12 @@ class ProfileIntersector
     m_numPoints = numPoints;
   }
 
-  public IProfil execute( final IProfil originalProfile )
+  public IProfile execute( final IProfile originalProfile )
   {
     final IProfileRecord[] originalRecords = originalProfile.getPoints();
     final int numProfPoints = originalRecords.length;
 
-    final IProfil newProfile = ChannelEditUtil.createEmptyProfile( originalProfile );
+    final IProfile newProfile = ChannelEditUtil.createEmptyProfile( originalProfile );
 
     if( m_numPoints > numProfPoints )
       equidistantSegmentation( originalProfile, originalRecords, newProfile );
@@ -86,7 +86,7 @@ class ProfileIntersector
     return newProfile;
   }
 
-  private void equidistantSegmentation( final IProfil originalProfile, final IProfileRecord[] originalRecords, final IProfil newProfile )
+  private void equidistantSegmentation( final IProfile originalProfile, final IProfileRecord[] originalRecords, final IProfile newProfile )
   {
     // copy start point
     final IProfileRecord newStartRecord = newProfile.createProfilPoint();
@@ -141,7 +141,7 @@ class ProfileIntersector
   }
 
   /* do it by Douglas-Peucker */
-  private void douglasPeuckerSegmentation( final IProfileRecord[] originalRecords, final IProfil newProfile )
+  private void douglasPeuckerSegmentation( final IProfileRecord[] originalRecords, final IProfile newProfile )
   {
     final IProfileRecord[] vipRecords = DouglasPeuckerHelper.findIProfileVIPPoints( originalRecords, m_numPoints );
 

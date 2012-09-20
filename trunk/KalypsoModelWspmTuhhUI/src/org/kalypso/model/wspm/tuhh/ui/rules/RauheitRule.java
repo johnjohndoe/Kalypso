@@ -46,8 +46,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
@@ -64,7 +64,7 @@ import org.kalypso.model.wspm.tuhh.ui.resolutions.AddRoughnessResolution;
 public class RauheitRule extends AbstractValidatorRule
 {
   @Override
-  public void validate( final IProfil profile, final IValidatorMarkerCollector collector ) throws CoreException
+  public void validate( final IProfile profile, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profile == null || isDurchlass( profile.getProfileObjects( IProfileBuilding.class ) ) )
       return;
@@ -77,7 +77,7 @@ public class RauheitRule extends AbstractValidatorRule
       return;
     }
 
-    final IProfilPointMarker[] durchS = profile.getPointMarkerFor( profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+    final IProfilePointMarker[] durchS = profile.getPointMarkerFor( profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
     if( durchS.length < 2 )
       return;
 

@@ -48,10 +48,10 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -77,7 +77,7 @@ public class RoughnessLayer extends AbstractProfilLayer
 {
   private IPointStyle m_styleClazzes;
 
-  public RoughnessLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
+  public RoughnessLayer( final IProfile profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( IWspmTuhhConstants.LAYER_RAUHEIT, profil, targetRangeProperty, styleProvider );
   }
@@ -91,7 +91,7 @@ public class RoughnessLayer extends AbstractProfilLayer
   @Override
   public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     if( profil == null )
       return;
 
@@ -136,7 +136,7 @@ public class RoughnessLayer extends AbstractProfilLayer
 
   private boolean hasRoughnessProperties( )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     final IComponent property = profil.getPointPropertyFor( getTargetProperty() );
     if( Objects.isNull( property ) )
     {
@@ -186,7 +186,7 @@ public class RoughnessLayer extends AbstractProfilLayer
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     if( Objects.isNull( profil ) )
       return null;
 
@@ -212,10 +212,10 @@ public class RoughnessLayer extends AbstractProfilLayer
   @Override
   public void removeYourself( )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.RoughnessLayer.0" ), getProfil(), true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.RoughnessLayer.0" ), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profil, getTargetComponent() ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 }

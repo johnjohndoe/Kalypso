@@ -62,9 +62,9 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.util.roughnesses.GuessRoughessClassesRunnable;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessDataModel;
@@ -77,7 +77,7 @@ import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
  */
 public abstract class AbstractRoughnessPage extends AbstractElementPage
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final IComponent m_component;
 
@@ -85,7 +85,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
 
   private IDataBinding m_binding;
 
-  public AbstractRoughnessPage( final IProfil profile, final IComponent component, final String identifier )
+  public AbstractRoughnessPage( final IProfile profile, final IComponent component, final String identifier )
   {
     super( identifier );
 
@@ -101,7 +101,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     m_binding.dispose();
   }
 
-  protected IProfil getProfile( )
+  protected IProfile getProfile( )
   {
     return m_profile;
   }
@@ -206,10 +206,10 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
           final GuessRoughessClassesRunnable worker = new GuessRoughessClassesRunnable( getProfile(), getComponent().getId(), overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );
 
-          final ProfilOperation operation = new ProfilOperation( "Guessing roughness classes", getProfile(), overwriteValues ); //$NON-NLS-1$
+          final ProfileOperation operation = new ProfileOperation( "Guessing roughness classes", getProfile(), overwriteValues ); //$NON-NLS-1$
           operation.addChange( worker.getChanges() );
 
-          new ProfilOperationJob( operation ).schedule();
+          new ProfileOperationJob( operation ).schedule();
         }
       } );
 

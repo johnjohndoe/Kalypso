@@ -52,7 +52,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
@@ -111,7 +111,7 @@ public abstract class AbstractCsvWriter
     for( final IProfileFeature profileFeature : profiles )
     {
       monitor.subTask( String.format( "%s (km %s)", profileFeature.getName(), profileFeature.getBigStation() ) ); //$NON-NLS-1$
-      final IProfil profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfil();
       writeData( writer, profileFeature, profil );
       ProgressUtilities.worked( monitor, 1 );
     }
@@ -134,5 +134,5 @@ public abstract class AbstractCsvWriter
     writer.println();
   }
 
-  protected abstract void writeData( final PrintWriter writer, final IProfileFeature profileFeature, final IProfil profil );
+  protected abstract void writeData( final PrintWriter writer, final IProfileFeature profileFeature, final IProfile profil );
 }

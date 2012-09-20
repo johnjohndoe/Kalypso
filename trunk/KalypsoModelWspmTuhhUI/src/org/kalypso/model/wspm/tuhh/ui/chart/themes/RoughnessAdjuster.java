@@ -46,8 +46,8 @@ import java.util.Collection;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.chart.utils.ProfileChannel;
@@ -62,11 +62,11 @@ import org.kalypso.observation.result.IComponent;
  */
 public class RoughnessAdjuster
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
-  private final IProfilPointMarker m_devider;
+  private final IProfilePointMarker m_devider;
 
-  public RoughnessAdjuster( final IProfil profil, final IProfilPointMarker devider )
+  public RoughnessAdjuster( final IProfile profil, final IProfilePointMarker devider )
   {
     m_profil = profil;
     m_devider = devider;
@@ -75,8 +75,8 @@ public class RoughnessAdjuster
 
   public void moveDevider( final IProfileRecord newPoint )
   {
-    final IProfilPointMarker[] trennflaechen = m_profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final IProfilPointMarker[] durchstroemte = m_profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilePointMarker[] trennflaechen = m_profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilePointMarker[] durchstroemte = m_profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( trennflaechen.length < 2 || durchstroemte.length < 2 )
       return;
 

@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.math.BigDecimal;
 
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -73,7 +73,7 @@ public class LengthSectionColumnDivide implements ILengthSectionColumn
   public void addColumn( final TupleResult result )
   {
     /* Make sure the target component exists */
-    result.addComponent( ProfilUtil.getFeatureComponent( m_componentTarget ) );
+    result.addComponent( ProfileUtil.getFeatureComponent( m_componentTarget ) );
 
     final int targetComponent = result.indexOfComponent( m_componentTarget );
 

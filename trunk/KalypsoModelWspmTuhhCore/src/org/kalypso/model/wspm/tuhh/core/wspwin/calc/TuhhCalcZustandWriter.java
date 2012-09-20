@@ -46,7 +46,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
@@ -117,7 +117,7 @@ public class TuhhCalcZustandWriter
 
     final IProfileFeature profileMember = segment.getProfileMember();
 
-    final IProfil profil = profileMember.getProfil();
+    final IProfile profil = profileMember.getProfil();
     profil.setStation( exportStation.doubleValue() );
 
     final File outPrfFile = new File( profDir, prfName );

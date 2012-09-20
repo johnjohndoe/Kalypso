@@ -73,7 +73,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
@@ -175,7 +175,7 @@ public class Restart1DImporter
       final IProfileFeature profileMember = segment.getProfileMember();
       final String crs = profileMember.getSrsName();
       final BigDecimal station = profileMember.getBigStation();
-      final IProfil profil = profileMember.getProfil();
+      final IProfile profil = profileMember.getProfil();
 
       final IProfileRecord sohlPoint = ProfileVisitors.findLowestPoint( profil );
 

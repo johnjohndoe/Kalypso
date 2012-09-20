@@ -59,11 +59,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_GERINNE_ART;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_KENNUNG;
@@ -93,7 +93,7 @@ public class SinuositaetPanel extends AbstractProfilView
 
   protected final SinuositaetProfileObject m_sinuositaet;
 
-  public SinuositaetPanel( final IProfil profile )
+  public SinuositaetPanel( final IProfile profile )
   {
     super( profile );
     final SinuositaetProfileObject[] sins = profile.getProfileObjects( SinuositaetProfileObject.class );
@@ -130,9 +130,9 @@ public class SinuositaetPanel extends AbstractProfilView
     final IRecord rec = res.size() > 0 ? res.get( 0 ) : null;
     if( rec == null || val.equals( rec.getValue( i ) ) )
       return;
-    final ProfilOperation operation = new ProfilOperation( cmp.getDescription(), getProfile(), true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( cmp.getDescription(), getProfile(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectEdit( m_sinuositaet, cmp, val ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
 
   }
 
@@ -253,7 +253,7 @@ public class SinuositaetPanel extends AbstractProfilView
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isObjectDataChanged() )
     {

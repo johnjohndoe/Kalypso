@@ -58,7 +58,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IRunOffEvent;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
@@ -86,7 +86,7 @@ public class WspWinProjectWriter
 {
   private final WspCfg m_wspCfg;
 
-  private final Map<Integer, IProfil> m_profiles = new HashMap<>();
+  private final Map<Integer, IProfile> m_profiles = new HashMap<>();
 
   private final String m_roughnessType;
 
@@ -122,7 +122,7 @@ public class WspWinProjectWriter
       profileIndex.put( profileFeature, profileBean );
 
       /* Add real profile */
-      final IProfil profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfil();
       m_profiles.put( prfCount, profil );
     }
 
@@ -168,7 +168,7 @@ public class WspWinProjectWriter
   private void addEnergyloss( final TuhhReachProfileSegment segment, final WspWinZustand zustand )
   {
     final IProfileFeature profileMember = segment.getProfileMember();
-    final IProfil profile = profileMember.getProfil();
+    final IProfile profile = profileMember.getProfil();
     final IEnergylossProfileObject[] losses = profile.getProfileObjects( IEnergylossProfileObject.class );
     final BigDecimal station = profileMember.getBigStation();
     for( final IEnergylossProfileObject losse : losses )
@@ -303,12 +303,12 @@ public class WspWinProjectWriter
     final File profDir = project.getProfDir();
 
     /* Profiles */
-    final Set<Entry<Integer, IProfil>> entrySet = m_profiles.entrySet();
-    for( final Entry<Integer, IProfil> entry : entrySet )
+    final Set<Entry<Integer, IProfile>> entrySet = m_profiles.entrySet();
+    for( final Entry<Integer, IProfile> entry : entrySet )
     {
       final Integer prfCount = entry.getKey();
       final String filename = formatPrfName( prfCount );
-      final IProfil profil = entry.getValue();
+      final IProfile profil = entry.getValue();
       final File outPrfFile = new File( profDir, filename );
 
       final WspWinProfileWriter profileWriter = new WspWinProfileWriter( profil, prfCount, m_roughnessType );

@@ -46,7 +46,7 @@ import java.util.List;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
@@ -61,11 +61,11 @@ public class PrfVegetationWriter
 
   private boolean m_preferClasses;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final DataBlockWriter m_dbWriter;
 
-  public PrfVegetationWriter( final DataBlockWriter dbWriter, final IProfil profile )
+  public PrfVegetationWriter( final DataBlockWriter dbWriter, final IProfile profile )
   {
     m_dbWriter = dbWriter;
     m_profile = profile;

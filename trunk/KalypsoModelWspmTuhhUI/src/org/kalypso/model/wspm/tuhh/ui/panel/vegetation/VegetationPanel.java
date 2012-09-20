@@ -67,8 +67,8 @@ import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPageListener;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.pages.VegetationClassesPage;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.pages.VegetationPropertiesPage;
@@ -84,7 +84,7 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
 
   private static String LAST_SELECTED_PAGE;
 
-  public VegetationPanel( final IProfil profile )
+  public VegetationPanel( final IProfile profile )
   {
     super( profile );
   }
@@ -94,7 +94,7 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
 // TODO
   }
@@ -228,7 +228,7 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
 
   private IElementPage[] getPages( )
   {
-    final IProfil profile = getProfile();
+    final IProfile profile = getProfile();
 
     final List<IElementPage> pages = new ArrayList<>();
 

@@ -45,10 +45,10 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -71,7 +71,7 @@ import org.kalypso.observation.result.IRecord;
 public class TrennerRule extends AbstractValidatorRule
 {
   @Override
-  public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  public void validate( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profil == null )
       return;
@@ -87,17 +87,17 @@ public class TrennerRule extends AbstractValidatorRule
     if( !validateSize( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, collector, true ) )
       return;
 
-    final IProfilPointMarker[] db = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    final IProfilPointMarker[] tf = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final IProfilPointMarker[] bv = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    final IProfilePointMarker[] db = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilePointMarker[] tf = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilePointMarker[] bv = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
 
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
   }
 
-  private boolean validateSize( final IProfil profile, final String markerId, final IValidatorMarkerCollector collector, final boolean allowEmpty ) throws CoreException
+  private boolean validateSize( final IProfile profile, final String markerId, final IValidatorMarkerCollector collector, final boolean allowEmpty ) throws CoreException
   {
-    final IProfilPointMarker[] markers = profile.getPointMarkerFor( markerId );
+    final IProfilePointMarker[] markers = profile.getPointMarkerFor( markerId );
 
     // REMARK: only used to get the label, so we use the generic component. Do not use this
     // component to do anything with the markers.
@@ -152,7 +152,7 @@ public class TrennerRule extends AbstractValidatorRule
     return true;
   }
 
-  private void validatePosition( final IProfilPointMarker[] db, final IProfilPointMarker[] toValidate, final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  private void validatePosition( final IProfilePointMarker[] db, final IProfilePointMarker[] toValidate, final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( Arrays.isEmpty( db ) || db.length != 2 )
       return;
@@ -162,10 +162,10 @@ public class TrennerRule extends AbstractValidatorRule
     final IRecord leftP = db[0].getPoint();
     final IRecord rightP = db[1].getPoint();
 
-    final Double left = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, leftP );
-    final Double right = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, rightP );
-    final Double xleft = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, toValidate[0].getPoint() );
-    final Double xright = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, toValidate[1].getPoint() );
+    final Double left = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, leftP );
+    final Double right = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, rightP );
+    final Double xleft = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, toValidate[0].getPoint() );
+    final Double xright = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, toValidate[1].getPoint() );
     if( xright.isNaN() || xleft.isNaN() || left.isNaN() || right.isNaN() )
       return;
 

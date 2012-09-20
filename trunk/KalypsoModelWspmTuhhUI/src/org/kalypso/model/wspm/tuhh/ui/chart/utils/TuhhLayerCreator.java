@@ -46,7 +46,7 @@ import java.util.Set;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
@@ -77,7 +77,7 @@ public final class TuhhLayerCreator
   {
   }
 
-  public static IProfilChartLayer[] create2DWaterLevelLayers( final IProfil profile, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
+  public static IProfilChartLayer[] create2DWaterLevelLayers( final IProfile profile, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
   {
     final Set<IProfilChartLayer> layers = new LinkedHashSet<>();
 
@@ -99,7 +99,7 @@ public final class TuhhLayerCreator
     return layers.toArray( new IProfilChartLayer[] {} );
   }
 
-  public static IProfilChartLayer createBuildingLayer( final IProfil profile, final IProfilLayerProvider provider )
+  public static IProfilChartLayer createBuildingLayer( final IProfile profile, final IProfilLayerProvider provider )
   {
     // TODO IProfileObjects now returned as list from IProfile, but we can only handle one IProfileObject (WSPM can't
     // handle more!)
@@ -124,7 +124,7 @@ public final class TuhhLayerCreator
     return null;
   }
 
-  public static IProfilChartLayer createWspLayer( final IProfil profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
+  public static IProfilChartLayer createWspLayer( final IProfile profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
   {
 
     final CoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
@@ -133,7 +133,7 @@ public final class TuhhLayerCreator
     return new WspLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL, styleProvider, wspLayerData, cm );
   }
 
-  public static IProfilChartLayer createWspFixationLayer( final IProfil profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
+  public static IProfilChartLayer createWspFixationLayer( final IProfile profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
   {
     final CoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
     final IWspLayerData data = new TuhhResultDataProvider( result, "activeFixationIds" ); //$NON-NLS-1$

@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
@@ -55,7 +55,7 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
 {
   @Override
-  public IProfilChartLayer[] createLayers( final IProfil profil, final Object result )
+  public IProfilChartLayer[] createLayers( final IProfile profil, final Object result )
   {
     final List<IProfilChartLayer> layers = new ArrayList<>();
 

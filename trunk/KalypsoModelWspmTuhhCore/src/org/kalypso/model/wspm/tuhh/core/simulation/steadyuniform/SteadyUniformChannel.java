@@ -50,7 +50,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -77,13 +77,13 @@ public class SteadyUniformChannel
 {
   private final GeometryFactory m_factory = new GeometryFactory();
 
-  private final IProfil m_crossSection;
+  private final IProfile m_crossSection;
 
   private final int m_channelStart;
 
   private final int m_channelEnd;
 
-  public SteadyUniformChannel( final IProfil crossSection, final int channelStart, final int channelEnd )
+  public SteadyUniformChannel( final IProfile crossSection, final int channelStart, final int channelEnd )
   {
     Assert.isTrue( channelStart < channelEnd );
 

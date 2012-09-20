@@ -4,8 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -38,7 +38,7 @@ final class SimplifyProfileManipulator implements IProfileManipulator
   }
 
   @Override
-  public Pair<IProfilChange[], IStatus> performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+  public Pair<IProfileChange[], IStatus> performProfileManipulation( final IProfile profile, final IProgressMonitor monitor )
   {
     monitor.beginTask( "", 1 );//$NON-NLS-1$
 
@@ -55,9 +55,9 @@ final class SimplifyProfileManipulator implements IProfileManipulator
     monitor.done();
 
     if( pointsToRemove == null )
-      return Pair.of( new IProfilChange[0], status );
+      return Pair.of( new IProfileChange[0], status );
 
-    final IProfilChange[] changes = new IProfilChange[] { new PointRemove( profile, pointsToRemove ) };
+    final IProfileChange[] changes = new IProfileChange[] { new PointRemove( profile, pointsToRemove ) };
     return Pair.of( changes, status );
   }
 

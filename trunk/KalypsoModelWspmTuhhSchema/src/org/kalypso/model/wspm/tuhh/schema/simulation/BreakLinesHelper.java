@@ -55,7 +55,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -123,7 +123,7 @@ public class BreakLinesHelper implements IWspmConstants
           continue;
 
         final IProfileFeature profileMember = reach.getProfileMember();
-        final IProfil profil = profileMember.getProfil();
+        final IProfile profil = profileMember.getProfil();
 
         final BigDecimal station = reach.getStation();
         final Double wsp = wspMap.get( station.doubleValue() );

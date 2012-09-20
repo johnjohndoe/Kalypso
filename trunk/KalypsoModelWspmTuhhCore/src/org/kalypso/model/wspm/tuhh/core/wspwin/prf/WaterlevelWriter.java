@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
@@ -57,11 +57,11 @@ import org.kalypso.wspwin.core.prf.datablock.IDataBlockNames;
  */
 public class WaterlevelWriter
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final IWaterlevel[] m_waterlevels;
 
-  public WaterlevelWriter( final IProfil profil, final IWaterlevel[] waterlevels )
+  public WaterlevelWriter( final IProfile profil, final IWaterlevel[] waterlevels )
   {
     m_profil = profil;
     m_waterlevels = waterlevels;

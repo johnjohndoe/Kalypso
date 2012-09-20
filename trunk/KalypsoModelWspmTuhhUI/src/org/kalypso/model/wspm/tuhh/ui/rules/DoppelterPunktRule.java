@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.tuhh.ui.rules;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -57,7 +57,7 @@ import org.kalypso.observation.result.IComponent;
 public class DoppelterPunktRule extends AbstractValidatorRule
 {
   @Override
-  public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  public void validate( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profil == null )
       return;
@@ -73,7 +73,7 @@ public class DoppelterPunktRule extends AbstractValidatorRule
     for( final IProfileRecord point : points )
     {
       if( prevPoint != null )
-        if( ProfilUtil.comparePoints( new IComponent[] { cB, cH }, prevPoint, point ) )
+        if( ProfileUtil.comparePoints( new IComponent[] { cB, cH }, prevPoint, point ) )
         {
           final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DoppelterPunktRule.0", point.getValue( iB ) ); //$NON-NLS-1$
           collector.createProfilMarker( IMarker.SEVERITY_WARNING, msg, String.format( "km %.4f", profil.getStation() ), point.getIndex(), cB.getId() ); //$NON-NLS-1$

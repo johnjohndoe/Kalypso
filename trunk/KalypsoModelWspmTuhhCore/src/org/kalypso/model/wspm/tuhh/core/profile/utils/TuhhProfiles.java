@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.utils;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil;
 import org.kalypso.observation.result.TupleResultUtilities;
 
@@ -55,7 +55,7 @@ public final class TuhhProfiles
   {
   }
 
-  public static boolean hasRoughness( final IProfil profile )
+  public static boolean hasRoughness( final IProfile profile )
   {
     if( Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
       return true;
@@ -67,7 +67,7 @@ public final class TuhhProfiles
     return false;
   }
 
-  public static boolean hasVegetation( final IProfil profile )
+  public static boolean hasVegetation( final IProfile profile )
   {
     if( Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) )
       return true;
@@ -78,7 +78,7 @@ public final class TuhhProfiles
   }
 
   // FIXME: this is a very specific clone -> comment; careful how to use this!
-  public static IProfil clone( final IProfil profile )
+  public static IProfile clone( final IProfile profile )
   {
     if( TuhhProfiles.class.equals( profile.getClass() ) )
       throw new IllegalStateException( String.format( "Cloning of profile class %s not supported", profile.getClass().getName() ) ); //$NON-NLS-1$

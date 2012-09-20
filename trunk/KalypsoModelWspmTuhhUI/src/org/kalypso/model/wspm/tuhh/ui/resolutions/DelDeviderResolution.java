@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
@@ -92,7 +92,7 @@ public class DelDeviderResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  public boolean resolve( final IProfil profil )
+  public boolean resolve( final IProfile profil )
   {
     if( m_initialized )
     {
@@ -100,8 +100,8 @@ public class DelDeviderResolution extends AbstractProfilMarkerResolution
       if( m_deviderIndex < 0 )
         return profil.removePointProperty( comp );
 
-      final IProfilPointMarker[] markers = profil.getPointMarkerFor( comp );
-      final IProfilPointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
+      final IProfilePointMarker[] markers = profil.getPointMarkerFor( comp );
+      final IProfilePointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
 
       if( marker == null )
         return false;

@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -51,11 +51,11 @@ public class ProfilePatternData implements IProfilePatternData
 {
   private final IProfileFeature m_profileFeature;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final IRecord m_point;
 
-  public ProfilePatternData( final IProfileFeature profileFeature, final IProfil profile, final IRecord point )
+  public ProfilePatternData( final IProfileFeature profileFeature, final IProfile profile, final IRecord point )
   {
     m_profileFeature = profileFeature;
     m_profile = profile;
@@ -66,7 +66,7 @@ public class ProfilePatternData implements IProfilePatternData
    * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData#getProfile()
    */
   @Override
-  public IProfil getProfile( )
+  public IProfile getProfile( )
   {
     return m_profile;
   }

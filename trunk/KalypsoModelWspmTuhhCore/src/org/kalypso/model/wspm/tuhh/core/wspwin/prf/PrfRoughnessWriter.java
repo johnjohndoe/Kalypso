@@ -47,7 +47,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -68,13 +68,13 @@ public class PrfRoughnessWriter
 
   private final String m_defaultRoughnessType;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final PrfWriter m_prfWriter;
 
   private final DataBlockWriter m_dbWriter;
 
-  public PrfRoughnessWriter( final PrfWriter prfWriter, final DataBlockWriter dbWriter, final IProfil profile, final String defaultRoughnessType )
+  public PrfRoughnessWriter( final PrfWriter prfWriter, final DataBlockWriter dbWriter, final IProfile profile, final String defaultRoughnessType )
   {
     m_prfWriter = prfWriter;
     m_dbWriter = dbWriter;

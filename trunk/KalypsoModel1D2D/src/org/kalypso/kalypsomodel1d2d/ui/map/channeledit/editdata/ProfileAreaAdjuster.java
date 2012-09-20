@@ -41,8 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata;
 
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 /**
@@ -59,20 +59,20 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
  */
 class ProfileAreaAdjuster
 {
-  private final IProfil m_originalProfile;
+  private final IProfile m_originalProfile;
 
-  public ProfileAreaAdjuster( final IProfil originalProfile )
+  public ProfileAreaAdjuster( final IProfile originalProfile )
   {
     m_originalProfile = originalProfile;
   }
 
-  public IProfil execute( final IProfil adjustingProfile )
+  public IProfile execute( final IProfile adjustingProfile )
   {
     /* the cropped profile area is the desired value for the intersected profile area */
-    final double originalArea = ProfilUtil.calcArea( m_originalProfile );
-    final double adjustingArea = ProfilUtil.calcArea( adjustingProfile );
+    final double originalArea = ProfileUtil.calcArea( m_originalProfile );
+    final double adjustingArea = ProfileUtil.calcArea( adjustingProfile );
 
-    final IProfil newProfile = ChannelEditUtil.createEmptyProfile( adjustingProfile );
+    final IProfile newProfile = ChannelEditUtil.createEmptyProfile( adjustingProfile );
 
     // calculate the area difference
     final double dArea = originalArea - adjustingArea;
@@ -122,7 +122,7 @@ class ProfileAreaAdjuster
     newProfile.addPoint( newEndRecord );
 
     // debugging and testing:
-    final double areaNew = ProfilUtil.calcArea( newProfile );
+    final double areaNew = ProfileUtil.calcArea( newProfile );
     final double diffArea = originalArea - areaNew;
     if( diffArea > 0.10 )
     {

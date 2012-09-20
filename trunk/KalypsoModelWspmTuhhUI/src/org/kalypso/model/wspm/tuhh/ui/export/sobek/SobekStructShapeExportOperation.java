@@ -45,7 +45,7 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -106,7 +106,7 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
   @Override
   protected void writeProfile( final IProfileFeature profileFeature ) throws IOException, DBaseException, SHPException, ShapeDataException
   {
-    final IProfil profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfil();
 
     final SobekExportInfo info = getInfo();
 

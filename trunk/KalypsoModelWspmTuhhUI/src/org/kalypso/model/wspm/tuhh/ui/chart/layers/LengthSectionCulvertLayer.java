@@ -8,7 +8,7 @@ import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -46,9 +46,9 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   {
     final IRecord[] record = tupleResult == null ? new IRecord[] {} : tupleResult.toArray( new IRecord[] {} );
     final IComponent[] components = tupleResult == null ? null : tupleResult.getComponents();
-    final IComponent component = ProfilUtil.getComponentForID( components, id );
-    final Number min = ProfilUtil.getSectionMinValueFor( record, component );
-    final Number max = ProfilUtil.getSectionMaxValueFor( record, component );
+    final IComponent component = ProfileUtil.getComponentForID( components, id );
+    final Number min = ProfileUtil.getSectionMinValueFor( record, component );
+    final Number max = ProfileUtil.getSectionMaxValueFor( record, component );
     return DataRange.create( min, max );
   }
 
@@ -62,8 +62,8 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     final int stationIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
     final String targetOKComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetOKComponentIndex ) );
     final String stationComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( stationIndex ) );
-    final Double dn = ProfilUtil.getDoubleValueFor( targetOKComponentIndex, rec );
-    final Double ds = ProfilUtil.getDoubleValueFor( stationIndex, rec );
+    final Double dn = ProfileUtil.getDoubleValueFor( targetOKComponentIndex, rec );
+    final Double ds = ProfileUtil.getDoubleValueFor( stationIndex, rec );
     return String.format( "%-12s %.4f%n%-12s %.4f", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn } );//$NON-NLS-1$
   }
 
@@ -111,9 +111,9 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     final TupleResult result = valueData.getObservation().getResult();
     final IRecord record = result.get( i );
-    final Double dN = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, record );
-    final Double sT = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );
-    final Double uK = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, record );
+    final Double dN = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, record );
+    final Double sT = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );
+    final Double uK = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, record );
     if( uK.isNaN() || dN.isNaN() || sT.isNaN() )
       return null;
 

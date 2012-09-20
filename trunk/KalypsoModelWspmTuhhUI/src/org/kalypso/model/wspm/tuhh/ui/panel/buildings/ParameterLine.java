@@ -55,12 +55,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
@@ -68,11 +68,11 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 public class ParameterLine
 {
-  protected final IProfilPointMarker m_devider;
+  protected final IProfilePointMarker m_devider;
 
   protected final Composite m_composite;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private Label m_label;
 
@@ -80,7 +80,7 @@ public class ParameterLine
 
   Text m_valueText;
 
-  ParameterLine( final FormToolkit toolkit, final Composite parent, final IProfilPointMarker devider, final boolean canDelete, final IProfil profile )
+  ParameterLine( final FormToolkit toolkit, final Composite parent, final IProfilePointMarker devider, final boolean canDelete, final IProfile profile )
   {
     m_profile = profile;
     m_composite = toolkit.createComposite( parent );
@@ -171,7 +171,7 @@ public class ParameterLine
       m_valueText.setText( String.format( "%.4f", valueToSet ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11" ), m_profile, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11" ), m_profile, true ); //$NON-NLS-1$
     if( m_devider.getComponent().getId().equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
     {
       operation.addChange( new PointMarkerEdit( m_devider, valueToSet ) );
@@ -180,6 +180,6 @@ public class ParameterLine
     {
       operation.addChange( new ProfileObjectEdit( weir, weir.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), valueToSet ) );
     }
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 }

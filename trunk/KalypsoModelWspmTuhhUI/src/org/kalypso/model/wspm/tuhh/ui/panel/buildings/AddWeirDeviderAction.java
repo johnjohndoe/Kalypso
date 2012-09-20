@@ -41,12 +41,12 @@
 package org.kalypso.model.wspm.tuhh.ui.panel.buildings;
 
 import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
@@ -62,11 +62,11 @@ class AddWeirDeviderAction extends Action
 {
   private final int m_deviderID;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final String m_componentID;
 
-  public AddWeirDeviderAction( final IProfil profile, final int deviderID, final String componentID, final boolean canAdd )
+  public AddWeirDeviderAction( final IProfile profile, final int deviderID, final String componentID, final boolean canAdd )
   {
     m_profile = profile;
     m_deviderID = deviderID;
@@ -81,12 +81,12 @@ class AddWeirDeviderAction extends Action
   public void run( )
   {
 
-    final IProfilPointMarker marker = m_profile.getPointMarkerFor( m_componentID )[m_deviderID];
+    final IProfilePointMarker marker = m_profile.getPointMarkerFor( m_componentID )[m_deviderID];
 
     final IProfileRecord point = m_profile.getPoint( marker.getPoint().getIndex() + 1 );
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.8" ), m_profile, true ); //$NON-NLS-1$
-    final IProfilPointMarker trenner = m_profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.8" ), m_profile, true ); //$NON-NLS-1$
+    final IProfilePointMarker trenner = m_profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );
 
     if( trenner != null )
     {
@@ -99,7 +99,7 @@ class AddWeirDeviderAction extends Action
       final Object dblVal = objVal instanceof Double ? objVal : Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, building );
       operation.addChange( new PointMarkerEdit( trenner, dblVal ) );
       operation.addChange( new ActiveObjectEdit( m_profile, point.getBreiteAsRange(), null ) );
-      new ProfilOperationJob( operation ).schedule();
+      new ProfileOperationJob( operation ).schedule();
     }
   }
 }

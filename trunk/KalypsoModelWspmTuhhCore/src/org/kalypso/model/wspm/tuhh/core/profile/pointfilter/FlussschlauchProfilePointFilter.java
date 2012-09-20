@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pointfilter;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -52,9 +52,9 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 public class FlussschlauchProfilePointFilter extends AbstractProfilePointFilter
 {
   @Override
-  public boolean accept( final IProfil profil, final IProfileRecord point )
+  public boolean accept( final IProfile profil, final IProfileRecord point )
   {
-    final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilePointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( devider.length == 2 )
       return isBetweenMarkers( profil, point, devider[0], devider[1] );
 

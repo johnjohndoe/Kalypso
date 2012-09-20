@@ -49,8 +49,8 @@ import java.util.Set;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
@@ -80,7 +80,7 @@ public abstract class PrfExportWizardCallback implements IPrfExporterCallback
    *      org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  public File getExportFile( final IProfileFeature feature, final IProfil profil )
+  public File getExportFile( final IProfileFeature feature, final IProfile profil )
   {
     final IProfilePatternData data = new ProfilePatternData( feature, profil, null );
     final String fileName = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_filenamePattern, data );
@@ -113,10 +113,10 @@ public abstract class PrfExportWizardCallback implements IPrfExporterCallback
   }
 
   @Override
-  public IWaterlevel[] getWaterlevels( final IProfil profil )
+  public IWaterlevel[] getWaterlevels( final IProfile profil )
   {
     final double station = profil.getStation();
-    final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
+    final BigDecimal bigStation = ProfileUtil.stationToBigDecimal( station );
 
     final Collection<IWaterlevel> waterlevels = new ArrayList<>( m_results.length );
 

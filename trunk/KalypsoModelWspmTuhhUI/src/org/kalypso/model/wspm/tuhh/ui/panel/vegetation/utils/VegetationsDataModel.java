@@ -48,7 +48,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.ProfileFlowzones;
 import org.kalypso.observation.result.IComponent;
 
@@ -73,11 +73,11 @@ public class VegetationsDataModel extends AbstractModelObject
 
   IVegetationClass m_rightFloodplainClass;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final IComponent m_component;
 
-  public VegetationsDataModel( final IProfil profile, final IComponent component )
+  public VegetationsDataModel( final IProfile profile, final IComponent component )
   {
     m_profile = profile;
     m_component = component;
@@ -85,7 +85,7 @@ public class VegetationsDataModel extends AbstractModelObject
     init( profile, component );
   }
 
-  private void init( final IProfil profile, final IComponent component )
+  private void init( final IProfile profile, final IComponent component )
   {
     if( isSimpleType( component ) )
     {

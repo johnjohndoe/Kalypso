@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
@@ -57,7 +57,7 @@ public class EmptyProfileCreator extends AbstractProfileCreator
    * @see org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.AbstractProfileCreator#configure(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  protected void configure( final IProfil profile )
+  protected void configure( final IProfile profile )
   {
     // nothing to do...
   }

@@ -57,10 +57,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.ProfileFactory;
+import org.kalypso.model.wspm.core.profil.util.ProfileObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -250,7 +250,7 @@ public class NodeResultHelper
    */
   public static GM_Curve getProfileCurveFor1dNode( final IProfileFeature profile ) throws Exception
   {
-    final IProfil profil = profile.getProfil();
+    final IProfile profil = profile.getProfil();
 
     /* cut the profile at the intersection points with the water level */
     // get the intersection points
@@ -262,7 +262,7 @@ public class NodeResultHelper
 
     // final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
     // final GM_Curve curve = cutProfileAtWaterlevel( waterlevel, profil, crs );
-    final GM_Curve curve = ProfilUtil.getLine( profil );
+    final GM_Curve curve = ProfileUtil.getLine( profil );
     final GM_Curve transformCurve = (GM_Curve) curve.transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     /* simplify the profile */
     final double epsThinning = 1.0;
@@ -371,11 +371,11 @@ public class NodeResultHelper
   public static GM_Curve getCurveForBoundaryLine( final GM_Point[] linePoints, final double waterlevel, final String crs ) throws GM_Exception, Exception
   {
     // we create a profile in order to use already implemented methods
-    final IProfil boundaryProfil = ProfilFactory.createProfil( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    boundaryProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_BREITE ) );
-    boundaryProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-    boundaryProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-    boundaryProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+    final IProfile boundaryProfil = ProfileFactory.createProfil( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    boundaryProfil.addPointProperty( ProfileObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    boundaryProfil.addPointProperty( ProfileObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    boundaryProfil.addPointProperty( ProfileObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+    boundaryProfil.addPointProperty( ProfileObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
     double width = 0;
     for( int i = 0; i < linePoints.length; i++ )
@@ -389,10 +389,10 @@ public class NodeResultHelper
 
       /* calculate the width of the intersected profile */
       // sort intersection points by width
-      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ), width );
-      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ), geoPoint.getZ() );
-      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), geoPoint.getX() );
-      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOCHWERT ), geoPoint.getY() );
+      point.setValue( ProfileObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ), width );
+      point.setValue( ProfileObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ), geoPoint.getZ() );
+      point.setValue( ProfileObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), geoPoint.getX() );
+      point.setValue( ProfileObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOCHWERT ), geoPoint.getY() );
 
       boundaryProfil.addPoint( point );
     }

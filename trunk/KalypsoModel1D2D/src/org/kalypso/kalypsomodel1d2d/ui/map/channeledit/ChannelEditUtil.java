@@ -60,9 +60,9 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.ProfileFactory;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -126,17 +126,17 @@ public final class ChannelEditUtil
    * Only components for breite, hoehe, rechtswert and hochwert are added.<br/>
    * The new profile is in the Kalypso coordinate system, not in the system of the original profile.
    */
-  public static IProfil createEmptyProfile( final IProfil templateProfile )
+  public static IProfile createEmptyProfile( final IProfile templateProfile )
   {
     final String profileType = templateProfile.getType();
-    final IProfil newProfil = ProfilFactory.createProfil( profileType );
+    final IProfile newProfil = ProfileFactory.createProfil( profileType );
 
     newProfil.setStation( templateProfile.getStation() );
 
     final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     newProfil.setSrsName( kalypsoSRS );
 
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileType );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileType );
 
     /* get / create components */
     final IComponent breiteComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );

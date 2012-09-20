@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.RoughnessPanel;
@@ -66,7 +66,7 @@ public class RoughnessTheme extends AbstractProfilTheme
   @Override
   public IComponent getTargetComponent( )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
       if( layer instanceof IProfilChartLayer )
@@ -85,13 +85,13 @@ public class RoughnessTheme extends AbstractProfilTheme
     return new IChartLayer[] {};
   }
 
-  public RoughnessTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public RoughnessTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( profil, IWspmTuhhConstants.LAYER_RAUHEIT, TITLE, chartLayers, cm );
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {

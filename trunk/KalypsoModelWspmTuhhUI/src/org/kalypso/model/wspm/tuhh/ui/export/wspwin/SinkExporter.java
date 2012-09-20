@@ -54,8 +54,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.serializer.IProfileSink;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
@@ -63,9 +63,9 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
  */
 public class SinkExporter
 {
-  private final IProfilSink m_sink;
+  private final IProfileSink m_sink;
 
-  public SinkExporter( final IProfilSink sink )
+  public SinkExporter( final IProfileSink sink )
   {
     m_sink = sink;
   }
@@ -107,7 +107,7 @@ public class SinkExporter
   {
     monitor.beginTask( Messages.getString( "SinkExporter_1" ), profileFeatures.length ); //$NON-NLS-1$
 
-    final IProfil[] profiles = ProfileFeatureSorter.extractProfiles( profileFeatures, monitor );
+    final IProfile[] profiles = ProfileFeatureSorter.extractProfiles( profileFeatures, monitor );
 // new IProfil[profileFeatures.length];
 // for( int i = 0; i < profiles.length; i++ )
 // {

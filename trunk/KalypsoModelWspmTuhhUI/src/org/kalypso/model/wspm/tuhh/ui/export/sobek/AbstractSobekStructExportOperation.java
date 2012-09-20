@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 
 /**
@@ -60,7 +60,7 @@ public abstract class AbstractSobekStructExportOperation extends AbstractSobekFi
   @Override
   protected void writeProfile( final IProfileFeature profileFeature )
   {
-    final IProfil profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfil();
 
     final SobekExportInfo info = getInfo();
 
@@ -81,5 +81,5 @@ public abstract class AbstractSobekStructExportOperation extends AbstractSobekFi
     }
   }
 
-  protected abstract boolean writeBuilding( String structId, IProfil profil, String profileName, IProfileObject profileObject );
+  protected abstract boolean writeBuilding( String structId, IProfile profil, String profileName, IProfileObject profileObject );
 }

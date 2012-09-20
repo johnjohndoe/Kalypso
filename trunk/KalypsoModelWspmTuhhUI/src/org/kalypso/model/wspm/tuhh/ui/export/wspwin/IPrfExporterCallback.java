@@ -44,7 +44,7 @@ import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel;
 
 /**
@@ -54,10 +54,10 @@ import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel;
  */
 public interface IPrfExporterCallback
 {
-  File getExportFile( IProfileFeature feature, IProfil profil );
+  File getExportFile( IProfileFeature feature, IProfile profil );
 
   /** Called, after the profile has been written */
   void profileWritten( File file ) throws CoreException;
 
-  IWaterlevel[] getWaterlevels( IProfil profil );
+  IWaterlevel[] getWaterlevels( IProfile profil );
 }

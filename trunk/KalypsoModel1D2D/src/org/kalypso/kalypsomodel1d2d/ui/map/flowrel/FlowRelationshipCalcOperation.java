@@ -78,7 +78,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -239,7 +239,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
         throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) ); //$NON-NLS-1$
       }
 
-      return runCalculation( calculation, flowRel, new IProfil[] { teschkeProfile.getProfil() }, monitor );
+      return runCalculation( calculation, flowRel, new IProfile[] { teschkeProfile.getProfil() }, monitor );
     }
     else if( flowRel instanceof IBuildingFlowRelation )
     {
@@ -278,18 +278,18 @@ public class FlowRelationshipCalcOperation implements IAdaptable
         throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) );
       }
 
-      final IProfil downStreamProfil = downProfile.getProfil();
-      final IProfil buildingProfil = buildingProfile.getProfil();
-      final IProfil upStreamProfil = upProfile.getProfil();
+      final IProfile downStreamProfil = downProfile.getProfil();
+      final IProfile buildingProfil = buildingProfile.getProfil();
+      final IProfile upStreamProfil = upProfile.getProfil();
 
-      return runCalculation( calculation, flowRel, new IProfil[] { downStreamProfil, buildingProfil, upStreamProfil }, monitor );
+      return runCalculation( calculation, flowRel, new IProfile[] { downStreamProfil, buildingProfil, upStreamProfil }, monitor );
     }
 
     final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.9" ) + flowRel + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.10" ); //$NON-NLS-1$ //$NON-NLS-2$
     throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) );
   }
 
-  private QIntervallResult runCalculation( final TuhhCalculation templateCalculation, final IFlowRelation1D flowRel, final IProfil[] profiles, final IProgressMonitor monitor ) throws InvocationTargetException
+  private QIntervallResult runCalculation( final TuhhCalculation templateCalculation, final IFlowRelation1D flowRel, final IProfile[] profiles, final IProgressMonitor monitor ) throws InvocationTargetException
   {
     File tmpDir = null;
     try
@@ -397,7 +397,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     return m_running;
   }
 
-  private TuhhCalculation createCalculation( final IFlowRelation1D flowRel, final TuhhCalculation template, final IProfil[] profiles ) throws GMLSchemaException, InvocationTargetException
+  private TuhhCalculation createCalculation( final IFlowRelation1D flowRel, final TuhhCalculation template, final IProfile[] profiles ) throws GMLSchemaException, InvocationTargetException
   {
     final IFeatureProviderFactory factory = flowRel.getWorkspace().getFeatureProviderFactory();
 
@@ -413,7 +413,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     // Add Profiles to reach
     double minStation = Double.MAX_VALUE;
     double maxStation = -Double.MAX_VALUE;
-    for( final IProfil profil : profiles )
+    for( final IProfile profil : profiles )
     {
       final double station = profil.getStation();
 

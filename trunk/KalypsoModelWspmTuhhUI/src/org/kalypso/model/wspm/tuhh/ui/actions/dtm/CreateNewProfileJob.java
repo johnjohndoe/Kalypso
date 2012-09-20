@@ -10,7 +10,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -51,7 +51,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
   @Override
   protected IStatus runJob( final GM_Curve curve, final RichCoverageCollection richCoverages ) throws Exception
   {
-    final IProfil profile = createProfile( richCoverages, curve, TuhhProfil.PROFIL_TYPE );
+    final IProfile profile = createProfile( richCoverages, curve, TuhhProfil.PROFIL_TYPE );
     if( profile == null )
       return openNoPointsWarning();
 
@@ -77,7 +77,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
   private void addNewProfile( final ProfileFromDEMData data ) throws Exception
   {
     final IKalypsoFeatureTheme theme = data.getTheme();
-    final IProfil profile = data.getProfile();
+    final IProfile profile = data.getProfile();
 
     final CommandableWorkspace workspace = theme.getWorkspace();
     final FeatureList profileFeatures = theme.getFeatureList();
@@ -92,7 +92,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
     selectionManager.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( workspace, featureForSelection ) } );
   }
 
-  private IProfil createProfile( final RichCoverageCollection richCoverages, final GM_Curve curve, final String profileType ) throws Exception
+  private IProfile createProfile( final RichCoverageCollection richCoverages, final GM_Curve curve, final String profileType ) throws Exception
   {
     final Coordinate[] gridCrds = richCoverages.extractPoints( curve, m_digitalizeDistance );
     richCoverages.dispose();
@@ -101,7 +101,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
 
     // TODO: Would be nice to simplify the coords, but not the profile afterwards.
     // TODO: We need Douglas-Peucker for coordinates (with distance by z!).
-    final IProfil profile = WspmProfileHelper.createProfile( profileType, gridCrds, curve.getCoordinateSystem(), getSimplifyDistance() );
+    final IProfile profile = WspmProfileHelper.createProfile( profileType, gridCrds, curve.getCoordinateSystem(), getSimplifyDistance() );
     if( profile.getPoints().length == 0 )
       return WspmProfileHelper.convertLinestringToEmptyProfile( curve, profileType );
 

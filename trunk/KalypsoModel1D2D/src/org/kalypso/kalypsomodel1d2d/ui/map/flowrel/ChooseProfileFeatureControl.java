@@ -74,9 +74,9 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
@@ -211,7 +211,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
         return;
 
       // TODO: check, if the chosen profile is suitable for this relation
-      final IProfil profile = ((IProfileFeature) newProfileLink).getProfil();
+      final IProfile profile = ((IProfileFeature) newProfileLink).getProfil();
 
       final String profileRef = "terrain.gml#" + newProfileLink.getId(); //$NON-NLS-1$
       if( flowRel instanceof ITeschkeFlowRelation )
@@ -258,7 +258,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
 
       // TODO: set name of flowrel according to profile or create a dummy name
       final double station = profile.getStation();
-      final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
+      final BigDecimal bigStation = ProfileUtil.stationToBigDecimal( station );
 
       if( StringUtils.isBlank( flowRel.getName() ) )
         flowRel.setName( bigStation.toString() ); //$NON-NLS-1$

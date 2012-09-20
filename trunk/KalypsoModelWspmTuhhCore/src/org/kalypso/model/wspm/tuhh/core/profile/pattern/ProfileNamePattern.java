@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 public final class ProfileNamePattern extends AbstractProfileStringPattern
@@ -54,7 +54,7 @@ public final class ProfileNamePattern extends AbstractProfileStringPattern
   @Override
   public String getValue( final IProfilePatternData data, final String params )
   {
-    final IProfil profile = data.getProfile();
+    final IProfile profile = data.getProfile();
     if( profile == null )
       return null;
 

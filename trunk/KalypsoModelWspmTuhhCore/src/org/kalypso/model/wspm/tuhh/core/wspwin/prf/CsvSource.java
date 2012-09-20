@@ -48,10 +48,10 @@ import java.util.HashMap;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.ProfileFactory;
+import org.kalypso.model.wspm.core.profil.serializer.IProfileSource;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -62,9 +62,9 @@ import au.com.bytecode.opencsv.CSVReader;
 /**
  * @author kimwerner
  */
-public class CsvSource implements IProfilSource
+public class CsvSource implements IProfileSource
 {
-  private IProfilPointPropertyProvider m_provider = null;
+  private IProfilePointPropertyProvider m_provider = null;
 
   private final HashMap<String, TupleResult> m_profilesTable = new HashMap<>();
 
@@ -148,14 +148,14 @@ public class CsvSource implements IProfilSource
    */
 
   @Override
-  public IProfil[] read( final String profileTyp, final Reader reader ) throws IOException
+  public IProfile[] read( final String profileTyp, final Reader reader ) throws IOException
   {
     m_provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileTyp );
     extractDataBlocks( new CSVReader( reader, ';' ) );
-    final ArrayList<IProfil> profiles = new ArrayList<>();
+    final ArrayList<IProfile> profiles = new ArrayList<>();
     for( final String key : m_profilesTable.keySet() )
     {
-      final IProfil profil = ProfilFactory.createProfil( profileTyp );
+      final IProfile profil = ProfileFactory.createProfil( profileTyp );
       if( profil == null )
         throw new IOException( Messages.getString( "CsvSource_0" ) ); //$NON-NLS-1$
 
@@ -164,6 +164,6 @@ public class CsvSource implements IProfilSource
       profil.setResult( result );
       profiles.add( profil );
     }
-    return profiles.toArray( new IProfil[] {} );
+    return profiles.toArray( new IProfile[] {} );
   }
 }

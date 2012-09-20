@@ -57,8 +57,8 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kimwerner
  */
-public abstract class AbstractProfilMarkerResolution implements IProfilMarkerResolution
+public abstract class AbstractProfilMarkerResolution implements IProfileMarkerResolution
 {
   private final String m_label;
 
@@ -161,7 +161,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
 
       if( feature != null )
       {
-        final IProfil profil = ((IProfileFeature) feature).getProfil();
+        final IProfile profil = ((IProfileFeature) feature).getProfil();
         if( profil != null )
         {
           if( resolve( profil ) )
@@ -209,7 +209,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
    * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#getUIresult(org.eclipse.swt.widgets.Shell)
    */
   @Override
-  public String getUIresult( final Shell shell, final IProfil profil )
+  public String getUIresult( final Shell shell, final IProfile profil )
   {
     return null;
   }

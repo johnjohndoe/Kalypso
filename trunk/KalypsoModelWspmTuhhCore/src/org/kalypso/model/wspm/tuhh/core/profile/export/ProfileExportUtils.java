@@ -46,7 +46,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.observation.result.IComponent;
 
@@ -66,7 +66,7 @@ public final class ProfileExportUtils
     final Set<IComponent> profCompSet = new HashSet<>();
     for( final IProfileFeature profileFeature : profiles )
     {
-      final IProfil profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfil();
       for( final IComponent component : profil.getPointProperties() )
       {
         profCompSet.add( component );

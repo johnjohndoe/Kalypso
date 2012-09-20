@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineDistanceBuilder.SIDE;
 import org.kalypso.transformation.transformer.JTSTransformer;
@@ -105,7 +105,7 @@ public class BanklineMarkerProvider implements IBanklineMarkerProvider
    * @return <code>false</code> if the riverLine is not between the two marker points.
    */
   @Override
-  public boolean checkSanity( final LineString riverLine, final String profileSRS, final IProfil profile, final SIDE side ) throws Exception
+  public boolean checkSanity( final LineString riverLine, final String profileSRS, final IProfile profile, final SIDE side ) throws Exception
   {
     if( !m_checkRiverLineBetweenMarkers )
       return true;
@@ -132,7 +132,7 @@ public class BanklineMarkerProvider implements IBanklineMarkerProvider
   }
 
   @Override
-  public Coordinate getMarkerLocation( final String profileSRS, final IProfil profile, final SIDE side ) throws Exception
+  public Coordinate getMarkerLocation( final String profileSRS, final IProfile profile, final SIDE side ) throws Exception
   {
     final IProfileRecord point = findMarkerPoint( profile, side );
     return transformLocation( profileSRS, point );
@@ -151,7 +151,7 @@ public class BanklineMarkerProvider implements IBanklineMarkerProvider
     return jtsTransformer.transform( point.getCoordinate() );
   }
 
-  private IProfileRecord findMarkerPoint( final IProfil profile, final SIDE side )
+  private IProfileRecord findMarkerPoint( final IProfile profile, final SIDE side )
   {
     final IProfileRecord primaryResult = doFindMarkerPoint( profile, m_markerTyp, side );
     if( primaryResult != null )
@@ -165,7 +165,7 @@ public class BanklineMarkerProvider implements IBanklineMarkerProvider
     return doFindMarkerPoint( profile, null, side );
   }
 
-  private IProfileRecord doFindMarkerPoint( final IProfil profile, final String markerType, final SIDE side )
+  private IProfileRecord doFindMarkerPoint( final IProfile profile, final String markerType, final SIDE side )
   {
     final IProfileRecord[] markers = findMarkersOfType( profile, markerType );
     if( markers.length < 2 )
@@ -182,7 +182,7 @@ public class BanklineMarkerProvider implements IBanklineMarkerProvider
     }
   }
 
-  private IProfileRecord[] findMarkersOfType( final IProfil profile, final String markerType )
+  private IProfileRecord[] findMarkersOfType( final IProfile profile, final String markerType )
   {
     if( markerType == null )
       return new IProfileRecord[0];
@@ -190,7 +190,7 @@ public class BanklineMarkerProvider implements IBanklineMarkerProvider
     if( markerType == PROFILE_START_END )
       return profile.getPoints();
 
-    final IProfilPointMarker[] pointMarkers = profile.getPointMarkerFor( markerType );
+    final IProfilePointMarker[] pointMarkers = profile.getPointMarkerFor( markerType );
     final IProfileRecord[] points = new IProfileRecord[pointMarkers.length];
     for( int i = 0; i < points.length; i++ )
       points[i] = pointMarkers[i].getPoint();

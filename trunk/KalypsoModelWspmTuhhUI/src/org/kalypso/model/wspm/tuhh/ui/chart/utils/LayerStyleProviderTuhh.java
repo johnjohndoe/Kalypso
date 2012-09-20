@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.utils;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarkerProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil;
 import org.kalypso.model.wspm.ui.view.AbstractLayerStyleProvider;
@@ -93,7 +93,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 
   private void createPointMarkerStyles( )
   {
-    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
+    final IProfilePointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
 
     final ILineStyle lsT = getStyleFor( IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + LINE, LineStyle.class ); //$NON-NLS-1$
     lsT.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
@@ -110,7 +110,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 
   private void createWeirStyles( )
   {
-    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
+    final IProfilePointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
     final RGB col = markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
 
     final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_WEHR + LINE, LineStyle.class ); //$NON-NLS-1$

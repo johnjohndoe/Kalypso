@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -71,15 +71,15 @@ public class RemovePropertyResolution extends AbstractProfilMarkerResolution
   }
 
   @Override
-  public boolean resolve( final IProfil profile )
+  public boolean resolve( final IProfile profile )
   {
     final IComponent component = profile.getResult().getComponent( m_componentIndex );
     final String componentLabel = ComponentUtilities.getComponentLabel( component );
     final String opMsg = String.format( Messages.getString( "RemovePropertyResolution_2" ), componentLabel ); //$NON-NLS-1$
 
-    final ProfilOperation operation = new ProfilOperation( opMsg, profile, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( opMsg, profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profile, component ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
 
     return true; // profile.getResult().removeComponent( m_componentIndex );
   }

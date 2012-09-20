@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -60,7 +60,7 @@ public class AbstractPlaceholderProfileTheme extends AbstractProfilTheme
 {
   private final String[] m_componentIDs;
 
-  public AbstractPlaceholderProfileTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final String[] componentIDs )
+  public AbstractPlaceholderProfileTheme( final IProfile profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final String[] componentIDs )
   {
     super( profil, id, title, chartLayers, null );
 
@@ -76,12 +76,12 @@ public class AbstractPlaceholderProfileTheme extends AbstractProfilTheme
   @Override
   public final void removeYourself( )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.GeoCoordinateTheme.1" ), getProfil(), true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.GeoCoordinateTheme.1" ), getProfil(), true ); //$NON-NLS-1$
 
     for( final String component : m_componentIDs )
       operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( component ) ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 }

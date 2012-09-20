@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.tuhh.ui.rules;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -57,7 +57,7 @@ import org.kalypso.observation.result.IRecord;
 public class RuecksprungRule extends AbstractValidatorRule
 {
   @Override
-  public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  public void validate( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profil == null )
       return;
@@ -72,10 +72,10 @@ public class RuecksprungRule extends AbstractValidatorRule
 
     for( int i = 1; i < points.length; i++ )
     {
-      final Double x1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i - 1] );
-      final Double x2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i] );
-      final Double y1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i - 1] );
-      final Double y2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+      final Double x1 = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i - 1] );
+      final Double x2 = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i] );
+      final Double y1 = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i - 1] );
+      final Double y2 = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
       if( x1.isNaN() )
       {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule.0" ), String.format( "km %.4f", profil.getStation() ), i-1, IWspmConstants.POINT_PROPERTY_BREITE ); //$NON-NLS-1$ //$NON-NLS-2$

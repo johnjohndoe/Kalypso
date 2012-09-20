@@ -46,8 +46,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
@@ -73,7 +73,7 @@ public class WeirProfileCreator extends GelaendeProfileCreator
    * @see org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.GelaendeProfileCreator#configure(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  protected void configure( final IProfil profile ) throws CoreException
+  protected void configure( final IProfile profile ) throws CoreException
   {
     super.configure( profile );
 
@@ -82,11 +82,11 @@ public class WeirProfileCreator extends GelaendeProfileCreator
     addWeirObject( profile );
   }
 
-  private void addWeir( final IProfil profile ) throws CoreException
+  private void addWeir( final IProfile profile ) throws CoreException
   {
     final IWProfPoint[] weirPoints = getPoints( m_weirPolygonID );
 
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent component = provider.getPointProperty( POINT_PROPERTY_OBERKANTEWEHR );
 
     profile.addPointProperty( component );
@@ -122,7 +122,7 @@ public class WeirProfileCreator extends GelaendeProfileCreator
     }
   }
 
-  private void addWeirObject( final IProfil profile )
+  private void addWeirObject( final IProfile profile )
   {
     final BuildingWehr weir = new BuildingWehr( profile );
 // final IWProfPoint widthPoint = findBridgetWidth();

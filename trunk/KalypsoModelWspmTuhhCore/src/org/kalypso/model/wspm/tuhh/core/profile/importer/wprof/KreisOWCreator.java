@@ -48,7 +48,7 @@ import java.util.TreeMap;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
@@ -81,7 +81,7 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
 
   private void createKreisOW( final TuhhWspmProject project, final ProfileData kreisData ) throws CoreException
   {
-    final IProfil kreisProfile = kreisData.getProfile();
+    final IProfile kreisProfile = kreisData.getProfile();
 
     final GelaendeProfileCreator kreisOWCreator = createGelaendeCreator( kreisData, kreisProfile );
     if( kreisOWCreator == null )
@@ -91,7 +91,7 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
     kreisOWCreator.addProfile( project );
   }
 
-  private GelaendeProfileCreator createGelaendeCreator( final ProfileData kreisData, final IProfil kreisProfile )
+  private GelaendeProfileCreator createGelaendeCreator( final ProfileData kreisData, final IProfile kreisProfile )
   {
     final double minDistance = 10.0;
     final double owDistance = 6.0;
@@ -101,7 +101,7 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
       return null;
 
     final String riverId = kreisData.getRiverId();
-    final IProfil owProfile = findOWProfile( riverId, kreisStation );
+    final IProfile owProfile = findOWProfile( riverId, kreisStation );
     final double owStation = owProfile.getStation();
     if( Double.isNaN( owStation ) )
       return null;
@@ -144,28 +144,28 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
     }
   }
 
-  private IProfil findOWProfile( final String riverId, final double uwStation )
+  private IProfile findOWProfile( final String riverId, final double uwStation )
   {
-    final SortedMap<Double, IProfil> profilesOfRiver = indexProfilesForRiver( riverId );
+    final SortedMap<Double, IProfile> profilesOfRiver = indexProfilesForRiver( riverId );
 
     // FIXME: Stationierungsrichtung beachten!
-    final SortedMap<Double, IProfil> tailMap = profilesOfRiver.tailMap( uwStation );
-    final Iterator<IProfil> valuesIter = tailMap.values().iterator();
+    final SortedMap<Double, IProfile> tailMap = profilesOfRiver.tailMap( uwStation );
+    final Iterator<IProfile> valuesIter = tailMap.values().iterator();
     if( valuesIter.hasNext() )
       return valuesIter.next();
 
     return null;
   }
 
-  private SortedMap<Double, IProfil> indexProfilesForRiver( final String riverId )
+  private SortedMap<Double, IProfile> indexProfilesForRiver( final String riverId )
   {
-    final SortedMap<Double, IProfil> profilesOfRiver = new TreeMap<>();
+    final SortedMap<Double, IProfile> profilesOfRiver = new TreeMap<>();
     for( final ProfileData data : m_data )
     {
       final String dataRiver = data.getRiverId();
       if( riverId.equals( dataRiver ) )
       {
-        final IProfil profile = data.getProfile();
+        final IProfile profile = data.getProfile();
         final double station = profile.getStation();
         profilesOfRiver.put( station, profile );
       }

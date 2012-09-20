@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 /**
  * @author Gernot Belger
@@ -49,5 +49,5 @@ public interface IFlowZoneType
 {
   String getLabel( );
 
-  FlowZone createFlowZone( IProfil profile );
+  FlowZone createFlowZone( IProfile profile );
 }

@@ -45,8 +45,8 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -63,7 +63,7 @@ import org.kalypso.observation.result.IComponent;
 public class DuplicateComponentRule extends AbstractValidatorRule
 {
   @Override
-  public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  public void validate( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     final IComponent[] pointProperties = profil.getPointProperties();
 
@@ -82,13 +82,13 @@ public class DuplicateComponentRule extends AbstractValidatorRule
     }
   }
 
-  private void createDuplicateRule( final IProfil profil, final IComponent component, final int componentIndex, final IValidatorMarkerCollector collector ) throws CoreException
+  private void createDuplicateRule( final IProfile profil, final IComponent component, final int componentIndex, final IValidatorMarkerCollector collector ) throws CoreException
   {
     // TODO: we need a list of components that allow duplicates.
     final String componentLabel = ComponentUtilities.getComponentLabel( component );
     final String msg = String.format( Messages.getString( "DuplicateComponentRule_0" ), componentLabel ); //$NON-NLS-1$
 
-    final IProfilMarkerResolution resolution = new RemovePropertyResolution( componentIndex );
+    final IProfileMarkerResolution resolution = new RemovePropertyResolution( componentIndex );
     collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, profil, resolution );
   }
 }

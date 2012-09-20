@@ -49,7 +49,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -89,7 +89,7 @@ class ProfilOverlayLayer extends PointsLineLayer
    * manages the displaying of the intersected profile layer in the profile chart view and handles the user
    * interactivity.
    */
-  public ProfilOverlayLayer( final IProfil profil, final ILayerStyleProvider styleProvider )
+  public ProfilOverlayLayer( final IProfile profil, final ILayerStyleProvider styleProvider )
   {
     super( LAYER_ID, profil, IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
 
@@ -133,7 +133,7 @@ class ProfilOverlayLayer extends PointsLineLayer
 
     final Point2D curserPoint = ProfilLayerUtils.toNumeric( getCoordinateMapper(), curserPos );
 
-    final IProfil profile = m_data.getActiveProfile().getOriginalProfile();
+    final IProfile profile = m_data.getActiveProfile().getOriginalProfile();
     final IProfileRecord profilePoint = ProfileVisitors.findNearestPoint( profile, curserPoint.getX() );
     final IProfileRecord fePoint = ProfileVisitors.findNearestPoint( getProfil(), curserPoint.getX() );
 
@@ -197,11 +197,11 @@ class ProfilOverlayLayer extends PointsLineLayer
     final Integer index = (Integer)dragStartData.getData();
 
     final IProfileData activeProfile = m_data.getActiveProfile();
-    final IProfil origProfil = activeProfile.getOriginalProfile();
-    final IProfil segmentedProfile = activeProfile.getWorkingProfile();
+    final IProfile origProfil = activeProfile.getOriginalProfile();
+    final IProfile segmentedProfile = activeProfile.getWorkingProfile();
 
     /* data and my state should be the same, else something is wrong */
-    final IProfil profilInternal = getProfil();
+    final IProfile profilInternal = getProfil();
     if( profilInternal == null || profilInternal != segmentedProfile )
       return;
 
@@ -226,14 +226,14 @@ class ProfilOverlayLayer extends PointsLineLayer
     {
       /* move the record */
       final ProfileOverlayMovePointOperation worker = new ProfileOverlayMovePointOperation( origProfil, segmentedProfile );
-      final IProfil newSegmentedProfile = worker.moveRecord( draggedRecord, destinationWidth );
+      final IProfile newSegmentedProfile = worker.moveRecord( draggedRecord, destinationWidth );
 
       if( newSegmentedProfile != null )
       {
         activeProfile.updateWorkingProfile( newSegmentedProfile );
 
         // REMARK: the set segmented profile may have been further adjusted, so we need to get it from the data
-        final IProfil newAdjustedSegmentedProfile = activeProfile.getWorkingProfile();
+        final IProfile newAdjustedSegmentedProfile = activeProfile.getWorkingProfile();
 
         setProfile( newAdjustedSegmentedProfile, m_data );
       }
@@ -248,7 +248,7 @@ class ProfilOverlayLayer extends PointsLineLayer
     m_data.triggerMapRepaint();
   }
 
-  private double calculateDestinationWidth( final IProfil origProfil, final int destinationScreenX, final double unsnappedWidth )
+  private double calculateDestinationWidth( final IProfile origProfil, final int destinationScreenX, final double unsnappedWidth )
   {
     /* snap to a record of the original profile near to destination */
     final IProfileRecord snappedRecord = ProfileVisitors.findNearestPoint( origProfil, unsnappedWidth );
@@ -295,7 +295,7 @@ class ProfilOverlayLayer extends PointsLineLayer
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
 
     if( profil == null )
       return;
@@ -320,7 +320,7 @@ class ProfilOverlayLayer extends PointsLineLayer
     }
   }
 
-  public void setProfile( final IProfil profile, final ChannelEditData data )
+  public void setProfile( final IProfile profile, final ChannelEditData data )
   {
     super.setProfil( profile );
 

@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -55,12 +55,12 @@ public class GeoCoordinateTheme extends AbstractPlaceholderProfileTheme
 
   private static final String[] COMPONENTS = new String[] { IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT };
 
-  public GeoCoordinateTheme( final IProfil profil )
+  public GeoCoordinateTheme( final IProfile profil )
   {
     super( profil, IWspmConstants.LAYER_GEOKOORDINATEN, TITLE, subLayers( profil ), COMPONENTS );
   }
 
-  private static IProfilChartLayer[] subLayers( final IProfil profil )
+  private static IProfilChartLayer[] subLayers( final IProfile profil )
   {
     return new IProfilChartLayer[] { new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ), new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) };
   }
