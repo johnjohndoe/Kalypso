@@ -50,8 +50,8 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
 import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesh;
 import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMeshPainter;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -157,11 +157,11 @@ class ChannelEditPainter
     if( activeProfile == null )
       return;
 
-    final IProfil intersectionProfile = activeProfile.getWorkingProfile();
+    final IProfile intersectionProfile = activeProfile.getWorkingProfile();
     if( intersectionProfile == null )
       return;
 
-    final GM_Curve line = (GM_Curve)ProfilUtil.getLine( intersectionProfile ).transform( m_srsName );
+    final GM_Curve line = (GM_Curve)ProfileUtil.getLine( intersectionProfile ).transform( m_srsName );
 
     m_editProfileLinePainter.paint( g, projection, line );
 

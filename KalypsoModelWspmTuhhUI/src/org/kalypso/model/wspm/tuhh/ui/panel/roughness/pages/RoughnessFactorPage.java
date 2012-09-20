@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
@@ -53,7 +53,7 @@ public class RoughnessFactorPage extends AbstractRoughnessPage
 {
   public static final String LABEL = Messages.getString("RoughnessFactorPage.0"); //$NON-NLS-1$
 
-  public RoughnessFactorPage( final IProfil profile, final IComponent component )
+  public RoughnessFactorPage( final IProfile profile, final IComponent component )
   {
     super( profile, component, RoughnessFactorPage.class.getName() );
   }

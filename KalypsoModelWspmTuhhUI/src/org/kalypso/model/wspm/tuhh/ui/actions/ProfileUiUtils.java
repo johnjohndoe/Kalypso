@@ -44,8 +44,8 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -89,9 +89,9 @@ public final class ProfileUiUtils
   /**
    * Adds two markers of the given type to start and end points of a profile.
    */
-  public static void addDefaultMarkers( final IProfil profile, final String markerTyp )
+  public static void addDefaultMarkers( final IProfile profile, final String markerTyp )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IProfileRecord[] points = profile.getPoints();
     if( points.length > 0 )
     {
@@ -107,7 +107,7 @@ public final class ProfileUiUtils
    * @return Returns the element that should be selected after the new profile is created. The new reach segment if the
    *         reach is not null.
    */
-  public static Feature addNewProfileAndFireEvents( final IProfil iProfile, final WspmWaterBody waterBody, final TuhhReach reach, final IProfileFeature previous )
+  public static Feature addNewProfileAndFireEvents( final IProfile iProfile, final WspmWaterBody waterBody, final TuhhReach reach, final IProfileFeature previous )
   {
     final IProfileFeature feature = waterBody.createNewProfile();
     ((ProfileFeatureBinding) feature).setProfile( iProfile );

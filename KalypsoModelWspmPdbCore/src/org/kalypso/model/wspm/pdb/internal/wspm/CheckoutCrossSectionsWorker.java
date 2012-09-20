@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -126,7 +126,7 @@ public class CheckoutCrossSectionsWorker
     final String srs = line == null ? null : JTSAdapter.toSrs( line.getSRID() );
     newProfile.setSrsName( srs );
 
-    final IProfil profile = newProfile.getProfil();
+    final IProfile profile = newProfile.getProfil();
 
     final CrossSectionConverter converter = new CrossSectionConverter( section, profile );
     converter.execute();

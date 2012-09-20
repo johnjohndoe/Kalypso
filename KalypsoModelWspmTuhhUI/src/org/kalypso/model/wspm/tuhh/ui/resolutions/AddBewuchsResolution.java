@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
@@ -69,7 +69,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
   }
 
   @Override
-  public boolean resolve( final IProfil profil )
+  public boolean resolve( final IProfile profil )
   {
     final IComponent cAX = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
     final IComponent cAY = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );

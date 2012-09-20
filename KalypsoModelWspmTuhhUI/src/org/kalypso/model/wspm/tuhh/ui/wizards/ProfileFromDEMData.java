@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 
 /**
@@ -56,13 +56,13 @@ public class ProfileFromDEMData extends AbstractModelObject
 
   public static final String PROPERTY_THEME = "theme"; //$NON-NLS-1$
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final IKalypsoFeatureTheme[] m_profileThemes;
 
   private IKalypsoFeatureTheme m_theme;
 
-  public ProfileFromDEMData( final IProfil profile, final IKalypsoFeatureTheme[] profileThemes )
+  public ProfileFromDEMData( final IProfile profile, final IKalypsoFeatureTheme[] profileThemes )
   {
     m_profile = profile;
 
@@ -86,7 +86,7 @@ public class ProfileFromDEMData extends AbstractModelObject
     firePropertyChange( PROPERTY_THEME, oldValue, theme );
   }
 
-  public IProfil getProfile( )
+  public IProfile getProfile( )
   {
     return m_profile;
   }

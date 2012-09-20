@@ -42,10 +42,10 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -66,12 +66,12 @@ public class SinuositaetLayer extends AbstractProfilLayer
   public void removeYourself( )
   {
     final ISinuositaetProfileObject[] sin = getProfil().getProfileObjects( ISinuositaetProfileObject.class );
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "SinuositaetLayer_0" ), getProfil(), true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "SinuositaetLayer_0" ), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectRemove( getProfil(), sin ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 
-  public SinuositaetLayer( final IProfil profil )
+  public SinuositaetLayer( final IProfile profil )
   {
     super( "NullComponent", profil, "NullComponent", null ); //$NON-NLS-1$ //$NON-NLS-2$
 

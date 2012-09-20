@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -89,7 +89,7 @@ public class CheckinPartOperation
 
   private final CrossSectionPart m_part = new CrossSectionPart();
 
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final String m_profilSRS;
 
@@ -105,7 +105,7 @@ public class CheckinPartOperation
 
   private final ClassChecker m_classChcker;
 
-  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final IPartBuilder partBuilder, final ClassChecker classChcker )
+  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfile profil, final String profilSRS, final IPartBuilder partBuilder, final ClassChecker classChcker )
   {
     m_classChcker = classChcker;
     m_partBuilder = partBuilder;

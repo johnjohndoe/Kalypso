@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
@@ -53,13 +53,13 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
  */
 public class PPPartBuilder implements IPartBuilder
 {
-  private final IProfilPointMarker[] m_tfMarkers;
+  private final IProfilePointMarker[] m_tfMarkers;
 
-  private final IProfilPointMarker[] m_bvMarkers;
+  private final IProfilePointMarker[] m_bvMarkers;
 
-  private final IProfilPointMarker[] m_dbMarkers;
+  private final IProfilePointMarker[] m_dbMarkers;
 
-  public PPPartBuilder( final IProfil profil )
+  public PPPartBuilder( final IProfile profil )
   {
     m_tfMarkers = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     m_bvMarkers = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
@@ -106,9 +106,9 @@ public class PPPartBuilder implements IPartBuilder
     return null;
   }
 
-  private static String checkMarker( final IProfileRecord record, final IProfilPointMarker[] markers, final String codeStart, final String codeEnd )
+  private static String checkMarker( final IProfileRecord record, final IProfilePointMarker[] markers, final String codeStart, final String codeEnd )
   {
-    for( final IProfilPointMarker marker : markers )
+    for( final IProfilePointMarker marker : markers )
     {
       if( marker.getPoint().getRecord() == record.getRecord() )
       {

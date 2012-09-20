@@ -46,10 +46,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -93,12 +93,12 @@ public class SobekProfileDatExportOperation extends AbstractSobekFileExportOpera
   private double getHeight( final IRecord point )
   {
     final int widthindex = point.indexOfComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
-    return ProfilUtil.getDoubleValueFor( widthindex, point );
+    return ProfileUtil.getDoubleValueFor( widthindex, point );
   }
 
   private IRecord[] getSurfaceIndices( final IProfileFeature profileFeature )
   {
-    final IProfil profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfil();
     final IRecord[] points = profil.getPoints();
     if( points.length < 2 )
       // TODO: log?
@@ -113,7 +113,7 @@ public class SobekProfileDatExportOperation extends AbstractSobekFileExportOpera
     final String unknownLabel = String.format( Messages.getString( "SobekDefExportOperation.1" ), flowZone ); //$NON-NLS-1$
     final String markerLabel = markerComponent == null ? unknownLabel : ComponentUtilities.getComponentLabel( markerComponent );
 
-    final IProfilPointMarker[] markers = profil.getPointMarkerFor( flowZone );
+    final IProfilePointMarker[] markers = profil.getPointMarkerFor( flowZone );
     if( markers.length < 2 )
     {
       final String message = String.format( Messages.getString( "SobekDefExportOperation_2" ), markerLabel, profil.getStation(), profil.getName() ); //$NON-NLS-1$

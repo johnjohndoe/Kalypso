@@ -78,7 +78,7 @@ import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.dialog.compare.ProfileChartComposite;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
@@ -245,8 +245,8 @@ class ProfileSection extends Composite
 
   protected void onProfileChanged( final IProfileData profileData )
   {
-    final IProfil originalProfile = profileData == null ? null : profileData.getOriginalProfile();
-    final IProfil segmentedProfile = profileData == null ? null : profileData.getWorkingProfile();
+    final IProfile originalProfile = profileData == null ? null : profileData.getOriginalProfile();
+    final IProfile segmentedProfile = profileData == null ? null : profileData.getWorkingProfile();
     final boolean hasSegmentedProfile = segmentedProfile != null;
 
     m_profilComposite.setProfil( originalProfile, null );
@@ -280,7 +280,7 @@ class ProfileSection extends Composite
     display.asyncExec( runner );
   }
 
-  protected void doUpdateControls( final IProfil profile, final boolean hasSegmentedProfile )
+  protected void doUpdateControls( final IProfile profile, final boolean hasSegmentedProfile )
   {
     /* update toolbar */
     if( m_sourceManager != null )

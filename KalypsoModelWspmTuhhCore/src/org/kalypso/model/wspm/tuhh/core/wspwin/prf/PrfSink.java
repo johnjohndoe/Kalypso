@@ -43,13 +43,13 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.serializer.IProfileSink;
 
 /**
  * @author kimwerner
  */
-public class PrfSink implements IProfilSink
+public class PrfSink implements IProfileSink
 {
   // depends on Tuhh 1D calculation, ks or kst
   private final String m_defaultRoughnessType;
@@ -70,12 +70,12 @@ public class PrfSink implements IProfilSink
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(org.kalypso.model.wspm.core.profil.IProfil[], java.io.Writer)
    */
   @Override
-  public boolean write( final IProfil[] profiles, final Writer writer ) throws IOException
+  public boolean write( final IProfile[] profiles, final Writer writer ) throws IOException
   {
     if( profiles == null || profiles.length < 1 )
       return false;
 
-    final IProfil profil = profiles[0];
+    final IProfile profil = profiles[0];
 
     final PrfWriter prfWriter = new PrfWriter( profil, new IWaterlevel[0], m_defaultRoughnessType );
     prfWriter.write( writer );

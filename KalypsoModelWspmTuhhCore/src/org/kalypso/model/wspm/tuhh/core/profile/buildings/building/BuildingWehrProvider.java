@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.observation.IObservation;
@@ -56,7 +56,7 @@ public class BuildingWehrProvider implements IProfileObjectProvider
    *      org.kalypso.observation.IObservation)
    */
   @Override
-  public IProfileObject buildProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
+  public IProfileObject buildProfileObject( final IProfile profile, final IObservation<TupleResult> observation )
   {
     return new BuildingWehr( profile, observation );
   }

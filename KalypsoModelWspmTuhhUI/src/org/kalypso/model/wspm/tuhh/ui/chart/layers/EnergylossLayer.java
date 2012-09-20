@@ -42,10 +42,10 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel;
@@ -61,7 +61,7 @@ import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
  */
 public class EnergylossLayer extends AbstractProfilLayer
 {
-  public EnergylossLayer( final IProfil profil )
+  public EnergylossLayer( final IProfile profil )
   {
     super( "NullComponent", profil, "NullComponent", null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -70,9 +70,9 @@ public class EnergylossLayer extends AbstractProfilLayer
   public void removeYourself( )
   {
     final IEnergylossProfileObject[] elpo = getProfil().getProfileObjects( IEnergylossProfileObject.class );
-    final ProfilOperation operation = new ProfilOperation( "", getProfil(), true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( "", getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectRemove( getProfil(), elpo ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 
   @Override

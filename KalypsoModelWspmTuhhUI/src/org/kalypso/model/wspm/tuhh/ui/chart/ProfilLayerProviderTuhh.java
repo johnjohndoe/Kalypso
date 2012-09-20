@@ -51,8 +51,8 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
@@ -152,9 +152,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   }
 
   @Override
-  public void addLayerToProfile( final IProfil profil, final String layerId )
+  public void addLayerToProfile( final IProfile profil, final String layerId )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
     {
@@ -203,7 +203,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   }
 
   @Override
-  public IProfilChartLayer createLayer( final IProfil profil, final String layerID )
+  public IProfilChartLayer createLayer( final IProfile profil, final String layerID )
   {
     if( layerID == null || profil == null )
       return null;
@@ -256,7 +256,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   }
 
   @Override
-  public IProfilChartLayer[] createLayers( final IProfil profile, final Object result )
+  public IProfilChartLayer[] createLayers( final IProfile profile, final Object result )
   {
     // Achtung: diese Reihenfolge ist die natürliche Ordnung im Layermanager
     final List<IProfilChartLayer> layersToAdd = new ArrayList<>();
@@ -331,7 +331,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   public LayerDescriptor[] getAddableLayers( final ProfilChartModel chartModel )
   {
 
-    final IProfil profile = chartModel.getProfil();
+    final IProfile profile = chartModel.getProfil();
     if( Objects.isNull( profile ) )
       return new LayerDescriptor[] {};
 
@@ -392,7 +392,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   }
 
   @Override
-  public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile )
+  public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfile profile )
   {
     return new WspmTableUiHandlerProvider( profile );
   }
@@ -431,7 +431,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     return new IAxis[] { m_domainAxis, m_targetAxisLeft, m_targetAxisRight, m_screenAxisVertical };
   }
 
-  final void setAxisLabel( final IProfil profil )
+  final void setAxisLabel( final IProfile profil )
   {
     final String domLabel = String.format( AXIS_LABEL, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) ) );
     m_domainAxis.clearLabels();

@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
@@ -79,7 +79,7 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  public boolean resolve( final IProfil profil )
+  public boolean resolve( final IProfile profil )
   {
 
     if( !m_initialized )
@@ -87,7 +87,7 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
       final IComponent cTrennF = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
       if( cTrennF == null )
         return false;
-      final IProfilPointMarker[] deviders = profil.getPointMarkerFor( cTrennF );
+      final IProfilePointMarker[] deviders = profil.getPointMarkerFor( cTrennF );
       if( deviders.length < 2 )
         return false;
 

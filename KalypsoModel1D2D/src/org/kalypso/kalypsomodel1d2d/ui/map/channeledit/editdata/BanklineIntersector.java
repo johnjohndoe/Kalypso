@@ -48,7 +48,7 @@ import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -183,7 +183,7 @@ class BanklineIntersector
       if( !Double.isNaN( intersectionZ ) )
         return intersectionZ;
 
-      final IProfil profilOrg = profileData.getOriginalProfile();
+      final IProfile profilOrg = profileData.getOriginalProfile();
 
       final LengthIndexedLine bankIndex = new LengthIndexedLine( bankLine );
       final double indexOnBankLine = bankIndex.project( intersection.getCoordinate() );

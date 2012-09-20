@@ -49,9 +49,9 @@ import java.util.Set;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -77,11 +77,11 @@ public class CrossSectionConverter
 {
   private final CrossSection m_section;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
-  private final IProfilPointPropertyProvider m_provider;
+  private final IProfilePointPropertyProvider m_provider;
 
-  public CrossSectionConverter( final CrossSection section, final IProfil profile )
+  public CrossSectionConverter( final CrossSection section, final IProfile profile )
   {
     m_section = section;
     m_profile = profile;
@@ -165,7 +165,7 @@ public class CrossSectionConverter
 
   protected void createMarker( final IProfileRecord point, final String markerType )
   {
-    final IProfilPointMarker marker = m_profile.createPointMarker( markerType, point );
+    final IProfilePointMarker marker = m_profile.createPointMarker( markerType, point );
     final Object defaultValue = m_provider.getDefaultValue( markerType );
     marker.setValue( defaultValue );
   }

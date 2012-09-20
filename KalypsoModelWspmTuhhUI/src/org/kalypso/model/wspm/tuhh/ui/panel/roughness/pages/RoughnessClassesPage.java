@@ -66,9 +66,9 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.util.roughnesses.UpdateSimpleRoughnessProperty;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.AbstractClassificationLabelProvider;
@@ -86,7 +86,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
 
   private IRoughnessClass[] m_roughnesses;
 
-  public RoughnessClassesPage( final IProfil profile, final IComponent component )
+  public RoughnessClassesPage( final IProfile profile, final IComponent component )
   {
     super( profile, component, RoughnessClassesPage.class.getName() );
   }
@@ -158,14 +158,14 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
       {
         final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString( "RoughnessClassesPage.9" ), Messages.getString( "RoughnessClassesPage.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-        final IProfil profile = getProfile();
+        final IProfile profile = getProfile();
         final UpdateSimpleRoughnessProperty worker = new UpdateSimpleRoughnessProperty( profile, property, overwriteValues );
         ProgressUtilities.busyCursorWhile( worker );
 
-        final ProfilOperation operation = new ProfilOperation( "Updating roughness values", profile, true ); //$NON-NLS-1$
+        final ProfileOperation operation = new ProfileOperation( "Updating roughness values", profile, true ); //$NON-NLS-1$
         operation.addChange( worker.getChanges() );
 
-        new ProfilOperationJob( operation ).schedule();
+        new ProfileOperationJob( operation ).schedule();
       }
     } );
 
@@ -173,7 +173,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
 
   private boolean hasActions( )
   {
-    final IProfil profile = getProfile();
+    final IProfile profile = getProfile();
 
     if( Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
       return true;

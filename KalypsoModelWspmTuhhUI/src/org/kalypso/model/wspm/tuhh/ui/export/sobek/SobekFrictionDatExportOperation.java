@@ -46,7 +46,7 @@ import java.util.Locale;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat.FrictionType;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -74,7 +74,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
   @Override
   protected void writeProfile( final IProfileFeature profileFeature )
   {
-    final IProfil profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfil();
     final SobekFrictionZone[] frictionZones = findZones( profil );
 
     final SobekExportInfo info = getInfo();
@@ -124,7 +124,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
     formatter.format( "tble%n" ); //$NON-NLS-1$
   }
 
-  private SobekFrictionZone[] findZones( final IProfil profil )
+  private SobekFrictionZone[] findZones( final IProfile profil )
   {
     final IFlowZoneType[] zoneTypes = getInfo().getRoughnessZoneTypes();
 
@@ -136,7 +136,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
     return zones;
   }
 
-  private SobekFrictionZone createZone( final IProfil profil, final IFlowZoneType zoneType )
+  private SobekFrictionZone createZone( final IProfile profil, final IFlowZoneType zoneType )
   {
     final FlowZone flowZone = zoneType.createFlowZone( profil );
     if( flowZone == null )
@@ -163,7 +163,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
   /**
    * Calculates the mean roughness between from and to.
    */
-  private double calculateFriction( final IProfil profil, final double from, final double to )
+  private double calculateFriction( final IProfile profil, final double from, final double to )
   {
     final String roughnessId = getInfo().getRoughnessID();
 
@@ -202,7 +202,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
     return friction;
   }
 
-  private double getRoughness( final IProfil profile, final int roughnessIndex, final IProfileRecord point )
+  private double getRoughness( final IProfile profile, final int roughnessIndex, final IProfileRecord point )
   {
     final double plainValue = getRecordValue( roughnessIndex, point );
     if( !getInfo().getPreferRoughnessClasses() )

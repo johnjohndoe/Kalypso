@@ -53,7 +53,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedLis
 import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
@@ -378,7 +378,7 @@ public class SobekExportInfo
 
   public String getStructID( final IProfileFeature profileFeature )
   {
-    final IProfil profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfil();
     final String pattern = getIdPattern() + getIdSuffix();
     final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
     return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( pattern, data );
@@ -386,7 +386,7 @@ public class SobekExportInfo
 
   public String getID( final IProfileFeature profileFeature )
   {
-    final IProfil profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfil();
     final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
 
     return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( getIdPattern(), data );
@@ -394,7 +394,7 @@ public class SobekExportInfo
 
   public String getName( final IProfileFeature profileFeature )
   {
-    final IProfil profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfil();
     final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
 
     return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( getNamePattern(), data );

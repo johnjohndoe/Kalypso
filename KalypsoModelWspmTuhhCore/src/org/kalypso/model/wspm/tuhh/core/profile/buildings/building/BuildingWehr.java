@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
 import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.observation.IObservation;
@@ -57,7 +57,7 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_WEHR;
 
-  public BuildingWehr( final IProfil profil )
+  public BuildingWehr( final IProfile profil )
   {
     this( profil, buildObservation() );
   }
@@ -78,14 +78,14 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
     return observation;
   }
 
-  public BuildingWehr( final IProfil profil, final IObservation<TupleResult> observation )
+  public BuildingWehr( final IProfile profil, final IObservation<TupleResult> observation )
   {
     super( observation );
 
     addPointProperties( profil );
   }
 
-  private void addPointProperties( final IProfil profil )
+  private void addPointProperties( final IProfile profil )
   {
     // final IComponent hoehe = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );

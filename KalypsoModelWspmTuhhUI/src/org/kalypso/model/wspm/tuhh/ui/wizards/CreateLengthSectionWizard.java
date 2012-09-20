@@ -72,7 +72,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.profile.LengthSectionCreator;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.wspwin.ProfileFeatureSorter;
@@ -159,7 +159,7 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     if( !parentFolder.exists() )
       parentFolder.create( false, true, new NullProgressMonitor() );
 
-    final IProfil[] profiles = ProfileFeatureSorter.extractProfiles( profilFeatures, null );
+    final IProfile[] profiles = ProfileFeatureSorter.extractProfiles( profilFeatures, null );
 
     final String containerName = getContainerName();
 

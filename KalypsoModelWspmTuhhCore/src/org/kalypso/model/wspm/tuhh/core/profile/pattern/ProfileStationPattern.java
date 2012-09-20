@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
@@ -35,14 +35,14 @@ public final class ProfileStationPattern extends AbstractPatternInput<IProfilePa
     if( value == null )
       return StringUtils.EMPTY;
 
-    final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( value );
+    final BigDecimal bigStation = ProfileUtil.stationToBigDecimal( value );
     return String.format( "%s", bigStation ); //$NON-NLS-1$
   }
 
   @Override
   public Double getValue( final IProfilePatternData data, final String params )
   {
-    final IProfil profile = data.getProfile();
+    final IProfile profile = data.getProfile();
     if( profile == null )
       return null;
 

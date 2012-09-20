@@ -52,7 +52,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IPrfConstants;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfWriter;
@@ -80,7 +80,7 @@ public class PrfExporter
 
     for( final IProfileFeature feature : profiles )
     {
-      final IProfil profil = feature.getProfil();
+      final IProfile profil = feature.getProfil();
       final String profileName = profil.getName();
       final double station = profil.getStation();
       final WspmWaterBody water = feature.getWater();
@@ -128,7 +128,7 @@ public class PrfExporter
 
   // FIXME: get this information from a wizard page (let the user define what to do)
   // Let all prf-exports use the same wizard page.
-  public static void configurePrfWriterWithMetadata( final WspmWaterBody water, final IProfil profil, final PrfWriter prfWriter )
+  public static void configurePrfWriterWithMetadata( final WspmWaterBody water, final IProfile profil, final PrfWriter prfWriter )
   {
     final String profileName = profil.getName();
     final String profileDescription = profil.getDescription();

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.sobek.struct.SobekStructDef;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
@@ -68,7 +68,7 @@ public class SobekStructDefExportOperation extends AbstractSobekStructExportOper
   }
 
   @Override
-  protected boolean writeBuilding( final String structId, final IProfil profil, final String profileName, final IProfileObject profileObject )
+  protected boolean writeBuilding( final String structId, final IProfile profil, final String profileName, final IProfileObject profileObject )
   {
     final SobekStructDef structDef = buildStructDef( structId, profil, profileName, profileObject );
     if( structDef == null )
@@ -79,7 +79,7 @@ public class SobekStructDefExportOperation extends AbstractSobekStructExportOper
     return true;
   }
 
-  private SobekStructDef buildStructDef( final String buildingId, final IProfil profil, final String profileName, final IProfileObject profileObject )
+  private SobekStructDef buildStructDef( final String buildingId, final IProfile profil, final String profileName, final IProfileObject profileObject )
   {
     if( profileObject instanceof BuildingBruecke )
       return buildBridge( buildingId, profil, profileName, (BuildingBruecke) profileObject );
@@ -88,7 +88,7 @@ public class SobekStructDefExportOperation extends AbstractSobekStructExportOper
     return null;
   }
 
-  private SobekStructDef buildBridge( final String buildingId, final IProfil profil, final String profileName, final BuildingBruecke profileObject )
+  private SobekStructDef buildBridge( final String buildingId, final IProfile profil, final String profileName, final BuildingBruecke profileObject )
   {
     final double width = profileObject.getWidth();
 

@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
@@ -54,7 +54,7 @@ public class CommentTheme extends AbstractPlaceholderProfileTheme
 
   private static final String[] COMPONENTS = new String[] { IWspmConstants.POINT_PROPERTY_COMMENT };
 
-  public CommentTheme( final IProfil profil )
+  public CommentTheme( final IProfile profil )
   {
     super( profil, IWspmConstants.LAYER_COMMENT, TITLE, new IProfilChartLayer[0], COMPONENTS );
   }

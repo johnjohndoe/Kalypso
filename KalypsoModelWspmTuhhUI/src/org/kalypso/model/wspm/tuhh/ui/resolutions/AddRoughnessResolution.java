@@ -49,7 +49,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
@@ -91,7 +91,7 @@ public class AddRoughnessResolution extends AbstractProfilMarkerResolution
   }
 
   @Override
-  public String getUIresult( final Shell shell, final IProfil profil )
+  public String getUIresult( final Shell shell, final IProfile profil )
   {
     final LabelProvider labelProvider = new LabelProvider()
     {
@@ -139,7 +139,7 @@ public class AddRoughnessResolution extends AbstractProfilMarkerResolution
   }
 
   @Override
-  public boolean resolve( final IProfil profil )
+  public boolean resolve( final IProfile profil )
   {
     if( m_initialized )
     {

@@ -41,13 +41,13 @@
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -80,12 +80,12 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  public boolean resolve( final IProfil profil )
+  public boolean resolve( final IProfile profil )
   {
     if( m_deviderType == "" || profil.getPoints().length < 1 ) //$NON-NLS-1$
       throw new IllegalStateException();
 
-    final IProfilPointMarker[] markers = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilePointMarker[] markers = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( markers.length == 2 )
     {
       createMarkers( profil, markers[0].getPoint(), markers[markers.length - 1].getPoint() );
@@ -100,14 +100,14 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
     return false;
   }
 
-  private void createMarkers( final IProfil profil, final IProfileRecord pointLeft, final IProfileRecord pointRight )
+  private void createMarkers( final IProfile profil, final IProfileRecord pointLeft, final IProfileRecord pointRight )
   {
-    final ProfilOperation operation = new ProfilOperation( "Add Devider", profil, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( "Add Devider", profil, true ); //$NON-NLS-1$
 
-    final IProfilPointMarker m1 = profil.createPointMarker( m_deviderType, pointLeft );
-    final IProfilPointMarker m2 = profil.createPointMarker( m_deviderType, pointRight );
+    final IProfilePointMarker m1 = profil.createPointMarker( m_deviderType, pointLeft );
+    final IProfilePointMarker m2 = profil.createPointMarker( m_deviderType, pointRight );
 
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
 
     final Object defaultValue = provider.getDefaultValue( m_deviderType );
     m1.setValue( defaultValue );
@@ -118,7 +118,7 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
 
     operation.addChange( new ActiveObjectEdit( profil, pointLeft.getBreiteAsRange(), null ) );
 
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 
   /**

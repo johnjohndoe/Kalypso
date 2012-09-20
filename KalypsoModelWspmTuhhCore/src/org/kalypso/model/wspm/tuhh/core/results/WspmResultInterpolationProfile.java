@@ -45,7 +45,7 @@ import java.math.BigDecimal;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -78,7 +78,7 @@ public class WspmResultInterpolationProfile
     final IProfileFeature previousProfile = reach.findProfile( m_previousStation );
 
     final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile.getProfil(), nextProfile.getProfil(), onlyRiverChannel );
-    final IProfil newProfile = interpolation.interpolate( m_interpolatedStation, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    final IProfile newProfile = interpolation.interpolate( m_interpolatedStation, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
     final String name = String.format( Messages.getString( "WspmResultInterpolationProfile_0" ), m_previousStation, m_nextStation ); //$NON-NLS-1$
     newProfile.setName( name );
 

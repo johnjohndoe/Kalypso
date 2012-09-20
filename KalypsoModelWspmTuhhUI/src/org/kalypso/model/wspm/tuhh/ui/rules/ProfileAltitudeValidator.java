@@ -46,9 +46,9 @@ import java.util.Map;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
@@ -59,7 +59,7 @@ import org.kalypso.observation.result.IRecord;
  */
 public class ProfileAltitudeValidator
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final double m_delta;
 
@@ -69,7 +69,7 @@ public class ProfileAltitudeValidator
 
   private final String m_station;
 
-  public ProfileAltitudeValidator( final IProfil profil, final IValidatorMarkerCollector collector )
+  public ProfileAltitudeValidator( final IProfile profil, final IValidatorMarkerCollector collector )
   {
     m_breite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     m_delta = m_breite == null ? 0.0001 : m_breite.getPrecision();
@@ -88,9 +88,9 @@ public class ProfileAltitudeValidator
     m_collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, m_station, pos, componentID );
   }
 
-  public final void createMarker( final String message, final int pos, final String componentID, final IProfilMarkerResolution resolution ) throws CoreException
+  public final void createMarker( final String message, final int pos, final String componentID, final IProfileMarkerResolution resolution ) throws CoreException
   {
-    m_collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, m_station, pos, componentID, new IProfilMarkerResolution[] { resolution } );
+    m_collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, m_station, pos, componentID, new IProfileMarkerResolution[] { resolution } );
   }
 
   public final int whileEqual( final int begin, final int end, final Map<Integer, Double> interpolatedValues )
@@ -116,7 +116,7 @@ public class ProfileAltitudeValidator
     while( i != end )
     {
       final IRecord point = points[i];
-      final Double h = ProfilUtil.getDoubleValueFor( componentID, point );
+      final Double h = ProfileUtil.getDoubleValueFor( componentID, point );
       if( !h.isNaN() )
         return i;
       i = i + step;
@@ -154,7 +154,7 @@ public class ProfileAltitudeValidator
       final Double h1 = interpolatedValues.get( i );
       if( h1 != null )
       {
-        final Double h2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
+        final Double h2 = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
         if( !compare( h1, h2, check, orEqual ) )
           return lastPos;
         lastPos = i;
@@ -178,18 +178,18 @@ public class ProfileAltitudeValidator
     for( int i = startPos; i <= lastPos; i++ )
     {
       final IRecord point = points[i];
-      Double h1 = ProfilUtil.getDoubleValueFor( componentID, point );
+      Double h1 = ProfileUtil.getDoubleValueFor( componentID, point );
       if( h1.isNaN() )
       {
         final double last = result.get( i - 1 );
         if( m.isNaN() )
         {
-          final int next = ProfilUtil.getNextNonNull( points, i, m_profil.indexOfProperty( componentID ) );
-          final Double distance = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[next] )
-              - ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i - 1] );
-          m = (ProfilUtil.getDoubleValueFor( componentID, points[next] ) - last) / distance;
+          final int next = ProfileUtil.getNextNonNull( points, i, m_profil.indexOfProperty( componentID ) );
+          final Double distance = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[next] )
+              - ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i - 1] );
+          m = (ProfileUtil.getDoubleValueFor( componentID, points[next] ) - last) / distance;
         }
-        final double dist = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i] ) - ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i - 1] );
+        final double dist = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i] ) - ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i - 1] );
         h1 = last + m * dist;
       }
       else

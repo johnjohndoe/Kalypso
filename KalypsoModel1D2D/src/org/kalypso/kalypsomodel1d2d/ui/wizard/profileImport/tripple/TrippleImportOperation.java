@@ -18,7 +18,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -61,7 +61,7 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
       /* Import Trippel Data */
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.14" ) ); //$NON-NLS-1$
 
-      final IProfil[] profiles = ImportTrippleHelper.importTrippelData( m_trippelFile, m_separator, IWspmTuhhConstants.PROFIL_TYPE_PASCHE, m_crs );
+      final IProfile[] profiles = ImportTrippleHelper.importTrippelData( m_trippelFile, m_separator, IWspmTuhhConstants.PROFIL_TYPE_PASCHE, m_crs );
 
       monitor.worked( 1 );
 
@@ -101,7 +101,7 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
    *          the GML river network, in which the profiles will be stored
    * @param addedFeatures
    */
-  protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final IProfil[] profiles ) throws Exception
+  protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final IProfile[] profiles ) throws Exception
   {
     final IRiverProfileNetwork network = networkCollection.getRiverProfileNetworks().addNew( IRiverProfileNetwork.QNAME );
     final Feature networkFeature = network;
@@ -119,7 +119,7 @@ final class TrippleImportOperation extends AbstractImportProfileOperation
     // final String coordinatesSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     // workspace.accept( new TransformVisitor( coordinatesSystem ), networkFeature, FeatureVisitor.DEPTH_INFINITE );
 
-    for( final IProfil profile : profiles )
+    for( final IProfile profile : profiles )
     {
       final IProfileFeature profileFeature = (IProfileFeature)FeatureHelper.addFeature( networkFeature, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, IProfileFeature.FEATURE_PROFILE );
       profileFeature.setEnvelopesUpdated();

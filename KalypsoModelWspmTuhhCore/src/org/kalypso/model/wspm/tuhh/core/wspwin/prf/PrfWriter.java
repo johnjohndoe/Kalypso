@@ -64,10 +64,10 @@ import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -97,7 +97,7 @@ public class PrfWriter implements IPrfConstants
 
   private final DataBlockWriter m_dbWriter = new DataBlockWriter();
 
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final IWaterlevel[] m_waterlevels;
 
@@ -105,12 +105,12 @@ public class PrfWriter implements IPrfConstants
 
   private final PrfVegetationWriter m_vegetationWriter;
 
-  public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels )
+  public PrfWriter( final IProfile profil, final IWaterlevel[] waterlevels )
   {
     this( profil, waterlevels, "" ); //$NON-NLS-1$
   }
 
-  public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels, final String defaultRoughnessType )
+  public PrfWriter( final IProfile profil, final IWaterlevel[] waterlevels, final String defaultRoughnessType )
   {
     m_profil = profil;
     m_waterlevels = waterlevels;
@@ -357,7 +357,7 @@ public class PrfWriter implements IPrfConstants
 
   private void writeDeviderTyp( final String key )
   {
-    final IProfilPointMarker[] deviders = m_profil.getPointMarkerFor( m_profil.hasPointProperty( key ) );
+    final IProfilePointMarker[] deviders = m_profil.getPointMarkerFor( m_profil.hasPointProperty( key ) );
     if( deviders == null || deviders.length == 0 )
       return;
 
@@ -367,7 +367,7 @@ public class PrfWriter implements IPrfConstants
     final int iBreite = m_profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
     for( int i = 0; i < deviders.length; i++ )
     {
-      final IProfilPointMarker devider = deviders[i];
+      final IProfilePointMarker devider = deviders[i];
       final IRecord point = devider.getPoint();
 
       try
@@ -387,7 +387,7 @@ public class PrfWriter implements IPrfConstants
   /**
    * Get coodinate y value: depends on type of marker.
    */
-  private double getDeviderYValue( final IProfilPointMarker devider, final int index )
+  private double getDeviderYValue( final IProfilePointMarker devider, final int index )
   {
     final IComponent markerId = devider.getComponent();
 
@@ -461,16 +461,16 @@ public class PrfWriter implements IPrfConstants
     {
       final DataBlockHeader dbhw = PrfHeaders.createHeader( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$
       final CoordDataBlock dbw = new CoordDataBlock( dbhw );
-      final IProfilPointMarker[] deviders = m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
+      final IProfilePointMarker[] deviders = m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
       if( deviders.length > 0 )
       {
-        final IProfilPointMarker[] trennFl = m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+        final IProfilePointMarker[] trennFl = m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
         final Double[] markedWidths = new Double[deviders.length + 2];
-        markedWidths[0] = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, trennFl[0].getPoint() );
-        markedWidths[markedWidths.length - 1] = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, trennFl[trennFl.length - 1].getPoint() );
+        markedWidths[0] = ProfileUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, trennFl[0].getPoint() );
+        markedWidths[markedWidths.length - 1] = ProfileUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, trennFl[trennFl.length - 1].getPoint() );
         for( int i = 1; i < markedWidths.length - 1; i++ )
         {
-          markedWidths[i] = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, deviders[i - 1].getPoint() );
+          markedWidths[i] = ProfileUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, deviders[i - 1].getPoint() );
         }
         final Double[] interpolations = WspmProfileHelper.interpolateValues( m_profil, markedWidths, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
         dbw.setCoords( markedWidths, interpolations );
@@ -485,7 +485,7 @@ public class PrfWriter implements IPrfConstants
 
         final StringBuffer secLine = new StringBuffer( toDataBlockKey( wehrart ) );
         secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ) ); //$NON-NLS-1$
-        for( final IProfilPointMarker devider : deviders )
+        for( final IProfilePointMarker devider : deviders )
         {
           secLine.append( String.format( Locale.US, " %12.4f", devider.getValue() ) ); //$NON-NLS-1$
         }

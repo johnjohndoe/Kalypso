@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pointfilter;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -52,13 +52,13 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 public class VorlandrechtsProfilePointFilter extends AbstractProfilePointFilter
 {
   @Override
-  public boolean accept( final IProfil profil, final IProfileRecord point )
+  public boolean accept( final IProfile profil, final IProfileRecord point )
   {
-    final IProfilPointMarker[] bvMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    final IProfilePointMarker[] bvMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
     if( bvMarker.length == 2 )
       return isBetweenMarkers( profil, point, bvMarker[1], null );
 
-    final IProfilPointMarker[] tfMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilePointMarker[] tfMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( tfMarker.length == 2 )
       return isBetweenMarkers( profil, point, tfMarker[1], null );
 

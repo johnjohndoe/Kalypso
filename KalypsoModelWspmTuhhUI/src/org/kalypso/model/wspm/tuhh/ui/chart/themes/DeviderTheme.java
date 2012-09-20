@@ -46,8 +46,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarkerProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel;
@@ -70,7 +70,7 @@ public class DeviderTheme extends AbstractProfilTheme
 
   private ILegendEntry[] m_legendEntries;
 
-  public DeviderTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public DeviderTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( profil, IWspmTuhhConstants.LAYER_DEVIDER, TITLE, chartLayers, cm );
   }
@@ -110,7 +110,7 @@ public class DeviderTheme extends AbstractProfilTheme
 
   private ILegendEntry[] createLegendEntries( )
   {
-    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
+    final IProfilePointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
 
     final IComponent[] deviders = getProfil().getPointMarkerTypes();
     final String[] deviderIds = new String[deviders.length];

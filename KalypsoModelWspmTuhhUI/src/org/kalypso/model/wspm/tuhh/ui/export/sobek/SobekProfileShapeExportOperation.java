@@ -44,7 +44,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
@@ -104,7 +104,7 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
     final String id = info.getID( profileFeature );
     final String name = info.getName( profileFeature );
 
-    final IProfil profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfil();
 
     final IProfileRecord minPoint = ProfileVisitors.findLowestPoint( profil );
     if( minPoint == null )

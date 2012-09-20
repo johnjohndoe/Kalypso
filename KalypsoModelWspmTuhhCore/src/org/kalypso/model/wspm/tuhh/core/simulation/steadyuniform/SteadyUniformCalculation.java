@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.kalypso.commons.math.geom.PolyLine;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -56,11 +56,11 @@ import com.vividsolutions.jts.geom.Envelope;
  */
 public class SteadyUniformCalculation
 {
-  private final IProfil m_crossSection;
+  private final IProfile m_crossSection;
 
   private final double m_slope;
 
-  public SteadyUniformCalculation( final IProfil crossSection, final double slope )
+  public SteadyUniformCalculation( final IProfile crossSection, final double slope )
   {
     m_crossSection = crossSection;
     m_slope = slope;

@@ -55,7 +55,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.JtsVectorUtilities;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.base.ChangeProfilePointHeight;
 import org.kalypso.model.wspm.core.profil.base.FLOW_DIRECTION;
 import org.kalypso.model.wspm.core.profil.base.MoveProfileRunnable;
@@ -276,7 +276,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     return toVector( points[0], points[ArrayUtils.getLength( points ) - 1] );
   }
 
-  private Coordinate toVector( final IProfilPointMarker... markers )
+  private Coordinate toVector( final IProfilePointMarker... markers )
   {
     if( Arrays.isEmpty( markers ) || ArrayUtils.getLength( markers ) < 2 )
       return null;

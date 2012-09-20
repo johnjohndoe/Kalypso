@@ -46,8 +46,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
@@ -144,7 +144,7 @@ public class RiverLineBuilder
   {
     try
     {
-      final IProfil profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfil();
 
       /* Prepare for transformation */
       final String profileSRS = profileFeature.getSrsName();
@@ -176,7 +176,7 @@ public class RiverLineBuilder
     }
   }
 
-  private Coordinate findLowPoint( final IProfil profil, final JTSTransformer transformer ) throws Exception
+  private Coordinate findLowPoint( final IProfile profil, final JTSTransformer transformer ) throws Exception
   {
     try
     {
@@ -200,10 +200,10 @@ public class RiverLineBuilder
     return transformer.transform( lowLocation );
   }
 
-  private Vector2D findDirection( final IProfil profil, final JTSTransformer transformer ) throws Exception
+  private Vector2D findDirection( final IProfile profil, final JTSTransformer transformer ) throws Exception
   {
     // IProfileRecord[] pointsForDirection = profil.getPoints();
-    final IProfilPointMarker[] markerPoints = profil.getPointMarkerFor( "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE" ); //$NON-NLS-1$
+    final IProfilePointMarker[] markerPoints = profil.getPointMarkerFor( "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE" ); //$NON-NLS-1$
     final IProfileRecord[] pointsForDirection = new IProfileRecord[markerPoints.length];
     for( int i = 0; i < pointsForDirection.length; i++ )
       pointsForDirection[i] = markerPoints[i].getPoint();

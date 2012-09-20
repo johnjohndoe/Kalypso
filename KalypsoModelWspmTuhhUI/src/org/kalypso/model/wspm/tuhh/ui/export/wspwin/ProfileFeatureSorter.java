@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 /**
  * @author kimwerner
@@ -57,9 +57,9 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 public class ProfileFeatureSorter
 {
 
-  public static IProfil[] extractProfiles( final Object[] profilFeatures, final IProgressMonitor monitor )
+  public static IProfile[] extractProfiles( final Object[] profilFeatures, final IProgressMonitor monitor )
   {
-    final SortedMap<Double, IProfil> profiles = new TreeMap<>();
+    final SortedMap<Double, IProfile> profiles = new TreeMap<>();
 
     for( final Object objProfileFeature : profilFeatures )
     {
@@ -70,12 +70,12 @@ public class ProfileFeatureSorter
       }
       final IProfileFeature profileFeature = (IProfileFeature) objProfileFeature;
 
-      final IProfil profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfil();
       final double station = profil.getStation();
       profiles.put( station, profil );
     }
 
-    final IProfil[] sortedProfiles = profiles.values().toArray( new IProfil[profiles.size()] );
+    final IProfile[] sortedProfiles = profiles.values().toArray( new IProfile[profiles.size()] );
 
     // Sort according to flow direction (i.e. we always start upstreams)
     final WspmWaterBody waterBody = ((IProfileFeature) profilFeatures[0]).getWater();

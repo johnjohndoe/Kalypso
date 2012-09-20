@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.RoughnessAdjuster;
@@ -53,13 +53,13 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
  */
 public class RiverChannelLayer extends PointMarkerLayer
 {
-  public RiverChannelLayer( final IProfil profil, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
+  public RiverChannelLayer( final IProfile profil, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
   {
     super( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, styleProvider, offset, close );
   }
 
   @Override
-  protected void moveDevider( final IProfilPointMarker devider, final IProfileRecord newPoint )
+  protected void moveDevider( final IProfilePointMarker devider, final IProfileRecord newPoint )
   {
     if( Preferences.isKeepChannelRoughness() )
     {

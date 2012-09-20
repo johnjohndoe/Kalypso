@@ -44,8 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
@@ -62,7 +62,7 @@ public final class WspmSohlpunkte
   {
   }
 
-  public static double findSohlpunkt( final IProfil profile )
+  public static double findSohlpunkt( final IProfile profile )
   {
     return findSohlpunkt( profile, Profiles.FUZZINESS );
   }
@@ -72,12 +72,12 @@ public final class WspmSohlpunkte
    *          = height delta -> points inherit (interval!) this delta are equal!
    * @return breite of sohlpunkt
    */
-  public static double findSohlpunkt( final IProfil profile, final double fuziness )
+  public static double findSohlpunkt( final IProfile profile, final double fuziness )
   {
     final IProfileRecord startPoint;
     final IProfileRecord endPoint;
 
-    final IProfilPointMarker[] dbs = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilePointMarker[] dbs = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( dbs.length != 2 )
     {
       startPoint = profile.getFirstPoint();
@@ -128,7 +128,7 @@ public final class WspmSohlpunkte
     return p1.getBreite() + distance / 2.0;
   }
 
-  public static <T extends IProfileBuilding> T getBuilding( final IProfil profile, final Class<T> buildingType )
+  public static <T extends IProfileBuilding> T getBuilding( final IProfile profile, final Class<T> buildingType )
   {
     final IProfileBuilding[] profileObjects = profile.getProfileObjects( buildingType );
     return ArrayUtils.isEmpty( profileObjects ) ? null : buildingType.cast( profileObjects[0] );
@@ -136,7 +136,7 @@ public final class WspmSohlpunkte
 
   public static IProfileRecord getSohlpunktPoint( final ProfileWrapper wrapper )
   {
-    final IProfilPointMarker[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilePointMarker[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( dbs.length != 2 )
       throw new IllegalStateException();
 

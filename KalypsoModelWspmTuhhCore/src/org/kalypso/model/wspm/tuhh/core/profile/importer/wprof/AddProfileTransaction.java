@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 
 /**
@@ -59,7 +59,7 @@ public class AddProfileTransaction implements IProfileTransaction
   }
 
   @Override
-  public IStatus execute( final IProfil profile )
+  public IStatus execute( final IProfile profile )
   {
     try
     {

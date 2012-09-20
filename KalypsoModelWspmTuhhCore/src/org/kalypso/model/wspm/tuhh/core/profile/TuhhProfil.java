@@ -47,10 +47,10 @@ import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
+import org.kalypso.model.wspm.core.profil.impl.AbstractProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -63,7 +63,7 @@ import org.kalypso.observation.result.TupleResult;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class TuhhProfil extends AbstractProfil
+public class TuhhProfil extends AbstractProfile
 {
   public static final String PROFIL_TYPE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
@@ -92,9 +92,9 @@ public class TuhhProfil extends AbstractProfil
    * This is very confusing! Instead, we should directly set the value and return the real marker.
    */
   @Override
-  public IProfilPointMarker createPointMarker( final String markerID, final IProfileRecord point )
+  public IProfilePointMarker createPointMarker( final String markerID, final IProfileRecord point )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     if( provider == null )
       throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.3", getType() ) ); //$NON-NLS-1$
 
@@ -115,7 +115,7 @@ public class TuhhProfil extends AbstractProfil
   @Override
   public boolean removePoint( final IProfileRecord point )
   {
-    final IProfilPointMarker[] markers = getPointMarkerFor( point );
+    final IProfilePointMarker[] markers = getPointMarkerFor( point );
     if( Arrays.isEmpty( markers ) )
       return super.removePoint( point );
 
@@ -123,44 +123,44 @@ public class TuhhProfil extends AbstractProfil
   }
 
   @Override
-  public IProfilPointMarker[] getPointMarkerFor( final IProfileRecord record )
+  public IProfilePointMarker[] getPointMarkerFor( final IProfileRecord record )
   {
-    final List<IProfilPointMarker> pointMarkers = new ArrayList<>();
+    final List<IProfilePointMarker> pointMarkers = new ArrayList<>();
     final IComponent[] markers = getPointMarkerTypes();
     for( final IComponent component : markers )
     {
-      final IProfilPointMarker marker = getMarker( component, record );
+      final IProfilePointMarker marker = getMarker( component, record );
       if( marker != null )
       {
         pointMarkers.add( marker );
       }
     }
-    return pointMarkers.toArray( new IProfilPointMarker[] {} );
+    return pointMarkers.toArray( new IProfilePointMarker[] {} );
   }
 
   @Override
-  public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
+  public IProfilePointMarker[] getPointMarkerFor( final IComponent markerColumn )
   {
     if( markerColumn == null )
-      return new IProfilPointMarker[] {};
+      return new IProfilePointMarker[] {};
 
-    final List<IProfilPointMarker> markers = new ArrayList<>();
+    final List<IProfilePointMarker> markers = new ArrayList<>();
 
     final IProfileRecord[] points = getPoints();
 
     for( final IProfileRecord point : points )
     {
-      final IProfilPointMarker marker = getMarker( markerColumn, point );
+      final IProfilePointMarker marker = getMarker( markerColumn, point );
       if( marker != null )
       {
         markers.add( marker );
       }
     }
 
-    return markers.toArray( new IProfilPointMarker[] {} );
+    return markers.toArray( new IProfilePointMarker[] {} );
   }
 
-  private IProfilPointMarker getMarker( final IComponent component, final IProfileRecord record )
+  private IProfilePointMarker getMarker( final IComponent component, final IProfileRecord record )
   {
     final int index = indexOfProperty( component );
     if( index < 0 )

@@ -58,9 +58,9 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -126,7 +126,7 @@ public class Waterlevel2DCreator
     return m_waterlevels.get( name );
   }
 
-  public void insertWaterlevel( final IProfil profile )
+  public void insertWaterlevel( final IProfile profile )
   {
     for( final Entry<String, SortedSet<Point2D>> entry : m_waterlevels.entrySet() )
     {
@@ -138,7 +138,7 @@ public class Waterlevel2DCreator
     }
   }
 
-  private void insertWaterlevel( final IProfil profile, final String name, final PolyLine polyLine )
+  private void insertWaterlevel( final IProfile profile, final String name, final PolyLine polyLine )
   {
     final int widthIndex = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
 
@@ -185,17 +185,17 @@ public class Waterlevel2DCreator
     return null;
   }
 
-  public void moveDurchstroemteBereiche( final IProfil profile )
+  public void moveDurchstroemteBereiche( final IProfile profile )
   {
     final int widthIndex = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
 
-    final IProfilPointMarker[] dbMarker = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilePointMarker[] dbMarker = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
 
     double dbMin = Double.MAX_VALUE;
     double dbMax = -Double.MAX_VALUE;
 
     /* Minimal position is the old one */
-    for( final IProfilPointMarker existingMarker : dbMarker )
+    for( final IProfilePointMarker existingMarker : dbMarker )
     {
       profile.removePointMarker( existingMarker );
 
@@ -230,9 +230,9 @@ public class Waterlevel2DCreator
     createMarker( profile, dbMin, dbMax );
   }
 
-  private void createMarker( final IProfil profile, final double... widths )
+  private void createMarker( final IProfile profile, final double... widths )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
 
     for( final double width : widths )
     {
@@ -240,7 +240,7 @@ public class Waterlevel2DCreator
 
       if( point != null )
       {
-        final IProfilPointMarker marker = profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, point );
+        final IProfilePointMarker marker = profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, point );
         final Object defaultValue = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
         marker.setValue( defaultValue );
       }

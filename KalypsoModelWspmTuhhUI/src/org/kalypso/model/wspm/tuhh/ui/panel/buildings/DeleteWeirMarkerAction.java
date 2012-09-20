@@ -41,12 +41,12 @@
 package org.kalypso.model.wspm.tuhh.ui.panel.buildings;
 
 import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 
@@ -55,11 +55,11 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
  */
 class DeleteWeirMarkerAction extends Action
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
-  private final IProfilPointMarker m_devider;
+  private final IProfilePointMarker m_devider;
 
-  public DeleteWeirMarkerAction( final IProfilPointMarker devider, final boolean canDelete, final IProfil profile )
+  public DeleteWeirMarkerAction( final IProfilePointMarker devider, final boolean canDelete, final IProfile profile )
   {
     m_devider = devider;
     m_profile = profile;
@@ -77,9 +77,9 @@ class DeleteWeirMarkerAction extends Action
   @Override
   public void run( )
   {
-    final IProfilChange change = new PointMarkerEdit( m_devider, null );
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.5" ), m_profile, change, true ); //$NON-NLS-1$
-    new ProfilOperationJob( operation ).schedule();
+    final IProfileChange change = new PointMarkerEdit( m_devider, null );
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.5" ), m_profile, change, true ); //$NON-NLS-1$
+    new ProfileOperationJob( operation ).schedule();
   }
 
 }

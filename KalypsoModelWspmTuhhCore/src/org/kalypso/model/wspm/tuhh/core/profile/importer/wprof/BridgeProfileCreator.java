@@ -51,10 +51,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
@@ -96,7 +96,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
    * @see org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.GelaendeProfileCreator#configure(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  protected void configure( final IProfil profile ) throws CoreException
+  protected void configure( final IProfile profile ) throws CoreException
   {
     super.configure( profile );
 
@@ -109,7 +109,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     cleanup( profile );
   }
 
-  private void addBridgeObject( final IProfil profile )
+  private void addBridgeObject( final IProfile profile )
   {
     final BuildingBruecke bridge = new BuildingBruecke( profile );
     setBridgeDefaultValues( bridge );
@@ -129,7 +129,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     bridge.setValueFor( BUILDING_PROPERTY_FORMBEIWERT, new Double( 0.0 ) );
   }
 
-  private void setUWheight( final IProfil profile, final BuildingBruecke bridge, final IWProfPoint widthPoint )
+  private void setUWheight( final IProfile profile, final BuildingBruecke bridge, final IWProfPoint widthPoint )
   {
     final double widthPointZ = widthPoint == null ? Double.MAX_VALUE : widthPoint.getValue();
     final IComponent heightComponent = profile.getPointPropertyFor( POINT_PROPERTY_HOEHE );
@@ -148,7 +148,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     }
   }
 
-  private void setWidth( final IProfil profile, final BuildingBruecke bridge, final IWProfPoint widthPoint )
+  private void setWidth( final IProfile profile, final BuildingBruecke bridge, final IWProfPoint widthPoint )
   {
     final GM_Point location = widthPoint.getLocation();
 
@@ -170,14 +170,14 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     return bridgeWidthPoints[0];
   }
 
-  private void cleanup( final IProfil profile )
+  private void cleanup( final IProfile profile )
   {
     final int heightComponent = profile.indexOfProperty( POINT_PROPERTY_HOEHE );
 
     final int ukComponent = profile.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
 // final int okComponent = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
 
-    ProfilUtil.interpolateProperty( profile, heightComponent );
+    ProfileUtil.interpolateProperty( profile, heightComponent );
     // TODO: maybe optional?
     // Actually, interpolation is not necessary for kalypso-1d.exe
 // ProfilUtil.interpolateProperty( profile, ukComponent );
@@ -189,7 +189,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     createMarkers( profile, trennflaechenPoints, MARKER_TYP_TRENNFLAECHE );
   }
 
-  private IProfileRecord[] findFirstLast( final IProfil profile, final int heightComponent, final int bridgeComponent )
+  private IProfileRecord[] findFirstLast( final IProfile profile, final int heightComponent, final int bridgeComponent )
   {
     final Collection<IProfileRecord> firstLast = new ArrayList<>( 2 );
 
@@ -236,7 +236,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     return null;
   }
 
-  private void cleanupHeights( final IProfil profile )
+  private void cleanupHeights( final IProfile profile )
   {
     final int ukIndex = profile.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
     final int okIndex = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
@@ -296,7 +296,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     }
   }
 
-  private void addUK( final IProfil profile ) throws CoreException
+  private void addUK( final IProfile profile ) throws CoreException
   {
     final IWProfPoint[] ukPoints = getUkPoints();
     if( ukPoints.length < 2 )
@@ -440,7 +440,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     return adjustedPoints;
   }
 
-  private void addOK( final IProfil profile ) throws CoreException
+  private void addOK( final IProfile profile ) throws CoreException
   {
     final IWProfPoint[] okPoints = getOkPoints();
     if( okPoints == null || okPoints.length < 2 )
@@ -463,9 +463,9 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     return swapBackJumps( m_okPoints );
   }
 
-  private void addDefaultProperty( final IProfil profile, final String propertyToSet, final String propertyToCopy )
+  private void addDefaultProperty( final IProfile profile, final String propertyToSet, final String propertyToCopy )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
 
     final IComponent componentToSet = provider.getPointProperty( propertyToSet );
     final IComponent componentToCopy = provider.getPointProperty( propertyToCopy );
@@ -473,9 +473,9 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     profile.addPointProperty( componentToSet, componentToCopy );
   }
 
-  private void addBridgeProperty( final IProfil profile, final IWProfPoint[] bridgePoints, final String bridgeProperty ) throws CoreException
+  private void addBridgeProperty( final IProfile profile, final IWProfPoint[] bridgePoints, final String bridgeProperty ) throws CoreException
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent component = provider.getPointProperty( bridgeProperty );
 
     profile.addPointProperty( component );
@@ -511,9 +511,9 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     }
   }
 
-  private IRecord findOrInsertPointAt( final IProfil profile, final double distance, final int buildPropertyIndex )
+  private IRecord findOrInsertPointAt( final IProfile profile, final double distance, final int buildPropertyIndex )
   {
-    final IRecord existingPoint = ProfilUtil.findPoint( profile, distance, 0.00001 );
+    final IRecord existingPoint = ProfileUtil.findPoint( profile, distance, 0.00001 );
     if( existingPoint != null )
     {
       final Object buildingValue = existingPoint.getValue( buildPropertyIndex );
@@ -527,7 +527,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   }
 
   @Override
-  protected void addMarker( final IProfil profile )
+  protected void addMarker( final IProfile profile )
   {
     // Keine trennflächen: they will be set to the bridges edges
     // Keine Bordvollpunkte: verboten bei Brücken

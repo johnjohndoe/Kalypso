@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 /**
@@ -52,7 +52,7 @@ public class CodeTheme extends AbstractPlaceholderProfileTheme
 {
   public static final String TITLE = "Code"; //$NON-NLS-1$
 
-  public CodeTheme( final IProfil profil )
+  public CodeTheme( final IProfile profil )
   {
     super( profil, IWspmLayers.LAYER_CODE, TITLE, new IProfilChartLayer[] {}, new String[] { IWspmPointProperties.POINT_PROPERTY_CODE } );
   }

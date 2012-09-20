@@ -9,7 +9,7 @@ import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.TooltipFormatter;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -79,9 +79,9 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final String widthLabel = ComponentUtilities.getComponentLabel( tr.getComponent( bridgeWidthIndex ) );
 
     final Object station = rec.getValue( stationIndex );
-    final Double uk = ProfilUtil.getDoubleValueFor( ukIndex, rec );
-    final Double ok = ProfilUtil.getDoubleValueFor( okIndex, rec );
-    final Double bw = ProfilUtil.getDoubleValueFor( bridgeWidthIndex, rec );
+    final Double uk = ProfileUtil.getDoubleValueFor( ukIndex, rec );
+    final Double ok = ProfileUtil.getDoubleValueFor( okIndex, rec );
+    final Double bw = ProfileUtil.getDoubleValueFor( bridgeWidthIndex, rec );
 
     final String comment = commentIndex >= 0 ? (String) tr.get( index ).getValue( commentIndex ) : ""; //$NON-NLS-1$
 
@@ -127,10 +127,10 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final TupleResult result = valueData.getObservation().getResult();
     final IRecord record = result.get( i );
 
-    final Double unterkante = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, record );
-    final Double oberkante = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, record );
-    final Double station = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );
-    final Double bridgeWidth = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, record );
+    final Double unterkante = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, record );
+    final Double oberkante = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, record );
+    final Double station = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );
+    final Double bridgeWidth = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, record );
     if( bridgeWidth.isNaN() || unterkante.isNaN() || station.isNaN() || oberkante.isNaN() )
       return null;
 

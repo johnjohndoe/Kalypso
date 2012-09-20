@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -80,7 +80,7 @@ public class SobekFrictionDatExportUI
     @Override
     public String getText( final Object element )
     {
-      final IComponent component = ProfilUtil.getFeatureComponent( (String) element );
+      final IComponent component = ProfileUtil.getFeatureComponent( (String) element );
       return ComponentUtilities.getComponentLabel( component );
     }
   };

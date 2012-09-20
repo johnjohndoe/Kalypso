@@ -18,7 +18,7 @@
  */
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -35,7 +35,7 @@ public interface IProfileData
    */
   String getId( );
 
-  IProfil getOriginalProfile( );
+  IProfile getOriginalProfile( );
 
   GM_Curve getOriginalProfileGeometry( ) throws GM_Exception;
 
@@ -44,11 +44,11 @@ public interface IProfileData
   ISegmentData getUpSegment( );
 
   // TODO: rename
-  IProfil getWorkingProfile( );
+  IProfile getWorkingProfile( );
 
   GM_Envelope getMapExtent( String coordinatesSystem ) throws GM_Exception;
 
   boolean isUserChanged( );
 
-  void updateWorkingProfile( IProfil newWorkingProfile );
+  void updateWorkingProfile( IProfile newWorkingProfile );
 }

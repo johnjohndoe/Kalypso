@@ -100,8 +100,8 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
@@ -579,7 +579,7 @@ public class ImportWspmWizard extends Wizard
       final double station = profileMember.getStation();
 
       /* find sohlpunkt */
-      final IProfil profil = profileMember.getProfil();
+      final IProfile profil = profileMember.getProfil();
 
       final IProfileRecord sohlPoint = ProfileVisitors.findMinimum( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint, crs );
@@ -661,7 +661,7 @@ public class ImportWspmWizard extends Wizard
       nodesList.add( node );
       lastNode = node;
 
-      final BigDecimal stationDecimal = ProfilUtil.stationToBigDecimal( station );
+      final BigDecimal stationDecimal = ProfileUtil.stationToBigDecimal( station );
       nodesByStation.put( stationDecimal, lastNode );
     }
 

@@ -46,10 +46,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
@@ -105,7 +105,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator
    * @see org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.AbstractProfileCreator#configure(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  protected void configure( final IProfil profile ) throws CoreException
+  protected void configure( final IProfile profile ) throws CoreException
   {
     try
     {
@@ -123,7 +123,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator
     }
   }
 
-  private void addExtras( final IProfil profile )
+  private void addExtras( final IProfile profile )
   {
     final Waterlevel2DCreator waterlevelExtra = new Waterlevel2DCreator();
     final IWProfPoint[] soilPoints = getSoilPoints();
@@ -132,7 +132,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator
     waterlevelExtra.moveDurchstroemteBereiche( profile );
   }
 
-  private void addSoil( final IProfil profile ) throws Exception
+  private void addSoil( final IProfile profile ) throws Exception
   {
     final int hoeheIndex = profile.indexOfProperty( POINT_PROPERTY_HOEHE );
     final int rwIndex = profile.indexOfProperty( POINT_PROPERTY_RECHTSWERT );
@@ -166,7 +166,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator
     }
   }
 
-  private IRecord createPoint( final IProfil profil, final BigDecimal distance )
+  private IRecord createPoint( final IProfile profil, final BigDecimal distance )
   {
     // Höhe values always get added as new points; we assume that the points are in the right order
     // This is necessary the preserve 'Rücksprünge' in the soil-layer
@@ -176,14 +176,14 @@ class GelaendeProfileCreator extends AbstractProfileCreator
     return newPoint;
   }
 
-  protected void addMarker( final IProfil profile )
+  protected void addMarker( final IProfile profile )
   {
     addMarker( profile, MARKER_TYP_TRENNFLAECHE );
     addMarker( profile, MARKER_TYP_BORDVOLL );
     addMarker( profile, MARKER_TYP_DURCHSTROEMTE );
   }
 
-  protected void addMarker( final IProfil profile, final String markerType )
+  protected void addMarker( final IProfile profile, final String markerType )
   {
     final IWProfPoint[] points = getMarkers().getPoints( markerType );
     addMarkers( profile, points, markerType );
@@ -193,7 +193,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator
     addDefaultMarkers( profile, numberOfMarkersToAdd, markerType );
   }
 
-  private void addDefaultMarkers( final IProfil profile, final int numberOfMarkersToAdd, final String markerType )
+  private void addDefaultMarkers( final IProfile profile, final int numberOfMarkersToAdd, final String markerType )
   {
     final boolean useLastObservedPoints = false;
     final IProfileRecord firstPoint;
@@ -210,8 +210,8 @@ class GelaendeProfileCreator extends AbstractProfileCreator
       final IWProfPoint firstSoilPoint = soilPoints[0];
       final IWProfPoint lastSoilPoint = soilPoints[soilPoints.length - 1];
 
-      firstPoint = ProfilUtil.findPoint( profile, firstSoilPoint.getDistance().doubleValue(), 0.0001 );
-      lastPoint = ProfilUtil.findPoint( profile, lastSoilPoint.getDistance().doubleValue(), 0.0001 );
+      firstPoint = ProfileUtil.findPoint( profile, firstSoilPoint.getDistance().doubleValue(), 0.0001 );
+      lastPoint = ProfileUtil.findPoint( profile, lastSoilPoint.getDistance().doubleValue(), 0.0001 );
     }
     else
     {
@@ -241,25 +241,25 @@ class GelaendeProfileCreator extends AbstractProfileCreator
     }
   }
 
-  protected void addMarkers( final IProfil profile, final IWProfPoint[] points, final String markerType )
+  protected void addMarkers( final IProfile profile, final IWProfPoint[] points, final String markerType )
   {
     final IProfileRecord[] pointsToMark = findPoints( profile, points );
     createMarkers( profile, pointsToMark, markerType );
   }
 
-  protected void createMarkers( final IProfil profile, final IProfileRecord[] points, final String markerType )
+  protected void createMarkers( final IProfile profile, final IProfileRecord[] points, final String markerType )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
 
     for( final IProfileRecord point : points )
     {
-      final IProfilPointMarker marker = profile.createPointMarker( markerType, point );
+      final IProfilePointMarker marker = profile.createPointMarker( markerType, point );
       final Object defaultValue = provider.getDefaultValue( markerType );
       marker.setValue( defaultValue );
     }
   }
 
-  private IProfileRecord[] findPoints( final IProfil profile, final IWProfPoint[] points )
+  private IProfileRecord[] findPoints( final IProfile profile, final IWProfPoint[] points )
   {
     final IProfileRecord[] result = new IProfileRecord[points.length];
     for( int i = 0; i < result.length; i++ )
@@ -270,7 +270,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator
     return result;
   }
 
-  private IProfileRecord findPoint( final IProfil profile, final IWProfPoint wProfPoint )
+  private IProfileRecord findPoint( final IProfile profile, final IWProfPoint wProfPoint )
   {
     final BigDecimal distance = wProfPoint.getDistance();
     return ProfileVisitors.findNearestPoint( profile, distance.doubleValue() );

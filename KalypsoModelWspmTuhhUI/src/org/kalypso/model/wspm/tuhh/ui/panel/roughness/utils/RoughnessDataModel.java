@@ -48,7 +48,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.ProfileFlowzones;
 import org.kalypso.observation.result.IComponent;
 
@@ -69,7 +69,7 @@ public class RoughnessDataModel extends AbstractModelObject
 
   Double m_rightFloodplain;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final IComponent m_component;
 
@@ -85,7 +85,7 @@ public class RoughnessDataModel extends AbstractModelObject
 
   IRoughnessClass m_rightFloodplainClass;
 
-  public RoughnessDataModel( final IProfil profile, final IComponent component )
+  public RoughnessDataModel( final IProfile profile, final IComponent component )
   {
     m_profile = profile;
     m_component = component;
@@ -93,7 +93,7 @@ public class RoughnessDataModel extends AbstractModelObject
     init( profile, component );
   }
 
-  private void init( final IProfil profile, final IComponent component )
+  private void init( final IProfile profile, final IComponent component )
   {
     /* ks or kst value? */
     if( isSimpleRoughnessType( component ) )

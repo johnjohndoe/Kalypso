@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.export;
 import java.io.PrintWriter;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
 
@@ -60,13 +60,13 @@ public class CsvProfilesWriter extends AbstractCsvWriter
   }
 
   @Override
-  protected void writeData( final PrintWriter writer, final IProfileFeature profileFeature, final IProfil profil )
+  protected void writeData( final PrintWriter writer, final IProfileFeature profileFeature, final IProfile profil )
   {
     writeDataColumns( writer, profileFeature, profil );
     writer.println();
   }
 
-  private void writeDataColumns( final PrintWriter writer, final IProfileFeature profileFeature, final IProfil profil )
+  private void writeDataColumns( final PrintWriter writer, final IProfileFeature profileFeature, final IProfile profil )
   {
     final IProfileExportColumn[] columns = getColumns();
 

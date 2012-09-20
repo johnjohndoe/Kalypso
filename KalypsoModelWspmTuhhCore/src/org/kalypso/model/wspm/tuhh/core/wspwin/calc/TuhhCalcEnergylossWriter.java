@@ -48,7 +48,7 @@ import java.io.PrintWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
@@ -89,7 +89,7 @@ public class TuhhCalcEnergylossWriter
           System.out.println(this.getClass()+": No profilemember found in segment "+segment.getId()); //$NON-NLS-1$
           continue;
         }
-        final IProfil profil = profileFeature.getProfil();
+        final IProfile profil = profileFeature.getProfil();
         final EnergylossProfileObject[] energylosses = profil.getProfileObjects( EnergylossProfileObject.class );
         if( energylosses == null )
           continue;

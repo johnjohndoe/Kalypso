@@ -46,7 +46,7 @@ import java.util.HashMap;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarkerProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
@@ -56,7 +56,7 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 /**
  * @author kimwerner
  */
-public class DeviderProvider implements IProfilPointMarkerProvider
+public class DeviderProvider implements IProfilePointMarkerProvider
 {
   private static final HashMap<String, RGB> MARKER_TYPES = new HashMap<>();
 

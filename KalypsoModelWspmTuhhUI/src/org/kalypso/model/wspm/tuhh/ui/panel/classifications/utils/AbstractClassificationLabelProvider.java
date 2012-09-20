@@ -46,18 +46,18 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 /**
  * @author Dirk Kuch
  */
 public class AbstractClassificationLabelProvider extends LabelProvider
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final String m_property;
 
-  public AbstractClassificationLabelProvider( final IProfil profile, final String property )
+  public AbstractClassificationLabelProvider( final IProfile profile, final String property )
   {
     m_profile = profile;
     m_property = property;

@@ -56,13 +56,13 @@ import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -76,9 +76,9 @@ class DeviderLine
 
   final Text m_position;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
-  public DeviderLine( final FormToolkit toolkit, final Composite parent, final int deviderID, final String componentID, final boolean canAdd, final IProfil profile )
+  public DeviderLine( final FormToolkit toolkit, final Composite parent, final int deviderID, final String componentID, final boolean canAdd, final IProfile profile )
   {
     m_deviderID = deviderID;
     m_componentID = componentID;
@@ -128,7 +128,7 @@ class DeviderLine
     } );
   }
 
-  private IProfilPointMarker getDevider( )
+  private IProfilePointMarker getDevider( )
   {
     return m_profile.getPointMarkerFor( m_componentID )[m_deviderID];
   }
@@ -142,16 +142,16 @@ class DeviderLine
     if( Double.isNaN( value ) )
       return;
 
-    final Double pos = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, getDevider().getPoint() );
-    if( ProfilUtil.compareValues( value, pos, 0.0001 ) )
+    final Double pos = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, getDevider().getPoint() );
+    if( ProfileUtil.compareValues( value, pos, 0.0001 ) )
       return;
 
     final IProfileRecord point = ProfileVisitors.findNearestPoint( m_profile, value );
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.2" ), m_profile, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.2" ), m_profile, true ); //$NON-NLS-1$
     operation.addChange( new PointMarkerSetPoint( getDevider(), point ) );
     operation.addChange( new ActiveObjectEdit( m_profile, point.getBreiteAsRange(), null ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 
   public void refresh( )
@@ -163,7 +163,7 @@ class DeviderLine
     else
     {
       final IRecord point = getDevider().getPoint();
-      m_position.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) ) ); //$NON-NLS-1$
+      m_position.setText( String.format( "%.4f", ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) ) ); //$NON-NLS-1$
     }
   }
 }

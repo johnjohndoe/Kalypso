@@ -45,7 +45,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IPrfConstants;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfWriter;
@@ -55,7 +55,7 @@ import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfWriter;
  */
 public class WspWinProfileWriter
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final String m_roughnessType;
 
@@ -65,7 +65,7 @@ public class WspWinProfileWriter
 
   private boolean m_preferVegetationClasses;
 
-  public WspWinProfileWriter( final IProfil profil, final int profileNumber, final String roughnessType )
+  public WspWinProfileWriter( final IProfile profil, final int profileNumber, final String roughnessType )
   {
     m_profil = profil;
     m_roughnessType = roughnessType;

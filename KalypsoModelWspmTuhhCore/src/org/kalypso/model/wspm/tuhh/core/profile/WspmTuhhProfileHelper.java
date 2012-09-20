@@ -47,8 +47,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.serializer.ProfileSerializerUtilitites;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
 
@@ -62,14 +62,14 @@ public final class WspmTuhhProfileHelper
     // Helperclass, do not instantiate
   }
 
-  public static IProfil copyProfile( final IProfil profile ) throws InvalidObjectException
+  public static IProfile copyProfile( final IProfile profile ) throws InvalidObjectException
   {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     try
     {
-      ProfilSerializerUtilitites.writeProfile( new PrfSink(), profile, new BufferedOutputStream( out ) );
+      ProfileSerializerUtilitites.writeProfile( new PrfSink(), profile, new BufferedOutputStream( out ) );
       final ByteArrayInputStream in = new ByteArrayInputStream( out.toByteArray() );
-      final IProfil profil = ProfilSerializerUtilitites.readProfile( new PrfSource(), new BufferedInputStream( in ), profile.getType() );
+      final IProfile profil = ProfileSerializerUtilitites.readProfile( new PrfSource(), new BufferedInputStream( in ), profile.getType() );
 
       return profil;
     }

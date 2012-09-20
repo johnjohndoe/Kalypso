@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.utils;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -52,13 +52,13 @@ import org.kalypso.observation.result.IRecord;
  */
 public class ProfileChannel
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final int m_startPoint;
 
   private final int m_endPoint;
 
-  public ProfileChannel( final IProfil profile, final int startPoint, final int endPoint )
+  public ProfileChannel( final IProfile profile, final int startPoint, final int endPoint )
   {
     m_profile = profile;
     m_startPoint = startPoint;

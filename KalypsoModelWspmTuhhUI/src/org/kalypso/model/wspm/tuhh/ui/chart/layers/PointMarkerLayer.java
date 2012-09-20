@@ -51,15 +51,15 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -86,13 +86,13 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class PointMarkerLayer extends AbstractProfilLayer
 {
-  private final Map<Rectangle, IProfilPointMarker> m_hoverRects = new ConcurrentHashMap<>();
+  private final Map<Rectangle, IProfilePointMarker> m_hoverRects = new ConcurrentHashMap<>();
 
   private final int m_offset;
 
   private final boolean m_close;
 
-  public PointMarkerLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
+  public PointMarkerLayer( final IProfile profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
   {
     super( IWspmTuhhConstants.LAYER_DEVIDER + "_" + targetRangeProperty, profil, targetRangeProperty, styleProvider ); //$NON-NLS-1$
 
@@ -104,7 +104,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
 
     final Point2D numericPos = ProfilLayerUtils.toNumeric( getCoordinateMapper(), newPos );
 
@@ -133,11 +133,11 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public final void executeDrop( final Point point, final EditInfo dragStartData )
   {
-    final IProfilPointMarker draggedDevider = (IProfilPointMarker)dragStartData.getData();
+    final IProfilePointMarker draggedDevider = (IProfilePointMarker)dragStartData.getData();
     if( draggedDevider == null )
       return;
 
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     final Point2D numPoint = ProfilLayerUtils.toNumeric( getCoordinateMapper(), point );
     if( numPoint == null )
       return;
@@ -147,10 +147,10 @@ public class PointMarkerLayer extends AbstractProfilLayer
     if( newPoint == profilPoint )
       return;
 
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profilPoint );
-    final IProfilPointMarker[] targetDeviders = profil.getPointMarkerFor( newPoint );
+    final IProfilePointMarker[] deviders = profil.getPointMarkerFor( profilPoint );
+    final IProfilePointMarker[] targetDeviders = profil.getPointMarkerFor( newPoint );
 
-    for( final IProfilPointMarker devider : deviders )
+    for( final IProfilePointMarker devider : deviders )
     {
       // BUGIFX: prohibit that a marker is moved on another marker of the same type, which
       // will incidentally remove it
@@ -169,10 +169,10 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public EditInfo getHover( final Point pos )
   {
-    for( final Map.Entry<Rectangle, IProfilPointMarker> entry : m_hoverRects.entrySet() )
+    for( final Map.Entry<Rectangle, IProfilePointMarker> entry : m_hoverRects.entrySet() )
     {
       final Rectangle hoverRect = entry.getKey();
-      final IProfilPointMarker devider = entry.getValue();
+      final IProfilePointMarker devider = entry.getValue();
 
       if( hoverRect.contains( pos ) )
       {
@@ -192,7 +192,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
+    final IProfilePointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
 
     final LegendEntry le = new LegendEntry( this, getTitle() )
     {
@@ -230,20 +230,20 @@ public class PointMarkerLayer extends AbstractProfilLayer
     }
   }
 
-  protected void moveDevider( final IProfilPointMarker devider, final IProfileRecord newPoint )
+  protected void moveDevider( final IProfilePointMarker devider, final IProfileRecord newPoint )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
 
-    final ProfilOperation operation = new ProfilOperation( "", profil, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( "", profil, true ); //$NON-NLS-1$
     operation.addChange( new PointMarkerSetPoint( devider, newPoint ) );
     operation.addChange( new ActiveObjectEdit( profil, newPoint.getBreiteAsRange(), null ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 
-  private boolean movesOnSameDeviderType( final IProfilPointMarker devider, final IProfilPointMarker[] targetDeviders )
+  private boolean movesOnSameDeviderType( final IProfilePointMarker devider, final IProfilePointMarker[] targetDeviders )
   {
     final String id = devider.getComponent().getId();
-    for( final IProfilPointMarker marker : targetDeviders )
+    for( final IProfilePointMarker marker : targetDeviders )
     {
       final String targetId = marker.getComponent().getId();
       if( ObjectUtils.equals( id, targetId ) )
@@ -254,7 +254,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isPointPropertiesChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
     {
@@ -265,7 +265,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     final IComponent target = getTargetComponent();
 
     m_hoverRects.clear();
@@ -273,7 +273,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
     if( profil == null || target == null )
       return;
 
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( target.getId() );
+    final IProfilePointMarker[] deviders = profil.getPointMarkerFor( target.getId() );
 
     /* calculate top and bottom */
     final int screenBottom = chartImageInfo.getLayerRect().y + chartImageInfo.getLayerRect().height;
@@ -285,9 +285,9 @@ public class PointMarkerLayer extends AbstractProfilLayer
     final PolylineFigure pf = new PolylineFigure();
     pf.setStyle( getLineStyle() );
 
-    for( final IProfilPointMarker devider : deviders )
+    for( final IProfilePointMarker devider : deviders )
     {
-      final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, devider.getPoint() );
+      final Double breite = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, devider.getPoint() );
       final int screenX = domainAxis.numericToScreen( breite );
       final Point p1 = new Point( screenX, screenBottom );
       final Point p2 = new Point( screenX, top );
@@ -302,8 +302,8 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
     if( m_close && deviders.length > 1 )
     {
-      final int screenX1 = domainAxis.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
-      final int screenX2 = domainAxis.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[deviders.length - 1].getPoint() ) );
+      final int screenX1 = domainAxis.numericToScreen( ProfileUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
+      final int screenX2 = domainAxis.numericToScreen( ProfileUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[deviders.length - 1].getPoint() ) );
 
       pf.setPoints( new Point[] { new Point( screenX1, top ), new Point( screenX2, top ) } );
       pf.paint( gc );

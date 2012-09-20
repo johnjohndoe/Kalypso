@@ -63,8 +63,8 @@ import org.kalypso.model.wspm.core.gml.WspmProfileComparator;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
@@ -183,12 +183,12 @@ public class TuhhReach extends WspmReach implements IWspmTuhhConstants, IProfile
       }
 
       final String crs = profileMember.getSrsName();
-      final IProfil profil = profileMember.getProfil();
+      final IProfile profil = profileMember.getProfil();
       final IComponent[] markerTypes = profil.getPointMarkerTypes();
       for( final IComponent markerTyp : markerTypes )
       {
-        final IProfilPointMarker[] deviders = profil.getPointMarkerFor( markerTyp );
-        for( final IProfilPointMarker devider : deviders )
+        final IProfilePointMarker[] deviders = profil.getPointMarkerFor( markerTyp );
+        for( final IProfilePointMarker devider : deviders )
         {
           try
           {

@@ -53,7 +53,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IRunOffEvent;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -139,8 +139,8 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
   {
     final Feature subReachFeature = FeatureHelper.getSubFeature( this, QN_PROPERTY_SUB_REACH_DEFINITION_MEMBER );
 
-    final BigDecimal bigStart = ProfilUtil.stationToBigDecimal( startStation );
-    final BigDecimal bigEnd = ProfilUtil.stationToBigDecimal( endStation );
+    final BigDecimal bigStart = ProfileUtil.stationToBigDecimal( startStation );
+    final BigDecimal bigEnd = ProfileUtil.stationToBigDecimal( endStation );
     subReachFeature.setProperty( new QName( NS_WSPM_TUHH, "startStation" ), bigStart ); //$NON-NLS-1$
     subReachFeature.setProperty( new QName( NS_WSPM_TUHH, "endStation" ), bigEnd ); //$NON-NLS-1$
   }

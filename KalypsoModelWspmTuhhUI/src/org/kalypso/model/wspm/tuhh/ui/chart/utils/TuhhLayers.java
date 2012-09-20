@@ -45,7 +45,7 @@ import java.util.List;
 
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.PointMarkerLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.RiverChannelLayer;
@@ -76,7 +76,7 @@ public final class TuhhLayers
   {
   }
 
-  public static IProfilChartLayer createBridgetLayer( final IProfil profil, final CoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createBridgetLayer( final IProfile profil, final CoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
     final PointsLineLayer unterkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, styleProvider ); //$NON-NLS-1$
     final PointsLineLayer oberkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, styleProvider ); //$NON-NLS-1$
@@ -84,7 +84,7 @@ public final class TuhhLayers
     return new BuildingBridgeTheme( profil, new IProfilChartLayer[] { unterkante, oberkante }, mapper );
   }
 
-  public static IProfilChartLayer createWehrLayer( final IProfil profil, final String layerID, final CoordinateMapper axisMapper, final CoordinateMapper screenMapper, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createWehrLayer( final IProfile profil, final String layerID, final CoordinateMapper axisMapper, final CoordinateMapper screenMapper, final LayerStyleProviderTuhh styleProvider )
   {
     final PointsLineLayer oberkante = new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, styleProvider ); //$NON-NLS-1$
     final PointMarkerLayer pointMarkerLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_WEHR, styleProvider, 30, false );
@@ -92,7 +92,7 @@ public final class TuhhLayers
     return new BuildingWeirTheme( profil, new IProfilChartLayer[] { oberkante, pointMarkerLayer }, axisMapper, screenMapper );
   }
 
-  public static IProfilChartLayer createDeviderLayer( final IProfil profil, final CoordinateMapper cmScreen, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createDeviderLayer( final IProfile profil, final CoordinateMapper cmScreen, final LayerStyleProviderTuhh styleProvider )
   {
     final PointMarkerLayer dbLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, styleProvider, 5, true );
     final RiverChannelLayer tfLayer = new RiverChannelLayer( profil, styleProvider, 15, false );
@@ -102,7 +102,7 @@ public final class TuhhLayers
     return new DeviderTheme( profil, subLayers, cmScreen );
   }
 
-  public static IProfilChartLayer createRoughnessLayer( final IProfil profil, final CoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createRoughnessLayer( final IProfile profil, final CoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
     final RoughnessLayer ks = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, styleProvider );
     final RoughnessLayer kst = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, styleProvider );
@@ -114,7 +114,7 @@ public final class TuhhLayers
     return new RoughnessTheme( profil, subLayers, mapper );
   }
 
-  public static IProfilChartLayer createGelaendeLayer( final IProfil profil, final CoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createGelaendeLayer( final IProfile profil, final CoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
     final StationPointLayer stationPointLayer = new StationPointLayer( IWspmLayers.LAYER_GELAENDE, profil, IWspmPointProperties.POINT_PROPERTY_HOEHE, styleProvider );
     final StationLineLayer stationLineLayer = new StationLineLayer( profil, IWspmPointProperties.POINT_PROPERTY_HOEHE );
@@ -122,7 +122,7 @@ public final class TuhhLayers
     return new CrossSectionTheme( profil, new IProfilChartLayer[] { stationLineLayer, stationPointLayer }, mapper );
   }
 
-  public static IProfilChartLayer createVegetationLayer( final IProfil profil, final CoordinateMapper cmLeft, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createVegetationLayer( final IProfile profil, final CoordinateMapper cmLeft, final LayerStyleProviderTuhh styleProvider )
   {
     final ComponentLayer ax = new ComponentLayer( profil, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, false );
     final ComponentLayer ay = new ComponentLayer( profil, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, false );

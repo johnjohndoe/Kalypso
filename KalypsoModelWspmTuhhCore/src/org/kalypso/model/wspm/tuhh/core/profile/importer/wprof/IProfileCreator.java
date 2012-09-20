@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 
 /**
@@ -49,5 +49,5 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
  */
 interface IProfileCreator
 {
-  IProfil addProfile( TuhhWspmProject project ) throws CoreException;
+  IProfile addProfile( TuhhWspmProject project ) throws CoreException;
 }

@@ -56,14 +56,14 @@ import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.ProfileFactory;
+import org.kalypso.model.wspm.core.profil.serializer.IProfileSource;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -93,9 +93,9 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 /**
  * @author kimwerner
  */
-public class PrfSource implements IProfilSource
+public class PrfSource implements IProfileSource
 {
-  private void readSource( final PrfReader pr, final IProfil p )
+  private void readSource( final PrfReader pr, final IProfile p )
   {
     if( p == null )
       return;
@@ -139,7 +139,7 @@ public class PrfSource implements IProfilSource
 
   // FIXME: we probably should let the user set the coordinate system
   // For the moment, we guess the coordinate system by assuming it is gauss-krueger
-  private String findCoordinateSystem( final IProfil profile )
+  private String findCoordinateSystem( final IProfile profile )
   {
     final int rwIndex = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     if( rwIndex == -1 )
@@ -156,7 +156,7 @@ public class PrfSource implements IProfilSource
     return null;
   }
 
-  private void readComment( final IProfil p, final PrfReader pr )
+  private void readComment( final IProfile p, final PrfReader pr )
   {
     final IDataBlock db = pr.getDataBlock( "KOM" ); //$NON-NLS-1$
     if( db == null )
@@ -176,7 +176,7 @@ public class PrfSource implements IProfilSource
     p.setComment( sb.toString() );
   }
 
-  private void readBewuchs( final IProfil p, final PrfReader pr )
+  private void readBewuchs( final IProfile p, final PrfReader pr )
   {
     final IDataBlock dbx = pr.getDataBlock( "AX" ); //$NON-NLS-1$
     final IDataBlock dby = pr.getDataBlock( "AY" ); //$NON-NLS-1$
@@ -184,7 +184,7 @@ public class PrfSource implements IProfilSource
     if( dbx == null || dby == null || dbp == null )
       return;
 
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
 
     final IComponent prAx = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
     final IComponent prAy = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
@@ -195,7 +195,7 @@ public class PrfSource implements IProfilSource
     writePointProperty( p, prDp, dbp );
   }
 
-  private void writePointProperty( final IProfil p, final IComponent property, final IDataBlock db )
+  private void writePointProperty( final IProfile p, final IComponent property, final IDataBlock db )
   {
     p.addPointProperty( property );
     final int index = p.indexOfProperty( property );
@@ -209,7 +209,7 @@ public class PrfSource implements IProfilSource
     final Double[] ys = db.getY();
     for( int i = 0; i < xs.length; i++ )
     {
-      final IRecord point = ProfilUtil.findPoint( p, i, xs[i], 0 );
+      final IRecord point = ProfileUtil.findPoint( p, i, xs[i], 0 );
       if( point != null )
       {
         point.setValue( index, ys[i] );
@@ -217,14 +217,14 @@ public class PrfSource implements IProfilSource
     }
   }
 
-  private void readGeoCoord( final IProfil p, final PrfReader pr )
+  private void readGeoCoord( final IProfile p, final PrfReader pr )
   {
     final IDataBlock dbh = pr.getDataBlock( "HOC" ); //$NON-NLS-1$
     final IDataBlock dbr = pr.getDataBlock( "REC" ); //$NON-NLS-1$
     if( dbh == null || dbr == null )
       return;
 
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
 
     final IComponent hochwert = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
     final IComponent rechtswert = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
@@ -233,7 +233,7 @@ public class PrfSource implements IProfilSource
     writePointProperty( p, rechtswert, dbr );
   }
 
-  private void readSinuositaet( final IProfil p, final PrfReader pr )
+  private void readSinuositaet( final IProfile p, final PrfReader pr )
   {
     final IDataBlock db = pr.getDataBlock( IPrfConstants.HEADER_SINUOSITAET ); //$NON-NLS-1$
     if( db == null )
@@ -259,7 +259,7 @@ public class PrfSource implements IProfilSource
     p.addProfileObjects( profileObject );
   }
 
-  private void readBuilding( final IProfil p, final PrfReader pr )
+  private void readBuilding( final IProfile p, final PrfReader pr )
   {
     IDataBlock db = pr.getDataBlock( "EI" ); //$NON-NLS-1$
     if( db == null )
@@ -354,7 +354,7 @@ public class PrfSource implements IProfilSource
     }
   }
 
-  private boolean readBridge( final IProfil p, final PrfReader pr )
+  private boolean readBridge( final IProfile p, final PrfReader pr )
   {
     final IDataBlock dbo = pr.getDataBlock( "OK-B" ); //$NON-NLS-1$
     final IDataBlock dbu = pr.getDataBlock( "UK-B" ); //$NON-NLS-1$
@@ -394,8 +394,8 @@ public class PrfSource implements IProfilSource
     final int iUKB = p.indexOfProperty( ukb );
     for( final IRecord point : p.getPoints() )
     {
-      final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
-      final Double hoehe = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
+      final Double breite = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
+      final Double hoehe = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
 
       if( rangeO.contains( breite ) )
       {
@@ -418,7 +418,7 @@ public class PrfSource implements IProfilSource
 
   }
 
-  private int readPoints( final IProfil p, final PrfReader pr )
+  private int readPoints( final IProfile p, final PrfReader pr )
   {
     final IDataBlock db = pr.getDataBlock( "Gelae" ); //$NON-NLS-1$
     if( db == null )
@@ -440,7 +440,7 @@ public class PrfSource implements IProfilSource
     return xs.length;
   }
 
-  private void readRauhheit( final IProfil p, final PrfReader pr )
+  private void readRauhheit( final IProfile p, final PrfReader pr )
   {
     final IDataBlock db = pr.getDataBlock( "RAU" ); //$NON-NLS-1$
     if( db == null )
@@ -467,7 +467,7 @@ public class PrfSource implements IProfilSource
     final int index = p.indexOfProperty( rTyp );
     for( int i = 0; i < db.getCoordCount(); i++ )
     {
-      final IRecord point = ProfilUtil.findPoint( p, i, db.getX()[i], 0 );
+      final IRecord point = ProfileUtil.findPoint( p, i, db.getX()[i], 0 );
       if( point != null )
       {
         point.setValue( index, db.getY()[i] );
@@ -475,7 +475,7 @@ public class PrfSource implements IProfilSource
     }
   }
 
-  private void readTrennFl( final IProfil p, final PrfReader pr )
+  private void readTrennFl( final IProfile p, final PrfReader pr )
   {
     final IRecord[] points = p.getPoints();
     if( points.length == 0 )
@@ -492,12 +492,12 @@ public class PrfSource implements IProfilSource
 
     if( pCount > 0 )
     {
-      p1 = ProfilUtil.findPoint( p, db.getX()[0], 0 );
+      p1 = ProfileUtil.findPoint( p, db.getX()[0], 0 );
       pos1 = (int)db.getY()[0].doubleValue();
     }
     if( pCount > 1 )
     {
-      p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
+      p2 = ProfileUtil.findPoint( p, db.getX()[1], 0 );
       pos2 = (int)db.getY()[1].doubleValue();
     }
     if( pCount > 2 )
@@ -508,18 +508,18 @@ public class PrfSource implements IProfilSource
 
     if( p1 != null )
     {
-      final IProfilPointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, p1 );
+      final IProfilePointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, p1 );
       marker.setInterpretedValue( pos1 == 3 );
     }
 
     if( p2 != null )
     {
-      final IProfilPointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, p2 );
+      final IProfilePointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, p2 );
       marker.setInterpretedValue( pos2 == 4 );
     }
   }
 
-  private void readDurchStr( final IProfil p, final PrfReader pr )
+  private void readDurchStr( final IProfile p, final PrfReader pr )
   {
     final IProfileRecord[] points = p.getPoints();
     if( points.length == 0 )
@@ -534,11 +534,11 @@ public class PrfSource implements IProfilSource
 
     if( pCount > 0 )
     {
-      p1 = ProfilUtil.findPoint( p, db.getX()[0], 0 );
+      p1 = ProfileUtil.findPoint( p, db.getX()[0], 0 );
     }
     if( pCount > 1 )
     {
-      p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
+      p2 = ProfileUtil.findPoint( p, db.getX()[1], 0 );
     }
     if( pCount > 2 )
     {
@@ -548,20 +548,20 @@ public class PrfSource implements IProfilSource
 
     if( p1 != null )
     {
-      final IProfilPointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, p1 );
+      final IProfilePointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, p1 );
       marker.setValue( true );
     }
 
     if( p2 != null )
     {
-      final IProfilPointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, p2 );
+      final IProfilePointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, p2 );
       marker.setValue( true );
     }
   }
 
-  private void readWehrtrenner( final double[] values, final IProfil p, final PrfReader pr )
+  private void readWehrtrenner( final double[] values, final IProfile p, final PrfReader pr )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
 
     final IDataBlock dbt = pr.getDataBlock( "TRENNLINIE" ); //$NON-NLS-1$
     if( dbt == null )
@@ -569,7 +569,7 @@ public class PrfSource implements IProfilSource
     final Double[] pos = dbt.getX();
     for( int i = 0; i < pos.length; i++ )
     {
-      final IProfileRecord point = ProfilUtil.findPoint( p, pos[i], 0 );
+      final IProfileRecord point = ProfileUtil.findPoint( p, pos[i], 0 );
       if( point != null )
         if( values != null && values.length > i + 1 )
         {
@@ -581,7 +581,7 @@ public class PrfSource implements IProfilSource
     }
   }
 
-  private boolean readWehr( final IProfil p, final PrfReader pr )
+  private boolean readWehr( final IProfile p, final PrfReader pr )
   {
     final IDataBlock dbw = pr.getDataBlock( "OK-WEHR" ); //$NON-NLS-1$
     if( dbw == null )
@@ -605,8 +605,8 @@ public class PrfSource implements IProfilSource
     final Range rangeO = new Range( polyLineO.getFirstX(), polyLineO.getLastX(), delta );
     for( final IRecord point : p.getPoints() )
     {
-      final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
-      final Double hoehe = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
+      final Double breite = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
+      final Double hoehe = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
       final int iOKW = p.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
       if( rangeO.contains( breite ) )
       {
@@ -658,7 +658,7 @@ public class PrfSource implements IProfilSource
     return null;
   }
 
-  private void readBordVoll( final IProfil p, final PrfReader pr )
+  private void readBordVoll( final IProfile p, final PrfReader pr )
   {
     final IProfileRecord[] points = p.getPoints();
     if( points.length == 0 )
@@ -672,11 +672,11 @@ public class PrfSource implements IProfilSource
 
     if( pCount > 0 )
     {
-      p1 = ProfilUtil.findPoint( p, db.getX()[0], 0 );
+      p1 = ProfileUtil.findPoint( p, db.getX()[0], 0 );
     }
     if( pCount > 1 )
     {
-      p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
+      p2 = ProfileUtil.findPoint( p, db.getX()[1], 0 );
     }
     if( pCount > 2 )
     {
@@ -686,13 +686,13 @@ public class PrfSource implements IProfilSource
 
     if( p1 != null )
     {
-      final IProfilPointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, p1 );
+      final IProfilePointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, p1 );
       marker.setValue( true );
     }
 
     if( p2 != null )
     {
-      final IProfilPointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, p2 );
+      final IProfilePointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, p2 );
       marker.setValue( true );
     }
   }
@@ -701,9 +701,9 @@ public class PrfSource implements IProfilSource
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSource#read(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  public IProfil[] read( final String profileTyp, final Reader reader ) throws IOException
+  public IProfile[] read( final String profileTyp, final Reader reader ) throws IOException
   {
-    final IProfil profil = ProfilFactory.createProfil( profileTyp );
+    final IProfile profil = ProfileFactory.createProfil( profileTyp );
 
     if( profil == null )
       throw new IOException( Messages.getString( "PrfSource.0" ) + profileTyp ); //$NON-NLS-1$
@@ -711,6 +711,6 @@ public class PrfSource implements IProfilSource
     final PrfReader prfReader = new PrfReader();
     prfReader.readFromReader( new BufferedReader( reader ) );
     readSource( prfReader, profil );
-    return new IProfil[] { profil };
+    return new IProfile[] { profil };
   }
 }

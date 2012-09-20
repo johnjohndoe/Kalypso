@@ -50,8 +50,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.sobek.utils.hw.BridgeResult;
@@ -84,7 +84,7 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
   @Override
   protected void writeProfile( final IProfileFeature profileFeature )
   {
-    final IProfil profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfil();
     final IRecord[] points = getPointsToExport( profil );
     if( points == null )
       return;
@@ -98,7 +98,7 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
     writeProfileBuilding( id, profileName, points, profil );
   }
 
-  private void writeNormalProfile( final String id, final String profileName, final IRecord[] points, final IProfil profil )
+  private void writeNormalProfile( final String id, final String profileName, final IRecord[] points, final IProfile profil )
   {
     final Formatter formatter = getFormatter();
     formatter.format( "CRDS id '%s' nm '%s' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz%n", id, profileName ); //$NON-NLS-1$
@@ -117,7 +117,7 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
     formatter.format( "crds%n" ); //$NON-NLS-1$
   }
 
-  private void writeProfileBuilding( final String id, final String profileName, final IRecord[] points, final IProfil profil )
+  private void writeProfileBuilding( final String id, final String profileName, final IRecord[] points, final IProfile profil )
   {
     final SobekExportInfo info = getInfo();
     if( !info.getExportBuildings() )
@@ -147,7 +147,7 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
     }
   }
 
-  private void writeBridge( final Formatter formatter, final String id, final String profileName, final IRecord[] points, final IProfil profil )
+  private void writeBridge( final Formatter formatter, final String id, final String profileName, final IRecord[] points, final IProfile profil )
   {
     final Collection<Coordinate> lowerCrds = new ArrayList<>();
     final Collection<Coordinate> upperCrds = new ArrayList<>();
@@ -193,7 +193,7 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
     bridgeHw.formatOut( formatter );
   }
 
-  private IRecord[] getPointsToExport( final IProfil profil )
+  private IRecord[] getPointsToExport( final IProfile profil )
   {
     final String flowZone = getInfo().getFlowZone();
     if( StringUtils.isBlank( flowZone ) )
@@ -203,7 +203,7 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
     final String unknownLabel = String.format( Messages.getString( "SobekDefExportOperation.1" ), flowZone ); //$NON-NLS-1$
     final String markerLabel = markerComponent == null ? unknownLabel : ComponentUtilities.getComponentLabel( markerComponent );
 
-    final IProfilPointMarker[] markers = profil.getPointMarkerFor( flowZone );
+    final IProfilePointMarker[] markers = profil.getPointMarkerFor( flowZone );
     if( markers.length < 2 )
     {
       final String message = String.format( Messages.getString( "SobekDefExportOperation_2" ), markerLabel, profil.getStation(), profil.getName() ); //$NON-NLS-1$

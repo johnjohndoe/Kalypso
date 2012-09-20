@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.serializer.IProfileSink;
 import org.kalypso.model.wspm.tuhh.core.profile.LengthSectionCreator;
 import org.kalypso.model.wspm.tuhh.core.wspwin.LengthSectionExporter;
 import org.kalypso.observation.IObservation;
@@ -53,13 +53,13 @@ import org.kalypso.observation.result.TupleResult;
 /**
  * @author kimwerner
  */
-public class LngSink implements IProfilSink
+public class LngSink implements IProfileSink
 {
   /**
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(java.lang.Object, java.io.Writer)
    */
   @Override
-  public final boolean write( final IProfil[] profiles, final Writer writer ) throws IOException
+  public final boolean write( final IProfile[] profiles, final Writer writer ) throws IOException
   {
     final LengthSectionCreator lsCreator = new LengthSectionCreator( profiles );
     final IObservation<TupleResult> obs = lsCreator.toLengthSection();

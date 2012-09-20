@@ -65,12 +65,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
@@ -99,7 +99,7 @@ public class CulvertPanel extends AbstractProfilView
 
   private final Map<String, IProfileBuilding> m_culverts = new HashMap<>();
 
-  public CulvertPanel( final IProfil profile )
+  public CulvertPanel( final IProfile profile )
   {
     super( profile );
     m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_KREIS, new BuildingKreis() );
@@ -158,9 +158,9 @@ public class CulvertPanel extends AbstractProfilView
             if( val == value )
               return;
 
-            final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.0", m_property.getName() ), getProfile(), true ); //$NON-NLS-1$
+            final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.0", m_property.getName() ), getProfile(), true ); //$NON-NLS-1$
             operation.addChange( new ProfileObjectEdit( building, m_property, value ) );
-            new ProfilOperationJob( operation ).schedule();
+            new ProfileOperationJob( operation ).schedule();
           }
         }
       } );
@@ -327,7 +327,7 @@ public class CulvertPanel extends AbstractProfilView
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isObjectDataChanged() )
     {

@@ -56,9 +56,9 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.ISobekProfileDefData;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
@@ -70,7 +70,7 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDat;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDefYZTable;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekYZPoint;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -160,7 +160,7 @@ public class Sobek2Wspm
       final BigDecimal station = guessStation( profileDef );
       profileFeature.setBigStation( station );
 
-      final IProfil profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfil();
       convertData( profil, profileData );
       convertFriction( profil, frictionDat );
       convertNetworkPoint( profil, networkPoint );
@@ -207,7 +207,7 @@ public class Sobek2Wspm
     return station;
   }
 
-  private void convertData( final IProfil profil, final ISobekProfileDefData data ) throws CoreException
+  private void convertData( final IProfile profil, final ISobekProfileDefData data ) throws CoreException
   {
     final int type = data.getType();
     switch( type )
@@ -223,12 +223,12 @@ public class Sobek2Wspm
     }
   }
 
-  private void convertYZTable( final IProfil profil, final SobekProfileDefYZTable data )
+  private void convertYZTable( final IProfile profil, final SobekProfileDefYZTable data )
   {
     final TupleResult result = profil.getResult();
 
-    final int yIndex = ProfilUtil.getOrCreateComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
-    final int zIndex = ProfilUtil.getOrCreateComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
+    final int yIndex = ProfileUtil.getOrCreateComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
+    final int zIndex = ProfileUtil.getOrCreateComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final SobekYZPoint[] points = data.getPoints();
     for( final SobekYZPoint point : points )
@@ -252,7 +252,7 @@ public class Sobek2Wspm
     return m_newFeatures.toArray( new Feature[m_newFeatures.size()] );
   }
 
-  private void convertFriction( final IProfil profil, final SobekFrictionDat frictionDat )
+  private void convertFriction( final IProfile profil, final SobekFrictionDat frictionDat )
   {
     if( frictionDat == null )
     {
@@ -288,7 +288,7 @@ public class Sobek2Wspm
       for( int i = startIndex; i <= endIndex; i++ )
       {
         final IProfileRecord record = profil.getPoint( i );
-        final int index = ProfilUtil.getOrCreateComponent( profil, componentID );
+        final int index = ProfileUtil.getOrCreateComponent( profil, componentID );
         record.setValue( index, value.doubleValue() );
       }
 
@@ -300,13 +300,13 @@ public class Sobek2Wspm
     }
   }
 
-  private void setMarker( final IProfil profil, final IProfileRecord record, final String markerType )
+  private void setMarker( final IProfile profil, final IProfileRecord record, final String markerType )
   {
     if( markerType == null )
       return;
 
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
-    final IProfilPointMarker marker = profil.createPointMarker( markerType, record );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+    final IProfilePointMarker marker = profil.createPointMarker( markerType, record );
     marker.setValue( provider.getDefaultValue( markerType ) );
   }
 
@@ -345,7 +345,7 @@ public class Sobek2Wspm
     }
   }
 
-  private void convertNetworkPoint( final IProfil profil, final SobekNetworkD12Point networkPoint )
+  private void convertNetworkPoint( final IProfile profil, final SobekNetworkD12Point networkPoint )
   {
     if( networkPoint == null )
       return;
@@ -361,8 +361,8 @@ public class Sobek2Wspm
 
     // for now, we just use the same point for start and end
 
-    final int indexRW = ProfilUtil.getOrCreateComponent( profil, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT );
-    final int indexHW = ProfilUtil.getOrCreateComponent( profil, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT );
+    final int indexRW = ProfileUtil.getOrCreateComponent( profil, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT );
+    final int indexHW = ProfileUtil.getOrCreateComponent( profil, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT );
 
     final IRecord startPoint = profil.getPoint( 0 );
     final IRecord endPoint = profil.getPoint( pointCount - 1 );

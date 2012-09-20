@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.export.shape;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
@@ -67,7 +67,7 @@ public class PatternReplacementField extends AbstractProfileValue
   @Override
   protected Object getProfileValue( final IProfileFeature profile )
   {
-    final IProfil profil = profile.getProfil();
+    final IProfile profil = profile.getProfil();
     final IProfilePatternData data = new ProfilePatternData( profile, profil, null );
     return m_column.getValue( data );
   }

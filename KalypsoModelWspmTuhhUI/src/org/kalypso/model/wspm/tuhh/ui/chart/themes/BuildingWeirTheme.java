@@ -43,12 +43,12 @@ package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 import java.util.ArrayList;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
@@ -71,7 +71,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingWeirTheme.0" ); //$NON-NLS-1$
 
-  public BuildingWeirTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ICoordinateMapper cmDevider )
+  public BuildingWeirTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ICoordinateMapper cmDevider )
   {
     super( profil, IWspmTuhhConstants.LAYER_WEHR, TITLE, chartLayers, cm );
     // spezialfall für PointMarker und LineLayer
@@ -85,7 +85,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isSelectionChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {
@@ -95,16 +95,16 @@ public class BuildingWeirTheme extends AbstractProfilTheme
   @Override
   public void removeYourself( )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
 
     final BuildingWehr building = WspmSohlpunkte.getBuilding( profil, BuildingWehr.class );
     if( building == null )
       return;
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingWeirTheme.1" ), getProfil(), true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingWeirTheme.1" ), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectRemove( profil, building ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
-    new ProfilOperationJob( operation ).schedule();
+    new ProfileOperationJob( operation ).schedule();
   }
 
   @Override

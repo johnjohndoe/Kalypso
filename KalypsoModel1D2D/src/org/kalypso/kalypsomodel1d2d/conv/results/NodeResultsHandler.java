@@ -82,7 +82,7 @@ import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -510,7 +510,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final IProfileFeature profile = flowRelation1d.getProfile();
     final double profileStation = profile.getStation();
     // station
-    final BigDecimal station = ProfilUtil.stationToBigDecimal( profileStation );
+    final BigDecimal station = ProfileUtil.stationToBigDecimal( profileStation );
 
     // thalweg
     final BigDecimal thalweg = new BigDecimal( nodeResult.getPoint().getZ() ).setScale( 4, BigDecimal.ROUND_HALF_UP );

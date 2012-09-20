@@ -1,6 +1,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.pointfilter;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
@@ -16,7 +16,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 public class LastPointProfilePointFilter extends AbstractProfilePointFilter
 {
   @Override
-  public boolean accept( final IProfil profil, final IProfileRecord point )
+  public boolean accept( final IProfile profil, final IProfileRecord point )
   {
     final int index = point.getIndex();
     if( index == profil.getResult().size() - 1 )

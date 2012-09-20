@@ -45,9 +45,9 @@ import java.util.Map;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -65,7 +65,7 @@ import org.kalypso.observation.result.IRecord;
 public class WehrRule extends AbstractValidatorRule
 {
   @Override
-  public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  public void validate( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profil == null )
       return;
@@ -82,10 +82,10 @@ public class WehrRule extends AbstractValidatorRule
     validateBewuchs( profil, collector );
   }
 
-  private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  private void validateDevider( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    final IProfilPointMarker[] wehrDevider = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    final IProfilePointMarker[] wehrDevider = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
+    final IProfilePointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( wehrDevider == null || wehrDevider.length < 1 || deviders == null || deviders.length < 2 )
       return;
     final int index1 = wehrDevider[0].getPoint().getIndex();
@@ -103,12 +103,12 @@ public class WehrRule extends AbstractValidatorRule
   }
 
   // TODO: in die Bewuchsregel verschieben -> doppelter Code
-  private void validateBewuchs( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  private void validateBewuchs( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
 
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) == null )
       return;
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    final IProfilePointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( deviders.length < 2 )
       return;
     final int index1 = deviders[0].getPoint().getIndex();
@@ -116,9 +116,9 @@ public class WehrRule extends AbstractValidatorRule
     final IRecord[] points = profil.getPoints();
     for( int i = index1; i < index2; i++ )
     {
-      final Double vAX = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, points[i] );
-      final Double vAY = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, points[i] );
-      final Double vDP = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, points[i] );
+      final Double vAX = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, points[i] );
+      final Double vAY = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, points[i] );
+      final Double vDP = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, points[i] );
 
       if( !(vAX.isNaN() || vAY.isNaN() || vDP.isNaN()) && vAX + vAY + vDP > 0 )
       {
@@ -128,10 +128,10 @@ public class WehrRule extends AbstractValidatorRule
     }
   }
 
-  private void validateParams( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  private void validateParams( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
 
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
+    final IProfilePointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
 
     final IProfileBuilding building = WspmSohlpunkte.getBuilding( profil, IProfileBuilding.class );
     if( building == null )
@@ -142,7 +142,7 @@ public class WehrRule extends AbstractValidatorRule
       return;
     if( deviders != null )
     {
-      for( final IProfilPointMarker devider : deviders )
+      for( final IProfilePointMarker devider : deviders )
       {
         final Object objValue = devider.getValue();
         if( objValue == null || !(objValue instanceof Double) || ((Double) objValue).isNaN() || (Double) objValue == 0.0 )
@@ -169,7 +169,7 @@ public class WehrRule extends AbstractValidatorRule
     }
   }
 
-  private void validateProfilLines( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  private void validateProfilLines( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     final ProfileAltitudeValidator pav = new ProfileAltitudeValidator( profil, collector );
     final IRecord[] points = profil.getPoints();
@@ -178,7 +178,7 @@ public class WehrRule extends AbstractValidatorRule
     final Map<Integer, Double> OKW = pav.getInterpolatedValues( outerLeft, outerRight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     final int innerLeft = pav.whileEqual( outerLeft, outerRight, OKW );
     final int innerRight = pav.whileEqual( outerRight, innerLeft, OKW );
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    final IProfilePointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( deviders.length < 2 )
       return;
 // final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
@@ -200,7 +200,7 @@ public class WehrRule extends AbstractValidatorRule
     // final IRecord[] midPoints = profil.getPoints( left + 1, right - 1 );
     for( int i = innerLeft; i <= innerRight; i++ )
     {
-      final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+      final Double h = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
       final Double wk = OKW.get( i );// ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_TYP_WEHR, point );
       if( !h.isNaN() && wk != null && wk < h )
       {
@@ -210,17 +210,17 @@ public class WehrRule extends AbstractValidatorRule
     }
   }
 
-  private void validateLimits( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  private void validateLimits( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    final IProfilPointMarker[] devider = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-    for( final IProfilPointMarker marker : devider )
+    final IProfilePointMarker[] devider = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    for( final IProfilePointMarker marker : devider )
     {
       final IProfileRecord point = marker.getPoint();
       validateLimit( profil, collector, point );
     }
   }
 
-  private void validateLimit( final IProfil profil, final IValidatorMarkerCollector collector, final IProfileRecord point ) throws CoreException
+  private void validateLimit( final IProfile profil, final IValidatorMarkerCollector collector, final IProfileRecord point ) throws CoreException
   {
     final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final int iOKWehr = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
@@ -230,8 +230,8 @@ public class WehrRule extends AbstractValidatorRule
     final IComponent okWeir = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     final double deltaOkW = okWeir.getPrecision();
 
-    final Double groundValue = ProfilUtil.getDoubleValueFor( iHoehe, point );
-    final Double weirValue = ProfilUtil.getDoubleValueFor( iOKWehr, point );
+    final Double groundValue = ProfileUtil.getDoubleValueFor( iHoehe, point );
+    final Double weirValue = ProfileUtil.getDoubleValueFor( iOKWehr, point );
 
     if( !weirValue.isNaN() && !groundValue.isNaN() && Math.abs( groundValue - weirValue ) > deltaOkW )
     {

@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
@@ -64,22 +64,22 @@ public class LeftForeland extends AbstractFlowZoneType
    * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType#createFlowZone(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  public FlowZone createFlowZone( final IProfil profile )
+  public FlowZone createFlowZone( final IProfile profile )
   {
-    final IProfilPointMarker[] bvMarkers = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
-    final IProfilPointMarker[] dbMarkers = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilePointMarker[] bvMarkers = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    final IProfilePointMarker[] dbMarkers = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( bvMarkers == null || bvMarkers.length != 2 )
       return null;
     if( dbMarkers == null || dbMarkers.length != 2 )
       return null;
 
-    final IProfilPointMarker leftMarker = dbMarkers[0];
-    final IProfilPointMarker rightMarker = bvMarkers[0];
+    final IProfilePointMarker leftMarker = dbMarkers[0];
+    final IProfilePointMarker rightMarker = bvMarkers[0];
 
     return createZone( profile, leftMarker, rightMarker, getLabel() );
   }
 
-  public static FlowZone createZone( final IProfil profile, final IProfilPointMarker leftMarker, final IProfilPointMarker rightMarker, final String label )
+  public static FlowZone createZone( final IProfile profile, final IProfilePointMarker leftMarker, final IProfilePointMarker rightMarker, final String label )
   {
     final int indexWidth = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final double left = ((Number) leftMarker.getPoint().getValue( indexWidth )).doubleValue();

@@ -54,7 +54,7 @@ import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.base.interpolation.FillMissingProfileGeocoordinatesRunnable;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -125,7 +125,7 @@ public class BanklineDistanceBuilder
 
   private void buildDistances( final IProfileFeature profileFeature ) throws Exception
   {
-    final IProfil profileCopy = TuhhProfiles.clone( profileFeature.getProfil() );
+    final IProfile profileCopy = TuhhProfiles.clone( profileFeature.getProfil() );
 
     final Geometry profileGeometry = JTSAdapter.export( profileFeature.getLine() );
     if( profileGeometry == null || !m_riverLine.intersects( profileGeometry ) )

@@ -3,7 +3,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -33,8 +33,8 @@ public class LengthSectionSoilLayer extends TupleResultLineLayer
     final int stationIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
     final String targetOKComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( soilIndex ) );
     final String stationComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( stationIndex ) );
-    final Double dn = ProfilUtil.getDoubleValueFor( soilIndex, rec );
-    final Double ds = ProfilUtil.getDoubleValueFor( stationIndex, rec );
+    final Double dn = ProfileUtil.getDoubleValueFor( soilIndex, rec );
+    final Double ds = ProfileUtil.getDoubleValueFor( stationIndex, rec );
     if( commentIndex > 0 && rec.getValue( commentIndex ) != null )
     {
       return String.format( "%-12s %.4f%n%-12s %.4f%n%s", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn, rec.getValue( commentIndex ) } );//$NON-NLS-1$

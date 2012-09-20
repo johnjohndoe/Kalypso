@@ -48,7 +48,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -121,7 +121,7 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
 
   public void setStation( final double station )
   {
-    final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
+    final BigDecimal bigStation = ProfileUtil.stationToBigDecimal( station );
     setProperty( PROPERTY_STATION, bigStation );
   }
 
