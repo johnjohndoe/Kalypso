@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
@@ -100,11 +101,12 @@ public class PrfSource implements IProfilSource
       return;
     try
     {
-      p.setProperty( "prfFileFormat_MetaData", pr.getMetaData() ); //$NON-NLS-1$
-      p.setProperty( IWspmTuhhConstants.PROFIL_PROPERTY_STATUS, pr.getKeyValue( 3 )[1] );
-      p.setProperty( IWspmTuhhConstants.PROFIL_PROPERTY_VERZWEIGUNGSKENNUNG, pr.getKeyValue( 5 )[1] );
-      p.setProperty( IWspmTuhhConstants.PROFIL_PROPERTY_WASSERSPIEGEL, pr.getKeyValue( 6 )[1] );
-      p.setProperty( IWspmTuhhConstants.PROFIL_PROPERTY_MEHRFELDBRUECKE, pr.getKeyValue( 7 )[1] );
+      final IProfileMetadata metadata = p.getMetadata();
+      // p.setProperty( "prfFileFormat_MetaData", pr.getMetaData() ); //$NON-NLS-1$
+      metadata.setMetadata( IWspmTuhhConstants.PROFIL_PROPERTY_STATUS, pr.getKeyValue( 3 )[1] );
+      metadata.setMetadata( IWspmTuhhConstants.PROFIL_PROPERTY_VERZWEIGUNGSKENNUNG, pr.getKeyValue( 5 )[1] );
+      metadata.setMetadata( IWspmTuhhConstants.PROFIL_PROPERTY_WASSERSPIEGEL, pr.getKeyValue( 6 )[1] );
+      metadata.setMetadata( IWspmTuhhConstants.PROFIL_PROPERTY_MEHRFELDBRUECKE, pr.getKeyValue( 7 )[1] );
       final String stat = pr.getKeyValue( 9 )[0];
       if( stat.startsWith( "STATION " ) ) //$NON-NLS-1$
       {
@@ -491,12 +493,12 @@ public class PrfSource implements IProfilSource
     if( pCount > 0 )
     {
       p1 = ProfilUtil.findPoint( p, db.getX()[0], 0 );
-      pos1 = (int) db.getY()[0].doubleValue();
+      pos1 = (int)db.getY()[0].doubleValue();
     }
     if( pCount > 1 )
     {
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
-      pos2 = (int) db.getY()[1].doubleValue();
+      pos2 = (int)db.getY()[1].doubleValue();
     }
     if( pCount > 2 )
     {

@@ -88,7 +88,7 @@ import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
 
 /**
  * Exports one {@link org.kalypso.model.wspm.core.profil.IProfil} as {@link org.kalypso.wspwin.core.prf.DataBlockWriter}
- *
+ * 
  * @author Gernot Belger
  */
 public class PrfWriter implements IPrfConstants
@@ -311,9 +311,9 @@ public class PrfWriter implements IPrfConstants
     final int iProp = m_profil.indexOfProperty( prop );
     for( final IRecord point : points )
     {
-      final Double x = (Double) point.getValue( iBreite );
+      final Double x = (Double)point.getValue( iBreite );
 
-      final Double value = iProp < 0 ? null : (Double) point.getValue( iProp );
+      final Double value = iProp < 0 ? null : (Double)point.getValue( iProp );
       if( value == null )
       {
         if( nullValue != null )
@@ -372,7 +372,7 @@ public class PrfWriter implements IPrfConstants
 
       try
       {
-        xs[i] = (Double) point.getValue( iBreite );
+        xs[i] = (Double)point.getValue( iBreite );
         ys[i] = getDeviderYValue( devider, i );
       }
       catch( final Exception e )
@@ -393,7 +393,7 @@ public class PrfWriter implements IPrfConstants
 
     if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId.getId() ) )
     {
-      final boolean isBoeschung = devider.getIntepretedValue() == null ? false : (Boolean) devider.getIntepretedValue();
+      final boolean isBoeschung = devider.getIntepretedValue() == null ? false : (Boolean)devider.getIntepretedValue();
       final int offset = isBoeschung ? 3 : 1;
       return offset + index;
     }
@@ -401,7 +401,7 @@ public class PrfWriter implements IPrfConstants
     if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerId.getId() ) )
       return index + 1;
     final int iHoehe = m_profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
-    return (Double) devider.getPoint().getValue( iHoehe );
+    return (Double)devider.getPoint().getValue( iHoehe );
   }
 
   private void writeProfileObjects( )
@@ -413,7 +413,7 @@ public class PrfWriter implements IPrfConstants
     {
       if( profileObject instanceof IProfileBuilding )
       {
-        buildings.add( (IProfileBuilding) profileObject );
+        buildings.add( (IProfileBuilding)profileObject );
       }
       else
       {
@@ -503,9 +503,9 @@ public class PrfWriter implements IPrfConstants
       final DoubleDataBlock dbe = new DoubleDataBlock( dbhe );
       try
       {
-        dbe.setDoubles( new Double[] { (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
-            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ),
-            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
+        dbe.setDoubles( new Double[] { (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
+            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ),
+            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
       }
 
       catch( final Exception e )
@@ -521,9 +521,9 @@ public class PrfWriter implements IPrfConstants
 
       try
       {
-        dbm.setDoubles( new Double[] { (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
-            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ),
-            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
+        dbm.setDoubles( new Double[] { (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
+            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ),
+            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
       }
       catch( final Exception e )
       {
@@ -538,9 +538,8 @@ public class PrfWriter implements IPrfConstants
 
       try
       {
-        dbk.setDoubles( new Double[] { (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ),
-            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ),
-            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
+        dbk.setDoubles( new Double[] { (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ),
+            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
       }
       catch( final Exception e )
       {
@@ -555,9 +554,9 @@ public class PrfWriter implements IPrfConstants
       final DoubleDataBlock dbt = new DoubleDataBlock( dbht );
       try
       {
-        dbt.setDoubles( new Double[] { (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
-            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ),
-            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
+        dbt.setDoubles( new Double[] { (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
+            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ),
+            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
       }
       catch( final Exception e )
       {
@@ -572,7 +571,7 @@ public class PrfWriter implements IPrfConstants
   {
     if( profileObject instanceof ISinuositaetProfileObject )
     {
-      final ISinuositaetProfileObject sinuosity = (ISinuositaetProfileObject) profileObject;
+      final ISinuositaetProfileObject sinuosity = (ISinuositaetProfileObject)profileObject;
 
       final DataBlockHeader header = PrfHeaders.createHeader( sinuosity.getId() );
       final DoubleDataBlock dataBlock = new SinuositaetDataBlock( header );
@@ -612,12 +611,10 @@ public class PrfWriter implements IPrfConstants
   public void setPreferRoughnessClasses( final boolean preferRoughnessClasses )
   {
     m_roughnessWriter.setPreferClasses( preferRoughnessClasses );
-
   }
 
   public void setPreferVegetationClasses( final boolean preferVegetationClasses )
   {
     m_vegetationWriter.setPreferClasses( preferVegetationClasses );
   }
-
 }

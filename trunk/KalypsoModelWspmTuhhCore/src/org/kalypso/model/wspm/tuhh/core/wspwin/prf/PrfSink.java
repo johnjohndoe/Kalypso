@@ -67,8 +67,7 @@ public class PrfSink implements IProfilSink
   /**
    * FIXME: do not use IProfile[] profile, but only ever the first gets written....
    * 
-   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(org.kalypso.model.wspm.core.profil.IProfil[],
-   *      java.io.Writer)
+   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(org.kalypso.model.wspm.core.profil.IProfil[], java.io.Writer)
    */
   @Override
   public boolean write( final IProfil[] profiles, final Writer writer ) throws IOException
@@ -83,5 +82,4 @@ public class PrfSink implements IProfilSink
 
     return true;
   }
-
 }
