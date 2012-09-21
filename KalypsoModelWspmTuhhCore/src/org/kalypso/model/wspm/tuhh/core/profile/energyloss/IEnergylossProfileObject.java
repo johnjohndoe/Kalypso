@@ -60,5 +60,4 @@ public interface IEnergylossProfileObject extends IProfileObject
   BigDecimal getValue( final int index );
 
   String getType( final int index );
-
 }

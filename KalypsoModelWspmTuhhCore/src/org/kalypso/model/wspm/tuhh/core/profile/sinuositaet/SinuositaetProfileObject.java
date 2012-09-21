@@ -123,7 +123,7 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
     final int index = result.indexOfComponent( PROPERTY_SN );
 
     final IRecord record = result.get( 0 );
-    return (Double) record.getValue( index );
+    return (Double)record.getValue( index );
   }
 
   /**
@@ -157,7 +157,6 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
     final int index = result.indexOfComponent( PROPERTY_LF );
 
     final IRecord record = result.get( 0 );
-    return (Double) record.getValue( index );
-
+    return (Double)record.getValue( index );
   }
 }
