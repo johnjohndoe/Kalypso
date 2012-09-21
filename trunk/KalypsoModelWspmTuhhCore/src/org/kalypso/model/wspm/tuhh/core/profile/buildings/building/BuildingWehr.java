@@ -113,5 +113,4 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
   {
     return ID;
   }
-
 }

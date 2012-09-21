@@ -102,7 +102,7 @@ public class EnergylossProfileObject extends AbstractProfileObject implements IE
       return null;
     }
     final int iValue = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
-    return new BigDecimal( (Double) result.get( index ).getValue( iValue ) );
+    return new BigDecimal( (Double)result.get( index ).getValue( iValue ) );
   }
 
   /**
