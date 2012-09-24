@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +66,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * A wizard for importing water bodies into wspm.
- * 
+ *
  * @author Holger Albert
  */
 public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
@@ -110,7 +109,7 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
       final String gkz = wspmWaterBody.getRefNr();
       final String name = wspmWaterBody.getName();
 
-      final WaterBody waterBody = new WaterBody( new BigDecimal( cnt++ ), gkz, name, null );
+      final WaterBody waterBody = new WaterBody( cnt++, gkz, name, null );
 
       waterBodies.add( waterBody );
       m_features.put( gkz, wspmWaterBody );
@@ -119,9 +118,6 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     return waterBodies.toArray( new WaterBody[] {} );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
@@ -181,7 +177,7 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
   /**
    * This function inspects all elements in the selection and returns the WSPM project of first element which is a
    * feature of a WSPM project.
-   * 
+   *
    * @param selection
    *          The selection to inspect.
    * @return A WSPM project or null.
