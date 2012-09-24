@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.pdb.ui.internal.gaf;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
@@ -63,7 +61,6 @@ import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -77,10 +74,6 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class GafExporter
 {
-  public GafExporter( )
-  {
-  }
-
   public IStatus export( final IProfileFeature[] profiles, final File file, IProgressMonitor monitor )
   {
     /* Monitor. */
@@ -179,33 +172,13 @@ public class GafExporter
   {
     final GafCodes gafCodes = new GafCodes();
     final ICoefficients coefficients = new SimpleCoefficients();
-    final WaterBody[] waterBodies = getWaterBodies( profiles );
     final State state = new State();
     final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( null, gafCodes, coefficients, waterBodies, state, null, profiles, coordinateSystem, null, false, monitor );
+    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( null, gafCodes, coefficients, null, state, null, profiles, coordinateSystem, null, false, monitor );
     operation.execute( null );
 
     return state.getCrossSections();
-  }
-
-  private WaterBody[] getWaterBodies( final IProfileFeature[] profiles )
-  {
-    final List<WaterBody> waterBodies = new ArrayList<>();
-
-    for( final IProfileFeature profile : profiles )
-    {
-      final WspmWaterBody water = profile.getWater();
-      if( water == null )
-        continue;
-
-      final WaterBody waterBody = new WaterBody();
-      waterBody.setName( water.getRefNr() );
-
-      waterBodies.add( waterBody );
-    }
-
-    return waterBodies.toArray( new WaterBody[] {} );
   }
 
   private IWspmClassification getWspmClassification( final IProfileFeature[] profiles )

@@ -53,8 +53,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
@@ -84,16 +82,14 @@ public class CheckinStateWorker implements ICheckInWorker
   {
     final Map<String, BigDecimal> profileNames = new HashMap<>();
 
-    final Map<String, WaterBody> existingWaterCodes = WaterBodyUtils.hashWaterCodes( m_data.getExistingWaterBodies() );
-
     final TuhhReach reach = m_data.getReach();
 
-    final WspmWaterBody wspmWaterBody = reach.getWaterBody();
-    final String waterCode = wspmWaterBody.getRefNr();
-
     /* Water Body must exist */
-    if( !existingWaterCodes.containsKey( waterCode ) )
+    if( m_data.getWaterBody() == null )
     {
+      final WspmWaterBody wspmWaterBody = reach.getWaterBody();
+      final String waterCode = wspmWaterBody.getRefNr();
+
       final String waterName = wspmWaterBody.getName();
       final String message = CheckInEventWorker.formatMissingWaterBody( waterCode, waterName );
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
