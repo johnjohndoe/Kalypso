@@ -111,15 +111,11 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     final State newState = m_data.getState();
     final String newStateName = newState.getName();
 
-    final State[] existingStates = m_data.getExistingStates();
-    for( final State state : existingStates )
+    if( m_data.isExistingState( newStateName ) )
     {
-      if( state.getName().equals( newStateName ) )
-      {
-        final String message = String.format( Messages.getString( "ImportGafOperation_3" ), newStateName ); //$NON-NLS-1$
-        final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message );
-        throw new CoreException( status );
-      }
+      final String message = String.format( Messages.getString( "ImportGafOperation_3" ), newStateName ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
     }
   }
 
@@ -139,6 +135,8 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
       final Event waterlevelEvent = getWaterlevelEvent();
 
       final List<CrossSectionPartType> knownTypes = GetPdbList.getList( session, CrossSectionPartType.class );
+
+      // FIXME: check if knownTypes is a super.set of GafKind
 
       final Gaf2Db gaf2db = new Gaf2Db( dbType, waterBody, state, profiles, waterlevelEvent, knownTypes, monitor );
       new Executor( session, gaf2db ).execute();

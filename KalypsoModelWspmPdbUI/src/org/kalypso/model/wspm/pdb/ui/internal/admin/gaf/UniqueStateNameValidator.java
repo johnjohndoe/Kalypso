@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.databinding.validation.TypedValidator;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.IStateNamesProvider;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
@@ -55,32 +52,19 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
  */
 public class UniqueStateNameValidator extends TypedValidator<String>
 {
-  private final Set<String> m_names = new HashSet<>();
+  private final IStateNamesProvider m_namesProvider;
 
-  private final String m_ignoreName;
-
-  public UniqueStateNameValidator( final State[] existingStates, final String ignoreName )
+  public UniqueStateNameValidator( final IStateNamesProvider namesProvider )
   {
-    this( existingStates, IStatus.ERROR, ignoreName );
-  }
+    super( String.class, IStatus.ERROR, Messages.getString( "UniqueStateNameValidator.0" ) ); //$NON-NLS-1$
 
-  public UniqueStateNameValidator( final State[] existingStates, final int severity, final String ignoreName )
-  {
-    super( String.class, severity, Messages.getString( "UniqueStateNameValidator.0" ) ); //$NON-NLS-1$
-
-    m_ignoreName = ignoreName;
-
-    for( final State states : existingStates )
-      m_names.add( states.getName() );
+    m_namesProvider = namesProvider;
   }
 
   @Override
   protected IStatus doValidate( final String value ) throws CoreException
   {
-    if( value != null && value.equals( m_ignoreName ) )
-      return Status.OK_STATUS;
-
-    if( m_names.contains( value ) )
+    if( m_namesProvider.isForbidden( value ) )
       fail();
 
     return Status.OK_STATUS;
