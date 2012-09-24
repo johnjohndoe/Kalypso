@@ -123,16 +123,26 @@ public final class WaterBodyUtils
    * Query all states of the database that are connected to the given waterbody.<br/>
    * Join-fetches the events of the state.
    */
-  public static State[] getStates( final Session session, final String waterCode )
+  public static State[] getStatesForWaterByID( final Session session, final long waterID )
   {
+    final WaterBody waterBody = findWaterBodyByID( session, waterID );
+    if( waterBody == null )
+      return new State[0];
+
     final Criteria criteria = session.createCriteria( State.class );
     criteria.setFetchMode( State.PROPERTY_EVENTS, FetchMode.JOIN );
     final Criteria csCriteria = criteria.createCriteria( State.PROPERTY_CROSS_SECTIONS );
-
-    final Criteria waterCriteria = csCriteria.createCriteria( CrossSection.PROPERTY_WATER_BODY );
-    waterCriteria.add( Restrictions.eq( WaterBody.PROPERTY_NAME, waterCode ) );
+    csCriteria.add( Restrictions.eq( CrossSection.PROPERTY_WATER_BODY, waterBody ) );
 
     final Collection<State> list = new HashSet<>( criteria.list() );
     return list.toArray( new State[list.size()] );
+  }
+
+  public static WaterBody findWaterBodyByID( final Session session, final long waterID )
+  {
+    final Criteria criteria = session.createCriteria( WaterBody.class );
+    criteria.add( Restrictions.eq( WaterBody.PROPERTY_ID, waterID ) );
+
+    return (WaterBody)criteria.uniqueResult();
   }
 }

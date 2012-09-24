@@ -1,6 +1,5 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,7 +35,7 @@ import com.vividsolutions.jts.geom.LineString;
 @Table( name = "water_body", schema = "pdb", uniqueConstraints = @UniqueConstraint( columnNames = "name" ) )
 public class WaterBody extends AbstractModelObject implements java.io.Serializable, WaterBodyConstants, IDocumentContainer
 {
-  private BigDecimal m_id;
+  private long m_id;
 
   private String m_name = StringUtils.EMPTY;
 
@@ -60,7 +59,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   {
   }
 
-  public WaterBody( final BigDecimal id, final String name, final String label, final STATIONING_DIRECTION directionOfStationing )
+  public WaterBody( final long id, final String name, final String label, final STATIONING_DIRECTION directionOfStationing )
   {
     m_id = id;
     m_name = name;
@@ -68,7 +67,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     m_directionOfStationing = directionOfStationing;
   }
 
-  public WaterBody( final BigDecimal id, final String name, final Geometry riverline, final String label, final STATIONING_DIRECTION directionOfStationing, final Integer rank, final String description, final Set<Event> events, final Set<CrossSection> crossSections, final Set<Document> documents )
+  public WaterBody( final long id, final String name, final Geometry riverline, final String label, final STATIONING_DIRECTION directionOfStationing, final Integer rank, final String description, final Set<Event> events, final Set<CrossSection> crossSections, final Set<Document> documents )
   {
     m_id = id;
     m_name = name;
@@ -86,12 +85,12 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @Column( name = "id", unique = true, nullable = false, precision = 20, scale = 0 )
   @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "waterbody_id_seq" )
   @SequenceGenerator( name = "waterbody_id_seq", sequenceName = "pdb.seq_pdb" )
-  public BigDecimal getId( )
+  public long getId( )
   {
     return m_id;
   }
 
-  public void setId( final BigDecimal id )
+  public void setId( final long id )
   {
     final Object oldValue = m_id;
 

@@ -33,6 +33,8 @@ import org.kalypso.model.wspm.pdb.db.constants.EventConstants;
 @Table(name = "event", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = { "name", "water_body" }))
 public class Event extends AbstractModelObject implements Serializable, EventConstants, IElementWithDates
 {
+  private final String COLUMN_WATER_ID = "water_body"; //$NON-NLS-1$
+
   private BigDecimal m_id;
 
   private WaterBody m_waterBody;
@@ -111,7 +113,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "water_body", nullable = false)
+  @JoinColumn( name = COLUMN_WATER_ID, nullable = false )
   public WaterBody getWaterBody( )
   {
     return m_waterBody;
