@@ -42,11 +42,12 @@ package org.kalypso.model.wspm.pdb.db.utils;
 
 import java.util.Comparator;
 
-import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
 
 /**
- * Sorts {@link CrossSectionPart}s by {@link CrossSectionPart#getCategory()}.
+ * Sorts {@link CrossSectionPart}s by {@link CrossSectionPart#getCategory()}.<br/>
+ * FIXME: this is a lie!
  *
  * @author Holger Albert
  */
@@ -56,17 +57,17 @@ public class ByCategoryComparator implements Comparator<CrossSectionPart>
   public int compare( final CrossSectionPart o1, final CrossSectionPart o2 )
   {
     /* Get the categories. */
-    final CATEGORY c1 = o1.getCrossSectionPartType().getCategory();
-    final CATEGORY c2 = o2.getCrossSectionPartType().getCategory();
+    final String c1 = o1.getCrossSectionPartType().getCategory();
+    final String c2 = o2.getCrossSectionPartType().getCategory();
 
     /* The categories are equal. */
     if( c1 == c2 )
       return 0;
 
-    if( c1 == CATEGORY.P )
+    if( c1.equals( GafKind.P.toString() ) )
       return -1;
 
-    if( c2 == CATEGORY.P )
+    if( c2.equals( GafKind.P.toString() ) )
       return 1;
 
     return 0;

@@ -205,7 +205,7 @@ public class CheckinPartOperation
     }
 
     final double station = m_profil.getStation();
-    final String warning = String.format( Messages.getString("CheckinPartOperation_0"), station, m_partBuilder.getCategory() ); //$NON-NLS-1$
+    final String warning = String.format( Messages.getString( "CheckinPartOperation_0" ), station, m_partBuilder.getKind() ); //$NON-NLS-1$
     return m_stati.asMultiStatusOrOK( warning );
   }
 

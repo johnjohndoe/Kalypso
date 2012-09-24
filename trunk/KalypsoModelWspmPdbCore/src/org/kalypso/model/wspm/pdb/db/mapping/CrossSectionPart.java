@@ -19,7 +19,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
@@ -29,7 +28,7 @@ import com.vividsolutions.jts.geom.LineString;
  */
 @Entity
 @Table( name = "cross_section_part", schema = "pdb", uniqueConstraints = @UniqueConstraint( columnNames = { "name", "cross_section" } ) )
-public class CrossSectionPart extends AbstractModelObject implements Serializable, CategoryConstants
+public class CrossSectionPart extends AbstractModelObject implements Serializable
 {
   private BigDecimal m_id;
 

@@ -46,7 +46,7 @@ import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
@@ -67,17 +67,17 @@ public class GafPart
 
   private final Collection<GafPoint> m_points = new ArrayList<>( 20 );
 
-  private final CATEGORY m_kind;
+  private final GafKind m_kind;
 
   private final GeometryFactory m_geometryFactory;
 
-  public GafPart( final CATEGORY kind, final GeometryFactory geometryFactory )
+  public GafPart( final GafKind kind, final GeometryFactory geometryFactory )
   {
     m_kind = kind;
     m_geometryFactory = geometryFactory;
   }
 
-  public CATEGORY getKind( )
+  public GafKind getKind( )
   {
     return m_kind;
   }

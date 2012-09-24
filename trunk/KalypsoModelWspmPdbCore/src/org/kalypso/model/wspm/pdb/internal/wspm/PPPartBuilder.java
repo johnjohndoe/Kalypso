@@ -44,7 +44,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
@@ -67,10 +67,9 @@ public class PPPartBuilder implements IPartBuilder
   }
 
   @Override
-  public CATEGORY getCategory( )
+  public GafKind getKind( )
   {
-    return CATEGORY.P;
-    // return IGafConstants.KZ_CATEGORY_PROFILE;
+    return GafKind.P;
   }
 
   @Override
