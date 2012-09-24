@@ -41,22 +41,21 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetCoefficients;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
@@ -116,7 +115,9 @@ public class CheckoutPdbData extends AbstractModelObject
 
   private GafCodes m_codes;
 
-  public IStatus init( final Shell shell, final String windowTitle, final IDialogSettings settings, final IPdbConnection connection )
+  private Session m_session;
+
+  public IStatus init( final Shell shell, final String windowTitle, final IPdbConnection connection )
   {
     try
     {
@@ -125,17 +126,18 @@ public class CheckoutPdbData extends AbstractModelObject
       m_connection = connection;
       m_documentBase = findDocumentBase( shell, windowTitle, connection );
 
-      m_coefficients = loadCoefficients( connection );
+      m_session = connection.openSession();
+
+      m_coefficients = loadCoefficients( m_session );
+
       m_codes = new GafCodes();
 
-      if( settings != null )
-      {
-        // TODO?
-      }
+      // REMAK: we do NOT close the session, because sub-elemnts will be accessed during checkout. Session will be closed when wizard closes.
+      // session.close();
 
       return Status.OK_STATUS;
     }
-    catch( final InvocationTargetException e )
+    catch( final HibernateException e )
     {
       return StatusUtilities.statusFromThrowable( e );
     }
@@ -143,12 +145,43 @@ public class CheckoutPdbData extends AbstractModelObject
     {
       return StatusUtilities.statusFromThrowable( e );
     }
+    catch( final PdbConnectException e )
+    {
+      return StatusUtilities.statusFromThrowable( e );
+    }
   }
 
-  private ICoefficients loadCoefficients( final IPdbConnection connection ) throws InvocationTargetException
+  /**
+   * Fetches the selected elements from the new session because a) the old session is closed and the objects cannot be accessed any more, b) we want to be sure to have current elements.
+   */
+  private Object[] refetchElements( final Session session, final Object[] elements )
+  {
+    final Object[] updatedElements = new Object[elements.length];
+
+    for( int i = 0; i < updatedElements.length; i++ )
+      updatedElements[i] = refetchElement( session, elements[i] );
+
+    return updatedElements;
+  }
+
+  private Object refetchElement( final Session session, final Object element )
+  {
+    if( element instanceof WaterBody )
+      return session.load( WaterBody.class, ((WaterBody)element).getId() );
+
+    if( element instanceof State )
+      return session.load( State.class, ((State)element).getId() );
+
+    if( element instanceof Event )
+      return session.load( Event.class, ((Event)element).getId() );
+
+    throw new IllegalArgumentException();
+  }
+
+  private ICoefficients loadCoefficients( final Session session )
   {
     final GetCoefficients operation = new GetCoefficients( IGafConstants.POINT_KIND_GAF );
-    new ExecutorRunnable( connection, operation ).execute( new NullProgressMonitor() );
+    operation.execute( session );
     return operation.getCoefficients();
   }
 
@@ -222,25 +255,43 @@ public class CheckoutPdbData extends AbstractModelObject
     firePropertyChange( PROPERTY_REMOVE_STRATEGY, oldValue, removeStrategy );
   }
 
-  public void initMapping( final IStructuredSelection selection, final CommandableWorkspace workspace, final TuhhWspmProject project )
+  public IStatus initMapping( final Object[] elements, final CommandableWorkspace workspace, final TuhhWspmProject project )
   {
-    // FIXME: data might be stale! i.e. database changes are not up-to-date
+    try
+    {
+      final Object[] elementsUpToDate = refetchElements( m_session, elements );
 
-    final CheckoutDataSearcher searcher = new CheckoutDataSearcher();
-    searcher.search( selection );
+      final CheckoutDataSearcher searcher = new CheckoutDataSearcher();
+      searcher.search( elementsUpToDate );
 
-    final WaterBody[] waterBodies = searcher.getWaterBodies();
-    final State[] states = searcher.getStates();
-    final CrossSection[] crossSections = searcher.getCrossSections();
-    final Event[] events = searcher.getEvents();
+      final WaterBody[] waterBodies = searcher.getWaterBodies();
+      final State[] states = searcher.getStates();
+      final CrossSection[] crossSections = searcher.getCrossSections();
+      final Event[] events = searcher.getEvents();
 
-    m_mapping = new CheckoutDataMapping( waterBodies, states, crossSections, events, workspace, project );
+      m_mapping = new CheckoutDataMapping( waterBodies, states, crossSections, events, workspace, project );
+
+      return Status.OK_STATUS;
+    }
+    catch( final HibernateException e )
+    {
+      return StatusUtilities.statusFromThrowable( e );
+    }
   }
 
   public void closeConnection( )
   {
+    if( m_session != null )
+    {
+      PdbUtils.closeSessionQuietly( m_session );
+      m_session = null;
+    }
+
     if( m_connection != null )
+    {
       PdbUtils.closeQuietly( m_connection );
+      m_connection = null;
+    }
   }
 
   public ICoefficients getCoefficients( )

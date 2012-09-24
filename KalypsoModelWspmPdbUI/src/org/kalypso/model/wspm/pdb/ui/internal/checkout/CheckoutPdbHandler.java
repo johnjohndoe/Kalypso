@@ -48,14 +48,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -94,22 +93,31 @@ public class CheckoutPdbHandler extends AbstractHandler
       return null;
 
     final CheckoutPdbData data = new CheckoutPdbData();
-    initMapping( data, selection, project );
 
     final IPdbConnection connection = viewer.getConnection();
 
     final CheckoutPdbWizard wizard = new CheckoutPdbWizard( data );
     wizard.setWindowTitle( commandName );
 
-    final IDialogSettings settings = wizard.getDialogSettings();
-    final IStatus initStatus = data.init( shell, commandName, settings, connection );
+    final CommandableWorkspace workspace = project.getWorkspace();
+    final TuhhWspmProject wspmProject = project.getWspmProject();
+
+    final IStatus initStatus = data.init( shell, commandName, connection );
     if( !initStatus.isOK() )
     {
-      new StatusDialog( shell, initStatus, commandName ).open();
+      StatusDialog.open( shell, initStatus, commandName );
       return null;
     }
 
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    final IStatus mappingStatus = data.initMapping( selection.toArray(), workspace, wspmProject );
+    if( !mappingStatus.isOK() )
+    {
+      StatusDialog.open( shell, mappingStatus, commandName );
+      return null;
+    }
+
+    final WizardDialog2 dialog = new WizardDialog2( shell, wizard );
+    dialog.setRememberSize( true );
     dialog.open();
 
     /* Always save project data now */
@@ -120,13 +128,6 @@ public class CheckoutPdbHandler extends AbstractHandler
       project.updateViews( toSelect );
 
     return null;
-  }
-
-  private void initMapping( final CheckoutPdbData data, final IStructuredSelection selection, final PdbWspmProject project )
-  {
-    final CommandableWorkspace workspace = project.getWorkspace();
-    final TuhhWspmProject wspmProject = project.getWspmProject();
-    data.initMapping( selection, workspace, wspmProject );
   }
 
   private void doSaveProject( final Shell shell, final PdbWspmProject project, final String windowTitle )
