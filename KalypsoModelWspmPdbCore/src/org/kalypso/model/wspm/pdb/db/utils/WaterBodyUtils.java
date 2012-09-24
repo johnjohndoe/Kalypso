@@ -43,11 +43,18 @@ package org.kalypso.model.wspm.pdb.db.utils;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
@@ -99,5 +106,33 @@ public final class WaterBodyUtils
       codes.put( waterBody.getName(), waterBody );
 
     return Collections.unmodifiableMap( codes );
+  }
+
+  public static WaterBody findWaterBody( final Session session, final String waterCode )
+  {
+    if( StringUtils.isBlank( waterCode ) )
+      return null;
+
+    final Criteria criteria = session.createCriteria( WaterBody.class );
+    criteria.add( Restrictions.eq( WaterBody.PROPERTY_NAME, waterCode ) );
+
+    return (WaterBody)criteria.uniqueResult();
+  }
+
+  /**
+   * Query all states of the database that are connected to the given waterbody.<br/>
+   * Join-fetches the events of the state.
+   */
+  public static State[] getStates( final Session session, final String waterCode )
+  {
+    final Criteria criteria = session.createCriteria( State.class );
+    criteria.setFetchMode( State.PROPERTY_EVENTS, FetchMode.JOIN );
+    final Criteria csCriteria = criteria.createCriteria( State.PROPERTY_CROSS_SECTIONS );
+
+    final Criteria waterCriteria = csCriteria.createCriteria( CrossSection.PROPERTY_WATER_BODY );
+    waterCriteria.add( Restrictions.eq( WaterBody.PROPERTY_NAME, waterCode ) );
+
+    final Collection<State> list = new HashSet<>( criteria.list() );
+    return list.toArray( new State[list.size()] );
   }
 }
