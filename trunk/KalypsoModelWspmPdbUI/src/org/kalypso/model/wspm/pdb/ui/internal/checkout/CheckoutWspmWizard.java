@@ -195,7 +195,7 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
       return status;
 
     final IPdbConnection connection = m_settingsData.getConnection();
-    final IStatus initStatus = m_checkoutData.init( getShell(), getWindowTitle(), getDialogSettings(), connection );
+    final IStatus initStatus = m_checkoutData.init( getShell(), getWindowTitle(), connection );
     if( !initStatus.isOK() )
       return initStatus;
 
@@ -213,6 +213,6 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
       return;
     }
 
-    m_checkoutData.initMapping( selection, m_workspace, m_project );
+    m_checkoutData.initMapping( selection.toArray(), m_workspace, m_project );
   }
 }

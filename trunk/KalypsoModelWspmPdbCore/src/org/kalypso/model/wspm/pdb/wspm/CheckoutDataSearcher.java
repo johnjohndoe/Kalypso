@@ -40,13 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -66,10 +65,9 @@ public class CheckoutDataSearcher
 
   private final Set<Event> m_events = new HashSet<>();
 
-  public void search( final IStructuredSelection selection )
+  public void search( final Object[] elements )
   {
-    final List< ? > list = selection.toList();
-    addElements( list );
+    addElements( Arrays.asList( elements ) );
 
     /* Just in case, remove null */
     m_waterBodies.remove( null );
