@@ -63,9 +63,9 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants.STATIONING_DIRECTION;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.RankToStringConverter;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.StringToRankConverter;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyControl;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
@@ -177,7 +177,7 @@ public class ImportWaterbodiesSelectAttributesPage extends AbstractSelectAttribu
 
     rankViewer.setLabelProvider( new LabelProvider() );
     rankViewer.setContentProvider( new ArrayContentProvider() );
-    rankViewer.setInput( EditWaterBodyPage.RANK_INPUT );
+    rankViewer.setInput( WaterBodyControl.RANK_INPUT );
 
     final IObservableValue targetValue = ViewersObservables.observeSinglePostSelection( rankViewer );
     final IObservableValue targetEnablement = SWTObservables.observeEnabled( rankViewer.getControl() );
@@ -189,8 +189,8 @@ public class ImportWaterbodiesSelectAttributesPage extends AbstractSelectAttribu
     final IObservableValue modelEnablement = BeansObservables.observeValue( info, ImportAttributeInfo.PROPERTY_ENABLEMENT );
 
     final DataBinder valueBinder = new DataBinder( targetValue, modelValue );
-    valueBinder.setTargetToModelConverter( new StringToRankConverter( EditWaterBodyPage.RANK_INPUT ) );
-    valueBinder.setModelToTargetConverter( new RankToStringConverter( EditWaterBodyPage.RANK_INPUT ) );
+    valueBinder.setTargetToModelConverter( new StringToRankConverter( WaterBodyControl.RANK_INPUT ) );
+    valueBinder.setModelToTargetConverter( new RankToStringConverter( WaterBodyControl.RANK_INPUT ) );
     binding.bindValue( valueBinder );
 
     binding.bindValue( targetEnablement, modelEnablement );
