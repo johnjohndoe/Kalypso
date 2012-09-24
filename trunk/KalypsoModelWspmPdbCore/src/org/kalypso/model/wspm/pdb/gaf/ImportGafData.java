@@ -2,48 +2,50 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
@@ -56,12 +58,12 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.constants.StateConstants;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.StateUtils;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
@@ -125,7 +127,7 @@ public class ImportGafData extends AbstractModelObject
 
   private final Event m_waterlevelEvent = new Event();
 
-  private State[] m_existingStates;
+  private Set<String> m_existingStateNames;
 
   public ImportGafData( final IPdbConnection connection )
   {
@@ -133,7 +135,7 @@ public class ImportGafData extends AbstractModelObject
 
     /* Pre init measurement date to now */
     m_state.setMeasurementDate( new Date() );
-    m_state.setIsstatezero( StateConstants.ZERO_STATE_ON );
+    m_state.setIsstatezero( StateConstants.ZeroState.T );
     m_state.setDescription( StringUtils.EMPTY );
     m_state.setEditingUser( connection.getSettings().getUsername() );
   }
@@ -147,7 +149,7 @@ public class ImportGafData extends AbstractModelObject
 
       m_coefficients = new Coefficients( session, IGafConstants.POINT_KIND_GAF );
       m_info = new PdbInfo( session );
-      m_existingStates = GetPdbList.getArray( session, State.class );
+      m_existingStateNames = new HashSet<>( Arrays.asList( StateUtils.getStateNames( session ) ) );
 
       session.close();
     }
@@ -443,8 +445,8 @@ public class ImportGafData extends AbstractModelObject
     return events.toArray( new Event[events.size()] );
   }
 
-  public State[] getExistingStates( )
+  public boolean isExistingState( final String stateName )
   {
-    return m_existingStates;
+    return m_existingStateNames.contains( stateName );
   }
 }
