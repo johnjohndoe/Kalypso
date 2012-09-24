@@ -46,12 +46,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.IPageChangeProvider;
-import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -60,12 +59,12 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.jface.dialog.WizardPageChangedListener;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
 import org.kalypso.model.wspm.pdb.gaf.ReadGafOperation;
@@ -73,15 +72,15 @@ import org.kalypso.model.wspm.pdb.ui.internal.PdbUiUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.IStatesProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.IStateNamesProvider;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ChooseWaterPage;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
-public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStatesProvider, IGenericWizard
+public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStateNamesProvider, IGenericWizard
 {
-  private final IPageChangedListener m_pageListener = new IPageChangedListener()
+  private final WizardPageChangedListener m_pageListener = new WizardPageChangedListener()
   {
     @Override
     public void pageChanged( final PageChangedEvent event )
@@ -163,7 +162,9 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
     m_gafProfilesPage = new GafProfilesPage( "profiles", m_data ); //$NON-NLS-1$
     addPage( m_gafProfilesPage );
 
-    final EditStatePage editStatePage = new EditStatePage( "state", m_data.getState(), this, Mode.NEW ); //$NON-NLS-1$
+    final IValidator stateNameValidator = new UniqueStateNameValidator( this );
+
+    final EditStatePage editStatePage = new EditStatePage( "state", m_data.getState(), Mode.NEW, stateNameValidator ); //$NON-NLS-1$
     editStatePage.setTitle( EditStatePage.STR_ENTER_STATE_PROPERTIES );
     editStatePage.setDescription( EditStatePage.STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE );
     addPage( editStatePage );
@@ -175,14 +176,9 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   @Override
   public void setContainer( final IWizardContainer container )
   {
-    final IWizardContainer oldContainer = getContainer();
-    if( oldContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageListener );
+    m_pageListener.setContainer( getContainer(), container );
 
     super.setContainer( container );
-
-    if( container instanceof IPageChangeProvider )
-      ((IPageChangeProvider) container).addPageChangedListener( m_pageListener );
   }
 
   @Override
@@ -261,8 +257,8 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   }
 
   @Override
-  public State[] getStates( )
+  public boolean isForbidden( final String stateName )
   {
-    return m_data.getExistingStates();
+    return m_data.isExistingState( stateName );
   }
 }
