@@ -135,7 +135,7 @@ public class WspmTuhhCalcJob implements ISimulation
       }
       catch( final Exception e )
       {
-        final String msg = String.format( Messages.getString( "WspmTuhhCalcJob.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "WspmTuhhCalcJob.0" ), e.toString() ); //$NON-NLS-1$
         final SimulationException simulationException = new SimulationException( msg, e );
         log.log( simulationException, null );
         throw simulationException;
