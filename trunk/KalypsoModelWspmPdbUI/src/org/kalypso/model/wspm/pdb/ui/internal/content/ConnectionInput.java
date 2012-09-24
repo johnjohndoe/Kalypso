@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -60,33 +62,48 @@ public class ConnectionInput
 
   private final Session m_session;
 
-  private final List<State> m_states;
+  private final Collection<State> m_states;
 
   public ConnectionInput( final Session session ) throws PdbConnectException
   {
     m_session = session;
 
-    m_states = readState();
-    final List<WaterBody> waterBodies = readWaterBody();
+    m_states = fetchStates( session );
+
+    final Collection<WaterBody> waterBodies = fetchWaterBodies( session );
 
     m_waters = new WaterBodyStructure( waterBodies );
   }
 
-  private List<State> readState( ) throws PdbConnectException
-  {
-      return GetPdbList.getList( m_session, State.class );
-  }
-
-  private List<WaterBody> readWaterBody( )
+  private Collection<State> fetchStates( final Session session ) throws PdbConnectException
   {
     try
     {
-      return GetPdbList.getList( m_session, WaterBody.class );
+      final Criteria stateCriteria = session.createCriteria( State.class );
+      stateCriteria.setFetchMode( "crossSections", FetchMode.JOIN );
+      stateCriteria.setFetchMode( "events", FetchMode.JOIN );
+      return new HashSet<>( stateCriteria.list() );
     }
-    catch( final PdbConnectException e )
+    catch( final HibernateException e )
     {
       e.printStackTrace();
-      return new ArrayList<>();
+      throw new PdbConnectException( "Failed to fetch states", e ); //$NON-NLS-1$
+    }
+  }
+
+  private Collection<WaterBody> fetchWaterBodies( final Session session ) throws PdbConnectException
+  {
+    try
+    {
+      final Criteria waterCriteria = session.createCriteria( WaterBody.class );
+      waterCriteria.setFetchMode( "crossSections", FetchMode.JOIN );
+      waterCriteria.setFetchMode( "events", FetchMode.JOIN );
+      return new HashSet<>( waterCriteria.list() );
+    }
+    catch( final HibernateException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to fetch water bodies", e ); //$NON-NLS-1$
     }
   }
 

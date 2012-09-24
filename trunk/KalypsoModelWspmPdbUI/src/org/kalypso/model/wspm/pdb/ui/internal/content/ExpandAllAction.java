@@ -81,7 +81,7 @@ public class ExpandAllAction extends Action
   @Override
   public void run( )
   {
-    m_control.getTreeViewer().expandAll();
+    m_control.getWatersViewer().expandAll();
     m_control.refreshColumnSizes();
   }
 }

@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import java.util.Collection;
 import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,7 +62,7 @@ public class WaterBodyStructure implements IWaterBodyTreeVisitor, IWaterBodyStru
 
   private final WaterBodyTreeNode m_rootNode;
 
-  public WaterBodyStructure( final List<WaterBody> waterBodies )
+  public WaterBodyStructure( final Collection<WaterBody> waterBodies )
   {
     m_rootNode = WaterBodyTreeNode.buildTree( waterBodies );
 
