@@ -41,14 +41,14 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
 
 /**
  * @author Gernot Belger
  */
 public interface IPartBuilder
 {
-  CATEGORY getCategory( );
+  GafKind getKind( );
 
   String getHeightComponent( );
 

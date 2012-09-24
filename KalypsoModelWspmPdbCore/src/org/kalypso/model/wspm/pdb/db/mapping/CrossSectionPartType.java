@@ -56,16 +56,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants;
 
 /**
  * @author Monika Thuel
  */
 @Entity
 @Table( name = "cs_part_type", schema = "pdb" )
-public class CrossSectionPartType extends AbstractModelObject implements Serializable, CategoryConstants
+public class CrossSectionPartType extends AbstractModelObject implements Serializable
 {
-  private CATEGORY m_category;
+  String PROPERTY_CATEGORY = "category"; //$NON-NLS-1$
+
+  private String m_category;
 
   private String m_description;
 
@@ -77,7 +78,7 @@ public class CrossSectionPartType extends AbstractModelObject implements Seriali
   {
   }
 
-  public CrossSectionPartType( final CATEGORY category, final String description, final StyleArray styleArray, final Set<CrossSectionPart> crossSectionParts )
+  public CrossSectionPartType( final String category, final String description, final StyleArray styleArray, final Set<CrossSectionPart> crossSectionParts )
   {
     m_category = category;
     m_description = description;
@@ -88,12 +89,12 @@ public class CrossSectionPartType extends AbstractModelObject implements Seriali
   @Id
   @Column( name = "category", unique = true, nullable = false, length = 50 )
   @Enumerated( EnumType.STRING )
-  public CATEGORY getCategory( )
+  public String getCategory( )
   {
     return m_category;
   }
 
-  public void setCategory( final CATEGORY category )
+  public void setCategory( final String category )
   {
     final Object oldValue = m_category;
 

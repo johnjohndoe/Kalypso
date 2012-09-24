@@ -20,8 +20,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
@@ -32,6 +30,10 @@ import com.vividsolutions.jts.geom.LineString;
 @Table( name = "cross_section", schema = "pdb", uniqueConstraints = @UniqueConstraint( columnNames = { "name", "state" } ) )
 public class CrossSection implements java.io.Serializable, IDocumentContainer
 {
+  private static final String COLUMN_WATER_ID = "water_body"; //$NON-NLS-1$
+
+  public static final String PROPERTY_WATER_BODY = "waterBody"; //$NON-NLS-1$
+
   private BigDecimal m_id;
 
   private WaterBody m_waterBody;
@@ -106,7 +108,7 @@ public class CrossSection implements java.io.Serializable, IDocumentContainer
   }
 
   @ManyToOne( fetch = FetchType.LAZY )
-  @JoinColumn( name = "water_body", nullable = false )
+  @JoinColumn( name = COLUMN_WATER_ID, nullable = false )
   public WaterBody getWaterBody( )
   {
     return m_waterBody;
@@ -247,12 +249,12 @@ public class CrossSection implements java.io.Serializable, IDocumentContainer
 
   // Helper accessors
 
-  public CrossSectionPart findPartByCategory( final CATEGORY category )
+  public CrossSectionPart findPartByCategory( final String category )
   {
     final Set<CrossSectionPart> parts = getCrossSectionParts();
     for( final CrossSectionPart part : parts )
     {
-      final CATEGORY partCategory = part.getCrossSectionPartType().getCategory();
+      final String partCategory = part.getCrossSectionPartType().getCategory();
       if( category.equals( partCategory ) )
         return part;
     }

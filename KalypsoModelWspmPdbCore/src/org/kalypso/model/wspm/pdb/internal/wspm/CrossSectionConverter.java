@@ -56,13 +56,13 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
-import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.utils.ConsecutiveNumComparator;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
@@ -115,7 +115,7 @@ public class CrossSectionConverter
 
   private void convertP( )
   {
-    final CrossSectionPart part = m_section.findPartByCategory( CATEGORY.P );
+    final CrossSectionPart part = m_section.findPartByCategory( GafKind.P.toString() );
     if( part == null )
       return;
 
@@ -172,8 +172,8 @@ public class CrossSectionConverter
 
   private void convertBuilding( )
   {
-    final CrossSectionPart ukPart = m_section.findPartByCategory( CATEGORY.UK );
-    final CrossSectionPart okPart = m_section.findPartByCategory( CATEGORY.OK );
+    final CrossSectionPart ukPart = m_section.findPartByCategory( GafKind.UK.toString() );
+    final CrossSectionPart okPart = m_section.findPartByCategory( GafKind.OK.toString() );
 
     /* Can we do anything with a OK without UK? Maybe this is always a weir? */
     if( ukPart == null && okPart == null )

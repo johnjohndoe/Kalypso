@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
@@ -61,6 +60,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
@@ -158,7 +158,7 @@ public class Gaf2Db implements IPdbOperation
 
     /* Get PP part */
     final GafPart[] parts = profile.getParts();
-    final GafPart ppPart = profile.findPart( CATEGORY.P );
+    final GafPart ppPart = profile.findPart( GafKind.P );
 
     /* add parts */
     for( final GafPart gafPart : parts )
@@ -214,7 +214,7 @@ public class Gaf2Db implements IPdbOperation
   {
     final CrossSectionPart csPart = new CrossSectionPart();
 
-    final CATEGORY partKind = part.getKind();
+    final GafKind partKind = part.getKind();
 
     final String name = nameGenerator.createUniqueName( partKind.toString() );
 
@@ -235,11 +235,11 @@ public class Gaf2Db implements IPdbOperation
     return csPart;
   }
 
-  private CrossSectionPartType findPartType( final CATEGORY partKind )
+  private CrossSectionPartType findPartType( final GafKind partKind )
   {
     for( final CrossSectionPartType type : m_knownTypes )
     {
-      if( type.getCategory().equals( partKind ) )
+      if( type.getCategory().equals( partKind.toString() ) )
         return type;
     }
 
@@ -307,7 +307,7 @@ public class Gaf2Db implements IPdbOperation
       return width;
 
     final com.vividsolutions.jts.geom.Point location = gafPoint.getPoint();
-    if( CATEGORY.P.equals( gafPart.getKind() ) || projectionPart == null )
+    if( GafKind.P.equals( gafPart.getKind() ) || projectionPart == null )
     {
       return calculateWidthFromDistance( gafPart, location );
     }
@@ -346,8 +346,8 @@ public class Gaf2Db implements IPdbOperation
     if( m_waterlevelEvent == null )
       return;
 
-    final CATEGORY kind = part.getKind();
-    if( !CATEGORY.W.equals( kind ) )
+    final GafKind kind = part.getKind();
+    if( !GafKind.W.equals( kind ) )
       return;
 
     final GafPoint[] points = part.getPoints();
