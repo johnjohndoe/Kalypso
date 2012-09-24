@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -67,7 +69,17 @@ public class ByWaterBodyContentProvider implements IConnectionContentProvider
     if( inputElement instanceof WaterBodyStructure || inputElement instanceof ConnectionInput )
     {
       final WaterBody rootNode = m_input.getRoot();
-      return m_input.getChildren( rootNode );
+      final Object[] children = m_input.getChildren( rootNode );
+
+      /* happens for state viewer: descend one level */
+      final List<Object> rootElements = new ArrayList<>();
+      for( final Object child : children )
+      {
+        final Object[] grandChildren = getChildren( child );
+        rootElements.addAll( Arrays.asList( grandChildren ) );
+      }
+
+      return rootElements.toArray();
     }
 
     if( inputElement instanceof Object[] )
@@ -88,7 +100,7 @@ public class ByWaterBodyContentProvider implements IConnectionContentProvider
     if( element instanceof WaterBody )
     {
       final Object[] allChildren = m_input.getChildren( element );
-      return !Arrays.isEmpty( allChildren );
+      return !ArrayUtils.isEmpty( allChildren );
     }
 
     if( element instanceof State )

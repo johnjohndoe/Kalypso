@@ -64,7 +64,7 @@ public class RefreshAction extends Action
   public void run( )
   {
     final ElementSelector selector = new ElementSelector();
-    final IStructuredSelection selection = (IStructuredSelection) m_control.getTreeViewer().getSelection();
+    final IStructuredSelection selection = (IStructuredSelection) m_control.getWatersViewer().getSelection();
     selector.setElemensToSelect( selection.toArray() );
 
     m_control.refresh( selector );

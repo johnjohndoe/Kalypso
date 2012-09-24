@@ -82,6 +82,9 @@ public class RefreshContentJob extends Job
     {
       session = m_connection.openSession();
       m_input = new ConnectionInput( session );
+
+      // FIXME: instead, use some join-fetch mechanism to load all water bodies, states and events at once.
+
       // REMARK: we need to leave the session open here, else lazy initialization of elements
       // will not work. The session is closed when the input is disposed.
       // session.close();

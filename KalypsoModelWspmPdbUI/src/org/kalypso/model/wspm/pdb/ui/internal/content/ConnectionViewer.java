@@ -90,7 +90,7 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
     GridLayoutFactory.fillDefaults().applyTo( this );
 
     createPdbView( serviceLocator, toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    final StructuredViewer contentViewer = m_contentViewer.getTreeViewer();
+    final StructuredViewer contentViewer = m_contentViewer.getWatersViewer();
     createSearchControls( toolkit, this, contentViewer ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
   }
 
@@ -131,9 +131,11 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
 
   public void createContextMenu( final IWorkbenchPartSite site )
   {
-    final TreeViewer viewer = m_contentViewer.getTreeViewer();
+    final TreeViewer watersViewer = m_contentViewer.getWatersViewer();
+    final TreeViewer statesViewer = m_contentViewer.getStatesViewer();
 
-    site.setSelectionProvider( viewer );
+    // FIXME: combined viewer?
+    site.setSelectionProvider( watersViewer );
 
     // create context menu for editor
     final MenuManager menuManager = new MenuManager();
@@ -149,16 +151,19 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
       }
     } );
 
-    final Menu menu = menuManager.createContextMenu( viewer.getControl() );
+    final Menu watersMenu = menuManager.createContextMenu( watersViewer.getControl() );
+    final Menu statesMenu = menuManager.createContextMenu( statesViewer.getControl() );
 
-    site.registerContextMenu( menuManager, viewer ); //$NON-NLS-N$
+    site.registerContextMenu( site.getId() + ":waters", menuManager, watersViewer ); //$NON-NLS-N$
+    site.registerContextMenu( site.getId() + ":states", menuManager, watersViewer ); //$NON-NLS-N$
 
-    viewer.getControl().setMenu( menu );
+    watersViewer.getControl().setMenu( watersMenu );
+    statesViewer.getControl().setMenu( statesMenu );
 
     final IEvaluationService service = (IEvaluationService) site.getService( IEvaluationService.class );
     service.requestEvaluation( IEvaluationService.PROP_NOTIFYING /* ISources.ACTIVE_CURRENT_SELECTION_NAME */);
 
-    viewer.getControl().addDisposeListener( new DisposeListener()
+    watersViewer.getControl().addDisposeListener( new DisposeListener()
     {
       @Override
       public void widgetDisposed( final DisposeEvent e )

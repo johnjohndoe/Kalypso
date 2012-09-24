@@ -82,7 +82,7 @@ public class CollapseAllAction extends Action
   @Override
   public void run( )
   {
-    m_control.getTreeViewer().collapseAll();
+    m_control.getWatersViewer().collapseAll();
     m_control.refreshColumnSizes();
   }
 }

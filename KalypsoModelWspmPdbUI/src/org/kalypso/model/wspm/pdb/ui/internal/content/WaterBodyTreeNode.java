@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -175,7 +174,7 @@ class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     return null;
   }
 
-  public static WaterBodyTreeNode buildTree( final List<WaterBody> waterBodies )
+  public static WaterBodyTreeNode buildTree( final Collection<WaterBody> waterBodies )
   {
     /* Build flat structure in order to sort the elements */
     final SortedSet<WaterBodyTreeNode> allNodes = new TreeSet<>();
