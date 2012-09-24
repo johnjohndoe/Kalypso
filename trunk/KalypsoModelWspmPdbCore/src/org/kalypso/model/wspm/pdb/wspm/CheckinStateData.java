@@ -2,57 +2,64 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.CoreException;
 import org.hibernate.Session;
+import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
+import org.kalypso.model.wspm.pdb.db.constants.StateConstants.ZeroState;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.StateUtils;
+import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
@@ -64,15 +71,17 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 /**
  * @author Gernot Belger
  */
-public class CheckinStateData
+public class CheckinStateData extends AbstractModelObject
 {
   private final State m_state = new State();
 
   private final CommandableWorkspace m_wspmWorkspace;
 
-  private State[] m_existingStates;
+  private Set<String> m_existingStateNames;
 
-  private WaterBody[] m_existingWaterBodies;
+  private final Set<String> m_updateableStateNames = new HashSet<>();
+
+  private final Set<String> m_notUpdateableStateNames = new HashSet<>();
 
   private String m_dbSrs;
 
@@ -84,22 +93,29 @@ public class CheckinStateData
 
   private IPdbConnection m_connection;
 
+  private WaterBody m_waterBody;
+
+
   public CheckinStateData( final CommandableWorkspace wspmWorkspace, final TuhhReach reach )
   {
     m_wspmWorkspace = wspmWorkspace;
     m_reach = reach;
 
-    /* Initial state data */
+    /* Initialize state data */
     m_state.setMeasurementDate( new Date() );
     m_state.setName( reach.getName() );
     m_state.setDescription( reach.getDescription() );
-    m_state.setIsstatezero( State.ZERO_STATE_OFF );
+    m_state.setIsstatezero( State.ZeroState.F );
     m_state.setSource( Messages.getString( "CheckInEventData_0" ) ); //$NON-NLS-1$
   }
 
   public void init( final IPdbConnection connection ) throws PdbConnectException, CoreException
   {
     closeConnection();
+
+    /* prepare for exception */
+    m_updateableStateNames.clear();
+    m_notUpdateableStateNames.clear();
 
     m_connection = connection;
 
@@ -109,15 +125,21 @@ public class CheckinStateData
       session = connection.openSession();
 
       final PdbInfo info = new PdbInfo( session );
-      final List<State> states = GetPdbList.getList( session, State.class );
-      final List<WaterBody> waterbodies = GetPdbList.getList( session, WaterBody.class );
+
+      /* what is the relevant water body ? */
+      final WspmWaterBody wspmWaterBody = m_reach.getWaterBody();
+      final String waterCode = wspmWaterBody.getRefNr();
+
+      m_waterBody = WaterBodyUtils.findWaterBody( session, waterCode );
+
+      m_existingStateNames = new HashSet<>( Arrays.asList( StateUtils.getStateNames( session ) ) );
+
+      initUpdateStates( session, m_waterBody );
 
       m_coefficients = new Coefficients( session, IGafConstants.POINT_KIND_GAF );
 
       session.close();
 
-      m_existingStates = states.toArray( new State[states.size()] );
-      m_existingWaterBodies = waterbodies.toArray( new WaterBody[waterbodies.size()] );
       m_dbSrs = JTSAdapter.toSrs( info.getSRID() );
 
       m_documentBase = info.getDocumentBase();
@@ -128,19 +150,44 @@ public class CheckinStateData
     }
   }
 
+  private void initUpdateStates( final Session session, final WaterBody waterBody )
+  {
+    if( waterBody == null )
+      return;
+
+    final State[] states = WaterBodyUtils.getStatesForWaterByID( session, waterBody.getId() );
+    for( final State state : states )
+    {
+      final String stateName = state.getName();
+      final ZeroState isstatezero = state.getIsstatezero();
+
+      switch( isstatezero )
+      {
+        case T:
+          m_notUpdateableStateNames.add( stateName );
+          break;
+
+        case F:
+          m_updateableStateNames.add( stateName );
+          break;
+
+          default:
+            throw new IllegalStateException();
+      }
+    }
+  }
+
   public State getState( )
   {
     return m_state;
   }
 
-  public State[] getExistingStates( )
+  /**
+   * The water body the state will get cheecked in; found via code of element to be checked in
+   */
+  public WaterBody getWaterBody( )
   {
-    return m_existingStates;
-  }
-
-  public WaterBody[] getExistingWaterBodies( )
-  {
-    return m_existingWaterBodies;
+    return m_waterBody;
   }
 
   public Object getProject( )
@@ -181,5 +228,10 @@ public class CheckinStateData
   public void closeConnection( )
   {
     PdbUtils.closeQuietly( m_connection );
+  }
+
+  public IValidator getStateNameValidator( )
+  {
+    return new CheckinStateValidator( m_existingStateNames, m_notUpdateableStateNames, m_updateableStateNames );
   }
 }

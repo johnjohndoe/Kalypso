@@ -53,12 +53,12 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
@@ -175,7 +175,10 @@ public class CheckinPdbHandler extends AbstractHandler
   {
     final Wizard wizard = worker.createWizard();
     wizard.setWindowTitle( commandName );
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
+
+    final WizardDialog2 dialog = new WizardDialog2( shell, wizard );
+    dialog.setRememberSize( true );
+
     return dialog.open() == Window.OK;
   }
 

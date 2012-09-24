@@ -42,9 +42,7 @@ package org.kalypso.model.wspm.pdb.wspm;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,18 +52,18 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.db.constants.CategoryConstants.CATEGORY;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
@@ -99,11 +97,11 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
-  private final Map<String, WaterBody> m_waterBodies = new HashMap<>();
-
   private final PDBNameGenerator m_sectionNames = new PDBNameGenerator();
 
   private final IProgressMonitor m_monitor;
+
+  private final String m_waterCode;
 
   private final State m_state;
 
@@ -131,20 +129,18 @@ public class CheckinStatePdbOperation implements IPdbOperation
    * @param dbSrs
    *          The coordinate system of the database
    */
-  public CheckinStatePdbOperation( final CrossSectionPartType[] partTypes, final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody[] waterBodies, final State state, final TuhhReach reach, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final boolean checkSectionNames, final IProgressMonitor monitor )
+  public CheckinStatePdbOperation( final CrossSectionPartType[] partTypes, final GafCodes gafCodes, final ICoefficients coefficients, final String waterCode, final State state, final TuhhReach reach, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final boolean checkSectionNames, final IProgressMonitor monitor )
   {
     m_partTypes = partTypes;
     m_gafCodes = gafCodes;
     m_coefficients = coefficients;
     m_classChecker = new ClassChecker( profiles );
     m_state = state;
+    m_waterCode = waterCode;
     m_reach = reach;
     m_profiles = profiles;
     m_documentBase = documentBase;
     m_checkSectionNames = checkSectionNames;
-
-    for( final WaterBody waterBody : waterBodies )
-      m_waterBodies.put( waterBody.getName(), waterBody );
 
     m_monitor = monitor;
 
@@ -166,17 +162,22 @@ public class CheckinStatePdbOperation implements IPdbOperation
     m_monitor.beginTask( Messages.getString( "CheckinStatePdbOperation.2" ), 10 + m_profiles.length ); //$NON-NLS-1$
 
     m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.3" ) ); //$NON-NLS-1$
+    // FIXME: handle existing state
     Gaf2Db.addState( session, m_state );
     m_monitor.worked( 10 );
 
     final CheckinDocumentWorker worker = new CheckinDocumentWorker( m_documentBase );
     worker.createDocuments( session, m_state, m_reach );
 
+    final WaterBody waterBody = WaterBodyUtils.findWaterBody( session, m_waterCode );
+    if( m_waterCode != null && waterBody == null )
+      throw new PdbConnectException( "bad code" );
+
     for( final IProfileFeature feature : m_profiles )
     {
       final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
       m_monitor.subTask( String.format( Messages.getString( "CheckinStatePdbOperation.4" ), label ) ); //$NON-NLS-1$
-      uploadProfile( session, feature );
+      uploadProfile( session, waterBody, feature );
       m_monitor.worked( 1 );
     }
 
@@ -192,11 +193,9 @@ public class CheckinStatePdbOperation implements IPdbOperation
     return m_stati.asMultiStatusOrOK( Messages.getString( "CheckinStatePdbOperation.7" ) ); //$NON-NLS-1$
   }
 
-  private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException
+  private void uploadProfile( final Session session, final WaterBody waterBody, final IProfileFeature feature ) throws PdbConnectException
   {
     final IProfile profil = feature.getProfil();
-
-    final WaterBody waterBody = findWaterBody( feature );
 
     final CrossSection section = new CrossSection();
 
@@ -263,13 +262,6 @@ public class CheckinStatePdbOperation implements IPdbOperation
     return station.movePointRight( 3 );
   }
 
-  private WaterBody findWaterBody( final IProfileFeature feature )
-  {
-    final WspmWaterBody wspmWaterBody = feature.getWater();
-    final String refNr = wspmWaterBody.getRefNr();
-    return m_waterBodies.get( refNr );
-  }
-
   protected LineString toLine( final GM_Curve curve ) throws PdbConnectException
   {
     try
@@ -322,8 +314,8 @@ public class CheckinStatePdbOperation implements IPdbOperation
     for( final CrossSectionPart part : parts )
     {
       /* Instead of preserving the existing part name, we recreate it by the same system as when importing gaf */
-      final CATEGORY category = part.getCrossSectionPartType().getCategory();
-      final String uniquePartName = partNameGenerator.createUniqueName( category.toString() );
+      final String category = part.getCrossSectionPartType().getCategory();
+      final String uniquePartName = partNameGenerator.createUniqueName( category );
       part.setName( uniquePartName );
       part.setCrossSection( section );
       section.getCrossSectionParts().add( part );
@@ -348,24 +340,24 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
     final CrossSectionPart part = partOperation.getPart();
 
-    final CrossSectionPartType type = findPartType( partBuilder.getCategory() );
+    final CrossSectionPartType type = findPartType( partBuilder.getKind() );
     part.setCrossSectionPartType( type );
 
     return part;
   }
 
-  private CrossSectionPartType findPartType( final CATEGORY category )
+  private CrossSectionPartType findPartType( final GafKind kind )
   {
     if( m_partTypes == null )
       return null;
 
     for( final CrossSectionPartType type : m_partTypes )
     {
-      if( type.getCategory().equals( category ) )
+      if( type.getCategory().equals( kind.toString() ) )
         return type;
     }
 
-    throw new IllegalArgumentException( String.format( "Unknown part category: %s", category ) );
+    throw new IllegalArgumentException( String.format( "Unknown part type: %s", kind ) );
   }
 
   private CrossSectionPart[] createAdditionalParts( )

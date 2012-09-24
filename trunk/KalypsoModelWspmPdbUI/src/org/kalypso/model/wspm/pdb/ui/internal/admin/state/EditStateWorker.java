@@ -46,9 +46,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
@@ -87,14 +86,16 @@ public class EditStateWorker implements IEditWorker
   }
 
   @Override
-  public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
+  public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws HibernateException
   {
     monitor.subTask( Messages.getString( "EditStateWorker.1" ) ); //$NON-NLS-1$
 
-    final State[] existingStates = GetPdbList.getArray( session, State.class );
-    m_stateToEdit = StateUtils.findStateByName( existingStates, m_selectedItem.getName() );
+    final String[] existingStateNames = StateUtils.getStateNames( session );
+
+    m_stateToEdit = StateUtils.findStateByName( session, m_selectedItem.getName() );
     m_clone = cloneForEdit( m_selectedItem );
-    return new EditStateWizard( existingStates, m_clone );
+
+    return new EditStateWizard( existingStateNames, m_clone );
   }
 
   @Override
