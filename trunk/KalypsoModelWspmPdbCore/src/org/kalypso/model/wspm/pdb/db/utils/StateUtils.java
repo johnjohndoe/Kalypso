@@ -45,7 +45,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -92,5 +95,23 @@ public final class StateUtils
     {
       PdbUtils.closeSessionQuietly( session );
     }
+  }
+
+  /**
+   * Fetches the names of all existing states from the given session.
+   */
+  public static String[] getStateNames( final Session session )
+  {
+    final Query query = session.createQuery( String.format( "select %s from %s", State.PROPERTY_NAME, State.class.getName() ) );
+    final List<String> list = query.list();
+    return list.toArray( new String[list.size()] );
+  }
+
+  public static State findStateByName( final Session session, final String name )
+  {
+    final Criteria criteria = session.createCriteria( State.class );
+    criteria.add( Restrictions.eq( State.PROPERTY_NAME, name ) );
+
+    return (State)criteria.uniqueResult();
   }
 }
