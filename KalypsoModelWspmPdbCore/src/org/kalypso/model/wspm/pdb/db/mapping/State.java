@@ -8,6 +8,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,8 +35,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
 
   private String m_name;
 
-  // TODO: strange -> map to an enum instead
-  private char m_isstatezero;
+  private ZeroState m_zeroState;
 
   private Date m_creationDate;
 
@@ -58,21 +59,21 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   {
   }
 
-  public State( final BigDecimal id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser )
+  public State( final BigDecimal id, final String name, final ZeroState zeroState, final Date creationDate, final Date editingDate, final String editingUser )
   {
     m_id = id;
     m_name = name;
-    m_isstatezero = isstatezero;
+    m_zeroState = zeroState;
     m_creationDate = creationDate;
     m_editingDate = editingDate;
     m_editingUser = editingUser;
   }
 
-  public State( final BigDecimal id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections, final Set<Document> documents, final Set<Event> events )
+  public State( final BigDecimal id, final String name, final ZeroState zeroState, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections, final Set<Document> documents, final Set<Event> events )
   {
     m_id = id;
     m_name = name;
-    m_isstatezero = isstatezero;
+    m_zeroState = zeroState;
     m_creationDate = creationDate;
     m_editingDate = editingDate;
     m_editingUser = editingUser;
@@ -119,18 +120,19 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   }
 
   @Column( name = "isstatezero", nullable = false, length = 1 )
-  public char getIsstatezero( )
+  @Enumerated( EnumType.STRING )
+  public ZeroState getIsstatezero( )
   {
-    return m_isstatezero;
+    return m_zeroState;
   }
 
-  public void setIsstatezero( final char isstatezero )
+  public void setIsstatezero( final ZeroState state )
   {
-    final Object oldValue = m_isstatezero;
+    final Object oldValue = m_zeroState;
 
-    m_isstatezero = isstatezero;
+    m_zeroState = state;
 
-    firePropertyChange( PROPERTY_ISSTATEZERO, oldValue, isstatezero );
+    firePropertyChange( PROPERTY_ISSTATEZERO, oldValue, state );
   }
 
   @Override
