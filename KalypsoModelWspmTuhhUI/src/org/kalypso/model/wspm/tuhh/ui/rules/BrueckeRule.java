@@ -75,6 +75,11 @@ public class BrueckeRule extends AbstractValidatorRule
         pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.0", property.getName() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
         return false;
       }
+      if(oValue instanceof Double && ((Double) oValue)==0 )
+      {
+        pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.1", property.getName() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
+        return false;
+      }
     }
     return true;
   }
