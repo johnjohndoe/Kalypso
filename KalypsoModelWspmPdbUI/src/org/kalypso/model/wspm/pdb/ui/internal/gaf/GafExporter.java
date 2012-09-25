@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -183,9 +184,9 @@ public class GafExporter
 
     final CrossSectionPartType[] partTypes = buildPartTypes();
 
-    final CheckinStateOperationData data = new CheckinStateOperationData( partTypes, gafCodes, coefficients, null, null, profiles, coordinateSystem, null );
+    final CheckinStateOperationData data = new CheckinStateOperationData( partTypes, gafCodes, coefficients, null, state, null, profiles, coordinateSystem, null, StringUtils.EMPTY );
 
-    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( data, state, false );
+    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( data, false );
     operation.setMonitor( monitor );
     operation.execute( null );
 

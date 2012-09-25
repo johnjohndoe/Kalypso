@@ -20,7 +20,6 @@ package org.kalypso.model.wspm.pdb.wspm;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -62,11 +61,9 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
 
   private final CheckinStateData m_data;
 
-  private State m_state;
+  private Object m_existingStateZero;
 
-  private State m_existingState;
-
-  private ICheckinStatePdbOperation m_operation;
+  private CheckinStateOperationData m_operationData;
 
   public CheckinStatePrepareOperation( final CheckinStateData data )
   {
@@ -82,10 +79,12 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
       final IPdbConnection connection = m_data.getConnection();
       m_session = connection.openSession();
 
+      /* check status of state */
+      final State existingState = StateUtils.findStateByName( m_session, m_data.getState().getName() );
+      m_existingStateZero = existingState == null ? null : existingState.getIsstatezero();
+
       /* clone state, to avoid attaching this state object to a session; else we get problems if the operations fails, the state will remain attached to the session */
-      m_state = new State( m_data.getState() );
-      m_state.setEditingUser( connection.getSettings().getUsername() );
-      m_state.setEditingDate( new Date() );
+      final State state = createOrUpdateState( existingState );
 
       /* Re-read water body, to make sure it is from the same session */
       final String waterCode = m_data.getWaterBody().getName();
@@ -94,14 +93,8 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
         throw new PdbConnectException( String.format( "Water body '%s' was not found in database", waterCode ) );
 
       /* gather data for operation */
-      final CheckinStateOperationData operationData = createOperationData( m_session, waterBody );
-
-      /* check status of state */
-      m_existingState = StateUtils.findStateByName( m_session, m_state.getName() );
-      m_operation = createOperation( operationData, m_existingState, m_state );
-
-      if( m_existingState != null )
-        m_state.setId( m_existingState.getId() );
+      final String username = connection.getSettings().getUsername();
+      m_operationData = createOperationData( m_session, waterBody, state, username );
 
       return Status.OK_STATUS;
     }
@@ -118,13 +111,36 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Fehler beim Zugriff auf die Datenbank", e );
       throw new CoreException( status );
     }
-    finally
-    {
-
-    }
   }
 
-  private CheckinStateOperationData createOperationData( final Session session, final WaterBody waterBody ) throws IOException, PdbConnectException
+  /**
+   * Either create a new, un-attached instance, or use the one existing in the database.
+   */
+  private State createOrUpdateState( final State existingState )
+  {
+    final State templateState = m_data.getState();
+
+    /* copy some data from existing state that is not kept in wspm */
+    // FIXME: no must be put into dialog
+    // state.setMeasurementDate( m_existingState.getMeasurementDate() );
+    // state.setSource( m_existingState.getSource() );
+
+    if( existingState != null )
+    {
+      /* Copy those attributes that could have been edited by the user in the wizard */
+      existingState.setDescription( templateState.getDescription() );
+      existingState.setMeasurementDate( templateState.getMeasurementDate() );
+      existingState.setSource( templateState.getSource() );
+
+      return existingState;
+    }
+
+    final State state = new State( templateState );
+
+    return state;
+  }
+
+  private CheckinStateOperationData createOperationData( final Session session, final WaterBody waterBody, final State state, final String username ) throws IOException, PdbConnectException
   {
     final TuhhReach reach = m_data.getReach();
     final IProfileFeature[] profiles = findProfiles( reach );
@@ -137,38 +153,7 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
 
     final CrossSectionPartType[] partTypes = GetPdbList.getArray( session, CrossSectionPartType.class );
 
-    return new CheckinStateOperationData( partTypes, gafCodes, coefficients, waterBody, reach, profiles, dbSrs, documentBase );
-  }
-
-  private ICheckinStatePdbOperation createOperation( final CheckinStateOperationData operationData, final State existingState, final State newState )
-  {
-    if( existingState == null )
-    {
-      /* new state */
-      return createNewOperation( operationData, newState );
-    }
-
-    if( existingState.getIsstatezero() == ZeroState.T )
-    {
-      /* existing zero is write protected -> no operation! */
-      return null;
-    }
-    else
-    {
-      /* existing state will be overwritten */
-      return createUpdateOperation( operationData );
-    }
-  }
-
-  private ICheckinStatePdbOperation createNewOperation( final CheckinStateOperationData operationData, final State newState )
-  {
-    return new CheckinStatePdbOperation( operationData, newState, true );
-  }
-
-  private ICheckinStatePdbOperation createUpdateOperation( final CheckinStateOperationData operationData )
-  {
-    // TODO Auto-generated method stub
-    return null;
+    return new CheckinStateOperationData( partTypes, gafCodes, coefficients, waterBody, state, reach, profiles, dbSrs, documentBase, username );
   }
 
   public void dispose( )
@@ -178,28 +163,23 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
 
   public boolean warnUser( final Shell shell, final String windowTitle )
   {
-    if( m_existingState == null )
+    if( m_existingStateZero == null )
     {
       /* new state, no need for silly questions */
       return true;
     }
 
-    if( m_existingState.getIsstatezero() == ZeroState.T )
+    if( m_existingStateZero == ZeroState.T )
     {
       /* existing zero is write protected -> no operation! */
-      MessageDialog.openError( shell, windowTitle, CheckinStateValidator.STR_STATE_ISZERO );
+      MessageDialog.openError( shell, windowTitle, CheckinMessages.STR_STATE_ISZERO );
       return false;
     }
     else
     {
       /* existing state will be overwritten */
-      return MessageDialog.openConfirm( shell, windowTitle, CheckinStateValidator.STR_STATE_WILL_BE_OVERWRITTEN );
+      return MessageDialog.openConfirm( shell, windowTitle, CheckinMessages.STR_STATE_WILL_BE_OVERWRITTEN );
     }
-  }
-
-  public ICoreRunnableWithProgress createCheckinOperation( )
-  {
-    return new CheckinStateOperation( m_session, m_data, m_state, m_operation );
   }
 
   private IProfileFeature[] findProfiles( final TuhhReach reach )
@@ -214,5 +194,12 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
     }
 
     return profiles.toArray( new IProfileFeature[profiles.size()] );
+  }
+
+  public CheckinStateOperation createCheckinOperation( )
+  {
+    final CheckinStatePdbOperation pdbOperation = new CheckinStatePdbOperation( m_operationData, true );
+
+    return new CheckinStateOperation( m_session, m_data, pdbOperation );
   }
 }
