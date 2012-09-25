@@ -57,11 +57,11 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinPartOperation;
@@ -126,13 +126,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
     m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.3" ) ); //$NON-NLS-1$
 
-    final State state = m_data.getState();
-
-    // FIXME: handle existing state -> do not update creationDate etc.
-    state.setEditingUser( m_data.getUsername() );
-    state.setEditingDate( new Date() );
-
-    Gaf2Db.addState( session, state );
+    final State state = saveOrUpdateState( session );
     m_monitor.worked( 10 );
 
     final CheckinDocumentWorker worker = new CheckinDocumentWorker( m_data.getDocumentBase() );
@@ -153,6 +147,39 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
       m_log.add( classStatus );
 
     m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.5" ) ); //$NON-NLS-1$
+  }
+
+  private State saveOrUpdateState( final Session session )
+  {
+    final State state = m_data.getState();
+    state.setEditingUser( m_data.getUsername() );
+    state.setEditingDate( new Date() );
+
+    /* if state already contains cross sections or documents: delete everything */
+    // do not delete existing events, they do not get uploaded via this mechanism
+    final Set<CrossSection> crossSections = state.getCrossSections();
+    for( final CrossSection crossSection : crossSections )
+      session.delete( crossSection );
+    crossSections.clear();
+
+    final Set<Document> documents = state.getDocuments();
+    for( final Document document : documents )
+      session.delete( document );
+    documents.clear();
+
+    /* add state to db if it is new */
+    if( !session.contains( state ) )
+      session.save( state );
+    else
+      session.persist( state );
+
+    // FIXME: necessary to prevent problems with same cross sectionsre-checked in; else db whines about duplicate name
+    // check if this breaks the transaction
+    session.flush();
+
+    // REMARK: nothing to do if already attached to session, in this case all changes are persited when transaction is closed.
+
+    return state;
   }
 
   @Override

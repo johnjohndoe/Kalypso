@@ -121,10 +121,6 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
     final State templateState = m_data.getState();
 
     /* copy some data from existing state that is not kept in wspm */
-    // FIXME: no must be put into dialog
-    // state.setMeasurementDate( m_existingState.getMeasurementDate() );
-    // state.setSource( m_existingState.getSource() );
-
     if( existingState != null )
     {
       /* Copy those attributes that could have been edited by the user in the wizard */
@@ -135,9 +131,7 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
       return existingState;
     }
 
-    final State state = new State( templateState );
-
-    return state;
+    return new State( templateState );
   }
 
   private CheckinStateOperationData createOperationData( final Session session, final WaterBody waterBody, final State state, final String username ) throws IOException, PdbConnectException
