@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -83,12 +84,9 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 {
   public static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "CheckinStatePdbOperation.0" ); //$NON-NLS-1$
 
-  private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+  private final IStatusCollector m_log = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
   private final PDBNameGenerator m_sectionNames = new PDBNameGenerator();
-
-
-  private final State m_state;
 
   private final boolean m_checkSectionNames;
 
@@ -100,11 +98,10 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
    * @param dbSrs
    *          The coordinate system of the database
    */
-  public CheckinStatePdbOperation( final CheckinStateOperationData data, final State state, final boolean checkSectionNames )
+  public CheckinStatePdbOperation( final CheckinStateOperationData data, final boolean checkSectionNames )
   {
     m_data = data;
 
-    m_state = state;
     m_checkSectionNames = checkSectionNames;
   }
 
@@ -128,12 +125,18 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     m_monitor.beginTask( Messages.getString( "CheckinStatePdbOperation.2" ), 10 + profiles.length ); //$NON-NLS-1$
 
     m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.3" ) ); //$NON-NLS-1$
-    // FIXME: handle existing state
-    Gaf2Db.addState( session, m_state );
+
+    final State state = m_data.getState();
+
+    // FIXME: handle existing state -> do not update creationDate etc.
+    state.setEditingUser( m_data.getUsername() );
+    state.setEditingDate( new Date() );
+
+    Gaf2Db.addState( session, state );
     m_monitor.worked( 10 );
 
     final CheckinDocumentWorker worker = new CheckinDocumentWorker( m_data.getDocumentBase() );
-    worker.createDocuments( session, m_state, m_data.getReach() );
+    worker.createDocuments( session, state, m_data.getReach() );
 
     final WaterBody waterBody = m_data.getWaterBody();
 
@@ -141,13 +144,13 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     {
       final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
       m_monitor.subTask( String.format( Messages.getString( "CheckinStatePdbOperation.4" ), label ) ); //$NON-NLS-1$
-      uploadProfile( session, waterBody, feature );
+      uploadProfile( session, waterBody, state, feature );
       m_monitor.worked( 1 );
     }
 
     final IStatus classStatus = m_data.checkClasses();
     if( !classStatus.isOK() )
-      m_stati.add( classStatus );
+      m_log.add( classStatus );
 
     m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.5" ) ); //$NON-NLS-1$
   }
@@ -155,10 +158,10 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
   @Override
   public IStatus getStatus( )
   {
-    return m_stati.asMultiStatusOrOK( Messages.getString( "CheckinStatePdbOperation.7" ) ); //$NON-NLS-1$
+    return m_log.asMultiStatusOrOK( Messages.getString( "CheckinStatePdbOperation.7" ) ); //$NON-NLS-1$
   }
 
-  private void uploadProfile( final Session session, final WaterBody waterBody, final IProfileFeature feature ) throws PdbConnectException
+  private void uploadProfile( final Session session, final WaterBody waterBody, final State state, final IProfileFeature feature ) throws PdbConnectException
   {
     final IProfile profil = feature.getProfil();
 
@@ -166,11 +169,11 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
     /* db relevant data */
     section.setWaterBody( waterBody );
-    section.setState( m_state );
-    section.setCreationDate( m_state.getCreationDate() );
-    section.setEditingDate( m_state.getEditingDate() );
-    section.setEditingUser( m_state.getEditingUser() );
-    section.setMeasurementDate( m_state.getMeasurementDate() );
+    section.setState( state );
+    section.setCreationDate( state.getCreationDate() );
+    section.setEditingDate( state.getEditingDate() );
+    section.setEditingUser( state.getEditingUser() );
+    section.setMeasurementDate( state.getMeasurementDate() );
 
     /* Data from profile */
     final BigDecimal station = getStation( feature );
@@ -190,18 +193,18 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     final String srsName = feature.getSrsName();
     createParts( section, profil, srsName );
 
-    saveSection( session, section );
+    saveSection( session, state, section );
 
     final CheckinDocumentWorker worker = new CheckinDocumentWorker( m_data.getDocumentBase() );
     worker.createDocuments( session, section, feature );
   }
 
-  private void saveSection( final Session session, final CrossSection section )
+  private void saveSection( final Session session, final State state, final CrossSection section )
   {
     if( session == null )
     {
       /* HINT: We use the state as object to store only the cross sections, if no session is available. */
-      m_state.getCrossSections().add( section );
+      state.getCrossSections().add( section );
       return;
     }
 
@@ -302,7 +305,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
     final IStatus result = partOperation.execute();
     if( !result.isOK() )
-      m_stati.add( result );
+      m_log.add( result );
 
     final CrossSectionPart part = partOperation.getPart();
 

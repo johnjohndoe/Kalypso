@@ -18,16 +18,18 @@
  */
 package org.kalypso.model.wspm.pdb.wspm;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
-
 /**
  * @author Gernot Belger
  */
-interface ICheckinStatePdbOperation extends IPdbOperation
+public interface CheckinMessages
 {
-  void setMonitor( IProgressMonitor monitor );
+  String STR_STATE_WILL_BE_OVERWRITTEN = "Der Zustand mit gleichem Namen existiert bereits und wird aktualisiert.";
 
-  IStatus getStatus( );
+  String STR_UPLOAD_IMPOSSIBLE = " Bitte geben Sie einen anderen Namen ein, um den Strang als neuen Zustand hochzuladen.";
+
+  String STR_STATE_ISZERO = "Ein Zustand mit diesem Namen existiert bereits, ist aber schreibgeschützt (Ur-Zustand).\n" + STR_UPLOAD_IMPOSSIBLE;
+
+  String STR_SISTER_STATE_EXISTS = "Es existiert bereits ein Zustand innerhalb des Gewässers mit diesem Namen.\n" + STR_UPLOAD_IMPOSSIBLE;
+
+  String STR_STATE_EXISTS_IN_DIFFERENT_WATER = "Es existiert bereits ein Zustand mit diesem Namen in einem anderen Gewässer.\n" + STR_UPLOAD_IMPOSSIBLE;
 }

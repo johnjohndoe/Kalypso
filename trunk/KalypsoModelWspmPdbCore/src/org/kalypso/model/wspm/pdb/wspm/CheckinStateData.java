@@ -46,8 +46,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -77,12 +79,6 @@ public class CheckinStateData extends AbstractModelObject
 
   private final CommandableWorkspace m_wspmWorkspace;
 
-  private Set<String> m_existingStateNames;
-
-  private final Set<String> m_updateableStateNames = new HashSet<>();
-
-  private final Set<String> m_notUpdateableStateNames = new HashSet<>();
-
   private String m_dbSrs;
 
   private ICoefficients m_coefficients;
@@ -95,6 +91,7 @@ public class CheckinStateData extends AbstractModelObject
 
   private WaterBody m_waterBody;
 
+  private IValidator m_stateNameValidator;
 
   public CheckinStateData( final CommandableWorkspace wspmWorkspace, final TuhhReach reach )
   {
@@ -116,8 +113,7 @@ public class CheckinStateData extends AbstractModelObject
     closeConnection();
 
     /* prepare for exception */
-    m_updateableStateNames.clear();
-    m_notUpdateableStateNames.clear();
+    m_stateNameValidator = null;
 
     m_connection = connection;
 
@@ -131,12 +127,16 @@ public class CheckinStateData extends AbstractModelObject
       /* what is the relevant water body ? */
       final WspmWaterBody wspmWaterBody = m_reach.getWaterBody();
       final String waterCode = wspmWaterBody.getRefNr();
+      final String stateName = m_reach.getName();
 
       m_waterBody = WaterBodyUtils.findWaterBody( session, waterCode );
 
-      m_existingStateNames = new HashSet<>( Arrays.asList( StateUtils.getStateNames( session ) ) );
+      /* state with same name in database */
+      final State existingState = StateUtils.findStateByName( session, stateName );
 
-      initUpdateStates( session, m_waterBody );
+      m_stateNameValidator = initUpdateStates( session, m_waterBody, existingState, stateName );
+
+      initFromExistingState( existingState );
 
       m_coefficients = new Coefficients( session, IGafConstants.POINT_KIND_GAF );
 
@@ -152,31 +152,44 @@ public class CheckinStateData extends AbstractModelObject
     }
   }
 
-  private void initUpdateStates( final Session session, final WaterBody waterBody )
+  /**
+   * Copy some values from existing state into new state, so they won't get lost.<br/>
+   * Especially data, that is not present in wspm.
+   */
+  private void initFromExistingState( final State existingState )
   {
-    if( waterBody == null )
+    if( existingState == null )
       return;
 
+    m_state.setCreationDate( existingState.getCreationDate() );
+    m_state.setEditingDate( existingState.getEditingDate() );
+    m_state.setEditingUser( existingState.getEditingUser() );
+    m_state.setMeasurementDate( existingState.getMeasurementDate() );
+    m_state.setSource( existingState.getSource() );
+  }
+
+  private IValidator initUpdateStates( final Session session, final WaterBody waterBody, final State existingState, final String reachName )
+  {
+    if( waterBody == null )
+      return null;
+
+    /* all state names in db */
+    final Set<String> allStateNames = new HashSet<>( Arrays.asList( StateUtils.getStateNames( session ) ) );
+
+    /* states in same water body */
     final State[] states = WaterBodyUtils.getStatesForWaterByID( session, waterBody.getId() );
+    final Set<String> sisterStateNames = new HashSet<>( states.length );
     for( final State state : states )
-    {
-      final String stateName = state.getName();
-      final ZeroState isstatezero = state.getIsstatezero();
+      sisterStateNames.add( state.getName() );
 
-      switch( isstatezero )
-      {
-        case T:
-          m_notUpdateableStateNames.add( stateName );
-          break;
+    /* remove from this set: is updateable in theorie, but name changed so it cannot be overwritten */
+    if( existingState == null )
+      return new CheckinStateValidator( allStateNames, sisterStateNames, null, IStatus.CANCEL, StringUtils.EMPTY );
 
-        case F:
-          m_updateableStateNames.add( stateName );
-          break;
+    if( existingState.getIsstatezero() == ZeroState.T )
+      return new CheckinStateValidator( allStateNames, sisterStateNames, reachName, IStatus.ERROR, CheckinMessages.STR_STATE_ISZERO );
 
-          default:
-            throw new IllegalStateException();
-      }
-    }
+    return new CheckinStateValidator( allStateNames, sisterStateNames, reachName, IStatus.INFO, CheckinMessages.STR_STATE_WILL_BE_OVERWRITTEN );
   }
 
   public State getState( )
@@ -234,6 +247,6 @@ public class CheckinStateData extends AbstractModelObject
 
   public IValidator getStateNameValidator( )
   {
-    return new CheckinStateValidator( m_existingStateNames, m_notUpdateableStateNames, m_updateableStateNames );
+    return m_stateNameValidator;
   }
 }

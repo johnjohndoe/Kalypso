@@ -51,7 +51,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -178,13 +177,13 @@ public class CheckinStateWorker implements ICheckInWorker
       if( !prepareOperation.warnUser( shell, windowTitle ) )
         return false;
 
-      final ICoreRunnableWithProgress operation = prepareOperation.createCheckinOperation();
+      final CheckinStateOperation checkinOperation = prepareOperation.createCheckinOperation();
 
-      final IStatus status = RunnableContextHelper.execute( container, true, true, operation );
-      if( !status.isOK() )
-        StatusDialog.open( shell, status, windowTitle );
+      final IStatus checkinStatus = RunnableContextHelper.execute( container, true, true, checkinOperation );
+      if( !checkinStatus.isOK() )
+        StatusDialog.open( shell, checkinStatus, windowTitle );
 
-      return !status.matches( IStatus.ERROR );
+      return !checkinStatus.matches( IStatus.ERROR );
     }
     finally
     {

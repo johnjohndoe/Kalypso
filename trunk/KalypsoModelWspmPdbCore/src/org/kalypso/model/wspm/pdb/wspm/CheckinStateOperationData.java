@@ -23,6 +23,7 @@ import java.net.URI;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
@@ -63,15 +64,21 @@ public class CheckinStateOperationData
 
   private final WaterBody m_waterBody;
 
-  public CheckinStateOperationData( final CrossSectionPartType[] partTypes, final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody waterBody, final TuhhReach reach, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase )
+  private final State m_state;
+
+  private final String m_username;
+
+  public CheckinStateOperationData( final CrossSectionPartType[] partTypes, final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody waterBody, final State state, final TuhhReach reach, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final String username )
   {
     m_partTypes = partTypes;
     m_gafCodes = gafCodes;
     m_coefficients = coefficients;
     m_waterBody = waterBody;
+    m_state = state;
     m_reach = reach;
     m_profiles = profiles;
     m_documentBase = documentBase;
+    m_username = username;
 
     m_classChecker = new ClassChecker( profiles );
 
@@ -143,5 +150,15 @@ public class CheckinStateOperationData
   public WaterBody getWaterBody( )
   {
     return m_waterBody;
+  }
+
+  public State getState( )
+  {
+    return m_state;
+  }
+
+  public String getUsername( )
+  {
+    return m_username;
   }
 }

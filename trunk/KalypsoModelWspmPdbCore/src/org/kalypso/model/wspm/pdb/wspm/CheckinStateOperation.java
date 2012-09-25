@@ -75,15 +75,12 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
 
   private final Session m_session;
 
-  private final State m_newState;
-
   private final ICheckinStatePdbOperation m_operation;
 
-  public CheckinStateOperation( final Session session, final CheckinStateData data, final State newState, final ICheckinStatePdbOperation operation )
+  public CheckinStateOperation( final Session session, final CheckinStateData data, final ICheckinStatePdbOperation operation )
   {
     m_session = session;
     m_data = data;
-    m_newState = newState;
     m_operation = operation;
   }
 
@@ -100,7 +97,8 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
       final IStatus status = m_operation.getStatus();
 
       /* write new state name etc. back into reach element, so it is still in sync with db */
-      updateReach( m_newState );
+      final State newState = m_data.getState();
+      updateReach( newState );
 
       return status;
     }
