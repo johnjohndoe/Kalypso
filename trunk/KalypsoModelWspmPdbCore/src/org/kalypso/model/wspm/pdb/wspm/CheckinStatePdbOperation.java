@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.math.BigDecimal;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -53,7 +52,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
@@ -61,37 +59,27 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
-import org.kalypso.model.wspm.pdb.gaf.GafCodes;
-import org.kalypso.model.wspm.pdb.gaf.GafKind;
-import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinPartOperation;
-import org.kalypso.model.wspm.pdb.internal.wspm.ClassChecker;
 import org.kalypso.model.wspm.pdb.internal.wspm.IPartBuilder;
 import org.kalypso.model.wspm.pdb.internal.wspm.OKPartBuilder;
 import org.kalypso.model.wspm.pdb.internal.wspm.PPPartBuilder;
 import org.kalypso.model.wspm.pdb.internal.wspm.UKPartBuilder;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.transformation.transformer.GeoTransformerFactory;
-import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Gernot Belger
  */
-public class CheckinStatePdbOperation implements IPdbOperation
+public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 {
   public static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "CheckinStatePdbOperation.0" ); //$NON-NLS-1$
 
@@ -99,55 +87,31 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final PDBNameGenerator m_sectionNames = new PDBNameGenerator();
 
-  private final IProgressMonitor m_monitor;
-
-  private final String m_waterCode;
 
   private final State m_state;
 
-  private final TuhhReach m_reach;
-
-  private final IProfileFeature[] m_profiles;
-
-  private final IGeoTransformer m_transformer;
-
-  private final ICoefficients m_coefficients;
-
-  private final GafCodes m_gafCodes;
-
-  private final GeometryFactory m_geometryFactory;
-
-  private final URI m_documentBase;
-
   private final boolean m_checkSectionNames;
 
-  private final ClassChecker m_classChecker;
+  private final CheckinStateOperationData m_data;
 
-  private final CrossSectionPartType[] m_partTypes;
+  private IProgressMonitor m_monitor;
 
   /**
    * @param dbSrs
    *          The coordinate system of the database
    */
-  public CheckinStatePdbOperation( final CrossSectionPartType[] partTypes, final GafCodes gafCodes, final ICoefficients coefficients, final String waterCode, final State state, final TuhhReach reach, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final boolean checkSectionNames, final IProgressMonitor monitor )
+  public CheckinStatePdbOperation( final CheckinStateOperationData data, final State state, final boolean checkSectionNames )
   {
-    m_partTypes = partTypes;
-    m_gafCodes = gafCodes;
-    m_coefficients = coefficients;
-    m_classChecker = new ClassChecker( profiles );
+    m_data = data;
+
     m_state = state;
-    m_waterCode = waterCode;
-    m_reach = reach;
-    m_profiles = profiles;
-    m_documentBase = documentBase;
     m_checkSectionNames = checkSectionNames;
+  }
 
+  @Override
+  public void setMonitor( final IProgressMonitor monitor )
+  {
     m_monitor = monitor;
-
-    final int srid = JTSAdapter.toSrid( dbSrs );
-    m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
-
-    m_transformer = GeoTransformerFactory.getGeoTransformer( dbSrs );
   }
 
   @Override
@@ -159,21 +123,21 @@ public class CheckinStatePdbOperation implements IPdbOperation
   @Override
   public void execute( final Session session ) throws PdbConnectException
   {
-    m_monitor.beginTask( Messages.getString( "CheckinStatePdbOperation.2" ), 10 + m_profiles.length ); //$NON-NLS-1$
+    final IProfileFeature[] profiles = m_data.getProfiles();
+
+    m_monitor.beginTask( Messages.getString( "CheckinStatePdbOperation.2" ), 10 + profiles.length ); //$NON-NLS-1$
 
     m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.3" ) ); //$NON-NLS-1$
     // FIXME: handle existing state
     Gaf2Db.addState( session, m_state );
     m_monitor.worked( 10 );
 
-    final CheckinDocumentWorker worker = new CheckinDocumentWorker( m_documentBase );
-    worker.createDocuments( session, m_state, m_reach );
+    final CheckinDocumentWorker worker = new CheckinDocumentWorker( m_data.getDocumentBase() );
+    worker.createDocuments( session, m_state, m_data.getReach() );
 
-    final WaterBody waterBody = WaterBodyUtils.findWaterBody( session, m_waterCode );
-    if( m_waterCode != null && waterBody == null )
-      throw new PdbConnectException( "bad code" );
+    final WaterBody waterBody = m_data.getWaterBody();
 
-    for( final IProfileFeature feature : m_profiles )
+    for( final IProfileFeature feature : profiles )
     {
       final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
       m_monitor.subTask( String.format( Messages.getString( "CheckinStatePdbOperation.4" ), label ) ); //$NON-NLS-1$
@@ -181,13 +145,14 @@ public class CheckinStatePdbOperation implements IPdbOperation
       m_monitor.worked( 1 );
     }
 
-    final IStatus classStatus = m_classChecker.execute();
+    final IStatus classStatus = m_data.checkClasses();
     if( !classStatus.isOK() )
       m_stati.add( classStatus );
 
     m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.5" ) ); //$NON-NLS-1$
   }
 
+  @Override
   public IStatus getStatus( )
   {
     return m_stati.asMultiStatusOrOK( Messages.getString( "CheckinStatePdbOperation.7" ) ); //$NON-NLS-1$
@@ -227,7 +192,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
     saveSection( session, section );
 
-    final CheckinDocumentWorker worker = new CheckinDocumentWorker( m_documentBase );
+    final CheckinDocumentWorker worker = new CheckinDocumentWorker( m_data.getDocumentBase() );
     worker.createDocuments( session, section, feature );
   }
 
@@ -266,7 +231,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
   {
     try
     {
-      final GM_Object transformedCurve = m_transformer.transform( curve );
+      final GM_Object transformedCurve = m_data.getTransformer().transform( curve );
       return (LineString)JTSAdapter.export( transformedCurve );
     }
     catch( final Exception e )
@@ -314,6 +279,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     for( final CrossSectionPart part : parts )
     {
       /* Instead of preserving the existing part name, we recreate it by the same system as when importing gaf */
+      // REMARK: null happens, if we export to gaf format
       final String category = part.getCrossSectionPartType().getCategory();
       final String uniquePartName = partNameGenerator.createUniqueName( category );
       part.setName( uniquePartName );
@@ -332,7 +298,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private CrossSectionPart builtPart( final IProfile profil, final String profilSRS, final IPartBuilder partBuilder ) throws PdbConnectException
   {
-    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, partBuilder, m_classChecker );
+    final CheckinPartOperation partOperation = new CheckinPartOperation( m_data, profil, profilSRS, partBuilder );
 
     final IStatus result = partOperation.execute();
     if( !result.isOK() )
@@ -340,24 +306,10 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
     final CrossSectionPart part = partOperation.getPart();
 
-    final CrossSectionPartType type = findPartType( partBuilder.getKind() );
+    final CrossSectionPartType type = m_data.findPartType( partBuilder.getKind() );
     part.setCrossSectionPartType( type );
 
     return part;
-  }
-
-  private CrossSectionPartType findPartType( final GafKind kind )
-  {
-    if( m_partTypes == null )
-      return null;
-
-    for( final CrossSectionPartType type : m_partTypes )
-    {
-      if( type.getCategory().equals( kind.toString() ) )
-        return type;
-    }
-
-    throw new IllegalArgumentException( String.format( "Unknown part type: %s", kind ) );
   }
 
   private CrossSectionPart[] createAdditionalParts( )
@@ -365,25 +317,4 @@ public class CheckinStatePdbOperation implements IPdbOperation
     // TODO
     return new CrossSectionPart[0];
   }
-
-  public ICoefficients getCoefficients( )
-  {
-    return m_coefficients;
-  }
-
-  public GafCodes getGafCodes( )
-  {
-    return m_gafCodes;
-  }
-
-  public GeometryFactory getGeometryFactory( )
-  {
-    return m_geometryFactory;
-  }
-
-  public IGeoTransformer getTransformer( )
-  {
-    return m_transformer;
-  }
-
 }

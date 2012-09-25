@@ -44,8 +44,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -75,8 +75,6 @@ public class CheckinCalculationWorker implements ICheckInWorker
 {
   private final CheckInEventData<CalculationWspmTuhhSteadyState> m_data;
 
-  private final CheckinCalculationOperation m_operation;
-
   private ProfileResultExportPage m_resultPage;
 
   public CheckinCalculationWorker( final CommandableWorkspace workspace, final CalculationWspmTuhhSteadyState calculation )
@@ -96,7 +94,6 @@ public class CheckinCalculationWorker implements ICheckInWorker
     };
 
     m_data.getEvent().setType( TYPE.Simulation );
-    m_operation = new CheckinCalculationOperation( m_data );
   }
 
   @Override
@@ -145,7 +142,7 @@ public class CheckinCalculationWorker implements ICheckInWorker
   @Override
   public Wizard createWizard( )
   {
-    final CheckInEventWizard checkInEventWizard = new CheckInEventWizard( m_data, m_operation );
+    final CheckInEventWizard checkInEventWizard = new CheckInEventWizard( this, m_data );
 
     final IWspmResultNode results = WspmResultFactory.createResultNode( null, m_data.getWspmObject() );
 
@@ -165,17 +162,20 @@ public class CheckinCalculationWorker implements ICheckInWorker
   }
 
   @Override
-  public ICoreRunnableWithProgress getOperation( )
-  {
-    final WspmResultLengthSection[] lengthSections = m_resultPage.getSelectedLengthSections();
-    if( lengthSections.length > 0 )
-      m_operation.setLengthSections( lengthSections[0] );
-    return m_operation;
-  }
-
-  @Override
   public void closeConnection( )
   {
     m_data.closeConnection();
+  }
+
+  @Override
+  public boolean performFinish( final IWizardContainer container )
+  {
+    final CheckinCalculationOperation operation = new CheckinCalculationOperation( m_data );
+
+    final WspmResultLengthSection[] lengthSections = m_resultPage.getSelectedLengthSections();
+    if( lengthSections.length > 0 )
+      operation.setLengthSections( lengthSections[0] );
+
+    return CheckInEventWorker.executeOnContainer( container, operation );
   }
 }

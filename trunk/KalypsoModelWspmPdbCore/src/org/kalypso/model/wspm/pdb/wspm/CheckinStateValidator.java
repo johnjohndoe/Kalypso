@@ -32,7 +32,13 @@ import org.kalypso.commons.databinding.validation.TypedValidator;
  */
 class CheckinStateValidator extends TypedValidator<String>
 {
+  static final String STR_STATE_WILL_BE_OVERWRITTEN = "Ein Zustand mit gleichem Namen existiert bereits.\nDer Zustand wird überschrieben.";
+
   private static final String STR_UPLOAD_IMPOSSIBLE = "Bitte geben Sie einen Namen für einen neuen Zustand ein.";
+
+  static final String STR_STATE_ISZERO = "Ein Zustand mit gleichem Namen existiert bereits, ist aber schreibgeschützt (Ur-Zustand).\n" + STR_UPLOAD_IMPOSSIBLE;
+
+  static final String STR_STATE_EXISTS_IN_DIFFERENT_WATER = "Es existiert bereits ein Zustand mit diesem Namen in einem anderen Gewässer.\n" + STR_UPLOAD_IMPOSSIBLE;
 
   private final Set<String> m_allStateNames;
 
@@ -42,7 +48,7 @@ class CheckinStateValidator extends TypedValidator<String>
 
   public CheckinStateValidator( final Set<String> allStateNames, final Set<String> notUpdateableNames, final Set<String> updateableNames )
   {
-    super( String.class, IStatus.ERROR, "Es existiert bereits ein Zustand mit diesem Namen in einem anderen Gewässer.\n" + STR_UPLOAD_IMPOSSIBLE );
+    super( String.class, IStatus.ERROR, STR_STATE_EXISTS_IN_DIFFERENT_WATER );
 
     m_allStateNames = allStateNames;
     m_notUpdateableStateNames = notUpdateableNames;
@@ -53,10 +59,10 @@ class CheckinStateValidator extends TypedValidator<String>
   protected IStatus doValidate( final String value ) throws CoreException
   {
     if( m_notUpdateableStateNames.contains( value ) )
-      return ValidationStatus.error( "Ein Zustand mit gleichem Namen existiert bereits, ist aber schreibgeschützt.\n" + STR_UPLOAD_IMPOSSIBLE );
+      return ValidationStatus.error( STR_STATE_ISZERO );
 
     if( m_updateableStateNames.contains( value ) )
-      return ValidationStatus.warning( "Ein Zustand mit gleichem Namen existiert bereits.\nDer Zustand wird überschrieben." );
+      return ValidationStatus.warning( STR_STATE_WILL_BE_OVERWRITTEN );
 
     if( m_allStateNames.contains( value ) )
       fail();

@@ -40,11 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventPage;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
@@ -58,12 +54,12 @@ public class CheckInEventWizard extends Wizard
 {
   private final IEditEventPageData m_data;
 
-  private final ICoreRunnableWithProgress m_operation;
+  private final ICheckInWorker m_handler;
 
-  public CheckInEventWizard( final IEditEventPageData data, final ICoreRunnableWithProgress operation )
+  public CheckInEventWizard( final ICheckInWorker handler, final IEditEventPageData data )
   {
+    m_handler = handler;
     m_data = data;
-    m_operation = operation;
 
     setNeedsProgressMonitor( true );
   }
@@ -80,13 +76,6 @@ public class CheckInEventWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
-    if( !status.isOK() )
-      StatusDialog.open( getShell(), status, getWindowTitle() );
-
-    // FIXME: if wizard is not closed due to error, we need to reinitialize the state, as it is still attached to the
-    // old session
-
-    return !status.matches( IStatus.ERROR );
+    return m_handler.performFinish( getContainer() );
   }
 }

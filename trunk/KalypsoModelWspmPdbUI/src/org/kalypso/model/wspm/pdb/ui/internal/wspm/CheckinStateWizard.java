@@ -41,17 +41,12 @@
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
 import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateData;
-import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperation;
 
 /**
- * FIXME: unterscheide: neuer zustand oder bestehenden überschreiben
  * Uploads local WSPM data into the cross section database.
  *
  * @author Gernot Belger
@@ -60,12 +55,12 @@ public class CheckinStateWizard extends Wizard
 {
   private final CheckinStateData m_data;
 
-  private final CheckinStateOperation m_operation;
+  private final ICheckInWorker m_handler;
 
-  public CheckinStateWizard( final CheckinStateData data, final CheckinStateOperation operation )
+  public CheckinStateWizard( final ICheckInWorker handler, final CheckinStateData data )
   {
+    m_handler = handler;
     m_data = data;
-    m_operation = operation;
 
     setNeedsProgressMonitor( true );
   }
@@ -87,23 +82,6 @@ public class CheckinStateWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    // FIXME: handle state update; do not use this object, it is from another session
-
-    // TODO: check if state with same name exists
-    // TODO: - in different water body -> error
-    // TODO: - in same water body
-    // TODO: -- isstate zero ON -> error
-    // TODO: -- isstate zero OFF -> ask user if update state
-
-    // TODO: either update or create new state -> two different operations
-
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
-    if( !status.isOK() )
-      StatusDialog.open( getShell(), status, getWindowTitle() );
-
-    // FIXME: if wizard is not closed due to error, we need to reinitialize the state, as it is still attached to the
-    // old session
-
-    return !status.matches( IStatus.ERROR );
+    return m_handler.performFinish( getContainer() );
   }
 }

@@ -48,8 +48,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -58,6 +62,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateData;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperation;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStatePrepareOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -69,12 +74,9 @@ public class CheckinStateWorker implements ICheckInWorker
 {
   private final CheckinStateData m_data;
 
-  private final CheckinStateOperation m_operation;
-
   public CheckinStateWorker( final CommandableWorkspace workspace, final TuhhReach reach )
   {
     m_data = new CheckinStateData( workspace, reach );
-    m_operation = new CheckinStateOperation( m_data );
   }
 
   @Override
@@ -139,7 +141,7 @@ public class CheckinStateWorker implements ICheckInWorker
   @Override
   public Wizard createWizard( )
   {
-    return new CheckinStateWizard( m_data, m_operation );
+    return new CheckinStateWizard( this, m_data );
   }
 
   @Override
@@ -150,14 +152,43 @@ public class CheckinStateWorker implements ICheckInWorker
   }
 
   @Override
-  public ICoreRunnableWithProgress getOperation( )
-  {
-    return m_operation;
-  }
-
-  @Override
   public void closeConnection( )
   {
     m_data.closeConnection();
+  }
+
+  @Override
+  public boolean performFinish( final IWizardContainer container )
+  {
+    final CheckinStatePrepareOperation prepareOperation = new CheckinStatePrepareOperation( m_data );
+    try
+    {
+      final Shell shell = container.getShell();
+      final String windowTitle = shell.getText();
+
+      /* Prepare: open session and check if status is new or will be updated */
+      final IStatus prepareStatus = RunnableContextHelper.execute( container, true, true, prepareOperation );
+      if( !prepareStatus.isOK() )
+      {
+        StatusDialog.open( shell, prepareStatus, windowTitle );
+        return false;
+      }
+
+      /* If update: warn user and ask to proceed */
+      if( !prepareOperation.warnUser( shell, windowTitle ) )
+        return false;
+
+      final ICoreRunnableWithProgress operation = prepareOperation.createCheckinOperation();
+
+      final IStatus status = RunnableContextHelper.execute( container, true, true, operation );
+      if( !status.isOK() )
+        StatusDialog.open( shell, status, windowTitle );
+
+      return !status.matches( IStatus.ERROR );
+    }
+    finally
+    {
+      prepareOperation.dispose();
+    }
   }
 }

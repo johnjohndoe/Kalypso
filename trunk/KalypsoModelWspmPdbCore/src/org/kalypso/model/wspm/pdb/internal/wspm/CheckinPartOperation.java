@@ -63,16 +63,15 @@ import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperationData;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStatePdbOperation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -93,26 +92,14 @@ public class CheckinPartOperation
 
   private final String m_profilSRS;
 
-  private final ICoefficients m_coefficients;
-
-  private final GafCodes m_gafCodes;
-
-  private final GeometryFactory m_geometryFactory;
-
-  private final IGeoTransformer m_transformer;
-
   private final IPartBuilder m_partBuilder;
 
-  private final ClassChecker m_classChcker;
+  private final CheckinStateOperationData m_data;
 
-  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfile profil, final String profilSRS, final IPartBuilder partBuilder, final ClassChecker classChcker )
+  public CheckinPartOperation( final CheckinStateOperationData data, final IProfile profil, final String profilSRS, final IPartBuilder partBuilder )
   {
-    m_classChcker = classChcker;
+    m_data = data;
     m_partBuilder = partBuilder;
-    m_coefficients = stateOperation.getCoefficients();
-    m_gafCodes = stateOperation.getGafCodes();
-    m_geometryFactory = stateOperation.getGeometryFactory();
-    m_transformer = stateOperation.getTransformer();
     m_profil = profil;
     m_profilSRS = profilSRS;
   }
@@ -200,7 +187,7 @@ public class CheckinPartOperation
     final int size = lineCrds.size();
     if( size != 1 )
     {
-      final LineString line = m_geometryFactory.createLineString( lineCrds.toArray( new Coordinate[size] ) );
+      final LineString line = m_data.getGeometryFactory().createLineString( lineCrds.toArray( new Coordinate[size] ) );
       m_part.setLine( line );
     }
 
@@ -211,36 +198,40 @@ public class CheckinPartOperation
 
   private Vegetation toVegetation( final String vegetationClassId )
   {
-    if( StringUtils.isBlank( vegetationClassId ) )
-      return m_coefficients.getUnknownVegetation();
+    final ICoefficients coefficients = m_data.getCoefficients();
 
-    final Vegetation vegetation = m_coefficients.getVegetation( vegetationClassId );
+    if( StringUtils.isBlank( vegetationClassId ) )
+      return coefficients.getUnknownVegetation();
+
+    final Vegetation vegetation = coefficients.getVegetation( vegetationClassId );
     if( vegetation == null )
     {
-      final Vegetation unknownVegetation = m_coefficients.getUnknownVegetation();
+      final Vegetation unknownVegetation = coefficients.getUnknownVegetation();
       m_stati.add( IStatus.WARNING, Messages.getString("CheckinPartOperation_1"), null, vegetationClassId, unknownVegetation.getLabel() ); //$NON-NLS-1$
       return unknownVegetation;
     }
 
-    m_classChcker.addVegetation( vegetation );
+    m_data.getClassChecker().addVegetation( vegetation );
 
     return vegetation;
   }
 
   private Roughness toRoughness( final String roughnessClassId )
   {
-    if( StringUtils.isBlank( roughnessClassId ) )
-      return m_coefficients.getUnknownRoughness();
+    final ICoefficients coefficients = m_data.getCoefficients();
 
-    final Roughness roughness = m_coefficients.getRoughness( roughnessClassId );
+    if( StringUtils.isBlank( roughnessClassId ) )
+      return coefficients.getUnknownRoughness();
+
+    final Roughness roughness = coefficients.getRoughness( roughnessClassId );
     if( roughness == null )
     {
-      final Roughness unknownRoughness = m_coefficients.getUnknownRoughness();
+      final Roughness unknownRoughness = coefficients.getUnknownRoughness();
       m_stati.add( IStatus.WARNING, Messages.getString("CheckinPartOperation_2"), null, roughnessClassId, unknownRoughness.getLabel() ); //$NON-NLS-1$
       return unknownRoughness;
     }
 
-    m_classChcker.addRoughness( roughness );
+    m_data.getClassChecker().addRoughness( roughness );
 
     return roughness;
   }
@@ -259,7 +250,8 @@ public class CheckinPartOperation
   private String toHyk( final String code )
   {
     /* Just check if it is an existing code */
-    final GafCode hykCode = m_gafCodes.getHykCode( code );
+    final GafCodes codes = m_data.getGafCodes();
+    final GafCode hykCode = codes.getHykCode( code );
     if( hykCode == null )
       return null;
 
@@ -305,7 +297,7 @@ public class CheckinPartOperation
   {
     try
     {
-      final GM_Object transformedCurve = m_transformer.transform( point );
+      final GM_Object transformedCurve = m_data.getTransformer().transform( point );
       return (com.vividsolutions.jts.geom.Point) JTSAdapter.export( transformedCurve );
     }
     catch( final Exception e )

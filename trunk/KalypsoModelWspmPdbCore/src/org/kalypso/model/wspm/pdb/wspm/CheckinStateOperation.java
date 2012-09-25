@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -56,19 +53,12 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.pdb.connect.Executor;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.gaf.GafCodes;
-import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -79,13 +69,22 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CheckinStateOperation implements ICoreRunnableWithProgress
 {
-  private static final String STR_FAILED_TO_WRITE_TO_DATABASE = Messages.getString( "CheckInEventOperation.0" ); //$NON-NLS-1$
+  static final String STR_FAILED_TO_WRITE_TO_DATABASE = Messages.getString( "CheckInEventOperation.0" ); //$NON-NLS-1$
 
   private final CheckinStateData m_data;
 
-  public CheckinStateOperation( final CheckinStateData data )
+  private final Session m_session;
+
+  private final State m_newState;
+
+  private final ICheckinStatePdbOperation m_operation;
+
+  public CheckinStateOperation( final Session session, final CheckinStateData data, final State newState, final ICheckinStatePdbOperation operation )
   {
+    m_session = session;
     m_data = data;
+    m_newState = newState;
+    m_operation = operation;
   }
 
   @Override
@@ -93,35 +92,15 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
   {
     monitor.beginTask( Messages.getString( "CheckinStateOperation.1" ), 100 ); //$NON-NLS-1$
 
-    final IProfileFeature[] profiles = findProfiles();
-
-    Session session = null;
-
     try
     {
-      final IPdbConnection connection = m_data.getConnection();
-      session = connection.openSession();
+      m_operation.setMonitor( new SubProgressMonitor( monitor, 90 ) );
 
-      final GafCodes gafCodes = new GafCodes();
-      final String waterCode = m_data.getWaterBody().getName();
+      new Executor( m_session, m_operation ).execute();
+      final IStatus status = m_operation.getStatus();
 
-      final State state = m_data.getState();
-
-      final TuhhReach reach = m_data.getReach();
-      final String dbSrs = m_data.getDatabaseSrs();
-      final ICoefficients coefficients = m_data.getCoefficients();
-      state.setEditingUser( connection.getSettings().getUsername() );
-      final URI documentBase = m_data.getDocumentBase();
-
-      final CrossSectionPartType[] partTypes = GetPdbList.getArray( session, CrossSectionPartType.class );
-
-      final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( partTypes, gafCodes, coefficients, waterCode, state, reach, profiles, dbSrs, documentBase, true, new SubProgressMonitor( monitor, 90 ) );
-      new Executor( session, operation ).execute();
-      final IStatus status = operation.getStatus();
-
-      session.close();
-
-      updateReach( state );
+      /* write new state name etc. back into reach element, so it is still in sync with db */
+      updateReach( m_newState );
 
       return status;
     }
@@ -135,12 +114,6 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
     {
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, STR_FAILED_TO_WRITE_TO_DATABASE, e );
-      throw new CoreException( status );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "CheckinStateOperation.2" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final Exception e )
@@ -171,21 +144,6 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
     final CommandableWorkspace workspace = m_data.getWorkspace();
     final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { nameChange, descChange } );
     workspace.postCommand( command );
-  }
-
-  private IProfileFeature[] findProfiles( )
-  {
-    final TuhhReach reach = m_data.getReach();
-
-    final LinkedHashSet<IProfileFeature> profiles = new LinkedHashSet<>();
-    final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
-    for( final TuhhReachProfileSegment segment : segments )
-    {
-      final IProfileFeature profile = segment.getProfileMember();
-      profiles.add( profile );
-    }
-
-    return profiles.toArray( new IProfileFeature[profiles.size()] );
   }
 
   /** Creates the name for the cross section in the database. Uses profile name, or station if name is empty. */

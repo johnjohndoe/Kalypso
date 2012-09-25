@@ -32,7 +32,7 @@ import org.kalypso.model.wspm.pdb.db.constants.DocumentConstants;
 @Table(name = "document", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = "filename"))
 public class Document extends AbstractModelObject implements Serializable, DocumentConstants, IElementWithDates
 {
-  private BigDecimal m_id;
+  private long m_id;
 
   private String m_name;
 
@@ -66,7 +66,7 @@ public class Document extends AbstractModelObject implements Serializable, Docum
   {
   }
 
-  public Document( final BigDecimal id, final String name, final String filename, final Date creationDate, final Date editingDate, final String editingUser )
+  public Document( final long id, final String name, final String filename, final Date creationDate, final Date editingDate, final String editingUser )
   {
     m_id = id;
     m_name = name;
@@ -76,7 +76,7 @@ public class Document extends AbstractModelObject implements Serializable, Docum
     m_editingUser = editingUser;
   }
 
-  public Document( final BigDecimal id, final String name, final com.vividsolutions.jts.geom.Point location, final String filename, final String mimetype, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final BigDecimal shotdirection, final BigDecimal viewangle, final String description, final CrossSection crossSection, final WaterBody waterBody, final State state )
+  public Document( final long id, final String name, final com.vividsolutions.jts.geom.Point location, final String filename, final String mimetype, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final BigDecimal shotdirection, final BigDecimal viewangle, final String description, final CrossSection crossSection, final WaterBody waterBody, final State state )
   {
     m_id = id;
     m_waterBody = waterBody;
@@ -99,12 +99,12 @@ public class Document extends AbstractModelObject implements Serializable, Docum
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_id_seq")
   @SequenceGenerator(name = "document_id_seq", sequenceName = "pdb.seq_pdb")
-  public BigDecimal getId( )
+  public long getId( )
   {
     return m_id;
   }
 
-  public void setId( final BigDecimal id )
+  public void setId( final long id )
   {
     m_id = id;
   }
@@ -161,6 +161,7 @@ public class Document extends AbstractModelObject implements Serializable, Docum
     return m_creationDate;
   }
 
+  @Override
   public void setCreationDate( final Date creationDate )
   {
     final Object oldValue = m_creationDate;
@@ -178,6 +179,7 @@ public class Document extends AbstractModelObject implements Serializable, Docum
     return m_editingDate;
   }
 
+  @Override
   public void setEditingDate( final Date editingDate )
   {
     final Object oldValue = m_editingDate;
@@ -194,6 +196,7 @@ public class Document extends AbstractModelObject implements Serializable, Docum
     return m_editingUser;
   }
 
+  @Override
   public void setEditingUser( final String editingUser )
   {
     final Object oldValue = m_editingUser;
@@ -211,6 +214,7 @@ public class Document extends AbstractModelObject implements Serializable, Docum
     return m_measurementDate;
   }
 
+  @Override
   public void setMeasurementDate( final Date measurementDate )
   {
     final Object oldValue = m_measurementDate;

@@ -1,7 +1,6 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,13 +30,13 @@ import org.kalypso.model.wspm.pdb.db.constants.StateConstants;
 @Table( name = "state", schema = "pdb", uniqueConstraints = @UniqueConstraint( columnNames = "name" ) )
 public class State extends AbstractModelObject implements Serializable, StateConstants, IElementWithDates, IDocumentContainer
 {
-  private BigDecimal m_id;
+  private long m_id;
 
   private String m_name;
 
   private ZeroState m_zeroState;
 
-  private Date m_creationDate;
+  private Date m_creationDate = new Date();
 
   private Date m_editingDate;
 
@@ -59,7 +58,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   {
   }
 
-  public State( final BigDecimal id, final String name, final ZeroState zeroState, final Date creationDate, final Date editingDate, final String editingUser )
+  public State( final long id, final String name, final ZeroState zeroState, final Date creationDate, final Date editingDate, final String editingUser )
   {
     m_id = id;
     m_name = name;
@@ -69,7 +68,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
     m_editingUser = editingUser;
   }
 
-  public State( final BigDecimal id, final String name, final ZeroState zeroState, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections, final Set<Document> documents, final Set<Event> events )
+  public State( final long id, final String name, final ZeroState zeroState, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections, final Set<Document> documents, final Set<Event> events )
   {
     m_id = id;
     m_name = name;
@@ -85,16 +84,47 @@ public class State extends AbstractModelObject implements Serializable, StateCon
     m_events = events;
   }
 
+  /**
+   * Copy constructor, completely copy everything from the other state.<br/>
+   * This is a shallow copy, associations are copied as they are, not cloned as well.
+   */
+  public State( final State state )
+  {
+    m_id = state.getId();
+
+    m_name = state.getName();
+
+    m_zeroState = state.getIsstatezero();
+
+    m_creationDate = state.getCreationDate();
+
+    m_editingDate = state.getEditingDate();
+
+    m_editingUser = state.getEditingUser();
+
+    m_measurementDate = state.getMeasurementDate();
+
+    m_source = state.getSource();
+
+    m_description = state.getDescription();
+
+    m_crossSections = new HashSet<>( state.getCrossSections() );
+
+    m_documents = new HashSet<>( state.getDocuments() );
+
+    m_events = new HashSet<>( state.getEvents() );
+  }
+
   @Id
   @Column( name = "id", unique = true, nullable = false, precision = 20, scale = 0 )
   @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "state_id_seq" )
   @SequenceGenerator( name = "state_id_seq", sequenceName = "pdb.seq_pdb" )
-  public BigDecimal getId( )
+  public long getId( )
   {
     return m_id;
   }
 
-  public void setId( final BigDecimal id )
+  public void setId( final long id )
   {
     final Object oldValue = m_id;
 
@@ -143,6 +173,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
     return m_creationDate;
   }
 
+  @Override
   public void setCreationDate( final Date creationDate )
   {
     final Object oldValue = m_creationDate;
@@ -160,6 +191,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
     return m_editingDate;
   }
 
+  @Override
   public void setEditingDate( final Date editingDate )
   {
     final Object oldValue = m_editingDate;
@@ -176,6 +208,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
     return m_editingUser;
   }
 
+  @Override
   public void setEditingUser( final String editingUser )
   {
     final Object oldValue = m_editingUser;
@@ -193,6 +226,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
     return m_measurementDate;
   }
 
+  @Override
   public void setMeasurementDate( final Date measurementDate )
   {
     final Object oldValue = m_measurementDate;

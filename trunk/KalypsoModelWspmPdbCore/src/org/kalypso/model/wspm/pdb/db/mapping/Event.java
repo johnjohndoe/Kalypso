@@ -1,7 +1,6 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +34,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
 {
   private final String COLUMN_WATER_ID = "water_body"; //$NON-NLS-1$
 
-  private BigDecimal m_id;
+  private long m_id;
 
   private WaterBody m_waterBody;
 
@@ -69,7 +68,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   {
   }
 
-  public Event( final BigDecimal id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser )
+  public Event( final long id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser )
   {
     m_id = id;
     m_waterBody = waterBody;
@@ -79,7 +78,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     m_editingUser = editingUser;
   }
 
-  public Event( final BigDecimal id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final TYPE type, final WL_TYPE wl_type, final String description, final Set<WaterlevelFixation> waterlevelFixations, final State state, final StyleArray styles, final Set<CrossSectionPart> crossSectionParts )
+  public Event( final long id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final TYPE type, final WL_TYPE wl_type, final String description, final Set<WaterlevelFixation> waterlevelFixations, final State state, final StyleArray styles, final Set<CrossSectionPart> crossSectionParts )
   {
     m_id = id;
     m_waterBody = waterBody;
@@ -102,12 +101,12 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_id_seq")
   @SequenceGenerator(name = "event_id_seq", sequenceName = "pdb.seq_pdb")
-  public BigDecimal getId( )
+  public long getId( )
   {
     return m_id;
   }
 
-  public void setId( final BigDecimal id )
+  public void setId( final long id )
   {
     m_id = id;
   }
@@ -151,6 +150,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     return m_creationDate;
   }
 
+  @Override
   public void setCreationDate( final Date creationDate )
   {
     m_creationDate = creationDate;
@@ -164,6 +164,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     return m_editingDate;
   }
 
+  @Override
   public void setEditingDate( final Date editingDate )
   {
     m_editingDate = editingDate;
@@ -176,6 +177,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     return m_editingUser;
   }
 
+  @Override
   public void setEditingUser( final String editingUser )
   {
     m_editingUser = editingUser;
@@ -189,6 +191,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     return m_measurementDate;
   }
 
+  @Override
   public void setMeasurementDate( final Date measurementDate )
   {
     m_measurementDate = measurementDate;
