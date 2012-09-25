@@ -16,18 +16,18 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.pdb.db.mapping;
+package org.kalypso.model.wspm.pdb.wspm;
 
-import java.util.Set;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public interface IDocumentContainer
+interface ICheckinStatePdbOperation extends IPdbOperation
 {
-  String getName( );
+  void setMonitor( IProgressMonitor monitor );
 
-  Set<Document> getDocuments( );
-
-  void setDocuments( Set<Document> documents );
+  IStatus getStatus( );
 }

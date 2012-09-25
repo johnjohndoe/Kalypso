@@ -2,46 +2,45 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db.mapping;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -67,7 +66,7 @@ import com.vividsolutions.jts.geom.Polygon;
 @Table(name = "dhm_index", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = "filename"))
 public class DhmIndex extends AbstractModelObject implements Serializable, DhmIndexConstants, IElementWithDates
 {
-  private BigDecimal m_id;
+  private long m_id;
 
   private String m_name;
 
@@ -99,7 +98,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
 
   public DhmIndex( )
   {
-    m_id = null;
+    m_id = 0;
     m_name = "";
     m_location = null;
     m_filename = "";
@@ -115,7 +114,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     m_copyright = "";
   }
 
-  public DhmIndex( final BigDecimal id, final String name, final com.vividsolutions.jts.geom.Polygon location, final String filename, final String mimetype, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String editor, final String measurementAccuracy, final String description, final String copyright )
+  public DhmIndex( final long id, final String name, final com.vividsolutions.jts.geom.Polygon location, final String filename, final String mimetype, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String editor, final String measurementAccuracy, final String description, final String copyright )
   {
     m_id = id;
     m_name = name;
@@ -137,15 +136,17 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dhmindex_id_seq")
   @SequenceGenerator(name = "dhmindex_id_seq", sequenceName = "pdb.seq_pdb")
-  public BigDecimal getId( )
+  public long getId( )
   {
     return m_id;
   }
 
-  public void setId( final BigDecimal id )
+  public void setId( final long id )
   {
-    final BigDecimal oldValue = m_id;
+    final long oldValue = m_id;
+
     m_id = id;
+
     firePropertyChange( PROPERTY_ID, oldValue, m_id );
   }
 
@@ -158,7 +159,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setName( final String name )
   {
     final String oldValue = m_name;
+
     m_name = name;
+
     firePropertyChange( PROPERTY_NAME, oldValue, m_name );
   }
 
@@ -171,7 +174,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setLocation( final com.vividsolutions.jts.geom.Polygon location )
   {
     final Polygon oldValue = m_location;
+
     m_location = location;
+
     firePropertyChange( PROPERTY_LOCATION, oldValue, m_location );
   }
 
@@ -184,7 +189,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setFilename( final String filename )
   {
     final String oldValue = m_filename;
+
     m_filename = filename;
+
     firePropertyChange( PROPERTY_FILENAME, oldValue, m_filename );
   }
 
@@ -197,7 +204,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setMimeType( final String mimetype )
   {
     final String oldValue = m_mimeType;
+
     m_mimeType = mimetype;
+
     firePropertyChange( PROPERTY_MIMETYPE, oldValue, m_mimeType );
   }
 
@@ -209,6 +218,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     return m_creationDate;
   }
 
+  @Override
   public void setCreationDate( final Date creationDate )
   {
     final Date oldValue = m_creationDate;
@@ -224,10 +234,13 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     return m_editingDate;
   }
 
+  @Override
   public void setEditingDate( final Date editingDate )
   {
     final Date oldValue = m_editingDate;
+
     m_editingDate = editingDate;
+
     firePropertyChange( PROPERTY_EDITINGDATE, oldValue, m_editingDate );
   }
 
@@ -238,10 +251,13 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     return m_editingUser;
   }
 
+  @Override
   public void setEditingUser( final String editingUser )
   {
     final String oldValue = m_editingUser;
+
     m_editingUser = editingUser;
+
     firePropertyChange( PROPERTY_EDITINGUSER, oldValue, m_editingUser );
   }
 
@@ -253,10 +269,13 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     return m_measurementDate;
   }
 
+  @Override
   public void setMeasurementDate( final Date measurementDate )
   {
     final Date oldValue = m_measurementDate;
+
     m_measurementDate = measurementDate;
+
     firePropertyChange( PROPERTY_MEASUREMENTDATE, oldValue, m_measurementDate );
   }
 
@@ -269,7 +288,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setSource( final String source )
   {
     final String oldValue = m_source;
+
     m_source = source;
+
     firePropertyChange( PROPERTY_SOURCE, oldValue, m_source );
   }
 
@@ -282,7 +303,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setEditor( final String editor )
   {
     final String oldValue = m_editor;
+
     m_editor = editor;
+
     firePropertyChange( PROPERTY_EDITOR, oldValue, m_editor );
   }
 
@@ -295,7 +318,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setMeasurementAccuracy( final String measurementAccuracy )
   {
     final String oldValue = m_measurementAccuracy;
+
     m_measurementAccuracy = measurementAccuracy;
+
     firePropertyChange( PROPERTY_MEASUREMENTACCURACY, oldValue, m_measurementAccuracy );
   }
 
@@ -308,7 +333,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setDescription( final String description )
   {
     final String oldValue = m_description;
+
     m_description = description;
+
     firePropertyChange( PROPERTY_DESCRIPTION, oldValue, m_description );
   }
 
@@ -321,7 +348,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setCopyright( final String copyright )
   {
     final String oldValue = m_copyright;
+
     m_copyright = copyright;
+
     firePropertyChange( PROPERTY_COPYRIGHT, oldValue, m_copyright );
   }
 
@@ -334,7 +363,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public void setSrid( final String srid )
   {
     final String oldValue = m_srid;
+
     m_srid = srid;
+
     firePropertyChange( PROPERTY_SRID, oldValue, m_srid );
   }
 }

@@ -52,7 +52,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 public interface IEditEventPageData extends IModelObject
 {
   /** Special state value representing the null state. */
-  State NO_EVENT_STATE = new State( null, "<kein Zustand>", null, null, null, null );
+  State NO_EVENT_STATE = new State( 0, "<kein Zustand>", null, null, null, null );
 
   String PROPERTY_STATES = "states"; //$NON-NLS-1$
 

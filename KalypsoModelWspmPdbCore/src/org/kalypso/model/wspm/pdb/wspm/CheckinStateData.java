@@ -102,7 +102,9 @@ public class CheckinStateData extends AbstractModelObject
     m_reach = reach;
 
     /* Initialize state data */
-    m_state.setMeasurementDate( new Date() );
+    final Date now = new Date();
+
+    m_state.setMeasurementDate( now );
     m_state.setName( reach.getName() );
     m_state.setDescription( reach.getDescription() );
     m_state.setIsstatezero( State.ZeroState.F );

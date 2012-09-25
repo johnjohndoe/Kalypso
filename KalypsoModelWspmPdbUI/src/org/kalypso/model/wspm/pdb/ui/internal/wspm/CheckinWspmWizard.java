@@ -57,8 +57,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.forms.IMessage;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
@@ -162,22 +160,14 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
     final IWizardPage[] pages = wizard.getPages();
     for( final IWizardPage page : pages )
       addPage( page );
-    
+
     wizard.dispose();
   }
 
   @Override
   public boolean performFinish( )
   {
-    final ICoreRunnableWithProgress operation = m_worker.getOperation();
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    if( !status.isOK() )
-      new StatusDialog( getShell(), status, getWindowTitle() ).open();
-
-    // FIXME: if wizard is not closed due to error, we need to reinitialize the state, as it is still attached to the
-    // old session
-
-    return !status.matches( IStatus.ERROR );
+    return m_worker.performFinish( getContainer() );
   }
 
   @Override

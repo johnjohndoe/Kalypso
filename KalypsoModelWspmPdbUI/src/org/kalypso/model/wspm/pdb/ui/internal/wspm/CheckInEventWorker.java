@@ -44,8 +44,12 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -65,8 +69,6 @@ public class CheckInEventWorker implements ICheckInWorker
 {
   private final CheckInEventData<WspmFixation> m_data;
 
-  private final CheckInEventOperation m_operation;
-
   public CheckInEventWorker( final CommandableWorkspace workspace, final WspmFixation fixation )
   {
     m_data = new CheckInEventData<WspmFixation>( workspace, fixation )
@@ -82,8 +84,6 @@ public class CheckInEventWorker implements ICheckInWorker
         return waterHash.get( waterCode );
       }
     };
-
-    m_operation = new CheckInEventOperation( m_data );
   }
 
   @Override
@@ -120,7 +120,7 @@ public class CheckInEventWorker implements ICheckInWorker
   @Override
   public Wizard createWizard( )
   {
-    return new CheckInEventWizard( m_data, m_operation );
+    return new CheckInEventWizard( this, m_data );
   }
 
   @Override
@@ -130,14 +130,33 @@ public class CheckInEventWorker implements ICheckInWorker
   }
 
   @Override
-  public ICoreRunnableWithProgress getOperation( )
-  {
-    return m_operation;
-  }
-
-  @Override
   public void closeConnection( )
   {
     m_data.closeConnection();
+  }
+
+  @Override
+  public boolean performFinish( final IWizardContainer container )
+  {
+    final CheckInEventOperation operation = new CheckInEventOperation( m_data );
+
+    // FIXME: if wizard is not closed due to error, we need to reinitialize the event, as it is still attached to the old session
+
+    return executeOnContainer( container, operation );
+  }
+
+  // TODO: move into helper
+  static boolean executeOnContainer( final IWizardContainer container, final ICoreRunnableWithProgress operation )
+  {
+    final IStatus status = RunnableContextHelper.execute( container, true, true, operation );
+    if( !status.isOK() )
+    {
+      final Shell shell = container.getShell();
+      final String windowTitle = shell.getText();
+
+      StatusDialog.open( shell, status, windowTitle );
+    }
+
+    return !status.matches( IStatus.ERROR );
   }
 }

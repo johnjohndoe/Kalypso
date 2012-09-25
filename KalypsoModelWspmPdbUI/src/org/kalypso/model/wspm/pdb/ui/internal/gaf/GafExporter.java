@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.pdb.ui.internal.gaf;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
@@ -60,10 +62,13 @@ import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperationData;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStatePdbOperation;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -159,6 +164,7 @@ public class GafExporter
     }
     catch( final Exception ex )
     {
+      ex.printStackTrace();
       return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, ex.getLocalizedMessage(), ex );
     }
     finally
@@ -175,10 +181,30 @@ public class GafExporter
     final State state = new State();
     final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( null, gafCodes, coefficients, null, state, null, profiles, coordinateSystem, null, false, monitor );
+    final CrossSectionPartType[] partTypes = buildPartTypes();
+
+    final CheckinStateOperationData data = new CheckinStateOperationData( partTypes, gafCodes, coefficients, null, null, profiles, coordinateSystem, null );
+
+    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( data, state, false );
+    operation.setMonitor( monitor );
     operation.execute( null );
 
     return state.getCrossSections();
+  }
+
+  /**
+   * Simply builds part types from all known gaf kinds.
+   */
+  private CrossSectionPartType[] buildPartTypes( )
+  {
+    final GafKind[] kinds = GafKind.values();
+
+    final Collection<CrossSectionPartType> types = new ArrayList<>( kinds.length );
+
+    for( final GafKind kind : kinds )
+      types.add( new CrossSectionPartType( kind.name(), null, null, null ) );
+
+    return types.toArray( new CrossSectionPartType[types.size()] );
   }
 
   private IWspmClassification getWspmClassification( final IProfileFeature[] profiles )
