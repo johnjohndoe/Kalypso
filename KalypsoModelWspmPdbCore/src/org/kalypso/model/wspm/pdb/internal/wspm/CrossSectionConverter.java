@@ -46,13 +46,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
@@ -73,7 +77,7 @@ import org.kalypso.observation.result.TupleResult;
 /**
  * @author Gernot Belger
  */
-public class CrossSectionConverter
+public class CrossSectionConverter implements IProfileTransaction
 {
   private final CrossSection m_section;
 
@@ -89,28 +93,22 @@ public class CrossSectionConverter
     m_provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
   }
 
-  public void execute( )
+  @Override
+  public IStatus execute( final IProfile profile )
   {
-    m_profile.startTransaction( this );
+    m_profile.setName( m_section.getName() );
+    m_profile.setDescription( m_section.getDescription() );
 
-    try
-    {
-      m_profile.setName( m_section.getName() );
-      m_profile.setDescription( m_section.getDescription() );
+    final BigDecimal station = m_section.getStation();
+    /* [m] -> [km] */
+    m_profile.setStation( station.movePointLeft( 3 ).doubleValue() );
 
-      final BigDecimal station = m_section.getStation();
-      /* [m] -> [km] */
-      m_profile.setStation( station.movePointLeft( 3 ).doubleValue() );
+    convertP();
+    convertBuilding();
+    // TODO: other kinds...
+    // Other building types (tubes, ...)
 
-      convertP();
-      convertBuilding();
-      // TODO: other kinds...
-      // Other building types (tubes, ...)
-    }
-    finally
-    {
-      m_profile.stopTransaction( this );
-    }
+    return Status.OK_STATUS;
   }
 
   private void convertP( )
@@ -134,9 +132,24 @@ public class CrossSectionConverter
 
       convertStandardProperties( point, record );
 
-      // REMARK: we do not add hyk as separate component, it is redundant in any way..., isnt' it?
-      // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getHyk() );
-      final String hyk = point.getHyk();
+      convertHyk( point, record );
+    }
+  }
+
+  private void convertHyk( final Point point, final IProfileRecord record )
+  {
+    // REMARK: we do not add hyk as separate component, it is redundant in any way
+    // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getHyk() );
+
+    // REMARK: we only use hyk (not code) to create markers.
+    final String hyks = point.getHyk();
+    if( StringUtils.isBlank( hyks ) )
+      return;
+
+    /* several hyk codes possible */
+    final String[] hykCodes = StringUtils.split( hyks, ',' );
+    for( final String hyk : hykCodes )
+    {
       final String markerType = toMarkerType( hyk );
       if( markerType != null )
         createMarker( record, markerType );
@@ -145,22 +158,23 @@ public class CrossSectionConverter
 
   private String toMarkerType( final String hyk )
   {
-    if( IGafConstants.HYK_PA.equals( hyk ) )
-      return IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE;
-    if( IGafConstants.HYK_PE.equals( hyk ) )
-      return IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE;
+    switch( hyk )
+    {
+      case IGafConstants.HYK_PA:
+      case IGafConstants.HYK_PE:
+        return IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE;
 
-    if( IGafConstants.HYK_LBOK.equals( hyk ) )
-      return IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
-    if( IGafConstants.HYK_RBOK.equals( hyk ) )
-      return IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
+      case IGafConstants.HYK_LBOK:
+      case IGafConstants.HYK_RBOK:
+        return IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
 
-    if( IGafConstants.HYK_LU.equals( hyk ) )
-      return IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE;
-    if( IGafConstants.HYK_RU.equals( hyk ) )
-      return IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE;
+      case IGafConstants.HYK_LU:
+      case IGafConstants.HYK_RU:
+        return IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE;
 
-    return null;
+      default:
+        return null;
+    }
   }
 
   protected void createMarker( final IProfileRecord point, final String markerType )

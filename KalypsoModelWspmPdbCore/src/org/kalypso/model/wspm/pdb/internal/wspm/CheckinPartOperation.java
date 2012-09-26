@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
@@ -120,7 +121,7 @@ public class CheckinPartOperation
     final List<Coordinate> lineCrds = new ArrayList<>( records.length );
     for( int i = 0; i < records.length; i++ )
     {
-      final IRecord record = records[i];
+      final IProfileRecord record = records[i];
 
       final String name = getStringValue( record, IWspmConstants.POINT_PROPERTY_ID, StringUtils.EMPTY );
       final String comment = getStringValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, StringUtils.EMPTY );
@@ -129,12 +130,10 @@ public class CheckinPartOperation
 
       final String profileCode = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, null );
 
-      // final GafCode gafCode = toGafCode( profileCode );
+      final String pdbCode = toGafCode( profileCode, records, i );
 
-      final String pdbCode = guessCode( profileCode, records, i );
-
-      final String hyk = toHyk( pdbCode );
-
+      /* hyk is determined completely independent of code; just use position of markers in profile */
+      final String hyk = m_partBuilder.getHykCode( record );
 
       final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, heightComponentID );
       final com.vividsolutions.jts.geom.Point location = toPoint( loc );
@@ -236,27 +235,22 @@ public class CheckinPartOperation
     return roughness;
   }
 
-  private String guessCode( final String code, final IProfileRecord[] records, final int i )
+  /**
+   * Checks if the given code is a legal gaf code, else let the builder create a suitable code.
+   */
+  private String toGafCode( final String code, final IProfileRecord[] records, final int recordIndex )
   {
-    // TODO: not perfect, if markers or similar have changed, we should also guess the code again
-    // else this information gets lost
-    if( !StringUtils.isBlank( code ))
-      return code;
-
-    /* Guess default code on per builder base */
-    return m_partBuilder.guessCode( records, i );
-  }
-
-  private String toHyk( final String code )
-  {
-    /* Just check if it is an existing code */
+    final GafKind kind = m_partBuilder.getKind();
     final GafCodes codes = m_data.getGafCodes();
-    final GafCode hykCode = codes.getHykCode( code );
-    if( hykCode == null )
-      return null;
 
-    /* The hyk is always the same as the code itself */
-    return hykCode.getHyk();
+    final GafCode gafCode = codes.getCode( code );
+
+    /* if it is a legal code of this part, just return it */
+    if( gafCode != null && gafCode.getKind() == kind )
+      return gafCode.getCode();
+
+    /* let part builder guess it -> either default, or for building, depending on position of record */
+    return m_partBuilder.guessCode( records, recordIndex );
   }
 
   private String getStringValue( final IRecord record, final String componentId, final String defaultValue )
