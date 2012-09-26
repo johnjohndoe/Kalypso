@@ -109,7 +109,8 @@ public class GafExporter
       monitor.subTask( "Writing profiles..." );
 
       /* Create the gaf writer. */
-      final GafWriter writer = new GafWriter();
+      final GafCodes codes = new GafCodes();
+      final GafWriter writer = new GafWriter( codes, m_hykExportMode );
 
       /* Write the cross sections. */
       final IStatus gafStatus = writer.write( crossSections, file, new SubProgressMonitor( monitor, 500 ) );
@@ -173,6 +174,7 @@ public class GafExporter
     catch( final Exception ex )
     {
       ex.printStackTrace();
+      // TODO: ugly error handling!
       return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, ex.getLocalizedMessage(), ex );
     }
     finally
