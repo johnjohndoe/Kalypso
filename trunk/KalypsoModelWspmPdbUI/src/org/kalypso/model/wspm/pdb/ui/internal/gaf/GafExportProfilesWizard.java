@@ -40,27 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.gaf;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 
 /**
- * @author Gernot Belger
+ * @author Holger Albert
  */
 public class GafExportProfilesWizard extends ExportProfilesWizard
 {
-  private static final String FILTER_LABEL = "GAF File";
-
-  private static final String EXTENSION = "gaf"; //$NON-NLS-1$
-
-  private ExportFileChooserPage m_profileFileChooserPage;
+  private final GafOptionsData m_gafOptionsData = new GafOptionsData();
 
   public GafExportProfilesWizard( )
   {
@@ -74,21 +70,27 @@ public class GafExportProfilesWizard extends ExportProfilesWizard
 
     setShowResultInterpolationSettings( false );
 
-    final FileChooserDelegateSave delegateSave = new FileChooserDelegateSave();
-    delegateSave.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
+    m_gafOptionsData.init( getDialogSettings() );
 
-    m_profileFileChooserPage = new ExportFileChooserPage( delegateSave );
-    m_profileFileChooserPage.setTitle( STR_CHOOSE_EXPORT_FILE_TITLE );
-    m_profileFileChooserPage.setDescription( STR_CHOOSE_EXPORT_FILE_MESSAGE );
-    m_profileFileChooserPage.setFileGroupText( STR_EXPORT_FILE_GROUP_TEXT );
-
-    addPage( m_profileFileChooserPage );
+    final GafExportOptionsPage optionsPage = new GafExportOptionsPage( "options", m_gafOptionsData ); //$NON-NLS-1$
+    addPage( optionsPage );
   }
 
   @Override
   protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor )
   {
-    final GafExporter exporter = new GafExporter();
-    return exporter.export( profiles, m_profileFileChooserPage.getFile(), monitor );
+    final HykExportMode hykExportMode = m_gafOptionsData.getHykExportMode();
+    final File gafFile = m_gafOptionsData.getGafFile().getFile();
+
+    final GafExporter exporter = new GafExporter( hykExportMode );
+    return exporter.export( profiles, gafFile, monitor );
+  }
+
+  @Override
+  public boolean performFinish( )
+  {
+    m_gafOptionsData.store( getDialogSettings() );
+
+    return super.performFinish();
   }
 }
