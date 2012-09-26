@@ -108,8 +108,8 @@ public class GafCodes
     return values.toArray( new GafCode[values.size()] );
   }
 
-  public GafCode getDefaultCode( final String category )
+  public GafCode getDefaultCode( final GafKind kind )
   {
-    return m_defaultCodes.get( category );
+    return m_defaultCodes.get( kind );
   }
 }
