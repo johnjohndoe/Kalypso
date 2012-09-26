@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.pdb.gaf.GafKind;
 
 /**
  * Sorts {@link CrossSectionPart}s by {@link CrossSectionPart#getCategory()}.<br/>
- * FIXME: this is a lie!
+ * P is sorted to first place, the rest alphabetically.
  *
  * @author Holger Albert
  */
@@ -70,6 +70,7 @@ public class ByCategoryComparator implements Comparator<CrossSectionPart>
     if( c2.equals( GafKind.P.toString() ) )
       return 1;
 
-    return 0;
+    // compare the rest alphabetically, so the outcome is deterministic
+    return c1.compareTo( c2 );
   }
 }
