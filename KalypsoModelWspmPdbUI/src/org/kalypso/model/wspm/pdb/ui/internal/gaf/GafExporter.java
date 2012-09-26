@@ -80,6 +80,13 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class GafExporter
 {
+  private final HykExportMode m_hykExportMode;
+
+  public GafExporter( final HykExportMode hykExportMode )
+  {
+    m_hykExportMode = hykExportMode;
+  }
+
   public IStatus export( final IProfileFeature[] profiles, final File file, IProgressMonitor monitor )
   {
     /* Monitor. */
