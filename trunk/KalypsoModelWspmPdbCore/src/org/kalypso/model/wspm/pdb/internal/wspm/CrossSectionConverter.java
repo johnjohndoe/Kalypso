@@ -147,7 +147,7 @@ public class CrossSectionConverter implements IProfileTransaction
       return;
 
     /* several hyk codes possible */
-    final String[] hykCodes = StringUtils.split( hyks, ',' );
+    final String[] hykCodes = StringUtils.split( hyks, IGafConstants.HYK_CODE_SEPARATOR );
     for( final String hyk : hykCodes )
     {
       final String markerType = toMarkerType( hyk );

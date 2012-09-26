@@ -93,6 +93,12 @@ public class PPPartBuilder implements IPartBuilder
   {
     final Collection<String> codes = new ArrayList<>( 3 );
 
+    // IMPORTANT: this order is importan for gaf file export, do not change
+
+    final String codeBD = checkMarker( record, m_dbMarkers, IGafConstants.CODE_PA, IGafConstants.CODE_PE );
+    if( codeBD != null )
+      codes.add( codeBD );
+
     final String codeTF = checkMarker( record, m_tfMarkers, IGafConstants.CODE_LU, IGafConstants.CODE_RU );
     if( codeTF != null )
       codes.add( codeTF );
@@ -101,14 +107,10 @@ public class PPPartBuilder implements IPartBuilder
     if( codeBV != null )
       codes.add( codeBV );
 
-    final String codeBD = checkMarker( record, m_dbMarkers, IGafConstants.CODE_PA, IGafConstants.CODE_PE );
-    if( codeBD != null )
-      codes.add( codeBD );
-
     if( codes.isEmpty() )
       return null;
 
-    return StringUtils.join( codes, ',' );
+    return StringUtils.join( codes, IGafConstants.HYK_CODE_SEPARATOR );
   }
 
   private static String checkMarker( final IProfileRecord record, final IProfilePointMarker[] markers, final String codeStart, final String codeEnd )
