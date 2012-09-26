@@ -167,6 +167,9 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
       session.delete( document );
     documents.clear();
 
+    if( session == null )
+      return state;
+
     /* add state to db if it is new */
     if( !session.contains( state ) )
       session.save( state );
