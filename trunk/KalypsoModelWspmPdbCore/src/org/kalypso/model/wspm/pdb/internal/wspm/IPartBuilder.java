@@ -53,4 +53,6 @@ public interface IPartBuilder
   String getHeightComponent( );
 
   String guessCode( IProfileRecord[] records, int i );
+
+  String getHykCode( IProfileRecord record );
 }

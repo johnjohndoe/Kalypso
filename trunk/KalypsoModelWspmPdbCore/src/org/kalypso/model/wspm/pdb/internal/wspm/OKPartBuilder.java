@@ -79,4 +79,11 @@ public class OKPartBuilder implements IPartBuilder
 
     return IGafConstants.CODE_OKPP;
   }
+
+  @Override
+  public String getHykCode( final IProfileRecord record )
+  {
+    /* uk part never has a hyk code */
+    return null;
+  }
 }

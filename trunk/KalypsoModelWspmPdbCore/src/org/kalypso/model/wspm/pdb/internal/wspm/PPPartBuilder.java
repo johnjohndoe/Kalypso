@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
@@ -81,28 +85,30 @@ public class PPPartBuilder implements IPartBuilder
   @Override
   public String guessCode( final IProfileRecord[] records, final int i )
   {
-    final String markerCode = guessMarkerCode( records[i] );
-    if( markerCode != null )
-      return markerCode;
-
     return IGafConstants.CODE_PP;
   }
 
-  private String guessMarkerCode( final IProfileRecord record )
+  @Override
+  public String getHykCode( final IProfileRecord record )
   {
+    final Collection<String> codes = new ArrayList<>( 3 );
+
     final String codeTF = checkMarker( record, m_tfMarkers, IGafConstants.CODE_LU, IGafConstants.CODE_RU );
     if( codeTF != null )
-      return codeTF;
+      codes.add( codeTF );
 
     final String codeBV = checkMarker( record, m_bvMarkers, IGafConstants.CODE_LBOK, IGafConstants.CODE_RBOK );
     if( codeBV != null )
-      return codeBV;
+      codes.add( codeBV );
 
     final String codeBD = checkMarker( record, m_dbMarkers, IGafConstants.CODE_PA, IGafConstants.CODE_PE );
     if( codeBD != null )
-      return codeBD;
+      codes.add( codeBD );
 
-    return null;
+    if( codes.isEmpty() )
+      return null;
+
+    return StringUtils.join( codes, ',' );
   }
 
   private static String checkMarker( final IProfileRecord record, final IProfilePointMarker[] markers, final String codeStart, final String codeEnd )
