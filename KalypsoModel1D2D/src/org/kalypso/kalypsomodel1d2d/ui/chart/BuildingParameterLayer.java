@@ -54,7 +54,6 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 public class BuildingParameterLayer extends AbstractChartLayer implements IEditableChartLayer
 {
-
   private final static GeometryFactory GF = new GeometryFactory();
 
   private Coordinate[] m_paintOkPoints = null;
@@ -405,9 +404,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     ProgressUtilities.done( monitor );
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IEditableChartLayer#alwaysAllowsEditing()
-   */
   public boolean alwaysAllowsEditing( )
   {
     return true;
@@ -434,64 +430,27 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     return info;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
-   */
   @Override
   public void dispose( )
   {
     // nothing to do
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
-   */
   @Override
   public EditInfo getHover( final Point pos )
   {
-    // TODO Auto-generated method stub
     return null;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
-   */
-  @Override
-  public boolean isLocked( )
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
-   */
-  @Override
-  public void lockLayer( final boolean isLocked )
-  {
-    // TODO Auto-generated method stub
-
   }
 }
