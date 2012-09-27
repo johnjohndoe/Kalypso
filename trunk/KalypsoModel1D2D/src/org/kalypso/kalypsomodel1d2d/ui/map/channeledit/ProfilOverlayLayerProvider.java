@@ -65,11 +65,7 @@ class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
 
     final IProfilChartLayer[] superLayers = super.createLayers( profil, result );
     for( final IProfilChartLayer layer : superLayers )
-    {
-      /* Suppress editing for all layers excpet my own */
-      layer.lockLayer( true );
       layers.add( layer );
-    }
 
     return layers.toArray( new IProfilChartLayer[layers.size()] );
   }
