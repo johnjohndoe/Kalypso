@@ -56,7 +56,7 @@ public class KnaufSA20BeanInitializer extends KnaufBeanInitializer
 
     if( building instanceof BuildingBruecke )
     {
-      doInitBruecke( (BuildingBruecke) building, bean );
+      doInitBruecke( (BuildingBruecke)building, bean );
     }
     else
       doInit( bean );
@@ -65,7 +65,7 @@ public class KnaufSA20BeanInitializer extends KnaufBeanInitializer
 
   private static void doInitBruecke( final BuildingBruecke bridge, final KnaufSA20Bean bean )
   {
-    final double beiwert = bridge.getFormBeiwert();
+    final double beiwert = bridge.getFormbeiwert();
     if( Double.isNaN( beiwert ) )
       bean.setPfeilerFormBeiwert( 0.0 );
     else
@@ -77,5 +77,4 @@ public class KnaufSA20BeanInitializer extends KnaufBeanInitializer
   {
     bean.setPfeilerFormBeiwert( 0.0 );
   }
-
 }

@@ -80,7 +80,7 @@ public class PrfExporter
 
     for( final IProfileFeature feature : profiles )
     {
-      final IProfile profil = feature.getProfil();
+      final IProfile profil = feature.getProfile();
       final String profileName = profil.getName();
       final double station = profil.getStation();
       final WspmWaterBody water = feature.getWater();

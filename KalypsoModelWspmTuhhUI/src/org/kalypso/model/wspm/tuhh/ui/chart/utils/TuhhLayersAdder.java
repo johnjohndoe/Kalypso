@@ -44,9 +44,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileChange;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
@@ -170,14 +170,14 @@ public final class TuhhLayersAdder
       p1.setValue( index, y1 );
       p2.setValue( index, y2 );
 
-      building.setValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), 1.0 );
+      building.setFormbeiwert( 1.0 );
     }
   }
 
   public static void addTubesLayer( final IProfile profil )
   {
     final BuildingKreis building = new BuildingKreis();
-    building.setValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), 0.2 );
+    building.setRauheit( 0.2 );
     final IProfileChange[] changes = new IProfileChange[1];
     changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { building } );
 
@@ -191,13 +191,10 @@ public final class TuhhLayersAdder
     final IProfileChange[] changes = new IProfileChange[1];
 
     final SinuositaetProfileObject sinObj = new SinuositaetProfileObject();
-    final IRecord record = sinObj.getObservation().getResult().createRecord();
-    sinObj.getObservation().getResult().add( record );
 
     changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { sinObj } );
     final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.4" ), profil, changes, true ); //$NON-NLS-1$
     new ProfileOperationJob( operation ).schedule();
-
   }
 
   public static void addEnergylossLayer( final IProfile profil )
@@ -205,8 +202,8 @@ public final class TuhhLayersAdder
     final IProfileChange[] changes = new IProfileChange[1];
 
     final EnergylossProfileObject elpoObj = new EnergylossProfileObject();
-  //  final IRecord record = elpoObj.getObservation().getResult().createRecord();
-  //  elpoObj.getObservation().getResult().add( record );
+    // final IRecord record = elpoObj.getObservation().getResult().createRecord();
+    // elpoObj.getObservation().getResult().add( record );
 
     changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { elpoObj } );
     final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.8" ), profil, changes, true ); //$NON-NLS-1$

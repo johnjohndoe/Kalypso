@@ -16,42 +16,32 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.core.profile.objects;
+package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
-import java.math.BigDecimal;
-
-import org.kalypso.model.wspm.core.profil.objects.AbstractProfileObjectData;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 
 /**
  * @author Holger Albert
  */
-public class EnergylossProfileObjectData extends AbstractProfileObjectData
+public interface ICulvertBuilding extends IProfileBuilding
 {
-  private final String m_type;
+  Double getBezugspunktX( );
 
-  private final String m_description;
+  Double getBezugspunktY( );
 
-  private final BigDecimal m_value;
+  Double getBreite( );
 
-  public EnergylossProfileObjectData( final String type, final String description, final BigDecimal value )
-  {
-    m_type = type;
-    m_description = description;
-    m_value = value;
-  }
+  Double getSohlgefaelle( );
 
-  public String getType( )
-  {
-    return m_type;
-  }
+  Double getRauheit( );
 
-  public String getDescription( )
-  {
-    return m_description;
-  }
+  void setBezugspunktX( Double bezugspunktX );
 
-  public BigDecimal getValue( )
-  {
-    return m_value;
-  }
+  void setBezugspunktY( Double bezugspunktY );
+
+  void setBreite( Double breite );
+
+  void setSohlgefaelle( Double sohlgefaelle );
+
+  void setRauheit( Double rauheit );
 }

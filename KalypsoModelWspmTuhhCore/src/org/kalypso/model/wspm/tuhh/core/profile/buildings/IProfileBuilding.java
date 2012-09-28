@@ -43,9 +43,6 @@ package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 
 /**
- * restriction: tuhh profile buildings only consists of tuple results with one record set-> so we have special members
- * like getValue() and setValue()
- * 
  * @author Dirk Kuch
  */
 public interface IProfileBuilding extends IProfileObject

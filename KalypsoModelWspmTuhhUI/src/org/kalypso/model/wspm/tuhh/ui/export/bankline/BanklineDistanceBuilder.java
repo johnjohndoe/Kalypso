@@ -125,7 +125,7 @@ public class BanklineDistanceBuilder
 
   private void buildDistances( final IProfileFeature profileFeature ) throws Exception
   {
-    final IProfile profileCopy = TuhhProfiles.clone( profileFeature.getProfil() );
+    final IProfile profileCopy = TuhhProfiles.clone( profileFeature.getProfile() );
 
     final Geometry profileGeometry = JTSAdapter.export( profileFeature.getLine() );
     if( profileGeometry == null || !m_riverLine.intersects( profileGeometry ) )

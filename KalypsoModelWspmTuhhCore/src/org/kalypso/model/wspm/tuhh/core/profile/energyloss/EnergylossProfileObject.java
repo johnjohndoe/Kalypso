@@ -41,82 +41,162 @@
 package org.kalypso.model.wspm.tuhh.core.profile.energyloss;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.TupleResult;
+import org.kalypso.model.wspm.core.profil.IProfileMetadata;
+import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
+ * @author Holger Albert
  */
 public class EnergylossProfileObject extends AbstractProfileObject implements IEnergylossProfileObject
 {
+  private static final String PROPERTY_TYPE = "type"; //$NON-NLS-1$
+
+  private static final String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
+
+  private static final String PROPERTY_VALUE = "value"; //$NON-NLS-1$
+
   public EnergylossProfileObject( )
   {
-    this( buildObservation() );
+    super();
   }
 
-  private static IObservation<TupleResult> buildObservation( )
-  {
-    final TupleResult loss = new TupleResult();
-    loss.addComponent( getObjectComponent( IEnergylossProfileObject.PROPERTY_TYPE ) );
-    loss.addComponent( getObjectComponent( IEnergylossProfileObject.PROPERTY_DESCRIPTION ) );
-    loss.addComponent( getObjectComponent( IEnergylossProfileObject.PROPERTY_VALUE ) );
-    final Observation<TupleResult> observation = new Observation<>( IEnergylossProfileObject.ID, "energyloss", loss ); //$NON-NLS-1$
-    return observation;
-  }
-
-  public EnergylossProfileObject( final IObservation<TupleResult> observation )
-  {
-    super( observation );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
-   */
   @Override
   public String getId( )
   {
     return IEnergylossProfileObject.ID;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.AbstractProfileObject#getProfileProperties()
-   */
   @Override
-  protected String[] getProfileProperties( )
+  public String[] getProperties( )
   {
-    return new String[] {};
+    return new String[] { PROPERTY_TYPE, PROPERTY_DESCRIPTION, PROPERTY_VALUE };
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject#getValue(java.lang.String)
-   */
   @Override
-  public BigDecimal getValue( final int index )
+  public String getPropertyLabel( final String property )
   {
-    final TupleResult result = getObservation().getResult();
-    if( result == null || result.size() <= index )
-    {
-      return null;
-    }
-    final int iValue = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
-    return new BigDecimal( (Double)result.get( index ).getValue( iValue ) );
+    if( PROPERTY_TYPE.equals( property ) )
+      return "Typ"; // Type
+
+    if( PROPERTY_DESCRIPTION.equals( property ) )
+      return "Beschreibung"; // Description
+
+    if( PROPERTY_VALUE.equals( property ) )
+      return "Energieverlust"; // Energyloss
+
+    return property;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject#getValue(org.kalypso.model.wspm.tuhh.core.profile.energyloss.ENERGYLOSS_TYPE)
-   */
   @Override
-  public String getType( final int index )
+  public Energyloss[] getEnergylosses( )
   {
-    final TupleResult result = getObservation().getResult();
-    if( result == null || result.size() <= index )
+    final EnergylossData energylossData = toEnergylossData();
+    return energylossData.getEnergylosses();
+  }
+
+  @Override
+  public int getSize( )
+  {
+    final EnergylossData energylossData = toEnergylossData();
+    return energylossData.getSize();
+  }
+
+  @Override
+  public Energyloss getEnergyloss( final int index )
+  {
+    final EnergylossData energylossData = toEnergylossData();
+    return energylossData.getEnergyloss( index );
+  }
+
+  @Override
+  public void addEnergyloss( final Energyloss energyloss )
+  {
+    final EnergylossData energylossData = toEnergylossData();
+    energylossData.addEnergyloss( energyloss );
+    toMetadata( energylossData );
+  }
+
+  @Override
+  public void addEnergylosses( final List<Energyloss> energyloss )
+  {
+    final EnergylossData energylossData = toEnergylossData();
+    energylossData.addEnergylosses( energyloss );
+    toMetadata( energylossData );
+  }
+
+  @Override
+  public void setEnergyloss( final int index, final Energyloss energyloss )
+  {
+    final EnergylossData energylossData = toEnergylossData();
+    energylossData.setEnergyloss( index, energyloss );
+    toMetadata( energylossData );
+  }
+
+  @Override
+  public void removeEnergyloss( final int index )
+  {
+    final EnergylossData energylossData = toEnergylossData();
+    energylossData.removeEnergyloss( index );
+    toMetadata( energylossData );
+  }
+
+  private EnergylossData toEnergylossData( )
+  {
+    final IProfileMetadata metadata = getMetadata();
+    final EnergylossConverter energylossConverter = new EnergylossConverter( metadata );
+    return energylossConverter.createEnergylossData();
+  }
+
+  private void toMetadata( final EnergylossData energylossData )
+  {
+    /* Clear existing metadata with special keys. */
+    final IProfileMetadata metadata = getMetadata();
+    final String[] keys = metadata.getKeys();
+    for( final String key : keys )
     {
-      return null;
+      if( key.startsWith( EnergylossProfileObject.KEY_TYPE ) )
+      {
+        removeValue( key );
+        continue;
+      }
+
+      if( key.startsWith( EnergylossProfileObject.KEY_DESCRIPTION ) )
+      {
+        removeValue( key );
+        continue;
+      }
+
+      if( key.startsWith( EnergylossProfileObject.KEY_VALUE ) )
+      {
+        removeValue( key );
+        continue;
+      }
     }
-    final int iType = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
-    return result.get( index ).getValue( iType ).toString();
+
+    /* Add metadata with special keys. */
+    final Energyloss[] energylosses = energylossData.getEnergylosses();
+    for( int i = 0; i < energylosses.length; i++ )
+    {
+      final Energyloss energyloss = energylosses[i];
+      final String type = energyloss.getType();
+      final String description = energyloss.getDescription();
+      final BigDecimal value = energyloss.getValue();
+
+      final String typeKey = String.format( "%s_%d", KEY_TYPE, i );
+      final String descriptionKey = String.format( "%s_%d", KEY_DESCRIPTION, i );
+      final String valueKey = String.format( "%s_%d", KEY_VALUE, i );
+
+      if( type != null && type.length() > 0 )
+        setValue( typeKey, type );
+
+      if( description != null && description.length() > 0 )
+        setValue( descriptionKey, description );
+
+      if( value != null )
+        setBigDecimalValue( valueKey, value );
+    }
   }
 }

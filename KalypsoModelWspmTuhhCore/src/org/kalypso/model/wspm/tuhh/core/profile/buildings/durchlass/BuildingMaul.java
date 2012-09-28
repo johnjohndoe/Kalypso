@@ -40,62 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
-import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
+ * @author Holger Albert
  */
-public class BuildingMaul extends AbstractProfileObject implements IProfileBuilding
+public class BuildingMaul extends AbstractCulvertBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_MAUL;
 
+  private static final String PROPERTY_HOEHE = "hoehe"; //$NON-NLS-1$
+
+  public static final String KEY_HOEHE = "MAUL_HOEHE"; //$NON-NLS-1$
+
   public BuildingMaul( )
   {
-    this( buildObservation() );
+    super();
   }
 
-  private static IObservation<TupleResult> buildObservation( )
-  {
-    final TupleResult result = new TupleResult();
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
-
-    final IComponent buildingComponent = getObjectComponent( ID );
-    final Observation<TupleResult> observation = new Observation<>( ID, buildingComponent == null ? ID : buildingComponent.getName(), result ); //$NON-NLS-1$
-
-    return observation;
-  }
-
-  public BuildingMaul( final IObservation<TupleResult> observation )
-  {
-    super( observation );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getProfileProperties()
-   */
-  @Override
-  protected String[] getProfileProperties( )
-  {
-    return new String[] {};
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
-   */
   @Override
   public String getId( )
   {
     return ID;
+  }
+
+  @Override
+  public String[] getProperties( )
+  {
+    return new String[] { PROPERTY_BEZUGSPUNKT_X, PROPERTY_BEZUGSPUNKT_Y, PROPERTY_BREITE, PROPERTY_HOEHE, PROPERTY_SOHLGEFAELLE, PROPERTY_RAUHEIT };
+  }
+
+  @Override
+  public String getPropertyLabel( final String property )
+  {
+    if( PROPERTY_HOEHE.equals( property ) )
+      return "Gesamthöhe"; // Overall Height
+
+    return super.getPropertyLabel( property );
+  }
+
+  public Double getHoehe( )
+  {
+    return getDoubleValue( KEY_HOEHE, null );
+  }
+
+  public void setHoehe( final Double hoehe )
+  {
+    setDoubleValue( KEY_HOEHE, hoehe );
   }
 }

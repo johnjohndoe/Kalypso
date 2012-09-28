@@ -95,7 +95,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     final Set<IStatus> stati = new LinkedHashSet<>();
 
     final Coordinate vector = getBaseVector();
-    final double distance = m_bridge.getWidth();
+    final double distance = m_bridge.getBreite();
 
     /** move bridge into upstream direction */
     final IStatus status = moveBridgeProfile( distance / 2.0 );

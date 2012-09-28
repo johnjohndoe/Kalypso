@@ -134,8 +134,8 @@ public class InterpolationWizard extends Wizard implements IWorkbenchWizard
     try
     {
       final IProfileFeature previousProfileFeature = interpolationData.getPreviousProfile();
-      final IProfile previousProfile = previousProfileFeature.getProfil();
-      final IProfile nextProfile = interpolationData.getNextProfile().getProfil();
+      final IProfile previousProfile = previousProfileFeature.getProfile();
+      final IProfile nextProfile = interpolationData.getNextProfile().getProfile();
       final BigDecimal newStation = interpolationData.getNewStation();
       final boolean onlyRiverChannel = interpolationData.getOnlyChannel();
 

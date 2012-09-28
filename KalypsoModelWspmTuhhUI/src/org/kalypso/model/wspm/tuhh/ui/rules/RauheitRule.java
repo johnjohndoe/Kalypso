@@ -47,13 +47,17 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AddRoughnessResolution;
 
@@ -98,15 +102,15 @@ public class RauheitRule extends AbstractValidatorRule
       if( result == null )
       {
 
-        final String msg = String.format( Messages.getString("RauheitRule.0"), point.getBreite() ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "RauheitRule.0" ), point.getBreite() ); //$NON-NLS-1$
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, stationId, 0, "", new AddRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, //$NON-NLS-1$
             IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS } ) );
 
         return;
       }
 
-      final String id = (String) result[0];
-      final Double value = (Double) result[1];
+      final String id = (String)result[0];
+      final Double value = (Double)result[1];
 
       if( value.isNaN() || value <= 0.0 )
       {
@@ -147,7 +151,6 @@ public class RauheitRule extends AbstractValidatorRule
       return false;
 
     final String building = objects[0].getId();
-    return building.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS )
-        || building.equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ );
+    return building.equals( BuildingEi.ID ) || building.equals( BuildingMaul.ID ) || building.equals( BuildingKreis.ID ) || building.equals( BuildingTrapez.ID );
   }
 }

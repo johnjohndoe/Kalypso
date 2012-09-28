@@ -106,7 +106,7 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
   @Override
   protected void writeProfile( final IProfileFeature profileFeature ) throws IOException, DBaseException, SHPException, ShapeDataException
   {
-    final IProfile profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfile();
 
     final SobekExportInfo info = getInfo();
 

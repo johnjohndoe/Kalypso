@@ -90,7 +90,7 @@ public class SobekStructDefExportOperation extends AbstractSobekStructExportOper
 
   private SobekStructDef buildBridge( final String buildingId, final IProfile profil, final String profileName, final BuildingBruecke profileObject )
   {
-    final double width = profileObject.getWidth();
+    final double width = profileObject.getBreite();
 
     final IProfileRecord sohl = ProfileVisitors.findLowestPoint( profil );
     if( sohl == null )

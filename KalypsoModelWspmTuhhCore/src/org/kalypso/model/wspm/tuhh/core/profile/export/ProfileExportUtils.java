@@ -66,7 +66,7 @@ public final class ProfileExportUtils
     final Set<IComponent> profCompSet = new HashSet<>();
     for( final IProfileFeature profileFeature : profiles )
     {
-      final IProfile profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfile();
       for( final IComponent component : profil.getPointProperties() )
       {
         profCompSet.add( component );

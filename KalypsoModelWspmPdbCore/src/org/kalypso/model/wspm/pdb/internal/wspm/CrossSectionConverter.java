@@ -208,7 +208,7 @@ public class CrossSectionConverter implements IProfileTransaction
       insertPointsAs( okPart, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
 
       final BuildingBruecke bridge = new BuildingBruecke( m_profile );
-      bridge.setValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, new Double( 0.0 ) );
+      bridge.setFormbeiwert( new Double( 0.0 ) );
       // setUWheight( profile, bridge, widthPoint );
       m_profile.addProfileObjects( new IProfileObject[] { bridge } );
     }

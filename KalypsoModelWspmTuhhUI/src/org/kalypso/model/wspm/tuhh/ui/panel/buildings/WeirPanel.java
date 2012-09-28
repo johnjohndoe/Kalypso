@@ -58,12 +58,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
@@ -104,8 +100,7 @@ public class WeirPanel extends AbstractProfilView
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
@@ -136,18 +131,15 @@ public class WeirPanel extends AbstractProfilView
         if( building == null )
           return;
 
-        final IStructuredSelection selection = (IStructuredSelection) m_wehrart.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)m_wehrart.getSelection();
         if( selection.isEmpty() )
           return;
 
         final String id = selection.getFirstElement().toString();
-        final IComponent cWehr = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
-
-        if( id.equals( building.getValue( cWehr ) ) )
+        if( id.equals( building.getWehrart() ) )
           return;
-        final IProfileChange change = new ProfileObjectEdit( building, cWehr, id );
-        final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.32" ), getProfile(), change, true ); //$NON-NLS-1$
-        new ProfileOperationJob( operation ).schedule();
+
+        building.setWehrart( id );
       }
     } );
 
@@ -178,12 +170,10 @@ public class WeirPanel extends AbstractProfilView
     if( building == null )
       return;
 
-    final IComponent objProp = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
-    final String id = (String) building.getValue( objProp );
+    final String id = building.getWehrart();
     if( id != null )
-    {
       m_wehrart.setSelection( new StructuredSelection( id ) );
-    }
+
     m_wehrStart.refresh();
     m_wehrEnd.refresh();
     m_parameterLine.refresh();
@@ -217,7 +207,7 @@ public class WeirPanel extends AbstractProfilView
   {
     if( hint.isObjectDataChanged() || hint.isProfilPropertyChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() )
     {
-      final UIJob job = new UIJob( Messages.getString("WeirPanel.0") ) //$NON-NLS-1$
+      final UIJob job = new UIJob( Messages.getString( "WeirPanel.0" ) ) //$NON-NLS-1$
       {
 
         @Override
@@ -231,9 +221,7 @@ public class WeirPanel extends AbstractProfilView
 
       job.setUser( false );
       job.setSystem( true );
-
       job.schedule();
-
     }
   }
 }

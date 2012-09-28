@@ -40,27 +40,88 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.energyloss;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.model.wspm.core.gml.ProfileObjectBinding;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
+import org.kalypso.model.wspm.core.profil.ProfileObjectHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
+ * @author Holger Albert
  */
 public class EnergylossProfileObjectProvider implements IProfileObjectProvider
 {
-  public final static String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossTypes#ENERGYLOSS"; //$NON-NLS-1$
+  private static final String PROPERTY_TYPE = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossComponents#TYPE"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#buildProfileObject(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.kalypso.observation.IObservation)
-   */
+  private static final String PROPERTY_DESCRIPTION = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossComponents#DESCRIPTION"; //$NON-NLS-1$
+
+  private static final String PROPERTY_VALUE = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossComponents#VALUE"; //$NON-NLS-1$
+
   @Override
-  public IProfileObject buildProfileObject( final IProfile profile, final IObservation<TupleResult> observation )
+  public IProfileObject buildProfileObject( final IProfile profile, final Feature profileObjectFeature )
   {
-    return new EnergylossProfileObject( observation );
+    /* Create the profile object. */
+    final EnergylossProfileObject profileObject = new EnergylossProfileObject();
+
+    if( !(profileObjectFeature instanceof ProfileObjectBinding) )
+    {
+      /* REMARK: Handle feature as observation (old style). */
+      final IObservation<TupleResult> profileObjectObservation = ObservationFeatureFactory.toObservation( profileObjectFeature );
+
+      /* Fill the records and the metadata. */
+      fillMetadata( profileObjectObservation, profileObject );
+
+      return profileObject;
+    }
+
+    /* REMARK: Handle feature as profile object binding (new style). */
+    final ProfileObjectBinding profileObjectBinding = (ProfileObjectBinding)profileObjectFeature;
+
+    /* Fill the records and the metadata. */
+    ProfileObjectHelper.fillRecords( profileObjectBinding, profileObject );
+    ProfileObjectHelper.fillMetadata( profileObjectBinding, profileObject );
+
+    return profileObject;
   }
 
+  private void fillMetadata( final IObservation<TupleResult> profileObjectObservation, final EnergylossProfileObject profileObject )
+  {
+    final TupleResult result = profileObjectObservation.getResult();
+
+    final IComponent typeComponent = ProfileUtil.getFeatureComponent( PROPERTY_TYPE );
+    final IComponent descriptionComponent = ProfileUtil.getFeatureComponent( PROPERTY_DESCRIPTION );
+    final IComponent valueComponent = ProfileUtil.getFeatureComponent( PROPERTY_VALUE );
+
+    final int typeIndex = result.indexOfComponent( typeComponent );
+    final int descriptionIndex = result.indexOfComponent( descriptionComponent );
+    final int valueIndex = result.indexOfComponent( valueComponent );
+
+    final List<Energyloss> energylosses = new ArrayList<>();
+
+    for( int i = 0; i < result.size(); i++ )
+    {
+      final IRecord record = result.get( i );
+
+      final String type = (String)record.getValue( typeIndex );
+      final String description = (String)record.getValue( descriptionIndex );
+      final BigDecimal value = (BigDecimal)record.getValue( valueIndex );
+
+      final Energyloss energyloss = new Energyloss( type, description, value );
+      energylosses.add( energyloss );
+    }
+
+    profileObject.addEnergylosses( energylosses );
+  }
 }

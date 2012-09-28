@@ -44,25 +44,25 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 
 /**
  * @author Dirk Kuch
+ * @author Holger Albert
  */
 public interface ISinuositaetProfileObject extends IProfileObject
 {
-  String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUOSITAET"; //$NON-NLS-1$
+  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUOSITAET"; //$NON-NLS-1$
 
-  String PROPERTY_KENNUNG = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#KENNUNG"; //$NON-NLS-1$
+  public static final String KEY_KENNUNG = "SINUOSITAET_KENNUNG"; //$NON-NLS-1$
 
-  String PROPERTY_SN = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#SN"; //$NON-NLS-1$
+  public static final String KEY_SN = "SINUOSITAET_SN"; //$NON-NLS-1$
 
-  String PROPERTY_GERINNE_ART = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#GERINNE_ART"; //$NON-NLS-1$
+  public static final String KEY_GERINNE_ART = "SINUOSITAET_GERINNE_ART"; //$NON-NLS-1$
 
-  String PROPERTY_LF = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#LF"; //$NON-NLS-1$
+  public static final String KEY_LF = "SINUOSITAET_LF"; //$NON-NLS-1$
 
   SINUOSITAET_KENNUNG getKennung( );
 
-  Double getSinuositaet( );
+  Double getSn( );
 
   SINUOSITAET_GERINNE_ART getGerinneArt( );
 
   Double getLf( );
-
 }

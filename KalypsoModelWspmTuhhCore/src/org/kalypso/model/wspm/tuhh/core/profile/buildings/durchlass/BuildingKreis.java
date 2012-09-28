@@ -40,58 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
-import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
+ * @author Holger Albert
  */
-public class BuildingKreis extends AbstractProfileObject implements IProfileBuilding
+public class BuildingKreis extends AbstractCulvertBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_KREIS;
 
   public BuildingKreis( )
   {
-    this( buildObservation() );
+    super();
   }
 
-  private static IObservation<TupleResult> buildObservation( )
-  {
-    final TupleResult result = new TupleResult();
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
-
-    final IComponent buildingComponent = getObjectComponent( ID );
-    final Observation<TupleResult> observation = new Observation<>( ID, buildingComponent == null ? ID : buildingComponent.getName(), result ); //$NON-NLS-1$
-
-    return observation;
-  }
-
-  public BuildingKreis( final IObservation<TupleResult> observation )
-  {
-    super( observation );
-  }
-
-  @Override
-  protected String[] getProfileProperties( )
-  {
-    return new String[] {};
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
-   */
   @Override
   public String getId( )
   {
     return ID;
+  }
+
+  @Override
+  public String getPropertyLabel( final String property )
+  {
+    if( PROPERTY_BREITE.equals( property ) )
+      return "Durchmesser"; // Aperture
+
+    return super.getPropertyLabel( property );
   }
 }

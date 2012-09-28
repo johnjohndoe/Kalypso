@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.IBeanValueProperty;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -68,21 +71,15 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.observation.result.ComponentUtilities;
-import org.kalypso.observation.result.IComponent;
 
 /**
  * @author kimwerner
@@ -102,21 +99,22 @@ public class CulvertPanel extends AbstractProfilView
   public CulvertPanel( final IProfile profile )
   {
     super( profile );
-    m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_KREIS, new BuildingKreis() );
-    m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ, new BuildingTrapez() );
-    m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_MAUL, new BuildingMaul() );
-    m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_EI, new BuildingEi() );
+
+    m_culverts.put( BuildingKreis.ID, new BuildingKreis() );
+    m_culverts.put( BuildingTrapez.ID, new BuildingTrapez() );
+    m_culverts.put( BuildingMaul.ID, new BuildingMaul() );
+    m_culverts.put( BuildingEi.ID, new BuildingEi() );
   }
 
   private class PropertyLine
   {
-    protected final IComponent m_property;
+    protected final String m_property;
 
     protected final Text m_text;
 
     protected final Label m_label;
 
-    public PropertyLine( final FormToolkit toolkit, final Composite parent, final IComponent property )
+    public PropertyLine( final FormToolkit toolkit, final Composite parent, final String property )
     {
       m_property = property;
 
@@ -136,35 +134,28 @@ public class CulvertPanel extends AbstractProfilView
         public void focusGained( final FocusEvent e )
         {
           if( m_text != null && !m_text.isDisposed() )
-          {
             m_text.selectAll();
-          }
         }
 
-        /**
-         * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-         */
         @Override
         public void focusLost( final FocusEvent e )
         {
           final double value = NumberUtils.parseQuietDouble( m_text.getText() );
           if( !Double.isNaN( value ) )
           {
-            final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
+            final ICulvertBuilding building = WspmSohlpunkte.getBuilding( getProfile(), ICulvertBuilding.class );
             if( building == null )
               return;
 
-            final Double val = Buildings.getDoubleValueFor( m_property.getId(), building );
-            if( val == value )
+            final IBeanValueProperty beanValueProperty = BeanProperties.value( building.getClass(), m_property );
+            final Double val = (Double)beanValueProperty.getValue( building );
+            if( ObjectUtils.equals( value, val ) )
               return;
 
-            final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.0", m_property.getName() ), getProfile(), true ); //$NON-NLS-1$
-            operation.addChange( new ProfileObjectEdit( building, m_property, value ) );
-            new ProfileOperationJob( operation ).schedule();
+            beanValueProperty.setValue( building, new Double( value ) );
           }
         }
       } );
-
     }
 
     public void updateValue( )
@@ -176,16 +167,15 @@ public class CulvertPanel extends AbstractProfilView
       if( m_text == null || m_text.isDisposed() )
         return;
 
-      final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
+      final ICulvertBuilding building = WspmSohlpunkte.getBuilding( getProfile(), ICulvertBuilding.class );
       if( building == null )
         return;
 
-      final Double val = Buildings.getDoubleValueFor( m_property.getId(), building );
+      final IBeanValueProperty beanValueProperty = BeanProperties.value( building.getClass(), m_property );
+      final Double val = (Double)beanValueProperty.getValue( building );
       m_text.setText( String.format( "%.4f", val ) ); //$NON-NLS-1$
       if( m_text.isFocusControl() )
-      {
         m_text.selectAll();
-      }
     }
 
     public void dispose( )
@@ -195,50 +185,15 @@ public class CulvertPanel extends AbstractProfilView
     }
   }
 
-  protected String getLabel( final IComponent property )
+  protected String getLabel( final String property )
   {
-    String label = property.getName();
-    try
-    {
-      // FIXME: hack not needed, please see BridgePanel!
-// TUHH Hack for tube cross section TRAPEZ,EI,MAUL,KREIS
-      if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
-      {
-        final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
-        if( building != null )
-        {
-          final String buildingId = building.getId();
+    final ICulvertBuilding building = WspmSohlpunkte.getBuilding( getProfile(), ICulvertBuilding.class );
+    if( building != null )
+      return building.getPropertyLabel( property );
 
-          if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( buildingId ) )
-          {
-            label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.1" ); //$NON-NLS-1$
-          }
-          else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( buildingId ) )
-          {
-            label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.2" ); //$NON-NLS-1$
-          }
-          else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( buildingId ) )
-          {
-            label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.3" ); //$NON-NLS-1$
-          }
-          else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( buildingId ) )
-          {
-            label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.4" ); //$NON-NLS-1$
-          }
-        }
-      }
-    }
-    finally
-    {
-    }
-
-    return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.5", label, ComponentUtilities.getComponentUnitLabel( property ) ); //$NON-NLS-1$
+    return property;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
@@ -254,45 +209,42 @@ public class CulvertPanel extends AbstractProfilView
     m_cmb.setInput( m_culverts.values() );
     m_cmb.setLabelProvider( new LabelProvider()
     {
-
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
-        return ((IProfileObject) element).getObservation().getDescription();
+        return ((IProfileObject)element).getTypeLabel();
       }
     } );
+
     m_cmb.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 
-        final IProfileBuilding tube = (IProfileBuilding) selection.getFirstElement();
+        final ICulvertBuilding tube = (ICulvertBuilding)selection.getFirstElement();
 
-        final IProfileBuilding old = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
+        final ICulvertBuilding old = WspmSohlpunkte.getBuilding( getProfile(), ICulvertBuilding.class );
         if( tube != null && !tube.getId().equals( old.getId() ) )
         {
-          tube.cloneValuesFrom( old );
+          // TODO use copy constructor with IDurchlass Interfac
+          // tube.cloneValuesFrom( old );
           getProfile().addProfileObjects( new IProfileObject[] { tube } );
         }
       }
     } );
     m_toolkit.adapt( m_cmb.getCombo() );
-    final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
+
+    final ICulvertBuilding building = WspmSohlpunkte.getBuilding( getProfile(), ICulvertBuilding.class );
     if( building != null )
-    {
       m_cmb.setSelection( new StructuredSelection( m_culverts.get( building.getId() ) ) );
-    }
 
     final Label spacer = m_toolkit.createSeparator( m_propPanel, SWT.SEPARATOR | SWT.HORIZONTAL );
     spacer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
     createPropertyPanel();
     updateControls();
+
     return m_propPanel;
   }
 
@@ -305,25 +257,20 @@ public class CulvertPanel extends AbstractProfilView
 
     m_lines = new ArrayList<>( 8 );
 
-    final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
+    final ICulvertBuilding building = WspmSohlpunkte.getBuilding( getProfile(), ICulvertBuilding.class );
     if( building == null )
       return;
 
-    for( final IComponent property : building.getObjectProperties() )
-    {
+    for( final String property : building.getProperties() )
       m_lines.add( new PropertyLine( m_toolkit, m_propPanel, property ) );
-    }
 
     m_propPanel.layout();
   }
 
   protected void updateControls( )
   {
-
     for( final PropertyLine line : m_lines )
-    {
       line.updateValue();
-    }
   }
 
   @Override

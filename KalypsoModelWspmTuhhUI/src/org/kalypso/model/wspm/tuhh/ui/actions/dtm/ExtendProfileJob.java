@@ -111,7 +111,7 @@ public class ExtendProfileJob extends AbstractDemProfileJob
 
     /* Add line into profile. */
     final IProfileFeature profile = m_info.getProfile();
-    final IProfile profil = profile.getProfil();
+    final IProfile profil = profile.getProfile();
     WspmProfileHelper.extendPoints( profil, m_insertSign, newPoints, getSimplifyDistance(), curve.getCoordinateSystem() );
 
     final Feature profileOwner = m_info.getProfileOwner();

@@ -193,7 +193,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
   private void uploadProfile( final Session session, final WaterBody waterBody, final State state, final IProfileFeature feature ) throws PdbConnectException
   {
-    final IProfile profil = feature.getProfil();
+    final IProfile profil = feature.getProfile();
 
     final CrossSection section = new CrossSection();
 

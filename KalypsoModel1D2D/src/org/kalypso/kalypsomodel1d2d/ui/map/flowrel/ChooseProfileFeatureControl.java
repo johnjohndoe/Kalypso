@@ -211,7 +211,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
         return;
 
       // TODO: check, if the chosen profile is suitable for this relation
-      final IProfile profile = ((IProfileFeature) newProfileLink).getProfil();
+      final IProfile profile = ((IProfileFeature) newProfileLink).getProfile();
 
       final String profileRef = "terrain.gml#" + newProfileLink.getId(); //$NON-NLS-1$
       if( flowRel instanceof ITeschkeFlowRelation )

@@ -68,18 +68,12 @@ import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ComboMessageFocusListener;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.ENERGYLOSS_TYPE;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.Energyloss;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.energyloss.EnergylossDataModel;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
 
 /**
@@ -149,19 +143,6 @@ public class EnergylossPanel extends AbstractProfilView
     return m_comboFocusListener;
   }
 
-  protected void setValueFor( final IComponent cmp, final Object val )
-  {
-    final TupleResult res = getEnergyloss().getObservation().getResult();
-    final int i = res.indexOfComponent( cmp );
-    final IRecord rec = res.size() > 0 ? res.get( 0 ) : null;
-    if( rec == null || val.equals( rec.getValue( i ) ) )
-      return;
-    final ProfileOperation operation = new ProfileOperation( cmp.getDescription(), getProfile(), true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectEdit( getEnergyloss(), cmp, val ) );
-    new ProfileOperationJob( operation ).schedule();
-
-  }
-
   private void buildText( final IDataBinding binding, final EnergylossDataModel model )
   {
     final Text text = m_toolkit.createText( m_propPanel, StringUtils.EMPTY, SWT.BORDER | SWT.RIGHT );
@@ -199,11 +180,11 @@ public class EnergylossPanel extends AbstractProfilView
           return;
         }
 
-        if( ((Combo) e.getSource()).getSelectionIndex() > -1 || ((Combo) e.getSource()).getText() != "" ) //$NON-NLS-1$
+        if( ((Combo)e.getSource()).getSelectionIndex() > -1 || ((Combo)e.getSource()).getText() != "" ) //$NON-NLS-1$
         {
-          model.fireObjectChange( ((Combo) e.getSource()).getText(), model.getEnergylossValue() );
+          model.fireObjectChange( ((Combo)e.getSource()).getText(), model.getEnergylossValue() );
         }
-        else if( ((Combo) e.getSource()).getText() == "" ) //$NON-NLS-1$
+        else if( ((Combo)e.getSource()).getText() == "" ) //$NON-NLS-1$
         {
           model.removeEnergyloss();
         }
@@ -243,14 +224,14 @@ public class EnergylossPanel extends AbstractProfilView
     }
   }
 
-  final private boolean isEinlauf( final TupleResult result, final int index )
+  final private boolean isEinlauf( final Energyloss[] energylosses, final int index )
   {
-    if( index < result.size() )
+    if( index < energylosses.length )
     {
-      final int iType = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
-      final IRecord rec = result.get( index );
-      return ENERGYLOSS_TYPE.eEinlauf.getId().equals( rec.getValue( iType ) );
+      final Energyloss energyloss = energylosses[index];
+      return ENERGYLOSS_TYPE.eEinlauf.getId().equals( energyloss.getType() );
     }
+
     return false;
   }
 
@@ -258,14 +239,13 @@ public class EnergylossPanel extends AbstractProfilView
   {
     final IDataBinding binding = new SimpleDataBinding( m_toolkit );
 
-    final TupleResult result = getEnergyloss().getObservation().getResult();
+    final Energyloss[] energylosses = getEnergyloss().getEnergylosses();
 
-    EnergylossDataModel dataModel = null;
     int maxParamIndex = 4;
-    dataModel = new EnergylossDataModel( getProfile(), maxParamIndex + 1 );
+    EnergylossDataModel dataModel = new EnergylossDataModel( getProfile(), maxParamIndex + 1 );
     for( int i = 0; i < maxParamIndex; i++ )
     {
-      if( isEinlauf( result, i ) )
+      if( isEinlauf( energylosses, i ) )
       {
         dataModel = new EnergylossDataModel( getProfile(), i );
         maxParamIndex++;
@@ -277,6 +257,7 @@ public class EnergylossPanel extends AbstractProfilView
         buildText( binding, model );
       }
     }
+
     final Label label = m_toolkit.createLabel( m_propPanel, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.4" ) + ": " + ENERGYLOSS_TYPE.eEinlauf.toString() );//$NON-NLS-1$ //$NON-NLS-2$
     label.setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.5" ) );//$NON-NLS-1$
     dataModel.setEnergylossType( ENERGYLOSS_TYPE.eEinlauf.getId() );

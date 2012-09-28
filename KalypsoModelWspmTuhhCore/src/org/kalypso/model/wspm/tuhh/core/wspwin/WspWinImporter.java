@@ -84,8 +84,8 @@ import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.Energyloss;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -151,7 +151,7 @@ public final class WspWinImporter
       // fill wspwin data into workspace
       final Feature modelRootFeature = workspace.getRootFeature();
 
-      final WspmProject wspmProject = (WspmProject) modelRootFeature;
+      final WspmProject wspmProject = (WspmProject)modelRootFeature;
 
       // ////////////// //
       // set model name //
@@ -190,7 +190,7 @@ public final class WspWinImporter
       logStatus.add( wspCfgStatus );
 
       // from now on, we have tuhh projects: if we later support other kinds of projects, tweak here
-      final TuhhWspmProject tuhhProject = (TuhhWspmProject) modelRootFeature;
+      final TuhhWspmProject tuhhProject = (TuhhWspmProject)modelRootFeature;
 
       // TODO: ask direction from user
       final boolean isDirectionUpstreams = true;
@@ -347,7 +347,7 @@ public final class WspWinImporter
       else
       {
         // REMARK: if file is missing and referenced from a strand, we really have a problem.
-        final String message = String.format( Messages.getString("WspWinImporter.0"), fileName ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "WspWinImporter.0" ), fileName ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message );
         throw new CoreException( status );
       }
@@ -358,7 +358,7 @@ public final class WspWinImporter
     final IProfileSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
     final IProfile[] profile = ProfileSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
 
-    ((ProfileFeatureBinding) prof).setProfile( profile[0] );
+    ((ProfileFeatureBinding)prof).setProfile( profile[0] );
 
     /* Set filename as profile name in order to make it unique */
     prof.setName( FilenameUtils.removeExtension( fileName ) );
@@ -375,8 +375,7 @@ public final class WspWinImporter
   /**
    * Adds the zustand-bean to the tuhh-project. Already imported profiles are not imported a second time.
    * <p>
-   * If the zustand contains unknown profiles (e.g. due to a wspwin bug), they will be also imported and added to the
-   * importedPRofilesMap.
+   * If the zustand contains unknown profiles (e.g. due to a wspwin bug), they will be also imported and added to the importedPRofilesMap.
    * </p>
    */
   private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfg wspCfg, final WspWinZustand zustand, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final IContainer targetContainer ) throws GMLSchemaException
@@ -512,20 +511,17 @@ public final class WspWinImporter
     for( final LocalEnergyLossBean energyLossBean : zustand.getLosses() )
     {
       final IProfileFeature profileFeature = reach.findProfile( energyLossBean.getStation() );
+
       final EnergylossProfileObject energyLoss = new EnergylossProfileObject();
       final Map<LOSSKIND, Double> entries = energyLossBean.getEntries();
-      final TupleResult lossRes = energyLoss.getObservation().getResult();
-      final int iType = lossRes.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
-      final int iValue = lossRes.indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
+
       for( final LOSSKIND kind : entries.keySet() )
       {
-        final IRecord loss = lossRes.createRecord();
-        loss.setValue( iType, kind.name() );
-        loss.setValue( iValue, entries.get( kind ) );
-        lossRes.add( loss );
+        final Energyloss newEnergyloss = new Energyloss( kind.name(), "", new BigDecimal( entries.get( kind ) ) );
+        energyLoss.addEnergyloss( newEnergyloss );
       }
 
-      ((ProfileFeatureBinding) profileFeature).addProfileObject( energyLoss );
+      ((ProfileFeatureBinding)profileFeature).getProfile().addProfileObjects( energyLoss );
     }
 
     // ///////////////////////////// //
@@ -615,6 +611,6 @@ public final class WspWinImporter
   {
     final File probezFile = wspWinProject.getProbezFile();
 
-    return FileUtils.readFileToString( probezFile, (Charset) null );
+    return FileUtils.readFileToString( probezFile, (Charset)null );
   }
 }

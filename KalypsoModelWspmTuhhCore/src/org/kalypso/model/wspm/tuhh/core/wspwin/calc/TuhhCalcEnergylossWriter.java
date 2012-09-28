@@ -53,10 +53,8 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.ENERGYLOSS_TYPE;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.Energyloss;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 /**
  * Writes the energyloss psi-file for calculation with kalypso-1d.exe .
@@ -78,48 +76,49 @@ public class TuhhCalcEnergylossWriter
   public void write( final File psiFile ) throws IOException
   {
     PrintWriter psiWriter = null;
+
     try
     {
       psiFile.getParentFile().mkdirs();
       psiWriter = new PrintWriter( new BufferedWriter( new FileWriter( psiFile ) ) );
+
       for( final TuhhReachProfileSegment segment : m_segments )
       {
         final IProfileFeature profileFeature = segment.getProfileMember();
-        if( profileFeature == null ){
-          System.out.println(this.getClass()+": No profilemember found in segment "+segment.getId()); //$NON-NLS-1$
+        if( profileFeature == null )
+        {
+          System.out.println( this.getClass() + ": No profilemember found in segment " + segment.getId() ); //$NON-NLS-1$
           continue;
         }
-        final IProfile profil = profileFeature.getProfil();
-        final EnergylossProfileObject[] energylosses = profil.getProfileObjects( EnergylossProfileObject.class );
-        if( energylosses == null )
+
+        final IProfile profil = profileFeature.getProfile();
+        final EnergylossProfileObject[] energylossProfileObjects = profil.getProfileObjects( EnergylossProfileObject.class );
+        if( energylossProfileObjects == null )
           continue;
-        for( final EnergylossProfileObject energyloss : energylosses )
+
+        for( final EnergylossProfileObject energylossProfileObject : energylossProfileObjects )
         {
-          final TupleResult result = energyloss.getObservation().getResult();
-          if( result == null )
+          final Energyloss[] energylosses = energylossProfileObject.getEnergylosses();
+          if( energylosses == null || energylosses.length == 0 )
           {
-            System.out.println(this.getClass()+": Profile "+profil.getName()+" does not contain any Energyloss values"); //$NON-NLS-1$ //$NON-NLS-2$
+            System.out.println( this.getClass() + ": Profile " + profil.getName() + " does not contain any Energyloss values" ); //$NON-NLS-1$ //$NON-NLS-2$
             continue;
           }
-          final int iType = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
-          final int iValue = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
+
           psiWriter.print( "STATION " + segment.getStation() ); //$NON-NLS-1$
           int i = 1;
-          for( final IRecord record : result )
+          for( final Energyloss energyloss : energylosses )
           {
-            final String type = record.getValue( iType ).toString();
+            final String type = energyloss.getType();
             if( type.compareTo( ENERGYLOSS_TYPE.eEinlauf.getId() ) == 0 )
-            {
-              psiWriter.print( " " + ENERGYLOSS_TYPE.eEinlauf.getId() + " " + record.getValue( iValue ) ); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+              psiWriter.print( " " + ENERGYLOSS_TYPE.eEinlauf.getId() + " " + energyloss.getValue() ); //$NON-NLS-1$ //$NON-NLS-2$
             else
-            {
-              psiWriter.print( " " + ENERGYLOSS_TYPE.eZusatzverlust.getId() + i++ + " " + record.getValue( iValue ) ); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+              psiWriter.print( " " + ENERGYLOSS_TYPE.eZusatzverlust.getId() + i++ + " " + energyloss.getValue() ); //$NON-NLS-1$ //$NON-NLS-2$
           }
           psiWriter.println();
         }
       }
+
       psiWriter.flush();
       psiWriter.close();
     }

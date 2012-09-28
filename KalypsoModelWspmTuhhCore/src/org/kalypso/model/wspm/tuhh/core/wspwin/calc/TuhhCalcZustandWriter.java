@@ -117,7 +117,7 @@ public class TuhhCalcZustandWriter
 
     final IProfileFeature profileMember = segment.getProfileMember();
 
-    final IProfile profil = profileMember.getProfil();
+    final IProfile profil = profileMember.getProfile();
     profil.setStation( exportStation.doubleValue() );
 
     final File outPrfFile = new File( profDir, prfName );

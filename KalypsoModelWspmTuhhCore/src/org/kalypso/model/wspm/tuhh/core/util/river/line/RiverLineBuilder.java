@@ -144,7 +144,7 @@ public class RiverLineBuilder
   {
     try
     {
-      final IProfile profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfile();
 
       /* Prepare for transformation */
       final String profileSRS = profileFeature.getSrsName();

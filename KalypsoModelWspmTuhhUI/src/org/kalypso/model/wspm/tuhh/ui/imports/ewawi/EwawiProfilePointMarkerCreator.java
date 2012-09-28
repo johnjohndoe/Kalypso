@@ -45,7 +45,7 @@ public class EwawiProfilePointMarkerCreator
     final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
 
     /* Get the profile. */
-    final IProfile profil = m_profileFeature.getProfil();
+    final IProfile profil = m_profileFeature.getProfile();
 
     /* Create the point marker for all points using the code property. */
     createPointMarker( provider, profil );

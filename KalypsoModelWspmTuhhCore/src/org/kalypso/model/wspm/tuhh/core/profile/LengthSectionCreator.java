@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
@@ -104,13 +105,13 @@ public class LengthSectionCreator
 
   private void addProfile( final IProfile profil, final TupleResult lsResult, final Double precision )
   {
-// final IComponent compHeight = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    // final IComponent compHeight = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     final int indexHeight = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final IRecord station = lsResult.createRecord();
 
     // FIXME:
-// final String desc = profil.getDescription();
+    // final String desc = profil.getDescription();
     final String desc = profil.getName();
 
     station.setValue( 10, StringUtils.isBlank( desc ) ? null : desc ); //$NON-NLS-1$
@@ -158,8 +159,9 @@ public class LengthSectionCreator
         }
         else if( building instanceof BuildingBruecke )
         {
-          // TODO: use getter for width
-          final Object buildingWidth = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
+          final BuildingBruecke brueckeBuilding = (BuildingBruecke)building;
+
+          final Double buildingWidth = brueckeBuilding.getBreite();
           final Double ukValue = getMaxValueFor( profil, indexHeight, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, precision );
           final Double okValue = getMinValueFor( profil, indexHeight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, precision );
 
@@ -167,10 +169,9 @@ public class LengthSectionCreator
           station.setValue( 6, valueToBigDecimal( okValue ) ); // BridgeOK
           station.setValue( 8, valueToBigDecimal( buildingWidth ) ); // BridgeWidth
         }
-        else if( building != null )
+        else if( building instanceof ICulvertBuilding )
         {
-          // TODO: introduce common interface for durchlässe and use getter for width
-          final Object buildingWidth = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
+          final Double buildingWidth = ((ICulvertBuilding)building).getBreite();
           station.setValue( 9, valueToBigDecimal( buildingWidth ) ); // ROHR_DN
         }
 
@@ -196,7 +197,7 @@ public class LengthSectionCreator
       final Object height = point.getValue( indexHeight );
       if( value != null && height instanceof Number )
       {
-        final double doubleHeight = ((Number) height).doubleValue();
+        final double doubleHeight = ((Number)height).doubleValue();
 
         /* Only consider points that are NOT same as height */
         if( Math.abs( value - doubleHeight ) > precision )
@@ -226,7 +227,7 @@ public class LengthSectionCreator
       final Object height = point.getValue( indexHeight );
       if( value != null && height instanceof Number )
       {
-        final double doubleHeight = ((Number) height).doubleValue();
+        final double doubleHeight = ((Number)height).doubleValue();
 
         /* Only consider points that are NOT same as height */
         if( Math.abs( value - doubleHeight ) > precision )
@@ -245,11 +246,11 @@ public class LengthSectionCreator
   protected static BigDecimal valueToBigDecimal( final Object value )
   {
     if( value instanceof BigDecimal )
-      return (BigDecimal) value;
+      return (BigDecimal)value;
 
     if( value instanceof Number )
     {
-      final double val = ((Number) value).doubleValue();
+      final double val = ((Number)value).doubleValue();
       if( Double.isNaN( val ) )
         return null;
 

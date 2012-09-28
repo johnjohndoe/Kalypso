@@ -98,7 +98,7 @@ public class SobekProfileDatExportOperation extends AbstractSobekFileExportOpera
 
   private IRecord[] getSurfaceIndices( final IProfileFeature profileFeature )
   {
-    final IProfile profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfile();
     final IRecord[] points = profil.getPoints();
     if( points.length < 2 )
       // TODO: log?

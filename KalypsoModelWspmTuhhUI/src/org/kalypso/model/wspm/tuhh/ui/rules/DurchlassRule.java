@@ -46,67 +46,189 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution;
 import org.kalypso.observation.result.IComponent;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
  */
 public class DurchlassRule extends AbstractValidatorRule
 {
   @Override
   public void validate( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    final IProfileBuilding building = WspmSohlpunkte.getBuilding( profil, IProfileBuilding.class );
+    final ICulvertBuilding building = WspmSohlpunkte.getBuilding( profil, ICulvertBuilding.class );
     if( building == null )
       return;
 
-    if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() ) )
-      return;
-    else if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
-      return;
-
-    else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( building.getId() ) )
+    if( BuildingEi.ID.equals( building.getId() ) )
     {
-      final Object b = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-      final Object h = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
-      if( b instanceof Double && h instanceof Double && (Double) h <= (Double) b )
-      {
+      final BuildingEi eiBuilding = (BuildingEi)building;
+
+      final Double b = eiBuilding.getBreite();
+      final Double h = eiBuilding.getHoehe();
+      if( b != null && h != null && h.doubleValue() <= b.doubleValue() )
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.0" ), String.format( "km %.4f", profil.getStation() ), 0, null ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
     }
-    else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( building.getId() ) )
-    {
-      final Object b = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-      final Object h = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
-      if( b instanceof Double && h instanceof Double && (Double) b <= (Double) h )
-      {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.2" ), String.format( "km %.4f", profil.getStation() ), 0, null ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
 
+    if( BuildingMaul.ID.equals( building.getId() ) )
+    {
+      final BuildingMaul maulBuilding = (BuildingMaul)building;
+
+      final Double b = maulBuilding.getBreite();
+      final Double h = maulBuilding.getHoehe();
+      if( b != null && h != null && b.doubleValue() <= h.doubleValue() )
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.2" ), String.format( "km %.4f", profil.getStation() ), 0, null ); //$NON-NLS-1$ //$NON-NLS-2$
     }
+
     final IComponent compKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     final IComponent compKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( compKS != null )
-    {
       collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.1", compKS.getName() ), String.format( "km %.4f", profil.getStation() ), 0, null, new DelRoughnessResolution( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ); //$NON-NLS-1$//$NON-NLS-2$ 
-    }
+
     if( compKST != null )
-    {
       collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.1", compKST.getName() ), String.format( "km %.4f", profil.getStation() ), 0, null, new DelRoughnessResolution( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ); //$NON-NLS-1$//$NON-NLS-2$ 
-    }
-    for( final IComponent property : building.getObjectProperties() )
+
+    if( BuildingEi.ID.equals( building.getId() ) )
+      validateCulvertParameter( (BuildingEi)building, profil, collector );
+
+    if( BuildingKreis.ID.equals( building.getId() ) )
+      validateCulvertParameter( (BuildingKreis)building, profil, collector );
+
+    if( BuildingMaul.ID.equals( building.getId() ) )
+      validateCulvertParameter( (BuildingMaul)building, profil, collector );
+
+    if( BuildingTrapez.ID.equals( building.getId() ) )
+      validateCulvertParameter( (BuildingTrapez)building, profil, collector );
+  }
+
+  private void validateCulvertParameter( final BuildingEi building, final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
+  {
+    final Double bezugspunktX = building.getBezugspunktX();
+    final Double bezugspunktY = building.getBezugspunktY();
+    final Double hoehe = building.getHoehe();
+    final Double breite = building.getBreite();
+    final Double sohlgefaelle = building.getSohlgefaelle();
+    final Double rauheit = building.getRauheit();
+
+    if( !validateCulvertParameter( bezugspunktX, BuildingEi.KEY_BEZUGSPUNKT_X, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( bezugspunktY, BuildingEi.KEY_BEZUGSPUNKT_Y, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( hoehe, BuildingEi.KEY_HOEHE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( breite, BuildingEi.KEY_BREITE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( sohlgefaelle, BuildingEi.KEY_SOHLGEFAELLE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( rauheit, BuildingEi.KEY_RAUHEIT, profil, collector ) )
+      return;
+  }
+
+  private void validateCulvertParameter( final BuildingKreis building, final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
+  {
+    final Double bezugspunktX = building.getBezugspunktX();
+    final Double bezugspunktY = building.getBezugspunktY();
+    final Double breite = building.getBreite();
+    final Double sohlgefaelle = building.getSohlgefaelle();
+    final Double rauheit = building.getRauheit();
+
+    if( !validateCulvertParameter( bezugspunktX, BuildingKreis.KEY_BEZUGSPUNKT_X, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( bezugspunktY, BuildingKreis.KEY_BEZUGSPUNKT_Y, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( breite, BuildingKreis.KEY_BREITE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( sohlgefaelle, BuildingKreis.KEY_SOHLGEFAELLE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( rauheit, BuildingKreis.KEY_RAUHEIT, profil, collector ) )
+      return;
+  }
+
+  private void validateCulvertParameter( final BuildingMaul building, final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
+  {
+    final Double bezugspunktX = building.getBezugspunktX();
+    final Double bezugspunktY = building.getBezugspunktY();
+    final Double hoehe = building.getHoehe();
+    final Double breite = building.getBreite();
+    final Double sohlgefaelle = building.getSohlgefaelle();
+    final Double rauheit = building.getRauheit();
+
+    if( !validateCulvertParameter( bezugspunktX, BuildingMaul.KEY_BEZUGSPUNKT_X, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( bezugspunktY, BuildingMaul.KEY_BEZUGSPUNKT_Y, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( hoehe, BuildingMaul.KEY_HOEHE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( breite, BuildingMaul.KEY_BREITE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( sohlgefaelle, BuildingMaul.KEY_SOHLGEFAELLE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( rauheit, BuildingMaul.KEY_RAUHEIT, profil, collector ) )
+      return;
+  }
+
+  private void validateCulvertParameter( final BuildingTrapez building, final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
+  {
+    final Double bezugspunktX = building.getBezugspunktX();
+    final Double bezugspunktY = building.getBezugspunktY();
+    final Double hoehe = building.getHoehe();
+    final Double breite = building.getBreite();
+    final Double steigung = building.getSteigung();
+    final Double sohlgefaelle = building.getSohlgefaelle();
+    final Double rauheit = building.getRauheit();
+
+    if( !validateCulvertParameter( bezugspunktX, BuildingTrapez.KEY_BEZUGSPUNKT_X, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( bezugspunktY, BuildingTrapez.KEY_BEZUGSPUNKT_Y, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( hoehe, BuildingTrapez.KEY_HOEHE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( breite, BuildingTrapez.KEY_BREITE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( steigung, BuildingTrapez.KEY_STEIGUNG, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( sohlgefaelle, BuildingTrapez.KEY_SOHLGEFAELLE, profil, collector ) )
+      return;
+
+    if( !validateCulvertParameter( rauheit, BuildingTrapez.KEY_RAUHEIT, profil, collector ) )
+      return;
+  }
+
+  private boolean validateCulvertParameter( final Double oValue, final String propertyName, final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
+  {
+    if( oValue == null || oValue.isNaN() )
     {
-      final Object oValue = building.getValue( property );
-      if( oValue == null || ((Double) oValue).isNaN() )
-      {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.4", property.getName() ), String.format( "km %.4f", profil.getStation() ), 0, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        break;
-      }
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.4", propertyName ), String.format( "km %.4f", profil.getStation() ), 0, null ); //$NON-NLS-1$ //$NON-NLS-2$
+      return false;
     }
+
+    return true;
   }
 }

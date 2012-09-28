@@ -183,7 +183,7 @@ public class TuhhReach extends WspmReach implements IWspmTuhhConstants, IProfile
       }
 
       final String crs = profileMember.getSrsName();
-      final IProfile profil = profileMember.getProfil();
+      final IProfile profil = profileMember.getProfile();
       final IComponent[] markerTypes = profil.getPointMarkerTypes();
       for( final IComponent markerTyp : markerTypes )
       {

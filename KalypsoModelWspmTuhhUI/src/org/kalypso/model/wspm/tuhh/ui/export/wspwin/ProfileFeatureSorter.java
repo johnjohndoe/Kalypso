@@ -70,7 +70,7 @@ public class ProfileFeatureSorter
       }
       final IProfileFeature profileFeature = (IProfileFeature) objProfileFeature;
 
-      final IProfile profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfile();
       final double station = profil.getStation();
       profiles.put( station, profil );
     }

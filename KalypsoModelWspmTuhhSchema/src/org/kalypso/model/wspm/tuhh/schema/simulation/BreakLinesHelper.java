@@ -123,7 +123,7 @@ public class BreakLinesHelper implements IWspmConstants
           continue;
 
         final IProfileFeature profileMember = reach.getProfileMember();
-        final IProfile profil = profileMember.getProfil();
+        final IProfile profil = profileMember.getProfile();
 
         final BigDecimal station = reach.getStation();
         final Double wsp = wspMap.get( station.doubleValue() );

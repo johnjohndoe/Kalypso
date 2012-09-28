@@ -67,7 +67,7 @@ public class PatternReplacementField extends AbstractProfileValue
   @Override
   protected Object getProfileValue( final IProfileFeature profile )
   {
-    final IProfile profil = profile.getProfil();
+    final IProfile profil = profile.getProfile();
     final IProfilePatternData data = new ProfilePatternData( profile, profil, null );
     return m_column.getValue( data );
   }

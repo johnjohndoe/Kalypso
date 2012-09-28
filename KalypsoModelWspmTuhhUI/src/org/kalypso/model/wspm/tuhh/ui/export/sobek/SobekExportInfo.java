@@ -378,7 +378,7 @@ public class SobekExportInfo
 
   public String getStructID( final IProfileFeature profileFeature )
   {
-    final IProfile profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfile();
     final String pattern = getIdPattern() + getIdSuffix();
     final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
     return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( pattern, data );
@@ -386,7 +386,7 @@ public class SobekExportInfo
 
   public String getID( final IProfileFeature profileFeature )
   {
-    final IProfile profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfile();
     final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
 
     return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( getIdPattern(), data );
@@ -394,7 +394,7 @@ public class SobekExportInfo
 
   public String getName( final IProfileFeature profileFeature )
   {
-    final IProfile profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfile();
     final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
 
     return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( getNamePattern(), data );
