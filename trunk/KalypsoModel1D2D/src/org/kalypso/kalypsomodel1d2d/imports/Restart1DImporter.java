@@ -175,7 +175,7 @@ public class Restart1DImporter
       final IProfileFeature profileMember = segment.getProfileMember();
       final String crs = profileMember.getSrsName();
       final BigDecimal station = profileMember.getBigStation();
-      final IProfile profil = profileMember.getProfil();
+      final IProfile profil = profileMember.getProfile();
 
       final IProfileRecord sohlPoint = ProfileVisitors.findLowestPoint( profil );
 

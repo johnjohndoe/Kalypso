@@ -126,7 +126,7 @@ public class CheckoutCrossSectionsWorker
     final String srs = line == null ? null : JTSAdapter.toSrs( line.getSRID() );
     newProfile.setSrsName( srs );
 
-    final IProfile profile = newProfile.getProfil();
+    final IProfile profile = newProfile.getProfile();
 
     final CrossSectionConverter converter = new CrossSectionConverter( section, profile );
     profile.doTransaction( converter );

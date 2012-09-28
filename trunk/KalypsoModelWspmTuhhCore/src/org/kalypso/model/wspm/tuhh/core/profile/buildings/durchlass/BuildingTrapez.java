@@ -40,63 +40,73 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
-import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
+ * @author Holger Albert
  */
-public final class BuildingTrapez extends AbstractProfileObject implements IProfileBuilding
+public class BuildingTrapez extends AbstractCulvertBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_TRAPEZ;
 
+  private static final String PROPERTY_HOEHE = "hoehe"; //$NON-NLS-1$
+
+  private static final String PROPERTY_STEIGUNG = "steigung"; //$NON-NLS-1$
+
+  public static final String KEY_HOEHE = "TRAPEZ_HOEHE"; //$NON-NLS-1$
+
+  public static final String KEY_STEIGUNG = "TRAPEZ_STEIGUNG"; //$NON-NLS-1$
+
   public BuildingTrapez( )
   {
-    this( buildObservation() );
+    super();
   }
 
-  private static IObservation<TupleResult> buildObservation( )
-  {
-    final TupleResult result = new TupleResult();
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
-
-    final IComponent buildingComponent = getObjectComponent( ID );
-    final Observation<TupleResult> observation = new Observation<>( ID, buildingComponent == null ? ID : buildingComponent.getName(), result ); //$NON-NLS-1$
-
-    return observation;
-  }
-
-  public BuildingTrapez( final IObservation<TupleResult> observation )
-  {
-    super( observation );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getProfileProperties()
-   */
-  @Override
-  protected String[] getProfileProperties( )
-  {
-    return new String[] {};
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
-   */
   @Override
   public String getId( )
   {
     return ID;
+  }
+
+  @Override
+  public String[] getProperties( )
+  {
+    return new String[] { PROPERTY_BEZUGSPUNKT_X, PROPERTY_BEZUGSPUNKT_Y, PROPERTY_BREITE, PROPERTY_HOEHE, PROPERTY_STEIGUNG, PROPERTY_SOHLGEFAELLE, PROPERTY_RAUHEIT };
+  }
+
+  @Override
+  public String getPropertyLabel( final String property )
+  {
+    if( PROPERTY_BREITE.equals( property ) )
+      return "untere Seite"; // lower side
+
+    if( PROPERTY_HOEHE.equals( property ) )
+      return "Gesamthöhe"; // Overall Height
+
+    if( PROPERTY_STEIGUNG.equals( property ) )
+      return "Steigung der Dreieckseite"; // Gradient
+
+    return super.getPropertyLabel( property );
+  }
+
+  public Double getHoehe( )
+  {
+    return getDoubleValue( KEY_HOEHE, null );
+  }
+
+  public Double getSteigung( )
+  {
+    return getDoubleValue( KEY_STEIGUNG, null );
+  }
+
+  public void setHoehe( final Double hoehe )
+  {
+    setDoubleValue( KEY_HOEHE, hoehe );
+  }
+
+  public void setSteigung( final Double steigung )
+  {
+    setDoubleValue( KEY_STEIGUNG, steigung );
   }
 }

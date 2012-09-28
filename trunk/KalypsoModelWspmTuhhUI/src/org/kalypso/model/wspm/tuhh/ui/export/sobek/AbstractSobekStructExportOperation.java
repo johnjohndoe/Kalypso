@@ -60,7 +60,7 @@ public abstract class AbstractSobekStructExportOperation extends AbstractSobekFi
   @Override
   protected void writeProfile( final IProfileFeature profileFeature )
   {
-    final IProfile profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfile();
 
     final SobekExportInfo info = getInfo();
 

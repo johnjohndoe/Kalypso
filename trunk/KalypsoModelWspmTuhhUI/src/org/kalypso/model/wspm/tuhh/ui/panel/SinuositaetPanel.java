@@ -61,21 +61,14 @@ import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
-import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_GERINNE_ART;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_KENNUNG;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
  */
 public class SinuositaetPanel extends AbstractProfilView
 {
@@ -96,14 +89,11 @@ public class SinuositaetPanel extends AbstractProfilView
   public SinuositaetPanel( final IProfile profile )
   {
     super( profile );
+
     final SinuositaetProfileObject[] sins = profile.getProfileObjects( SinuositaetProfileObject.class );
     m_sinuositaet = sins.length == 0 ? null : sins[0];
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
@@ -111,29 +101,16 @@ public class SinuositaetPanel extends AbstractProfilView
     m_propPanel = m_toolkit.createComposite( parent );
 
     if( m_propPanel == null )
-    {
       m_toolkit.createText( m_propPanel, Messages.getString( "SinuositaetPanel_0" ) ); //$NON-NLS-1$
-    }
     else
     {
       m_propPanel.setLayout( new GridLayout( 2, false ) );
       createPropertyPanel();
     }
+
     updateControls();
+
     return m_propPanel;
-  }
-
-  protected void setValueFor( final IComponent cmp, final Object val )
-  {
-    final TupleResult res = m_sinuositaet.getObservation().getResult();
-    final int i = res.indexOfComponent( cmp );
-    final IRecord rec = res.size() > 0 ? res.get( 0 ) : null;
-    if( rec == null || val.equals( rec.getValue( i ) ) )
-      return;
-    final ProfileOperation operation = new ProfileOperation( cmp.getDescription(), getProfile(), true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectEdit( m_sinuositaet, cmp, val ) );
-    new ProfileOperationJob( operation ).schedule();
-
   }
 
   protected void createPropertyPanel( )
@@ -142,63 +119,60 @@ public class SinuositaetPanel extends AbstractProfilView
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
-    final IComponent cmpKen = m_sinuositaet.getObjectProperty( ISinuositaetProfileObject.PROPERTY_KENNUNG );
-    m_toolkit.createLabel( m_propPanel, cmpKen.getName() );
+
+    m_toolkit.createLabel( m_propPanel, m_sinuositaet.getPropertyLabel( SinuositaetProfileObject.PROPERTY_KENNUNG ) );
     m_kennung = new ComboViewer( m_propPanel );
     m_kennung.setContentProvider( new ArrayContentProvider() );
     m_kennung.setInput( SINUOSITAET_KENNUNG.values() );
     m_kennung.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        final SINUOSITAET_KENNUNG kenn = (SINUOSITAET_KENNUNG) selection.getFirstElement();
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+        final SINUOSITAET_KENNUNG kenn = (SINUOSITAET_KENNUNG)selection.getFirstElement();
         if( kenn == null )
           return;
-        setValueFor( cmpKen, kenn.name() );
+
+        m_sinuositaet.setKennung( kenn.name() );
       }
     } );
     m_kennung.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
     m_toolkit.adapt( m_kennung.getCombo() );
 
-    final IComponent cmpGer = m_sinuositaet.getObjectProperty( ISinuositaetProfileObject.PROPERTY_GERINNE_ART );
-    m_toolkit.createLabel( m_propPanel, cmpGer.getName() );
+    m_toolkit.createLabel( m_propPanel, m_sinuositaet.getPropertyLabel( SinuositaetProfileObject.PROPERTY_GERINNE_ART ) );
     m_gerinne = new ComboViewer( m_propPanel );
     m_gerinne.setContentProvider( new ArrayContentProvider() );
     m_gerinne.setInput( SINUOSITAET_GERINNE_ART.values() );
     m_gerinne.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        final SINUOSITAET_GERINNE_ART gerA = (SINUOSITAET_GERINNE_ART) selection.getFirstElement();
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+        final SINUOSITAET_GERINNE_ART gerA = (SINUOSITAET_GERINNE_ART)selection.getFirstElement();
         if( gerA == null )
           return;
-        setValueFor( cmpGer, gerA.name() );
+
+        m_sinuositaet.setGerinneArt( gerA.name() );
       }
     } );
     m_gerinne.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
     m_toolkit.adapt( m_gerinne.getCombo() );
 
-    final IComponent cmpLF = m_sinuositaet.getObjectProperty( ISinuositaetProfileObject.PROPERTY_LF );
-    m_toolkit.createLabel( m_propPanel, cmpLF.getName() );
+    m_toolkit.createLabel( m_propPanel, m_sinuositaet.getPropertyLabel( SinuositaetProfileObject.PROPERTY_LF ) );
     m_lf = m_toolkit.createText( m_propPanel, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_lf.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
     m_lf.addModifyListener( doubleModifyListener );
     m_lf.addFocusListener( new FocusListener()
     {
-
       @Override
       public void focusLost( final FocusEvent e )
       {
-        if( e.widget instanceof Text && NumberUtils.isDouble( ((Text) e.widget).getText() ) )
+        if( e.widget instanceof Text && NumberUtils.isDouble( ((Text)e.widget).getText() ) )
         {
-          final Double val = NumberUtils.parseDouble( ((Text) e.widget).getText() );
-          setValueFor( cmpLF, val );
+          final Double val = NumberUtils.parseDouble( ((Text)e.widget).getText() );
+          m_sinuositaet.setLf( val );
         }
       }
 
@@ -207,27 +181,24 @@ public class SinuositaetPanel extends AbstractProfilView
       {
         if( e.widget instanceof Text )
         {
-          ((Text) e.widget).selectAll();
+          ((Text)e.widget).selectAll();
         }
-
       }
     } );
 
-    final IComponent cmpSN = m_sinuositaet.getObjectProperty( ISinuositaetProfileObject.PROPERTY_SN );
-    m_toolkit.createLabel( m_propPanel, cmpSN.getName() );
+    m_toolkit.createLabel( m_propPanel, m_sinuositaet.getPropertyLabel( SinuositaetProfileObject.PROPERTY_SN ) );
     m_sn = m_toolkit.createText( m_propPanel, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_sn.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
     m_sn.addModifyListener( doubleModifyListener );
     m_sn.addFocusListener( new FocusListener()
     {
-
       @Override
       public void focusLost( final FocusEvent e )
       {
-        if( e.widget instanceof Text && NumberUtils.isDouble( ((Text) e.widget).getText() ) )
+        if( e.widget instanceof Text && NumberUtils.isDouble( ((Text)e.widget).getText() ) )
         {
-          final Double val = NumberUtils.parseDouble( ((Text) e.widget).getText() );
-          setValueFor( cmpSN, val );
+          final Double val = NumberUtils.parseDouble( ((Text)e.widget).getText() );
+          m_sinuositaet.setSn( val );
         }
       }
 
@@ -236,7 +207,7 @@ public class SinuositaetPanel extends AbstractProfilView
       {
         if( e.widget instanceof Text )
         {
-          ((Text) e.widget).selectAll();
+          ((Text)e.widget).selectAll();
         }
       }
     } );
@@ -248,7 +219,7 @@ public class SinuositaetPanel extends AbstractProfilView
   {
     m_gerinne.setSelection( new StructuredSelection( m_sinuositaet.getGerinneArt() ) );
     m_kennung.setSelection( new StructuredSelection( m_sinuositaet.getKennung() ) );
-    m_sn.setText( String.format( "%.4f", m_sinuositaet.getSinuositaet() ) ); //$NON-NLS-1$
+    m_sn.setText( String.format( "%.4f", m_sinuositaet.getSn() ) ); //$NON-NLS-1$
     m_lf.setText( String.format( "%.4f", m_sinuositaet.getLf() ) ); //$NON-NLS-1$
   }
 

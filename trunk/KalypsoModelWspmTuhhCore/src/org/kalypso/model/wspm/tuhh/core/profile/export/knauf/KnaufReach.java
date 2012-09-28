@@ -70,7 +70,7 @@ public class KnaufReach
     m_profiles = new TreeSet<>( new KnaufProfileFeatureStationComparator( getDirection( profiles ).isUpstream() ) );
     for( final IProfileFeature profile : profiles )
     {
-      m_profiles.add( new KnaufProfileWrapper( this, profile.getProfil() ) );
+      m_profiles.add( new KnaufProfileWrapper( this, profile.getProfile() ) );
     }
   }
 

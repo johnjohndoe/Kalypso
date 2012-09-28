@@ -84,7 +84,7 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
   @Override
   protected void writeProfile( final IProfileFeature profileFeature )
   {
-    final IProfile profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfile();
     final IRecord[] points = getPointsToExport( profil );
     if( points == null )
       return;

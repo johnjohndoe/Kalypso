@@ -49,7 +49,6 @@ import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -80,7 +79,6 @@ class AddWeirDeviderAction extends Action
   @Override
   public void run( )
   {
-
     final IProfilePointMarker marker = m_profile.getPointMarkerFor( m_componentID )[m_deviderID];
 
     final IProfileRecord point = m_profile.getPoint( marker.getPoint().getIndex() + 1 );
@@ -96,7 +94,7 @@ class AddWeirDeviderAction extends Action
       if( building == null )
         return;
 
-      final Object dblVal = objVal instanceof Double ? objVal : Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, building );
+      final Object dblVal = objVal instanceof Double ? objVal : building.getFormbeiwert();
       operation.addChange( new PointMarkerEdit( trenner, dblVal ) );
       operation.addChange( new ActiveObjectEdit( m_profile, point.getBreiteAsRange(), null ) );
       new ProfileOperationJob( operation ).schedule();

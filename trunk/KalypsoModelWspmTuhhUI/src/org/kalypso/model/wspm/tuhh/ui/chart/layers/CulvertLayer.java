@@ -48,7 +48,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
@@ -80,12 +80,12 @@ public class CulvertLayer extends AbstractProfilLayer
   @Override
   public String getIdentifier( )
   {
-    return getTube() == null ? Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.TubeLayer.0" ) : getTube().getObservation().getName(); //$NON-NLS-1$
+    return getTube() == null ? Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.TubeLayer.0" ) : getTube().getId(); //$NON-NLS-1$
   }
 
-  private IProfileBuilding getTube( )
+  private ICulvertBuilding getTube( )
   {
-    final IProfileBuilding[] objects = getProfil().getProfileObjects( IProfileBuilding.class );
+    final ICulvertBuilding[] objects = getProfil().getProfileObjects( ICulvertBuilding.class );
     if( ArrayUtils.isEmpty( objects ) )
       return null;
 
@@ -95,13 +95,13 @@ public class CulvertLayer extends AbstractProfilLayer
   @Override
   public String getTitle( )
   {
-    return getTube() == null ? "" : getTube().getObservation().getDescription(); //$NON-NLS-1$
+    return getTube() == null ? "" : getTube().getTypeLabel(); //$NON-NLS-1$
   }
 
   @Override
-  public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-    final IProfileBuilding tube = getTube();
+    final ICulvertBuilding tube = getTube();
     if( tube == null )
       return;
 

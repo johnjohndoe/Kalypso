@@ -117,7 +117,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     if( profileFeature == null )
       return null;
 
-    final IProfile profile = profileFeature.getProfil();
+    final IProfile profile = profileFeature.getProfile();
 
     final IProfileTransaction transaction = new AddProfileTransaction( this );
     final IStatus status = profile.doTransaction( transaction );

@@ -161,7 +161,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfileMarkerRe
 
       if( feature != null )
       {
-        final IProfile profil = ((IProfileFeature) feature).getProfil();
+        final IProfile profil = ((IProfileFeature) feature).getProfile();
         if( profil != null )
         {
           if( resolve( profil ) )

@@ -74,7 +74,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
   @Override
   protected void writeProfile( final IProfileFeature profileFeature )
   {
-    final IProfile profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfile();
     final SobekFrictionZone[] frictionZones = findZones( profil );
 
     final SobekExportInfo info = getInfo();

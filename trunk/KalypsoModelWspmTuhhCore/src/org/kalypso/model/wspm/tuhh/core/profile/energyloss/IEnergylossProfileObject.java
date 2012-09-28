@@ -40,24 +40,35 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.energyloss;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
+ * @author Holger Albert
  */
 public interface IEnergylossProfileObject extends IProfileObject
 {
-  String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossTypes#ENERGYLOSS"; //$NON-NLS-1$
+  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossTypes#ENERGYLOSS"; //$NON-NLS-1$
 
-  String PROPERTY_VALUE = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossComponents#VALUE"; //$NON-NLS-1$
+  public static final String KEY_TYPE = "ENERGYLOSS_TYPE"; //$NON-NLS-1$
 
-  String PROPERTY_DESCRIPTION = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossComponents#DESCRIPTION"; //$NON-NLS-1$
+  public static final String KEY_DESCRIPTION = "ENERGYLOSS_DESCRIPTION"; //$NON-NLS-1$
 
-  String PROPERTY_TYPE = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossComponents#TYPE"; //$NON-NLS-1$
+  public static final String KEY_VALUE = "ENERGYLOSS_VALUE"; //$NON-NLS-1$
 
-  BigDecimal getValue( final int index );
+  public Energyloss[] getEnergylosses( );
 
-  String getType( final int index );
+  public int getSize( );
+
+  public Energyloss getEnergyloss( final int index );
+
+  public void addEnergyloss( final Energyloss energyloss );
+
+  public void addEnergylosses( final List<Energyloss> energyloss );
+
+  public void setEnergyloss( final int index, final Energyloss energyloss );
+
+  public void removeEnergyloss( final int index );
 }

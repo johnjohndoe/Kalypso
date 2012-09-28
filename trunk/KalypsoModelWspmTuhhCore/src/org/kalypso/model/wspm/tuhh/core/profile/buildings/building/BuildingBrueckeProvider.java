@@ -40,25 +40,79 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
+import org.kalypso.model.wspm.core.gml.ProfileObjectBinding;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
+import org.kalypso.model.wspm.core.profil.ProfileObjectHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
+ * @author Holger Albert
  */
 public final class BuildingBrueckeProvider implements IProfileObjectProvider
 {
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#buildProfileObject(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.kalypso.observation.IObservation)
-   */
   @Override
-  public IProfileObject buildProfileObject( final IProfile profile, final IObservation<TupleResult> observation )
+  public IProfileObject buildProfileObject( final IProfile profile, final Feature profileObjectFeature )
   {
-    return new BuildingBruecke( profile, observation );
+    /* Create the profile object. */
+    final BuildingBruecke profileObject = new BuildingBruecke( profile );
+
+    if( !(profileObjectFeature instanceof ProfileObjectBinding) )
+    {
+      /* REMARK: Handle feature as observation (old style). */
+      final IObservation<TupleResult> profileObjectObservation = ObservationFeatureFactory.toObservation( profileObjectFeature );
+
+      /* Fill the records and the metadata. */
+      fillMetadata( profileObjectObservation, profileObject );
+
+      return profileObject;
+    }
+
+    /* REMARK: Handle feature as profile object binding (new style). */
+    final ProfileObjectBinding profileObjectBinding = (ProfileObjectBinding)profileObjectFeature;
+
+    /* Fill the records and the metadata. */
+    ProfileObjectHelper.fillRecords( profileObjectBinding, profileObject );
+    ProfileObjectHelper.fillMetadata( profileObjectBinding, profileObject );
+
+    return profileObject;
   }
 
+  private void fillMetadata( final IObservation<TupleResult> profileObjectObservation, final BuildingBruecke profileObject )
+  {
+    final TupleResult result = profileObjectObservation.getResult();
+    if( result.size() != 1 )
+      throw new IllegalStateException( "Only one record is allowed in profile object observations..." );
+
+    final IComponent breiteComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
+    final IComponent unterwasserComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER );
+    final IComponent formbeiwertComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+    final IComponent rauheitComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
+
+    final int breiteIndex = result.indexOfComponent( breiteComponent );
+    final int unterwasserIndex = result.indexOfComponent( unterwasserComponent );
+    final int formbeiwertIndex = result.indexOfComponent( formbeiwertComponent );
+    final int rauheitIndex = result.indexOfComponent( rauheitComponent );
+
+    final IRecord record = result.get( 0 );
+
+    final Double breite = (Double)record.getValue( breiteIndex );
+    final Double unterwasser = (Double)record.getValue( unterwasserIndex );
+    final Double formbeiwert = (Double)record.getValue( formbeiwertIndex );
+    final Double rauheit = (Double)record.getValue( rauheitIndex );
+
+    profileObject.setBreite( breite );
+    profileObject.setUnterwasser( unterwasser );
+    profileObject.setFormbeiwert( formbeiwert );
+    profileObject.setRauheit( rauheit );
+  }
 }

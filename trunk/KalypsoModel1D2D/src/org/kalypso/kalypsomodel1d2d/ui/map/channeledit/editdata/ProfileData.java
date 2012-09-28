@@ -497,7 +497,7 @@ class ProfileData implements IProfileData
       FeatureHelper.copyProperties( feature, clonedProfile, (QName[])null );
 
       /* change crs of the cloned profile */
-      final IProfile transformedProfile = clonedProfile.getProfil();
+      final IProfile transformedProfile = clonedProfile.getProfile();
 
       final String sourceSRS = transformedProfile.getSrsName();
       final String targetSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();

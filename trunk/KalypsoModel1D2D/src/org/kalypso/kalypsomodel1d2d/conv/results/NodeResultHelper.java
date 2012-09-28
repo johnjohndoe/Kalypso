@@ -250,7 +250,7 @@ public class NodeResultHelper
    */
   public static GM_Curve getProfileCurveFor1dNode( final IProfileFeature profile ) throws Exception
   {
-    final IProfile profil = profile.getProfil();
+    final IProfile profil = profile.getProfile();
 
     /* cut the profile at the intersection points with the water level */
     // get the intersection points

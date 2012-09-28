@@ -40,77 +40,88 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
-import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
+ * @author Holger Albert
  */
 public class BuildingWehr extends AbstractProfileObject implements IProfileBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_WEHR;
 
-  public BuildingWehr( final IProfile profil )
+  private static final String PROPERTY_WEHRART = "wehrart"; //$NON-NLS-1$
+
+  private static final String PROPERTY_FORMBEIWERT = "formbeiwert"; //$NON-NLS-1$
+
+  public static final String KEY_WEHRART = "WEHR_WEHRART"; //$NON-NLS-1$
+
+  public static final String KEY_FORMBEIWERT = "WEHR_FORMBEIWERT"; //$NON-NLS-1$
+
+  public BuildingWehr( final IProfile profile )
   {
-    this( profil, buildObservation() );
+    super();
+
+    addPointProperties( profile );
   }
 
-  private static IObservation<TupleResult> buildObservation( )
-  {
-    final TupleResult result = new TupleResult();
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
-    final IRecord emptyRecord = result.createRecord();
-
-    emptyRecord.setValue( 0, IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG );
-    emptyRecord.setValue( 1, 0.0 );
-    result.add( emptyRecord );
-
-    final Observation<TupleResult> observation = new Observation<>( ID, ID, result );
-
-    return observation;
-  }
-
-  public BuildingWehr( final IProfile profil, final IObservation<TupleResult> observation )
-  {
-    super( observation );
-
-    addPointProperties( profil );
-  }
-
-  private void addPointProperties( final IProfile profil )
-  {
-    // final IComponent hoehe = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-
-    if( !profil.hasPointProperty( ok ) )
-    {
-      profil.addPointProperty( ok, null );
-    }
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getProfileProperties()
-   */
-  @Override
-  protected String[] getProfileProperties( )
-  {
-    return new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR };
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
-   */
   @Override
   public String getId( )
   {
     return ID;
+  }
+
+  @Override
+  public String[] getProperties( )
+  {
+    return new String[] { PROPERTY_WEHRART, PROPERTY_FORMBEIWERT };
+  }
+
+  @Override
+  public String getPropertyLabel( final String property )
+  {
+    if( PROPERTY_WEHRART.equals( property ) )
+      return "Wehrart"; // Weir Type
+
+    if( PROPERTY_FORMBEIWERT.equals( property ) )
+      return "Pfeilerformbeiwert"; // Pillar Shape Coefficient
+
+    return property;
+  }
+
+  public String getWehrart( )
+  {
+    return getValue( KEY_WEHRART, null );
+  }
+
+  public Double getFormbeiwert( )
+  {
+    return getDoubleValue( KEY_FORMBEIWERT, null );
+  }
+
+  public void setWehrart( final String wehrart )
+  {
+    setValue( KEY_WEHRART, wehrart );
+  }
+
+  public void setFormbeiwert( final Double formbeiwert )
+  {
+    setDoubleValue( KEY_FORMBEIWERT, formbeiwert );
+  }
+
+  public String[] getProfileProperties( )
+  {
+    return new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR };
+  }
+
+  private void addPointProperties( final IProfile profil )
+  {
+    final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    if( !profil.hasPointProperty( ok ) )
+      profil.addPointProperty( ok, null );
   }
 }

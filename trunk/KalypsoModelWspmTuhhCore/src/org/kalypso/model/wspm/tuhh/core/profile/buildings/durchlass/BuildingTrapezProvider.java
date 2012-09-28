@@ -40,25 +40,91 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
+import org.kalypso.model.wspm.core.gml.ProfileObjectBinding;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
+import org.kalypso.model.wspm.core.profil.ProfileObjectHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
+ * @author Holger Albert
  */
 public final class BuildingTrapezProvider implements IProfileObjectProvider
 {
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#buildProfileObject(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.kalypso.observation.IObservation)
-   */
   @Override
-  public IProfileObject buildProfileObject( final IProfile profile, final IObservation<TupleResult> observation )
+  public IProfileObject buildProfileObject( final IProfile profile, final Feature profileObjectFeature )
   {
-    return new BuildingTrapez( observation );
+    /* Create the profile object. */
+    final BuildingTrapez profileObject = new BuildingTrapez();
+
+    if( !(profileObjectFeature instanceof ProfileObjectBinding) )
+    {
+      /* REMARK: Handle feature as observation (old style). */
+      final IObservation<TupleResult> profileObjectObservation = ObservationFeatureFactory.toObservation( profileObjectFeature );
+
+      /* Fill the records and the metadata. */
+      fillMetadata( profileObjectObservation, profileObject );
+
+      return profileObject;
+    }
+
+    /* REMARK: Handle feature as profile object binding (new style). */
+    final ProfileObjectBinding profileObjectBinding = (ProfileObjectBinding)profileObjectFeature;
+
+    /* Fill the records and the metadata. */
+    ProfileObjectHelper.fillRecords( profileObjectBinding, profileObject );
+    ProfileObjectHelper.fillMetadata( profileObjectBinding, profileObject );
+
+    return profileObject;
+  }
+
+  private void fillMetadata( final IObservation<TupleResult> profileObjectObservation, final BuildingTrapez profileObject )
+  {
+    final TupleResult result = profileObjectObservation.getResult();
+    if( result.size() != 1 )
+      throw new IllegalStateException( "Only one record is allowed in profile object observations..." );
+
+    final IComponent bezugspunktXComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
+    final IComponent bezugspunktYComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );
+    final IComponent hoeheComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE );
+    final IComponent breiteComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
+    final IComponent steigungComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG );
+    final IComponent sohlgefaelleComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE );
+    final IComponent rauheitComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
+
+    final int bezugspunktXIndex = result.indexOfComponent( bezugspunktXComponent );
+    final int bezugspunktYIndex = result.indexOfComponent( bezugspunktYComponent );
+    final int hoeheIndex = result.indexOfComponent( hoeheComponent );
+    final int breiteIndex = result.indexOfComponent( breiteComponent );
+    final int steigungIndex = result.indexOfComponent( steigungComponent );
+    final int sohlgefaelleIndex = result.indexOfComponent( sohlgefaelleComponent );
+    final int rauheitIndex = result.indexOfComponent( rauheitComponent );
+
+    final IRecord record = result.get( 0 );
+
+    final Double bezugspunktX = (Double)record.getValue( bezugspunktXIndex );
+    final Double bezugspunktY = (Double)record.getValue( bezugspunktYIndex );
+    final Double hoehe = (Double)record.getValue( hoeheIndex );
+    final Double breite = (Double)record.getValue( breiteIndex );
+    final Double steigung = (Double)record.getValue( steigungIndex );
+    final Double sohlgefaelle = (Double)record.getValue( sohlgefaelleIndex );
+    final Double rauheit = (Double)record.getValue( rauheitIndex );
+
+    profileObject.setBezugspunktX( bezugspunktX );
+    profileObject.setBezugspunktY( bezugspunktY );
+    profileObject.setHoehe( hoehe );
+    profileObject.setBreite( breite );
+    profileObject.setSteigung( steigung );
+    profileObject.setSohlgefaelle( sohlgefaelle );
+    profileObject.setRauheit( rauheit );
   }
 }

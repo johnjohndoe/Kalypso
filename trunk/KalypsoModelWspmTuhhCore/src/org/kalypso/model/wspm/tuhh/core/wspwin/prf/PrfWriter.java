@@ -63,15 +63,21 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_GERINNE_ART;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_KENNUNG;
@@ -434,8 +440,10 @@ public class PrfWriter implements IPrfConstants
   private void writeBuilding( final IProfileBuilding building )
   {
     final String buildingType = building.getId();
-    if( buildingType.equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) )
+    if( buildingType.equals( BuildingBruecke.ID ) )
     {
+      final BuildingBruecke brueckeBuilding = (BuildingBruecke)building;
+
       final DataBlockHeader dbho = PrfHeaders.createHeader( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ); //$NON-NLS-1$
       final CoordDataBlock dbo = new CoordDataBlock( dbho );
       writeCoords( m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), dbo, null );
@@ -445,10 +453,10 @@ public class PrfWriter implements IPrfConstants
       writeCoords( m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), dbu, null );
       try
       {
-        final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
+        final String secLine = String.format( Locale.US, " %12.4f", brueckeBuilding.getUnterwasser() ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", brueckeBuilding.getBreite() ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", brueckeBuilding.getRauheit() ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", brueckeBuilding.getFormbeiwert() ); //$NON-NLS-1$
         dbu.setSecondLine( secLine );
       }
       catch( final Exception e )
@@ -457,8 +465,10 @@ public class PrfWriter implements IPrfConstants
       }
       m_dbWriter.addDataBlock( dbu );
     }
-    else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_WEHR ) == 0 )
+    else if( buildingType.compareTo( BuildingWehr.ID ) == 0 )
     {
+      final BuildingWehr wehrBuilding = (BuildingWehr)building;
+
       final DataBlockHeader dbhw = PrfHeaders.createHeader( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$
       final CoordDataBlock dbw = new CoordDataBlock( dbhw );
       final IProfilePointMarker[] deviders = m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
@@ -479,12 +489,13 @@ public class PrfWriter implements IPrfConstants
       {
         writeCoords( m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), dbw, null );
       }
+
       try
       {
-        final Object wehrart = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
+        final String wehrart = wehrBuilding.getWehrart();
 
         final StringBuffer secLine = new StringBuffer( toDataBlockKey( wehrart ) );
-        secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ) ); //$NON-NLS-1$
+        secLine.append( String.format( Locale.US, " %12.4f", wehrBuilding.getFormbeiwert() ) ); //$NON-NLS-1$
         for( final IProfilePointMarker devider : deviders )
         {
           secLine.append( String.format( Locale.US, " %12.4f", devider.getValue() ) ); //$NON-NLS-1$
@@ -495,17 +506,18 @@ public class PrfWriter implements IPrfConstants
       {
         KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.34" ), e ) ); //$NON-NLS-1$
       }
+
       m_dbWriter.addDataBlock( dbw );
     }
-    else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( buildingType ) )
+    else if( BuildingEi.ID.equals( buildingType ) )
     {
-      final DataBlockHeader dbhe = PrfHeaders.createHeader( IWspmTuhhConstants.BUILDING_TYP_EI );
+      final BuildingEi eiBuilding = (BuildingEi)building;
+
+      final DataBlockHeader dbhe = PrfHeaders.createHeader( BuildingEi.ID );
       final DoubleDataBlock dbe = new DoubleDataBlock( dbhe );
       try
       {
-        dbe.setDoubles( new Double[] { (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
-            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ),
-            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
+        dbe.setDoubles( new Double[] { eiBuilding.getBreite(), eiBuilding.getHoehe(), eiBuilding.getSohlgefaelle(), eiBuilding.getBezugspunktX(), eiBuilding.getBezugspunktY() } );
       }
 
       catch( final Exception e )
@@ -514,16 +526,16 @@ public class PrfWriter implements IPrfConstants
       }
       m_dbWriter.addDataBlock( dbe );
     }
-    else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( buildingType ) )
+    else if( BuildingMaul.ID.equals( buildingType ) )
     {
+      final BuildingMaul maulBuilding = (BuildingMaul)building;
+
       final DataBlockHeader dbhm = PrfHeaders.createHeader( buildingType );
       final DoubleDataBlock dbm = new DoubleDataBlock( dbhm );
 
       try
       {
-        dbm.setDoubles( new Double[] { (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
-            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ),
-            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
+        dbm.setDoubles( new Double[] { maulBuilding.getBreite(), maulBuilding.getHoehe(), maulBuilding.getSohlgefaelle(), maulBuilding.getBezugspunktX(), maulBuilding.getBezugspunktY() } );
       }
       catch( final Exception e )
       {
@@ -531,15 +543,16 @@ public class PrfWriter implements IPrfConstants
       }
       m_dbWriter.addDataBlock( dbm );
     }
-    else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( buildingType ) )
+    else if( BuildingKreis.ID.equals( buildingType ) )
     {
+      final BuildingKreis kreisBuilding = (BuildingKreis)building;
+
       final DataBlockHeader dbhk = PrfHeaders.createHeader( buildingType );
       final DoubleDataBlock dbk = new DoubleDataBlock( dbhk );
 
       try
       {
-        dbk.setDoubles( new Double[] { (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ),
-            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
+        dbk.setDoubles( new Double[] { kreisBuilding.getBreite(), kreisBuilding.getSohlgefaelle(), kreisBuilding.getBezugspunktX(), kreisBuilding.getBezugspunktY() } );
       }
       catch( final Exception e )
       {
@@ -548,23 +561,25 @@ public class PrfWriter implements IPrfConstants
       m_dbWriter.addDataBlock( dbk );
     }
 
-    else if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( buildingType ) )
+    else if( BuildingTrapez.ID.equals( buildingType ) )
     {
+      final BuildingTrapez trapezBuilding = (BuildingTrapez)building;
+
       final DataBlockHeader dbht = PrfHeaders.createHeader( buildingType ); //$NON-NLS-1$
       final DoubleDataBlock dbt = new DoubleDataBlock( dbht );
+
       try
       {
-        dbt.setDoubles( new Double[] { (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
-            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ),
-            (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ), (Double)building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
+        dbt.setDoubles( new Double[] { trapezBuilding.getBreite(), trapezBuilding.getHoehe(), trapezBuilding.getSteigung(), trapezBuilding.getSohlgefaelle(), trapezBuilding.getBezugspunktX(),
+            trapezBuilding.getBezugspunktY() } );
       }
       catch( final Exception e )
       {
         KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.46" ), e ) ); //$NON-NLS-1$
       }
+
       m_dbWriter.addDataBlock( dbt );
     }
-
   }
 
   private void writeProfileObject( final IProfileObject profileObject )
@@ -576,7 +591,7 @@ public class PrfWriter implements IPrfConstants
       final DataBlockHeader header = PrfHeaders.createHeader( sinuosity.getId() );
       final DoubleDataBlock dataBlock = new SinuositaetDataBlock( header );
       final SINUOSITAET_KENNUNG kennung = sinuosity.getKennung();
-      final double sinus = sinuosity.getSinuositaet();
+      final double sinus = sinuosity.getSn();
       final SINUOSITAET_GERINNE_ART gerinne = sinuosity.getGerinneArt();
       final double lf = sinuosity.getLf();
 

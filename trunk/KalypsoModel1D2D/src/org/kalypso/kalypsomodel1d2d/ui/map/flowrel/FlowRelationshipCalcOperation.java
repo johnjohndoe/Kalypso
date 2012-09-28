@@ -239,7 +239,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
         throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) ); //$NON-NLS-1$
       }
 
-      return runCalculation( calculation, flowRel, new IProfile[] { teschkeProfile.getProfil() }, monitor );
+      return runCalculation( calculation, flowRel, new IProfile[] { teschkeProfile.getProfile() }, monitor );
     }
     else if( flowRel instanceof IBuildingFlowRelation )
     {
@@ -278,9 +278,9 @@ public class FlowRelationshipCalcOperation implements IAdaptable
         throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message ) );
       }
 
-      final IProfile downStreamProfil = downProfile.getProfil();
-      final IProfile buildingProfil = buildingProfile.getProfil();
-      final IProfile upStreamProfil = upProfile.getProfil();
+      final IProfile downStreamProfil = downProfile.getProfile();
+      final IProfile buildingProfil = buildingProfile.getProfile();
+      final IProfile upStreamProfil = upProfile.getProfile();
 
       return runCalculation( calculation, flowRel, new IProfile[] { downStreamProfil, buildingProfil, upStreamProfil }, monitor );
     }

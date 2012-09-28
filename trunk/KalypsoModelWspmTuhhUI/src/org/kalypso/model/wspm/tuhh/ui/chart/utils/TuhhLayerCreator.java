@@ -51,6 +51,8 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.chart.data.TuhhResultDataProvider;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -115,9 +117,9 @@ public final class TuhhLayerCreator
         return provider.createLayer( profile, IWspmTuhhConstants.LAYER_WEHR );
       else if( Buildings.isTube( building ) )
         return provider.createLayer( profile, IWspmTuhhConstants.LAYER_TUBES );
-      else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) )
+      else if( building.getId().equals( BuildingKreis.ID ) )
         return provider.createLayer( profile, IWspmTuhhConstants.LAYER_TUBES );
-      else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_EI ) )
+      else if( building.getId().equals( BuildingEi.ID ) )
         return provider.createLayer( profile, IWspmTuhhConstants.LAYER_TUBES );
     }
 

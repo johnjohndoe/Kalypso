@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.SinuositaetPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -74,7 +73,6 @@ public class SinuositaetLayer extends AbstractProfilLayer
   public SinuositaetLayer( final IProfile profil )
   {
     super( "NullComponent", profil, "NullComponent", null ); //$NON-NLS-1$ //$NON-NLS-2$
-
   }
 
   @Override
@@ -93,8 +91,8 @@ public class SinuositaetLayer extends AbstractProfilLayer
       {
         // TODO get nice icon
       }
-
     };
+
     return new ILegendEntry[] { le };
   }
 
@@ -102,10 +100,9 @@ public class SinuositaetLayer extends AbstractProfilLayer
   public String getTitle( )
   {
     final ISinuositaetProfileObject[] sin = getProfil().getProfileObjects( ISinuositaetProfileObject.class );
-    if( sin.length > 0 && sin[0] instanceof SinuositaetProfileObject )
+    if( sin.length > 0 )
     {
-      final SinuositaetProfileObject sinuositaet = (SinuositaetProfileObject) sin[0];
-      return sinuositaet.getObservation().getDescription();
+      return sin[0].getTypeLabel();
     }
     return super.getTitle();
   }

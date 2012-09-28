@@ -104,7 +104,7 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
     final String id = info.getID( profileFeature );
     final String name = info.getName( profileFeature );
 
-    final IProfile profil = profileFeature.getProfil();
+    final IProfile profil = profileFeature.getProfile();
 
     final IProfileRecord minPoint = ProfileVisitors.findLowestPoint( profil );
     if( minPoint == null )

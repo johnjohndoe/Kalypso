@@ -111,7 +111,7 @@ public abstract class AbstractCsvWriter
     for( final IProfileFeature profileFeature : profiles )
     {
       monitor.subTask( String.format( "%s (km %s)", profileFeature.getName(), profileFeature.getBigStation() ) ); //$NON-NLS-1$
-      final IProfile profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfile();
       writeData( writer, profileFeature, profil );
       ProgressUtilities.worked( monitor, 1 );
     }

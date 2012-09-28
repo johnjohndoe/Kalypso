@@ -50,9 +50,11 @@ import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassification
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
@@ -108,32 +110,32 @@ public class PrfRoughnessWriter
   private Double getRoughnessFromBuilding( )
   {
     final IProfileBuilding[] buildings = m_profile.getProfileObjects( IProfileBuilding.class );
-    if( !isDurchlass( buildings ) )
-      return null;
-
-    return Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, buildings[0] );
+    return getRoughnessFromDurchlass( buildings );
   }
 
-  private boolean isDurchlass( final IProfileObject[] objects )
+  private Double getRoughnessFromDurchlass( final IProfileObject[] objects )
   {
     if( ArrayUtils.isEmpty( objects ) )
-      return false;
+      return null;
 
     for( final IProfileObject object : objects )
     {
       final String identifier = object.getId();
 
-      if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( identifier ) )
-        return true;
-      else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( identifier ) )
-        return true;
-      else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( identifier ) )
-        return true;
-      else if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( identifier ) )
-        return true;
+      if( BuildingEi.ID.equals( identifier ) )
+        return ((BuildingEi)object).getRauheit();
+
+      if( BuildingMaul.ID.equals( identifier ) )
+        return ((BuildingMaul)object).getRauheit();
+
+      if( BuildingKreis.ID.equals( identifier ) )
+        return ((BuildingKreis)object).getRauheit();
+
+      if( BuildingTrapez.ID.equals( identifier ) )
+        return ((BuildingTrapez)object).getRauheit();
     }
 
-    return false;
+    return null;
   }
 
   void writeRauheit( )
@@ -174,7 +176,7 @@ public class PrfRoughnessWriter
 
     for( final IProfileRecord point : points )
     {
-      final Double x = (Double) point.getValue( indexWidth );
+      final Double x = (Double)point.getValue( indexWidth );
       final Double roughness = applyFactor( point, getValue( point, component ) );
 
       arrX.add( x );
@@ -195,7 +197,7 @@ public class PrfRoughnessWriter
     if( Objects.isNull( componentFactor ) )
       return value;
 
-    final Double factor = (Double) point.getValue( componentFactor );
+    final Double factor = (Double)point.getValue( componentFactor );
     if( Objects.isNull( factor ) )
       return value;
 
@@ -204,7 +206,7 @@ public class PrfRoughnessWriter
 
   private Double getValue( final IProfileRecord point, final IComponent component )
   {
-    final Double plainValue = (Double) point.getValue( component );
+    final Double plainValue = (Double)point.getValue( component );
     if( !m_preferClasses )
       return plainValue;
 

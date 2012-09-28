@@ -65,7 +65,7 @@ public class EwawiProfilePointCreator
     final IComponent hoeheComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent codeComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_CODE );
 
-    final IProfile profil = m_profileFeature.getProfil();
+    final IProfile profil = m_profileFeature.getProfile();
     profil.addPointProperty( idComponent );
     profil.addPointProperty( commentComponent );
     profil.addPointProperty( rechtswertComponent );

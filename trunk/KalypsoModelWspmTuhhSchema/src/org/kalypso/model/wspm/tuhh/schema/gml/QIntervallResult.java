@@ -149,7 +149,7 @@ public class QIntervallResult extends Feature_Impl
     final String href = "project:/modell.gml#" + profile.getId(); //$NON-NLS-1$
     setLink( QNAME_P_QIntervallResult_profileMember, href, ftProfile );
 
-    final IProfileObject[] buildings = profile.getProfil().getProfileObjects( IProfileBuilding.class );
+    final IProfileObject[] buildings = profile.getProfile().getProfileObjects( IProfileBuilding.class );
     if( ArrayUtils.isEmpty( buildings ) )
       return;
 

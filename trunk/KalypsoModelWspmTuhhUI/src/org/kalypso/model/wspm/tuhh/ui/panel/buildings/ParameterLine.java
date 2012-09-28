@@ -58,7 +58,6 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -91,7 +90,7 @@ public class ParameterLine
 
     m_devider = devider;
     final BuildingWehr weir = WspmSohlpunkte.getBuilding( m_profile, BuildingWehr.class );
-    final String weirType = weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString();
+    final String weirType = weir.getWehrart();
     m_label = toolkit.createLabel( m_composite, m_labelProvider.getDescription( weirType ) );
 
     m_valueText = toolkit.createText( m_composite, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
@@ -101,17 +100,12 @@ public class ParameterLine
 
     final Double coefficientValue;
     if( devider.getComponent().getId().equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
-    {
-      coefficientValue = (Double) devider.getIntepretedValue();
-    }
+      coefficientValue = (Double)devider.getIntepretedValue();
     else
-    {
-      coefficientValue = (Double) weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
-    }
+      coefficientValue = weir.getFormbeiwert();
+
     if( coefficientValue != null )
-    {
       m_valueText.setText( String.format( "%.4f", coefficientValue ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
 
     final Display display = parent.getDisplay();
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
@@ -126,9 +120,7 @@ public class ParameterLine
       public void focusGained( final FocusEvent e )
       {
         if( m_valueText != null && !m_valueText.isDisposed() )
-        {
           m_valueText.selectAll();
-        }
       }
 
       @Override
@@ -148,7 +140,7 @@ public class ParameterLine
   public final void refresh( )
   {
     final BuildingWehr weir = WspmSohlpunkte.getBuilding( m_profile, BuildingWehr.class );
-    final String weirType = weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString();
+    final String weirType = weir.getWehrart();
     m_label.setText( m_labelProvider.getDescription( weirType ) );
   }
 
@@ -163,23 +155,17 @@ public class ParameterLine
 
     /* Update text */
     if( valueToSet == null )
-    {
       m_valueText.setText( StringUtils.EMPTY );
-    }
     else
-    {
       m_valueText.setText( String.format( "%.4f", valueToSet ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
 
-    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11" ), m_profile, true ); //$NON-NLS-1$
     if( m_devider.getComponent().getId().equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
     {
+      final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11" ), m_profile, true ); //$NON-NLS-1$
       operation.addChange( new PointMarkerEdit( m_devider, valueToSet ) );
+      new ProfileOperationJob( operation ).schedule();
     }
     else
-    {
-      operation.addChange( new ProfileObjectEdit( weir, weir.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), valueToSet ) );
-    }
-    new ProfileOperationJob( operation ).schedule();
+      weir.setFormbeiwert( valueToSet );
   }
 }

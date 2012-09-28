@@ -52,8 +52,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -126,7 +126,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
   private void setBridgeDefaultValues( final BuildingBruecke bridge )
   {
-    bridge.setValueFor( BUILDING_PROPERTY_FORMBEIWERT, new Double( 0.0 ) );
+    bridge.setFormbeiwert( new Double( 0.0 ) );
   }
 
   private void setUWheight( final IProfile profile, final BuildingBruecke bridge, final IWProfPoint widthPoint )
@@ -137,13 +137,13 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
     final IProfileRecord lowestSoilPoint = ProfileVisitors.findLowestPoint( profile );
 
-    final double lowestSoilZ = lowestSoilPoint == null ? Double.MAX_VALUE : (Double) lowestSoilPoint.getValue( heightIndex );
+    final double lowestSoilZ = lowestSoilPoint == null ? Double.MAX_VALUE : (Double)lowestSoilPoint.getValue( heightIndex );
     // FIXME: 2cm runter ist zu fix, besser noch mal gegen das uw-Profil prüfen
     final double uwZ = Math.min( lowestSoilZ - 0.02, widthPointZ );
     if( uwZ < Double.MAX_VALUE )
     {
       final BigDecimal uwScaled = new BigDecimal( uwZ ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-      bridge.setValueFor( BUILDING_PROPERTY_UNTERWASSER, uwScaled.doubleValue() );
+      bridge.setUnterwasser( uwScaled.doubleValue() );
       return;
     }
   }
@@ -157,7 +157,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     {
       final double width = location.distance( profileLine );
       final BigDecimal widthScaled = new BigDecimal( width ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-      bridge.setValueFor( BUILDING_PROPERTY_BREITE, widthScaled.doubleValue() );
+      bridge.setBreite( widthScaled.doubleValue() );
     }
   }
 
@@ -224,8 +224,8 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
       if( bridgeValue instanceof Number && heightValue instanceof Number )
       {
-        final double bridgeHeight = ((Number) bridgeValue).doubleValue();
-        final double heightHeight = ((Number) heightValue).doubleValue();
+        final double bridgeHeight = ((Number)bridgeValue).doubleValue();
+        final double heightHeight = ((Number)heightValue).doubleValue();
         if( bridgeHeight > heightHeight )
           return lastBridgePoint;
       }
@@ -261,8 +261,8 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     IRecord lastPoint = null;
     for( final IRecord point : points )
     {
-      final Double toSnap = (Double) point.getValue( toSnapIndex );
-      final Double height = (Double) point.getValue( heightIndex );
+      final Double toSnap = (Double)point.getValue( toSnapIndex );
+      final Double height = (Double)point.getValue( heightIndex );
       if( toSnap != null && height != null )
       {
         final double dist = Math.abs( toSnap - height );
@@ -284,8 +284,8 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   {
     for( final IRecord point : points )
     {
-      final Double lower = (Double) point.getValue( lowerIndex );
-      final Double higher = (Double) point.getValue( higherIndex );
+      final Double lower = (Double)point.getValue( lowerIndex );
+      final Double higher = (Double)point.getValue( higherIndex );
       if( lower != null && higher != null )
       {
         if( higher - lower < 0.05 )
@@ -497,7 +497,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
         if( comment != null && !comment.isEmpty() )
         {
-          final String existingComment = (String) point.getValue( commentIndex );
+          final String existingComment = (String)point.getValue( commentIndex );
           final String commentToSet = existingComment == null ? comment : existingComment + " - " + comment; //$NON-NLS-1$
           point.setValue( commentIndex, commentToSet );
         }

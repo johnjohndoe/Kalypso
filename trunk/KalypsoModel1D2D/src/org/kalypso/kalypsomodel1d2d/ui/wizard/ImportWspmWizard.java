@@ -105,13 +105,14 @@ import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor;
@@ -137,7 +138,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * A wizard to import WSPM-Models into a 1D2D Model.
- *
+ * 
  * @author Gernot Belger
  */
 public class ImportWspmWizard extends Wizard
@@ -319,7 +320,7 @@ public class ImportWspmWizard extends Wizard
   /**
    * Searches an already imported profile-network for the given reach.<br>
    * REMARK: at the moment, we just search for a network with the same name as the reach... is there another criterion?
-   *
+   * 
    * @return <code>null</code>, if none was found.
    */
   private IRiverProfileNetwork findExistingNetwork( final IRiverProfileNetworkCollection profNetworkColl, final TuhhReach reach )
@@ -337,7 +338,7 @@ public class ImportWspmWizard extends Wizard
 
   /**
    * Reads a REIB_CONST result and creates polynomial and building parameters (aka 'flow-relations') from it.
-   *
+   * 
    * @param elements
    *          by station Must be sorted in the order of the flow direction
    */
@@ -431,9 +432,9 @@ public class ImportWspmWizard extends Wizard
     final IPhenomenon buildingPhenomenon = qresultBuildingObs.getPhenomenon();
     final String buildingId = buildingPhenomenon.getID();
     final QName buildingQName;
-    if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( buildingId ) )
+    if( BuildingWehr.ID.equals( buildingId ) )
       buildingQName = IWeirFlowRelation.QNAME;
-    else if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( buildingId ) )
+    else if( BuildingBruecke.ID.equals( buildingId ) )
       buildingQName = IBridgeFlowRelation.QNAME;
     else
       throw new IllegalStateException();
@@ -579,7 +580,7 @@ public class ImportWspmWizard extends Wizard
       final double station = profileMember.getStation();
 
       /* find sohlpunkt */
-      final IProfile profil = profileMember.getProfil();
+      final IProfile profil = profileMember.getProfile();
 
       final IProfileRecord sohlPoint = ProfileVisitors.findMinimum( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint, crs );

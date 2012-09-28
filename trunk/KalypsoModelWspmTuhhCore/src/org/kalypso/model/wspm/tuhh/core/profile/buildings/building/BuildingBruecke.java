@@ -40,80 +40,41 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
-import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
+ * @author Holger Albert
  */
-public final class BuildingBruecke extends AbstractProfileObject implements IProfileBuilding
+public class BuildingBruecke extends AbstractProfileObject implements IProfileBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_BRUECKE;
 
-  public BuildingBruecke( final IProfile profil )
-  {
-    this( profil, buildTupleResult() );
-  }
+  private static final String PROPERTY_BREITE = "breite"; //$NON-NLS-1$
 
-  private static IObservation<TupleResult> buildTupleResult( )
-  {
-    final TupleResult result = new TupleResult();
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
-    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
-    final IRecord emptyRecord = result.createRecord();
-    result.add( emptyRecord );
-    final Observation<TupleResult> observation = new Observation<>( ID, ID, result );
+  private static final String PROPERTY_UNTERWASSER = "unterwasser"; //$NON-NLS-1$
 
-    return observation;
-  }
+  private static final String PROPERTY_FORMBEIWERT = "formbeiwert"; //$NON-NLS-1$
 
-  public double getWidth( )
-  {
-    return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
-  }
+  private static final String PROPERTY_RAUHEIT = "rauheit"; //$NON-NLS-1$
 
-  public double getUnterwasser( )
-  {
-    return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER );
-  }
+  public static final String KEY_BREITE = "BRUECKE_BREITE"; //$NON-NLS-1$
 
-  public double getFormBeiwert( )
-  {
-    return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
-  }
+  public static final String KEY_UNTERWASSER = "BRUECKE_UNTERWASSER"; //$NON-NLS-1$
 
-  public double getRauheit( )
-  {
-    return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
-  }
+  public static final String KEY_FORMBEIWERT = "BRUECKE_FORMBEIWERT"; //$NON-NLS-1$
 
-  public BuildingBruecke( final IProfile profil, final IObservation<TupleResult> observation )
-  {
-    super( observation );
-    addPointProperties( profil );
-  }
+  public static final String KEY_RAUHEIT = "BRUECKE_RAUHEIT"; //$NON-NLS-1$
 
-  private void addPointProperties( final IProfile profil )
+  public BuildingBruecke( final IProfile profile )
   {
-    final IComponent uk = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-    if( !profil.hasPointProperty( uk ) )
-    {
-      profil.addPointProperty( uk, null );
-    }
-    final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    if( !profil.hasPointProperty( ok ) )
-    {
-      profil.addPointProperty( ok, null );
-    }
+    super();
+
+    addPointProperties( profile );
   }
 
   @Override
@@ -123,8 +84,82 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
   }
 
   @Override
-  protected String[] getProfileProperties( )
+  public String[] getProperties( )
+  {
+    return new String[] { PROPERTY_BREITE, PROPERTY_UNTERWASSER, PROPERTY_FORMBEIWERT, PROPERTY_RAUHEIT };
+  }
+
+  @Override
+  public String getPropertyLabel( final String property )
+  {
+    if( PROPERTY_BREITE.equals( property ) )
+      return "größte Breite/Durchmesser"; // Largest Width
+
+    if( PROPERTY_UNTERWASSER.equals( property ) )
+      return "Unterwasser"; // Downstream Height
+
+    if( PROPERTY_FORMBEIWERT.equals( property ) )
+      return "Pfeilerformbeiwert"; // Pillar Shape Coefficient
+
+    if( PROPERTY_RAUHEIT.equals( property ) )
+      return "Rauheit"; // Roughness
+
+    return property;
+  }
+
+  public Double getBreite( )
+  {
+    return getDoubleValue( KEY_BREITE, null );
+  }
+
+  public Double getUnterwasser( )
+  {
+    return getDoubleValue( KEY_UNTERWASSER, null );
+  }
+
+  public Double getFormbeiwert( )
+  {
+    return getDoubleValue( KEY_FORMBEIWERT, null );
+  }
+
+  public Double getRauheit( )
+  {
+    return getDoubleValue( KEY_RAUHEIT, null );
+  }
+
+  public void setBreite( final Double breite )
+  {
+    setDoubleValue( KEY_BREITE, breite );
+  }
+
+  public void setUnterwasser( final Double unterwasser )
+  {
+    setDoubleValue( KEY_UNTERWASSER, unterwasser );
+  }
+
+  public void setFormbeiwert( final Double formbeiwert )
+  {
+    setDoubleValue( KEY_FORMBEIWERT, formbeiwert );
+  }
+
+  public void setRauheit( final Double rauheit )
+  {
+    setDoubleValue( KEY_RAUHEIT, rauheit );
+  }
+
+  public String[] getProfileProperties( )
   {
     return new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE };
+  }
+
+  private void addPointProperties( final IProfile profil )
+  {
+    final IComponent uk = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+    if( !profil.hasPointProperty( uk ) )
+      profil.addPointProperty( uk, null );
+
+    final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    if( !profil.hasPointProperty( ok ) )
+      profil.addPointProperty( ok, null );
   }
 }

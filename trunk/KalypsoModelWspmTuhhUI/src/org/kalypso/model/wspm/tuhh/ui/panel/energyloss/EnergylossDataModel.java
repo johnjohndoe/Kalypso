@@ -46,17 +46,12 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.Energyloss;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
  */
 public class EnergylossDataModel extends AbstractModelObject
 {
@@ -66,8 +61,6 @@ public class EnergylossDataModel extends AbstractModelObject
 
   private final IEnergylossProfileObject m_energylossObject;
 
-  private final IProfile m_profile;
-
   private final int m_index;
 
   private BigDecimal m_value;
@@ -76,49 +69,37 @@ public class EnergylossDataModel extends AbstractModelObject
 
   public EnergylossDataModel( final IProfile profile, final int index )
   {
-    m_profile = profile;
-    IEnergylossProfileObject[] obs = profile.getProfileObjects( EnergylossProfileObject.class );
+    final IEnergylossProfileObject[] obs = profile.getProfileObjects( EnergylossProfileObject.class );
     m_energylossObject = obs.length > 0 ? obs[0] : null;
     m_index = index;
   }
 
-  public void fireObjectChange( String type, BigDecimal newValue )
+  public void fireObjectChange( final String type, final BigDecimal newValue )
   {
     if( type == null || newValue == null )
+      return;
+
+    final Energyloss energyloss = getEnergyloss();
+    if( energyloss == null )
     {
+      m_energylossObject.addEnergyloss( new Energyloss( type, null, newValue ) );
       return;
     }
 
-    final IComponent cmpVal = m_energylossObject.getObjectProperty( IEnergylossProfileObject.PROPERTY_VALUE );
-    final IComponent cmpTyp = m_energylossObject.getObjectProperty( IEnergylossProfileObject.PROPERTY_TYPE );
-    final IRecord rec = getRecord();
-    int index = m_index;
-    if( rec == null )
-    {
-      final TupleResult result = m_energylossObject.getObservation().getResult();
-      index = result.size();
-      final IRecord newRec = m_energylossObject.getObservation().getResult().createRecord();
-      result.add( newRec );
-    }
-    final ProfileObjectEdit changes = new ProfileObjectEdit( m_energylossObject, cmpVal, index, newValue.doubleValue() );
-    final ProfileOperation operation = new ProfileOperation( "updating energyloss", m_profile, changes, true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectEdit( m_energylossObject, cmpTyp, index, type ) );
-    new ProfileOperationJob( operation ).schedule();
+    m_energylossObject.setEnergyloss( m_index, new Energyloss( type, null, newValue ) );
   }
 
   public String getEnergylossType( )
   {
     if( m_type == null )
     {
-      final IRecord rec = getRecord();
-      if( rec == null )
-      {
+      final Energyloss energyloss = getEnergyloss();
+      if( energyloss == null )
         return null;
-      }
-      final int iType = rec.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
-      final Object objTyp = rec.getValue( iType );
-      m_type = objTyp == null ? null : objTyp.toString();
+
+      m_type = energyloss.getType();
     }
+
     return m_type;
   }
 
@@ -126,18 +107,13 @@ public class EnergylossDataModel extends AbstractModelObject
   {
     if( m_value == null )
     {
-      final IRecord rec = getRecord();
-      if( rec == null )
-      {
+      final Energyloss energyloss = getEnergyloss();
+      if( energyloss == null )
         return null;
-      }
-      // final int iType = rec.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
-      final int iValue = rec.indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
-      final Object objVal = rec.getValue( iValue );
-      // final Object objTyp = rec.getValue( iType );
-      m_value = objVal == null ? null : new BigDecimal( (Double) objVal );
-      // return new Pair<String, BigDecimal>( objTyp.toString(), energylossValue );
+
+      m_value = energyloss.getValue();
     }
+
     return m_value;
   }
 
@@ -146,31 +122,22 @@ public class EnergylossDataModel extends AbstractModelObject
     return BeansObservables.observeValue( this, property );
   }
 
-  private final IRecord getRecord( )
+  private final Energyloss getEnergyloss( )
   {
-    final TupleResult result = m_energylossObject.getObservation().getResult();
-    if( m_index < result.size() )
-    {
-      return result.get( m_index );
-    }
-    return null;
+    return m_energylossObject.getEnergyloss( m_index );
   }
 
   public void removeEnergyloss( )
   {
-    final TupleResult result = m_energylossObject.getObservation().getResult();
-    if( m_index < result.size() )
-    {
-      result.remove( m_index );
-    }
+    m_energylossObject.removeEnergyloss( m_index );
   }
 
-  public void setEnergylossType( String energylossType )
+  public void setEnergylossType( final String energylossType )
   {
     m_type = energylossType;
   }
 
-  public void setEnergylossValue( BigDecimal energylossValue )
+  public void setEnergylossValue( final BigDecimal energylossValue )
   {
     m_value = energylossValue;
     fireObjectChange( getEnergylossType(), energylossValue );

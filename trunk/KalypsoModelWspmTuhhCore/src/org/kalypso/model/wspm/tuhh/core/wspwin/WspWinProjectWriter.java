@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.Energyloss;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
@@ -79,7 +80,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Writes the state for calculation with kalypso-1d.exe (which is different from wspwin format!).
- *
+ * 
  * @author Gernot Belger
  */
 public class WspWinProjectWriter
@@ -122,7 +123,7 @@ public class WspWinProjectWriter
       profileIndex.put( profileFeature, profileBean );
 
       /* Add real profile */
-      final IProfile profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfile();
       m_profiles.put( prfCount, profil );
     }
 
@@ -168,7 +169,7 @@ public class WspWinProjectWriter
   private void addEnergyloss( final TuhhReachProfileSegment segment, final WspWinZustand zustand )
   {
     final IProfileFeature profileMember = segment.getProfileMember();
-    final IProfile profile = profileMember.getProfil();
+    final IProfile profile = profileMember.getProfile();
     final IEnergylossProfileObject[] losses = profile.getProfileObjects( IEnergylossProfileObject.class );
     final BigDecimal station = profileMember.getBigStation();
     for( final IEnergylossProfileObject losse : losses )
@@ -178,44 +179,35 @@ public class WspWinProjectWriter
     }
   }
 
-  final private LOSSKIND getLosskind( final TupleResult result, final int index )
+  final private LOSSKIND getLosskind( final Energyloss energyloss )
   {
-    if( index < result.size() )
+    try
     {
-      final int iType = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
-      final IRecord rec = result.get( index );
-      try
-      {
-        final String id = rec.getValue( iType ).toString();
-        final LOSSKIND lk = LOSSKIND.valueOf( id.replace( "ü", "UE" ).toUpperCase() ); //$NON-NLS-1$ //$NON-NLS-2$
-        return lk;
-      }
-      catch( final IllegalArgumentException e )
-      {
-        // do nothing, just catch IllegalArgumentException
-      }
+      final String id = energyloss.getType();
+      final LOSSKIND lk = LOSSKIND.valueOf( id.replace( "ü", "UE" ).toUpperCase() ); //$NON-NLS-1$ //$NON-NLS-2$
+      return lk;
     }
-    return LOSSKIND.ZUSATZVERLUST;
+    catch( final IllegalArgumentException e )
+    {
+      // do nothing, just catch IllegalArgumentException
+      return LOSSKIND.ZUSATZVERLUST;
+    }
   }
 
   private final LocalEnergyLossBean convertToEnergylossBean( final BigDecimal station, final IEnergylossProfileObject loss )
   {
     final Map<LocalEnergyLossBean.LOSSKIND, Double> lossMap = new HashMap<>();
-    final TupleResult res = loss.getObservation().getResult();
-    for( int i = 0; i < res.size(); i++ )
+    final Energyloss[] energylosses = loss.getEnergylosses();
+    for( final Energyloss energyloss : energylosses )
     {
-      final LOSSKIND lk = getLosskind( res, i );
-      if(lossMap.containsKey( lk  ))
-      {
-        lossMap.put( lk,lossMap.get( lk )+ loss.getValue( i ).doubleValue() );
-      }
+      final LOSSKIND lk = getLosskind( energyloss );
+      if( lossMap.containsKey( lk ) )
+        lossMap.put( lk, lossMap.get( lk ) + energyloss.getValue().doubleValue() );
       else
-      {
-        lossMap.put( lk, loss.getValue( i ).doubleValue() );
-      }
+        lossMap.put( lk, energyloss.getValue().doubleValue() );
     }
-    final LocalEnergyLossBean bean = new LocalEnergyLossBean( station, lossMap);
-    return bean;
+
+    return new LocalEnergyLossBean( station, lossMap );
   }
 
   private void addRunoffEvent( final IRunOffEvent runoffEvent, final WspWinZustand zustand )
@@ -242,8 +234,8 @@ public class WspWinProjectWriter
 
     for( final IRecord record : result )
     {
-      final BigDecimal station = (BigDecimal) record.getValue( stationIndex );
-      final BigDecimal value = (BigDecimal) record.getValue( runoffIndex );
+      final BigDecimal station = (BigDecimal)record.getValue( stationIndex );
+      final BigDecimal value = (BigDecimal)record.getValue( runoffIndex );
       bean.addEntry( station, value );
     }
 

@@ -40,123 +40,126 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
-import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
+import org.eclipse.core.runtime.Assert;
+import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 
 /**
  * @author Dirk Kuch
+ * @author Holger Albert
  */
 public class SinuositaetProfileObject extends AbstractProfileObject implements ISinuositaetProfileObject
 {
+  private static final SINUOSITAET_KENNUNG DEFAULT_KENNUNG = SINUOSITAET_KENNUNG.eBeides;
+
+  private static final SINUOSITAET_GERINNE_ART DEFAULT_GERINNE_ART = SINUOSITAET_GERINNE_ART.eGegliedert;
+
+  public static final String PROPERTY_KENNUNG = "kennung"; //$NON-NLS-1$
+
+  public static final String PROPERTY_SN = "sn"; //$NON-NLS-1$
+
+  public static final String PROPERTY_GERINNE_ART = "gerinneArt"; //$NON-NLS-1$
+
+  public static final String PROPERTY_LF = "lf"; //$NON-NLS-1$
+
   public SinuositaetProfileObject( )
   {
-    this( buildObservation() );
+    super();
+
+    setKennung( DEFAULT_KENNUNG );
+    setGerinneArt( DEFAULT_GERINNE_ART );
   }
 
-  private static IObservation<TupleResult> buildObservation( )
-  {
-    final TupleResult result = new TupleResult();
-    result.addComponent( getObjectComponent( PROPERTY_KENNUNG ) );
-    result.addComponent( getObjectComponent( PROPERTY_SN ) );
-    result.addComponent( getObjectComponent( PROPERTY_GERINNE_ART ) );
-    result.addComponent( getObjectComponent( PROPERTY_LF ) );
-
-    final Observation<TupleResult> observation = new Observation<>( ID, "Sinuosität", result ); //$NON-NLS-1$
-    return observation;
-  }
-
-  public SinuositaetProfileObject( final IObservation<TupleResult> observation )
-  {
-    super( observation );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
-   */
   @Override
   public String getId( )
   {
     return ID;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.AbstractProfileObject#getProfileProperties()
-   */
   @Override
-  protected String[] getProfileProperties( )
+  public String[] getProperties( )
   {
-    return new String[] {};
+    return new String[] { PROPERTY_KENNUNG, PROPERTY_SN, PROPERTY_GERINNE_ART, PROPERTY_LF };
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject#getKennung()
-   */
+  @Override
+  public String getPropertyLabel( final String property )
+  {
+    if( PROPERTY_KENNUNG.equals( property ) )
+      return "Kennung";
+
+    if( PROPERTY_SN.equals( property ) )
+      return "Sinuosität";
+
+    if( PROPERTY_GERINNE_ART.equals( property ) )
+      return "Gerinne Art";
+
+    if( PROPERTY_LF.equals( property ) )
+      return "Linearfaktor";
+
+    return property;
+  }
+
   @Override
   public SINUOSITAET_KENNUNG getKennung( )
   {
-    final IObservation<TupleResult> observation = getObservation();
-    final TupleResult result = observation.getResult();
-    if( result.isEmpty() )
-      return null;
+    final String value = getValue( KEY_KENNUNG, null );
+    if( value == null )
+      return DEFAULT_KENNUNG;
 
-    final int index = result.indexOfComponent( PROPERTY_KENNUNG );
-    if( index < 0 )
-      return null;
-    final IRecord record = result.get( 0 );
-    return SINUOSITAET_KENNUNG.valueOf( record.getValue( index ).toString() );
+    return SINUOSITAET_KENNUNG.valueOf( value );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject#getSinuositaet()
-   */
   @Override
-  public Double getSinuositaet( )
+  public Double getSn( )
   {
-    final IObservation<TupleResult> observation = getObservation();
-    final TupleResult result = observation.getResult();
-    if( result.isEmpty() )
-      return null;
-
-    final int index = result.indexOfComponent( PROPERTY_SN );
-
-    final IRecord record = result.get( 0 );
-    return (Double)record.getValue( index );
+    return getDoubleValue( KEY_SN, null );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject#getGerinneArt()
-   */
   @Override
   public SINUOSITAET_GERINNE_ART getGerinneArt( )
   {
-    final IObservation<TupleResult> observation = getObservation();
-    final TupleResult result = observation.getResult();
-    if( result.isEmpty() )
-      return null;
+    final String value = getValue( KEY_GERINNE_ART, null );
+    if( value == null )
+      return DEFAULT_GERINNE_ART;
 
-    final int index = result.indexOfComponent( PROPERTY_GERINNE_ART );
-
-    final IRecord record = result.get( 0 );
-    return SINUOSITAET_GERINNE_ART.valueOf( record.getValue( index ).toString() );
+    return SINUOSITAET_GERINNE_ART.valueOf( value );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject#getLf()
-   */
   @Override
   public Double getLf( )
   {
-    final IObservation<TupleResult> observation = getObservation();
-    final TupleResult result = observation.getResult();
-    if( result.isEmpty() )
-      return null;
+    return getDoubleValue( KEY_LF, null );
+  }
 
-    final int index = result.indexOfComponent( PROPERTY_LF );
+  public void setKennung( final String kennung )
+  {
+    setValue( KEY_KENNUNG, kennung );
+  }
 
-    final IRecord record = result.get( 0 );
-    return (Double)record.getValue( index );
+  public void setKennung( final SINUOSITAET_KENNUNG kennung )
+  {
+    Assert.isNotNull( kennung );
+    setValue( KEY_KENNUNG, kennung.name() );
+  }
+
+  public void setSn( final Double sn )
+  {
+    setDoubleValue( KEY_SN, sn );
+  }
+
+  public void setGerinneArt( final String gerinneArt )
+  {
+    setValue( KEY_GERINNE_ART, gerinneArt );
+  }
+
+  public void setGerinneArt( final SINUOSITAET_GERINNE_ART gerinneArt )
+  {
+    Assert.isNotNull( gerinneArt );
+    setValue( KEY_GERINNE_ART, gerinneArt.name() );
+  }
+
+  public void setLf( final Double lf )
+  {
+    setDoubleValue( KEY_LF, lf );
   }
 }

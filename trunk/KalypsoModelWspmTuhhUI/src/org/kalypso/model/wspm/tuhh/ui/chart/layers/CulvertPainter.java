@@ -41,9 +41,13 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.commons.java.lang.Doubles;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.ICulvertBuilding;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -62,44 +66,11 @@ import de.openali.odysseus.chart.framework.util.FigureUtilities;
  */
 class CulvertPainter
 {
-  private final IProfileBuilding m_tube;
+  private final ICulvertBuilding m_tube;
 
-  public CulvertPainter( final IProfileBuilding tube )
+  public CulvertPainter( final ICulvertBuilding tube )
   {
     m_tube = tube;
-  }
-
-  private double getValue( final String property )
-  {
-    if( m_tube == null )
-      return Double.NaN;
-
-    return Buildings.getDoubleValueFor( property, m_tube );
-  }
-
-  private double getX( )
-  {
-    return getValue( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
-  }
-
-  private double getY( )
-  {
-    return getValue( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );
-  }
-
-  private double getWidth( )
-  {
-    return getValue( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
-  }
-
-  private double getHeight( )
-  {
-    return getValue( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE );
-  }
-
-  private double getSlope( )
-  {
-    return getValue( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG );
   }
 
   IFigure<IAreaStyle> createFigure( final ICoordinateMapper cm )
@@ -109,18 +80,18 @@ class CulvertPainter
 
     final String tubeID = m_tube.getId();
 
-    if( tubeID.equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) )
-      return paintTrapez( cm );
+    if( tubeID.equals( BuildingTrapez.ID ) )
+      return paintTrapez( (BuildingTrapez)m_tube, cm );
 
-    if( tubeID.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) || tubeID.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || tubeID.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) )
-      return paintEllipsis( cm );
+    if( tubeID.equals( BuildingKreis.ID ) || tubeID.equals( BuildingEi.ID ) || tubeID.equals( BuildingMaul.ID ) )
+      return paintEllipsis( m_tube, cm );
 
     return null;
   }
 
-  private IFigure<IAreaStyle> paintTrapez( final ICoordinateMapper cm )
+  private IFigure<IAreaStyle> paintTrapez( final BuildingTrapez trapezBuilding, final ICoordinateMapper cm )
   {
-    final Coordinate[] points = calculateTrapezCoordinates();
+    final Coordinate[] points = calculateTrapezCoordinates( trapezBuilding );
     if( points == null )
       return null;
 
@@ -132,18 +103,18 @@ class CulvertPainter
     return polygonFigure;
   }
 
-  private Coordinate[] calculateTrapezCoordinates( )
+  private Coordinate[] calculateTrapezCoordinates( final BuildingTrapez trapezBuilding )
   {
-    final double x = getX();
-    final double y = getY();
-    final double b = getWidth();
-    final double h = getHeight();
-    final double m = getSlope();
+    final Double x = trapezBuilding.getBezugspunktX();
+    final Double y = trapezBuilding.getBezugspunktY();
+    final Double b = trapezBuilding.getBreite();
+    final Double h = trapezBuilding.getHoehe();
+    final Double m = trapezBuilding.getSteigung();
 
-    if( Double.isNaN( x ) || Double.isNaN( y ) || Double.isNaN( b ) )
+    if( Objects.isNull( x, y, b, h, m ) )
       return null;
 
-    if( Double.isNaN( m ) || Double.isNaN( h ) )
+    if( Doubles.isNaN( x, y, b, h, m ) )
       return null;
 
     final double leftX = x - b / 2;
@@ -160,19 +131,22 @@ class CulvertPainter
     return points;
   }
 
-  private Coordinate[] calculateEllipsisCoordinates( )
+  private Coordinate[] calculateEllipsisCoordinates( final ICulvertBuilding building )
   {
-    final double x = getX();
-    final double y = getY();
-    final double b = getWidth();
-    final double h = getHeight();
+    final Double x = building.getBezugspunktX();
+    final Double y = building.getBezugspunktY();
+    final Double b = building.getBreite();
 
-    if( Double.isNaN( x ) || Double.isNaN( y ) || Double.isNaN( b ) )
+    if( org.kalypso.commons.java.lang.Objects.isNull( x, y, b ) )
       return null;
 
+    if( Doubles.isNaN( x, y, b ) )
+      return null;
+
+    final double h = fetchHeight( building, b );
+
     final double leftX = x - b / 2;
-// // FIXME: comment, why this strange isNaN test here, is this correct?
-    final double upperY = y + (Double.isNaN( h ) ? b : h);
+    final double upperY = y + h;
     final double rightX = x + b / 2;
     final double lowerY = y;
 
@@ -183,9 +157,29 @@ class CulvertPainter
     return points;
   }
 
-  private IFigure<IAreaStyle> paintEllipsis( final ICoordinateMapper cm )
+  private double fetchHeight( final ICulvertBuilding building, final Double b )
   {
-    final Coordinate[] points = calculateEllipsisCoordinates();
+    if( building instanceof BuildingEi )
+    {
+      final Double hoehe = ((BuildingEi)building).getHoehe();
+      if( hoehe != null )
+        return hoehe.doubleValue();
+    }
+
+    if( building instanceof BuildingMaul )
+    {
+      final Double hoehe = ((BuildingMaul)building).getHoehe();
+      if( hoehe != null )
+        return hoehe.doubleValue();
+    }
+
+    // REMARK: We use the width as height, if there is no height in the building.
+    return b.doubleValue();
+  }
+
+  private IFigure<IAreaStyle> paintEllipsis( final ICulvertBuilding building, final ICoordinateMapper cm )
+  {
+    final Coordinate[] points = calculateEllipsisCoordinates( building );
     if( points == null )
       return null;
 
@@ -208,7 +202,7 @@ class CulvertPainter
     if( box == null )
       return null;
 
-    return DataRange.create( (Number) box.getMinX(), (Number) box.getMaxX() );
+    return DataRange.create( (Number)box.getMinX(), (Number)box.getMaxX() );
   }
 
   public IDataRange<Number> getTargetRange( )
@@ -217,7 +211,7 @@ class CulvertPainter
     if( box == null )
       return null;
 
-    return DataRange.create( (Number) box.getMinY(), (Number) box.getMaxY() );
+    return DataRange.create( (Number)box.getMinY(), (Number)box.getMaxY() );
   }
 
   private Envelope getEnvelope( )
@@ -239,13 +233,13 @@ class CulvertPainter
     if( m_tube == null )
       return null;
 
-    final String tubID = m_tube.getId();
+    final String tubeID = m_tube.getId();
 
-    if( tubID.equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) )
-      return calculateTrapezCoordinates();
+    if( tubeID.equals( BuildingTrapez.ID ) )
+      return calculateTrapezCoordinates( (BuildingTrapez)m_tube );
 
-    if( tubID.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) || tubID.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || tubID.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) )
-      return calculateEllipsisCoordinates();
+    if( tubeID.equals( BuildingKreis.ID ) || tubeID.equals( BuildingEi.ID ) || tubeID.equals( BuildingMaul.ID ) )
+      return calculateEllipsisCoordinates( m_tube );
 
     return null;
   }

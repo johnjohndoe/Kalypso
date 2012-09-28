@@ -42,6 +42,10 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
@@ -103,16 +107,16 @@ public final class PrfHeaders
     if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "DP   m" ); //$NON-NLS-1$
 
-    if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( key ) ) //$NON-NLS-1$
+    if( BuildingEi.ID.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "EI", "", IWspWinConstants.SPEZIALPROFIL_EI ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( key ) ) //$NON-NLS-1$
+    if( BuildingKreis.ID.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "KREIS", "", IWspWinConstants.SPEZIALPROFIL_KREIS ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( key ) ) //$NON-NLS-1$
+    if( BuildingTrapez.ID.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "TRAPEZ", "", IWspWinConstants.SPEZIALPROFIL_TRAPEZ ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( key ) ) //$NON-NLS-1$
+    if( BuildingMaul.ID.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "MAULPROFIL", "", IWspWinConstants.SPEZIALPROFIL_MAUL ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( key ) ) //$NON-NLS-1$

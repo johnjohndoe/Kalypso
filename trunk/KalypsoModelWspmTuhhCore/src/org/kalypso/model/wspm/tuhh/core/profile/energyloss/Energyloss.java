@@ -16,64 +16,55 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.core.profile.objects;
+package org.kalypso.model.wspm.tuhh.core.profile.energyloss;
 
-import org.kalypso.model.wspm.core.profil.objects.AbstractProfileObjectData;
+import java.math.BigDecimal;
 
 /**
  * @author Holger Albert
  */
-public class EiProfileObjectData extends AbstractProfileObjectData
+public class Energyloss
 {
-  private final double m_bezugspunktX;
+  private final String m_type;
 
-  private final double m_bezugspunktY;
+  private final String m_description;
 
-  private final double m_hoehe;
+  private final BigDecimal m_value;
 
-  private final double m_breite;
-
-  private final double m_sohlGefaelle;
-
-  private final double m_rauhheit;
-
-  public EiProfileObjectData( final double bezugspunktX, final double bezugspunktY, final double hoehe, final double breite, final double sohlGefaelle, final double rauhheit )
+  public Energyloss( final String type, final String description, final BigDecimal value )
   {
-    m_bezugspunktX = bezugspunktX;
-    m_bezugspunktY = bezugspunktY;
-    m_hoehe = hoehe;
-    m_breite = breite;
-    m_sohlGefaelle = sohlGefaelle;
-    m_rauhheit = rauhheit;
+    m_type = type;
+    m_description = description;
+    m_value = value;
   }
 
-  public double getBezugspunktX( )
+  public String getType( )
   {
-    return m_bezugspunktX;
+    return m_type;
   }
 
-  public double getBezugspunktY( )
+  public Energyloss setType( final String type )
   {
-    return m_bezugspunktY;
+    return new Energyloss( type, m_description, m_value );
   }
 
-  public double getHoehe( )
+  public String getDescription( )
   {
-    return m_hoehe;
+    return m_description;
   }
 
-  public double getBreite( )
+  public Energyloss setDescription( final String description )
   {
-    return m_breite;
+    return new Energyloss( m_type, description, m_value );
   }
 
-  public double getSohlGefaelle( )
+  public BigDecimal getValue( )
   {
-    return m_sohlGefaelle;
+    return m_value;
   }
 
-  public double getRauhheit( )
+  public Energyloss setValue( final BigDecimal value )
   {
-    return m_rauhheit;
+    return new Energyloss( m_type, m_description, value );
   }
 }

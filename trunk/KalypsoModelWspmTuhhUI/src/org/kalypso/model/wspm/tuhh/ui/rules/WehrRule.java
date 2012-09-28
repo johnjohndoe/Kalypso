@@ -52,7 +52,7 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
@@ -60,7 +60,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * @author kimwerner
+ * @author Kim Werner
  */
 public class WehrRule extends AbstractValidatorRule
 {
@@ -70,9 +70,8 @@ public class WehrRule extends AbstractValidatorRule
     if( profil == null )
       return;
 
-    final IProfileBuilding building = WspmSohlpunkte.getBuilding( profil, IProfileBuilding.class );
-
-    if( building == null || !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
+    final BuildingWehr building = WspmSohlpunkte.getBuilding( profil, BuildingWehr.class );
+    if( building == null )
       return;
 
     validateLimits( profil, collector );
@@ -88,18 +87,16 @@ public class WehrRule extends AbstractValidatorRule
     final IProfilePointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( wehrDevider == null || wehrDevider.length < 1 || deviders == null || deviders.length < 2 )
       return;
+
     final int index1 = wehrDevider[0].getPoint().getIndex();
     final int index2 = wehrDevider[wehrDevider.length - 1].getPoint().getIndex();
     final int index3 = deviders[0].getPoint().getIndex();
     final int index4 = deviders[deviders.length - 1].getPoint().getIndex();
     if( index1 < index3 )
-    {
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.1" ), String.format( "km %.4f", profil.getStation() ), index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
+
     if( index2 > index4 )
-    {
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.3" ), String.format( "km %.4f", profil.getStation() ), index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
   }
 
   // TODO: in die Bewuchsregel verschieben -> doppelter Code
@@ -130,22 +127,21 @@ public class WehrRule extends AbstractValidatorRule
 
   private void validateParams( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-
     final IProfilePointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
 
-    final IProfileBuilding building = WspmSohlpunkte.getBuilding( profil, IProfileBuilding.class );
+    final BuildingWehr building = WspmSohlpunkte.getBuilding( profil, BuildingWehr.class );
     if( building == null )
       return;
 
-    final IComponent cmp = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
-    if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( building.getValue( cmp ) ) )
+    if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( building.getWehrart() ) )
       return;
+
     if( deviders != null )
     {
       for( final IProfilePointMarker devider : deviders )
       {
         final Object objValue = devider.getValue();
-        if( objValue == null || !(objValue instanceof Double) || ((Double) objValue).isNaN() || (Double) objValue == 0.0 )
+        if( objValue == null || !(objValue instanceof Double) || ((Double)objValue).isNaN() || (Double)objValue == 0.0 )
         {
           collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.7" ), String.format( "km %.4f", profil.getStation() ), devider.getPoint().getIndex(), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
           break;
@@ -153,20 +149,9 @@ public class WehrRule extends AbstractValidatorRule
       }
     }
 
-    for( final IComponent property : building.getObjectProperties() )
-    {
-      final Object prop = building.getValue( property );
-      if( !(prop instanceof Double) )
-      {
-        continue;
-      }
-
-      if( ((Double) prop).isNaN() || (Double) prop == 0.0 )
-      {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.9", property.getName() ), String.format( "km %.4f", profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        break;
-      }
-    }
+    final Double formbeiwert = building.getFormbeiwert();
+    if( formbeiwert == null || formbeiwert.isNaN() || formbeiwert.doubleValue() == 0.0 )
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.9", BuildingWehr.KEY_FORMBEIWERT ), String.format( "km %.4f", profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void validateProfilLines( final IProfile profil, final IValidatorMarkerCollector collector ) throws CoreException
@@ -181,10 +166,12 @@ public class WehrRule extends AbstractValidatorRule
     final IProfilePointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( deviders.length < 2 )
       return;
-// final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-// final int iOKWehr = profil.indexOfProperty( IWspmTuhhConstants.BUILDING_TYP_WEHR );
-// if( iOKWehr < 0 || iHoehe < 0 )
-// return;
+
+    // final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    // final int iOKWehr = profil.indexOfProperty( IWspmTuhhConstants.BUILDING_TYP_WEHR );
+    // if( iOKWehr < 0 || iHoehe < 0 )
+    // return;
+
     final int left = deviders[0].getPoint().getIndex();
     final int right = deviders[deviders.length - 1].getPoint().getIndex();
     if( left != innerLeft )
@@ -197,6 +184,7 @@ public class WehrRule extends AbstractValidatorRule
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.14" ), String.format( "km %.4f", profil.getStation() ), innerRight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
+
     // final IRecord[] midPoints = profil.getPoints( left + 1, right - 1 );
     for( int i = innerLeft; i <= innerRight; i++ )
     {

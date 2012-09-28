@@ -40,12 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.observation.result.IComponent;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 
 /**
  * @author Dirk Kuch
@@ -56,45 +57,28 @@ public final class Buildings
   {
   }
 
-  public static double getDoubleValueFor( final String componentID, final IProfileBuilding building )
-  {
-    final IComponent property = building.getObjectProperty( componentID );
-
-    try
-    {
-      final Object value = building.getValue( property );
-      if( value == null )
-        return Double.NaN;
-      if( value instanceof Double )
-        return (Double) value;
-      return Double.NaN;
-    }
-    catch( final IllegalArgumentException e )
-    {
-      KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( IStatus.ERROR, componentID, e.getLocalizedMessage(), null ) );
-      return Double.NaN;
-    }
-  }
-
   public static boolean isBridge( final IProfileObject building )
   {
-    return building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE );
+    return building.getId().equals( BuildingBruecke.ID );
   }
 
   public static boolean isWeir( final IProfileObject building )
   {
-    return building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_WEHR );
+    return building.getId().equals( BuildingWehr.ID );
   }
 
   public static boolean isTube( final IProfileObject building )
   {
-    if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_EI ) )
+    if( building.getId().equals( BuildingEi.ID ) )
       return true;
-    else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) )
+
+    if( building.getId().equals( BuildingKreis.ID ) )
       return true;
-    else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) )
+
+    if( building.getId().equals( BuildingMaul.ID ) )
       return true;
-    else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) )
+
+    if( building.getId().equals( BuildingTrapez.ID ) )
       return true;
 
     return false;

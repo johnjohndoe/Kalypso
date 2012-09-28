@@ -160,7 +160,7 @@ public class Sobek2Wspm
       final BigDecimal station = guessStation( profileDef );
       profileFeature.setBigStation( station );
 
-      final IProfile profil = profileFeature.getProfil();
+      final IProfile profil = profileFeature.getProfile();
       convertData( profil, profileData );
       convertFriction( profil, frictionDat );
       convertNetworkPoint( profil, networkPoint );
