@@ -114,6 +114,7 @@ public class ImportBaseMapImportShpOperation implements IImportBaseMapOperation
     final ImportShapeFileData importShapeData = new ImportShapeFileData();
     importShapeData.setInsertionIndex( 0 );
     importShapeData.setSrs( m_sourceSrs );
+
     // REMARK: setting the shape path after the import type has the effect, that, if an sld file already exists,
     // it will always be reused. This is intended.
     importShapeData.setStyleImportType( StyleImport.generateDefault );
