@@ -80,9 +80,9 @@ public class NetElement
 {
   private boolean m_calculated = false;
 
-  private final List<NetElement> m_upStreamDepends = new ArrayList<NetElement>();
+  private final List<NetElement> m_upStreamDepends = new ArrayList<>();
 
-  private final List<NetElement> m_downStreamDepends = new ArrayList<NetElement>();
+  private final List<NetElement> m_downStreamDepends = new ArrayList<>();
 
   private final Channel m_channel;
 

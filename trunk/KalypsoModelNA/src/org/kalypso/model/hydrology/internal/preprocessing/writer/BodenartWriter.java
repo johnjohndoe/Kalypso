@@ -76,7 +76,7 @@ public class BodenartWriter extends AbstractCoreFileWriter
     writer.append( Messages.getString( "org.kalypso.convert.namodel.manager.BodenartManager.5" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     writer.append( "BODART_ID ArtKap.  WP     FK     BFMAX     Kf   BF0\n" ); //$NON-NLS-1$
     writer.append( "                [mm/dm] [mm/dm] [mm/dm]  [mm/d] [-]\n" ); //$NON-NLS-1$
-    final List<String> names = new ArrayList<String>();
+    final List<String> names = new ArrayList<>();
 
     for( final Object object : list )
     {

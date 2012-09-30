@@ -72,7 +72,7 @@ import com.google.common.base.Objects;
  */
 public class StationClasses extends Feature_Impl implements IStationClasses
 {
-  private static WeakReference<Map<Class< ? extends Station>, Set<String>>> HASH = new WeakReference<Map<Class< ? extends Station>, Set<String>>>( null );
+  private static WeakReference<Map<Class< ? extends Station>, Set<String>>> HASH = new WeakReference<>( null );
 
   private static final QName MEMBER_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "classMember" ); //$NON-NLS-1$
 
@@ -108,7 +108,7 @@ public class StationClasses extends Feature_Impl implements IStationClasses
       return classCatalog;
 
     final Map<Class< ? extends Station>, Set<String>> newClassCatalog = loadClassCatalog();
-    HASH = new WeakReference<Map<Class< ? extends Station>, Set<String>>>( newClassCatalog );
+    HASH = new WeakReference<>( newClassCatalog );
     return newClassCatalog;
   }
 

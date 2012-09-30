@@ -119,7 +119,6 @@ abstract class AbstractHydrotopeInput<T extends Feature> implements IHydrotopeIn
       {
         final Geometry export = JTSAdapter.export( gmObj );
 
-        @SuppressWarnings("unchecked")
         final List<Polygon> polygons = PolygonExtracter.getPolygons( export );
         for( final Polygon polygon : polygons )
         {

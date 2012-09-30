@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * Binding class for rrmHydo:OverlayCollection's
- * 
+ *
  * @author Gernot Belger
  */
 public class OverlayCollection extends UnversionedModel
@@ -73,7 +73,7 @@ public class OverlayCollection extends UnversionedModel
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_overlayElements = new FeatureBindingCollection<OverlayElement>( this, OverlayElement.class, MEMBER_ELEMENTS );
+    m_overlayElements = new FeatureBindingCollection<>( this, OverlayElement.class, MEMBER_ELEMENTS );
   }
 
   public IFeatureBindingCollection<OverlayElement> getOverlayElements( )
@@ -83,7 +83,7 @@ public class OverlayCollection extends UnversionedModel
 
   /**
    * Create/Import a new soilType into this collection.
-   * 
+   *
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
   public OverlayElement importOverlayElement( final String label, final GM_MultiSurface geometry, final ImportType importType, final String refDRWBMDefinition, final IStatusCollector log )

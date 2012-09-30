@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * The multi generator executes several generators based on the valid from and valid to dates.
- * 
+ *
  * @author Holger Albert
  */
 public class MultiGenerator extends AbstractRainfallGenerator implements IMultiGenerator
@@ -72,7 +72,7 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          The parent.
    * @param parentRelation
@@ -88,7 +88,7 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_subGenerators = new FeatureBindingCollection<IRainfallGenerator>( this, IRainfallGenerator.class, MEMBER_SUB_GENERATOR, true );
+    m_subGenerators = new FeatureBindingCollection<>( this, IRainfallGenerator.class, MEMBER_SUB_GENERATOR, true );
   }
 
   @Override

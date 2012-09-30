@@ -73,7 +73,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
   private static final double HECTO_CUBIC_METER = 1000000.0;
 
   // maps timeseries link path to its ascii file name
-  private final Map<String, String> m_timseriesMap = new HashMap<String, String>();
+  private final Map<String, String> m_timseriesMap = new HashMap<>();
 
   private final File m_klimaDir;
 

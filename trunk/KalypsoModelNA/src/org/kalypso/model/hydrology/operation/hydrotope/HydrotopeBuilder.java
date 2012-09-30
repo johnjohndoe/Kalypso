@@ -178,7 +178,6 @@ public class HydrotopeBuilder implements ICoreRunnableWithProgress
   {
     try
     {
-      @SuppressWarnings("unchecked")
       final List<Polygon> polygons = PolygonExtracter.getPolygons( difference );
 
       final GeometryFactory factory = difference.getFactory();

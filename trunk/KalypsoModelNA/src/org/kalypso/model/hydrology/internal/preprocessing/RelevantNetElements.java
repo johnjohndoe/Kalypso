@@ -53,18 +53,18 @@ import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 /**
  * Collects the relevant net elements, that needs to be written to ascii files.
- * 
+ *
  * @author Gernot Belger
  */
 public class RelevantNetElements
 {
-  private final List<NetElement> m_channels = new ArrayList<NetElement>();
+  private final List<NetElement> m_channels = new ArrayList<>();
 
-  private final List<Catchment> m_catchments = new ArrayList<Catchment>();
+  private final List<Catchment> m_catchments = new ArrayList<>();
 
-  private final List<Entry<NetElement, Integer>> m_rootChannels = new ArrayList<Entry<NetElement, Integer>>();
+  private final List<Entry<NetElement, Integer>> m_rootChannels = new ArrayList<>();
 
-  private final List<Node> m_nodes = new ArrayList<Node>();
+  private final List<Node> m_nodes = new ArrayList<>();
 
   public void addChannel( final NetElement channel )
   {
@@ -119,7 +119,6 @@ public class RelevantNetElements
     m_rootChannels.add( rootChannelEntry );
   }
 
-  @SuppressWarnings("unchecked")
   public Entry<NetElement, Integer>[] getRootChannels( )
   {
     return m_rootChannels.toArray( new Entry[m_rootChannels.size()] );

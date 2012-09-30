@@ -156,7 +156,7 @@ public class LzsimWriter
   private static Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> buildChannelHash( final IDManager idManager )
   {
     final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
-    final Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> naChannelHash = new HashMap<String, org.kalypso.model.hydrology.binding.model.channels.Channel>();
+    final Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> naChannelHash = new HashMap<>();
     for( final Feature feature : allNAChannelFeatures )
       naChannelHash.put( feature.getId(), (org.kalypso.model.hydrology.binding.model.channels.Channel) feature );
     return naChannelHash;
@@ -203,7 +203,7 @@ public class LzsimWriter
 
     /* Hash ini catchments for quicker access */
     final IFeatureBindingCollection<Catchment> iniCatchments = m_initialValues.getCatchments();
-    final Map<String, Catchment> iniCatchmentHash = new HashMap<String, Catchment>();
+    final Map<String, Catchment> iniCatchmentHash = new HashMap<>();
     for( final Catchment iniCatchment : iniCatchments )
     {
       final String naCatchmentID = iniCatchment.getNaCatchmentID();
@@ -211,7 +211,7 @@ public class LzsimWriter
     }
 
     /* build the result mapping */
-    final Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> result = new HashMap<org.kalypso.model.hydrology.binding.model.Catchment, Catchment>();
+    final Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> result = new HashMap<>();
     for( final Feature catchment : allNACatchmentFeatures )
     {
       final String catchmentID = catchment.getId();
@@ -290,7 +290,7 @@ public class LzsimWriter
 
     /* Hash ini hydrotopes for quicker access */
     final IFeatureBindingCollection<IniHyd> iniHyds = iniCatchment.getIniHyds();
-    final Map<String, IniHyd> iniHydHash = new HashMap<String, IniHyd>();
+    final Map<String, IniHyd> iniHydHash = new HashMap<>();
     for( final IniHyd iniHyd : iniHyds )
     {
       final String naHydrotopID = iniHyd.getNaHydrotopID();
@@ -298,7 +298,7 @@ public class LzsimWriter
     }
 
     /* Build result map */
-    final Map<Integer, IniHyd> iniHydMap = new TreeMap<Integer, IniHyd>();
+    final Map<Integer, IniHyd> iniHydMap = new TreeMap<>();
     for( final HydrotopeInfo hydrotopeInfo : hydrotops )
     {
       final Integer localID = hydrotopeInfo.getLocalID();

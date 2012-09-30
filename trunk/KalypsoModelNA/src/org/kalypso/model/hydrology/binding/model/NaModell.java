@@ -59,7 +59,7 @@ import de.renew.workflow.connector.cases.IModel;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}NaModell.
- * 
+ *
  * @author Gernot Belger
  */
 public class NaModell extends Feature_Impl implements IModel
@@ -104,7 +104,7 @@ public class NaModell extends Feature_Impl implements IModel
     if( m_catchments == null )
     {
       final Feature catchmentCollection = getProperty( MEMBER_CATCHMENT_COLLECTION, Feature.class );
-      m_catchments = new FeatureBindingCollection<Catchment>( catchmentCollection, Catchment.class, MEMBER_CATCHMENT );
+      m_catchments = new FeatureBindingCollection<>( catchmentCollection, Catchment.class, MEMBER_CATCHMENT );
     }
 
     return m_catchments;
@@ -115,7 +115,7 @@ public class NaModell extends Feature_Impl implements IModel
     if( m_channels == null )
     {
       final Feature channelCollection = getProperty( MEMBER_CHANNEL_COLLECTION, Feature.class );
-      m_channels = new FeatureBindingCollection<Channel>( channelCollection, Channel.class, MEMBER_CHANNEL );
+      m_channels = new FeatureBindingCollection<>( channelCollection, Channel.class, MEMBER_CHANNEL );
     }
 
     return m_channels;
@@ -123,7 +123,7 @@ public class NaModell extends Feature_Impl implements IModel
 
   public KMChannel[] getKMChannels( )
   {
-    final List<KMChannel> result = new ArrayList<KMChannel>();
+    final List<KMChannel> result = new ArrayList<>();
     final IFeatureBindingCollection<Channel> channels = getChannels();
     for( final Channel channel : channels )
     {
@@ -139,7 +139,7 @@ public class NaModell extends Feature_Impl implements IModel
     if( m_nodes == null )
     {
       final Feature nodeCollection = getProperty( MEMBER_NODE_COLLECTION, Feature.class );
-      m_nodes = new FeatureBindingCollection<Node>( nodeCollection, Node.class, MEMBER_NODE );
+      m_nodes = new FeatureBindingCollection<>( nodeCollection, Node.class, MEMBER_NODE );
     }
 
     return m_nodes;

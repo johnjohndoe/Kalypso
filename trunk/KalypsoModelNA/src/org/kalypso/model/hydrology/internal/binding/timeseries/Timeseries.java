@@ -193,7 +193,6 @@ public class Timeseries extends Feature_Impl implements ITimeseries
     }
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public Object getAdapter( final Class adapter )
   {

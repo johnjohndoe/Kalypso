@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * The catchment.
- * 
+ *
  * @author Holger Albert
  */
 public class Catchment extends Feature_Impl implements ICatchment
@@ -68,7 +68,7 @@ public class Catchment extends Feature_Impl implements ICatchment
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_timeseries = new FeatureBindingCollection<IFactorizedTimeseries>( this, IFactorizedTimeseries.class, MEMBER_FACTORIZED_TIMESERIES );
+    m_timeseries = new FeatureBindingCollection<>( this, IFactorizedTimeseries.class, MEMBER_FACTORIZED_TIMESERIES );
   }
 
   @Override

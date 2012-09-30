@@ -99,7 +99,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * The linear sum generator.
- * 
+ *
  * @author Holger Albert
  */
 public class LinearSumGenerator extends AbstractRainfallGenerator implements ILinearSumGenerator
@@ -116,7 +116,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          The parent.
    * @param parentRelation
@@ -132,7 +132,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_catchments = new FeatureBindingCollection<ICatchment>( this, ICatchment.class, MEMBER_CATCHMENT );
+    m_catchments = new FeatureBindingCollection<>( this, ICatchment.class, MEMBER_CATCHMENT );
     m_validityRange = null;
   }
 
@@ -166,7 +166,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       /* A catchment with the already used hash needs not to be calculated anymore. */
       /* Because the result timeseries would be the same. */
       /* Also the link in the catchment to the result timeseries should be the same. */
-      final List<String> usedHashes = new ArrayList<String>();
+      final List<String> usedHashes = new ArrayList<>();
 
       /* Generate one timeseries for each catchment. */
       for( int i = 0; i < catchments.size(); i++ )
@@ -187,8 +187,8 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
           log.log( new Status( IStatus.INFO, ModelNA.PLUGIN_ID, message1 ) );
 
         /* Memory for the factors and the observations of the catchments. */
-        final List<Double> factors = new ArrayList<Double>();
-        final List<IObservation> observations = new ArrayList<IObservation>();
+        final List<Double> factors = new ArrayList<>();
+        final List<IObservation> observations = new ArrayList<>();
 
         /* Build the hash. */
         final String hash = CatchmentHelper.buildHash( catchment );

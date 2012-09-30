@@ -51,7 +51,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * Binding class for {http://sourceforge.kalypso.org/schemata/hydrology/hydrotope}HydrotopeCollection
- * 
+ *
  * @author Gernot Belger
  */
 public class HydrotopeCollection extends UnversionedModel
@@ -72,7 +72,7 @@ public class HydrotopeCollection extends UnversionedModel
   public synchronized IFeatureBindingCollection<IHydrotope> getHydrotopes( )
   {
     if( m_hydrotopes == null )
-      m_hydrotopes = new FeatureBindingCollection<IHydrotope>( this, IHydrotope.class, MEMBER_HYDROTOPE );
+      m_hydrotopes = new FeatureBindingCollection<>( this, IHydrotope.class, MEMBER_HYDROTOPE );
 
     return m_hydrotopes;
   }

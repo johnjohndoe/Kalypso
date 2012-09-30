@@ -52,7 +52,7 @@ import org.eclipse.core.runtime.Path;
 
 /**
  * Represents a simulation of the rrm model (i.e. one calculation case folder) and allows access to its data.
- * 
+ *
  * @author Gernot Belger
  */
 public class RrmSimulation
@@ -209,7 +209,7 @@ public class RrmSimulation
 
   public IFolder[] getTimeseriesFolders( )
   {
-    final List<IFolder> folders = new ArrayList<IFolder>();
+    final List<IFolder> folders = new ArrayList<>();
 
     final IFolder climateFolder = getClimateFolder();
     folders.add( climateFolder );

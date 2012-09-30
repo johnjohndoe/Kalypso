@@ -188,7 +188,7 @@ public class Catchment extends AbstractNaModelElement
   public synchronized IFeatureBindingCollection<Bodenschichtkorrektur> getBodenKorrekturCollection( )
   {
     if( m_bodenKorrekturCollection == null )
-      m_bodenKorrekturCollection = new FeatureBindingCollection<Bodenschichtkorrektur>( this, Bodenschichtkorrektur.class, PROPLIST_BODENKORREKTUR_MEMBER, true );
+      m_bodenKorrekturCollection = new FeatureBindingCollection<>( this, Bodenschichtkorrektur.class, PROPLIST_BODENKORREKTUR_MEMBER, true );
     return m_bodenKorrekturCollection;
   }
 
@@ -201,7 +201,7 @@ public class Catchment extends AbstractNaModelElement
   public synchronized IFeatureBindingCollection<Grundwasserabfluss> getGrundwasserAbflussCollection( )
   {
     if( m_grundwasserAbflussCollection == null )
-      m_grundwasserAbflussCollection = new FeatureBindingCollection<Grundwasserabfluss>( this, Grundwasserabfluss.class, PROPLIST_GRUNDWASSERABFLUSS_MEMBER, true );
+      m_grundwasserAbflussCollection = new FeatureBindingCollection<>( this, Grundwasserabfluss.class, PROPLIST_GRUNDWASSERABFLUSS_MEMBER, true );
     return m_grundwasserAbflussCollection;
   }
 

@@ -72,7 +72,7 @@ public class NAHydrotop extends UnversionedModel
   public synchronized IFeatureBindingCollection<IHydrotope> getHydrotopes( )
   {
     if( m_hydrotops == null )
-      m_hydrotops = new FeatureBindingCollection<IHydrotope>( this, IHydrotope.class, MEMBER_HYDROTOP );
+      m_hydrotops = new FeatureBindingCollection<>( this, IHydrotope.class, MEMBER_HYDROTOP );
 
     return m_hydrotops;
   }

@@ -51,7 +51,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {http://www.tuhh.de/initialValues}Catchment.
- * 
+ *
  * @author Gernot Belger
  */
 public class Catchment extends Feature_Impl
@@ -60,7 +60,7 @@ public class Catchment extends Feature_Impl
 
   public static final QName FEATURE_CATCHMENT = new QName( NS_INIVALUES, "Catchment" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_HYD = new QName( NaModelConstants.NS_INIVALUES, "hyd" ); //$NON-NLS-1$ 
+  private static final QName MEMBER_HYD = new QName( NaModelConstants.NS_INIVALUES, "hyd" ); //$NON-NLS-1$
 
   private static final QName PROP_FEATURE_ID = new QName( NS_INIVALUES, "featureId" );//$NON-NLS-1$
 
@@ -115,7 +115,7 @@ public class Catchment extends Feature_Impl
   public synchronized IFeatureBindingCollection<IniHyd> getIniHyds( )
   {
     if( m_iniHyds == null )
-      m_iniHyds = new FeatureBindingCollection<IniHyd>( this, IniHyd.class, MEMBER_HYD );
+      m_iniHyds = new FeatureBindingCollection<>( this, IniHyd.class, MEMBER_HYD );
 
     return m_iniHyds;
   }

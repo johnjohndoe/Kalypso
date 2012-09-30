@@ -97,7 +97,7 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
 
       final Feature[] relatedFeaturs = findRelatedFeatures( feature );
 
-      final List<GM_Curve> curves = new ArrayList<GM_Curve>();
+      final List<GM_Curve> curves = new ArrayList<>();
       for( final Feature relatedFeature : relatedFeaturs )
       {
         final GM_Object targetGeom = relatedFeature.getDefaultGeometryPropertyValue();
@@ -125,7 +125,7 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
       return targetFeatures;
 
     /* Heavy relation indirect into 2nd feature */
-    final Collection<Feature> result = new ArrayList<Feature>();
+    final Collection<Feature> result = new ArrayList<>();
     for( final Feature bodyFeature : targetFeatures )
     {
       /* Could be another workspace */

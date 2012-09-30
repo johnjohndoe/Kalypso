@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * Binding class for {org.kalypso.namodell.control_v2}NAModellControl.
- * 
+ *
  * @author Gernot Belger
  */
 public class NAModellControl extends UnversionedModel
@@ -110,7 +110,7 @@ public class NAModellControl extends UnversionedModel
 
   private static final QName PROP_SUP = new QName( NS_NACONTROL, "sup" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<InitialValue> m_initialValues = new FeatureBindingCollection<InitialValue>( this, InitialValue.class, MEMBER_INITIAL_VALUE );
+  private final IFeatureBindingCollection<InitialValue> m_initialValues = new FeatureBindingCollection<>( this, InitialValue.class, MEMBER_INITIAL_VALUE );
 
   public NAModellControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -237,7 +237,7 @@ public class NAModellControl extends UnversionedModel
     if( dateList == null )
       return new Date[0];
 
-    final SortedSet<Date> dateWriteSet = new TreeSet<Date>();
+    final SortedSet<Date> dateWriteSet = new TreeSet<>();
     for( final Object object : dateList )
     {
       final InitialValue fe = (InitialValue) object;

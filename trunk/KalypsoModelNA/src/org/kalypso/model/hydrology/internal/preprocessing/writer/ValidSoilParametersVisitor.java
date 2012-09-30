@@ -52,9 +52,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
  */
 public class ValidSoilParametersVisitor<T extends SoilLayerParameter> implements IFeatureBindingCollectionVisitor<T>
 {
-  private final Set<SoilLayerParameter> m_valid = new LinkedHashSet<SoilLayerParameter>();
+  private final Set<SoilLayerParameter> m_valid = new LinkedHashSet<>();
 
-  private final Set<SoilLayerParameter> m_invalid = new LinkedHashSet<SoilLayerParameter>();
+  private final Set<SoilLayerParameter> m_invalid = new LinkedHashSet<>();
 
   @Override
   public void visit( final T parameter )

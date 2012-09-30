@@ -88,7 +88,7 @@ public class BlockTimeSeries
 
   private static final Pattern PATTERN_BLOCK_HEADER = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" ); //$NON-NLS-1$
 
-  private final Map<String, Block> m_blocks = new HashMap<String, Block>();
+  private final Map<String, Block> m_blocks = new HashMap<>();
 
   private final DateFormat m_dateFormat;
 

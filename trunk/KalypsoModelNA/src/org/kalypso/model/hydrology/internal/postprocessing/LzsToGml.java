@@ -237,7 +237,7 @@ public class LzsToGml
           final String hydroID = m_hydroHash.getHydroFeatureId( catchment, pos );
           lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ), hydroID ); //$NON-NLS-1$
           final Double interception = Double.valueOf( strings[1] );
-          final List<Double> bofs = new ArrayList<Double>();
+          final List<Double> bofs = new ArrayList<>();
           for( int i = 2; i < strings.length; i++ )
           {
             final Double bf = Double.valueOf( strings[i] );

@@ -101,7 +101,7 @@ public class NAStatistics implements INaStatistics
 
   private static final char SEPARATOR_CSV = '\t'; //$NON-NLS-1$
 
-  private final Map<Feature, NAStatisticsData> m_resultMap = new TreeMap<Feature, NAStatisticsData>( new NAStatisticComparator() );
+  private final Map<Feature, NAStatisticsData> m_resultMap = new TreeMap<>( new NAStatisticComparator() );
 
   private final Logger m_logger;
 
@@ -141,7 +141,7 @@ public class NAStatistics implements INaStatistics
 
   private Object[][] gatherData( final File inputDir ) throws SensorException
   {
-    final List<Object[]> resultValuesList = new ArrayList<Object[]>();
+    final List<Object[]> resultValuesList = new ArrayList<>();
 
     for( final Entry<Feature, NAStatisticsData> entry : m_resultMap.entrySet() )
     {
@@ -202,7 +202,7 @@ public class NAStatistics implements INaStatistics
 
   private IAxis[] createAxes( )
   {
-    final List<IAxis> resultAxisList = new ArrayList<IAxis>();
+    final List<IAxis> resultAxisList = new ArrayList<>();
     resultAxisList.add( new DefaultAxis( AXIS_NODE_ID, ITimeseriesConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$
     resultAxisList.add( new DefaultAxis( AXIS_STATION, ITimeseriesConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$
     resultAxisList.add( new DefaultAxis( AXIS_DATE, ITimeseriesConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$

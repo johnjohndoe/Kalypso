@@ -43,7 +43,6 @@ package org.kalypso.model.hydrology.binding.timeseries;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.renew.workflow.connector.cases.IModel;
@@ -51,7 +50,7 @@ import de.renew.workflow.connector.cases.IModel;
 /**
  * @author Gernot Belger
  */
-public interface IStationCollection extends Feature, IModel
+public interface IStationCollection extends IModel
 {
   QName FEATURE_STATION_COLLECTION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationCollection" ); //$NON-NLS-1$
 

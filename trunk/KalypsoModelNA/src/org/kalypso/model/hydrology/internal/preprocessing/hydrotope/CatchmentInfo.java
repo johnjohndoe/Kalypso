@@ -55,14 +55,14 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * Infos about all hydrotops belonging to one catchment.
- * 
+ *
  * @author Gernot Belger
  */
 public class CatchmentInfo
 {
-  private final List<HydrotopeInfo> m_hydrotopes = new ArrayList<HydrotopeInfo>();
+  private final List<HydrotopeInfo> m_hydrotopes = new ArrayList<>();
 
-  private final Map<String, HydrotopeInfo> m_hydrotopeHash = new LinkedHashMap<String, HydrotopeInfo>();
+  private final Map<String, HydrotopeInfo> m_hydrotopeHash = new LinkedHashMap<>();
 
   private final Catchment m_catchment;
 
