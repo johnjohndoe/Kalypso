@@ -233,17 +233,17 @@ public class NaSimulationData implements INaSimulationData
     return provider.getWorkspace();
   }
 
-  private GMLWorkspace loadAndCheckForFile( final File file ) throws Exception
-  {
-    if( file != null && file.exists() )
-    {
-      final String uri = file.toURI().toString();
-      final IWorkspaceProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, uri );
-      return provider.getWorkspace();
-    }
-
-    return null;
-  }
+//  private GMLWorkspace loadAndCheckForFile( final File file ) throws Exception
+//  {
+//    if( file != null && file.exists() )
+//    {
+//      final String uri = file.toURI().toString();
+//      final IWorkspaceProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, uri );
+//      return provider.getWorkspace();
+//    }
+//
+//    return null;
+//  }
 
   @Override
   public NAModellControl getNaControl( )

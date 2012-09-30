@@ -66,7 +66,7 @@ public class TimeseriesMapping extends Feature_Impl implements ITimeseriesMappin
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_mappingMembers = new FeatureBindingCollection<IMappingElement>( this, IMappingElement.class, MEMBER_MAPPING );
+    m_mappingMembers = new FeatureBindingCollection<>( this, IMappingElement.class, MEMBER_MAPPING );
   }
 
   @Override

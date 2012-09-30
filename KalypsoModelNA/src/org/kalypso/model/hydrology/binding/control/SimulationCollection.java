@@ -70,7 +70,7 @@ public class SimulationCollection extends Feature_Impl implements IModel
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_simulations = new FeatureBindingCollection<NAControl>( this, NAControl.class, MEMBER_SIMULATION );
+    m_simulations = new FeatureBindingCollection<>( this, NAControl.class, MEMBER_SIMULATION );
   }
 
   @Override

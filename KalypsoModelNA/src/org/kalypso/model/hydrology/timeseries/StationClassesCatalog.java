@@ -75,7 +75,7 @@ public class StationClassesCatalog
   {
   }
 
-  private static WeakReference<Map<Class< ? extends IStation>, Set<String>>> HASH = new WeakReference<Map<Class< ? extends IStation>, Set<String>>>( null );
+  private static WeakReference<Map<Class< ? extends IStation>, Set<String>>> HASH = new WeakReference<>( null );
 
   public static String[] findAllowedParameterTypes( final IStation station )
   {
@@ -134,7 +134,7 @@ public class StationClassesCatalog
       return classCatalog;
 
     final Map<Class< ? extends IStation>, Set<String>> newClassCatalog = loadClassCatalog();
-    HASH = new WeakReference<Map<Class< ? extends IStation>, Set<String>>>( newClassCatalog );
+    HASH = new WeakReference<>( newClassCatalog );
     return newClassCatalog;
   }
 

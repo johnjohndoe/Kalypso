@@ -61,7 +61,7 @@ public class TimeseriesMappingCollection extends UnversionedModel implements ITi
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_timeseriesMappingMembers = new FeatureBindingCollection<ITimeseriesMapping>( this, ITimeseriesMapping.class, MEMBER_TIMESERIES_MAPPING );
+    m_timeseriesMappingMembers = new FeatureBindingCollection<>( this, ITimeseriesMapping.class, MEMBER_TIMESERIES_MAPPING );
   }
 
   @Override

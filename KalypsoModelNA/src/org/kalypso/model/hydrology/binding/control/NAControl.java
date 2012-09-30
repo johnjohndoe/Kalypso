@@ -74,7 +74,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {org.kalypso.na.control_v2}NAControl.
- * 
+ *
  * @author Gernot Belger
  */
 public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
@@ -345,7 +345,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
 
   /**
    * This function returns the last modified timestamp.
-   * 
+   *
    * @return The last modified timestamp.
    */
   public Date getLastModified( )
@@ -357,7 +357,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
 
   /**
    * This function sets the last modified timestamp.
-   * 
+   *
    * @param lastModified
    *          The last modified timestamp.
    */
@@ -371,7 +371,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
    * {@link #getLastModified()}<br/>
    * {@link #getLastModifiedGenerators()}<br/>
    * {@link #getLastModifiedInputData()}
-   * 
+   *
    * @return The last modified timestamp.
    */
   public long getLastModifiedInput( )
@@ -497,7 +497,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
   /**
    * This function checks all existing values of property and returns the ajusted value, if it does already exisit among
    * them.
-   * 
+   *
    * @param features
    *          The features to check.
    * @param property
@@ -511,7 +511,7 @@ public class NAControl extends Feature_Impl implements IDuplicateFeatureMarker
   private String findUniqueValue( final Feature[] features, final QName property, final String value, final String detail )
   {
     /* All existing values. */
-    final List<String> existingValues = new ArrayList<String>();
+    final List<String> existingValues = new ArrayList<>();
 
     /* Collect existing values. */
     for( final Feature feature : features )

@@ -144,7 +144,6 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
     final HydrotopeUserData sourceData = (HydrotopeUserData) sourcePolygon.getUserData();
     final int dim1 = sourcePolygon.getDimension();
 
-    @SuppressWarnings("unchecked")
     final List<Polygon> targetPolygons = targetIndex.query( sourcePolygon.getEnvelopeInternal() );
 
     for( final Polygon targetPolygon : targetPolygons )
@@ -177,7 +176,6 @@ class FeatureListGeometryIntersector implements ICoreRunnableWithProgress
           log.add( IStatus.WARNING, Messages.getString( "FeatureListGeometryIntersector.4", sourceLabel, targetLabel ), e ); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
-        @SuppressWarnings("unchecked")
         final List<Polygon> intersectionPolygons = PolygonExtracter.getPolygons( intersection );
         final Polygon[] polygons = intersectionPolygons.toArray( new Polygon[intersectionPolygons.size()] );
         for( final Polygon polygon : polygons )

@@ -71,7 +71,7 @@ public class SoilTypeCollection extends UnversionedModel
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_soilTypes = new FeatureBindingCollection<SoilType>( this, SoilType.class, MEMBER_SOIL_TYPE );
+    m_soilTypes = new FeatureBindingCollection<>( this, SoilType.class, MEMBER_SOIL_TYPE );
   }
 
   public IFeatureBindingCollection<SoilType> getSoilTypes( )

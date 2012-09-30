@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class StationCollection extends Feature_Impl implements IStationCollection
 {
-  private final IFeatureBindingCollection<IStation> m_stations = new FeatureBindingCollection<IStation>( this, IStation.class, MEMBER_STATION );
+  private final IFeatureBindingCollection<IStation> m_stations = new FeatureBindingCollection<>( this, IStation.class, MEMBER_STATION );
 
   public StationCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

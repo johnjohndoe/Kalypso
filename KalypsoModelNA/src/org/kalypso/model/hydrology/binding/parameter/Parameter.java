@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * Binding class for {http://www.tuhh.de/parameter}Parameter
- * 
+ *
  * @author Gernot Belger
  */
 public class Parameter extends UnversionedModel
@@ -81,7 +81,7 @@ public class Parameter extends UnversionedModel
   public synchronized IFeatureBindingCollection<Soiltype> getSoiltypes( )
   {
     if( m_soiltypes == null )
-      m_soiltypes = new FeatureBindingCollection<Soiltype>( this, Soiltype.class, MEMBER_SOILTYPE );
+      m_soiltypes = new FeatureBindingCollection<>( this, Soiltype.class, MEMBER_SOILTYPE );
 
     return m_soiltypes;
   }
@@ -89,7 +89,7 @@ public class Parameter extends UnversionedModel
   public synchronized IFeatureBindingCollection<DRWBMSoiltype> getDRWBMSoiltypes( )
   {
     if( m_drwbmSoilTypes == null )
-      m_drwbmSoilTypes = new FeatureBindingCollection<DRWBMSoiltype>( this, DRWBMSoiltype.class, MEMBER_DRWBM_SOILTYPE );
+      m_drwbmSoilTypes = new FeatureBindingCollection<>( this, DRWBMSoiltype.class, MEMBER_DRWBM_SOILTYPE );
 
     return m_drwbmSoilTypes;
   }
@@ -97,7 +97,7 @@ public class Parameter extends UnversionedModel
   public synchronized IFeatureBindingCollection<Snow> getSnow( )
   {
     if( m_snow == null )
-      m_snow = new FeatureBindingCollection<Snow>( this, Snow.class, MEMBER_SNOW );
+      m_snow = new FeatureBindingCollection<>( this, Snow.class, MEMBER_SNOW );
 
     return m_snow;
   }

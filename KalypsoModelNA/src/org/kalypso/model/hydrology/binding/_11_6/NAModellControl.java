@@ -109,7 +109,7 @@ public class NAModellControl extends Feature_Impl
 
   private static final QName PROP_SUP = new QName( NS_NACONTROL, "sup" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<InitialValues> m_initialValues = new FeatureBindingCollection<InitialValues>( this, InitialValues.class, PROP_INITIALVALUEDATE );
+  private final IFeatureBindingCollection<InitialValues> m_initialValues = new FeatureBindingCollection<>( this, InitialValues.class, PROP_INITIALVALUEDATE );
 
   public NAModellControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -236,7 +236,7 @@ public class NAModellControl extends Feature_Impl
     if( dateList == null )
       return new Date[0];
 
-    final SortedSet<Date> dateWriteSet = new TreeSet<Date>();
+    final SortedSet<Date> dateWriteSet = new TreeSet<>();
     for( final Object object : dateList )
     {
       final InitialValues fe = (InitialValues) object;

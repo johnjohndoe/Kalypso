@@ -66,7 +66,6 @@ public class StationClass extends Feature_Impl implements IStationClass
   @Override
   public String[] getParameterTypes( )
   {
-    @SuppressWarnings("unchecked")
     final List<String> types = getProperty( PROPERTY_PARAMETER_TYPE, List.class );
     return types.toArray( new String[types.size()] );
   }

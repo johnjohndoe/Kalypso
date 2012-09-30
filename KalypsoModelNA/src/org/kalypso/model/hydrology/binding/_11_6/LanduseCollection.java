@@ -51,7 +51,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * Binding class for rrmLanduse:LanduseCollection's
- * 
+ *
  * @author Gernot Belger
  */
 public class LanduseCollection extends UnversionedModel
@@ -64,7 +64,7 @@ public class LanduseCollection extends UnversionedModel
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_landuses = new FeatureBindingCollection<Landuse>( this, Landuse.class, MEMBER_LANDUSE );
+    m_landuses = new FeatureBindingCollection<>( this, Landuse.class, MEMBER_LANDUSE );
   }
 
   public IFeatureBindingCollection<Landuse> getLanduses( )

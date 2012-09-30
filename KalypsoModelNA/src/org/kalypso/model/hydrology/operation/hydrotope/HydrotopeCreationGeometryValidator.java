@@ -68,7 +68,6 @@ public class HydrotopeCreationGeometryValidator
 
   private final String m_label;
 
-  @SuppressWarnings("unchecked")
   public HydrotopeCreationGeometryValidator( final String label, final SpatialIndexExt index )
   {
     m_label = label;
@@ -126,7 +125,6 @@ public class HydrotopeCreationGeometryValidator
 
       totalArea += polygon.getArea();
 
-      @SuppressWarnings("unchecked")
       final List<Polygon> otherPolygons = m_index.query( polygon.getEnvelopeInternal() );
       for( final Polygon other : otherPolygons )
       {

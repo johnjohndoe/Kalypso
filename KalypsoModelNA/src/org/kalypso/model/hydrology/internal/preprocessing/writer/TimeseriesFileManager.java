@@ -62,7 +62,7 @@ public class TimeseriesFileManager
 
   private static final String STD_VERD_FILENAME = "std.ver"; //$NON-NLS-1$
 
-  private final HashMap<String, String> m_fileMap = new HashMap<String, String>();
+  private final HashMap<String, String> m_fileMap = new HashMap<>();
 
   private final IDManager m_idManager;
 

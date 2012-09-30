@@ -273,7 +273,7 @@ public class TsFileWriter
   // FIXME: does not belong here -> move into own writer
   private void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws SensorException, IOException
   {
-    final List<Feature> statNList = new ArrayList<Feature>();
+    final List<Feature> statNList = new ArrayList<>();
 
     final StringBuffer buffer = new StringBuffer();
     final Double annualityKey = m_metaControl.getAnnuality();

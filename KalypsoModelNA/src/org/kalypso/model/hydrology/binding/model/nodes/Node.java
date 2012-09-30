@@ -79,7 +79,7 @@ public class Node extends AbstractNaModelElement implements INode
   @Override
   public Channel[] findUpstreamChannels( )
   {
-    final Collection<Channel> upstreamChannels = new ArrayList<Channel>();
+    final Collection<Channel> upstreamChannels = new ArrayList<>();
 
     final NaModell naModel = getNaModel();
 

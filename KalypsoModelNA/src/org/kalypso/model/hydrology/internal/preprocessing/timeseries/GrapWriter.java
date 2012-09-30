@@ -128,7 +128,7 @@ public class GrapWriter
     // FIXME: this is nonsense! this only makes sense if length and timestep of input and output ranges are the same
 
     final ITupleModel values = m_observation.getValues( null );
-    final SortedMap<Date, Double> valuesMap = new TreeMap<Date, Double>();
+    final SortedMap<Date, Double> valuesMap = new TreeMap<>();
 
     // TODO: check if this does a correct interpolation, seems dubious
     final long interpolationStep = (simulationEnd.getTime() - simulationStart.getTime()) / (values.size() - 1);

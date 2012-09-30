@@ -79,10 +79,8 @@ public class IniHyd extends Feature_Impl
     return getProperty( PROP_BI, Double.class );
   }
 
-  @SuppressWarnings("unchecked")
   public List<Double> getBofs( )
   {
     return getProperty( PROP_BOFS, List.class );
   }
-
 }

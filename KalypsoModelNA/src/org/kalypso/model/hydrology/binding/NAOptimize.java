@@ -95,8 +95,8 @@ public class NAOptimize extends Feature_Impl
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_catchmentMembers = new FeatureBindingCollection<Catchment>( this, Catchment.class, PROP_CATCHMENT_LINK, true );
-    m_kmChannelMembers = new FeatureBindingCollection<KMChannel>( this, KMChannel.class, PROP_KMCHANNEL_LINK, true );
+    m_catchmentMembers = new FeatureBindingCollection<>( this, Catchment.class, PROP_CATCHMENT_LINK, true );
+    m_kmChannelMembers = new FeatureBindingCollection<>( this, KMChannel.class, PROP_KMCHANNEL_LINK, true );
   }
 
   public IFeatureBindingCollection<Catchment> getCatchmentCollection( )

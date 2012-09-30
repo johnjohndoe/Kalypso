@@ -347,14 +347,13 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   /**
    * @throws SensorException
-   * @see org.kalypso.optimize.IOptimizingJob#getMeasuredTimeSeries()
    */
   @Override
   public SortedMap<Date, Double> getMeasuredTimeSeries( ) throws SensorException
   {
     if( m_measuredTS == null )
     {
-      final SortedMap<Date, Double> result = new TreeMap<Date, Double>();
+      final SortedMap<Date, Double> result = new TreeMap<>();
       final NAOptimize naOptimize = m_data.getNaOptimize();
       final ZmlLink linkMeasuredTS = naOptimize.getPegelZRLink();
 
@@ -381,12 +380,11 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
   /**
    * @throws SensorException
    * @throws MalformedURLException
-   * @see org.kalypso.optimize.IOptimizingJob#getCalcedTimeSeries()
    */
   @Override
   public SortedMap<Date, Double> getCalcedTimeSeries( ) throws MalformedURLException, SensorException
   {
-    final SortedMap<Date, Double> result = new TreeMap<Date, Double>();
+    final SortedMap<Date, Double> result = new TreeMap<>();
     final File optimizeResultDir = new File( m_optimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
     final NAOptimize naOptimize = m_data.getNaOptimize();

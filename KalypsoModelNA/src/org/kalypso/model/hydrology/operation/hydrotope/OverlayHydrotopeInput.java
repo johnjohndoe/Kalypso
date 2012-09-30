@@ -123,7 +123,6 @@ class OverlayHydrotopeInput extends AbstractHydrotopeInput<OverlayElement>
         final GM_Object geometry = overlayElement.getGeometry();
         final Geometry overlayGeometry = JTSAdapter.export( geometry );
 
-        @SuppressWarnings("unchecked")
         final List<Polygon> overlayPolygons = PolygonExtracter.getPolygons( overlayGeometry );
 
         for( final Polygon overlayPolygon : overlayPolygons )
@@ -145,7 +144,6 @@ class OverlayHydrotopeInput extends AbstractHydrotopeInput<OverlayElement>
     }
 
     /* Return result */
-    @SuppressWarnings("unchecked")
     final List<Polygon> polygons = PolygonExtracter.getPolygons( mask );
     return polygons.toArray( new Polygon[polygons.size()] );
   }

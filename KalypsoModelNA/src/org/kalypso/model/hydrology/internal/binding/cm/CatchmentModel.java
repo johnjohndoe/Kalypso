@@ -61,7 +61,7 @@ public class CatchmentModel extends Feature_Impl implements ICatchmentModel
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_generators = new FeatureBindingCollection<IRainfallGenerator>( this, IRainfallGenerator.class, MEMBER_CATCHMENT_GENERATOR );
+    m_generators = new FeatureBindingCollection<>( this, IRainfallGenerator.class, MEMBER_CATCHMENT_GENERATOR );
   }
 
   @Override

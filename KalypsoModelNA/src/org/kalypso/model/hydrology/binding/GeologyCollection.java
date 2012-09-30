@@ -73,7 +73,7 @@ public class GeologyCollection extends UnversionedModel
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_geologyMembers = new FeatureBindingCollection<Geology>( this, Geology.class, MEMBER_GEOLOGY );
+    m_geologyMembers = new FeatureBindingCollection<>( this, Geology.class, MEMBER_GEOLOGY );
   }
 
   public IFeatureBindingCollection<Geology> getGeologies( )
