@@ -55,6 +55,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -94,7 +95,6 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.CalculationBean;
 import org.kalypso.wspwin.core.ICalculationContentBean;
 import org.kalypso.wspwin.core.LocalEnergyLossBean;
-import org.kalypso.wspwin.core.LocalEnergyLossBean.LOSSKIND;
 import org.kalypso.wspwin.core.ProfileBean;
 import org.kalypso.wspwin.core.RunOffEventBean;
 import org.kalypso.wspwin.core.WspCfg;
@@ -513,11 +513,11 @@ public final class WspWinImporter
       final IProfileFeature profileFeature = reach.findProfile( energyLossBean.getStation() );
 
       final EnergylossProfileObject energyLoss = new EnergylossProfileObject();
-      final Map<LOSSKIND, Double> entries = energyLossBean.getEntries();
 
-      for( final LOSSKIND kind : entries.keySet() )
+      final Pair<String, BigDecimal>[] entries = energyLossBean.getEntries();
+      for( final Pair<String, BigDecimal> entry : entries )
       {
-        final Energyloss newEnergyloss = new Energyloss( kind.name(), "", new BigDecimal( entries.get( kind ) ) );
+        final Energyloss newEnergyloss = new Energyloss( entry.getLeft(), StringUtils.EMPTY, entry.getRight() );
         energyLoss.addEnergyloss( newEnergyloss );
       }
 

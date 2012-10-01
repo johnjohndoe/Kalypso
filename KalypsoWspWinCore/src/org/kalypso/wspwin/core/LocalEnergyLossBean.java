@@ -46,15 +46,13 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.apache.commons.lang3.tuple.Pair;
 import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
@@ -62,15 +60,6 @@ import org.kalypso.wspwin.core.i18n.Messages;
  */
 public class LocalEnergyLossBean
 {
-  public static enum LOSSKIND
-  {
-    EINLAUF,
-    AUSLAUF,
-    KRUEMMER,
-    RECHEN,
-    ZUSATZVERLUST;
-  }
-
   /**
    * Reads a psi file (Energieverluste/Verlustbeiwerte/local energy losses)
    */
@@ -88,28 +77,31 @@ public class LocalEnergyLossBean
         {
           final String nextLine = lineIt.nextLine();
           count++;
+
           final StringTokenizer tokenizer = new StringTokenizer( nextLine );
           if( tokenizer.countTokens() % 2 != 0 )
             throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.LocalEnergyLossBean.1" ) + nextLine, count ); //$NON-NLS-1$
+
           final int countKinds = tokenizer.countTokens() / 2 - 1;
+
           final String key = tokenizer.nextToken();
+
           if( !STATION.equalsIgnoreCase( key ) )
             throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.LocalEnergyLossBean.2" ) + STATION + "': " + nextLine, count ); //$NON-NLS-1$ //$NON-NLS-2$
+
           final BigDecimal station = new BigDecimal( tokenizer.nextToken() );
 
           // read pairs: kind -> value
-          final Map<LOSSKIND, Double> entries = new HashMap<>( countKinds );
+          final Collection<Pair<String, BigDecimal>> entries = new ArrayList<>();
           for( int i = 0; i < countKinds; i++ )
           {
-            // TODO spelling of kind is changed / normalized. Is it better to wait until conversion to feature?
-            final LOSSKIND kind = LOSSKIND.valueOf( tokenizer.nextToken().toUpperCase().replaceAll( "Ü", "UE" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-            double value = Double.parseDouble( tokenizer.nextToken() );
-            // energy losses of same kind are summed up
-            if( entries.containsKey( kind ) )
-              value = value + entries.get( kind );
-            entries.put( kind, value );
+            final String kind = tokenizer.nextToken();
+            final BigDecimal value = new BigDecimal( tokenizer.nextToken() );
+            entries.add( Pair.of( kind, value ) );
           }
-          beans.add( new LocalEnergyLossBean( station, entries ) );
+
+          final LocalEnergyLossBean lossBean = new LocalEnergyLossBean( station, entries.toArray( new Pair[entries.size()] ) );
+          beans.add( lossBean );
         }
       }
       return beans.toArray( new LocalEnergyLossBean[beans.size()] );
@@ -122,36 +114,41 @@ public class LocalEnergyLossBean
 
   private final BigDecimal m_station;
 
-  private final Map<LOSSKIND, Double> m_entries;
+  private final Pair<String, BigDecimal>[] m_entries;
 
   private static String STATION = "STATION"; //$NON-NLS-1$
 
-  public LocalEnergyLossBean( final BigDecimal station, final Map<LOSSKIND, Double> entries )
+  public LocalEnergyLossBean( final BigDecimal station, final Pair<String, BigDecimal>[] entries )
   {
     m_station = station;
-    m_entries = new TreeMap<>( entries );
+    m_entries = entries;
   }
 
   public static void write( final File lelFile, final LocalEnergyLossBean[] beans ) throws IOException
   {
-    try (final PrintWriter psiWriter = new PrintWriter( lelFile ))
+    try( final PrintWriter psiWriter = new PrintWriter( lelFile ) )
     {
       for( final LocalEnergyLossBean localEnergyLossBean : beans )
       {
-        psiWriter.print( "STATION " + localEnergyLossBean.getStation() );//$NON-NLS-1$
-        final Map<LOSSKIND, Double> entries = localEnergyLossBean.getEntries();
-        for( final LOSSKIND losskind : entries.keySet() )
+        psiWriter.format( "STATION %s", localEnergyLossBean.getStation() );//$NON-NLS-1$
+
+        final Pair<String, BigDecimal>[] entries = localEnergyLossBean.getEntries();
+        for( final Pair<String, BigDecimal> entry : entries )
         {
-          psiWriter.print( " " + losskind + " " + entries.get( losskind ) );//$NON-NLS-1$ $NON-NLS-2$
+          final String type = entry.getLeft();
+          final BigDecimal value = entry.getRight();
+
+          psiWriter.format( " %s %s", type, value );//$NON-NLS-1$
         }
+
         psiWriter.println();
       }
     }
   }
 
-  public Map<LOSSKIND, Double> getEntries( )
+  public Pair<String, BigDecimal>[] getEntries( )
   {
-    return Collections.unmodifiableMap( m_entries );
+    return m_entries;
   }
 
   public BigDecimal getStation( )

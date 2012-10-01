@@ -72,13 +72,10 @@ public class PrfRoughnessWriter
 
   private final IProfile m_profile;
 
-  private final PrfWriter m_prfWriter;
-
   private final DataBlockWriter m_dbWriter;
 
-  public PrfRoughnessWriter( final PrfWriter prfWriter, final DataBlockWriter dbWriter, final IProfile profile, final String defaultRoughnessType )
+  public PrfRoughnessWriter( final DataBlockWriter dbWriter, final IProfile profile, final String defaultRoughnessType )
   {
-    m_prfWriter = prfWriter;
     m_dbWriter = dbWriter;
     m_profile = profile;
     m_defaultRoughnessType = defaultRoughnessType;
@@ -87,7 +84,6 @@ public class PrfRoughnessWriter
   public void setPreferClasses( final boolean prefereClasses )
   {
     m_preferClasses = prefereClasses;
-
   }
 
   private IComponent[] getRoughness( )
@@ -218,8 +214,9 @@ public class PrfRoughnessWriter
     final Double building = getRoughnessFromBuilding();
 
     final DataBlockHeader dbhr = PrfHeaders.createHeader( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ); //$NON-NLS-1$
-    final CoordDataBlock dbr = new CoordDataBlock( dbhr );
-    m_prfWriter.writeCoords( null, dbr, Objects.firstNonNull( building, 0.0 ) );
+
+    final CoordDataBlock dbr = PrfWriter.writeCoords( m_profile, null, dbhr, Objects.firstNonNull( building, 0.0 ) );
+
     if( Objects.isNotNull( building ) )
     {
       dbr.getY()[0] = building;
@@ -227,5 +224,4 @@ public class PrfRoughnessWriter
 
     m_dbWriter.addDataBlock( dbr );
   }
-
 }
