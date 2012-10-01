@@ -44,4 +44,6 @@ public interface ICulvertBuilding extends IProfileBuilding
   void setSohlgefaelle( Double sohlgefaelle );
 
   void setRauheit( Double rauheit );
+
+  void copyValues( ICulvertBuilding culvertBuilding );
 }

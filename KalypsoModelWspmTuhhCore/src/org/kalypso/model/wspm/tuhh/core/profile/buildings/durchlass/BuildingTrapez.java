@@ -79,13 +79,13 @@ public class BuildingTrapez extends AbstractCulvertBuilding
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_BREITE.equals( property ) )
-      return "untere Seite"; // lower side
+      return "untere Seite [m]"; // lower side
 
     if( PROPERTY_HOEHE.equals( property ) )
-      return "Gesamthöhe"; // Overall Height
+      return "Gesamthöhe [m]"; // Overall Height
 
     if( PROPERTY_STEIGUNG.equals( property ) )
-      return "Steigung der Dreieckseite"; // Gradient
+      return "Steigung der Dreieckseite [1/m]"; // Gradient
 
     return super.getPropertyLabel( property );
   }

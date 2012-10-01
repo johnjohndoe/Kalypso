@@ -49,12 +49,10 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -73,18 +71,18 @@ public class TuhhProfil extends AbstractProfile
     result.setInterpolationHandler( new TUHHInterpolationHandler() );
   }
 
-  @Override
-  public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
-  {
-    // TODO: this restriction only exists for buildings! Other objects may occur several times...
-    final IProfileObject[] objects = getProfileObjects( IProfileBuilding.class );
-    for( final IProfileObject object : objects )
-    {
-      removeProfileObject( object );
-    }
-
-    return super.addProfileObjects( profileObjects );
-  }
+//  @Override
+//  public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
+//  {
+//    // TODO: this restriction only exists for buildings! Other objects may occur several times...
+//    final IProfileObject[] objects = getProfileObjects( IProfileBuilding.class );
+//    for( final IProfileObject object : objects )
+//    {
+//      removeProfileObject( object );
+//    }
+//
+//    return super.addProfileObjects( profileObjects );
+//  }
 
   /**
    * FIXME: this creates a marker (virtually) but does not really change the profile, except maybe add the

@@ -78,12 +78,10 @@ class CulvertPainter
     if( m_tube == null )
       return null;
 
-    final String tubeID = m_tube.getId();
-
-    if( tubeID.equals( BuildingTrapez.ID ) )
+    if( m_tube instanceof BuildingTrapez )
       return paintTrapez( (BuildingTrapez)m_tube, cm );
 
-    if( tubeID.equals( BuildingKreis.ID ) || tubeID.equals( BuildingEi.ID ) || tubeID.equals( BuildingMaul.ID ) )
+    if( m_tube instanceof BuildingKreis || m_tube instanceof BuildingEi || m_tube instanceof BuildingMaul )
       return paintEllipsis( m_tube, cm );
 
     return null;
@@ -233,12 +231,10 @@ class CulvertPainter
     if( m_tube == null )
       return null;
 
-    final String tubeID = m_tube.getId();
-
-    if( tubeID.equals( BuildingTrapez.ID ) )
+    if( m_tube instanceof BuildingTrapez )
       return calculateTrapezCoordinates( (BuildingTrapez)m_tube );
 
-    if( tubeID.equals( BuildingKreis.ID ) || tubeID.equals( BuildingEi.ID ) || tubeID.equals( BuildingMaul.ID ) )
+    if( m_tube instanceof BuildingKreis || m_tube instanceof BuildingEi || m_tube instanceof BuildingMaul )
       return calculateEllipsisCoordinates( m_tube );
 
     return null;
