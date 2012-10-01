@@ -40,7 +40,7 @@
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_Boe_re</StyleReference>
 				</Styles>
 			</DerivedLayer>
-			<DerivedLayer id="h_BV">
+			<DerivedLayer id="h_BV" visible="false">
 				<LayerReference url="soil"></LayerReference>
 				<Parameters>
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV" name="targetComponentId" />
@@ -50,7 +50,7 @@
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_h_BV</StyleReference>
 				</Styles>
 			</DerivedLayer>
-			<DerivedLayer id="Bridge" visible="false">
+			<DerivedLayer id="Bridge" visible="true">
 				<LayerReference url="soil"></LayerReference>
 				<Parameters>
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId" />
@@ -60,7 +60,7 @@
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_Bridge</StyleReference>
 				</Styles>
 			</DerivedLayer>
-			<DerivedLayer id="Weir" visible="false">
+			<DerivedLayer id="Weir" visible="true">
 				<LayerReference url="soil"></LayerReference>
 				<Parameters>
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_WeirOK" name="targetComponentId" />
@@ -70,7 +70,7 @@
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_Weir</StyleReference>
 				</Styles>
 			</DerivedLayer>
-			<DerivedLayer id="Culvert" visible="false">
+			<DerivedLayer id="Culvert" visible="true">
 				<LayerReference url="soil"></LayerReference>
 				<Parameters>
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_RohrDN" name="targetComponentId" />
@@ -101,7 +101,7 @@
 				</Parameters>
 				<Title>Wasserspiegel-Fixierung</Title>
 				<Styles>
-					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_WspFixation</StyleReference>
+					<!-- StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_WspFixation</StyleReference-->
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_WspFixation</StyleReference>
 				</Styles>
 			</DerivedLayer>
