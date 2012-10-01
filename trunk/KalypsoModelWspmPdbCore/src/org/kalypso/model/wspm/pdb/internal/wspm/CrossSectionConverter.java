@@ -265,7 +265,7 @@ public class CrossSectionConverter implements IProfileTransaction
 
       /* Find or insert point at 'width' */
       final boolean insert = Objects.isNull( ProfileVisitors.findPoint( m_profile, width.doubleValue() ) );
-      final IProfileRecord record = Profiles.addPoint( m_profile, width.doubleValue() );
+      final IProfileRecord record = Profiles.addOrFindPoint( m_profile, width.doubleValue() );
 
       setValue( record, asComponent, asDouble( point.getHeight() ) );
 

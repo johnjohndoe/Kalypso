@@ -102,7 +102,7 @@ public class WeirProfileCreator extends GelaendeProfileCreator
         final double value = wprofPoint.getValue();
         final String comment = wprofPoint.getComment();
 
-        final IRecord point = Profiles.addPoint( profile, distance.doubleValue() );
+        final IRecord point = Profiles.addOrFindPoint( profile, distance.doubleValue() );
 
         point.setValue( bridgeIndex, value );
 
