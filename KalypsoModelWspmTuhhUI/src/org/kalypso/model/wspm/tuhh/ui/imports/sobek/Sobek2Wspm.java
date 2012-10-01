@@ -277,8 +277,8 @@ public class Sobek2Wspm
       final BigDecimal start = section.getStart();
       final BigDecimal end = section.getEnd();
 
-      final IProfileRecord startRecord = Profiles.addPoint( profil, start.doubleValue() );
-      final IProfileRecord endRecord = Profiles.addPoint( profil, end.doubleValue() );
+      final IProfileRecord startRecord = Profiles.addOrFindPoint( profil, start.doubleValue() );
+      final IProfileRecord endRecord = Profiles.addOrFindPoint( profil, end.doubleValue() );
 
       final int startIndex = startRecord.getIndex();
       final int endIndex = endRecord.getIndex();

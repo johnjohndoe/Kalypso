@@ -522,7 +522,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     }
 
     // If no point with this width exist or if it already has the buildingProperty, create a new one:
-    final IProfileRecord newPoint = Profiles.addPoint( profile, distance );
+    final IProfileRecord newPoint = Profiles.addOrFindPoint( profile, distance );
     return newPoint;
   }
 
@@ -534,5 +534,4 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 // addMarker( profile, MARKER_TYP_BORDVOLL );
     addMarker( profile, MARKER_TYP_DURCHSTROEMTE );
   }
-
 }
