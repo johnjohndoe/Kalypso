@@ -48,8 +48,6 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
-import org.kalypso.commons.math.Range;
-import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -62,6 +60,7 @@ import org.kalypso.model.wspm.core.profil.ProfileFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfileSource;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
@@ -330,20 +329,6 @@ public class PrfSource implements IProfileSource
     }
   }
 
-//  private void writeBuildingProperties( final IProfileBuilding building, final Double[] values, final String[] keys )
-//  {
-//    if( building == null || values.length != keys.length )
-//      return;
-//
-//    for( int i = 0; i < values.length; i++ )
-//    {
-//      final String key = keys[i];
-//      final Double value = values[i];
-//
-//      building.setValue( key, String.format( Locale.PRC, "%f", value.doubleValue() ) );
-//    }
-//  }
-
   private boolean readBridge( final IProfile p, final PrfReader pr )
   {
     final IDataBlock dbo = pr.getDataBlock( "OK-B" ); //$NON-NLS-1$
@@ -367,37 +352,9 @@ public class PrfSource implements IProfileSource
     bridge.setFormbeiwert( formbeiwert );
 
     p.addProfileObjects( new IProfileObject[] { bridge } );
-    final IComponent okb = p.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    if( !p.hasPointProperty( okb ) )
-      p.addPointProperty( okb );
 
-    final double delta = okb == null ? 0.0001 : okb.getPrecision();
-
-    final PolyLine polyLineO = new PolyLine( dbo.getX(), dbo.getY(), delta );
-    final PolyLine polyLineU = new PolyLine( dbu.getX(), dbu.getY(), delta );
-    final Range rangeO = new Range( polyLineO.getFirstX(), polyLineO.getLastX(), delta );
-    final Range rangeU = new Range( polyLineU.getFirstX(), polyLineU.getLastX(), delta );
-    final IComponent ukb = p.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-    if( !p.hasPointProperty( ukb ) )
-      p.addPointProperty( ukb );
-
-    final int iOKB = p.indexOfProperty( okb );
-    final int iUKB = p.indexOfProperty( ukb );
-    for( final IRecord point : p.getPoints() )
-    {
-      final Double pointBreite = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
-      final Double pointHoehe = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
-
-      if( rangeO.contains( pointBreite ) )
-        point.setValue( iOKB, polyLineO.getYFor( pointBreite ) );
-      else
-        point.setValue( iOKB, pointHoehe );
-
-      if( rangeU.contains( pointBreite ) )
-        point.setValue( iUKB, polyLineU.getYFor( pointBreite ) );
-      else
-        point.setValue( iUKB, pointHoehe );
-    }
+    insertBuildingValues( p, dbu, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+    insertBuildingValues( p, dbo, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
 
     return true;
   }
@@ -416,7 +373,6 @@ public class PrfSource implements IProfileSource
     final IDataBlock db = pr.getDataBlock( "Gelae" ); //$NON-NLS-1$
     if( db == null )
       return 0;
-
     final Double[] xs = db.getX();
     final Double[] ys = db.getY();
     final IComponent cBreite = p.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -560,11 +516,13 @@ public class PrfSource implements IProfileSource
     final IDataBlock dbt = pr.getDataBlock( "TRENNLINIE" ); //$NON-NLS-1$
     if( dbt == null )
       return;
+
     final Double[] pos = dbt.getX();
     for( int i = 0; i < pos.length; i++ )
     {
       final IProfileRecord point = ProfileUtil.findPoint( p, pos[i], 0 );
       if( point != null )
+      {
         if( values != null && values.length > i + 1 )
         {
           final IComponent cWehr = provider.getPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
@@ -572,45 +530,28 @@ public class PrfSource implements IProfileSource
           final ProfilDevider devider = new ProfilDevider( cWehr, point );
           devider.setValue( values[i + 1] );
         }
+      }
     }
   }
 
-  private boolean readWehr( final IProfile p, final PrfReader pr )
+  private boolean readWehr( final IProfile profile, final PrfReader pr )
   {
     final IDataBlock dbw = pr.getDataBlock( "OK-WEHR" ); //$NON-NLS-1$
     if( dbw == null )
       return false;
 
-    final BuildingWehr wehr = new BuildingWehr( p );
+    final BuildingWehr wehr = new BuildingWehr( profile );
     final String secLine = dbw.getSecondLine();
     final String wehrart = getWehrart( secLine );
     final double[] wt = getWehrParameter( secLine );
     if( wehrart != null )
-    {
       wehr.setWehrart( wehrart );
-    }
 
     wehr.setFormbeiwert( wt == null ? 0.0 : wt[0] );
-    p.addProfileObjects( new IProfileObject[] { wehr } );
-    readWehrtrenner( wt, p, pr );
-    final IComponent pp = p.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-    final double delta = pp == null ? 0.0001 : pp.getPrecision();
-    final PolyLine polyLineO = new PolyLine( dbw.getX(), dbw.getY(), delta );
-    final Range rangeO = new Range( polyLineO.getFirstX(), polyLineO.getLastX(), delta );
-    for( final IRecord point : p.getPoints() )
-    {
-      final Double breite = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
-      final Double hoehe = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
-      final int iOKW = p.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-      if( rangeO.contains( breite ) )
-      {
-        point.setValue( iOKW, polyLineO.getYFor( breite ) );
-      }
-      else
-      {
-        point.setValue( iOKW, hoehe );
-      }
-    }
+    profile.addProfileObjects( new IProfileObject[] { wehr } );
+    readWehrtrenner( wt, profile, pr );
+
+    insertBuildingValues( profile, dbw, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
 
     return true;
   }
@@ -691,9 +632,6 @@ public class PrfSource implements IProfileSource
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSource#read(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public IProfile[] read( final String profileTyp, final Reader reader ) throws IOException
   {
@@ -707,4 +645,44 @@ public class PrfSource implements IProfileSource
     readSource( prfReader, profil );
     return new IProfile[] { profil };
   }
+
+  private void insertBuildingValues( final IProfile profile, final IDataBlock dbw, final String componentID )
+  {
+    final int componentIndex = ProfileUtil.getOrCreateComponent( profile, componentID );
+    final IComponent component = profile.getPointProperties()[componentIndex];
+
+    final double precision = component.getPrecision();
+
+    final Double[] xValues = dbw.getX();
+    final Double[] yValues = dbw.getY();
+
+    if( xValues.length != yValues.length )
+      return;
+
+    for( int i = 0; i < yValues.length; i++ )
+    {
+      final Double x = xValues[i];
+      final Double y = yValues[i];
+
+      final IRecord weirRecord = findOrInsertPointAt( profile, x, componentIndex, precision );
+      weirRecord.setValue( componentIndex, y );
+    }
+  }
+
+  private IRecord findOrInsertPointAt( final IProfile profile, final double distance, final int buildPropertyIndex, final double precision )
+  {
+    final IRecord existingPoint = ProfileUtil.findPoint( profile, distance, precision );
+    if( existingPoint != null )
+    {
+      // REAMRK: only if the building has no value, return the existing point
+      final Object buildingValue = existingPoint.getValue( buildPropertyIndex );
+      if( buildingValue == null )
+        return existingPoint;
+    }
+
+
+    // If no point with this width exist or if it already has the buildingProperty, create a new one:
+    return Profiles.addOrFindPoint( profile, distance );
+  }
+
 }
