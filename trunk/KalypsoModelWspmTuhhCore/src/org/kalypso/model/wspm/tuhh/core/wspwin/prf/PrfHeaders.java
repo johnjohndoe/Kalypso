@@ -59,6 +59,7 @@ public final class PrfHeaders
   {
   }
 
+  // TODO: this is nonsense, because the given key is 'random' -> probably we should just inline
   public static DataBlockHeader createHeader( final String key )
   {
     if( IWspmPointProperties.POINT_PROPERTY_HOEHE.equals( key ) ) //$NON-NLS-1$

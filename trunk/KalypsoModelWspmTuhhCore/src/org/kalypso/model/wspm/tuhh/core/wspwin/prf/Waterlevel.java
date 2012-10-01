@@ -58,27 +58,18 @@ public class Waterlevel implements IWaterlevel
     m_label = label;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel#getWaterlevel()
-   */
   @Override
   public double getWaterlevel( )
   {
     return m_waterlevel;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel#getDischarge()
-   */
   @Override
   public double getDischarge( )
   {
     return m_discharge;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel#getLabel()
-   */
   @Override
   public String getLabel( )
   {
