@@ -168,9 +168,6 @@ public class CoordDataBlock extends AbstractDataBlock
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.AbstractDataBlock#printToPrinterInternal(java.io.PrintWriter)
-   */
   @Override
   public void printToPrinter( final PrintWriter pw )
   {
@@ -200,9 +197,6 @@ public class CoordDataBlock extends AbstractDataBlock
     pw.println();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.IDataBlock#getCoordCount()
-   */
   @Override
   public int getCoordCount( )
   {
@@ -219,9 +213,6 @@ public class CoordDataBlock extends AbstractDataBlock
   }
   
 
-  /**
-   * @see org.bce.wspm.core.prf.datablock.IDataBlock#getText()
-   */
   @Override
   public String[] getText( )
   {

@@ -18,6 +18,8 @@
  */
 package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.IStatus;
@@ -26,7 +28,6 @@ import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
-import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -135,20 +136,50 @@ public class ProfileObjectsPrfWriter
 
     CoordDataBlock dbw;
 
+    // FIXME: check, is this really necessary: we interpolate weir values for all weir-markers
     if( deviders.length > 0 )
     {
       final IProfilePointMarker[] trennFl = m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-      final Double[] markedWidths = new Double[deviders.length + 2];
-      markedWidths[0] = ProfileUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, trennFl[0].getPoint() );
-      markedWidths[markedWidths.length - 1] = ProfileUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, trennFl[trennFl.length - 1].getPoint() );
-      for( int i = 1; i < markedWidths.length - 1; i++ )
-      {
-        markedWidths[i] = ProfileUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, deviders[i - 1].getPoint() );
-      }
-      final Double[] interpolations = WspmProfileHelper.interpolateValues( m_profil, markedWidths, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
 
+      final Collection<Double> markedWidths = new ArrayList<>( deviders.length + 2 );
+      final Collection<Double> interpolatedWeirHeights = new ArrayList<>( deviders.length + 2 );
+
+      final Double tf0Width = trennFl[0].getPoint().getBreite();
+      final Double tf0Height = WspmProfileHelper.interpolateValue( m_profil, tf0Width, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+      if( tf0Height != null )
+      {
+        markedWidths.add( tf0Width );
+        interpolatedWeirHeights.add( tf0Height );
+      }
+
+      /* weir markers */
+      for( int i = 0; i < deviders.length - 1; i++ )
+      {
+        final Double width = deviders[i - 1].getPoint().getBreite();
+        final Double height = WspmProfileHelper.interpolateValue( m_profil, width, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+        if( height != null )
+        {
+          markedWidths.add( width );
+          interpolatedWeirHeights.add( height );
+        }
+      }
+
+      /* last tf */
+      final Double tf1Width = trennFl[trennFl.length - 1].getPoint().getBreite();
+      final Double tf1Height = WspmProfileHelper.interpolateValue( m_profil, tf1Width, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+      if( tf1Height != null )
+      {
+        markedWidths.add( tf1Width );
+        interpolatedWeirHeights.add( tf1Height );
+      }
+
+      /* create datablock */
       dbw = new CoordDataBlock( dbhw );
-      dbw.setCoords( markedWidths, interpolations );
+
+      final Double[] xValues = markedWidths.toArray( new Double[markedWidths.size()] );
+      final Double[] yValues = interpolatedWeirHeights.toArray( new Double[interpolatedWeirHeights.size()] );
+
+      dbw.setCoords( xValues, yValues );
     }
     else
     {
