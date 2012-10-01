@@ -85,7 +85,7 @@ public class EnergylossProfileObject extends AbstractProfileObject implements IE
       return "Beschreibung"; // Description
 
     if( PROPERTY_VALUE.equals( property ) )
-      return "Energieverlust"; // Energyloss
+      return "Energieverlust [mNN]"; // Energyloss
 
     return property;
   }

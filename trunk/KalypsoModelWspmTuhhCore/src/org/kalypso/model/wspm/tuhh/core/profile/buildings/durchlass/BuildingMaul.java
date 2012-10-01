@@ -75,7 +75,7 @@ public class BuildingMaul extends AbstractCulvertBuilding
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_HOEHE.equals( property ) )
-      return "Gesamthöhe"; // Overall Height
+      return "Gesamthöhe [m]"; // Overall Height
 
     return super.getPropertyLabel( property );
   }

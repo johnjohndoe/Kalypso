@@ -49,6 +49,11 @@ public abstract class AbstractCulvertBuilding extends AbstractProfileObject impl
   {
   }
 
+  public AbstractCulvertBuilding( final ICulvertBuilding culvertBuilding )
+  {
+    copyValues( culvertBuilding );
+  }
+
   @Override
   public String[] getProperties( )
   {
@@ -59,16 +64,16 @@ public abstract class AbstractCulvertBuilding extends AbstractProfileObject impl
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_BEZUGSPUNKT_X.equals( property ) )
-      return "Bezugspunkt Breite"; // Anchor Width
+      return "Bezugspunkt Breite [m]"; // Anchor Width
 
     if( PROPERTY_BEZUGSPUNKT_Y.equals( property ) )
-      return "Bezugspunkt Höhe"; // Anchor Height
+      return "Bezugspunkt Höhe [mNN]"; // Anchor Height
 
     if( PROPERTY_BREITE.equals( property ) )
-      return "größte Breite/Durchmesser"; // Largest Width
+      return "größte Breite/Durchmesser [m]"; // Largest Width
 
     if( PROPERTY_SOHLGEFAELLE.equals( property ) )
-      return "Sohlgefälle"; // Channel Slope
+      return "Sohlgefälle [%]"; // Channel Slope
 
     if( PROPERTY_RAUHEIT.equals( property ) )
       return "Rauheit"; // Roughness
@@ -134,5 +139,15 @@ public abstract class AbstractCulvertBuilding extends AbstractProfileObject impl
   public void setRauheit( final Double rauheit )
   {
     setDoubleValue( KEY_RAUHEIT, rauheit );
+  }
+
+  @Override
+  public void copyValues( final ICulvertBuilding culvertBuilding )
+  {
+    setBezugspunktX( culvertBuilding.getBezugspunktX() );
+    setBezugspunktY( culvertBuilding.getBezugspunktY() );
+    setBreite( culvertBuilding.getBreite() );
+    setSohlgefaelle( culvertBuilding.getSohlgefaelle() );
+    setRauheit( culvertBuilding.getRauheit() );
   }
 }

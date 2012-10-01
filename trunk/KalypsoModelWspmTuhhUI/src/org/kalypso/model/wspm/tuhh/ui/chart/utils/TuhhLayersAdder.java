@@ -41,6 +41,9 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileChange;
@@ -50,10 +53,12 @@ import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
@@ -67,6 +72,8 @@ import org.kalypso.observation.result.IRecord;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
+ * FIXME: ugly! introduce class 'LayerAdder' and have implementations for each type
+ * 
  * @author Dirk Kuch
  */
 public final class TuhhLayersAdder
@@ -127,7 +134,6 @@ public final class TuhhLayersAdder
       rauheitNeu = rauheitKs == null ? rauheitKst : provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
       values = ProfileUtil.getValuesFor( profil, rauheitAlt );
       operation.addChange( new PointPropertyRemove( profil, rauheitAlt ) );
-
     }
 
     targetAxisRight.setLabel( String.format( axisLabeling, ComponentUtilities.getComponentUnitLabel( rauheitNeu ) ) );
@@ -135,22 +141,42 @@ public final class TuhhLayersAdder
     new ProfileOperationJob( operation ).schedule();
   }
 
-  public static void addBridgeLayer( final IProfile profil )
+  public static void addBridgeLayer( final Shell shell, final IProfile profil )
   {
-    final IProfileChange[] changes = new IProfileChange[1];
-    changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { new BuildingBruecke( profil ) } );
+    final IProfileBuilding[] existingBuildings = profil.getProfileObjects( IProfileBuilding.class );
+    if( !askForExistingBuildings( shell, existingBuildings ) )
+      return;
+
+    final ProfileObjectRemove removeChange = new ProfileObjectRemove( profil, existingBuildings );
+    final ProfileObjectAdd addChange = new ProfileObjectAdd( profil, new BuildingBruecke( profil ) );
+
+    final IProfileChange[] changes = new IProfileChange[] { removeChange, addChange };
 
     final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.4" ), profil, changes, true ); //$NON-NLS-1$
     new ProfileOperationJob( operation ).schedule();
   }
 
-  public static void addWeirLayer( final IProfile profil )
+  private static boolean askForExistingBuildings( final Shell shell, final IProfileBuilding[] existingBuildings )
   {
-    final IProfileChange[] changes = new IProfileChange[1];
+    if( Arrays.isEmpty( existingBuildings ) )
+      return true;
+
+    return MessageDialog.openConfirm( shell, "Add Building", "Existing buildings in the profile will be replaced. Continue?" );
+  }
+
+  public static void addWeirLayer( final Shell shell, final IProfile profil )
+  {
+    final IProfileBuilding[] existingBuildings = profil.getProfileObjects( IProfileBuilding.class );
+    if( !askForExistingBuildings( shell, existingBuildings ) )
+      return;
+
     final BuildingWehr bw = new BuildingWehr( profil );
 
     setInitialWeirValues( bw, profil );
-    changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { bw } );
+
+    final ProfileObjectRemove removeChange = new ProfileObjectRemove( profil, existingBuildings );
+    final ProfileObjectAdd addChange = new ProfileObjectAdd( profil, bw );
+    final IProfileChange[] changes = new IProfileChange[] { removeChange, addChange };
 
     final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.5" ), profil, changes, true ); //$NON-NLS-1$
     new ProfileOperationJob( operation ).schedule();
@@ -161,7 +187,6 @@ public final class TuhhLayersAdder
     final IProfilePointMarker[] marker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( marker.length == 2 )
     {
-
       final IRecord p1 = marker[0].getPoint();
       final IRecord p2 = marker[1].getPoint();
       final int index = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
@@ -174,41 +199,55 @@ public final class TuhhLayersAdder
     }
   }
 
-  public static void addTubesLayer( final IProfile profil )
+  public static void addTubesLayer( final Shell shell, final IProfile profil )
   {
+    final IProfileBuilding[] existingBuildings = profil.getProfileObjects( IProfileBuilding.class );
+    if( !askForExistingBuildings( shell, existingBuildings ) )
+      return;
+
+    final ProfileObjectRemove removeChange = new ProfileObjectRemove( profil, existingBuildings );
+
     final BuildingKreis building = new BuildingKreis();
     building.setRauheit( 0.2 );
-    final IProfileChange[] changes = new IProfileChange[1];
-    changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { building } );
+
+    final ProfileObjectAdd addChange = new ProfileObjectAdd( profil, building );
+
+    final IProfileChange[] changes = new IProfileChange[] { removeChange, addChange };
 
     final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.6" ), profil, changes, true ); //$NON-NLS-1$
     new ProfileOperationJob( operation ).schedule();
-
   }
 
   public static void addSinuositaetLayer( final IProfile profil )
   {
-    final IProfileChange[] changes = new IProfileChange[1];
-
     final SinuositaetProfileObject sinObj = new SinuositaetProfileObject();
 
-    changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { sinObj } );
+    final IProfileObject[] existingObjects = profil.getProfileObjects( SinuositaetProfileObject.class );
+
+    final ProfileObjectRemove removeChange = new ProfileObjectRemove( profil, existingObjects );
+
+    final ProfileObjectAdd addChange = new ProfileObjectAdd( profil, sinObj );
+
+    final IProfileChange[] changes = new IProfileChange[] { removeChange, addChange };
+
     final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.4" ), profil, changes, true ); //$NON-NLS-1$
     new ProfileOperationJob( operation ).schedule();
   }
 
   public static void addEnergylossLayer( final IProfile profil )
   {
-    final IProfileChange[] changes = new IProfileChange[1];
-
     final EnergylossProfileObject elpoObj = new EnergylossProfileObject();
-    // final IRecord record = elpoObj.getObservation().getResult().createRecord();
-    // elpoObj.getObservation().getResult().add( record );
 
-    changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { elpoObj } );
+    final IProfileObject[] existingObjects = profil.getProfileObjects( EnergylossProfileObject.class );
+
+    final ProfileObjectRemove removeChange = new ProfileObjectRemove( profil, existingObjects );
+
+    final ProfileObjectAdd addChange = new ProfileObjectAdd( profil, elpoObj );
+
+    final IProfileChange[] changes = new IProfileChange[] { removeChange, addChange };
+
     final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.8" ), profil, changes, true ); //$NON-NLS-1$
     new ProfileOperationJob( operation ).schedule();
-
   }
 
   public static void addCodeLayer( final IProfilePointPropertyProvider provider, final IProfile profil )

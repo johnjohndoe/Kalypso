@@ -46,7 +46,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.ProfileObjectHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingsCompatibilityConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -93,10 +93,10 @@ public final class BuildingBrueckeProvider implements IProfileObjectProvider
     if( result.size() != 1 )
       throw new IllegalStateException( "Only one record is allowed in profile object observations..." );
 
-    final IComponent breiteComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
-    final IComponent unterwasserComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER );
-    final IComponent formbeiwertComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
-    final IComponent rauheitComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
+    final IComponent breiteComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_BREITE );
+    final IComponent unterwasserComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_UNTERWASSER );
+    final IComponent formbeiwertComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_FORMBEIWERT );
+    final IComponent rauheitComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_RAUHEIT );
 
     final int breiteIndex = result.indexOfComponent( breiteComponent );
     final int unterwasserIndex = result.indexOfComponent( unterwasserComponent );

@@ -93,10 +93,10 @@ public class BuildingBruecke extends AbstractProfileObject implements IProfileBu
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_BREITE.equals( property ) )
-      return "größte Breite/Durchmesser"; // Largest Width
+      return "größte Breite/Durchmesser [m]"; // Largest Width
 
     if( PROPERTY_UNTERWASSER.equals( property ) )
-      return "Unterwasser"; // Downstream Height
+      return "Unterwasser [mNN]"; // Downstream Height
 
     if( PROPERTY_FORMBEIWERT.equals( property ) )
       return "Pfeilerformbeiwert"; // Pillar Shape Coefficient

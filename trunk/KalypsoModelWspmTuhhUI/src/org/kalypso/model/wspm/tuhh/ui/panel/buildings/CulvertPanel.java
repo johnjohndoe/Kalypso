@@ -225,12 +225,19 @@ public class CulvertPanel extends AbstractProfilView
 
         final ICulvertBuilding tube = (ICulvertBuilding)selection.getFirstElement();
 
-        final ICulvertBuilding old = WspmSohlpunkte.getBuilding( getProfile(), ICulvertBuilding.class );
+        final IProfile profile = getProfile();
+        final ICulvertBuilding old = WspmSohlpunkte.getBuilding( profile, ICulvertBuilding.class );
         if( tube != null && !tube.getId().equals( old.getId() ) )
         {
-          // TODO use copy constructor with IDurchlass Interfac
-          // tube.cloneValuesFrom( old );
-          getProfile().addProfileObjects( new IProfileObject[] { tube } );
+          tube.copyValues( old );
+
+          /* remove existing culverts */
+          final ICulvertBuilding[] oldCulverts = profile.getProfileObjects( ICulvertBuilding.class );
+          for( final ICulvertBuilding oldCulvert : oldCulverts )
+            profile.removeProfileObject( oldCulvert );
+
+          /* add new one */
+          profile.addProfileObjects( new IProfileObject[] { tube } );
         }
       }
     } );

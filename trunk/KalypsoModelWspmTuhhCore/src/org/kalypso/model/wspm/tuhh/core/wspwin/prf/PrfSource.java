@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IStatus;
@@ -51,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.math.Range;
 import org.kalypso.commons.math.geom.PolyLine;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfile;
@@ -330,19 +330,19 @@ public class PrfSource implements IProfileSource
     }
   }
 
-  private void writeBuildingProperties( final IProfileBuilding building, final Double[] values, final String[] keys )
-  {
-    if( building == null || values.length != keys.length )
-      return;
-
-    for( int i = 0; i < values.length; i++ )
-    {
-      final String key = keys[i];
-      final Double value = values[i];
-
-      building.setValue( key, String.format( Locale.PRC, "%f", value.doubleValue() ) );
-    }
-  }
+//  private void writeBuildingProperties( final IProfileBuilding building, final Double[] values, final String[] keys )
+//  {
+//    if( building == null || values.length != keys.length )
+//      return;
+//
+//    for( int i = 0; i < values.length; i++ )
+//    {
+//      final String key = keys[i];
+//      final Double value = values[i];
+//
+//      building.setValue( key, String.format( Locale.PRC, "%f", value.doubleValue() ) );
+//    }
+//  }
 
   private boolean readBridge( final IProfile p, final PrfReader pr )
   {
@@ -351,27 +351,26 @@ public class PrfSource implements IProfileSource
     if( dbo == null || dbu == null )
       return false;
 
-    final IProfileBuilding bridge = new BuildingBruecke( p );
+    final BuildingBruecke bridge = new BuildingBruecke( p );
     final StringTokenizer sT = new StringTokenizer( dbu.getSecondLine(), " " ); //$NON-NLS-1$
     if( sT.countTokens() > 4 )
-    {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.20" ), null ) ); //$NON-NLS-1$
-    }
 
-    // FIXME: better error handling if values is not parsable -> read as null-property; else we loose too much
-    final Double[] values = new Double[] { Double.parseDouble( sT.nextToken() ), Double.parseDouble( sT.nextToken() ), Double.parseDouble( sT.nextToken() ), Double.parseDouble( sT.nextToken() ) };
-    final String[] ids = new String[] { IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT,
-        IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT };
+    final Double unterwasser = getValue( sT.nextToken() );
+    final Double breite = getValue( sT.nextToken() );
+    final Double rauheit = getValue( sT.nextToken() );
+    final Double formbeiwert = getValue( sT.nextToken() );
 
-    // FIXME: Use setter
-    writeBuildingProperties( bridge, values, ids );
+    bridge.setUnterwasser( unterwasser );
+    bridge.setBreite( breite );
+    bridge.setRauheit( rauheit );
+    bridge.setFormbeiwert( formbeiwert );
 
     p.addProfileObjects( new IProfileObject[] { bridge } );
     final IComponent okb = p.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
     if( !p.hasPointProperty( okb ) )
-    {
       p.addPointProperty( okb );
-    }
+
     final double delta = okb == null ? 0.0001 : okb.getPrecision();
 
     final PolyLine polyLineO = new PolyLine( dbo.getX(), dbo.getY(), delta );
@@ -380,36 +379,36 @@ public class PrfSource implements IProfileSource
     final Range rangeU = new Range( polyLineU.getFirstX(), polyLineU.getLastX(), delta );
     final IComponent ukb = p.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
     if( !p.hasPointProperty( ukb ) )
-    {
       p.addPointProperty( ukb );
-    }
+
     final int iOKB = p.indexOfProperty( okb );
     final int iUKB = p.indexOfProperty( ukb );
     for( final IRecord point : p.getPoints() )
     {
-      final Double breite = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
-      final Double hoehe = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
+      final Double pointBreite = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
+      final Double pointHoehe = ProfileUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
 
-      if( rangeO.contains( breite ) )
-      {
-        point.setValue( iOKB, polyLineO.getYFor( breite ) );
-      }
+      if( rangeO.contains( pointBreite ) )
+        point.setValue( iOKB, polyLineO.getYFor( pointBreite ) );
       else
-      {
-        point.setValue( iOKB, hoehe );
-      }
+        point.setValue( iOKB, pointHoehe );
 
-      if( rangeU.contains( breite ) )
-      {
-        point.setValue( iUKB, polyLineU.getYFor( breite ) );
-      }
+      if( rangeU.contains( pointBreite ) )
+        point.setValue( iUKB, polyLineU.getYFor( pointBreite ) );
       else
-      {
-        point.setValue( iUKB, hoehe );
-      }
+        point.setValue( iUKB, pointHoehe );
     }
 
     return true;
+  }
+
+  private Double getValue( final String token )
+  {
+    final double value = NumberUtils.parseQuietDouble( token );
+    if( Double.isNaN( value ) )
+      return null;
+
+    return new Double( value );
   }
 
   private int readPoints( final IProfile p, final PrfReader pr )
@@ -417,6 +416,7 @@ public class PrfSource implements IProfileSource
     final IDataBlock db = pr.getDataBlock( "Gelae" ); //$NON-NLS-1$
     if( db == null )
       return 0;
+
     final Double[] xs = db.getX();
     final Double[] ys = db.getY();
     final IComponent cBreite = p.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );

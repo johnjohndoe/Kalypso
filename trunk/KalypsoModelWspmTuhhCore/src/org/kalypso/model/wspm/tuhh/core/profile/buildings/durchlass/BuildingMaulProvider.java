@@ -46,7 +46,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.ProfileObjectHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingsCompatibilityConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -93,12 +93,12 @@ public class BuildingMaulProvider implements IProfileObjectProvider
     if( result.size() != 1 )
       throw new IllegalStateException( "Only one record is allowed in profile object observations..." );
 
-    final IComponent bezugspunktXComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
-    final IComponent bezugspunktYComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );
-    final IComponent hoeheComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE );
-    final IComponent breiteComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
-    final IComponent sohlgefaelleComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE );
-    final IComponent rauheitComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
+    final IComponent bezugspunktXComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
+    final IComponent bezugspunktYComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );
+    final IComponent hoeheComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_HOEHE );
+    final IComponent breiteComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_BREITE );
+    final IComponent sohlgefaelleComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_SOHLGEFAELLE );
+    final IComponent rauheitComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_RAUHEIT );
 
     final int bezugspunktXIndex = result.indexOfComponent( bezugspunktXComponent );
     final int bezugspunktYIndex = result.indexOfComponent( bezugspunktYComponent );

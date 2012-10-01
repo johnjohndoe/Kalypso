@@ -46,14 +46,15 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
@@ -151,8 +152,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     m_targetAxisRight.setPreferredAdjustment( new AxisAdjustment( 2, 40, 58 ) );
   }
 
+  // FIXME: once, this was nice and object oriented; we should do it agin like this: encapsulate adding layer into a class! -> this class is presented in the ui
   @Override
-  public void addLayerToProfile( final IProfile profil, final String layerId )
+  public void addLayerToProfile( final Shell shell, final IProfile profil, final String layerId )
   {
     final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
 
@@ -174,15 +176,15 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
     {
-      TuhhLayersAdder.addBridgeLayer( profil );
+      TuhhLayersAdder.addBridgeLayer( shell, profil );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
-      TuhhLayersAdder.addWeirLayer( profil );
+      TuhhLayersAdder.addWeirLayer( shell, profil );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_TUBES ) )
     {
-      TuhhLayersAdder.addTubesLayer( profil );
+      TuhhLayersAdder.addTubesLayer( shell, profil );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
     {
@@ -283,10 +285,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     }
 
     /** water level layer */
-    layersToAdd.add( TuhhLayerCreator.createWspLayer( profile, (IWspmResultNode) result, m_domainAxis, m_targetAxisLeft, m_styleProvider ) );
+    layersToAdd.add( TuhhLayerCreator.createWspLayer( profile, (IWspmResultNode)result, m_domainAxis, m_targetAxisLeft, m_styleProvider ) );
 
     /** water level fixation layer */
-    layersToAdd.add( TuhhLayerCreator.createWspFixationLayer( profile, (IWspmResultNode) result, m_domainAxis, m_targetAxisLeft, m_styleProvider ) );
+    layersToAdd.add( TuhhLayerCreator.createWspFixationLayer( profile, (IWspmResultNode)result, m_domainAxis, m_targetAxisLeft, m_styleProvider ) );
 
     /** 2d layers */
     final IProfilChartLayer[] twoDLayers = TuhhLayerCreator.create2DWaterLevelLayers( profile, m_domainAxis, m_targetAxisLeft, m_styleProvider );

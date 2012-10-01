@@ -65,7 +65,7 @@ public class BuildingKreis extends AbstractCulvertBuilding
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_BREITE.equals( property ) )
-      return "Durchmesser"; // Aperture
+      return "Durchmesser [m]"; // Aperture
 
     return super.getPropertyLabel( property );
   }
