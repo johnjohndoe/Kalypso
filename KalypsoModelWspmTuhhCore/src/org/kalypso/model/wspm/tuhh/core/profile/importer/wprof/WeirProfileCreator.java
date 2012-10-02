@@ -51,7 +51,7 @@ import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;

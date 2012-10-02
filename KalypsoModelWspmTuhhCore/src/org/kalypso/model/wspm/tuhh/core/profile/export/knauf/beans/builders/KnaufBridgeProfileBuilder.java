@@ -63,9 +63,9 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 
 import com.vividsolutions.jts.geom.Coordinate;
