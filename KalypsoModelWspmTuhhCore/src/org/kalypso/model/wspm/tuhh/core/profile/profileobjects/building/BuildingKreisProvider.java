@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
+package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
 import org.kalypso.model.wspm.core.gml.ProfileObjectBinding;
 import org.kalypso.model.wspm.core.profil.IProfile;
@@ -46,7 +46,6 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.ProfileObjectHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingsCompatibilityConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;

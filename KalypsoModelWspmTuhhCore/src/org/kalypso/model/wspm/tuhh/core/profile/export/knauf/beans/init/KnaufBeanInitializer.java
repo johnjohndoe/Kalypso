@@ -41,12 +41,12 @@
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init;
 
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA20Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA21Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA29Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfileBuilding;
 
 /**
  * @author Dirk Kuch

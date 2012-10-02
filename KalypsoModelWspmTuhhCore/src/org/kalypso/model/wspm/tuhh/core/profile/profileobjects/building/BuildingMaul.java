@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
+package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
@@ -46,11 +46,15 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
  * @author Kim Werner
  * @author Holger Albert
  */
-public class BuildingKreis extends AbstractCulvertBuilding
+public class BuildingMaul extends AbstractCulvertBuilding
 {
-  public static final String ID = IWspmTuhhConstants.BUILDING_TYP_KREIS;
+  public static final String ID = IWspmTuhhConstants.BUILDING_TYP_MAUL;
 
-  public BuildingKreis( )
+  private static final String PROPERTY_HOEHE = "hoehe"; //$NON-NLS-1$
+
+  public static final String KEY_HOEHE = "MAUL_HOEHE"; //$NON-NLS-1$
+
+  public BuildingMaul( )
   {
     super();
   }
@@ -62,11 +66,27 @@ public class BuildingKreis extends AbstractCulvertBuilding
   }
 
   @Override
+  public String[] getProperties( )
+  {
+    return new String[] { PROPERTY_BEZUGSPUNKT_X, PROPERTY_BEZUGSPUNKT_Y, PROPERTY_BREITE, PROPERTY_HOEHE, PROPERTY_SOHLGEFAELLE, PROPERTY_RAUHEIT };
+  }
+
+  @Override
   public String getPropertyLabel( final String property )
   {
-    if( PROPERTY_BREITE.equals( property ) )
-      return "Durchmesser [m]"; // Aperture
+    if( PROPERTY_HOEHE.equals( property ) )
+      return "Gesamthöhe [m]"; // Overall Height
 
     return super.getPropertyLabel( property );
+  }
+
+  public Double getHoehe( )
+  {
+    return getDoubleValue( KEY_HOEHE, null );
+  }
+
+  public void setHoehe( final Double hoehe )
+  {
+    setDoubleValue( KEY_HOEHE, hoehe );
   }
 }

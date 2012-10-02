@@ -43,11 +43,11 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.ICulvertBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;

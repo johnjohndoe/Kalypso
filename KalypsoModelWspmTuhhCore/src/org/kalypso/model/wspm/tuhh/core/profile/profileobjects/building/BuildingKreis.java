@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
+package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
@@ -46,19 +46,11 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
  * @author Kim Werner
  * @author Holger Albert
  */
-public class BuildingTrapez extends AbstractCulvertBuilding
+public class BuildingKreis extends AbstractCulvertBuilding
 {
-  public static final String ID = IWspmTuhhConstants.BUILDING_TYP_TRAPEZ;
+  public static final String ID = IWspmTuhhConstants.BUILDING_TYP_KREIS;
 
-  private static final String PROPERTY_HOEHE = "hoehe"; //$NON-NLS-1$
-
-  private static final String PROPERTY_STEIGUNG = "steigung"; //$NON-NLS-1$
-
-  public static final String KEY_HOEHE = "TRAPEZ_HOEHE"; //$NON-NLS-1$
-
-  public static final String KEY_STEIGUNG = "TRAPEZ_STEIGUNG"; //$NON-NLS-1$
-
-  public BuildingTrapez( )
+  public BuildingKreis( )
   {
     super();
   }
@@ -70,43 +62,11 @@ public class BuildingTrapez extends AbstractCulvertBuilding
   }
 
   @Override
-  public String[] getProperties( )
-  {
-    return new String[] { PROPERTY_BEZUGSPUNKT_X, PROPERTY_BEZUGSPUNKT_Y, PROPERTY_BREITE, PROPERTY_HOEHE, PROPERTY_STEIGUNG, PROPERTY_SOHLGEFAELLE, PROPERTY_RAUHEIT };
-  }
-
-  @Override
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_BREITE.equals( property ) )
-      return "untere Seite [m]"; // lower side
-
-    if( PROPERTY_HOEHE.equals( property ) )
-      return "Gesamthöhe [m]"; // Overall Height
-
-    if( PROPERTY_STEIGUNG.equals( property ) )
-      return "Steigung der Dreieckseite [1/m]"; // Gradient
+      return "Durchmesser [m]"; // Aperture
 
     return super.getPropertyLabel( property );
-  }
-
-  public Double getHoehe( )
-  {
-    return getDoubleValue( KEY_HOEHE, null );
-  }
-
-  public Double getSteigung( )
-  {
-    return getDoubleValue( KEY_STEIGUNG, null );
-  }
-
-  public void setHoehe( final Double hoehe )
-  {
-    setDoubleValue( KEY_HOEHE, hoehe );
-  }
-
-  public void setSteigung( final Double steigung )
-  {
-    setDoubleValue( KEY_STEIGUNG, steigung );
   }
 }

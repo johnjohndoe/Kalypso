@@ -50,11 +50,11 @@ import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassification
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfileBuilding;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;

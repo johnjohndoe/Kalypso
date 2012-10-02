@@ -38,49 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.buildings;
+package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 
 /**
  * @author Dirk Kuch
  */
-public final class Buildings
+public interface IProfileBuilding extends IProfileObject
 {
-  private Buildings( )
-  {
-  }
-
-  public static boolean isBridge( final IProfileObject building )
-  {
-    return building.getId().equals( BuildingBruecke.ID );
-  }
-
-  public static boolean isWeir( final IProfileObject building )
-  {
-    return building.getId().equals( BuildingWehr.ID );
-  }
-
-  public static boolean isTube( final IProfileObject building )
-  {
-    if( building.getId().equals( BuildingEi.ID ) )
-      return true;
-
-    if( building.getId().equals( BuildingKreis.ID ) )
-      return true;
-
-    if( building.getId().equals( BuildingMaul.ID ) )
-      return true;
-
-    if( building.getId().equals( BuildingTrapez.ID ) )
-      return true;
-
-    return false;
-  }
 }
