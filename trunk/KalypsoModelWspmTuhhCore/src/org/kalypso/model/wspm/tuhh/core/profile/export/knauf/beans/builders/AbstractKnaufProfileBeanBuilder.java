@@ -46,13 +46,13 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA20Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA21Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA29Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA30Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init.KnaufBeanInitializer;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 
 /**
  * @author Dirk Kuch
