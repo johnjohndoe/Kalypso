@@ -16,34 +16,24 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
+package org.kalypso.model.wspm.tuhh.core.profile.profileobjects;
 
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 
 /**
  * @author Holger Albert
  */
-public interface ICulvertBuilding extends IProfileBuilding
+public class GenericProfileHorizont extends AbstractProfileObject
 {
-  Double getBezugspunktX( );
+  public static final String ID = "GenericProfileHorizont";
 
-  Double getBezugspunktY( );
+  public GenericProfileHorizont( )
+  {
+  }
 
-  Double getBreite( );
-
-  Double getSohlgefaelle( );
-
-  Double getRauheit( );
-
-  void setBezugspunktX( Double bezugspunktX );
-
-  void setBezugspunktY( Double bezugspunktY );
-
-  void setBreite( Double breite );
-
-  void setSohlgefaelle( Double sohlgefaelle );
-
-  void setRauheit( Double rauheit );
-
-  void copyValues( ICulvertBuilding culvertBuilding );
+  @Override
+  public String getId( )
+  {
+    return ID;
+  }
 }

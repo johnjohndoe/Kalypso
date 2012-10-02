@@ -42,10 +42,10 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;

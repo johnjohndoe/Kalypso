@@ -44,7 +44,7 @@ import java.util.Locale;
 
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 
 /**
  * Exports WSPM profiles as struct.def SOBEK file.

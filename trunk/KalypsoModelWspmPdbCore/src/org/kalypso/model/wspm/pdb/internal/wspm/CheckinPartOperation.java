@@ -64,21 +64,18 @@ import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
+import org.kalypso.model.wspm.pdb.wspm.CheckinHelper;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperationData;
-import org.kalypso.model.wspm.pdb.wspm.CheckinStatePdbOperation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
- * Translates a {@link org.kalypso.model.wspm.core.profil.IProfil} to a
- * {@link org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart}.
- *
+ * Translates a {@link org.kalypso.model.wspm.core.profil.IProfil} to a {@link org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart}.
+ * 
  * @author Gernot Belger
  */
 public class CheckinPartOperation
@@ -112,7 +109,7 @@ public class CheckinPartOperation
 
   public IStatus execute( ) throws PdbConnectException
   {
-    // Name must be unique within each part
+    /* Names must be unique within each part. */
     final PDBNameGenerator nameGenerator = new PDBNameGenerator();
 
     final String heightComponentID = m_partBuilder.getHeightComponent();
@@ -136,7 +133,7 @@ public class CheckinPartOperation
       final String hyk = m_partBuilder.getHykCode( record );
 
       final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, heightComponentID );
-      final com.vividsolutions.jts.geom.Point location = toPoint( loc );
+      final com.vividsolutions.jts.geom.Point location = CheckinHelper.toPoint( loc, m_data.getTransformer() );
 
       // FIMXE: check class
       final String roughnessClassId = getStringValue( record, IWspmConstants.POINT_PROPERTY_ROUGHNESS_CLASS, null );
@@ -206,7 +203,7 @@ public class CheckinPartOperation
     if( vegetation == null )
     {
       final Vegetation unknownVegetation = coefficients.getUnknownVegetation();
-      m_stati.add( IStatus.WARNING, Messages.getString("CheckinPartOperation_1"), null, vegetationClassId, unknownVegetation.getLabel() ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, Messages.getString( "CheckinPartOperation_1" ), null, vegetationClassId, unknownVegetation.getLabel() ); //$NON-NLS-1$
       return unknownVegetation;
     }
 
@@ -226,7 +223,7 @@ public class CheckinPartOperation
     if( roughness == null )
     {
       final Roughness unknownRoughness = coefficients.getUnknownRoughness();
-      m_stati.add( IStatus.WARNING, Messages.getString("CheckinPartOperation_2"), null, roughnessClassId, unknownRoughness.getLabel() ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, Messages.getString( "CheckinPartOperation_2" ), null, roughnessClassId, unknownRoughness.getLabel() ); //$NON-NLS-1$
       return unknownRoughness;
     }
 
@@ -279,25 +276,11 @@ public class CheckinPartOperation
       return defaultValue;
 
     if( value instanceof BigDecimal )
-      return (BigDecimal) value;
+      return (BigDecimal)value;
 
     if( value instanceof Number )
-      return new BigDecimal( ((Number) value).doubleValue() );
+      return new BigDecimal( ((Number)value).doubleValue() );
 
     return defaultValue;
-  }
-
-  private com.vividsolutions.jts.geom.Point toPoint( final GM_Point point ) throws PdbConnectException
-  {
-    try
-    {
-      final GM_Object transformedCurve = m_data.getTransformer().transform( point );
-      return (com.vividsolutions.jts.geom.Point) JTSAdapter.export( transformedCurve );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new PdbConnectException( CheckinStatePdbOperation.STR_FAILED_TO_CONVERT_GEOMETRY, e );
-    }
   }
 }

@@ -53,11 +53,11 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AddRoughnessResolution;
 

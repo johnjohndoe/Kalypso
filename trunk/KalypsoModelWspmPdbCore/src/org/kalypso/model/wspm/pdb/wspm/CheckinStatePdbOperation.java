@@ -278,7 +278,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
   {
     final Set<CrossSectionPart> parts = new HashSet<>();
 
-    /* Extract profile line */
+    /* Extract profile line. */
     final CrossSectionPart pPart = builtPart( profil, profilSRS, new PPPartBuilder( profil ) );
     if( !isBlank( pPart ) )
     {
@@ -286,28 +286,27 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
       section.setLine( pPart.getLine() );
     }
 
-    /* Extract building parts */
+    /* Extract building parts. */
     final CrossSectionPart ukPart = builtPart( profil, profilSRS, new UKPartBuilder() );
     if( !isBlank( ukPart ) )
       parts.add( ukPart );
 
     final OKPartBuilder okBridgeBuilder = new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    final CrossSectionPart okPart = builtPart( profil, profilSRS, okBridgeBuilder );
-    if( !isBlank( okPart ) )
-      parts.add( okPart );
+    final CrossSectionPart okBridgePart = builtPart( profil, profilSRS, okBridgeBuilder );
+    if( !isBlank( okBridgePart ) )
+      parts.add( okBridgePart );
 
-    final OKPartBuilder weirBuilder = new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, weirBuilder );
+    final OKPartBuilder okWeirBuilder = new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, okWeirBuilder );
     if( !isBlank( okWeirPart ) )
       parts.add( okWeirPart );
 
-    /* extract extra parts */
+    /* Extract extra parts. */
     final CrossSectionPart[] additionalParts = createAdditionalParts();
     for( final CrossSectionPart additionalPart : additionalParts )
-    {
       parts.add( additionalPart );
-    }
 
+    /* Generate unique names. */
     final PDBNameGenerator partNameGenerator = new PDBNameGenerator();
     for( final CrossSectionPart part : parts )
     {
@@ -329,17 +328,26 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     return part.getPoints().isEmpty();
   }
 
-  private CrossSectionPart builtPart( final IProfile profil, final String profilSRS, final IPartBuilder partBuilder ) throws PdbConnectException
+  /**
+   * This function creates a cross section part using the records of the profile and the part builder.
+   * 
+   * @param profile
+   *          The profile.
+   * @param profileSRS
+   *          The coordinate system of the profile.
+   * @param partBuilder
+   *          The part builder provides gaf codes, ...
+   * @return The cross section part.
+   */
+  private CrossSectionPart builtPart( final IProfile profile, final String profileSRS, final IPartBuilder partBuilder ) throws PdbConnectException
   {
-    final CheckinPartOperation partOperation = new CheckinPartOperation( m_data, profil, profilSRS, partBuilder );
-
+    final CheckinPartOperation partOperation = new CheckinPartOperation( m_data, profile, profileSRS, partBuilder );
     final IStatus result = partOperation.execute();
     if( !result.isOK() )
       m_log.add( result );
 
-    final CrossSectionPart part = partOperation.getPart();
-
     final CrossSectionPartType type = m_data.findPartType( partBuilder.getKind() );
+    final CrossSectionPart part = partOperation.getPart();
     part.setCrossSectionPartType( type );
 
     return part;
