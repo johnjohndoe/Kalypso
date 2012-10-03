@@ -56,7 +56,7 @@
               <LineColor>0000aa</LineColor>
             </Stroke>
             <FillColor>
-              3333aa
+              <Color>3333aa</Color>
             </FillColor>
           </PointStyle>
         </Styles>
@@ -92,7 +92,7 @@
               <LineColor>00aa00</LineColor>
             </Stroke>
             <FillColor>
-              33aa33
+              <Color>33aa33</Color>
             </FillColor>
           </PointStyle>
         </Styles>
@@ -128,7 +128,7 @@
               <LineColor>aa0000</LineColor>
             </Stroke>
             <FillColor>
-              aa3333
+              <Color>aa3333</Color>
             </FillColor>
           </PointStyle>
         </Styles>
@@ -163,7 +163,7 @@
               <LineColor>616161</LineColor>
             </Stroke>
             <FillColor>
-              3333aa
+              <Color>3333aa</Color>
             </FillColor>
           </PointStyle>
         </Styles>
@@ -199,7 +199,7 @@
               <LineColor>8C007B</LineColor>
             </Stroke>
             <FillColor>
-              3333aa
+              <Color>3333aa</Color>
             </FillColor>
           </PointStyle>
         </Styles>
@@ -234,7 +234,7 @@
               <LineColor>616161</LineColor>
             </Stroke>
             <FillColor>
-              3333aa
+              <Color>3333aa</Color>
             </FillColor>
           </PointStyle>
         </Styles>
@@ -269,7 +269,7 @@
               <LineColor>ff0000</LineColor>
             </Stroke>
             <FillColor>
-              3333aa
+              <Color>3333aa</Color>
             </FillColor>
           </PointStyle>
         </Styles>
