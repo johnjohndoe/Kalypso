@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/../../../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
   <Chart id="runoffChart">
-    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Abfluss</Title>
-    <Description>Abflusswerte der Berechnung</Description>
+    <ChartInsets bottom="0" left="0" top="10" right="10"/>
     <Layers>
-
       <Layer visible="true" legend="false" id="runoffGridLayer">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
           <Parameters>
@@ -40,14 +38,14 @@
       </Layer>
 
       <Layer visible="true" id="runoffLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
@@ -153,10 +151,8 @@
   </Chart>
 
   <Chart id="areaChart">
-    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Fläche</Title>
-    <Description>Flächenwerte der Berechnung</Description>
+    <ChartInsets bottom="0" left="0" top="10" right="10"/>
     <Layers>
-
       <Layer visible="true" legend="false" id="areaGridLayer">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
           <Parameters>
@@ -192,14 +188,14 @@
       </Layer>
 
       <Layer visible="true" id="areaLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
@@ -294,10 +290,8 @@
 
   <!-- ALPHA -->
   <Chart id="alphaChart">
-    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Alpha</Title>
-    <Description>Alphawerte der Berechnung</Description>
+    <ChartInsets bottom="0" left="0" top="10" right="10"/>
     <Layers>
-
       <Layer visible="true" legend="false" id="alphyGridLayer">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
           <Parameters>
@@ -333,14 +327,14 @@
       </Layer>
 
       <Layer visible="true" id="alphaLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
@@ -435,10 +429,8 @@
 
   <!-- new chart configurations -->
   <Chart id="runoffChannelAndFloodplainChart">
-    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Abfluss Flussschlauch und Vorland</Title>
-    <Description>Abflusswerte innerhalb des Flussschlauchs und des Vorlands</Description>
+    <ChartInsets bottom="0" left="0" top="10" right="10"/>
     <Layers>
-
       <!-- grid and border -->
       <Layer visible="true" legend="false" id="runoffChannelAndFloodplainGridLayer">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
@@ -476,14 +468,14 @@
 
       <!-- sum of channel and floodplain -->
       <Layer visible="true" id="runoffSumLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
             <Parameter name="legendMode" value="point" />            
           </Parameters>
         </Provider>
@@ -518,14 +510,14 @@
 
       <!-- channel -->
       <Layer visible="true" id="runoffChannelLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffChannel" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffChannel" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
@@ -560,14 +552,14 @@
 
       <!-- floodplain -->
       <Layer visible="true" id="runoffFloodplainLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffFloodplain" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffFloodplain" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
@@ -666,10 +658,8 @@
   </Chart>
 
   <Chart id="areaChannelAndFloodplainChart">
-    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Fläche Flussschlauch und Vorland</Title>
-    <Description>Flächenwerte innerhalb des Flussschlauchs und des Vorlands</Description>
+    <ChartInsets bottom="0" left="0" top="10" right="10"/>
     <Layers>
-    
       <!-- grid and border -->
       <Layer visible="true" legend="false" id="areaChannelAndFloodplainGridLayer">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
@@ -707,14 +697,14 @@
 
       <!-- sum of channel and floodplain -->
       <Layer visible="true" id="areaSumLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
@@ -748,14 +738,14 @@
 
       <!-- channel -->
       <Layer visible="true" id="areaChannelLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#AreaChannel" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#AreaChannel" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
@@ -789,14 +779,14 @@
 
       <!-- floodplain -->
       <Layer visible="true" id="areaFloodplainLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#AreaFloodplain" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#AreaFloodplain" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
@@ -883,10 +873,8 @@
   </Chart>
 
   <Chart id="widthChannelAndFloodplainChart">
-    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Breite Flussschlauch und Vorland</Title>
-    <Description>Breite des Flussschlauchs und des Vorlands</Description>
+    <ChartInsets bottom="0" left="0" top="10" right="10"/>
     <Layers>
-    
       <!-- grid and border -->
       <Layer visible="true" legend="false" id="widthChannelAndFloodplainGridLayer">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
@@ -924,14 +912,14 @@
 
       <!-- sum of channel and floodplain -->
       <Layer visible="true" id="widthSumLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Width" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Width" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
@@ -965,14 +953,14 @@
 
       <!-- channel -->
       <Layer visible="true" id="widthChannelLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#WidthChannel" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#WidthChannel" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
@@ -1006,14 +994,14 @@
 
       <!-- floodplain -->
       <Layer visible="true" id="widthFloodplainLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#WidthFloodplain" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#WidthFloodplain" />
             <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
