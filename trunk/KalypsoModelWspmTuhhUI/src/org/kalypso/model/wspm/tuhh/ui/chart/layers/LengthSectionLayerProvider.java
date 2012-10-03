@@ -42,14 +42,11 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import java.net.URL;
 
-import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
-import org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
+import org.kalypso.chart.ext.observation.TupleResultDomainValueData;
+import org.kalypso.chart.ext.observation.TupleResultLineLayer;
+import org.kalypso.chart.ext.observation.TupleResultLineLayerProvider;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
@@ -60,55 +57,31 @@ public class LengthSectionLayerProvider extends TupleResultLineLayerProvider
   // FIXME: bad design!
   // There should be exactly one layer provider per layer implementation
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
-   */
   @Override
   public IChartLayer getLayer( final URL context )
   {
     final IStyleSet styleSet = getStyleSet();
     final String layerId = getId();
 
+    // FIXME: implement several layer providers!
+
+    final TupleResultDomainValueData< ? , ? > dataContainer = TupleResultDomainValueData.fromContainer( getParameterContainer(), context, getModel() );
+
     if( "Bridge".equals( layerId ) ) //$NON-NLS-1$
-      return new LengthSectionBridgeLayer( this, getDataContainer(), styleSet );
+      return new LengthSectionBridgeLayer( this, dataContainer, styleSet );
 
     if( "Weir".equals( layerId ) ) //$NON-NLS-1$
-      return new LengthSectionWeirLayer( this, getDataContainer(), styleSet );
+      return new LengthSectionWeirLayer( this, dataContainer, styleSet );
 
     if( "Culvert".equals( layerId ) ) //$NON-NLS-1$
-      return new LengthSectionCulvertLayer( this, getDataContainer(), styleSet );
+      return new LengthSectionCulvertLayer( this, dataContainer, styleSet );
 
     if( "runOff".equals( layerId ) ) //$NON-NLS-1$
-      return new LengthSectionRunOffLayer( this, getDataContainer(), styleSet );
+      return new LengthSectionRunOffLayer( this, dataContainer, styleSet );
 
     if( "soil".equals( layerId ) ) //$NON-NLS-1$
-      return new LengthSectionSoilLayer( this, getDataContainer(), styleSet );
+      return new LengthSectionSoilLayer( this, dataContainer, styleSet );
 
-    return new TupleResultLineLayer( this, getDataContainer(), styleSet );
-  }
-
-  private TupleResultDomainValueData< ? , ? > getDataContainer( )
-  {
-    final IParameterContainer pc = getParameterContainer();
-    return getDataContainer( pc, pc.getParameterValue( "targetComponentId", null ) ); //$NON-NLS-1$
-  }
-
-  private TupleResultDomainValueData< ? , ? > getDataContainer( final IParameterContainer pc, final String targetComponentId )
-  {
-    final String domainComponentName = pc.getParameterValue( "domainComponentId", null ); //$NON-NLS-1$
-    if( domainComponentName == null || targetComponentId == null )
-      return null;
-
-    // try to find loaded observation (from GFT)
-    final IObservation<TupleResult> obs = getObservation();
-    if( obs != null )
-      return new TupleResultDomainValueData<>( obs, domainComponentName, targetComponentId );
-
-    final String href = pc.getParameterValue( "href", null ); //$NON-NLS-1$
-    final String observationId = pc.getParameterValue( "observationId", null ); //$NON-NLS-1$
-    if( href != null && observationId != null )
-      return new TupleResultDomainValueData<>( getContext(), href, observationId, domainComponentName, targetComponentId );
-
-    return null;
+    return new TupleResultLineLayer( this, dataContainer, styleSet );
   }
 }

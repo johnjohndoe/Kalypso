@@ -5,8 +5,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.chart.ext.observation.TupleResultDomainValueData;
+import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
@@ -26,6 +26,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
+//FIXME: why do we extend from TupleResultLineLayer -> implementation is totally different!
 public class LengthSectionBridgeLayer extends TupleResultLineLayer
 {
   public LengthSectionBridgeLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
@@ -44,6 +45,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final IObservation<TupleResult> obs = valueData.getObservation();
     if( obs == null )
       return;
+
     final FullRectangleFigure rf = new FullRectangleFigure();
     final IPointStyle ps = getPointStyle();
     rf.setStyle( new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), true ) );

@@ -3,8 +3,8 @@ package org.kalypso.statistics.gui.chart;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.chart.ext.observation.TupleResultDomainValueData;
+import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.TupleResult;
 
