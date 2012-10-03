@@ -7,7 +7,6 @@ import java.util.List;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
@@ -26,7 +25,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.i18n.Messages;
@@ -40,11 +39,8 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
-public class GenerateRiskModelHandler extends AbstractHandler implements IHandler
+public class GenerateRiskModelHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -150,8 +146,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       {
         // final String msg = "Failed to create Risk Model, please try again.";
         final String title = Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.4" ); //$NON-NLS-1$
-        final StatusDialog2 dialog = new StatusDialog2( shell, result, title );
-        dialog.open();
+        StatusDialog.open( shell, result, title );
       }
 
     }
@@ -171,7 +166,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
   private IRunoffEvent[] checkEvents( final IRunoffEvent[] selectedEvents, final Shell shell )
   {
     // decision dialog for user, if he wants to overwrite existing data
-    final List<IRunoffEvent> eventList = new LinkedList<IRunoffEvent>();
+    final List<IRunoffEvent> eventList = new LinkedList<>();
 
     for( final IRunoffEvent runoffEvent : selectedEvents )
     {

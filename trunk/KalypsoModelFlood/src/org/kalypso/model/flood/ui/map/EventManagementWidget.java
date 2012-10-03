@@ -713,7 +713,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
 
     /* Collect selected tins: either directly selected or all children of selected events */
-    final Collection<ITinReference> tinRefs = new HashSet<ITinReference>();
+    final Collection<ITinReference> tinRefs = new HashSet<>();
     for( final Object o : m_treeSelection )
     {
       if( o instanceof IAdaptable )

@@ -57,25 +57,19 @@ public class FloodModel extends UnversionedModel implements IFloodModel
 
   private final IFeatureBindingCollection<IRunoffEvent> m_events;
 
-  public FloodModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public FloodModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
-    m_polygones = new FeatureBindingCollection<IFloodPolygon>( this, IFloodPolygon.class, QNAME_PROP_POLYGONE_MEMBER );
-    m_events = new FeatureBindingCollection<IRunoffEvent>( this, IRunoffEvent.class, QNAME_PROP_EVENT_MEMBER );
+    m_polygones = new FeatureBindingCollection<>( this, IFloodPolygon.class, QNAME_PROP_POLYGONE_MEMBER );
+    m_events = new FeatureBindingCollection<>( this, IRunoffEvent.class, QNAME_PROP_EVENT_MEMBER );
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IFloodModel#getPolygons()
-   */
   @Override
   public IFeatureBindingCollection<IFloodPolygon> getPolygons( )
   {
     return m_polygones;
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IFloodModel#getTerrainModel()
-   */
   @Override
   public ICoverageCollection getTerrainModel( )
   {
@@ -83,9 +77,6 @@ public class FloodModel extends UnversionedModel implements IFloodModel
     return (ICoverageCollection) coveragesFeature;
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IFloodModel#getEvents()
-   */
   @Override
   public IFeatureBindingCollection<IRunoffEvent> getEvents( )
   {

@@ -43,7 +43,6 @@ package org.kalypso.model.flood.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.swt.widgets.Shell;
@@ -64,11 +63,8 @@ import org.kalypso.ui.views.map.MapView;
 /**
  * @author Gernot Belger
  */
-public class PolygonEditingHandler extends AbstractHandler implements IHandler
+public class PolygonEditingHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {

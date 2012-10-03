@@ -81,7 +81,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
       /* Create a unique name */
       final IFeatureBindingCollection<IRunoffEvent> events = m_model.getEvents();
-      final Set<String> names = new HashSet<String>();
+      final Set<String> names = new HashSet<>();
       for( final IRunoffEvent runoffEvent : events )
         names.add( runoffEvent.getName() );
 

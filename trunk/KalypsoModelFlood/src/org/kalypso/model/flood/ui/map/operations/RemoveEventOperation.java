@@ -54,7 +54,8 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( Messages.getString("RemoveEventOperation_0"), m_treeSelection.length + 10 ); //$NON-NLS-1$
-    final Collection<IStatus> removeResults = new ArrayList<IStatus>();
+
+    final Collection<IStatus> removeResults = new ArrayList<>();
     try
     {
       for( final Object element : m_treeSelection )

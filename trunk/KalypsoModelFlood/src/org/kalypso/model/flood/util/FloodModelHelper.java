@@ -282,7 +282,7 @@ public class FloodModelHelper
 
     final Object[] selectedObjects = dialog.getResult();
 
-    final List<IRunoffEvent> selectedEventList = new LinkedList<IRunoffEvent>();
+    final List<IRunoffEvent> selectedEventList = new LinkedList<>();
     for( final Object object : selectedObjects )
     {
       if( object instanceof IRunoffEvent )

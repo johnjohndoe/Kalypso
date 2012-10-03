@@ -87,11 +87,11 @@ public final class FloodModelOperation implements ICoreRunnableWithProgress
 
   final Modeldata getModeldata( )
   {
-    final Map<String, String> inputs = new HashMap<String, String>();
+    final Map<String, String> inputs = new HashMap<>();
     inputs.put( SimulationKalypsoFlood.INPUT_FLOOD_MODEL, "models/flood.gml" ); //$NON-NLS-1$
     inputs.put( SimulationKalypsoFlood.INPUT_GRID_FOLDER, "grids" ); //$NON-NLS-1$
 
-    final Map<String, String> outputs = new HashMap<String, String>();
+    final Map<String, String> outputs = new HashMap<>();
     outputs.put( SimulationKalypsoFlood.OUTPUT_FLOOD_MODEL, "models/flood.gml" ); //$NON-NLS-1$
     outputs.put( SimulationKalypsoFlood.OUTPUT_EVENTS_BASE_FOLDER, "events" ); //$NON-NLS-1$
 
