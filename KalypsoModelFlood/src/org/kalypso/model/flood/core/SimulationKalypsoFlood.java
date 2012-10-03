@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.BinaryGeoGridReader;
 import org.kalypso.grid.CountGeoGridWalker;
@@ -177,7 +176,7 @@ public class SimulationKalypsoFlood implements ISimulation
 
       /* Find events to be calculated */
       final IFeatureBindingCollection<IRunoffEvent> events = model.getEvents();
-      final List<IRunoffEvent> markedEvents = new ArrayList<IRunoffEvent>();
+      final List<IRunoffEvent> markedEvents = new ArrayList<>();
       for( final IRunoffEvent event : events )
       {
         if( event.isMarkedForProcessing() )
@@ -187,7 +186,7 @@ public class SimulationKalypsoFlood implements ISimulation
       }
 
       if( markedEvents.size() == 0 )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.17" ), null ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.WARNING, KalypsoModelFloodPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.17" ) ) ); //$NON-NLS-1$
 
       progress.setWorkRemaining( events.size() * 2 );
       for( final IRunoffEvent event : markedEvents )
@@ -224,14 +223,14 @@ public class SimulationKalypsoFlood implements ISimulation
     final IFeatureBindingCollection<IFloodPolygon> polygons = model.getPolygons();
 
     /* Filter Volume Polygon */
-    final List<IFloodVolumePolygon> volumePolygons = new ArrayList<IFloodVolumePolygon>( polygons.size() );
+    final List<IFloodVolumePolygon> volumePolygons = new ArrayList<>( polygons.size() );
     for( final IFloodPolygon floodPolygon : polygons )
     {
       if( floodPolygon instanceof IFloodVolumePolygon && floodPolygon.getEvents().contains( event ) )
         volumePolygons.add( (IFloodVolumePolygon) floodPolygon );
     }
 
-    final Collection<IStatus> stati = new ArrayList<IStatus>();
+    final Collection<IStatus> stati = new ArrayList<>();
     final SubMonitor progress = SubMonitor.convert( monitor, volumePolygons.size() );
     for( final IFloodVolumePolygon floodVolumePolygon : volumePolygons )
     {
@@ -260,7 +259,7 @@ public class SimulationKalypsoFlood implements ISimulation
     final String volumeName = volumePolygon.getName();
 
     final String noValueMsg = String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.2" ), volumeName ); //$NON-NLS-1$
-    final IStatus noValueStatus = StatusUtilities.createStatus( IStatus.WARNING, noValueMsg, null );
+    final IStatus noValueStatus = new Status( IStatus.WARNING, KalypsoModelFloodPlugin.PLUGIN_ID, noValueMsg );
 
     if( volumeValue == null )
       return noValueStatus;
@@ -367,20 +366,20 @@ public class SimulationKalypsoFlood implements ISimulation
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.21" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     if( Double.isNaN( currentWsp ) || Double.isInfinite( currentWsp ) )
-      return new VolumeResult( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.20" ), null ), Double.NaN ); //$NON-NLS-1$
+      return new VolumeResult( new Status( IStatus.ERROR, KalypsoModelFloodPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.20" ) ), Double.NaN ); //$NON-NLS-1$
 
     if( Math.abs( currentWsp - minWsp ) < WSP_EPS )
     {
       final double volumeDif = Math.abs( minVol - targetVolume );
       final String msg = String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.3" ), volumeDif ); //$NON-NLS-1$
-      return new VolumeResult( StatusUtilities.createStatus( IStatus.WARNING, msg, null ), minWsp );
+      return new VolumeResult( new Status( IStatus.WARNING, KalypsoModelFloodPlugin.PLUGIN_ID, msg ), minWsp );
     }
 
     if( Math.abs( currentWsp - maxWsp ) < WSP_EPS )
     {
       final double volumeDif = Math.abs( maxVol - targetVolume );
       final String msg = String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.4" ), volumeDif ); //$NON-NLS-1$
-      return new VolumeResult( StatusUtilities.createStatus( IStatus.WARNING, msg, null ), maxWsp );
+      return new VolumeResult( new Status( IStatus.WARNING, KalypsoModelFloodPlugin.PLUGIN_ID, msg ), maxWsp );
     }
 
     // TODO: better condition to avoid endless-loop. Either count loops or stop, if currentWsp is too near to min/max

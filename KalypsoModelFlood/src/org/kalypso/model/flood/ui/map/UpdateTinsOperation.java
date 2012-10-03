@@ -76,9 +76,9 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * Updates the data of some tin-references. I.e. re-reads the original tin and copies the data into the reference.<br/>
  * TODO: It does not transform anything. The read data will be in the source coordinate system.
- * 
+ *
  * @author Gernot Belger
- * 
+ *
  */
 public class UpdateTinsOperation implements ICoreRunnableWithProgress
 {
@@ -128,7 +128,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
     /* Read source data. */
     final Date sourceDate = new Date();
-    final MinMaxSurfacePatchVisitor<GM_Triangle> minmaxVisitor = new MinMaxSurfacePatchVisitor<GM_Triangle>();
+    final MinMaxSurfacePatchVisitor<GM_Triangle> minmaxVisitor = new MinMaxSurfacePatchVisitor<>();
 
     /* Get the source type. */
     final SOURCETYPE sourceType = ref.getSourceType();

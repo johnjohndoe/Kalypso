@@ -58,15 +58,12 @@ public class RunoffEvent extends Feature_Impl implements IRunoffEvent
 {
   private final FeatureBindingCollection<ITinReference> m_tinReferences;
 
-  public RunoffEvent( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RunoffEvent( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
-    m_tinReferences = new FeatureBindingCollection<ITinReference>( this, ITinReference.class, QNAME_PROP_TIN_MEMBER );
+    m_tinReferences = new FeatureBindingCollection<>( this, ITinReference.class, QNAME_PROP_TIN_MEMBER );
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IRunoffEvent#getResultCoverages()
-   */
   @Override
   public ICoverageCollection getResultCoverages( )
   {
@@ -80,8 +77,6 @@ public class RunoffEvent extends Feature_Impl implements IRunoffEvent
   /**
    * Creates a new result collection and returns it.<br/>
    * If the result collection already exists, the existing one will be returned.
-   * 
-   * @see org.kalypso.model.flood.binding.IRunoffEvent#createResultCoverages()
    */
   @Override
   public ICoverageCollection createResultCoverages( )
@@ -102,18 +97,12 @@ public class RunoffEvent extends Feature_Impl implements IRunoffEvent
     return newCollection;
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IRunoffEvent#getTins()
-   */
   @Override
   public IFeatureBindingCollection<ITinReference> getTins( )
   {
     return m_tinReferences;
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IRunoffEvent#getDataPath()
-   */
   @Override
   public IPath getDataPath( )
   {
@@ -130,18 +119,12 @@ public class RunoffEvent extends Feature_Impl implements IRunoffEvent
     setProperty( QNAME_PROP_DATAPATH, path.toPortableString() );
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IRunoffEvent#setResultCoverages(org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection)
-   */
   @Override
   public void setResultCoverages( final ICoverageCollection collection )
   {
     setProperty( QNAME_PROP_RESULT_COVERAGES, collection );
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IRunoffEvent#isMarkedForProcess()
-   */
   @Override
   public boolean isMarkedForProcessing( )
   {
@@ -149,27 +132,18 @@ public class RunoffEvent extends Feature_Impl implements IRunoffEvent
     return value == null ? false : value.booleanValue();
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IRunoffEvent#setMarkedForProcess(boolean)
-   */
   @Override
   public void setMarkedForProcessing( final boolean value )
   {
     setProperty( QNAME_PROP_MARKEDFORPROCESSING, value );
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IRunoffEvent#getReturnPeriod()
-   */
   @Override
   public Integer getReturnPeriod( )
   {
     return (Integer) getProperty( QNAME_PROP_RETURN_PERIOD );
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.IRunoffEvent#setReturnPeriod(java.lang.Integer)
-   */
   @Override
   public void setReturnPeriod( final Integer value )
   {

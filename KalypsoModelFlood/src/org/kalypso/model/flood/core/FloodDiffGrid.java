@@ -91,7 +91,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 
   private final IFeatureBindingCollection<IFloodPolygon> m_polygons;
 
-  private final Map<IFloodExtrapolationPolygon, Double> m_polygonWsps = new HashMap<IFloodExtrapolationPolygon, Double>();
+  private final Map<IFloodExtrapolationPolygon, Double> m_polygonWsps = new HashMap<>();
 
   private BigDecimal m_min;
 
@@ -294,7 +294,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     final GM_Position pos = JTSAdapter.wrap( crd );
 
     final List<IFloodPolygon> list = m_polygons.query( pos );
-    final List<IFloodPolygon> polygonList = new LinkedList<IFloodPolygon>();
+    final List<IFloodPolygon> polygonList = new LinkedList<>();
 
     if( list == null || list.size() == 0 )
       return polygonList;

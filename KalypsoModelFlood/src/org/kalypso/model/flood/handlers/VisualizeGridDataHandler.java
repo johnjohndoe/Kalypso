@@ -3,7 +3,6 @@ package org.kalypso.model.flood.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.widgets.Shell;
@@ -18,12 +17,8 @@ import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
 
-public class VisualizeGridDataHandler extends AbstractHandler implements IHandler
+public class VisualizeGridDataHandler extends AbstractHandler
 {
-
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -58,5 +53,4 @@ public class VisualizeGridDataHandler extends AbstractHandler implements IHandle
 
     return null;
   }
-
 }

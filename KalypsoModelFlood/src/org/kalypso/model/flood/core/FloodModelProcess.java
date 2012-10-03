@@ -86,7 +86,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * @author Gernot Belger
  * @author Thomas Jung
- * 
+ *
  */
 public class FloodModelProcess
 {
@@ -133,7 +133,7 @@ public class FloodModelProcess
     final IFeatureBindingCollection<IFloodPolygon> polygons = m_model.getPolygons();
 
     /* Filter Volume Polygon */
-    final List<IFloodVolumePolygon> volumePolygons = new ArrayList<IFloodVolumePolygon>( polygons.size() );
+    final List<IFloodVolumePolygon> volumePolygons = new ArrayList<>( polygons.size() );
     for( final IFloodPolygon floodPolygon : polygons )
     {
       if( floodPolygon instanceof IFloodVolumePolygon && floodPolygon.getEvents().contains( event ) )
@@ -251,7 +251,7 @@ public class FloodModelProcess
   private void processEvent( final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
   {
     final ICoverageCollection terrainModel = m_model.getTerrainModel();
-    IFeatureBindingCollection<ICoverage> terrainCoverages = terrainModel.getCoverages();
+    final IFeatureBindingCollection<ICoverage> terrainCoverages = terrainModel.getCoverages();
     final SubMonitor progress = SubMonitor.convert( monitor, terrainCoverages.size() * 100 );
     // TODO: shouldn't we filter by the event?
     final IFeatureBindingCollection<IFloodPolygon> polygons = m_model.getPolygons();

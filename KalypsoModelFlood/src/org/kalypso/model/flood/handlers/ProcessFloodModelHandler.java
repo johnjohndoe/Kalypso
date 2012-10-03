@@ -187,7 +187,7 @@ public class ProcessFloodModelHandler extends AbstractHandler
   // FIXME: still too slow: we save the (quite big) model for every event!
   private IStatus deleteExistingResults( final IRunoffEvent[] eventsToProcess, final IScenarioDataProvider dataProvider )
   {
-    final Collection<IStatus> results = new ArrayList<IStatus>();
+    final Collection<IStatus> results = new ArrayList<>();
 
     for( final IRunoffEvent event : eventsToProcess )
     {
@@ -227,7 +227,7 @@ public class ProcessFloodModelHandler extends AbstractHandler
 
   private IRunoffEvent[] getEventsWithResults( final IRunoffEvent[] eventsToProcess )
   {
-    final Collection<IRunoffEvent> eventsWithResults = new ArrayList<IRunoffEvent>( eventsToProcess.length );
+    final Collection<IRunoffEvent> eventsWithResults = new ArrayList<>( eventsToProcess.length );
 
     for( final IRunoffEvent event : eventsToProcess )
     {
