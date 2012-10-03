@@ -5,9 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -25,7 +23,6 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -34,6 +31,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
+import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -70,11 +68,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
 
   private final int m_classComponent;
 
-  private final ToolTipRenderer m_tooltipRenderer = new ToolTipRenderer();
-
-  private Point m_tooltipPoint;
-
-  private Map<Rectangle, EditInfo> m_editInfos;
+  private HoverIndex m_hoverIndex;
 
   private final Feature m_obsFeature;
 
@@ -122,7 +116,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-
     for( final Coordinate[] okLine : m_paintOkLines )
     {
       m_okLineFigure.setPoints( toPointArray( okLine ) );
@@ -142,18 +135,16 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     m_crossPointFigure.setPoints( toPointArray( m_paintCrossPoints ) );
     m_crossPointFigure.paint( gc );
 
-    m_editInfos = updateEditInfos();
-
-    if( m_tooltipPoint != null )
-      m_tooltipRenderer.paintTooltip( m_tooltipPoint, gc, gc.getClipping() );
+    m_hoverIndex = updateEditInfos();
   }
 
-  private Map<Rectangle, EditInfo> updateEditInfos( )
+  private HoverIndex updateEditInfos( )
   {
+    final HoverIndex index = new HoverIndex();
+
     final String classLabel = m_result.getComponent( m_classComponent ).getName();
 
     // Create current edit infos from ok points
-    final Map<Rectangle, EditInfo> editInfos = new LinkedHashMap<>( m_result.size() );
     final IAxis xAxis = getDomainAxis();
     final IAxis yAxis = getTargetAxis();
     for( final IRecord record : m_result )
@@ -176,8 +167,8 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       // Edit info
       final String msg = String.format( "%10.4f\t%s%n%10.4f\t%s%n%10.4f\t%s", domainValue, xAxis.getLabel(), targetValue, yAxis.getLabel(), classValue, classLabel ); //$NON-NLS-1$
       final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
-      final EditInfo info = new EditInfo( null, createHoverPaintable( shape ), null, record, msg, pos );
-      editInfos.put( shape, info );
+      final EditInfo info = new EditInfo( this, createHoverPaintable( shape ), null, record, msg, pos );
+      index.addElement( shape, info );
     }
 
     for( final Coordinate crd : m_paintCrossPoints )
@@ -190,11 +181,11 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       // Edit info
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.5" ); //$NON-NLS-1$
       final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
-      final EditInfo info = new EditInfo( null, createHoverPaintable( shape ), null, null, msg, pos );
-      editInfos.put( shape, info );
+      final EditInfo info = new EditInfo( this, createHoverPaintable( shape ), null, null, msg, pos );
+      index.addElement( shape, info );
     }
 
-    return editInfos;
+    return index;
   }
 
   private IPaintable createHoverPaintable( final Rectangle shape )
@@ -223,18 +214,12 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     return points;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
-   */
   @Override
   public IDataRange< ? > getDomainRange( )
   {
     return rangeForComponent( m_domainComponent );
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
-   */
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
@@ -262,23 +247,10 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
 
   public EditInfo getEditInfo( final Point p )
   {
-    if( m_editInfos == null )
+    if( m_hoverIndex == null )
       return null;
 
-    for( final Rectangle shape : m_editInfos.keySet() )
-    {
-      if( shape.contains( p ) )
-        return m_editInfos.get( shape );
-    }
-    return null;
-  }
-
-  public void setTooltip( final String text, final Point point )
-  {
-    m_tooltipPoint = point;
-    m_tooltipRenderer.setTooltip( text );
-
-    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
+    return m_hoverIndex.findElement( p );
   }
 
   public void delete( final EditInfo info )
@@ -451,6 +423,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   @Override
   public EditInfo getHover( final Point pos )
   {
-    return null;
+    return getEditInfo( pos );
   }
 }

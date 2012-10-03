@@ -62,14 +62,11 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
  * <li>propertyName: QName. If non null, the observation feature is found at that property of the given feature. Else
  * the given feature must be an observation itself.</li>
  * </ul>
- * 
+ *
  * @author Gernot Belger
  */
 public class BuildingParameterLayerProvider extends AbstractLayerProvider
 {
-  /**
-   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
-   */
   @Override
   public IChartLayer getLayer( final URL context )
   {
@@ -89,12 +86,12 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
     if( feature == null )
       return null;
 
+    // FIXME: should use TupleResultDomainValueData
+
     final String domainComponentId = pc.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String valueComponentId = pc.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String valueComponentId = pc.getParameterValue( "targetComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String classComponentId = pc.getParameterValue( "classComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final BuildingParameterLayer icl = new BuildingParameterLayer( feature, domainComponentId, valueComponentId, classComponentId, getStyleSet() );
-
-    return icl;
+    return new BuildingParameterLayer( feature, domainComponentId, valueComponentId, classComponentId, getStyleSet() );
   }
 }
