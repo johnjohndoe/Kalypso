@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="runoffChart" legend="false">
-    <Title horizontalTextAnchor="CENTER" insetBottom="5">Ganglinie</Title>
     <Description>Berechnungsergebnisse</Description>
+    <ChartInsets top="10" />
     <Layers>
       <Layer visible="true" id="gridLayer">
         <Provider epid="de.openali.odysseus.chart.ext.layer.provider.Grid">

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
   <Chart id="runoffChart" legend="true">
-    <Description>Abflusswerte der Berechnung</Description>
+    <ChartInsets bottom="0" left="0" top="10" right="10"/>
     <Layers>
-
       <Layer visible="true" id="runoffLayer">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
@@ -108,7 +107,7 @@
   </Chart>
 
   <Chart id="areaChart">
-    <Description>Flächenwerte der Berechnung</Description>
+    <ChartInsets bottom="0" left="0" top="10" right="10"/>
     <Layers>
       <Layer visible="true" id="areaLayer">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
@@ -211,13 +210,11 @@
         </Provider>
       </AxisRenderer>
     </Renderers>
-
   </Chart>
-
 
   <!-- ALPHA -->
   <Chart id="alphaChart">
-    <Description>Alphawerte der Berechnung</Description>
+    <ChartInsets bottom="0" left="0" top="10" right="10"/>
     <Layers>
       <Layer visible="true" id="alphaLayer">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
