@@ -45,7 +45,7 @@
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_h_BV</StyleReference>
 				</Styles>
 			</DerivedLayer>
-			<DerivedLayer id="Bridge" visible="false">
+			<DerivedLayer id="Bridge" visible="true">
 				<LayerReference url="soil"></LayerReference>
 				<Parameters>
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId" />
@@ -55,7 +55,7 @@
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_Bridge</StyleReference>
 				</Styles>
 			</DerivedLayer>
-			<DerivedLayer id="Weir" visible="false">
+			<DerivedLayer id="Weir" visible="true">
 				<LayerReference url="soil"></LayerReference>
 				<Parameters>
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_WeirOK" name="targetComponentId" />
@@ -65,7 +65,7 @@
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_Weir</StyleReference>
 				</Styles>
 			</DerivedLayer>
-			<DerivedLayer id="Culvert" visible="false">
+			<DerivedLayer id="Culvert" visible="true">
 				<LayerReference url="soil"></LayerReference>
 				<Parameters>
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_RohrDN" name="targetComponentId" />
