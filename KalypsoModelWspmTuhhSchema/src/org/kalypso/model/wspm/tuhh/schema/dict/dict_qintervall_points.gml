@@ -143,7 +143,7 @@
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="DeltaArea">
       <gml:description>Delta Fläche</gml:description>
-      <gml:name>Delata Fläche</gml:name>
+      <gml:name>Delta Fläche</gml:name>
       <swe:property xlink:href="#phenomenonArea" />
       <swe:representation>
         <swe:SimpleType>
@@ -294,8 +294,8 @@
 
   <gml:dictionaryEntry>
     <swe:Phenomenon gml:id="phenomenonDepth">
-      <gml:description>Tiefe</gml:description>
-      <gml:name>Tiefe</gml:name>
+      <gml:description>Fließtiefe</gml:description>
+      <gml:name>Fließtiefe</gml:name>
     </swe:Phenomenon>
   </gml:dictionaryEntry>
 
