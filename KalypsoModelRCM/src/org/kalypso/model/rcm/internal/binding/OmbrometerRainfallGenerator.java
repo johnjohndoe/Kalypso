@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.tokenreplace.IStringResolver;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.JTSUtilities;
@@ -94,7 +93,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Implementation that generates rainfall from ombrometer stations with Thiessen.
- * 
+ *
  * @author Gernot Belger
  */
 public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
@@ -228,28 +227,28 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
       /* Update the log. */
       LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to convert geometry: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to convert geometry: " + e.toString(), e ) );
     }
     catch( final SensorException e )
     {
       /* Update the log. */
       LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to combine observations: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to combine observations: " + e.toString(), e ) );
     }
     catch( final MalformedURLException e )
     {
       /* Update the log. */
       LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to load Observations: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to load Observations: " + e.toString(), e ) );
     }
     catch( final Exception e )
     {
       /* Update the log. */
       LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to create the rainfall: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to create the rainfall: " + e.toString(), e ) );
     }
     finally
     {
