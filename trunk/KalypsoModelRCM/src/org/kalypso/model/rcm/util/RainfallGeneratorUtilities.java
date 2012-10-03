@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.util;
 
@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
@@ -81,7 +80,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * Utilities for {@link org.kalypso.model.rcm.internal.binding.OmbrometerRainfallGenerator}'s and
  * {@link org.kalypso.model.rcm.internal.binding.InverseDistanceRainfallGenerator}'s.
- * 
+ *
  * @author Holger Albert
  */
 public final class RainfallGeneratorUtilities
@@ -109,7 +108,7 @@ public final class RainfallGeneratorUtilities
       {
         final Feature catchmentFeature = catchmentFeatures[i];
         if( catchmentFeature == null )
-          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Ein catchment feature war null ...", null ) );
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Ein catchment feature war null ..." ) );
 
         final Object object = GMLXPathUtilities.query( catchmentAreaXPath, catchmentFeature );
         final GM_MultiSurface multiSurface = toMultiSurface( catchmentAreaXPath, object );
@@ -145,7 +144,8 @@ public final class RainfallGeneratorUtilities
     if( object == null )
       return null; // does not make sense to process
 
-    throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaXPath ), null ) );
+    final String message = String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaXPath );
+    throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, message ) );
   }
 
   public static IObservation[] readObservations( final Feature[] ombrometerFeatures, final GMLXPath linkXPath, final IZmlFilter[] filters, final DateRange dateRange ) throws SensorException
@@ -170,7 +170,7 @@ public final class RainfallGeneratorUtilities
 
   /**
    * This function combines the observations using the specified weights.
-   * 
+   *
    * @param observations
    *          The observations to combine.
    * @param weights
@@ -209,7 +209,7 @@ public final class RainfallGeneratorUtilities
     // FIXME 1: -> We should first filter those out to improve performance.
     // FIXME 2: For still better performance, we could filter out everything with a weight smaller than some limit.
     // FIXME 2: To still get 100%, we could share the difference with the remaining obses to their weight.
-    final List<ITupleModel> observationValues = new ArrayList<ITupleModel>();
+    final List<ITupleModel> observationValues = new ArrayList<>();
     for( final IObservation observation : observations )
       observationValues.add( observation.getValues( null ) );
 
@@ -251,7 +251,7 @@ public final class RainfallGeneratorUtilities
   /**
    * This function finds the name of the catchment. It will check the description and the name attribute of the
    * catchment.
-   * 
+   *
    * @param catchment
    *          The catchment.
    * @return The name or null.

@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The base implementation of the rainfall generator.
- * 
+ *
  * @author Gernot Belger
  */
 public abstract class AbstractRainfallGenerator extends Feature_Impl implements IRainfallGenerator
@@ -72,7 +72,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          The parent.
    * @param parentRelation
@@ -88,7 +88,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_filters = new FeatureBindingCollection<IZmlFilter>( this, IZmlFilter.class, MEMBER_FILTER, true );
+    m_filters = new FeatureBindingCollection<>( this, IZmlFilter.class, MEMBER_FILTER, true );
   }
 
   @Override
