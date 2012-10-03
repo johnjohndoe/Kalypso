@@ -6,23 +6,19 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.chart.ext.observation.TupleResultDomainValueData;
+import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
+//FIXME: why do we extend from TupleResultLineLayer -> implementation is totally different!
 public class LengthSectionRunOffLayer extends TupleResultLineLayer
 {
-  /**
-   * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
-   */
-
   public LengthSectionRunOffLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet)
   {
     super( provider, data, styleSet );
-
   }
 
   @Override
@@ -63,5 +59,4 @@ public class LengthSectionRunOffLayer extends TupleResultLineLayer
     }
     paint( gc, path.toArray( new Point[] {} ) );
   }
-
 }

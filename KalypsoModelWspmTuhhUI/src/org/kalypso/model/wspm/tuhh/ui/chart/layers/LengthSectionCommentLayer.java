@@ -1,7 +1,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
-import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.chart.ext.observation.TupleResultDomainValueData;
+import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.result.ComponentUtilities;

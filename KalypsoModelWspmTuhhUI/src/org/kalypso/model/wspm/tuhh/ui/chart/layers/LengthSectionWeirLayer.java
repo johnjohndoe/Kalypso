@@ -5,8 +5,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.chart.ext.observation.TupleResultDomainValueData;
+import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
@@ -23,12 +23,12 @@ import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
+//FIXME: why do we extend from TupleResultLineLayer -> implementation is totally different!
 public class LengthSectionWeirLayer extends TupleResultLineLayer
 {
   public LengthSectionWeirLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
   {
     super( provider, data, styleSet );
-
   }
 
   @Override
@@ -59,7 +59,6 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
     if( commentIndex < 0 )
       return String.format( "%-12s %.4f", new Object[] { targetOKComponentLabel, ok } );//$NON-NLS-1$
     return String.format( "%-12s %.4f%n%s", new Object[] { targetOKComponentLabel, ok, tr.get( index ).getValue( commentIndex ) } );//$NON-NLS-1$
-
   }
 
   @Override
@@ -111,5 +110,4 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
     final Point pUK = getCoordinateMapper().numericToScreen( sT, uK );
     return new Rectangle( pOK.x - 1, pOK.y, 3, pUK.y - pOK.y );
   }
-
 }

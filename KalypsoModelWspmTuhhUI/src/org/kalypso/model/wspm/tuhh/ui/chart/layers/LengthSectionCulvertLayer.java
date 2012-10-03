@@ -4,8 +4,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.chart.ext.observation.TupleResultDomainValueData;
+import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
@@ -24,6 +24,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
+// FIXME: why do we extend from TupleResultLineLayer -> implementation is totally different!
 public class LengthSectionCulvertLayer extends TupleResultLineLayer
 {
   public LengthSectionCulvertLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
@@ -31,9 +32,6 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     super( provider, data, styleSet );
   }
 
-  /**
-   * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTargetRange()
-   */
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
@@ -126,5 +124,4 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     final int dy = pBase.y - pDN.y;
     return new Rectangle( pOK.x - dx / 2, pOK.y - dy, dx, dy );
   }
-
 }

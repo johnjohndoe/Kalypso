@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.observation.IObservation;

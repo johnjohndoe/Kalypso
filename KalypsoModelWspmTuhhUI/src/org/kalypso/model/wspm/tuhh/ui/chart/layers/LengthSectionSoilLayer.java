@@ -1,7 +1,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
-import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.chart.ext.observation.TupleResultDomainValueData;
+import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -13,15 +13,12 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 public class LengthSectionSoilLayer extends TupleResultLineLayer
 {
-  /**
-   * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
-   */
-
   public LengthSectionSoilLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet)
   {
     super( provider, data,styleSet );
   }
 
+  // FIXME: instead of implementing new layers; we should enhance the TupleResultLineLayer so it has these abilities
   @Override
   protected final String getTooltip( final int index )
   {
@@ -38,10 +35,8 @@ public class LengthSectionSoilLayer extends TupleResultLineLayer
     if( commentIndex > 0 && rec.getValue( commentIndex ) != null )
     {
       return String.format( "%-12s %.4f%n%-12s %.4f%n%s", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn, rec.getValue( commentIndex ) } );//$NON-NLS-1$
-
     }
+
     return String.format( "%-12s %.4f%n%-12s %.4f", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn } );//$NON-NLS-1$
-
   }
-
 }
