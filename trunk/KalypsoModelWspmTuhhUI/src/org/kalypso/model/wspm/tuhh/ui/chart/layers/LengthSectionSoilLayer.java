@@ -13,9 +13,9 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 public class LengthSectionSoilLayer extends TupleResultLineLayer
 {
-  public LengthSectionSoilLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet)
+  public LengthSectionSoilLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
   {
-    super( provider, data,styleSet );
+    super( provider, data, styleSet );
   }
 
   // FIXME: instead of implementing new layers; we should enhance the TupleResultLineLayer so it has these abilities
