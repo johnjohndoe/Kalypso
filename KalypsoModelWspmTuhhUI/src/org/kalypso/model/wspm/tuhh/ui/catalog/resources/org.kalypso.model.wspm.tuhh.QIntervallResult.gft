@@ -41,16 +41,6 @@
     <format>%.3f</format>
   </text>
 
-<!-- 
-  <extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
-    <gridData horizontalSpan="4" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true" />
-    <param name="configuration" value="urn:kalypso:chart:configuration:QIntervallResult" />
-    <param name="featureKeyName" value="theResultFeatureKey" />
-    <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
-    <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
-  </extensioncontrol>
- -->
-
   <tabFolder style="SWT.NONE">
     <gridData horizontalSpan="4" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true" />
     <tabItem>
