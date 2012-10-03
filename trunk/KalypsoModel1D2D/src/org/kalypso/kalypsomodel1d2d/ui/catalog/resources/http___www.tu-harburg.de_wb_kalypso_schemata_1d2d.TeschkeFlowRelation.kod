@@ -5,14 +5,14 @@
     <Layers>
 
       <Layer visible="true" id="runoffLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
             <Parameter name="legendMode" value="line+point" />
           </Parameters>
         </Provider>
@@ -67,8 +67,8 @@
         </Styles>
       </Layer>
 
-      <!-- TODO: show Histogramm instead <Layer visible="true" id="runoffDeltaLayer"> <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" > <Parameters> <Parameter name="featureKey" value="theResultFeatureKey" /> <Parameter name="propertyName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}pointsMember" /> <Parameter name="showPoints" value="true" /> <Parameter 
-        name="showLines" value="false" /> <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" /> <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaRunoff" /> </Parameters> </Provider> <Title>Abfluss-Delta</Title> <Description>Abfluss Differenzen bei der Polynomerstellung</Description> 
+      <!-- TODO: show Histogramm instead <Layer visible="true" id="runoffDeltaLayer"> <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider" > <Parameters> <Parameter name="featureKey" value="theResultFeatureKey" /> <Parameter name="propertyName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}pointsMember" /> <Parameter name="showPoints" value="true" /> <Parameter 
+        name="showLines" value="false" /> <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" /> <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaRunoff" /> </Parameters> </Provider> <Title>Abfluss-Delta</Title> <Description>Abfluss Differenzen bei der Polynomerstellung</Description> 
         <Mapper> <DomainAxisRef ref="wsp_Axis" /> <TargetAxisRef ref="runoffDelta_Axis" /> </Mapper> <Style> <StyleRef ref="runoffDeltaStyle" /> </Style> </Layer> -->
 
     </Layers>
@@ -111,14 +111,14 @@
     <Description>Flächenwerte der Berechnung</Description>
     <Layers>
       <Layer visible="true" id="areaLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
             <Parameter name="legendMode" value="line+point" />
           </Parameters>
         </Provider>
@@ -173,8 +173,8 @@
         </Styles>
 
       </Layer>
-      <!-- TODO: show Histogramm instead <Layer visible="true" id="areaDeltaLayer"> <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" > <Parameters> <Parameter name="featureKey" value="theResultFeatureKey" /> <Parameter name="propertyName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}pointsMember" /> <Parameter name="showPoints" value="true" /> <Parameter 
-        name="showLines" value="false" /> <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" /> <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea" /> </Parameters> </Provider> <Title>Fl㢨en-Delta</Title> <Description>Fl㢨en Differenzen bei der Polynomerstellung</Description> 
+      <!-- TODO: show Histogramm instead <Layer visible="true" id="areaDeltaLayer"> <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider" > <Parameters> <Parameter name="featureKey" value="theResultFeatureKey" /> <Parameter name="propertyName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}pointsMember" /> <Parameter name="showPoints" value="true" /> <Parameter 
+        name="showLines" value="false" /> <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" /> <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea" /> </Parameters> </Provider> <Title>Fl㢨en-Delta</Title> <Description>Fl㢨en Differenzen bei der Polynomerstellung</Description> 
         <Mapper> <DomainAxisRef ref="wsp_Axis" /> <TargetAxisRef ref="areaDelta_Axis" /> </Mapper> <Style> <StyleRef ref="areaDeltaStyle" /> </Style> </Layer> -->
     </Layers>
     <Mappers>
@@ -220,14 +220,14 @@
     <Description>Alphawerte der Berechnung</Description>
     <Layers>
       <Layer visible="true" id="alphaLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="theResultFeatureKey" />
             <Parameter name="propertyName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}pointsMember" />
             <Parameter name="showPoints" value="true" />
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" />
             <Parameter name="legendMode" value="line+point" />
           </Parameters>
         </Provider>
@@ -283,8 +283,8 @@
         </Styles>
       </Layer>
 
-      <!-- TODO: show Histogramm instead <Layer visible="true" id="alphaDeltaLayer"> <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" > <Parameters> <Parameter name="featureKey" value="theResultFeatureKey" /> <Parameter name="propertyName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}pointsMember" /> <Parameter name="showPoints" value="true" /> <Parameter 
-        name="showLines" value="false" /> <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" /> <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha" /> </Parameters> </Provider> <Title>Abfluss-Delta</Title> <Description>Alpha Differenzen bei der Polynomerstellung</Description> 
+      <!-- TODO: show Histogramm instead <Layer visible="true" id="alphaDeltaLayer"> <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider" > <Parameters> <Parameter name="featureKey" value="theResultFeatureKey" /> <Parameter name="propertyName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}pointsMember" /> <Parameter name="showPoints" value="true" /> <Parameter 
+        name="showLines" value="false" /> <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" /> <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha" /> </Parameters> </Provider> <Title>Abfluss-Delta</Title> <Description>Alpha Differenzen bei der Polynomerstellung</Description> 
         <Mapper> <DomainAxisRef ref="wsp_Axis" /> <TargetAxisRef ref="alphaDelta_Axis" /> </Mapper> <Style> <StyleRef ref="alphaDeltaStyle" /> </Style> </Layer> -->
     </Layers>
     <Mappers>

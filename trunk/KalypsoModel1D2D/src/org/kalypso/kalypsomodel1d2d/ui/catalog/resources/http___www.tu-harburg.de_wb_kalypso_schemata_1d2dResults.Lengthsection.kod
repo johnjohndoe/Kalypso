@@ -6,11 +6,11 @@
     <Description>Berechnungsergebnisse</Description>
     <Layers>
       <Layer visible="true" id="groundLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="lengthsectionFeatureKey" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" />
           </Parameters>
         </Provider>
         <Title>Sohlhöhe</Title>
@@ -41,11 +41,11 @@
         </Styles>
       </Layer>
       <Layer visible="true" id="wspLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="lengthsectionFeatureKey" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" />
           </Parameters>
         </Provider>
         <Title>Wasserstand</Title>
@@ -77,11 +77,11 @@
       </Layer>
 
       <Layer visible="true" id="dischargeLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="lengthsectionFeatureKey" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" />
           </Parameters>
         </Provider>
         <Title>Abfluss</Title>
@@ -114,11 +114,11 @@
       </Layer>
 
       <Layer visible="true" id="velocityLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="lengthsectionFeatureKey" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" />
           </Parameters>
         </Provider>
         <Title>Geschwindigkeit</Title>

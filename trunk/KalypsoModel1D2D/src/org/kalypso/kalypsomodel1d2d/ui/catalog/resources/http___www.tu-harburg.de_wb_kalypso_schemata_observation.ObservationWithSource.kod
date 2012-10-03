@@ -28,11 +28,11 @@
 				</Styles>
 			</Layer>
 			<Layer visible="true" id="wspLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+				<Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
 					<Parameters>
 						<Parameter name="featureKey" value="observationFeatureKey" />
 						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" />
+						<Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" />
 					</Parameters>
 				</Provider>
 				<Title>Wasserstand</Title>
@@ -62,11 +62,11 @@
 				</Styles>
 			</Layer>
             <Layer visible="true" id="wqLayer">
-                <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+                <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
                     <Parameters>
                         <Parameter name="featureKey" value="observationFeatureKey" />
                         <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" />
-                        <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" />
+                        <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" />
                     </Parameters>
                 </Provider>
                 <Title>w-Q Beziehung</Title>
@@ -96,11 +96,11 @@
                 </Styles>
             </Layer>
             <Layer visible="true" id="dischargeLayer">
-                <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+                <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
                     <Parameters>
                         <Parameter name="featureKey" value="observationFeatureKey" />
                         <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-                        <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" />
+                        <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" />
                     </Parameters>
                 </Provider>
                 <Title>Abfluss</Title>
@@ -130,11 +130,11 @@
                 </Styles>
             </Layer>
             <Layer visible="true" id="spec2DdischargeLayer">
-                <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+                <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
                     <Parameters>
                         <Parameter name="featureKey" value="observationFeatureKey" />
                         <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-                        <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D" />
+                        <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D" />
                     </Parameters>
                 </Provider>
                 <Title>spez. Abfluss (1D)</Title>
@@ -164,11 +164,11 @@
                 </Styles>
             </Layer>
             <Layer visible="true" id="spec1DdischargeLayer">
-                <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+                <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
                     <Parameters>
                         <Parameter name="featureKey" value="observationFeatureKey" />
                         <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-                        <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge2D" />
+                        <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge2D" />
                     </Parameters>
                 </Provider>
                 <Title>spez. Abfluss (2D)</Title>
@@ -198,11 +198,11 @@
                 </Styles>
             </Layer>
             <Layer visible="true" id="waveHsigLayer">
-                <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+                <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
                     <Parameters>
                         <Parameter name="featureKey" value="observationFeatureKey" />
                         <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-                        <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveHsig" />
+                        <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveHsig" />
                     </Parameters>
                 </Provider>
                 <Title>signifikante Wellenhöhe</Title>
@@ -232,11 +232,11 @@
                 </Styles>
             </Layer>
             <Layer visible="true" id="waveDirectionLayer">
-                <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+                <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
                     <Parameters>
                         <Parameter name="featureKey" value="observationFeatureKey" />
                         <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-                        <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirection" />
+                        <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirection" />
                     </Parameters>
                 </Provider>
                 <Title>Wellenrichtung</Title>
@@ -266,11 +266,11 @@
                 </Styles>
             </Layer>
             <Layer visible="true" id="wavePeakPeriodLayer">
-                <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+                <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
                     <Parameters>
                         <Parameter name="featureKey" value="observationFeatureKey" />
                         <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-                        <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WavePeakPeriod" />
+                        <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WavePeakPeriod" />
                     </Parameters>
                 </Provider>
                 <Title>Wellenperiode</Title>

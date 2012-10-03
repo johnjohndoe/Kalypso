@@ -5,7 +5,7 @@
     <Description/>
     <Layers>
       <Layer id="Boe_li" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter value="Daten/lengthSection_190.000.gml" name="href"/>
             <Parameter value="" name="gxlpath"/>
@@ -36,7 +36,7 @@
         </Styles>
       </Layer>
       <Layer id="wsp" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter value="Daten/lengthSection_190.000.gml" name="href"/>
             <Parameter value="" name="gxlpath"/>
@@ -61,7 +61,7 @@
         </Styles>
       </Layer>
       <Layer id="Boe_re" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter value="Daten/lengthSection_190.000.gml" name="href"/>
             <Parameter value="" name="gxlpath"/>
@@ -92,7 +92,7 @@
         </Styles>
       </Layer>
       <Layer id="runoff" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter value="Daten/lengthSection_190.000.gml" name="href"/>
             <Parameter value="" name="gxlpath"/>
@@ -118,7 +118,7 @@
       </Layer>
       
       <Layer id="LengthSection_v_m" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter value="Daten/lengthSection_190.000.gml" name="href"/>
             <Parameter value="" name="gxlpath"/>
@@ -144,7 +144,7 @@
       </Layer>
       
       <Layer id="h_BV" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter value="Daten/lengthSection_190.000.gml" name="href"/>
             <Parameter value="" name="gxlpath"/>
@@ -175,7 +175,7 @@
         </Styles>
       </Layer>
       <Layer id="hen" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter value="Daten/lengthSection_190.000.gml" name="href"/>
             <Parameter value="" name="gxlpath"/>
@@ -295,7 +295,7 @@
         </Styles>
       </Layer>
         <Layer id="soil" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter value="Daten/lengthSection_190.000.gml" name="href"/>
             <Parameter value="" name="gxlpath"/>
