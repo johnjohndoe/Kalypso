@@ -13,7 +13,7 @@
 					<Parameters>
 						<Parameter name="featureKey" value="theFeatureKey" />
 						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelDownstream" />
-						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelUpstream" />
+						<Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelUpstream" />
 						<Parameter name="classComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" />
 					</Parameters>
 				</Provider>
