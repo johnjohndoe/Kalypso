@@ -16,9 +16,11 @@
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_soil</StyleReference>
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_soil</StyleReference>
 				</Styles>
+        <!-- 
 				<MapperRefs>
 					<DomainAxisRef ref="Station_Axis" />
 				</MapperRefs>
+         -->
 			</DerivedLayer>
 			<DerivedLayer id="Boe_li" visible="false">
 				<LayerReference url="soil"></LayerReference>
@@ -81,17 +83,18 @@
 				</Styles>
 			</DerivedLayer>
 			<DerivedLayer id="wsp" visible="true">
+				<Title>Wasserspiegel</Title>
 				<LayerReference url="soil"></LayerReference>
 				<Parameters>
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" name="targetComponentId" />
 				</Parameters>
-				<Title>Wasserspiegel</Title>
 				<Styles>
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_wsp</StyleReference>
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_wsp</StyleReference>
 				</Styles>
 			</DerivedLayer>
 			<DerivedLayer id="WspFixation" visible="true">
+				<Title>Wasserspiegel-Fixierung</Title>
 				<LayerReference url="urn:kalypso:chart:configuration:LengthSectionTemplate#template_layer"></LayerReference>
 				<Parameters>
 					<Parameter value="%MODELL_GML%" name="href" />
@@ -99,13 +102,13 @@
 					<Parameter value="%MODELL_OBS_ID%" name="observationId" />
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" name="targetComponentId" />
 				</Parameters>
-				<Title>Wasserspiegel-Fixierung</Title>
 				<Styles>
 					<!-- StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_WspFixation</StyleReference-->
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_WspFixation</StyleReference>
 				</Styles>
 			</DerivedLayer>
 			<DerivedLayer id="runoff" visible="true">
+				<Title>Abfluss</Title>
 				<LayerReference url="urn:kalypso:chart:configuration:LengthSectionTemplate#template_layer_m3s"></LayerReference>
 				<Parameters>
 					<Parameter value="Daten/%GMLFILENAME%" name="href" />
@@ -113,18 +116,17 @@
 					<Parameter value="%ROOT_ID%" name="observationId" />
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" name="targetComponentId" />
 				</Parameters>
-				<Title>Abfluss</Title>
 				<Styles>
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_runoff</StyleReference>
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_runoff</StyleReference>
 				</Styles>
 			</DerivedLayer>
 			<DerivedLayer id="hen" visible="true">
+				<Title>Energielinie</Title>
 				<LayerReference url="soil"></LayerReference>
 				<Parameters>
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_hen" name="targetComponentId" />
 				</Parameters>
-				<Title>Energielinie</Title>
 				<Styles>
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_hen</StyleReference>
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_hen</StyleReference>
@@ -132,6 +134,7 @@
 			</DerivedLayer>
 
 			<DerivedLayer id="LengthSection_v_m" visible="true">
+				<Title>Fließgeschwindigkeit</Title>
 				<LayerReference url="urn:kalypso:chart:configuration:LengthSectionTemplate#template_layer_m1s"></LayerReference>
 				<Parameters>
 					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" name="targetComponentId" />
@@ -139,7 +142,6 @@
 					<Parameter value="" name="gxlpath" />
 					<Parameter value="%ROOT_ID%" name="observationId" />
 				</Parameters>
-				<Title>Fließgeschwindigkeit</Title>
 				<Styles>
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_LengthSection_v_m</StyleReference>
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_LengthSection_v_m</StyleReference>
