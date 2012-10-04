@@ -84,7 +84,7 @@ public class CloneCalculationUnitWizard extends Wizard
   {
     final String calcUnitName = m_page.getCalculationUnitName();
 
-    final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( m_calcUnitToClone.getQualifiedName(), (IFEDiscretisationModel1d2d) Util.getModel( IFEDiscretisationModel1d2d.class.getName() ), calcUnitName, m_calcUnitToClone.getDescription() )
+    final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( m_calcUnitToClone.getQualifiedName(), (IFEDiscretisationModel1d2d) Util.getModel( IFEDiscretisationModel1d2d.class.getName() ), calcUnitName, m_calcUnitToClone )
     {
       /**
        * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd#process()
