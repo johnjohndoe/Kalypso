@@ -161,9 +161,6 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
     }
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
-   */
   @Override
   public void setContainer( final IWizardContainer wizardContainer )
   {
@@ -177,9 +174,6 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
       ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageChangeListener );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -190,9 +184,6 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
