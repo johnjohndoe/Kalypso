@@ -44,6 +44,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -52,7 +53,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -98,8 +98,10 @@ public class CalculationUnitLogComponent
 
   public Control createControl( final FormToolkit toolkit, final Composite parent )
   {
-    final Composite rootComposite = toolkit.createComposite( parent, SWT.NONE | SWT.END );
-    rootComposite.setLayout( new GridLayout() );
+    final Composite rootComposite = toolkit.createComposite( parent, SWT.NONE );
+    GridLayoutFactory.fillDefaults().applyTo( rootComposite );
+
+    rootComposite.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_CYAN ) );
 
     guiProblemViewer( rootComposite, toolkit );
 
@@ -117,11 +119,11 @@ public class CalculationUnitLogComponent
 
     final Table table = logTableViewer.getTable();
     toolkit.adapt( table );
+    final GridData tableGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    table.setLayoutData( tableGridData );
 
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
-    final GridData tableGridData = new GridData( SWT.FILL, SWT.END, true, true );
-    table.setLayoutData( tableGridData );
 
     // FIXME: probably we can replace all this by the StatusTableViewer
     StatusViewer.addSeverityColumn( logTableViewer );
@@ -160,7 +162,7 @@ public class CalculationUnitLogComponent
 
     /* Data change events */
     final CalculationUnitDataModel dataModel = m_dataModel;
-    dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
+    final KeyBasedDataModelChangeListener dataListener = new KeyBasedDataModelChangeListener()
     {
       @Override
       public void dataChanged( final String key, final Object newValue )
@@ -170,6 +172,7 @@ public class CalculationUnitLogComponent
           final IStatusCollection list = findGeoStatusCollection( (ICalculationUnit) newValue );
           if( list == null || list.isEmpty() )
           {
+            // FIXME: makes no sense: noLogLabel should show empty log, but actually its visible if table is not selected...
             table.setVisible( false );
             noLogLabel.setVisible( true );
             noLogGridData.exclude = false;
@@ -182,16 +185,14 @@ public class CalculationUnitLogComponent
             noLogLabel.setVisible( false );
             noLogGridData.exclude = true;
             tableGridData.exclude = false;
-            ViewerUtilities.setInput( logTableViewer, list, false );
+            ViewerUtilities.setInput( logTableViewer, list.getStatusList(), false );
           }
 
           parent.layout();
-          // parent.getParent().layout( true, true );
-          // // parent.getParent().getParent().layout( true, true );
         }
       }
-    } );
-
+    };
+    dataModel.addKeyBasedDataChangeListener( dataListener );
   }
 
   protected void handleSelectionChanged( final SelectionChangedEvent event )

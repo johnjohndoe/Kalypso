@@ -122,9 +122,6 @@ public class RMA10CalculationPage extends WizardPage
     setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.2" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -159,9 +156,6 @@ public class RMA10CalculationPage extends WizardPage
     startResultProcessingCheck.setSelection( m_startResultProcessing );
     startResultProcessingCheck.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -183,7 +177,7 @@ public class RMA10CalculationPage extends WizardPage
     final GridData gridData1 = new GridData( SWT.FILL, SWT.CENTER, true, false );
     spinnerLabel1.setLayoutData( gridData1 );
 
-    m_resultInterval = new Spinner( buttonComposite, SWT.NONE );
+    m_resultInterval = new Spinner( buttonComposite, SWT.BORDER );
 
     final GridData gridDataSpin = new GridData( SWT.RIGHT, SWT.CENTER, true, true );
 
@@ -329,6 +323,7 @@ public class RMA10CalculationPage extends WizardPage
     setTitle( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0" ), calculationUnit.getName() ) ); //$NON-NLS-1$
 
     m_statusComp.setStatus( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.12" ) ) ); //$NON-NLS-1$
+
     setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.13" ) ); //$NON-NLS-1$
 
     // default to local simulation
