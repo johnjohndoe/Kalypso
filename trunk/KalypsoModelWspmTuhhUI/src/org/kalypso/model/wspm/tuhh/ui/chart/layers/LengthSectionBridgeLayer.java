@@ -16,6 +16,7 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
@@ -41,33 +42,52 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     if( valueData == null )
       return;
 
-    valueData.open();
-    final IObservation<TupleResult> obs = valueData.getObservation();
-    if( obs == null )
+    final IObservation<TupleResult> observation = valueData.getObservation();
+    if( observation == null )
       return;
+
+    /* recreate hover info on every paint */
+    clearInfoIndex();
 
     final FullRectangleFigure rf = new FullRectangleFigure();
     final IPointStyle ps = getPointStyle();
     rf.setStyle( new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), true ) );
-    for( int i = 0; i < obs.getResult().size(); i++ )
+
+    final TupleResult result = observation.getResult();
+
+    for( int i = 0; i < result.size(); i++ )
     {
-      final Rectangle rect = getScreenRect( i );
+      final IRecord record = result.get( i );
+
+      final Rectangle rect = getScreenRect( record );
       if( rect != null )
       {
         if( rect.width < 1 )
           rect.width = 1;
+
         rf.setRectangle( rect );
         rf.paint( gc );
+
+        addInfo( rect, record, i );
       }
     }
   }
 
-  @Override
-  protected final String getTooltip( final int index )
+  private void addInfo( final Rectangle bounds, final IRecord record, final int recordIndex )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    final TupleResult tr = valueData.getObservation().getResult();
-    final IRecord rec = tr.get( index );
+    // FIXME: lets have a nice figure!
+    final IPaintable hoverFigure = null;
+
+    final String tooltip = getTooltip( record );
+
+    final EditInfo info = new EditInfo( this, hoverFigure, null, recordIndex, tooltip, null );
+    addInfoElement( bounds, info );
+  }
+
+  @Override
+  protected final String getTooltip( final IRecord record )
+  {
+    final TupleResult tr = record.getOwner();
 
     final int stationIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
     final int okIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK );
@@ -76,16 +96,16 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final int bridgeWidthIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH );
 
     final String stationLabel = ComponentUtilities.getComponentLabel( tr.getComponent( stationIndex ) );
-    final String okLabel = "max. " + ComponentUtilities.getComponentLabel( tr.getComponent( okIndex ) ); //$NON-NLS-1$
-    final String ukLabel = "min. " + ComponentUtilities.getComponentLabel( tr.getComponent( ukIndex ) ); //$NON-NLS-1$
+    final String okLabel = "max. " + ComponentUtilities.getComponentLabel( tr.getComponent( okIndex ) );
+    final String ukLabel = "min. " + ComponentUtilities.getComponentLabel( tr.getComponent( ukIndex ) );
     final String widthLabel = ComponentUtilities.getComponentLabel( tr.getComponent( bridgeWidthIndex ) );
 
-    final Object station = rec.getValue( stationIndex );
-    final Double uk = ProfileUtil.getDoubleValueFor( ukIndex, rec );
-    final Double ok = ProfileUtil.getDoubleValueFor( okIndex, rec );
-    final Double bw = ProfileUtil.getDoubleValueFor( bridgeWidthIndex, rec );
+    final Object station = record.getValue( stationIndex );
+    final Double uk = ProfileUtil.getDoubleValueFor( ukIndex, record );
+    final Double ok = ProfileUtil.getDoubleValueFor( okIndex, record );
+    final Double bw = ProfileUtil.getDoubleValueFor( bridgeWidthIndex, record );
 
-    final String comment = commentIndex >= 0 ? (String) tr.get( index ).getValue( commentIndex ) : ""; //$NON-NLS-1$
+    final String comment = commentIndex >= 0 ? (String)record.getValue( commentIndex ) : ""; //$NON-NLS-1$
 
     final TooltipFormatter tooltip = new TooltipFormatter( comment );
     tooltip.addLine( stationLabel, station.toString() );
@@ -94,21 +114,6 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     tooltip.addLine( widthLabel, bw.toString() );
 
     return tooltip.format();
-  }
-
-  @Override
-  public EditInfo getHover( final Point pos )
-  {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    if( !isVisible() )
-      return null;
-    for( int i = 0; i < valueData.getDomainValues().length; i++ )
-    {
-      final Rectangle hover = getScreenRect( i );
-      if( hover != null && hover.contains( pos ) )
-        return new EditInfo( this, null, null, i, getTooltip( i ), RectangleUtils.getCenterPoint( hover ) );
-    }
-    return null;
   }
 
   @Override
@@ -123,12 +128,8 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     return title;
   }
 
-  private Rectangle getScreenRect( final int i )
+  private Rectangle getScreenRect( final IRecord record )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    final TupleResult result = valueData.getObservation().getResult();
-    final IRecord record = result.get( i );
-
     final Double unterkante = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, record );
     final Double oberkante = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, record );
     final Double station = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );

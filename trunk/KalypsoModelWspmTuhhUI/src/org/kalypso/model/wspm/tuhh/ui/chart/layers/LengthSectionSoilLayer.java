@@ -20,23 +20,27 @@ public class LengthSectionSoilLayer extends TupleResultLineLayer
 
   // FIXME: instead of implementing new layers; we should enhance the TupleResultLineLayer so it has these abilities
   @Override
-  protected final String getTooltip( final int index )
+  protected final String getTooltip( final IRecord record )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    final TupleResult tr = valueData.getObservation().getResult();
-    final IRecord rec = tr.get( index );
+    final TupleResult tr = record.getOwner();
+
     final int soilIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND );
     final int commentIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT );
     final int stationIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
+
     final String targetOKComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( soilIndex ) );
     final String stationComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( stationIndex ) );
-    final Double dn = ProfileUtil.getDoubleValueFor( soilIndex, rec );
-    final Double ds = ProfileUtil.getDoubleValueFor( stationIndex, rec );
-    if( commentIndex > 0 && rec.getValue( commentIndex ) != null )
+
+    final Double dn = ProfileUtil.getDoubleValueFor( soilIndex, record );
+    final Double ds = ProfileUtil.getDoubleValueFor( stationIndex, record );
+
+    if( commentIndex > 0 )
     {
-      return String.format( "%-12s %.4f%n%-12s %.4f%n%s", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn, rec.getValue( commentIndex ) } );//$NON-NLS-1$
+      final Object comment = record.getValue( commentIndex );
+      if( comment != null )
+        return String.format( "%-12s %.4f%n%-12s %.4f%n%s", stationComponentLabel, ds, targetOKComponentLabel, dn, comment );//$NON-NLS-1$
     }
 
-    return String.format( "%-12s %.4f%n%-12s %.4f", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn } );//$NON-NLS-1$
+    return String.format( "%-12s %.4f%n%-12s %.4f", stationComponentLabel, ds, targetOKComponentLabel, dn );//$NON-NLS-1$
   }
 }

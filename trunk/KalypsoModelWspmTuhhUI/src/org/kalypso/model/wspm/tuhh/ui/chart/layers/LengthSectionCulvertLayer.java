@@ -17,6 +17,7 @@ import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
@@ -37,6 +38,9 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   {
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     final IObservation<TupleResult> obs = valueData.getObservation();
+
+    // TODO: nonsense, give our own range, not that of ground
+
     return getDataRange( obs == null ? null : obs.getResult(), IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND );
   }
 
@@ -51,17 +55,20 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   }
 
   @Override
-  protected final String getTooltip( final int index )
+  protected String getTooltip( final IRecord record )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    final TupleResult tr = valueData.getObservation().getResult();
-    final IRecord rec = tr.get( index );
+    final TupleResult tr = record.getOwner();
+
     final int targetOKComponentIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN );
     final int stationIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
+
     final String targetOKComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetOKComponentIndex ) );
     final String stationComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( stationIndex ) );
-    final Double dn = ProfileUtil.getDoubleValueFor( targetOKComponentIndex, rec );
-    final Double ds = ProfileUtil.getDoubleValueFor( stationIndex, rec );
+
+    // FIXME: better tooltip
+
+    final Double dn = ProfileUtil.getDoubleValueFor( targetOKComponentIndex, record );
+    final Double ds = ProfileUtil.getDoubleValueFor( stationIndex, record );
     return String.format( "%-12s %.4f%n%-12s %.4f", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn } );//$NON-NLS-1$
   }
 
@@ -71,44 +78,53 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( valueData == null )
       return;
-    valueData.open();
 
     // FIXME: painting an ellipse here makes no sense!
     // FIXME: wir brauchen mehr Informationen über die verdohlungslänge
-    for( int i = 0; i < valueData.getObservation().getResult().size(); i++ )
+
+    final IObservation<TupleResult> observation = valueData.getObservation();
+    if( observation == null )
+      return;
+
+    /* recreate hover info on every paint */
+    clearInfoIndex();
+
+    final TupleResult result = observation.getResult();
+
+    for( int i = 0; i < result.size(); i++ )
     {
-      final Rectangle rect = getScreenRect( i );
+      final IRecord record = result.get( i );
+
+      final Rectangle rect = getScreenRect( record );
       if( rect != null )
       {
+        // new MarkerFigure( getPointStyle() );
+
         final PointFigure ps = new PointFigure();
         ps.setPoints( new Point[] { RectangleUtils.getCenterPoint( rect ) } );
         ps.getStyle().setWidth( rect.width );
         ps.getStyle().setHeight( rect.height );
         ps.paint( gc );
+
+        addInfo( rect, record, i );
       }
     }
   }
 
-  @Override
-  public EditInfo getHover( final Point pos )
+  private void addInfo( final Rectangle bounds, final IRecord record, final int recordIndex )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    if( !isVisible() )
-      return null;
-    for( int i = 0; i < valueData.getDomainValues().length; i++ )
-    {
-      final Rectangle hover = getScreenRect( i );
-      if( hover != null && hover.contains( pos ) )
-        return new EditInfo( this, null, null, i, getTooltip( i ), RectangleUtils.getCenterPoint( hover ) );
-    }
-    return null;
+    // FIXME: lets have a nice figure!
+    final IPaintable hoverFigure = null;
+
+    final String tooltip = getTooltip( record );
+
+    final EditInfo info = new EditInfo( this, hoverFigure, null, recordIndex, tooltip, null );
+
+    addInfoElement( bounds, info );
   }
 
-  private Rectangle getScreenRect( final int i )
+  private Rectangle getScreenRect( final IRecord record )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    final TupleResult result = valueData.getObservation().getResult();
-    final IRecord record = result.get( i );
     final Double dN = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, record );
     final Double sT = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );
     final Double uK = ProfileUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, record );
