@@ -129,7 +129,7 @@ public class CalculationUnitLogComponent
     StatusViewer.addTimeColumn( logTableViewer );
 
     logTableViewer.setContentProvider( new ArrayContentProvider() );
-    logTableViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    logTableViewer.addPostSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
