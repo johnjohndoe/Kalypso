@@ -268,7 +268,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
     ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
 
-    viewer.addSelectionChangedListener( m_selectListener );
+    viewer.addPostSelectionChangedListener( m_selectListener );
 
     // TODO: replace with toolbar and actions
     final Composite btnComposite = toolkit.createComposite( parent, SWT.NONE );
@@ -602,9 +602,6 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   {
     final Runnable changeInputRunnable = new Runnable()
     {
-      /**
-       * @see java.lang.Runnable#run()
-       */
       @Override
       public void run( )
       {
