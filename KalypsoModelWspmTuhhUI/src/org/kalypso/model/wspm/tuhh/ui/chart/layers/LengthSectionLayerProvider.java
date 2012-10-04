@@ -76,7 +76,7 @@ public class LengthSectionLayerProvider extends TupleResultLineLayerProvider
     if( "Culvert".equals( layerId ) ) //$NON-NLS-1$
       return new LengthSectionCulvertLayer( this, dataContainer, styleSet );
 
-    if( "runOff".equals( layerId ) ) //$NON-NLS-1$
+    if( "runoff".equals( layerId ) ) //$NON-NLS-1$
       return new LengthSectionRunOffLayer( this, dataContainer, styleSet );
 
     if( "soil".equals( layerId ) ) //$NON-NLS-1$

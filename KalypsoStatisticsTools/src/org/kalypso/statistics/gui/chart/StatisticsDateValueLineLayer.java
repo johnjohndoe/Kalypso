@@ -6,6 +6,7 @@ import java.util.Date;
 import org.kalypso.chart.ext.observation.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
@@ -23,16 +24,18 @@ public class StatisticsDateValueLineLayer extends TupleResultLineLayer
   }
 
   @Override
-  protected String getTooltip( final int index )
+  protected String getTooltip( final IRecord record )
   {
-    if( getValueData() == null )
-      return "";
-    final TupleResult tr = getValueData().getObservation().getResult();
+    final TupleResult tr = record.getOwner();
+
     final int targetComponentIndex = tr.indexOfComponent( getValueData().getTargetComponentName() );
     final int domainComponentIndex = tr.indexOfComponent( getValueData().getDomainComponentName() );
+
     final String targetComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetComponentIndex ) );
-    final Object dateMillisObject = tr.get( index ).getValue( domainComponentIndex );
+
+    final Object dateMillisObject = record.getValue( domainComponentIndex );
     final String domainComponentLabel = "Date/time";
+
     final Object x;
     if( dateMillisObject instanceof Long )
     {
@@ -40,9 +43,10 @@ public class StatisticsDateValueLineLayer extends TupleResultLineLayer
     }
     else
     {
-      x = tr.get( index ).getValue( domainComponentIndex );
+      x = record.getValue( domainComponentIndex );
     }
-    final Object y = tr.get( index ).getValue( targetComponentIndex );
+
+    final Object y = record.getValue( targetComponentIndex );
     return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, targetComponentLabel, y } );
   }
 }
