@@ -101,8 +101,6 @@ public class CalculationUnitLogComponent
     final Composite rootComposite = toolkit.createComposite( parent, SWT.NONE );
     GridLayoutFactory.fillDefaults().applyTo( rootComposite );
 
-    rootComposite.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_CYAN ) );
-
     guiProblemViewer( rootComposite, toolkit );
 
     return rootComposite;
