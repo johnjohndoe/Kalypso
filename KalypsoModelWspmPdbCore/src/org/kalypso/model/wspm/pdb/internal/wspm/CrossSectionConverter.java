@@ -54,6 +54,8 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
+import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
@@ -62,6 +64,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartParameter;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
@@ -69,7 +72,11 @@ import org.kalypso.model.wspm.pdb.db.utils.ConsecutiveNumComparator;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -79,6 +86,12 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class CrossSectionConverter implements IProfileTransaction
 {
+  public static final String PART_NAME = "PART_NAME";
+
+  public static final String PART_TYPE = "PART_TYPE";
+
+  public static final String PART_EVENT = "PART_EVENT";
+
   private final CrossSection m_section;
 
   private final IProfile m_profile;
@@ -99,14 +112,12 @@ public class CrossSectionConverter implements IProfileTransaction
     m_profile.setName( m_section.getName() );
     m_profile.setDescription( m_section.getDescription() );
 
-    final BigDecimal station = m_section.getStation();
     /* [m] -> [km] */
+    final BigDecimal station = m_section.getStation();
     m_profile.setStation( station.movePointLeft( 3 ).doubleValue() );
 
     convertP();
-    convertBuilding();
-    // TODO: other kinds...
-    // Other building types (tubes, ...)
+    convertParts();
 
     return Status.OK_STATUS;
   }
@@ -117,9 +128,9 @@ public class CrossSectionConverter implements IProfileTransaction
     if( part == null )
       return;
 
-    // TODO: put part's name, description etc. into profile objects
+    // TODO: Put part's name, description etc. into profile objects.
 
-    /* Add points in their natural order into the profile */
+    /* Add points in their natural order into the profile. */
     final Set<Point> points = part.getPoints();
     final List<Point> sortedPoints = sortPoints( points );
     for( final Point point : sortedPoints )
@@ -138,15 +149,15 @@ public class CrossSectionConverter implements IProfileTransaction
 
   private void convertHyk( final Point point, final IProfileRecord record )
   {
-    // REMARK: we do not add hyk as separate component, it is redundant in any way
+    // REMARK: We do not add hyk as separate component, it is redundant in any way.
     // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getHyk() );
 
-    // REMARK: we only use hyk (not code) to create markers.
+    // REMARK: We only use hyk (not code) to create markers.
     final String hyks = point.getHyk();
     if( StringUtils.isBlank( hyks ) )
       return;
 
-    /* several hyk codes possible */
+    /* Several hyk codes possible. */
     final String[] hykCodes = StringUtils.split( hyks, IGafConstants.HYK_CODE_SEPARATOR );
     for( final String hyk : hykCodes )
     {
@@ -184,36 +195,6 @@ public class CrossSectionConverter implements IProfileTransaction
     marker.setValue( defaultValue );
   }
 
-  private void convertBuilding( )
-  {
-    final CrossSectionPart ukPart = m_section.findPartByCategory( GafKind.UK.toString() );
-    final CrossSectionPart okPart = m_section.findPartByCategory( GafKind.OK.toString() );
-
-    /* Can we do anything with a OK without UK? Maybe this is always a weir? */
-    if( ukPart == null && okPart == null )
-      return;
-
-    if( ukPart == null )
-    {
-      insertPointsAs( okPart, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-
-      /* We consider this situation as a weir */
-      final BuildingWehr weir = new BuildingWehr( m_profile );
-      // weir.setValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, new Double( 0.0 ) );
-      m_profile.addProfileObjects( new IProfileObject[] { weir } );
-    }
-    else
-    {
-      insertPointsAs( ukPart, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-      insertPointsAs( okPart, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-
-      final BuildingBruecke bridge = new BuildingBruecke( m_profile );
-      bridge.setFormbeiwert( new Double( 0.0 ) );
-      // setUWheight( profile, bridge, widthPoint );
-      m_profile.addProfileObjects( new IProfileObject[] { bridge } );
-    }
-  }
-
   private Double asDouble( final BigDecimal decimal )
   {
     if( decimal == null )
@@ -249,33 +230,6 @@ public class CrossSectionConverter implements IProfileTransaction
     return sortedPoints;
   }
 
-  private void insertPointsAs( final CrossSectionPart part, final String asComponent )
-  {
-    if( part == null )
-      return;
-
-    // TODO: put part's name, description etc. into profile objects
-
-    /* Add points in their natural order into the profile */
-    final Set<Point> points = part.getPoints();
-    final List<Point> sortedPoints = sortPoints( points );
-    for( final Point point : sortedPoints )
-    {
-      final BigDecimal width = point.getWidth();
-
-      /* Find or insert point at 'width' */
-      final boolean insert = Objects.isNull( ProfileVisitors.findPoint( m_profile, width.doubleValue() ) );
-      final IProfileRecord record = Profiles.addOrFindPoint( m_profile, width.doubleValue() );
-
-      setValue( record, asComponent, asDouble( point.getHeight() ) );
-
-      // TODO: check: if we have the same width, but different rw/hw we just forget the old rw/hw here, which is bad...
-      // TODO: same holds for ID, Code, etc.
-      if( insert )
-        convertStandardProperties( point, record );
-    }
-  }
-
   private void convertStandardProperties( final Point point, final IRecord record )
   {
     setValue( record, IWspmPointProperties.POINT_PROPERTY_ID, point.getName() );
@@ -289,7 +243,7 @@ public class CrossSectionConverter implements IProfileTransaction
       setValue( record, IWspmPointProperties.POINT_PROPERTY_HOCHWERT, location.getY() );
     }
 
-    // REMARK: the checkout operation makes sure that all necessary classes are present
+    /* REMARK: The checkout operation makes sure that all necessary classes are present. */
     final Roughness roughness = point.getRoughness();
     if( roughness != null )
       setValue( record, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, roughness.getId().getName() );
@@ -302,7 +256,7 @@ public class CrossSectionConverter implements IProfileTransaction
     if( roughnessK != null )
       setValue( record, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, roughnessK.doubleValue() );
 
-    // REMARK: the checkout operation makes sure that all necessary classes are present
+    /* REMARK: The checkout operation makes sure that all necessary classes are present. */
     final Vegetation vegetation = point.getVegetation();
     if( vegetation != null )
       setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, vegetation.getId().getName() );
@@ -318,5 +272,271 @@ public class CrossSectionConverter implements IProfileTransaction
     final BigDecimal vegetationDp = point.getVegetationDp();
     if( vegetationDp != null )
       setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, vegetationDp.doubleValue() );
+  }
+
+  private void convertParts( )
+  {
+    /* Memory for the created profile objects. */
+    final List<IProfileObject> profileObjects = new ArrayList<>();
+
+    /* Get all cross section parts. */
+    final Set<CrossSectionPart> parts = m_section.getCrossSectionParts();
+    for( final CrossSectionPart part : parts )
+    {
+      /* Ignore p horizont, because this one should be already imported. */
+      final String partCategory = part.getCrossSectionPartType().getCategory();
+      if( partCategory.equals( GafKind.P.toString() ) )
+        continue;
+
+      /* Convert the cross section part to a profile object. */
+      final IProfileObject profileObject = convertPart( part );
+      if( profileObject != null )
+        profileObjects.add( profileObject );
+    }
+
+    /* Add the profile objects to the profile. */
+    /* Add all in one step, to reduce events. */
+    if( profileObjects.size() > 0 )
+      m_profile.addProfileObjects( profileObjects.toArray( new IProfileObject[] {} ) );
+
+    /* Update the components in the profile. */
+    final IProfileObject[] pos = m_profile.getProfileObjects();
+    for( final IProfileObject po : pos )
+      updateComponents( po );
+  }
+
+  private IProfileObject convertPart( final CrossSectionPart part )
+  {
+    /* Create the profile object. */
+    final String partCategory = part.getCrossSectionPartType().getCategory();
+    final IProfileObject profileObject = createProfileObject( partCategory );
+    if( profileObject == null )
+      return null;
+
+    /* Update the description. */
+    profileObject.setDescription( part.getDescription() );
+
+    /* Fill records. */
+    fillProfileObjectRecords( part, profileObject );
+
+    /* Guess metadata. */
+    guessMetadata( part, profileObject );
+
+    return profileObject;
+  }
+
+  private IProfileObject createProfileObject( final String partCategory )
+  {
+    /* Ignore p horizont, because this one should be already imported. */
+    if( partCategory.equals( GafKind.P.toString() ) )
+      return null;
+
+    if( partCategory.equals( GafKind.UK.toString() ) )
+      return new BuildingBruecke( m_profile );
+
+    if( partCategory.equals( GafKind.K.toString() ) )
+      return new BuildingKreis();
+
+    if( partCategory.equals( GafKind.EI.toString() ) )
+      return new BuildingEi();
+
+    if( partCategory.equals( GafKind.MA.toString() ) )
+      return new BuildingMaul();
+
+    if( partCategory.equals( GafKind.OK.toString() ) )
+    {
+      /* REMARK: If OK and UK exists we have a bridge, else a weir. */
+      final CrossSectionPart part = m_section.findPartByCategory( GafKind.UK.toString() );
+      if( part == null )
+        return new BuildingWehr( m_profile );
+    }
+
+    return new GenericProfileHorizon();
+  }
+
+  private void fillProfileObjectRecords( final CrossSectionPart part, final IProfileObject profileObject )
+  {
+    /* The profile object records. */
+    final IProfileObjectRecords records = profileObject.getRecords();
+
+    /* Add points in their natural order into the profile. */
+    final Set<Point> points = part.getPoints();
+    final List<Point> sortedPoints = sortPoints( points );
+    for( final Point point : sortedPoints )
+    {
+      /* Get the values from the point. */
+      // REMARK: Some values like roughness are not set here at the moment...
+      // REMARK: If roughness is set, set it as roughness of the building (mean value?)...
+      final String id = point.getName();
+      final String comment = point.getDescription();
+      final BigDecimal breite = point.getWidth();
+      final BigDecimal hoehe = point.getHeight();
+      final String code = point.getCode();
+      final com.vividsolutions.jts.geom.Point location = point.getLocation();
+
+      /* Add the values to the record. */
+      final IProfileObjectRecord record = records.addNewRecord();
+      record.setId( id );
+      record.setComment( comment );
+      record.setBreite( breite.doubleValue() );
+      record.setHoehe( hoehe.doubleValue() );
+      record.setRechtswert( location.getX() );
+      record.setHochwert( location.getY() );
+      record.setCode( code );
+    }
+  }
+
+  private void updateComponents( final IProfileObject profileObject )
+  {
+    if( profileObject instanceof BuildingBruecke )
+    {
+      final BuildingBruecke bridge = (BuildingBruecke)profileObject;
+      insertRecordsAs( bridge, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+
+      IProfileObject ok = bridge.findOK( m_profile );
+      if( ok == null )
+      {
+        /* If no ok was found, check if the bridge has an id. */
+        /* If not search for an ok without id (via "part_type") and use this one. */
+        final String brueckeId = bridge.getBrueckeId();
+        if( brueckeId == null || brueckeId.length() == 0 )
+          ok = findOkProfileObject();
+      }
+
+      if( ok != null )
+        insertRecordsAs( ok, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    }
+
+    if( profileObject instanceof BuildingWehr )
+    {
+      final BuildingWehr weir = (BuildingWehr)profileObject;
+      insertRecordsAs( weir, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    }
+  }
+
+  private void insertRecordsAs( final IProfileObject profileObject, final String asComponent )
+  {
+    final IProfileObjectRecords records = profileObject.getRecords();
+    for( int i = 0; i < records.getSize(); i++ )
+    {
+      final IProfileObjectRecord record = records.getRecord( i );
+      final String id = record.getId();
+      final String comment = record.getComment();
+      final Double breite = record.getBreite();
+      final Double hoehe = record.getHoehe();
+      final Double rechtswert = record.getRechtswert();
+      final Double hochwert = record.getHochwert();
+      final String code = record.getCode();
+
+      /* Find or insert point at 'width'. */
+      final boolean insert = Objects.isNull( ProfileVisitors.findPoint( m_profile, breite.doubleValue() ) );
+      final IProfileRecord pRecord = Profiles.addOrFindPoint( m_profile, breite );
+
+      setValue( pRecord, asComponent, hoehe );
+
+      // TODO: Check: If we have the same width, but different rw/hw, we just forget the old rw/hw here, which is bad...
+      // TODO: Same holds for ID, Code, etc.
+      if( insert )
+      {
+        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_ID, id );
+        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_COMMENT, comment );
+        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, rechtswert );
+        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_HOCHWERT, hochwert );
+        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_CODE, code );
+      }
+    }
+  }
+
+  private IProfileObject findOkProfileObject( )
+  {
+    final IProfileObject[] profileObjects = m_profile.getProfileObjects();
+    for( final IProfileObject profileObject : profileObjects )
+    {
+      if( !(profileObject instanceof GenericProfileHorizon) )
+        continue;
+
+      final String value = profileObject.getValue( PART_TYPE, null );
+      if( GafKind.OK.toString().equals( value ) )
+      {
+        final String brueckeId = profileObject.getValue( BuildingBruecke.KEY_BRUECKE_ID, null );
+        if( brueckeId == null || brueckeId.length() == 0 )
+          return profileObject;
+      }
+    }
+
+    return null;
+  }
+
+  private void guessMetadata( final CrossSectionPart part, final IProfileObject profileObject )
+  {
+    /* Set generic metadata. */
+    final Set<CrossSectionPartParameter> parameters = part.getCrossSectionPartParameters();
+    for( final CrossSectionPartParameter parameter : parameters )
+      profileObject.setValue( parameter.getKey(), parameter.getValue() );
+
+    /* Set specific metadata. */
+    profileObject.setValue( PART_NAME, part.getName() );
+    profileObject.setValue( PART_TYPE, part.getCrossSectionPartType().getCategory() );
+    // TODO profileObject.setValue( PART_EVENT, part.getEvent().getName() );
+
+    /* Guess special cases. */
+    if( profileObject instanceof BuildingKreis )
+    {
+      final BuildingKreis kreis = (BuildingKreis)profileObject;
+
+      final IProfileObjectRecord ukRecord = findPoint( profileObject, "KRUK" );
+      final IProfileObjectRecord fsRecord = findPoint( profileObject, "KRFS" );
+      if( ukRecord == null || fsRecord == null )
+        return;
+
+      final com.vividsolutions.jts.geom.Point ukPoint = ukRecord.getPoint();
+      final com.vividsolutions.jts.geom.Point fsPoint = fsRecord.getPoint();
+
+      final double bezugspunktX = fsPoint.getX();
+      final double bezugspunktY = fsPoint.getY();
+      final double durchmesser = fsPoint.distance( ukPoint );
+
+      kreis.setBezugspunktX( new Double( bezugspunktX ) );
+      kreis.setBezugspunktY( new Double( bezugspunktY ) );
+      kreis.setBreite( new Double( durchmesser ) );
+    }
+
+    if( profileObject instanceof BuildingEi )
+    {
+      final BuildingEi ei = (BuildingEi)profileObject;
+
+      final IProfileObjectRecord ukRecord = findPoint( profileObject, "EIUK" );
+      final IProfileObjectRecord fsRecord = findPoint( profileObject, "EIFS" );
+      if( ukRecord == null || fsRecord == null )
+        return;
+
+      final com.vividsolutions.jts.geom.Point ukPoint = ukRecord.getPoint();
+      final com.vividsolutions.jts.geom.Point fsPoint = fsRecord.getPoint();
+
+      /* Egg buildings are interpreted with 1:1 diagonales. */
+      final double bezugspunktX = fsPoint.getX();
+      final double bezugspunktY = fsPoint.getY();
+      final double breite = fsPoint.distance( ukPoint );
+      final double hoehe = fsPoint.distance( ukPoint );
+
+      ei.setBezugspunktX( new Double( bezugspunktX ) );
+      ei.setBezugspunktY( new Double( bezugspunktY ) );
+      ei.setBreite( new Double( breite ) );
+      ei.setHoehe( new Double( hoehe ) );
+    }
+  }
+
+  private IProfileObjectRecord findPoint( final IProfileObject profileObject, final String code )
+  {
+    final IProfileObjectRecords records = profileObject.getRecords();
+    for( int i = 0; i < records.getSize(); i++ )
+    {
+      final IProfileObjectRecord record = records.getRecord( i );
+      final String recordCode = record.getCode();
+      if( code.equals( recordCode ) )
+        return record;
+    }
+
+    return null;
   }
 }

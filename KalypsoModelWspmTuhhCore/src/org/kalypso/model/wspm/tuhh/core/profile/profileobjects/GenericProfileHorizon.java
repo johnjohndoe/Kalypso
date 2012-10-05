@@ -23,11 +23,11 @@ import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 /**
  * @author Holger Albert
  */
-public class GenericProfileHorizont extends AbstractProfileObject
+public class GenericProfileHorizon extends AbstractProfileObject
 {
-  public static final String ID = "GenericProfileHorizont";
+  public static final String ID = "GenericProfileHorizon";
 
-  public GenericProfileHorizont( )
+  public GenericProfileHorizon( )
   {
   }
 
