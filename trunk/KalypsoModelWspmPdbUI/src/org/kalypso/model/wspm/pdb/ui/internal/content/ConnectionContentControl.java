@@ -51,14 +51,11 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.events.TreeListener;
 import org.eclipse.swt.graphics.Font;
@@ -80,8 +77,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.content.statetree.StateTreeComposite;
-import org.kalypso.model.wspm.pdb.ui.internal.content.statetree.StateTreeUpdater;
 
 /**
  * @author Gernot Belger
@@ -111,9 +106,9 @@ public class ConnectionContentControl extends Composite
 
   private StatusComposite m_statusBar;
 
-  private StateTreeComposite m_stateTree;
+//  private StateTreeComposite m_stateTree;
 
-  private final StateTreeUpdater m_stateTreeUpdater;
+  // private final StateTreeUpdater m_stateTreeUpdater;
 
   public ConnectionContentControl( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
   {
@@ -133,21 +128,23 @@ public class ConnectionContentControl extends Composite
 
     m_manager = new ToolBarManager( SWT.FLAT | SWT.SHADOW_OUT );
 
-    final SashForm sash = new SashForm( this, SWT.VERTICAL );
-    sash.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    // final SashForm sash = new SashForm( this, SWT.VERTICAL );
+    // sash.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    if( toolkit != null )
-      toolkit.adapt( sash );
+    // if( toolkit != null )
+    // toolkit.adapt( sash );
 
-    createWaterTree( toolkit, sash );
-    createStateTree( toolkit, sash );
+    createWaterTree( toolkit, this );
+    // createWaterTree( toolkit, sash );
+    // sash.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    // createStateTree( toolkit, sash );
 
     // FIXME: put into dialog settings
-    sash.setWeights( new int[] { 50, 50 } );
+    // sash.setWeights( new int[] { 50, 50 } );
 
     createActions();
 
-    m_stateTreeUpdater = new StateTreeUpdater( connection, m_stateTree );
+    // m_stateTreeUpdater = new StateTreeUpdater( connection, m_stateTree );
 
     refresh( null );
   }
@@ -155,6 +152,7 @@ public class ConnectionContentControl extends Composite
   private void createWaterTree( final FormToolkit toolkit, final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
+    panel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     if( toolkit != null )
       toolkit.adapt( panel );
 
@@ -165,10 +163,10 @@ public class ConnectionContentControl extends Composite
     createTreeViewer( toolkit, panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
   }
 
-  private void createStateTree( final FormToolkit toolkit, final Composite parent )
-  {
-    m_stateTree = new StateTreeComposite( toolkit, parent );
-  }
+  // private void createStateTree( final FormToolkit toolkit, final Composite parent )
+  // {
+  // m_stateTree = new StateTreeComposite( toolkit, parent );
+  // }
 
   private Control createStatusBar( final FormToolkit toolkit, final Composite parent )
   {
@@ -205,14 +203,14 @@ public class ConnectionContentControl extends Composite
     m_waterViewer = createContentTree( toolkit, parent, null );
     m_waterViewer.setInput( PdbLabelProvider.PENDING );
 
-    m_waterViewer.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      @Override
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        handleSelectionChanged( (IStructuredSelection)event.getSelection() );
-      }
-    } );
+//    m_waterViewer.addSelectionChangedListener( new ISelectionChangedListener()
+//    {
+//      @Override
+//      public void selectionChanged( final SelectionChangedEvent event )
+//      {
+//        handleSelectionChanged( (IStructuredSelection)event.getSelection() );
+//      }
+//    } );
     return m_waterViewer.getControl();
   }
 
@@ -255,15 +253,15 @@ public class ConnectionContentControl extends Composite
     return viewer;
   }
 
-  protected void handleSelectionChanged( final IStructuredSelection selection )
-  {
-    m_stateTreeUpdater.setSelection( selection );
+  // protected void handleSelectionChanged( final IStructuredSelection selection )
+  // {
+    // m_stateTreeUpdater.setSelection( selection );
 
     /* Preserve selection from user, i.e. if the selection is changed during refresh, use that new selection */
-    final ElementSelector selector = new ElementSelector();
-    selector.setElemensToSelect( selection.toArray() );
-    m_refreshJob.setElementToSelect( selector );
-  }
+    // final ElementSelector selector = new ElementSelector();
+    // selector.setElemensToSelect( selection.toArray() );
+    // m_refreshJob.setElementToSelect( selector );
+  // }
 
   private void createActions( )
   {
@@ -385,10 +383,10 @@ public class ConnectionContentControl extends Composite
     return m_waterViewer;
   }
 
-  public TreeViewer getStatesViewer( )
-  {
-    return m_stateTree.getTreeViewer();
-  }
+//  public TreeViewer getStatesViewer( )
+//  {
+//    return m_stateTree.getTreeViewer();
+//  }
 
   public IWaterBodyStructure getStructure( )
   {

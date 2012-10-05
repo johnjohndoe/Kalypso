@@ -132,7 +132,7 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
   public void createContextMenu( final IWorkbenchPartSite site )
   {
     final TreeViewer watersViewer = m_contentViewer.getWatersViewer();
-    final TreeViewer statesViewer = m_contentViewer.getStatesViewer();
+//    final TreeViewer statesViewer = m_contentViewer.getStatesViewer();
 
     // FIXME: combined viewer?
     site.setSelectionProvider( watersViewer );
@@ -152,13 +152,13 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
     } );
 
     final Menu watersMenu = menuManager.createContextMenu( watersViewer.getControl() );
-    final Menu statesMenu = menuManager.createContextMenu( statesViewer.getControl() );
+//    final Menu statesMenu = menuManager.createContextMenu( statesViewer.getControl() );
 
     site.registerContextMenu( site.getId() + ":waters", menuManager, watersViewer ); //$NON-NLS-N$
-    site.registerContextMenu( site.getId() + ":states", menuManager, watersViewer ); //$NON-NLS-N$
+    //site.registerContextMenu( site.getId() + ":states", menuManager, statesViewer ); //$NON-NLS-N$
 
     watersViewer.getControl().setMenu( watersMenu );
-    statesViewer.getControl().setMenu( statesMenu );
+//    statesViewer.getControl().setMenu( statesMenu );
 
     final IEvaluationService service = (IEvaluationService) site.getService( IEvaluationService.class );
     service.requestEvaluation( IEvaluationService.PROP_NOTIFYING /* ISources.ACTIVE_CURRENT_SELECTION_NAME */);
