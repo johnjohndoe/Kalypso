@@ -26,7 +26,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
-import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.wspm.ClassChecker;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -39,7 +38,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * Data object for the {@link CheckinStateOperation}.
- *
+ * 
  * @author Gernot Belger
  */
 public class CheckinStateOperationData
@@ -113,18 +112,18 @@ public class CheckinStateOperationData
     return m_documentBase;
   }
 
-  public CrossSectionPartType findPartType( final GafKind kind )
+  public CrossSectionPartType findPartType( final String partType )
   {
     if( m_partTypes == null )
       return null;
 
     for( final CrossSectionPartType type : m_partTypes )
     {
-      if( type.getCategory().equals( kind.toString() ) )
+      if( type.getCategory().equals( partType ) )
         return type;
     }
 
-    throw new IllegalArgumentException( String.format( "Unknown part type: %s", kind ) );
+    throw new IllegalArgumentException( String.format( "Unknown part type: %s", partType ) );
   }
 
   public GeometryFactory getGeometryFactory( )

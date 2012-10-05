@@ -117,10 +117,13 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
     return new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR };
   }
 
-  private void addPointProperties( final IProfile profil )
+  private void addPointProperties( final IProfile profile )
   {
-    final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-    if( !profil.hasPointProperty( ok ) )
-      profil.addPointProperty( ok, null );
+    if( profile == null )
+      return;
+
+    final IComponent ok = profile.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    if( !profile.hasPointProperty( ok ) )
+      profile.addPointProperty( ok, null );
   }
 }

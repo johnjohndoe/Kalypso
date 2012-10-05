@@ -41,8 +41,10 @@
 package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -60,6 +62,8 @@ public class BuildingBruecke extends AbstractProfileObject implements IProfileBu
   private static final String PROPERTY_FORMBEIWERT = "formbeiwert"; //$NON-NLS-1$
 
   private static final String PROPERTY_RAUHEIT = "rauheit"; //$NON-NLS-1$
+
+  public static final String KEY_BRUECKE_ID = "BRUECKE_BRUECKE_ID"; //$NON-NLS-1$
 
   public static final String KEY_BREITE = "BRUECKE_BREITE"; //$NON-NLS-1$
 
@@ -106,6 +110,11 @@ public class BuildingBruecke extends AbstractProfileObject implements IProfileBu
     return property;
   }
 
+  public String getBrueckeId( )
+  {
+    return getValue( KEY_BRUECKE_ID, null );
+  }
+
   public Double getBreite( )
   {
     return getDoubleValue( KEY_BREITE, null );
@@ -124,6 +133,11 @@ public class BuildingBruecke extends AbstractProfileObject implements IProfileBu
   public Double getRauheit( )
   {
     return getDoubleValue( KEY_RAUHEIT, null );
+  }
+
+  public void setBrueckeId( final String brueckeId )
+  {
+    setValue( KEY_BRUECKE_ID, brueckeId );
   }
 
   public void setBreite( final Double breite )
@@ -151,14 +165,40 @@ public class BuildingBruecke extends AbstractProfileObject implements IProfileBu
     return new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE };
   }
 
-  private void addPointProperties( final IProfile profil )
+  private void addPointProperties( final IProfile profile )
   {
-    final IComponent uk = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-    if( !profil.hasPointProperty( uk ) )
-      profil.addPointProperty( uk, null );
+    if( profile == null )
+      return;
 
-    final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    if( !profil.hasPointProperty( ok ) )
-      profil.addPointProperty( ok, null );
+    final IComponent uk = profile.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+    if( !profile.hasPointProperty( uk ) )
+      profile.addPointProperty( uk, null );
+
+    final IComponent ok = profile.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    if( !profile.hasPointProperty( ok ) )
+      profile.addPointProperty( ok, null );
+  }
+
+  public IProfileObject findOK( final IProfile profile )
+  {
+    final String brueckeId = getBrueckeId();
+    if( brueckeId == null || brueckeId.length() == 0 )
+      return null;
+
+    final IProfileObject[] profileObjects = profile.getProfileObjects();
+    for( final IProfileObject profileObject : profileObjects )
+    {
+      if( !(profileObject instanceof GenericProfileHorizon) )
+        continue;
+
+      final String bridgeId = profileObject.getValue( KEY_BRUECKE_ID, null );
+      if( bridgeId == null || bridgeId.length() == 0 )
+        continue;
+
+      if( brueckeId.equals( bridgeId ) )
+        return profileObject;
+    }
+
+    return null;
   }
 }

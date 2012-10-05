@@ -41,8 +41,10 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
@@ -66,10 +69,10 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinPartOperation;
 import org.kalypso.model.wspm.pdb.internal.wspm.IPartBuilder;
-import org.kalypso.model.wspm.pdb.internal.wspm.OKPartBuilder;
 import org.kalypso.model.wspm.pdb.internal.wspm.PPPartBuilder;
-import org.kalypso.model.wspm.pdb.internal.wspm.UKPartBuilder;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -274,35 +277,20 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     }
   }
 
-  private void createParts( final CrossSection section, final IProfile profil, final String profilSRS ) throws PdbConnectException
+  private void createParts( final CrossSection section, final IProfile profile, final String profilSRS ) throws PdbConnectException
   {
     final Set<CrossSectionPart> parts = new HashSet<>();
 
     /* Extract profile line. */
-    final CrossSectionPart pPart = builtPart( profil, profilSRS, new PPPartBuilder( profil ) );
+    final CrossSectionPart pPart = builtPart( profile, profilSRS, new PPPartBuilder( profile ) );
     if( !isBlank( pPart ) )
     {
       parts.add( pPart );
       section.setLine( pPart.getLine() );
     }
 
-    /* Extract building parts. */
-    final CrossSectionPart ukPart = builtPart( profil, profilSRS, new UKPartBuilder() );
-    if( !isBlank( ukPart ) )
-      parts.add( ukPart );
-
-    final OKPartBuilder okBridgeBuilder = new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    final CrossSectionPart okBridgePart = builtPart( profil, profilSRS, okBridgeBuilder );
-    if( !isBlank( okBridgePart ) )
-      parts.add( okBridgePart );
-
-    final OKPartBuilder okWeirBuilder = new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, okWeirBuilder );
-    if( !isBlank( okWeirPart ) )
-      parts.add( okWeirPart );
-
     /* Extract extra parts. */
-    final CrossSectionPart[] additionalParts = createAdditionalParts();
+    final CrossSectionPart[] additionalParts = createAdditionalParts( profile );
     for( final CrossSectionPart additionalPart : additionalParts )
       parts.add( additionalPart );
 
@@ -346,16 +334,75 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     if( !result.isOK() )
       m_log.add( result );
 
-    final CrossSectionPartType type = m_data.findPartType( partBuilder.getKind() );
+    final CrossSectionPartType type = m_data.findPartType( partBuilder.getKind().toString() );
     final CrossSectionPart part = partOperation.getPart();
     part.setCrossSectionPartType( type );
 
     return part;
   }
 
-  private CrossSectionPart[] createAdditionalParts( )
+  private CrossSectionPart[] createAdditionalParts( final IProfile profile ) throws PdbConnectException
   {
+    /* Memory for the cloned profile objects. */
+    final List<IProfileObject> clonedProfileObjects = new ArrayList<>();
+
+    /* Clone profile objects. */
+    final IProfileObject[] profileObjects = profile.getProfileObjects();
+    for( final IProfileObject profileObject : profileObjects )
+    {
+      final IProfileObject clonedProfileObject = cloneProfileObject( profileObject );
+      clonedProfileObjects.add( clonedProfileObject );
+    }
+
+    /* Update from components of profile. */
+    updateFromComponents( clonedProfileObjects, profile );
+
+    /* Memory for the cross section parts. */
+    final List<CrossSectionPart> parts = new ArrayList<>();
+
+    /* Checkin. */
+    for( final IProfileObject clonedProfileObject : clonedProfileObjects )
+    {
+      final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( m_data, profile, clonedProfileObject, profile.getSrsName() );
+      operation.execute();
+
+      final CrossSectionPart part = operation.getPart();
+      parts.add( part );
+    }
+
+    return parts.toArray( new CrossSectionPart[] {} );
+  }
+
+  private IProfileObject cloneProfileObject( final IProfileObject profileObject )
+  {
+    final IProfileObject newProfileObject = ProfileObjectHelper.createProfileObject( profileObject );
+    ProfileObjectHelper.cloneProfileObject( profileObject, newProfileObject );
+    return newProfileObject;
+  }
+
+  private void updateFromComponents( final List<IProfileObject> clonedProfileObjects, final IProfile profile )
+  {
+    // Step 1 find all single objects
+    // Step 2 find all bridge/ok pairs
+    // Eventually create a ok object for a bridge
+    // Think of the bridge ids
     // TODO
-    return new CrossSectionPart[0];
+
+    for( final IProfileObject clonedProfileObject : clonedProfileObjects )
+    {
+      /* Update bridge buildings and weir buildings. */
+      // if( clonedProfileObject instanceof BuildingBruecke )
+      // ProfileObjectHelper.updateBridgeFromComponents( profile, (BuildingBruecke)clonedProfileObject );
+
+      if( clonedProfileObject instanceof BuildingWehr )
+        ProfileObjectHelper.updateWeirFromComponents( profile, (BuildingWehr)clonedProfileObject );
+
+      /* Update egg buildings and circle buildings. */
+      if( clonedProfileObject instanceof BuildingEi )
+        ProfileObjectHelper.updateEggFromComponents( profile, (BuildingEi)clonedProfileObject );
+
+      if( clonedProfileObject instanceof BuildingKreis )
+        ProfileObjectHelper.updateCircleFromComponents( profile, (BuildingKreis)clonedProfileObject );
+    }
   }
 }
