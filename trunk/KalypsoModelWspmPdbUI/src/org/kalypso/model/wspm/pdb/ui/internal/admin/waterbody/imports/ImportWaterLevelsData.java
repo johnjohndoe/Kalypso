@@ -69,6 +69,27 @@ import org.kalypso.shape.dbf.DBaseException;
  */
 public class ImportWaterLevelsData extends AbstractModelObject implements IEditEventPageData
 {
+  public final static String PROPERTY_IMPORT_METHOD = "importMethod"; //$NON-NLS-1$
+
+  public static enum ImportMethod
+  {
+    waterlevel1d( "1D-Wasserspiegel" ),
+    waterlevel2d( "2D-Wasserspiegel" );
+
+    private final String m_label;
+
+    private ImportMethod( final String label )
+    {
+      m_label = label;
+    }
+
+    @Override
+    public String toString( )
+    {
+      return m_label;
+    }
+  }
+
   private final Event m_event = new Event();
 
   private final IPdbConnection m_connection;
@@ -82,6 +103,8 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
   private ImportAttributeInfo< ? >[] m_infos;
 
   private Collection<State> m_states = Collections.emptyList();
+
+  private ImportMethod m_importMethod = ImportMethod.waterlevel2d;
 
   public ImportWaterLevelsData( final IPdbConnection connection )
   {
@@ -198,5 +221,19 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
   public boolean showStatesChooser( )
   {
     return true;
+  }
+
+  public ImportMethod getImportMethod( )
+  {
+    return m_importMethod;
+  }
+
+  public void setImportMethod( final ImportMethod importMethod )
+  {
+    final ImportMethod oldValue = m_importMethod;
+
+    m_importMethod = importMethod;
+
+    firePropertyChange( PROPERTY_IMPORT_METHOD, oldValue, importMethod );
   }
 }

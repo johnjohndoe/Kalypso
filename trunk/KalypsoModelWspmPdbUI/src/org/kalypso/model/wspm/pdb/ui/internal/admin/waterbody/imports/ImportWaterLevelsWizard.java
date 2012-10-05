@@ -101,8 +101,6 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
   private IConnectionViewer m_viewer;
 
-  private EditEventPage m_eventPage;
-
   private IObservableValue m_waterValue;
 
   public ImportWaterLevelsWizard( )
@@ -134,7 +132,6 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   public void addPages( )
   {
     m_shapeFilePage = new SelectShapeFilePage( "selectPage", Messages.getString( "ImportWaterLevelsWizard.1" ), WspmPdbUiImages.IMG_WIZBAN_IMPORT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-
     m_shapeFilePage.setDescription( Messages.getString( "ImportWaterLevelsWizard.2" ) ); //$NON-NLS-1$
     addPage( m_shapeFilePage );
 
@@ -159,9 +156,11 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     waterPage.setDescription( Messages.getString( "ImportWaterLevelsWizard.3" ) ); //$NON-NLS-1$
     addPage( waterPage );
 
+    /* Options page */
+    addPage( new ImportWaterlevelsOptionsPage( "options", m_data ) ); //$NON-NLS-1$ 
+
     /* Edit event properties */
-    m_eventPage = new EditEventPage( "eventPage", m_data, true ); //$NON-NLS-1$
-    addPage( m_eventPage );
+    addPage( new EditEventPage( "eventPage", m_data, true ) ); //$NON-NLS-1$
   }
 
   @Override
