@@ -74,6 +74,8 @@ public interface IGafConstants
 
   String CODE_OKPP = "OKPP"; //$NON-NLS-1$
 
+  String CODE_WS = "WS"; //$NON-NLS-1$
+
   /* HYK */
 
   String HYK_PA = CODE_PA;
@@ -89,4 +91,5 @@ public interface IGafConstants
   String HYK_RU = CODE_RU;
 
   char HYK_CODE_SEPARATOR = ',';
+
 }
