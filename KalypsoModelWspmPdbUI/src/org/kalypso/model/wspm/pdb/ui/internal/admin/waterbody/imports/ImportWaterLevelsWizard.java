@@ -46,6 +46,7 @@ import java.util.Collection;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -59,6 +60,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.hibernatespatial.mgeom.MGeometryFactory;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -67,6 +69,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -76,10 +79,13 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventPage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ChooseWaterPage;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsData.ImportMethod;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
+
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Gernot Belger
@@ -157,7 +163,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     addPage( waterPage );
 
     /* Options page */
-    addPage( new ImportWaterlevelsOptionsPage( "options", m_data ) ); //$NON-NLS-1$ 
+    addPage( new ImportWaterlevelsOptionsPage( "options", m_data ) ); //$NON-NLS-1$
 
     /* Edit event properties */
     addPage( new EditEventPage( "eventPage", m_data, true ) ); //$NON-NLS-1$
@@ -233,15 +239,14 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   @Override
   public boolean performFinish( )
   {
+    final IPdbConnection connection = m_data.getConnection();
+
     final Event event = m_data.getEvent();
 
-    final IPdbConnection connection = m_data.getConnection();
-    final String username = connection.getSettings().getUsername();
-    final IPdbOperation operation = new SaveEventOperation( event, username );
+    final IStatus status = runOperation( connection, event );
+    if( status.matches( IStatus.CANCEL ) )
+      return false;
 
-    final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
-
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
     if( !status.isOK() )
       StatusDialog.open( getShell(), status, getWindowTitle() );
 
@@ -251,6 +256,53 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     m_viewer.reload( selector );
 
     return !status.matches( IStatus.ERROR );
+  }
+
+  private IStatus runOperation( final IPdbConnection connection, final Event event )
+  {
+    try
+    {
+      final IPdbOperation operation = createCheckinOperation( connection, event );
+
+      final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
+
+      return RunnableContextHelper.execute( getContainer(), true, false, runnable );
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
+  }
+
+  private IPdbOperation createCheckinOperation( final IPdbConnection connection, final Event event ) throws CoreException
+  {
+    final String username = connection.getSettings().getUsername();
+
+    final ImportMethod importMethod = m_data.getImportMethod();
+    switch( importMethod )
+    {
+      case waterlevel1d:
+        return new SaveEventOperation( event, username );
+
+      case waterlevel2d:
+      {
+        if( event.getState() == null )
+        {
+          final String message = "Das Ereignis muss einem Zustand zugeordnet sein, wenn es als 2D-Wasserspiegel importiert werden soll. Bitte wählen Sie einen Zustand aus.";
+          final IStatus warning = new Status( IStatus.CANCEL, WspmPdbUiPlugin.PLUGIN_ID, message );
+          throw new CoreException( warning );
+        }
+
+        final PdbInfo info = connection.getInfo();
+        final int targetSRID = info.getSRID();
+        final MGeometryFactory geometryFactory = new MGeometryFactory( new PrecisionModel(), targetSRID );
+
+        return new SaveWaterlevel2dOperation( event, username, geometryFactory );
+      }
+    }
+
+    /* never reached */
+    throw new IllegalStateException();
   }
 
   private WaterBody findPreferredWater( final IStructuredSelection selection )
