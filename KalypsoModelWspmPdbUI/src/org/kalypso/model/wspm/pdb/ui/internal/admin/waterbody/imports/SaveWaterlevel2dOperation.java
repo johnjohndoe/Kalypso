@@ -209,6 +209,8 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
     final Point point = new Point( null, part, Long.toString( num ), num );
 
     point.setDescription( description );
+    /* keep original location of waterlevel, not the projection on the section, which can be computed by width */
+    point.setLocation( m_factory.createPoint( waterlevelLocation ) );
 
     point.setCode( IGafConstants.CODE_WS );
     // point.setHyk( );
@@ -223,7 +225,6 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
     final BigDecimal mWidth = Double.isNaN( projectedLocationWithM.m ) ? null : new BigDecimal( projectedLocationWithM.m );
 
     point.setWidth( mWidth );
-    point.setLocation( m_factory.createPoint( projectedLocationWithM ) );
 
     return point;
   }

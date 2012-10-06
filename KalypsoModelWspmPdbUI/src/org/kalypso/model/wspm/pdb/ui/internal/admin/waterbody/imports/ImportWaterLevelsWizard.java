@@ -294,8 +294,8 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
         }
 
         final PdbInfo info = connection.getInfo();
-        final int targetSRID = info.getSRID();
-        final MGeometryFactory geometryFactory = new MGeometryFactory( new PrecisionModel(), targetSRID );
+        final int dbSRID = info.getSRID();
+        final MGeometryFactory geometryFactory = new MGeometryFactory( new PrecisionModel(), dbSRID );
 
         return new SaveWaterlevel2dOperation( event, username, geometryFactory );
       }

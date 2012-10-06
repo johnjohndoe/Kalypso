@@ -98,7 +98,7 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
 
   private String m_shapeFile;
 
-  private String m_srs;
+  private String m_shapeSRS;
 
   private ImportAttributeInfo< ? >[] m_infos;
 
@@ -145,7 +145,7 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
         m_shapeFile = shapeFile;
     }
 
-    m_srs = srs;
+    m_shapeSRS = srs;
 
     /* Update name and source of event */
     if( m_shapeFile != null )
@@ -193,7 +193,7 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
 
   public String getSrs( )
   {
-    return m_srs;
+    return m_shapeSRS;
   }
 
   @Override
@@ -235,5 +235,13 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
     m_importMethod = importMethod;
 
     firePropertyChange( PROPERTY_IMPORT_METHOD, oldValue, importMethod );
+  }
+
+  /**
+   * @return The srid of the database we are connected to.
+   */
+  public int getDbSRID( )
+  {
+    return m_connection.getInfo().getSRID();
   }
 }
