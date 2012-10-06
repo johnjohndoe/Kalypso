@@ -60,13 +60,19 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
-import org.kalypso.shape.deegree.SHP2GM_Object;
 import org.kalypso.shape.geometry.ISHPGeometry;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypso.shape.tools.SHP2JTS;
+import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * Reads water levels from a shape file.
@@ -83,6 +89,9 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
   private final Map<WaterlevelFixation, IStatus> m_waterLevelStatus;
 
+  /**
+   * dbSRID
+   */
   public ReadWaterLevelsOperation( final ImportWaterLevelsData data, final Map<WaterlevelFixation, IStatus> waterLevelStatus )
   {
     m_data = data;
@@ -161,12 +170,11 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     return m_waterLevels;
   }
 
-  private WaterlevelFixation toWaterlevelFixation( final ISHPGeometry shape, final Object[] data, final IDBFField[] fields ) throws GM_Exception, CoreException
+  private WaterlevelFixation toWaterlevelFixation( final ISHPGeometry shape, final Object[] data, final IDBFField[] fields ) throws CoreException, MismatchedDimensionException, FactoryException, TransformException
   {
     final WaterlevelFixation waterLevel = new WaterlevelFixation();
 
-    final GM_Point location = (GM_Point) SHP2GM_Object.transform( m_data.getSrs(), shape );
-    final Point point = location == null ? null : (Point) JTSAdapter.export( location );
+    final Point point = getLocation( shape );
 
     final ImportAttributeInfo< ? >[] attributeInfos = m_data.getAttributeInfos();
     for( final ImportAttributeInfo< ? > info : attributeInfos )
@@ -188,6 +196,30 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     waterLevel.setLocation( point );
 
     return waterLevel;
+  }
+
+  /**
+   * Extract location from shape geometry and transform to srs of database.
+   */
+  private Point getLocation( final ISHPGeometry shape ) throws FactoryException, MismatchedDimensionException, TransformException
+  {
+    final String shapeSRS = m_data.getSrs();
+    final int shapeSRID = JTSAdapter.toSrid( shapeSRS );
+    final int dbSRID = m_data.getDbSRID();
+
+    final GeometryFactory factory = new GeometryFactory( new PrecisionModel(), shapeSRID );
+    final SHP2JTS shp2jts = new SHP2JTS( factory );
+    final JTSTransformer transformer = new JTSTransformer( shapeSRID, dbSRID );
+
+    final Geometry geometry = shp2jts.transform( shape );
+    if( !(geometry instanceof Point) )
+      return null;
+
+    final Coordinate transformed = transformer.transform( ((Point)geometry).getCoordinate() );
+    final Point transformedPoint = factory.createPoint( transformed );
+    transformedPoint.setSRID( dbSRID );
+
+    return transformedPoint;
   }
 
   private Object findValue( final ImportAttributeInfo< ? > info, final IDBFField[] fields, final Object[] data ) throws CoreException

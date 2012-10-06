@@ -227,7 +227,7 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
-      new StatusDialog( getShell(), status, Messages.getString( "ImportWaterlevelsPreviewPage.8" ) ).open(); //$NON-NLS-1$
+      StatusDialog.open( getShell(), status, Messages.getString( "ImportWaterlevelsPreviewPage.8" ) ); //$NON-NLS-1$
 
     return operation.getWaterBodies();
   }
