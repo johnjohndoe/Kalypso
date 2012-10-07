@@ -1097,9 +1097,10 @@
             lightweight="true"
             state="true">
          <enablement>
-            <objectClass
-                  name="org.kalypso.model.wspm.core.gml.IProfileFeature">
-            </objectClass>
+            <or>
+              <objectClass name="org.kalypso.model.wspm.core.gml.IProfileFeature"/>
+              <objectClass name="org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment"/>
+            </or>
          </enablement>
       </decorator>
    </extension>
