@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
@@ -67,10 +68,15 @@ public class WspmGmlDecorator implements ILightweightLabelDecorator
   {
     if( element instanceof IProfileFeature )
       decorateProfile( (IProfileFeature)element, decoration );
+    else if( element instanceof TuhhReachProfileSegment )
+      decorateProfile( ((TuhhReachProfileSegment)element).getProfileMember(), decoration );
   }
 
   private void decorateProfile( final IProfileFeature profileFeature, final IDecoration decoration )
   {
+    if( profileFeature == null )
+      return;
+
     final IProfile profile = profileFeature.getProfile();
 
     final IProfileBuilding[] buildings = profile.getProfileObjects( IProfileBuilding.class );
