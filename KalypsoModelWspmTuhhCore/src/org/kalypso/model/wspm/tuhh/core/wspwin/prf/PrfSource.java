@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.Building
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr.WeirType;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_GERINNE_ART;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_KENNUNG;
@@ -542,13 +543,16 @@ public class PrfSource implements IProfileSource
 
     final BuildingWehr wehr = new BuildingWehr( profile );
     final String secLine = dbw.getSecondLine();
-    final String wehrart = getWehrart( secLine );
+
+    final WeirType wehrart = getWehrart( secLine );
+    wehr.setWehrart( wehrart );
+
     final double[] wt = getWehrParameter( secLine );
-    if( wehrart != null )
-      wehr.setWehrart( wehrart );
 
     wehr.setFormbeiwert( wt == null ? 0.0 : wt[0] );
+
     profile.addProfileObjects( new IProfileObject[] { wehr } );
+
     readWehrtrenner( wt, profile, pr );
 
     insertBuildingValues( profile, dbw, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
@@ -573,24 +577,28 @@ public class PrfSource implements IProfileSource
     return wp;
   }
 
-  private final String getWehrart( final String secLine )
+  private final WeirType getWehrart( final String secLine )
   {
     final StringTokenizer sT = new StringTokenizer( secLine, " " ); //$NON-NLS-1$
     final int paramCount = sT.countTokens() - 1;
     if( paramCount < 0 )
       return null;
+
     final String wehrart = sT.nextToken().toUpperCase();
 
     if( wehrart.startsWith( "RUND" ) ) //$NON-NLS-1$
-      return IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG;
-    if( wehrart.startsWith( "BREI" ) ) //$NON-NLS-1$
-      return IWspmTuhhConstants.WEHR_TYP_BREITKRONIG;
-    if( wehrart.startsWith( "SCHA" ) ) //$NON-NLS-1$
-      return IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG;
-    if( wehrart.startsWith( "BEIW" ) ) //$NON-NLS-1$
-      return IWspmTuhhConstants.WEHR_TYP_BEIWERT;
+      return WeirType.rundkronig;
 
-    return null;
+    if( wehrart.startsWith( "BREI" ) ) //$NON-NLS-1$
+      return WeirType.breitkronig;
+
+    if( wehrart.startsWith( "SCHA" ) ) //$NON-NLS-1$
+      return WeirType.scharfkantig;
+
+    if( wehrart.startsWith( "BEIW" ) ) //$NON-NLS-1$
+      return WeirType.beiwert;
+
+    return BuildingWehr.DEFAULT_WEIRTYPE;
   }
 
   private void readBordVoll( final IProfile p, final PrfReader pr )
@@ -679,7 +687,6 @@ public class PrfSource implements IProfileSource
       if( buildingValue == null )
         return existingPoint;
     }
-
 
     // If no point with this width exist or if it already has the buildingProperty, create a new one:
     return Profiles.addOrFindPoint( profile, distance );

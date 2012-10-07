@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -51,6 +52,28 @@ import org.kalypso.observation.result.IComponent;
  */
 public class BuildingWehr extends AbstractProfileObject implements IProfileBuilding
 {
+  public enum WeirType
+  {
+    // TODO: move strings from WeirLabelProvider into this enum
+    beiwert( "Beiwert" ), //$NON-NLS-1$
+    breitkronig( "Breitkronig" ), //$NON-NLS-1$
+    rundkronig( "Rundkronig" ), //$NON-NLS-1$
+    scharfkantig( "Scharfkantig" ); //$NON-NLS-1$
+
+    private final String m_label;
+
+    private WeirType( final String label )
+    {
+      m_label = label;
+    }
+
+    @Override
+    public String toString( )
+    {
+      return m_label;
+    }
+  }
+
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_WEHR;
 
   private static final String PROPERTY_WEHRART = "wehrart"; //$NON-NLS-1$
@@ -60,6 +83,8 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
   public static final String KEY_WEHRART = "WEHR_WEHRART"; //$NON-NLS-1$
 
   public static final String KEY_FORMBEIWERT = "WEHR_FORMBEIWERT"; //$NON-NLS-1$
+
+  public static final WeirType DEFAULT_WEIRTYPE = WeirType.breitkronig;
 
   public BuildingWehr( final IProfile profile )
   {
@@ -92,9 +117,18 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
     return property;
   }
 
-  public String getWehrart( )
+  public WeirType getWehrart( )
   {
-    return getValue( KEY_WEHRART, null );
+    final String value = getValue( KEY_WEHRART, null );
+    if( StringUtils.isBlank( value ) )
+      return DEFAULT_WEIRTYPE;
+
+    return WeirType.valueOf( value );
+  }
+
+  public void setWehrart( final WeirType wehrart )
+  {
+    setValue( KEY_WEHRART, wehrart.name() );
   }
 
   public Double getFormbeiwert( )
@@ -102,10 +136,6 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
     return getDoubleValue( KEY_FORMBEIWERT, null );
   }
 
-  public void setWehrart( final String wehrart )
-  {
-    setValue( KEY_WEHRART, wehrart );
-  }
 
   public void setFormbeiwert( final Double formbeiwert )
   {

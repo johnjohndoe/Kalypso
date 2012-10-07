@@ -37,6 +37,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.Building
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr.WeirType;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
@@ -188,7 +189,7 @@ public class ProfileObjectsPrfWriter
 
     try
     {
-      final String wehrart = wehrBuilding.getWehrart();
+      final WeirType wehrart = wehrBuilding.getWehrart();
 
       final StringBuffer secLine = new StringBuffer( toWeirTypeKey( wehrart ) );
       secLine.append( String.format( Locale.US, " %12.4f", wehrBuilding.getFormbeiwert() ) ); //$NON-NLS-1$
@@ -206,18 +207,24 @@ public class ProfileObjectsPrfWriter
     m_dbWriter.addDataBlock( dbw );
   }
 
-  private String toWeirTypeKey( final String weirKey )
+  private String toWeirTypeKey( final WeirType wehrart )
   {
-    if( IWspmTuhhConstants.WEHR_TYP_BEIWERT.equals( weirKey ) )
-      return "BEIWERT"; //$NON-NLS-1$
-    else if( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG.equals( weirKey ) )
-      return "RUNDKRONIG"; //$NON-NLS-1$
-    else if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( weirKey ) )
-      return "SCHARFKANTIG"; //$NON-NLS-1$
-    else if( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG.equals( weirKey ) )
-      return "BREITKRONIG"; //$NON-NLS-1$
-    else
-      return weirKey.toString();
+    switch( wehrart )
+    {
+      case beiwert:
+        return "BEIWERT"; //$NON-NLS-1$
+
+      case breitkronig:
+        return "BREITKRONIG"; //$NON-NLS-1$
+
+      case rundkronig:
+        return "RUNDKRONIG"; //$NON-NLS-1$
+
+      case scharfkantig:
+        return "SCHARFKANTIG"; //$NON-NLS-1$
+    }
+
+    throw new IllegalStateException();
   }
 
   private void writeCulvert( final ICulvertBuilding culvert )

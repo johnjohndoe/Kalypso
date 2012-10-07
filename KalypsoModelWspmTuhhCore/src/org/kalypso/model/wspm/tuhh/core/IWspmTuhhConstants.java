@@ -72,10 +72,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   String POINT_PROPERTY = IWspmConstants.POINT_PROPERTY;
 
-  /* Wehrtypen */
-  /* MUST keep this -wrong- id string in order to be backwards-compatible! */
-  String WEHR_TYP = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_"; //$NON-NLS-1$
-
   /*----------------------*/
 
   /* POINT_PROPERTY */
@@ -119,16 +115,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
   String PROFIL_PROPERTY_VERZWEIGUNGSKENNUNG = PROFIL_PROPERTY + "VERZWEIGUNGSKENNUNG"; //$NON-NLS-1$
 
   String PROFIL_PROPERTY_WASSERSPIEGEL = PROFIL_PROPERTY + "WASSERSPIEGEL"; //$NON-NLS-1$
-
-  /* Wehrtypen */
-
-  String WEHR_TYP_BEIWERT = WEHR_TYP + "BEIWERT"; //$NON-NLS-1$
-
-  String WEHR_TYP_BREITKRONIG = WEHR_TYP + "BREITKRONIG"; //$NON-NLS-1$
-
-  String WEHR_TYP_RUNDKRONIG = WEHR_TYP + "RUNDKRONIG"; //$NON-NLS-1$
-
-  String WEHR_TYP_SCHARFKANTIG = WEHR_TYP + "SCHARFKANTIG"; //$NON-NLS-1$
 
   /* Layer */
   String PROFILE_LAYER = "org.kalypso.model.wspm.tuhh.ui.chart.LAYER_"; //$NON-NLS-1$
