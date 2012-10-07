@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr.WeirType;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -121,7 +122,7 @@ public class WeirPanel extends AbstractProfilView
 
     m_wehrart.setContentProvider( new ArrayContentProvider() );
     m_wehrart.setLabelProvider( m_labelProvider );
-    m_wehrart.setInput( m_labelProvider.getTypes() );
+    m_wehrart.setInput( WeirType.values() );
     m_wehrart.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
@@ -135,11 +136,11 @@ public class WeirPanel extends AbstractProfilView
         if( selection.isEmpty() )
           return;
 
-        final String id = selection.getFirstElement().toString();
-        if( id.equals( building.getWehrart() ) )
+        final WeirType weirType = (WeirType)selection.getFirstElement();
+        if( weirType == building.getWehrart() )
           return;
 
-        building.setWehrart( id );
+        building.setWehrart( weirType );
       }
     } );
 
@@ -170,9 +171,8 @@ public class WeirPanel extends AbstractProfilView
     if( building == null )
       return;
 
-    final String id = building.getWehrart();
-    if( id != null )
-      m_wehrart.setSelection( new StructuredSelection( id ) );
+    final WeirType weirType = building.getWehrart();
+    m_wehrart.setSelection( new StructuredSelection( weirType ) );
 
     m_wehrStart.refresh();
     m_wehrEnd.refresh();

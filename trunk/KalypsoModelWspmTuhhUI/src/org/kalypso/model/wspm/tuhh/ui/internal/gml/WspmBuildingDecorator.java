@@ -40,7 +40,7 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 /**
  * @author Gernot Belger
  */
-public class WspmGmlDecorator implements ILightweightLabelDecorator
+public class WspmBuildingDecorator implements ILightweightLabelDecorator
 {
   @Override
   public void dispose( )

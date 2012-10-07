@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr.WeirType;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
@@ -90,7 +91,7 @@ public class ParameterLine
 
     m_devider = devider;
     final BuildingWehr weir = WspmSohlpunkte.getBuilding( m_profile, BuildingWehr.class );
-    final String weirType = weir.getWehrart();
+    final WeirType weirType = weir.getWehrart();
     m_label = toolkit.createLabel( m_composite, m_labelProvider.getDescription( weirType ) );
 
     m_valueText = toolkit.createText( m_composite, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
@@ -140,7 +141,7 @@ public class ParameterLine
   public final void refresh( )
   {
     final BuildingWehr weir = WspmSohlpunkte.getBuilding( m_profile, BuildingWehr.class );
-    final String weirType = weir.getWehrart();
+    final WeirType weirType = weir.getWehrart();
     m_label.setText( m_labelProvider.getDescription( weirType ) );
   }
 

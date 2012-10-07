@@ -1091,9 +1091,9 @@
    <extension
          point="org.eclipse.ui.decorators">
       <decorator
-            class="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmGmlDecorator"
-            id="KalypsoModelWspmTuhhUI.decorator1"
-            label="WSPM Decorator"
+            class="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmBuildingDecorator"
+            id="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmBuildingDecorator"
+            label="Bulding icons for WSPM profiles"
             lightweight="true"
             state="true">
          <enablement>
@@ -1102,6 +1102,18 @@
               <objectClass name="org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment"/>
             </or>
          </enablement>
+         <description>Shows icons for building type for WSPM profiles.</description>
+      </decorator>
+      <decorator
+            class="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmReachNamesDecorator"
+            id="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmReachNamesDecorator"
+            label="Strand names for WSPM profile"
+            lightweight="true"
+            state="true">
+         <enablement>
+            <objectClass name="org.kalypso.model.wspm.core.gml.IProfileFeature"/>
+         </enablement>
+         <description>Shows names of strands that use a WSPM profile in paranthesis behind the profile name.</description>
       </decorator>
    </extension>
 
