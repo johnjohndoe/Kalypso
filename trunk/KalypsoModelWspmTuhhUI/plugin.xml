@@ -1088,6 +1088,21 @@
          -->
       </wizardSelection>
    </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            class="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmGmlDecorator"
+            id="KalypsoModelWspmTuhhUI.decorator1"
+            label="WSPM Decorator"
+            lightweight="true"
+            state="true">
+         <enablement>
+            <objectClass
+                  name="org.kalypso.model.wspm.core.gml.IProfileFeature">
+            </objectClass>
+         </enablement>
+      </decorator>
+   </extension>
 
 
 </plugin>
