@@ -71,8 +71,6 @@ public interface EventConstants
 
   enum WL_TYPE
   {
-    // TODO will it work? naming the enumeration element '1D' didn't work
-    // translation?!?
     WL_1D( Messages.getString( "EventConstants.2" ) ), //$NON-NLS-1$
     WL_2D( Messages.getString( "EventConstants.3" ) ); //$NON-NLS-1$
 
@@ -88,7 +86,6 @@ public interface EventConstants
     {
       return m_label;
     }
-
   }
 
   // FIXME

@@ -22,25 +22,33 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.eclipse.core.runtime.IStatus;
 import org.hibernate.Session;
 import org.hibernatespatial.mgeom.MCoordinate;
 import org.hibernatespatial.mgeom.MGeomUtils;
 import org.hibernatespatial.mgeom.MGeometryFactory;
 import org.hibernatespatial.mgeom.MLineString;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
+import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
+import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
@@ -51,6 +59,8 @@ import com.vividsolutions.jts.linearref.LengthIndexedLine;
  */
 public class SaveWaterlevel2dOperation implements IPdbOperation
 {
+  private final IStatusCollector m_log = new StatusCollector( WspmPdbUiPlugin.PLUGIN_ID );
+
   private final Event m_event;
 
   private final String m_username;
@@ -70,12 +80,23 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
     return "Save waterlevel 2d";
   }
 
-  @Override
-  public void execute( final Session session )
+  IStatus getStatus( )
   {
+    return m_log.asMultiStatusOrOK( "Warnings during waterlevel conversion" );
+  }
+
+  @Override
+  public void execute( final Session session ) throws PdbConnectException
+  {
+    /* find the 'W' part type */
+    final CrossSectionPartTypes partTypes = new CrossSectionPartTypes( session );
+    final CrossSectionPartType typeW = partTypes.findPartType( GafKind.W.toString() );
+    if( typeW == null )
+      throw new PdbConnectException( String.format( "The database does not contain the %s part type.", GafKind.W ) );
+
     /* convert single waterlevels to crosssection parts */
     final Set<WaterlevelFixation> waterlevelFixations = m_event.getWaterlevelFixations();
-    final CrossSectionPart[] waterlevelParts = createParts( waterlevelFixations );
+    final CrossSectionPart[] waterlevelParts = createParts( waterlevelFixations, typeW );
 
     /* not saved as fixation at all */
     waterlevelFixations.clear();
@@ -99,7 +120,7 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
     }
   }
 
-  private CrossSectionPart[] createParts( final Set<WaterlevelFixation> waterlevelFixations )
+  private CrossSectionPart[] createParts( final Set<WaterlevelFixation> waterlevelFixations, final CrossSectionPartType typeW ) throws PdbConnectException
   {
     final Collection<CrossSectionPart> parts = new ArrayList<>();
 
@@ -115,7 +136,13 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
       /* find cross section(s) for station */
       final Collection<CrossSection> sections = sectionsByStation.get( station );
       if( sections == null )
+      {
+        final IStatus status = m_log.add( IStatus.WARNING, "No cross section for with station %s", null, station );
+        // FIXME: remove
+        WspmPdbUiPlugin.getDefault().getLog().log( status );
+
         continue;
+      }
 
       // REMARK: assign waterlevel to all sections with same station, because if 2 sections have the same station, we do not know what to do...
       for( final CrossSection section : sections )
@@ -125,8 +152,12 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
         if( profileLineM != null )
         {
           /* create part */
-          final CrossSectionPart part = createPart( section, profileLineM, waterlevels );
+          final CrossSectionPart part = createPart( section, profileLineM, waterlevels, typeW );
           parts.add( part );
+        }
+        else
+        {
+          m_log.add( IStatus.WARNING, "Cross section %s has no profile line. Creation of 2d-waterlevel not possible.", null, station );
         }
       }
     }
@@ -134,11 +165,15 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
     return parts.toArray( new CrossSectionPart[parts.size()] );
   }
 
-  private Map<BigDecimal, Collection<CrossSection>> hashSectionsByStation( )
+  private Map<BigDecimal, Collection<CrossSection>> hashSectionsByStation( ) throws PdbConnectException
   {
-    final Map<BigDecimal, Collection<CrossSection>> hash = new HashMap<>();
+    final Map<BigDecimal, Collection<CrossSection>> hash = new TreeMap<>();
 
-    final Set<CrossSection> sections = m_event.getState().getCrossSections();
+    final State state = m_event.getState();
+    if( state == null )
+      throw new PdbConnectException( "State must be set for 2D waterlevel." ); //$NON-NLS-1$
+
+    final Set<CrossSection> sections = state.getCrossSections();
 
     for( final CrossSection section : sections )
     {
@@ -155,7 +190,7 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
 
   private Map<BigDecimal, Collection<WaterlevelFixation>> hashWaterlevelsByStation( final Set<WaterlevelFixation> waterlevels )
   {
-    final Map<BigDecimal, Collection<WaterlevelFixation>> hash = new HashMap<>();
+    final Map<BigDecimal, Collection<WaterlevelFixation>> hash = new TreeMap<>();
 
     for( final WaterlevelFixation waterlevel : waterlevels )
     {
@@ -170,13 +205,14 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
     return hash;
   }
 
-  private CrossSectionPart createPart( final CrossSection section, final MLineString mProfileLine, final Collection<WaterlevelFixation> waterlevels )
+  private CrossSectionPart createPart( final CrossSection section, final MLineString mProfileLine, final Collection<WaterlevelFixation> waterlevels, final CrossSectionPartType typeW )
   {
     final CrossSectionPart part = new CrossSectionPart( null, section, m_event.getName() );
 
     // TODO: discharge would be nice, if present;maybe as metadata?
     // part.setDescription( filename? );
     part.setEvent( m_event );
+    part.setCrossSectionPartType( typeW );
 
     final Collection<Coordinate> coordinates = new ArrayList<>( waterlevels.size() );
     /* convert to points */
@@ -204,29 +240,52 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
   private Point createPoint( final MLineString mProfileLine, final CrossSectionPart part, final long num, final WaterlevelFixation waterlevel )
   {
     final Coordinate waterlevelLocation = waterlevel.getLocation().getCoordinate();
+    final com.vividsolutions.jts.geom.Point waterlevelPoint = m_factory.createPoint( waterlevelLocation );
+
     final String description = waterlevel.getDescription();
 
     final Point point = new Point( null, part, Long.toString( num ), num );
 
     point.setDescription( description );
+
     /* keep original location of waterlevel, not the projection on the section, which can be computed by width */
-    point.setLocation( m_factory.createPoint( waterlevelLocation ) );
+    point.setLocation( waterlevelPoint );
 
     point.setCode( IGafConstants.CODE_WS );
     // point.setHyk( );
 
     point.setHeight( waterlevel.getWaterlevel() );
 
+    final double distance = mProfileLine.distance( waterlevelPoint );
+    final double maxDistance = 1.0; // [m]
+    if( distance > maxDistance )
+    {
+      final BigDecimal station = waterlevel.getStation();
+      final IStatus status = m_log.add( IStatus.WARNING, "Waterlevel with station %s: big distance to corresponding profile line: %d [m]", null, station, distance );
+      // FIXME: remove
+      WspmPdbUiPlugin.getDefault().getLog().log( status );
+    }
+
+    final BigDecimal width = calculateWidth( mProfileLine, waterlevelLocation );
+    point.setWidth( width );
+
+    return point;
+  }
+
+  private BigDecimal calculateWidth( final MLineString mProfileLine, final Coordinate waterlevelLocation )
+  {
     /* calculate width and location on profile line */
     final LengthIndexedLine index = new LengthIndexedLine( mProfileLine );
     final double projectedIndex = index.project( waterlevelLocation );
     final MCoordinate projectedLocationWithM = MGeomUtils.extractPoint( mProfileLine, projectedIndex );
 
-    final BigDecimal mWidth = Double.isNaN( projectedLocationWithM.m ) ? null : new BigDecimal( projectedLocationWithM.m );
+    if( Double.isNaN( projectedLocationWithM.m ) )
+      return null;
 
-    point.setWidth( mWidth );
+    final BigDecimal mWidth = new BigDecimal( projectedLocationWithM.m );
 
-    return point;
+    final int scale = PdbMappingUtils.findScale( Point.class, Point.PROPERTY_WIDTH );
+    return mWidth.setScale( scale, BigDecimal.ROUND_HALF_UP );
   }
 
   private MLineString buildProfileLine( final CrossSection section )
@@ -251,12 +310,12 @@ public class SaveWaterlevel2dOperation implements IPdbOperation
     /* sort points by consecutive number */
     final Map<Long, Point> sortedPoints = new TreeMap<>();
 
-    if( sortedPoints.size() < 2 )
-      return null;
-
     final Set<Point> points = ppart.getPoints();
     for( final Point point : points )
       sortedPoints.put( point.getConsecutiveNum(), point );
+
+    if( sortedPoints.size() < 2 )
+      return null;
 
     /* rebuild line as line M */
     final Collection<MCoordinate> coords = new ArrayList<>( sortedPoints.size() );

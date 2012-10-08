@@ -56,6 +56,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
+import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
@@ -89,9 +90,6 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
   private final Map<WaterlevelFixation, IStatus> m_waterLevelStatus;
 
-  /**
-   * dbSRID
-   */
   public ReadWaterLevelsOperation( final ImportWaterLevelsData data, final Map<WaterlevelFixation, IStatus> waterLevelStatus )
   {
     m_data = data;
@@ -187,7 +185,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
       // REMARK: Oracle needs the third ordinate!
       if( WaterlevelFixation.PROPERTY_WATERLEVEL.equals( property ) )
       {
-        final BigDecimal height = (BigDecimal) value;
+        final BigDecimal height = (BigDecimal)value;
         if( height != null )
           point.getCoordinate().z = height.doubleValue();
       }
@@ -231,20 +229,26 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     final int fieldIndex = findFieldIndex( field.getName(), fields );
     final Object value = data[fieldIndex];
 
-    if( WaterlevelFixation.PROPERTY_STATION.equals( info.getProperty() ) )
-      return parseDecimal( value, field.getName(), 4 );
-    if( WaterlevelFixation.PROPERTY_WATERLEVEL.equals( info.getProperty() ) )
-      return parseDecimal( value, field.getName(), 2 );
-    if( WaterlevelFixation.PROPERTY_DISCHARGE.equals( info.getProperty() ) )
-      return parseDecimal( value, field.getName(), 3 );
+    switch( info.getProperty() )
+    {
+      case WaterlevelFixation.PROPERTY_STATION:
+        return parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_STATION );
 
-    if( WaterlevelFixation.PROPERTY_MEASURMENT_DATE.equals( info.getProperty() ) )
-      return parseDate( value, field.getName() );
+      case WaterlevelFixation.PROPERTY_WATERLEVEL:
+        return parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_WATERLEVEL );
 
-    if( WaterlevelFixation.PROPERTY_DESCRIPTION.equals( info.getProperty() ) )
-      return value == null ? null : value.toString();
+      case WaterlevelFixation.PROPERTY_DISCHARGE:
+        return parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_DISCHARGE );
 
-    return value;
+      case WaterlevelFixation.PROPERTY_MEASURMENT_DATE:
+        return parseDate( value, field.getName() );
+
+      case WaterlevelFixation.PROPERTY_DESCRIPTION:
+        return value == null ? null : value.toString();
+
+      default:
+        return value;
+    }
   }
 
   private Date parseDate( final Object value, final String label ) throws CoreException
@@ -253,20 +257,22 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
       return null;
 
     if( value instanceof Date )
-      return (Date) value;
+      return (Date)value;
 
     final String msg = String.format( Messages.getString( "ReadWaterLevelsOperation.4" ), label, value ); //$NON-NLS-1$
     final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
     throw new CoreException( status );
   }
 
-  private BigDecimal parseDecimal( final Object value, final String label, final int scale ) throws CoreException
+  private BigDecimal parseDecimal( final Object value, final String label, final String precisionProperty ) throws CoreException
   {
+    final int scale = PdbMappingUtils.findScale( WaterlevelFixation.class, precisionProperty );
+
     if( value == null )
       return null;
 
     if( value instanceof Number )
-      return new BigDecimal( ((Number) value).doubleValue() ).setScale( scale, BigDecimal.ROUND_HALF_UP );
+      return new BigDecimal( ((Number)value).doubleValue() ).setScale( scale, BigDecimal.ROUND_HALF_UP );
 
     final String text = value.toString();
     try

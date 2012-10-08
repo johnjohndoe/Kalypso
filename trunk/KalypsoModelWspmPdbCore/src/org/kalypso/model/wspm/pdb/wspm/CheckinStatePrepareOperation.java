@@ -35,11 +35,10 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.constants.StateConstants.ZeroState;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.db.utils.StateUtils;
 import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
@@ -145,7 +144,7 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
     final ICoefficients coefficients = m_data.getCoefficients();
     final URI documentBase = m_data.getDocumentBase();
 
-    final CrossSectionPartType[] partTypes = GetPdbList.getArray( session, CrossSectionPartType.class );
+    final CrossSectionPartTypes partTypes = new CrossSectionPartTypes( session );
 
     return new CheckinStateOperationData( partTypes, gafCodes, coefficients, waterBody, state, reach, profiles, dbSrs, documentBase, username );
   }
