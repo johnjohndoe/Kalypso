@@ -1109,7 +1109,7 @@
             id="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmReachNamesDecorator"
             label="Strand names for WSPM profile"
             lightweight="true"
-            state="true">
+            state="false">
          <enablement>
             <objectClass name="org.kalypso.model.wspm.core.gml.IProfileFeature"/>
          </enablement>
