@@ -208,9 +208,6 @@ public class Node extends AbstractNaModelElement implements INode
     setProperty( PROPERTY_ZUFLUSS_ZR, zuflussLink );
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.binding.model.INode#getPoint()
-   */
   @Override
   public GM_Point getPosition( )
   {
@@ -221,9 +218,6 @@ public class Node extends AbstractNaModelElement implements INode
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.binding.model.INode#getJtsPoint()
-   */
   @Override
   public Point getJtsPosition( ) throws GM_Exception
   {
@@ -234,9 +228,6 @@ public class Node extends AbstractNaModelElement implements INode
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.binding.model.nodes.INode#getRiverCode()
-   */
   @Override
   public String getRiverCode( )
   {
@@ -247,9 +238,6 @@ public class Node extends AbstractNaModelElement implements INode
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.binding.model.nodes.INode#getRiverKm()
-   */
   @Override
   public Double getRiverKm( )
   {
