@@ -45,8 +45,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.hibernate.Session;
@@ -379,7 +381,71 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
   private void repair( final List<IProfileObject> clonedProfileObjects )
   {
-    // TODO
+    /* The used ids. */
+    final Set<String> usedIds = findUsedIds( clonedProfileObjects );
+
+    /* Iterate over the array, because we may change the list. */
+    final IProfileObject[] clonedProfileObjectsArray = clonedProfileObjects.toArray( new IProfileObject[] {} );
+    for( final IProfileObject clonedProfileObject : clonedProfileObjectsArray )
+    {
+      /* Repair bridges. */
+      if( clonedProfileObject instanceof BuildingBruecke )
+      {
+        /* Cast. */
+        final BuildingBruecke bridge = (BuildingBruecke)clonedProfileObject;
+
+        /* If a ok profile object was found, both, bridge and ok profile object have an id. */
+        final IProfileObject okProfileObject = BuildingBruecke.findOkProfileObject( bridge, clonedProfileObjectsArray );
+        if( okProfileObject != null )
+          continue;
+
+        /* If no ok profile object was found, we create one. */
+        /* We also create the id. */
+        final String bridgeId = findFreeId( usedIds );
+        bridge.setBrueckeId( bridgeId );
+
+        final GenericProfileHorizon genericProfileHorizon = new GenericProfileHorizon();
+        genericProfileHorizon.setValue( CrossSectionConverter.PART_TYPE, GafKind.OK.toString() );
+        genericProfileHorizon.setValue( BuildingBruecke.KEY_BRUECKE_ID, bridgeId );
+      }
+    }
+  }
+
+  private Set<String> findUsedIds( final List<IProfileObject> clonedProfileObjects )
+  {
+    final Set<String> usedIds = new HashSet<>();
+
+    for( final IProfileObject clonedProfileObject : clonedProfileObjects )
+    {
+      if( clonedProfileObject instanceof BuildingBruecke )
+      {
+        final String brueckeId = ((BuildingBruecke)clonedProfileObject).getBrueckeId();
+        if( !StringUtils.isEmpty( brueckeId ) )
+          usedIds.add( brueckeId );
+      }
+
+      if( clonedProfileObject instanceof GenericProfileHorizon )
+      {
+        if( GafKind.OK.toString().equals( clonedProfileObject.getValue( CrossSectionConverter.PART_TYPE, null ) ) )
+        {
+          final String brueckeId = ((GenericProfileHorizon)clonedProfileObject).getValue( BuildingBruecke.KEY_BRUECKE_ID, null );
+          if( !StringUtils.isEmpty( brueckeId ) )
+            usedIds.add( brueckeId );
+        }
+      }
+    }
+
+    return usedIds;
+  }
+
+  private String findFreeId( final Set<String> usedIds )
+  {
+    int cnt = 1;
+    String freeId = String.format( Locale.PRC, "bridge_%d", cnt++ );
+    while( usedIds.contains( freeId ) )
+      freeId = String.format( Locale.PRC, "bridge_%d", cnt++ );
+
+    return freeId;
   }
 
   private void updateFromComponents( final List<IProfileObject> clonedProfileObjects, final IProfile profile )

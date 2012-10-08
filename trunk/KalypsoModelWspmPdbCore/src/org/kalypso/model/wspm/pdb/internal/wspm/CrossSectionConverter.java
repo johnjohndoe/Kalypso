@@ -393,7 +393,7 @@ public class CrossSectionConverter implements IProfileTransaction
       final BuildingBruecke bridge = (BuildingBruecke)profileObject;
       insertRecordsAs( bridge, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
 
-      final IProfileObject ok = bridge.findOK( m_profile );
+      final IProfileObject ok = bridge.findOkProfileObject( m_profile );
       if( ok != null )
         insertRecordsAs( ok, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
     }

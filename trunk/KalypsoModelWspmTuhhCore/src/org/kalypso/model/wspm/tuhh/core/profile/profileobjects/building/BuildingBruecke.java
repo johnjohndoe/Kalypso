@@ -179,13 +179,17 @@ public class BuildingBruecke extends AbstractProfileObject implements IProfileBu
       profile.addPointProperty( ok, null );
   }
 
-  public IProfileObject findOK( final IProfile profile )
+  public IProfileObject findOkProfileObject( final IProfile profile )
   {
-    final String brueckeId = getBrueckeId();
+    return findOkProfileObject( this, profile.getProfileObjects() );
+  }
+
+  public static IProfileObject findOkProfileObject( final BuildingBruecke bruecke, final IProfileObject[] profileObjects )
+  {
+    final String brueckeId = bruecke.getBrueckeId();
     if( brueckeId == null || brueckeId.length() == 0 )
       return null;
 
-    final IProfileObject[] profileObjects = profile.getProfileObjects();
     for( final IProfileObject profileObject : profileObjects )
     {
       if( !(profileObject instanceof GenericProfileHorizon) )
