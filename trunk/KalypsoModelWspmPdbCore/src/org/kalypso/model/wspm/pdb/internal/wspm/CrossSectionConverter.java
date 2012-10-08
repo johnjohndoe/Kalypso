@@ -393,16 +393,7 @@ public class CrossSectionConverter implements IProfileTransaction
       final BuildingBruecke bridge = (BuildingBruecke)profileObject;
       insertRecordsAs( bridge, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
 
-      IProfileObject ok = bridge.findOK( m_profile );
-      if( ok == null )
-      {
-        /* If no ok was found, check if the bridge has an id. */
-        /* If not search for an ok without id (via "part_type") and use this one. */
-        final String brueckeId = bridge.getBrueckeId();
-        if( brueckeId == null || brueckeId.length() == 0 )
-          ok = findOkProfileObject();
-      }
-
+      final IProfileObject ok = bridge.findOK( m_profile );
       if( ok != null )
         insertRecordsAs( ok, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
     }
@@ -447,26 +438,6 @@ public class CrossSectionConverter implements IProfileTransaction
     }
   }
 
-  private IProfileObject findOkProfileObject( )
-  {
-    final IProfileObject[] profileObjects = m_profile.getProfileObjects();
-    for( final IProfileObject profileObject : profileObjects )
-    {
-      if( !(profileObject instanceof GenericProfileHorizon) )
-        continue;
-
-      final String value = profileObject.getValue( PART_TYPE, null );
-      if( GafKind.OK.toString().equals( value ) )
-      {
-        final String brueckeId = profileObject.getValue( BuildingBruecke.KEY_BRUECKE_ID, null );
-        if( brueckeId == null || brueckeId.length() == 0 )
-          return profileObject;
-      }
-    }
-
-    return null;
-  }
-
   private void guessMetadata( final CrossSectionPart part, final IProfileObject profileObject )
   {
     /* Set generic metadata. */
@@ -484,8 +455,8 @@ public class CrossSectionConverter implements IProfileTransaction
     {
       final BuildingKreis kreis = (BuildingKreis)profileObject;
 
-      final IProfileObjectRecord ukRecord = findPoint( profileObject, "KRUK" );
-      final IProfileObjectRecord fsRecord = findPoint( profileObject, "KRFS" );
+      final IProfileObjectRecord ukRecord = findPoint( profileObject, IGafConstants.CODE_KRUK );
+      final IProfileObjectRecord fsRecord = findPoint( profileObject, IGafConstants.CODE_KRFS );
       if( ukRecord == null || fsRecord == null )
         return;
 
@@ -505,8 +476,8 @@ public class CrossSectionConverter implements IProfileTransaction
     {
       final BuildingEi ei = (BuildingEi)profileObject;
 
-      final IProfileObjectRecord ukRecord = findPoint( profileObject, "EIUK" );
-      final IProfileObjectRecord fsRecord = findPoint( profileObject, "EIFS" );
+      final IProfileObjectRecord ukRecord = findPoint( profileObject, IGafConstants.CODE_EIUK );
+      final IProfileObjectRecord fsRecord = findPoint( profileObject, IGafConstants.CODE_EIFS );
       if( ukRecord == null || fsRecord == null )
         return;
 
