@@ -46,12 +46,13 @@ import java.util.Collection;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -67,7 +68,6 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
@@ -79,7 +79,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventPage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ChooseWaterPage;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsData.ImportMethod;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
@@ -162,9 +161,6 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     waterPage.setDescription( Messages.getString( "ImportWaterLevelsWizard.3" ) ); //$NON-NLS-1$
     addPage( waterPage );
 
-    /* Options page */
-    addPage( new ImportWaterlevelsOptionsPage( "options", m_data ) ); //$NON-NLS-1$
-
     /* Edit event properties */
     addPage( new EditEventPage( "eventPage", m_data, true ) ); //$NON-NLS-1$
   }
@@ -243,10 +239,14 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
     final Event event = m_data.getEvent();
 
-    final IStatus status = runOperation( connection, event );
-    if( status.matches( IStatus.CANCEL ) )
-      return false;
+    if( event.getState() == null )
+    {
+      final String message = "Das Ereignis ist keinem Zustand zugeordnet, 2D-Wasserspiegel werden nicht erzeugt. Trotzdem fortfahren?";
+      if( !MessageDialog.openConfirm( getShell(), getWindowTitle(), message ) )
+        return false;
+    }
 
+    final IStatus status = runOperation( connection, event );
     if( !status.isOK() )
       StatusDialog.open( getShell(), status, getWindowTitle() );
 
@@ -260,51 +260,40 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
   private IStatus runOperation( final IPdbConnection connection, final Event event )
   {
-    try
-    {
-      final IPdbOperation operation = createCheckinOperation( connection, event );
+    final SaveEventOperation operation = createCheckinOperation( connection, event );
 
-      final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
+    final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
 
-      // FIXME: maybe return status of operation
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
 
-      return RunnableContextHelper.execute( getContainer(), true, false, runnable );
-    }
-    catch( final CoreException e )
-    {
-      return e.getStatus();
-    }
+    final IStatus log = operation.getLog();
+
+    return createStatus( status, log );
   }
 
-  private IPdbOperation createCheckinOperation( final IPdbConnection connection, final Event event ) throws CoreException
+  private IStatus createStatus( final IStatus status1, final IStatus status2 )
+  {
+    if( !status1.isOK() && !status2.isOK() )
+      return new MultiStatus( WspmPdbUiPlugin.PLUGIN_ID, 0, new IStatus[] { status1, status2 }, "Several problems while importing waterlevel", null );
+
+    if( !status1.isOK() )
+      return status1;
+
+    if( !status2.isOK() )
+      return status1;
+
+    return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "Waterlevel was successfully uploaded" );
+  }
+
+  private SaveEventOperation createCheckinOperation( final IPdbConnection connection, final Event event )
   {
     final String username = connection.getSettings().getUsername();
 
-    final ImportMethod importMethod = m_data.getImportMethod();
-    switch( importMethod )
-    {
-      case waterlevel1d:
-        return new SaveEventOperation( event, username );
+    final PdbInfo info = connection.getInfo();
+    final int dbSRID = info.getSRID();
+    final MGeometryFactory geometryFactory = new MGeometryFactory( new PrecisionModel(), dbSRID );
 
-      case waterlevel2d:
-      {
-        if( event.getState() == null )
-        {
-          final String message = "Das Ereignis muss einem Zustand zugeordnet sein, wenn es als 2D-Wasserspiegel importiert werden soll. Bitte wählen Sie einen Zustand aus.";
-          final IStatus warning = new Status( IStatus.CANCEL, WspmPdbUiPlugin.PLUGIN_ID, message );
-          throw new CoreException( warning );
-        }
-
-        final PdbInfo info = connection.getInfo();
-        final int dbSRID = info.getSRID();
-        final MGeometryFactory geometryFactory = new MGeometryFactory( new PrecisionModel(), dbSRID );
-
-        return new SaveWaterlevel2dOperation( event, username, geometryFactory );
-      }
-    }
-
-    /* never reached */
-    throw new IllegalStateException();
+    return new SaveEventOperation( event, username, geometryFactory );
   }
 
   private WaterBody findPreferredWater( final IStructuredSelection selection )

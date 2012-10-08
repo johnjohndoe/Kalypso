@@ -64,28 +64,25 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinPartOperation;
-import org.kalypso.model.wspm.pdb.internal.wspm.CrossSectionConverter;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Gernot Belger
@@ -231,7 +228,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     section.setDescription( profil.getComment() );
 
     final String srsName = feature.getSrsName();
-    createParts( section, profil, srsName );
+    createParts( session, section, profil, srsName );
 
     saveSection( session, state, section );
 
@@ -270,21 +267,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     return station.movePointRight( 3 );
   }
 
-  protected LineString toLine( final GM_Curve curve ) throws PdbConnectException
-  {
-    try
-    {
-      final GM_Object transformedCurve = m_data.getTransformer().transform( curve );
-      return (LineString)JTSAdapter.export( transformedCurve );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new PdbConnectException( STR_FAILED_TO_CONVERT_GEOMETRY, e );
-    }
-  }
-
-  private void createParts( final CrossSection section, final IProfile profile, final String profilSRS ) throws PdbConnectException
+  private void createParts( final Session session, final CrossSection section, final IProfile profile, final String profilSRS ) throws PdbConnectException
   {
     final Set<CrossSectionPart> parts = new HashSet<>();
 
@@ -297,7 +280,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     }
 
     /* Extract extra parts. */
-    final CrossSectionPart[] additionalParts = createAdditionalParts( profile );
+    final CrossSectionPart[] additionalParts = createAdditionalParts( session, profile );
     for( final CrossSectionPart additionalPart : additionalParts )
       parts.add( additionalPart );
 
@@ -325,7 +308,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
   /**
    * This function creates a cross section part using the records of the profile.
-   * 
+   *
    * @param profile
    *          The profile.
    * @param profileSRS
@@ -346,7 +329,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     return part;
   }
 
-  private CrossSectionPart[] createAdditionalParts( final IProfile profile ) throws PdbConnectException
+  private CrossSectionPart[] createAdditionalParts( final Session session, final IProfile profile ) throws PdbConnectException
   {
     /* Memory for the cloned profile objects. */
     final List<IProfileObject> clonedProfileObjects = new ArrayList<>();
@@ -369,7 +352,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     removeEmptyOks( clonedProfileObjects );
 
     /* Checkin the profile objects. */
-    return checkin( clonedProfileObjects, profile );
+    return checkin( session, clonedProfileObjects, profile );
   }
 
   private IProfileObject cloneProfileObject( final IProfileObject profileObject )
@@ -405,7 +388,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
         bridge.setBrueckeId( bridgeId );
 
         final GenericProfileHorizon genericProfileHorizon = new GenericProfileHorizon();
-        genericProfileHorizon.setValue( CrossSectionConverter.PART_TYPE, GafKind.OK.toString() );
+        genericProfileHorizon.setValue( IGafConstants.PART_TYPE, GafKind.OK.toString() );
         genericProfileHorizon.setValue( BuildingBruecke.KEY_BRUECKE_ID, bridgeId );
 
         clonedProfileObjects.add( genericProfileHorizon );
@@ -428,7 +411,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
       if( clonedProfileObject instanceof GenericProfileHorizon )
       {
-        if( GafKind.OK.toString().equals( clonedProfileObject.getValue( CrossSectionConverter.PART_TYPE, null ) ) )
+        if( GafKind.OK.toString().equals( clonedProfileObject.getValue( IGafConstants.PART_TYPE, null ) ) )
         {
           final String brueckeId = ((GenericProfileHorizon)clonedProfileObject).getValue( BuildingBruecke.KEY_BRUECKE_ID, null );
           if( !StringUtils.isEmpty( brueckeId ) )
@@ -463,7 +446,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
       if( clonedProfileObject instanceof GenericProfileHorizon )
       {
-        if( GafKind.OK.toString().equals( clonedProfileObject.getValue( CrossSectionConverter.PART_TYPE, null ) ) )
+        if( GafKind.OK.toString().equals( clonedProfileObject.getValue( IGafConstants.PART_TYPE, null ) ) )
           ProfileObjectHelper.updateObjectFromComponents( profile, clonedProfileObject, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
       }
 
@@ -487,7 +470,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
       if( !(clonedProfileObject instanceof GenericProfileHorizon) )
         continue;
 
-      if( !GafKind.OK.toString().equals( clonedProfileObject.getValue( CrossSectionConverter.PART_TYPE, null ) ) )
+      if( !GafKind.OK.toString().equals( clonedProfileObject.getValue( IGafConstants.PART_TYPE, null ) ) )
         continue;
 
       final IProfileObjectRecords records = clonedProfileObject.getRecords();
@@ -496,13 +479,23 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     }
   }
 
-  private CrossSectionPart[] checkin( final List<IProfileObject> clonedProfileObjects, final IProfile profile ) throws PdbConnectException
+  private CrossSectionPart[] checkin( final Session session, final List<IProfileObject> clonedProfileObjects, final IProfile profile ) throws PdbConnectException
   {
     final List<CrossSectionPart> parts = new ArrayList<>();
 
+    final CrossSectionPartTypes partTypes = new CrossSectionPartTypes( session );
+    final double station = profile.getStation();
+
+    // REAMRK: do not set event, even for 'W' part types -> the original 'W' points of GAF should remain, even if corresponding event is deleted
+    final Event event = null;
+
+    final int dbSRID = m_data.getGeometryFactory().getSRID();
+
+    final int profileSRID = JTSAdapter.toSrid( profile.getSrsName() );
+
     for( final IProfileObject clonedProfileObject : clonedProfileObjects )
     {
-      final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( m_data, profile, clonedProfileObject, profile.getSrsName() );
+      final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( clonedProfileObject, profileSRID, dbSRID, station, partTypes, event );
       operation.execute();
 
       final CrossSectionPart part = operation.getPart();
