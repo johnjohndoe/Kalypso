@@ -45,6 +45,9 @@ import java.net.URL;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
@@ -53,6 +56,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
@@ -75,11 +79,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * Import kalypso rainfall runoff models converts between custom ascii format and gml format. Export to ascii can be
  * generated from a gml file or from a gml workspace.
- * 
+ *
  * @author doemming
  */
 public class NAModellConverter
 {
+  private final IStatusCollector m_log = new StatusCollector( ModelNA.PLUGIN_ID );
+
   private final Logger m_logger;
 
   private final INaSimulationData m_data;
@@ -88,7 +94,7 @@ public class NAModellConverter
 
   private final IDManager m_idManager;
 
-  public NAModellConverter( final IDManager idManager, final INaSimulationData data, final NaAsciiDirs asciiDirs, final Logger logger ) throws Exception
+  public NAModellConverter( final IDManager idManager, final INaSimulationData data, final NaAsciiDirs asciiDirs, final Logger logger )
   {
     m_idManager = idManager;
     m_data = data;
@@ -112,6 +118,7 @@ public class NAModellConverter
 
     final NetFileWriter netWriter = new NetFileWriter( m_asciiDirs, relevantElements, m_idManager, zmlContext, metaControl, m_logger );
     netWriter.write( m_asciiDirs.netFile );
+    m_log.add( netWriter.getStatus() );
 
     final TsFileWriter tsWriter = new TsFileWriter( synthNWorkspace, metaControl, naOptimize, channels, zmlContext, tsFileManager, m_logger );
     tsWriter.write( m_asciiDirs.klimaDatDir );
@@ -151,7 +158,7 @@ public class NAModellConverter
     }
   }
 
-  public void writeCalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager ) throws Exception
+  public void writeCalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager ) throws IOException, NAPreprocessorException
   {
     final NAControl naControl = m_data.getMetaControl();
 
@@ -165,5 +172,10 @@ public class NAModellConverter
 
     final GebWriter catchmentManager = new GebWriter( m_logger, catchments, naControl, tsFileManager, m_idManager );
     catchmentManager.write( m_asciiDirs.catchmentFile );
+  }
+
+  public IStatus getStatus( )
+  {
+    return m_log.asMultiStatusOrOK( "NA Modell Converter" );
   }
 }

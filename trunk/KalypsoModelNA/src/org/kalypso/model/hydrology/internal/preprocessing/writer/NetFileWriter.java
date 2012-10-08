@@ -53,8 +53,11 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.net.UrlUtilities;
-import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.KontEntnahme;
 import org.kalypso.model.hydrology.binding.model.KontZufluss;
@@ -65,6 +68,7 @@ import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.model.nodes.Verzweigung;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
@@ -89,35 +93,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class NetFileWriter extends AbstractCoreFileWriter
 {
-  private static final class ZuflussBean
-  {
-    public final StringBuffer m_specialBuffer = new StringBuffer();
-
-    public final int m_izug;
-
-    public final int m_iabg;
-
-    public final int m_iueb;
-
-    public final int m_izuf;
-
-    public final int m_ivzwg;
-
-    public final Number m_value;
-
-    public final Node m_branchNode;
-
-    public ZuflussBean( final int izug, final int iabg, final int iueb, final int izuf, final int ivzwg, final double value, final Node branchNode )
-    {
-      m_izug = izug;
-      m_iabg = iabg;
-      m_iueb = iueb;
-      m_izuf = izuf;
-      m_ivzwg = ivzwg;
-      m_value = value;
-      m_branchNode = branchNode;
-    }
-  }
+  private final IStatusCollector m_log = new StatusCollector( ModelNA.PLUGIN_ID );
 
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
@@ -130,6 +106,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
   private final NaAsciiDirs m_asciiDirs;
 
   private final URL m_zmlContext;
+
 
   public NetFileWriter( final NaAsciiDirs asciiDirs, final RelevantNetElements relevantElements, final IDManager idManager, final URL zmlContext, final NAControl metaControl, final Logger logger )
   {
@@ -175,22 +152,27 @@ public class NetFileWriter extends AbstractCoreFileWriter
   private void appendNodeList( final Node[] nodes, final PrintWriter netBuffer ) throws IOException, SensorException
   {
     // FIXME: theses nodes do not contain the branching nodes
-
     final Map<Node, ZuflussBean> nodeInfos = new LinkedHashMap<>();
 
     /* First collect info and potentially add branching nodes */
     for( final Node node : nodes )
     {
-      // QQ have the priority over "Verzweigung", and all of them are mutually exclusive so this is safe
-      final ZuflussBean qqRelation = getQQRelationZuflussBean( node );
-      final ZuflussBean zuflussBean = qqRelation != null ? qqRelation : appendZuflussStuff( node );
+      final ZuflussBean zuflussBean = createZuflussBean( node );
+
+      // FIXME: strange we map the source-node here...
       nodeInfos.put( node, zuflussBean );
 
-      if( zuflussBean.m_branchNode != null )
+      final Node branchingNode = zuflussBean.getBranchingNode();
+      if( branchingNode != null )
       {
+        // FIXME: ... but check for the target node here; this can't be right, can it?
+        // FIXME: comment is not correct
         /* Do not overwrite existing info */
-        if( !nodeInfos.containsKey( zuflussBean.m_branchNode ) )
-          nodeInfos.put( zuflussBean.m_branchNode, new ZuflussBean( 0, 0, 0, 0, 0, Double.NaN, null ) );
+
+        // FIXME: in reality, we make sure a node that is the target of a branching, gets a default bean; but this happens anyways, so what? -> if the target itself has a branching, it might get
+        // removed, if the nodes are in the correct order...
+        if( !nodeInfos.containsKey( branchingNode ) )
+          nodeInfos.put( branchingNode, new ZuflussBean( 0, 0, 0, 0, 0, null, StringUtils.EMPTY ) );
       }
     }
 
@@ -203,15 +185,17 @@ public class NetFileWriter extends AbstractCoreFileWriter
 
       final int nodeID = m_idManager.getAsciiID( node );
 
-      netBuffer.append( FortranFormatHelper.printf( nodeID, "i5" ) ); //$NON-NLS-1$
+      netBuffer.format( "%5d", nodeID ); //$NON-NLS-1$
 
-      netBuffer.append( String.format( "%5d", zuflussBean.m_izug ) ); //$NON-NLS-1$
-      netBuffer.append( String.format( "%5d", zuflussBean.m_iabg ) ); //$NON-NLS-1$
-      netBuffer.append( String.format( "%5d", zuflussBean.m_iueb ) ); //$NON-NLS-1$
-      netBuffer.append( String.format( "%5d", zuflussBean.m_izuf ) ); //$NON-NLS-1$
-      netBuffer.append( String.format( "%5d", zuflussBean.m_ivzwg ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-      netBuffer.append( zuflussBean.m_specialBuffer.toString() );
+      netBuffer.format( "%5d", zuflussBean.getIzug() ); //$NON-NLS-1$
+      netBuffer.format( "%5d", zuflussBean.getIabg() ); //$NON-NLS-1$
+      netBuffer.format( "%5d", zuflussBean.getIueb() ); //$NON-NLS-1$
+      netBuffer.format( "%5d", zuflussBean.getIzuf() ); //$NON-NLS-1$
+      netBuffer.format( "%5d\n", zuflussBean.getIvzwg() ); //$NON-NLS-1$ //$NON-NLS-2$
 
+      netBuffer.append( zuflussBean.getArgument() );
+
+      // FIXME: what additional nodes?
       /* TODO: we should also consider the additional nodes by QQ rleations; but as QQ rleations do not work..... */
     }
 
@@ -220,15 +204,57 @@ public class NetFileWriter extends AbstractCoreFileWriter
     netBuffer.append( "10000    0    0    0    0    0\n" ); //$NON-NLS-1$
   }
 
-  private ZuflussBean getQQRelationZuflussBean( final Node node ) throws SensorException
+  private ZuflussBean createZuflussBean( final Node node ) throws SensorException, IOException
+  {
+    /* first create all possible beans, so we can check if we have multiple branchings */
+    final ZuflussBean qqRelationBean = createQQRelationZuflussBean( node );
+    final ZuflussBean branchingBean = createBranchingZuflussBean( node );
+    final ZuflussBean zuflussLinkBean = createZuflussLinkZuflussBean( node );
+
+    /* validation */
+    final int count = countZuflussBeans( qqRelationBean, branchingBean, zuflussLinkBean );
+    if( count > 1 )
+      m_log.add( IStatus.WARNING, "Node '%s': only one kind of 'QQ-relation', 'Branching' or 'Inflow Timeseries' may be specified. More than one kind is specified at this node.", null, node.getName() );
+
+    // QQ has the priority over "Verzweigung", and all of them are mutually exclusive so this is safe
+    if( qqRelationBean != null )
+      return qqRelationBean;
+
+    // REMARK: only one branching can be used at the same time. Also, braching and zufluss cannot appear at
+    // the same time. This is intended.
+    if( branchingBean != null )
+      return branchingBean;
+
+    if( zuflussLinkBean != null )
+      return zuflussLinkBean;
+
+    return new ZuflussBean( 0, 0, 0, 0, 0, null, StringUtils.EMPTY );
+  }
+
+  private int countZuflussBeans( final ZuflussBean... beans )
+  {
+    int count = 0;
+    for( final ZuflussBean bean : beans )
+    {
+      if( bean != null )
+        count++;
+    }
+
+    return count;
+  }
+
+  private ZuflussBean createQQRelationZuflussBean( final Node node ) throws SensorException
   {
     final Node relatedNode = node.getQQRelatedNode();
     if( relatedNode == null )
       return null;
-    final IObservation observation = (IObservation) node.getProperty( INode.PROPERTY_QQ_RELATION );
+
+    final IObservation observation = (IObservation)node.getProperty( INode.PROPERTY_QQ_RELATION );
     if( observation == null )
       return null;
-    final StringBuffer buffer = new StringBuffer();
+
+    /* serialize the qq relation */
+    final StringBuilder buffer = new StringBuilder();
     final IAxis[] axisList = observation.getAxes();
     final IAxis q1Axis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );
     final IAxis q2Axis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF_RHB );
@@ -239,34 +265,23 @@ public class NetFileWriter extends AbstractCoreFileWriter
     buffer.append( String.format( "%4d %6s\n", count, m_idManager.getAsciiID( relatedNode ) ) ); //$NON-NLS-1$
     for( int row = 0; row < count; row++ )
     {
-      final double q1 = (Double) values.get( row, q1Axis );
-      final double q2 = (Double) values.get( row, q2Axis );
+      final double q1 = (Double)values.get( row, q1Axis );
+      final double q2 = (Double)values.get( row, q2Axis );
       buffer.append( String.format( Locale.ENGLISH, "%8.3f %8.3f\n", q1, q2 ) ); //$NON-NLS-1$
     }
-    final ZuflussBean bean = new ZuflussBean( 0, 0, 0, 0, 2, count, relatedNode );
-    bean.m_specialBuffer.append( buffer );
-    return bean;
+
+    final String value = buffer.toString();
+
+    return new ZuflussBean( 0, 0, 0, 0, 2, relatedNode, value );
   }
 
-  private ZuflussBean appendZuflussStuff( final Node node ) throws SensorException, IOException
+  private ZuflussBean createZuflussLinkZuflussBean( final Node node ) throws SensorException, IOException
   {
-    // TODO: like this, only one branching can be used at the same time. Also, braching and zufluss cannot appear at
-    // the same time. Is both intented? Isn't kalypso-na able to do more?
-    final Branching branching = node.getBranching();
-    if( branching != null )
-      return appendBranching( branching );
-
     final ZmlLink zuflussLink = node.getZuflussLink();
-    if( zuflussLink.isLinkSet() )
-      return appendZuflussLink( node, zuflussLink );
+    if( !zuflussLink.isLinkSet() )
+      return null;
 
-    return new ZuflussBean( 0, 0, 0, 0, 0, Double.NaN, null );
-  }
-
-  private ZuflussBean appendZuflussLink( final Node node, final ZmlLink zuflussLink ) throws SensorException, IOException
-  {
-    final ZuflussBean bean = new ZuflussBean( 0, 0, 0, 5, 0, Double.NaN, null );
-
+    /* write zufluss file */
     final String zuflussFileName = getZuflussEingabeDateiString( node );
     final File targetFile = new File( m_asciiDirs.zuflussDir, zuflussFileName );
 
@@ -274,7 +289,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     final URL linkURL = m_urlUtilities.resolveURL( m_zmlContext, zuflussFile );
     if( !targetFile.exists() )
     {
-      final StringBuffer writer = new StringBuffer();
+      final StringBuilder writer = new StringBuilder();
       final IObservation observation = ZmlFactory.parseXML( linkURL ); //$NON-NLS-1$
 
       // FIXME: this functionality is currently deactivated, because it is wrongly implemented.
@@ -289,8 +304,8 @@ public class NetFileWriter extends AbstractCoreFileWriter
           final ITupleModel values = observation.getValues( null );
           final IAxis[] axis = observation.getAxes();
           final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeseriesConstants.TYPE_DATE );
-          final long simulationStartDateMillis = ((Date) values.get( 0, dateAxis )).getTime();
-          final long simulationEndDateMillis = ((Date) values.get( values.size() - 1, dateAxis )).getTime();
+          final long simulationStartDateMillis = ((Date)values.get( 0, dateAxis )).getTime();
+          final long simulationEndDateMillis = ((Date)values.get( values.size() - 1, dateAxis )).getTime();
 
           // FIXME: this will not work correctly with timezones
 
@@ -317,60 +332,61 @@ public class NetFileWriter extends AbstractCoreFileWriter
       FileUtils.writeStringToFile( targetFile, writer.toString() );
     }
 
-    bean.m_specialBuffer.append( "    1234\n" ); // dummyLine //$NON-NLS-1$
-    bean.m_specialBuffer.append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    /* create arguent */
+    final StringBuilder buffer = new StringBuilder();
+    buffer.append( "    1234\n" ); // dummyLine //$NON-NLS-1$
+    buffer.append( ".." ).append( File.separator ).append( "zufluss" ).append( File.separator ).append( zuflussFileName ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final String argument = buffer.toString();
 
-    return bean;
+    /* create bean entry */
+    return new ZuflussBean( 0, 0, 0, 5, 0, null, argument );
   }
 
-  private ZuflussBean appendBranching( final Branching branching )
+  private ZuflussBean createBranchingZuflussBean( final Node node )
   {
-    final ZuflussBean bean = getZuflussBean( branching );
-    if( bean.m_value instanceof Double )
-      bean.m_specialBuffer.append( String.format( Locale.US, "%10.3f", bean.m_value ) ); //$NON-NLS-1$
-    else if( bean.m_value instanceof Integer )
-      bean.m_specialBuffer.append( String.format( "%4d", bean.m_value ) ); //$NON-NLS-1$
-    // else throw an exception...
+    final Branching branching = node.getBranching();
+    if( branching == null )
+      return null;
 
-    if( bean.m_branchNode != null )
-    {
-      final int branchNodeID = m_idManager.getAsciiID( bean.m_branchNode );
-      bean.m_specialBuffer.append( FortranFormatHelper.printf( branchNodeID, "i8" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    return bean;
-  }
-
-  private ZuflussBean getZuflussBean( final Branching branching )
-  {
     final Node branchNode;
     if( branching instanceof BranchingWithNode )
-      branchNode = ((BranchingWithNode) branching).getNode();
+      branchNode = ((BranchingWithNode)branching).getNode();
     else
       branchNode = null;
 
+    String branchIdArgument = StringUtils.EMPTY;
+    if( branchNode != null )
+    {
+      final int branchNodeID = m_idManager.getAsciiID( branchNode );
+      branchIdArgument = String.format( " %7d\n", branchNodeID );
+    }
+
     if( branching instanceof KontZufluss )
     {
-      final double qzug = ((KontZufluss) branching).getQZug();
-      return new ZuflussBean( 1, 0, 0, 0, 0, qzug, branchNode );
+      final double qzug = ((KontZufluss)branching).getQZug();
+      final String argument = String.format( Locale.US, "%10.3f", qzug ); //$NON-NLS-1$
+      return new ZuflussBean( 1, 0, 0, 0, 0, branchNode, argument );
     }
 
     if( branching instanceof Verzweigung )
     {
-      final double zproz = ((Verzweigung) branching).getZProz();
-      return new ZuflussBean( 0, 0, 0, 0, 1, zproz, branchNode );
+      final double zproz = ((Verzweigung)branching).getZProz();
+      final String argument = String.format( Locale.US, "%10.3f", zproz ); //$NON-NLS-1$
+      return new ZuflussBean( 0, 0, 0, 0, 1, branchNode, argument + branchIdArgument );
     }
 
     if( branching instanceof KontEntnahme )
     {
-      final double qabg = ((KontEntnahme) branching).getQAbg();
-      return new ZuflussBean( 0, 1, 0, 0, 0, qabg, branchNode );
+      final double qabg = ((KontEntnahme)branching).getQAbg();
+      final String argument = String.format( Locale.US, "%10.3f", qabg ); //$NON-NLS-1$
+      return new ZuflussBean( 0, 1, 0, 0, 0, branchNode, argument + branchIdArgument );
     }
 
     if( branching instanceof Ueberlauf )
     {
-      final double queb = ((Ueberlauf) branching).getQUeb();
-      return new ZuflussBean( 0, 0, 1, 0, 0, queb, branchNode );
+      final double queb = ((Ueberlauf)branching).getQUeb();
+      final String argument = String.format( Locale.US, "%10.3f", queb ); //$NON-NLS-1$
+      return new ZuflussBean( 0, 0, 1, 0, 0, branchNode, argument + branchIdArgument );
     }
 
     throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() ); //$NON-NLS-1$
@@ -380,5 +396,10 @@ public class NetFileWriter extends AbstractCoreFileWriter
   {
     final int asciiID = m_idManager.getAsciiID( nodeFE );
     return "Z_" + Integer.toString( asciiID ).trim() + ".zufluss"; //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  public IStatus getStatus( )
+  {
+    return m_log.asMultiStatusOrOK( "Writing .net file" );
   }
 }
