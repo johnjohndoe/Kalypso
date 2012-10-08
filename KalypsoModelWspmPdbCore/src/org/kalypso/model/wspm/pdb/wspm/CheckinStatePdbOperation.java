@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
@@ -368,8 +369,11 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     /* Update from components of profile. */
     updateFromComponents( clonedProfileObjects, profile );
 
+    /* Remove empty OKs. */
+    removeEmptyOks( clonedProfileObjects );
+
     /* Checkin the profile objects. */
-    return checkin( profile, clonedProfileObjects );
+    return checkin( clonedProfileObjects, profile );
   }
 
   private IProfileObject cloneProfileObject( final IProfileObject profileObject )
@@ -401,12 +405,14 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
         /* If no ok profile object was found, we create one. */
         /* We also create the id. */
-        final String bridgeId = findFreeId( usedIds );
+        final String bridgeId = findFreeId( bridge, usedIds );
         bridge.setBrueckeId( bridgeId );
 
         final GenericProfileHorizon genericProfileHorizon = new GenericProfileHorizon();
         genericProfileHorizon.setValue( CrossSectionConverter.PART_TYPE, GafKind.OK.toString() );
         genericProfileHorizon.setValue( BuildingBruecke.KEY_BRUECKE_ID, bridgeId );
+
+        clonedProfileObjects.add( genericProfileHorizon );
       }
     }
   }
@@ -438,8 +444,12 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     return usedIds;
   }
 
-  private String findFreeId( final Set<String> usedIds )
+  private String findFreeId( final BuildingBruecke bridge, final Set<String> usedIds )
   {
+    final String brueckeId = bridge.getBrueckeId();
+    if( !StringUtils.isEmpty( brueckeId ) )
+      return brueckeId;
+
     int cnt = 1;
     String freeId = String.format( Locale.PRC, "bridge_%d", cnt++ );
     while( usedIds.contains( freeId ) )
@@ -472,7 +482,25 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     }
   }
 
-  private CrossSectionPart[] checkin( final IProfile profile, final List<IProfileObject> clonedProfileObjects ) throws PdbConnectException
+  private void removeEmptyOks( final List<IProfileObject> clonedProfileObjects )
+  {
+    /* Iterate over the array, because we may change the list. */
+    final IProfileObject[] clonedProfileObjectsArray = clonedProfileObjects.toArray( new IProfileObject[] {} );
+    for( final IProfileObject clonedProfileObject : clonedProfileObjectsArray )
+    {
+      if( !(clonedProfileObject instanceof GenericProfileHorizon) )
+        continue;
+
+      if( !GafKind.OK.toString().equals( clonedProfileObject.getValue( CrossSectionConverter.PART_TYPE, null ) ) )
+        continue;
+
+      final IProfileObjectRecords records = clonedProfileObject.getRecords();
+      if( records.getSize() == 0 )
+        clonedProfileObjects.remove( clonedProfileObject );
+    }
+  }
+
+  private CrossSectionPart[] checkin( final List<IProfileObject> clonedProfileObjects, final IProfile profile ) throws PdbConnectException
   {
     final List<CrossSectionPart> parts = new ArrayList<>();
 
