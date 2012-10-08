@@ -76,7 +76,7 @@ public class NaModelTweaker
    * @param workspace
    * @throws Exception
    */
-  public void tweakModel( ) throws Exception
+  public void tweakModel( ) throws NAPreprocessorException
   {
     updateGWNet();
     updateNode2NodeNet();
@@ -142,7 +142,7 @@ public class NaModelTweaker
    * @param workspace
    * @throws Exception
    */
-  private void updateNode2NodeNet( ) throws Exception
+  private void updateNode2NodeNet( ) throws NAPreprocessorException
   {
     final IFeatureBindingCollection<Node> nodes = m_naModel.getNodes();
     // Copy to array, as the list is manipulated on the fly.
@@ -195,7 +195,7 @@ public class NaModelTweaker
    * @param workspace
    * @throws Exception
    */
-  private void updateZuflussNet( ) throws Exception
+  private void updateZuflussNet( )
   {
     final IFeatureBindingCollection<Node> nodes = m_naModel.getNodes();
     final Node[] nodeArray = nodes.toArray( new Node[nodes.size()] );
@@ -233,7 +233,7 @@ public class NaModelTweaker
    * @param workspace
    * @throws Exception
    */
-  private void updateResultAsZuflussNet( ) throws Exception
+  private void updateResultAsZuflussNet( )
   {
     final IFeatureBindingCollection<Node> nodes = m_naModel.getNodes();
     final Node[] nodeArray = nodes.toArray( new Node[nodes.size()] );
@@ -280,7 +280,7 @@ public class NaModelTweaker
    *
    * </code>
    */
-  private Node buildVChannelNet( final Node existingNode ) throws Exception
+  private Node buildVChannelNet( final Node existingNode )
   {
     final IFeatureBindingCollection<Node> nodes = m_naModel.getNodes();
     final IFeatureBindingCollection<Channel> channels = m_naModel.getChannels();
@@ -297,5 +297,4 @@ public class NaModelTweaker
 
     return newNode2;
   }
-
 }

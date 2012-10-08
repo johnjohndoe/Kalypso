@@ -89,7 +89,7 @@ public class GrapWriter
       m_factor = DEFAULT_RANGE_FACTOR;
   }
 
-  public void write( final StringBuffer writer ) throws SensorException
+  public void write( final StringBuilder writer ) throws SensorException
   {
     final IAxis[] axis = m_observation.getAxes();
     final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeseriesConstants.TYPE_DATE );
@@ -113,7 +113,7 @@ public class GrapWriter
    * intended.
    */
   @Deprecated
-  public void writeSyntheticFile( final StringBuffer writer, final Date simulationStart, final Date simulationEnd, final int minutesOfTimeStep ) throws SensorException
+  public void writeSyntheticFile( final StringBuilder writer, final Date simulationStart, final Date simulationEnd, final int minutesOfTimeStep ) throws SensorException
   {
     if( simulationStart.after( simulationEnd ) )
       return;
@@ -157,7 +157,7 @@ public class GrapWriter
     while( currentDate.before( simulationEnd ) );
   }
 
-  private static void writeGrapHeader( final StringBuffer writer, final Date date )
+  private static void writeGrapHeader( final StringBuilder writer, final Date date )
   {
     // REMARK: we are not using PrintWriter#format for maximum performance
     // TODO: use joda DateTime for even better performance
@@ -171,12 +171,12 @@ public class GrapWriter
   // FIXME: an exception should be thrown in that case. Kalypso should prevent negative numbers to be imported into
   // its timeseries.
   // REMARK: we are not using PrintWriter#format for maximum performance
-  private static void writeGrapDate( final StringBuffer writer, final Date date, final double value )
+  private static void writeGrapDate( final StringBuilder writer, final Date date, final double value )
   {
     writeGrapDate( writer, date, value, DEFAULT_RANGE_FACTOR );
   }
 
-  private static void writeGrapDate( final StringBuffer writer, final Date date, final double value, final RangeFactor factor )
+  private static void writeGrapDate( final StringBuilder writer, final Date date, final double value, final RangeFactor factor )
   {
     final String grapDate = GRAP_DATE_FORMAT.format( date );
 
@@ -189,5 +189,4 @@ public class GrapWriter
 
     writer.append( '\n' );
   }
-
 }

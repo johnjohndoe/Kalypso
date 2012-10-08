@@ -181,7 +181,7 @@ public class TsFileWriter
     if( observation == null )
       return;
 
-    final StringBuffer writer = new StringBuffer();
+    final StringBuilder writer = new StringBuilder();
 
     final GrapWriter grapWriter = new GrapWriter( ITimeseriesConstants.TYPE_RAINFALL, observation );
 
@@ -237,7 +237,7 @@ public class TsFileWriter
       return;
 
     final GrapWriter grapWriter = new GrapWriter( valueAxisType, observation );
-    final StringBuffer writer = new StringBuffer();
+    final StringBuilder writer = new StringBuilder();
     grapWriter.write( writer );
     FileUtils.writeStringToFile( targetFile, writer.toString() );
   }
