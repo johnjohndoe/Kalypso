@@ -93,11 +93,10 @@ public class CheckinCalculationOperation implements ICoreRunnableWithProgress
 
       final Map<String, WaterBody> waterHash = m_data.getWaterHash();
       final Event event = m_data.getEvent();
-      event.setEditingUser( connection.getSettings().getUsername() );
 
       final TuhhCalculation calculation = m_data.getWspmObject();
 
-      final CheckinCalculationPdbOperation operation = new CheckinCalculationPdbOperation( waterHash, event, calculation, m_lengthSection, new SubProgressMonitor( monitor, 90 ) );
+      final CheckinCalculationPdbOperation operation = new CheckinCalculationPdbOperation( connection, waterHash, event, calculation, m_lengthSection, new SubProgressMonitor( monitor, 90 ) );
       new Executor( session, operation ).execute();
 
       session.close();

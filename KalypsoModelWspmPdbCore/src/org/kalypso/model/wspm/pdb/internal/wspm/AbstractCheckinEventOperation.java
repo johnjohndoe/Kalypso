@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -49,11 +48,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.core.IWspmLengthSectionProperties;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
+import org.kalypso.model.wspm.pdb.wspm.SaveEventOperation;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -73,10 +75,13 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
 
   private final WspmWaterBody m_wspmWaterBody;
 
-  public AbstractCheckinEventOperation( final Map<String, WaterBody> waterHash, final WspmWaterBody wspmWaterBody, final Event event, final IProgressMonitor monitor )
+  private final IPdbConnection m_connection;
+
+  public AbstractCheckinEventOperation( final IPdbConnection connection, final Map<String, WaterBody> waterHash, final WspmWaterBody wspmWaterBody, final Event event, final IProgressMonitor monitor )
   {
-    m_event = event;
+    m_connection = connection;
     m_wspmWaterBody = wspmWaterBody;
+    m_event = event;
     m_waterBodies = waterHash;
 
     m_monitor = monitor;
@@ -89,15 +94,12 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
   }
 
   @Override
-  public void execute( final Session session )
+  public void execute( final Session session ) throws PdbConnectException
   {
     m_monitor.beginTask( Messages.getString( "AbstractCheckinEventOperation.2" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     m_monitor.subTask( Messages.getString( "AbstractCheckinEventOperation.3" ) ); //$NON-NLS-1$
 
-    final Date now = new Date();
-    m_event.setCreationDate( now );
-    m_event.setEditingDate( now );
     m_event.setWaterBody( findWaterBody() );
 
     session.save( m_event );
@@ -118,19 +120,19 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
       final BigDecimal runoff = asBigDecimal( runoffIndex, record );
 
       final WaterlevelFixation element = new WaterlevelFixation();
-      element.setCreationDate( m_event.getCreationDate() );
       element.setDescription( StringUtils.EMPTY );
       element.setDischarge( runoff );
-      element.setEditingDate( m_event.getEditingDate() );
-      element.setEditingUser( m_event.getEditingUser() );
-      element.setEvent( m_event );
+      // FIXME
       element.setLocation( null );
-      element.setMeasurementDate( m_event.getMeasurementDate() );
       element.setStation( stationM );
       element.setWaterlevel( wsp );
-
-      session.save( element );
     }
+
+    /* save event */
+    final String username = m_connection.getSettings().getUsername();
+    final int dbSRSID = m_connection.getInfo().getSRID();
+    final SaveEventOperation operation = new SaveEventOperation( m_event, username, dbSRSID );
+    operation.execute( session );
 
     m_monitor.subTask( Messages.getString( "AbstractCheckinEventOperation.4" ) ); //$NON-NLS-1$
   }

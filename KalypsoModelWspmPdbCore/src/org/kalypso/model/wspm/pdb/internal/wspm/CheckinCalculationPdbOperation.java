@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.internal.wspm;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -57,9 +58,9 @@ public class CheckinCalculationPdbOperation extends AbstractCheckinEventOperatio
 {
   private final WspmResultLengthSection m_lengthSection;
 
-  public CheckinCalculationPdbOperation( final Map<String, WaterBody> waterHash, final Event event, final TuhhCalculation calculation, final WspmResultLengthSection lengthSection, final IProgressMonitor monitor )
+  public CheckinCalculationPdbOperation( final IPdbConnection connection, final Map<String, WaterBody> waterHash, final Event event, final TuhhCalculation calculation, final WspmResultLengthSection lengthSection, final IProgressMonitor monitor )
   {
-    super( waterHash, calculation.getReach().getWaterBody(), event, monitor );
+    super( connection, waterHash, calculation.getReach().getWaterBody(), event, monitor );
 
     m_lengthSection = lengthSection;
   }

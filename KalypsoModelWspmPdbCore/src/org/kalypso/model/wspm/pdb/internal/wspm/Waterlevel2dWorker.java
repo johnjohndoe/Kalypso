@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
+package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.opengis.geometry.MismatchedDimensionException;
@@ -56,7 +56,7 @@ import com.vividsolutions.jts.linearref.LengthIndexedLine;
  */
 public class Waterlevel2dWorker
 {
-  private final IStatusCollector m_log = new StatusCollector( WspmPdbUiPlugin.PLUGIN_ID );
+  private final IStatusCollector m_log = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
   private final Map<IProfileObject, BigDecimal> m_waterlevels2D = new HashMap<>();
 
