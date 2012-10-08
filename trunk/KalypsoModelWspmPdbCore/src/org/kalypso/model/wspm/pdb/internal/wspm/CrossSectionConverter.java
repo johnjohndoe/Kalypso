@@ -86,12 +86,6 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class CrossSectionConverter implements IProfileTransaction
 {
-  public static final String PART_NAME = "PART_NAME";
-
-  public static final String PART_TYPE = "PART_TYPE";
-
-  public static final String PART_EVENT = "PART_EVENT";
-
   private final CrossSection m_section;
 
   private final IProfile m_profile;
@@ -446,8 +440,8 @@ public class CrossSectionConverter implements IProfileTransaction
       profileObject.setValue( parameter.getKey(), parameter.getValue() );
 
     /* Set specific metadata. */
-    profileObject.setValue( PART_NAME, part.getName() );
-    profileObject.setValue( PART_TYPE, part.getCrossSectionPartType().getCategory() );
+    profileObject.setValue( IGafConstants.PART_NAME, part.getName() );
+    profileObject.setValue( IGafConstants.PART_TYPE, part.getCrossSectionPartType().getCategory() );
     // TODO profileObject.setValue( PART_EVENT, part.getEvent().getName() );
 
     /* Guess special cases. */
