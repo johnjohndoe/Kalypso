@@ -74,8 +74,6 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinPartOperation;
 import org.kalypso.model.wspm.pdb.internal.wspm.CrossSectionConverter;
-import org.kalypso.model.wspm.pdb.internal.wspm.IPartBuilder;
-import org.kalypso.model.wspm.pdb.internal.wspm.PPPartBuilder;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
@@ -291,7 +289,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     final Set<CrossSectionPart> parts = new HashSet<>();
 
     /* Extract profile line. */
-    final CrossSectionPart pPart = builtPart( profile, profilSRS, new PPPartBuilder( profile ) );
+    final CrossSectionPart pPart = builtPart( profile, profilSRS );
     if( !isBlank( pPart ) )
     {
       parts.add( pPart );
@@ -326,24 +324,22 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
   }
 
   /**
-   * This function creates a cross section part using the records of the profile and the part builder.
+   * This function creates a cross section part using the records of the profile.
    * 
    * @param profile
    *          The profile.
    * @param profileSRS
    *          The coordinate system of the profile.
-   * @param partBuilder
-   *          The part builder provides gaf codes, ...
    * @return The cross section part.
    */
-  private CrossSectionPart builtPart( final IProfile profile, final String profileSRS, final IPartBuilder partBuilder ) throws PdbConnectException
+  private CrossSectionPart builtPart( final IProfile profile, final String profileSRS ) throws PdbConnectException
   {
-    final CheckinPartOperation partOperation = new CheckinPartOperation( m_data, profile, profileSRS, partBuilder );
+    final CheckinPartOperation partOperation = new CheckinPartOperation( m_data, profile, profileSRS );
     final IStatus result = partOperation.execute();
     if( !result.isOK() )
       m_log.add( result );
 
-    final CrossSectionPartType type = m_data.findPartType( partBuilder.getKind().toString() );
+    final CrossSectionPartType type = m_data.findPartType( GafKind.P.toString() );
     final CrossSectionPart part = partOperation.getPart();
     part.setCrossSectionPartType( type );
 
