@@ -64,12 +64,18 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
+import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinPartOperation;
+import org.kalypso.model.wspm.pdb.internal.wspm.CrossSectionConverter;
 import org.kalypso.model.wspm.pdb.internal.wspm.IPartBuilder;
 import org.kalypso.model.wspm.pdb.internal.wspm.PPPartBuilder;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
@@ -354,13 +360,56 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
       clonedProfileObjects.add( clonedProfileObject );
     }
 
+    /* Repair. */
+    repair( clonedProfileObjects );
+
     /* Update from components of profile. */
     updateFromComponents( clonedProfileObjects, profile );
 
-    /* Memory for the cross section parts. */
+    /* Checkin the profile objects. */
+    return checkin( profile, clonedProfileObjects );
+  }
+
+  private IProfileObject cloneProfileObject( final IProfileObject profileObject )
+  {
+    final IProfileObject newProfileObject = ProfileObjectHelper.createProfileObject( profileObject );
+    ProfileObjectHelper.cloneProfileObject( profileObject, newProfileObject );
+    return newProfileObject;
+  }
+
+  private void repair( final List<IProfileObject> clonedProfileObjects )
+  {
+    // TODO
+  }
+
+  private void updateFromComponents( final List<IProfileObject> clonedProfileObjects, final IProfile profile )
+  {
+    for( final IProfileObject clonedProfileObject : clonedProfileObjects )
+    {
+      if( clonedProfileObject instanceof BuildingBruecke )
+        ProfileObjectHelper.updateObjectFromComponents( profile, clonedProfileObject, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+
+      if( clonedProfileObject instanceof GenericProfileHorizon )
+      {
+        if( GafKind.OK.toString().equals( clonedProfileObject.getValue( CrossSectionConverter.PART_TYPE, null ) ) )
+          ProfileObjectHelper.updateObjectFromComponents( profile, clonedProfileObject, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+      }
+
+      if( clonedProfileObject instanceof BuildingWehr )
+        ProfileObjectHelper.updateObjectFromComponents( profile, clonedProfileObject, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+
+      if( clonedProfileObject instanceof BuildingEi )
+        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingEi)clonedProfileObject, ((BuildingEi)clonedProfileObject).getHoehe(), IGafConstants.CODE_EIFS, IGafConstants.CODE_EIUK );
+
+      if( clonedProfileObject instanceof BuildingKreis )
+        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingKreis)clonedProfileObject, null, IGafConstants.CODE_KRFS, IGafConstants.CODE_KRUK );
+    }
+  }
+
+  private CrossSectionPart[] checkin( final IProfile profile, final List<IProfileObject> clonedProfileObjects ) throws PdbConnectException
+  {
     final List<CrossSectionPart> parts = new ArrayList<>();
 
-    /* Checkin. */
     for( final IProfileObject clonedProfileObject : clonedProfileObjects )
     {
       final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( m_data, profile, clonedProfileObject, profile.getSrsName() );
@@ -371,38 +420,5 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     }
 
     return parts.toArray( new CrossSectionPart[] {} );
-  }
-
-  private IProfileObject cloneProfileObject( final IProfileObject profileObject )
-  {
-    final IProfileObject newProfileObject = ProfileObjectHelper.createProfileObject( profileObject );
-    ProfileObjectHelper.cloneProfileObject( profileObject, newProfileObject );
-    return newProfileObject;
-  }
-
-  private void updateFromComponents( final List<IProfileObject> clonedProfileObjects, final IProfile profile )
-  {
-    // Step 1 find all single objects
-    // Step 2 find all bridge/ok pairs
-    // Eventually create a ok object for a bridge
-    // Think of the bridge ids
-    // TODO
-
-    for( final IProfileObject clonedProfileObject : clonedProfileObjects )
-    {
-      /* Update bridge buildings and weir buildings. */
-      // if( clonedProfileObject instanceof BuildingBruecke )
-      // ProfileObjectHelper.updateBridgeFromComponents( profile, (BuildingBruecke)clonedProfileObject );
-
-      if( clonedProfileObject instanceof BuildingWehr )
-        ProfileObjectHelper.updateWeirFromComponents( profile, (BuildingWehr)clonedProfileObject );
-
-      /* Update egg buildings and circle buildings. */
-      if( clonedProfileObject instanceof BuildingEi )
-        ProfileObjectHelper.updateEggFromComponents( profile, (BuildingEi)clonedProfileObject );
-
-      if( clonedProfileObject instanceof BuildingKreis )
-        ProfileObjectHelper.updateCircleFromComponents( profile, (BuildingKreis)clonedProfileObject );
-    }
   }
 }

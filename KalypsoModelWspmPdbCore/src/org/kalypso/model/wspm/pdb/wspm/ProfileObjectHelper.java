@@ -18,25 +18,29 @@
  */
 package org.kalypso.model.wspm.pdb.wspm;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Holger Albert
@@ -117,82 +121,104 @@ public class ProfileObjectHelper
     }
   }
 
-  public static void updateBridgeFromComponents( final IProfile source, final BuildingBruecke ukTarget, final GenericProfileHorizon okTarget )
+  public static void updateObjectFromComponents( final IProfile source, final IProfileObject target, final String component )
   {
-    final TupleResult result = source.getResult();
-    final IComponent ukBrueckeComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-    final IComponent okBrueckeComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    final int ukBrueckeIndex = result.indexOfComponent( ukBrueckeComponent );
-    final int okBrueckeIndex = result.indexOfComponent( okBrueckeComponent );
+    final TupleResult sourceResult = source.getResult();
+    final IComponent heightComponent = ProfileUtil.getFeatureComponent( component );
+    final int heightIndex = sourceResult.indexOfComponent( heightComponent );
 
-    final IProfileObjectRecords ukRecords = ukTarget.getRecords();
-    final IProfileObjectRecords okRecords = okTarget.getRecords();
+    final IProfileObjectRecords targetRecords = target.getRecords();
+    targetRecords.clearRecords();
 
-    for( final IRecord record : result )
+    for( final IRecord sourceRecord : sourceResult )
     {
       /* Only records with a height in the special component may be copied. */
-      final Double ukHeight = (Double)record.getValue( ukBrueckeIndex );
-      if( ukHeight == null )
-      {
-        /* Add a new record to the profile object. */
-        final IProfileObjectRecord ukRecord = ukRecords.addNewRecord();
-
-        /* Copy all standard values from the profile record to the profile object record. */
-        org.kalypso.model.wspm.core.profil.ProfileObjectHelper.updateStandardProperties( record, ukRecord );
-
-        /* Replace the height with the height from the special component. */
-        ukRecord.setHoehe( ukHeight );
-      }
-
-      /* Only records with a height in the special component may be copied. */
-      final Double okHeight = (Double)record.getValue( okBrueckeIndex );
-      if( okHeight == null )
-      {
-        /* Add a new record to the profile object. */
-        final IProfileObjectRecord okRecord = okRecords.addNewRecord();
-
-        /* Copy all standard values from the profile record to the profile object record. */
-        org.kalypso.model.wspm.core.profil.ProfileObjectHelper.updateStandardProperties( record, okRecord );
-
-        /* Replace the height with the height from the special component. */
-        okRecord.setHoehe( okHeight );
-      }
-    }
-  }
-
-  public static void updateWeirFromComponents( final IProfile source, final BuildingWehr okTarget )
-  {
-    final TupleResult result = source.getResult();
-    final IComponent okWehrComponent = ProfileUtil.getFeatureComponent( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-    final int okWehrIndex = result.indexOfComponent( okWehrComponent );
-
-    final IProfileObjectRecords okRecords = okTarget.getRecords();
-
-    for( final IRecord record : result )
-    {
-      /* Only records with a height in the special component may be copied. */
-      final Double height = (Double)record.getValue( okWehrIndex );
+      final Double height = (Double)sourceRecord.getValue( heightIndex );
       if( height == null )
         continue;
 
       /* Add a new record to the profile object. */
-      final IProfileObjectRecord okRecord = okRecords.addNewRecord();
+      final IProfileObjectRecord targetRecord = targetRecords.addNewRecord();
 
       /* Copy all standard values from the profile record to the profile object record. */
-      org.kalypso.model.wspm.core.profil.ProfileObjectHelper.updateStandardProperties( record, okRecord );
+      org.kalypso.model.wspm.core.profil.ProfileObjectHelper.updateStandardProperties( sourceRecord, targetRecord );
 
       /* Replace the height with the height from the special component. */
-      okRecord.setHoehe( height );
+      targetRecord.setHoehe( height );
+    }
+
+    /* Guess the point codes. */
+    guessCodes( targetRecords, component );
+  }
+
+  private static void guessCodes( final IProfileObjectRecords targetRecords, final String component )
+  {
+    for( int i = 0; i < targetRecords.getSize(); i++ )
+    {
+      final IProfileObjectRecord targetRecord = targetRecords.getRecord( i );
+
+      if( component.equals( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) )
+        targetRecord.setCode( getUkCode( i, targetRecords ) );
+
+      if( component.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) || component.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) )
+        targetRecord.setCode( getOkCode( i, targetRecords ) );
     }
   }
 
-  public static void updateEggFromComponents( final IProfile profile, final BuildingEi clonedProfileObject )
+  private static String getUkCode( final int i, final IProfileObjectRecords targetRecords )
   {
-    // TODO
+    if( i == 0 )
+      return IGafConstants.CODE_UKAN;
+
+    if( i == targetRecords.getSize() - 1 )
+      return IGafConstants.CODE_UKEN;
+
+    return IGafConstants.CODE_UKPP;
   }
 
-  public static void updateCircleFromComponents( final IProfile profile, final BuildingKreis clonedProfileObject )
+  private static String getOkCode( final int i, final IProfileObjectRecords targetRecords )
   {
-    // TODO
+    if( i == 0 )
+      return IGafConstants.CODE_OKAN;
+
+    if( i == targetRecords.getSize() - 1 )
+      return IGafConstants.CODE_OKEN;
+
+    return IGafConstants.CODE_OKPP;
+  }
+
+  public static void updateObjectFromMetadata( final IProfile source, final ICulvertBuilding target, final Double height, final String fsCode, final String ukCode )
+  {
+    final Double bezugspunktX = target.getBezugspunktX();
+    final Double bezugspunktY = target.getBezugspunktY();
+    final Double breite = target.getBreite();
+    if( Objects.isNull( bezugspunktX, bezugspunktY, breite ) )
+      return;
+
+    /* REMARK: The width is defined as the durchmesser (circle), if no height is given. */
+    final Double hoehe = height != null ? height : breite * 2;
+
+    final GM_Point geoPosition = WspmProfileHelper.getGeoPosition( bezugspunktX.doubleValue(), source );
+
+    final IProfileObjectRecords targetRecords = target.getRecords();
+    targetRecords.clearRecords();
+
+    final IProfileObjectRecord fsRecord = targetRecords.addNewRecord();
+    fsRecord.setId( "1" ); //$NON-NLS-1$
+    // fsRecord.setComment( null );
+    fsRecord.setBreite( bezugspunktX );
+    fsRecord.setHoehe( bezugspunktY );
+    fsRecord.setRechtswert( geoPosition.getX() );
+    fsRecord.setHochwert( geoPosition.getY() );
+    fsRecord.setCode( fsCode );
+
+    final IProfileObjectRecord ukRecord = targetRecords.addNewRecord();
+    ukRecord.setId( "2" ); //$NON-NLS-1$
+    // ukRecord.setComment( null );
+    ukRecord.setBreite( bezugspunktX );
+    ukRecord.setHoehe( bezugspunktY + hoehe );
+    ukRecord.setRechtswert( geoPosition.getX() );
+    ukRecord.setHochwert( geoPosition.getY() );
+    ukRecord.setCode( ukCode );
   }
 }
