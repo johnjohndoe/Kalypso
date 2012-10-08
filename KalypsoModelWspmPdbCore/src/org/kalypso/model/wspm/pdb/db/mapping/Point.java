@@ -21,6 +21,8 @@ import javax.persistence.Table;
 @Table(name = "point", schema = "pdb")
 public class Point implements java.io.Serializable
 {
+  public static final String PROPERTY_WIDTH = "width"; //$NON-NLS-1$
+
   private BigDecimal m_id;
 
   private CrossSectionPart m_crossSectionPart;

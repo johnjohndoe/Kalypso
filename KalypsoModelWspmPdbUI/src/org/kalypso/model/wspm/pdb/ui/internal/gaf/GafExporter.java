@@ -65,6 +65,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
@@ -191,7 +192,7 @@ public class GafExporter
     final State state = new State();
     final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final CrossSectionPartType[] partTypes = buildPartTypes();
+    final CrossSectionPartTypes partTypes = buildPartTypes();
 
     final CheckinStateOperationData data = new CheckinStateOperationData( partTypes, gafCodes, coefficients, null, state, null, profiles, coordinateSystem, null, StringUtils.EMPTY );
 
@@ -205,7 +206,7 @@ public class GafExporter
   /**
    * Simply builds part types from all known gaf kinds.
    */
-  private CrossSectionPartType[] buildPartTypes( )
+  private CrossSectionPartTypes buildPartTypes( )
   {
     final GafKind[] kinds = GafKind.values();
 
@@ -214,7 +215,7 @@ public class GafExporter
     for( final GafKind kind : kinds )
       types.add( new CrossSectionPartType( kind.name(), null, null, null ) );
 
-    return types.toArray( new CrossSectionPartType[types.size()] );
+    return new CrossSectionPartTypes( types.toArray( new CrossSectionPartType[types.size()] ) );
   }
 
   private IWspmClassification getWspmClassification( final IProfileFeature[] profiles )

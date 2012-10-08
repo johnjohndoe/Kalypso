@@ -266,6 +266,8 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
       final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
 
+      // FIXME: maybe return status of operation
+
       return RunnableContextHelper.execute( getContainer(), true, false, runnable );
     }
     catch( final CoreException e )

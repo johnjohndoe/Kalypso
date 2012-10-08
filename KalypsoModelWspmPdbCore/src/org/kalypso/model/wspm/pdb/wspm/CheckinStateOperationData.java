@@ -25,6 +25,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.wspm.ClassChecker;
@@ -38,12 +39,12 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * Data object for the {@link CheckinStateOperation}.
- * 
+ *
  * @author Gernot Belger
  */
 public class CheckinStateOperationData
 {
-  private final CrossSectionPartType[] m_partTypes;
+  private final CrossSectionPartTypes m_partTypes;
 
   private final GafCodes m_gafCodes;
 
@@ -67,7 +68,7 @@ public class CheckinStateOperationData
 
   private final String m_username;
 
-  public CheckinStateOperationData( final CrossSectionPartType[] partTypes, final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody waterBody, final State state, final TuhhReach reach, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final String username )
+  public CheckinStateOperationData( final CrossSectionPartTypes partTypes, final GafCodes gafCodes, final ICoefficients coefficients, final WaterBody waterBody, final State state, final TuhhReach reach, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final String username )
   {
     m_partTypes = partTypes;
     m_gafCodes = gafCodes;
@@ -117,13 +118,11 @@ public class CheckinStateOperationData
     if( m_partTypes == null )
       return null;
 
-    for( final CrossSectionPartType type : m_partTypes )
-    {
-      if( type.getCategory().equals( partType ) )
-        return type;
-    }
+    final CrossSectionPartType type = m_partTypes.findPartType( partType );
+    if( type == null )
+      throw new IllegalArgumentException( String.format( "Unknown part type: %s", partType ) );
 
-    throw new IllegalArgumentException( String.format( "Unknown part type: %s", partType ) );
+    return type;
   }
 
   public GeometryFactory getGeometryFactory( )
