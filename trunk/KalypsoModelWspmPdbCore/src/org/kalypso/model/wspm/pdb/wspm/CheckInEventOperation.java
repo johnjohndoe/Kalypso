@@ -93,13 +93,12 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
       session = connection.openSession();
 
       final Event event = m_data.getEvent();
-      event.setEditingUser( connection.getSettings().getUsername() );
 
       final WspmFixation fixation = m_data.getWspmObject();
 
       final Map<String, WaterBody> waterHash = m_data.getWaterHash();
 
-      final CheckinEventPdbOperation operation = new CheckinEventPdbOperation( waterHash, event, fixation, new SubProgressMonitor( monitor, 90 ) );
+      final CheckinEventPdbOperation operation = new CheckinEventPdbOperation( connection, waterHash, event, fixation, new SubProgressMonitor( monitor, 90 ) );
       new Executor( session, operation ).execute();
 
       session.close();

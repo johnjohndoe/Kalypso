@@ -61,7 +61,6 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
-import org.hibernatespatial.mgeom.MGeometryFactory;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -82,9 +81,8 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ChooseWaterPage;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
+import org.kalypso.model.wspm.pdb.wspm.SaveEventOperation;
 import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
-
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Gernot Belger
@@ -291,9 +289,8 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
     final PdbInfo info = connection.getInfo();
     final int dbSRID = info.getSRID();
-    final MGeometryFactory geometryFactory = new MGeometryFactory( new PrecisionModel(), dbSRID );
 
-    return new SaveEventOperation( event, username, geometryFactory );
+    return new SaveEventOperation( event, username, dbSRID );
   }
 
   private WaterBody findPreferredWater( final IStructuredSelection selection )

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
+package org.kalypso.model.wspm.pdb.wspm;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -66,8 +66,9 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
-import org.kalypso.model.wspm.pdb.wspm.CheckinHorizonPartOperation;
+import org.kalypso.model.wspm.pdb.internal.wspm.Waterlevel2dWorker;
+
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Gernot Belger
@@ -82,17 +83,17 @@ public class SaveEventOperation implements IPdbOperation
 
   private IStatus m_log;
 
-  public SaveEventOperation( final Event event, final String username, final MGeometryFactory geometryFactory )
+  public SaveEventOperation( final Event event, final String username, final int dbSRID )
   {
     m_event = event;
     m_username = username;
-    m_geometryFactory = geometryFactory;
+    m_geometryFactory = new MGeometryFactory( new PrecisionModel(), dbSRID );
   }
 
   @Override
   public String getLabel( )
   {
-    return Messages.getString( "SaveEventOperation.0" ); //$NON-NLS-1$
+    return "Save Event";
   }
 
   public IStatus getLog( )
