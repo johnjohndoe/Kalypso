@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -49,7 +50,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -61,11 +64,13 @@ import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
+import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.pdb.wspm.CheckinHelper;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperationData;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -80,25 +85,22 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class CheckinPartOperation
 {
-// private static final BigDecimal VEGETATION_0 = new BigDecimal( 0 );
+  // private static final BigDecimal VEGETATION_0 = new BigDecimal( 0 );
 
   private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
   private final CrossSectionPart m_part = new CrossSectionPart();
 
-  private final IProfile m_profil;
+  private final IProfile m_profile;
 
   private final String m_profilSRS;
 
-  private final IPartBuilder m_partBuilder;
-
   private final CheckinStateOperationData m_data;
 
-  public CheckinPartOperation( final CheckinStateOperationData data, final IProfile profil, final String profilSRS, final IPartBuilder partBuilder )
+  public CheckinPartOperation( final CheckinStateOperationData data, final IProfile profil, final String profilSRS )
   {
     m_data = data;
-    m_partBuilder = partBuilder;
-    m_profil = profil;
+    m_profile = profil;
     m_profilSRS = profilSRS;
   }
 
@@ -112,9 +114,9 @@ public class CheckinPartOperation
     /* Names must be unique within each part. */
     final PDBNameGenerator nameGenerator = new PDBNameGenerator();
 
-    final String heightComponentID = m_partBuilder.getHeightComponent();
+    final String heightComponentID = IWspmPointProperties.POINT_PROPERTY_HOEHE;
 
-    final IProfileRecord[] records = m_profil.getPoints();
+    final IProfileRecord[] records = m_profile.getPoints();
     final List<Coordinate> lineCrds = new ArrayList<>( records.length );
     for( int i = 0; i < records.length; i++ )
     {
@@ -127,12 +129,12 @@ public class CheckinPartOperation
 
       final String profileCode = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, null );
 
-      final String pdbCode = toGafCode( profileCode, records, i );
+      final String pdbCode = toGafCode( profileCode );
 
       /* hyk is determined completely independent of code; just use position of markers in profile */
-      final String hyk = m_partBuilder.getHykCode( record );
+      final String hyk = getHykCode( record );
 
-      final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, heightComponentID );
+      final GM_Point loc = WspmGeometryUtilities.createLocation( m_profile, record, m_profilSRS, heightComponentID );
       final com.vividsolutions.jts.geom.Point location = CheckinHelper.toPoint( loc, m_data.getTransformer() );
 
       // FIMXE: check class
@@ -187,8 +189,8 @@ public class CheckinPartOperation
       m_part.setLine( line );
     }
 
-    final double station = m_profil.getStation();
-    final String warning = String.format( Messages.getString( "CheckinPartOperation_0" ), station, m_partBuilder.getKind() ); //$NON-NLS-1$
+    final double station = m_profile.getStation();
+    final String warning = String.format( Messages.getString( "CheckinPartOperation_0" ), station, GafKind.P ); //$NON-NLS-1$
     return m_stati.asMultiStatusOrOK( warning );
   }
 
@@ -232,22 +234,59 @@ public class CheckinPartOperation
     return roughness;
   }
 
-  /**
-   * Checks if the given code is a legal gaf code, else let the builder create a suitable code.
-   */
-  private String toGafCode( final String code, final IProfileRecord[] records, final int recordIndex )
+  private String toGafCode( final String code )
   {
-    final GafKind kind = m_partBuilder.getKind();
+    final GafKind kind = GafKind.P;
     final GafCodes codes = m_data.getGafCodes();
 
     final GafCode gafCode = codes.getCode( code );
-
-    /* if it is a legal code of this part, just return it */
     if( gafCode != null && gafCode.getKind() == kind )
       return gafCode.getCode();
 
-    /* let part builder guess it -> either default, or for building, depending on position of record */
-    return m_partBuilder.guessCode( records, recordIndex );
+    return IGafConstants.CODE_PP;
+  }
+
+  public String getHykCode( final IProfileRecord record )
+  {
+    final Collection<String> codes = new ArrayList<>( 3 );
+
+    // IMPORTANT: This order is important for gaf file export, do not change.
+
+    final IProfilePointMarker[] dbMarkers = m_profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final String codeBD = checkMarker( record, dbMarkers, IGafConstants.CODE_PA, IGafConstants.CODE_PE );
+    if( codeBD != null )
+      codes.add( codeBD );
+
+    final IProfilePointMarker[] tfMarkers = m_profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final String codeTF = checkMarker( record, tfMarkers, IGafConstants.CODE_LU, IGafConstants.CODE_RU );
+    if( codeTF != null )
+      codes.add( codeTF );
+
+    final IProfilePointMarker[] bvMarkers = m_profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    final String codeBV = checkMarker( record, bvMarkers, IGafConstants.CODE_LBOK, IGafConstants.CODE_RBOK );
+    if( codeBV != null )
+      codes.add( codeBV );
+
+    if( codes.isEmpty() )
+      return null;
+
+    return StringUtils.join( codes, IGafConstants.HYK_CODE_SEPARATOR );
+  }
+
+  private String checkMarker( final IProfileRecord record, final IProfilePointMarker[] markers, final String codeStart, final String codeEnd )
+  {
+    for( final IProfilePointMarker marker : markers )
+    {
+      if( marker.getPoint().getRecord() == record.getRecord() )
+      {
+        if( marker == markers[0] )
+          return codeStart;
+        else
+          return codeEnd;
+      }
+    }
+
+    return null;
   }
 
   private String getStringValue( final IRecord record, final String componentId, final String defaultValue )
