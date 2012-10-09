@@ -72,12 +72,15 @@ import org.kalypso.model.wspm.pdb.db.utils.ConsecutiveNumComparator;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -345,6 +348,15 @@ public class CrossSectionConverter implements IProfileTransaction
         return new BuildingWehr( m_profile );
     }
 
+    if( partCategory.equals( IGafConstants.KIND_TR ) )
+      return new BuildingTrapez();
+
+    if( partCategory.equals( IGafConstants.KIND_SINUOSITAET ) )
+      return new SinuositaetProfileObject();
+
+    if( partCategory.equals( IGafConstants.KIND_ENERGYLOSS ) )
+      return new EnergylossProfileObject();
+
     return new GenericProfileHorizon();
   }
 
@@ -488,6 +500,30 @@ public class CrossSectionConverter implements IProfileTransaction
       ei.setBezugspunktY( new Double( bezugspunktY ) );
       ei.setBreite( new Double( breite ) );
       ei.setHoehe( new Double( hoehe ) );
+    }
+
+    if( profileObject instanceof BuildingMaul )
+    {
+      final BuildingMaul maul = (BuildingMaul)profileObject;
+
+      final IProfileObjectRecord ukRecord = findPoint( profileObject, IGafConstants.CODE_MAUK );
+      final IProfileObjectRecord fsRecord = findPoint( profileObject, IGafConstants.CODE_MAFS );
+      if( ukRecord == null || fsRecord == null )
+        return;
+
+      final com.vividsolutions.jts.geom.Point ukPoint = ukRecord.getPoint();
+      final com.vividsolutions.jts.geom.Point fsPoint = fsRecord.getPoint();
+
+      /* Maul buildings are interpreted with 1:1 diagonales. */
+      final double bezugspunktX = fsPoint.getX();
+      final double bezugspunktY = fsPoint.getY();
+      final double breite = fsPoint.distance( ukPoint );
+      final double hoehe = fsPoint.distance( ukPoint );
+
+      maul.setBezugspunktX( new Double( bezugspunktX ) );
+      maul.setBezugspunktY( new Double( bezugspunktY ) );
+      maul.setBreite( new Double( breite ) );
+      maul.setHoehe( new Double( hoehe ) );
     }
   }
 
