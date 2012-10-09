@@ -26,9 +26,11 @@ import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
@@ -61,28 +63,67 @@ public class ProfileObjectHelper
   public static IProfileObject createProfileObject( final IProfileObject profileObject )
   {
     if( profileObject instanceof BuildingBruecke )
-      return new BuildingBruecke( null );
+    {
+      final BuildingBruecke buildingBruecke = new BuildingBruecke( null );
+      buildingBruecke.setValue( IGafConstants.PART_TYPE, GafKind.UK.toString() );
+      return buildingBruecke;
+    }
 
     if( profileObject instanceof BuildingWehr )
-      return new BuildingWehr( null );
+    {
+      final BuildingWehr buildingWehr = new BuildingWehr( null );
+      buildingWehr.setValue( IGafConstants.PART_TYPE, GafKind.OK.toString() );
+      return buildingWehr;
+    }
 
     if( profileObject instanceof BuildingEi )
-      return new BuildingEi();
+    {
+      final BuildingEi buildingEi = new BuildingEi();
+      buildingEi.setValue( IGafConstants.PART_TYPE, GafKind.EI.toString() );
+      return buildingEi;
+    }
 
     if( profileObject instanceof BuildingKreis )
-      return new BuildingKreis();
+    {
+      final BuildingKreis buildingKreis = new BuildingKreis();
+      buildingKreis.setValue( IGafConstants.PART_TYPE, GafKind.K.toString() );
+      return buildingKreis;
+    }
 
     if( profileObject instanceof BuildingMaul )
-      return new BuildingMaul();
+    {
+      final BuildingMaul buildingMaul = new BuildingMaul();
+      buildingMaul.setValue( IGafConstants.PART_TYPE, GafKind.MA.toString() );
+      return buildingMaul;
+    }
 
     if( profileObject instanceof BuildingTrapez )
-      return new BuildingTrapez();
+    {
+      final BuildingTrapez buildingTrapez = new BuildingTrapez();
+      buildingTrapez.setValue( IGafConstants.PART_TYPE, IGafConstants.KIND_TR );
+      return buildingTrapez;
+    }
 
     if( profileObject instanceof SinuositaetProfileObject )
-      return new SinuositaetProfileObject();
+    {
+      final SinuositaetProfileObject sinuositaetProfileObject = new SinuositaetProfileObject();
+      sinuositaetProfileObject.setValue( IGafConstants.PART_TYPE, IGafConstants.KIND_SINUOSITAET );
+      return sinuositaetProfileObject;
+    }
 
     if( profileObject instanceof EnergylossProfileObject )
-      return new EnergylossProfileObject();
+    {
+      final EnergylossProfileObject energylossProfileObject = new EnergylossProfileObject();
+      energylossProfileObject.setValue( IGafConstants.PART_TYPE, IGafConstants.KIND_ENERGYLOSS );
+      return energylossProfileObject;
+    }
+
+    if( profileObject instanceof GenericProfileHorizon )
+    {
+      // Should already have a part type in the original, so if the values are cloned, so is the part type.
+      final GenericProfileHorizon genericProfileHorizon = new GenericProfileHorizon();
+      return genericProfileHorizon;
+    }
 
     return null;
   }

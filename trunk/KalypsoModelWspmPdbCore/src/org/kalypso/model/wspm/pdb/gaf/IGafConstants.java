@@ -76,16 +76,19 @@ public interface IGafConstants
 
   String CODE_WS = "WS"; //$NON-NLS-1$
 
-  String CODE_KRUK = "KRUK";
+  String CODE_KRUK = "KRUK"; //$NON-NLS-1$
 
-  String CODE_KRFS = "KRFS";
+  String CODE_KRFS = "KRFS"; //$NON-NLS-1$
 
-  String CODE_EIUK = "EIUK";
+  String CODE_EIUK = "EIUK"; //$NON-NLS-1$
 
-  String CODE_EIFS = "EIFS";
+  String CODE_EIFS = "EIFS"; //$NON-NLS-1$
+
+  String CODE_MAUK = "MAUK"; //$NON-NLS-1$
+
+  String CODE_MAFS = "MAFS"; //$NON-NLS-1$
 
   /* HYK */
-
   String HYK_PA = CODE_PA;
 
   String HYK_PE = CODE_PE;
@@ -99,6 +102,13 @@ public interface IGafConstants
   String HYK_RU = CODE_RU;
 
   char HYK_CODE_SEPARATOR = ',';
+
+  /* special building codes */
+  String KIND_TR = "TR"; //$NON-NLS-1$
+
+  String KIND_ENERGYLOSS = "ENERGYLOSS"; //$NON-NLS-1$
+
+  String KIND_SINUOSITAET = "SINUOSITAET"; //$NON-NLS-1$
 
   /* special metadata for profile objects */
   String PART_NAME = "PART_NAME"; //$NON-NLS-1$
