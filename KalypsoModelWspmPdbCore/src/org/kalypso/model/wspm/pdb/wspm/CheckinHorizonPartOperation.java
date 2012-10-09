@@ -138,6 +138,8 @@ public class CheckinHorizonPartOperation
       point.setHeight( new BigDecimal( hoehe.doubleValue() ) );
       point.setCode( pdbCode );
       point.setLocation( location );
+
+      m_part.getPoints().add( point );
     }
 
     final String type = m_profileObject.getValue( IGafConstants.PART_TYPE, null );
