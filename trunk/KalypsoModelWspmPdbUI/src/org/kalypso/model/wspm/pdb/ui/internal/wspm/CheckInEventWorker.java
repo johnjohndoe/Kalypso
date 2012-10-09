@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckInEventData;
 import org.kalypso.model.wspm.pdb.wspm.CheckInEventOperation;
+import org.kalypso.model.wspm.pdb.wspm.SaveEventOperation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
@@ -138,6 +139,9 @@ public class CheckInEventWorker implements ICheckInWorker
   @Override
   public boolean performFinish( final IWizardContainer container )
   {
+    if( !SaveEventOperation.askForEmptyState( m_data.getEvent(), container.getShell(), container.getCurrentPage().getWizard().getWindowTitle() ) )
+      return false;
+
     final CheckInEventOperation operation = new CheckInEventOperation( m_data );
 
     // FIXME: if wizard is not closed due to error, we need to reinitialize the event, as it is still attached to the old session

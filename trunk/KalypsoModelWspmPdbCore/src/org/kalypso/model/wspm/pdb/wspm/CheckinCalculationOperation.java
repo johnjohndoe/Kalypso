@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.pdb.wspm;
 
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -77,7 +76,7 @@ public class CheckinCalculationOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "CheckinCalculationOperation.0" ), 100 ); //$NON-NLS-1$
 
@@ -102,31 +101,28 @@ public class CheckinCalculationOperation implements ICoreRunnableWithProgress
       session.close();
 
       // REMARK: we do not change the local object, that may cause too much problems... compare with checkin fixation
+
+      return operation.getLog();
     }
     catch( final HibernateException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, CheckInEventOperation.STR_FAILED_TO_WRITE_TO_DATABASE, e );
-      throw new CoreException( status );
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, CheckInEventOperation.STR_FAILED_TO_WRITE_TO_DATABASE, e );
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, CheckInEventOperation.STR_FAILED_TO_WRITE_TO_DATABASE, e );
-      throw new CoreException( status );
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, CheckInEventOperation.STR_FAILED_TO_WRITE_TO_DATABASE, e );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.STR_OPERATION_FAILED, e ); //$NON-NLS-1$
-      throw new CoreException( status );
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.STR_OPERATION_FAILED, e ); //$NON-NLS-1$
     }
     finally
     {
       monitor.done();
     }
-
-    return Status.OK_STATUS;
   }
 
   public void setLengthSections( final WspmResultLengthSection lengthSection )

@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -81,7 +80,7 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "CheckInEventOperation.1" ), 100 ); //$NON-NLS-1$
 
@@ -104,31 +103,28 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
       session.close();
 
       updateFixation( event );
+
+      return operation.getLog();
     }
     catch( final HibernateException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, STR_FAILED_TO_WRITE_TO_DATABASE, e );
-      throw new CoreException( status );
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, STR_FAILED_TO_WRITE_TO_DATABASE, e );
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, STR_FAILED_TO_WRITE_TO_DATABASE, e );
-      throw new CoreException( status );
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, STR_FAILED_TO_WRITE_TO_DATABASE, e );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.STR_OPERATION_FAILED, e );
-      throw new CoreException( status );
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.STR_OPERATION_FAILED, e );
     }
     finally
     {
       monitor.done();
     }
-
-    return Status.OK_STATUS;
   }
 
   /**

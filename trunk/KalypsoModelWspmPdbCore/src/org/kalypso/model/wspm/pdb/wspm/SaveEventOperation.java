@@ -50,6 +50,8 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
 import org.hibernatespatial.mgeom.MGeometryFactory;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -204,5 +206,14 @@ public class SaveEventOperation implements IPdbOperation
     }
 
     return hash;
+  }
+
+  public static boolean askForEmptyState( final Event event, final Shell shell, final String dialogTitle )
+  {
+    if( event.getState() != null )
+      return true;
+
+    final String message = "Das Ereignis ist keinem Zustand zugeordnet, 2D-Wasserspiegel werden nicht erzeugt. Trotzdem fortfahren?";
+    return MessageDialog.openConfirm( shell, dialogTitle, message );
   }
 }
