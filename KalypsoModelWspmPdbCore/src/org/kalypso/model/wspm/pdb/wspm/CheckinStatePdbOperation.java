@@ -81,6 +81,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHor
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -313,7 +314,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
   /**
    * This function creates a cross section part using the records of the profile.
-   *
+   * 
    * @param profile
    *          The profile.
    * @param profileSRS
@@ -348,7 +349,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     }
 
     /* Repair. */
-    repair( clonedProfileObjects );
+    repairBridges( clonedProfileObjects );
 
     /* Update from components of profile. */
     updateFromComponents( clonedProfileObjects, profile );
@@ -367,7 +368,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     return newProfileObject;
   }
 
-  private void repair( final List<IProfileObject> clonedProfileObjects )
+  private void repairBridges( final List<IProfileObject> clonedProfileObjects )
   {
     /* The used ids. */
     final Set<String> usedIds = findUsedIds( clonedProfileObjects );
@@ -387,10 +388,17 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
         if( okProfileObject != null )
           continue;
 
-        /* If no ok profile object was found, we create one. */
-        /* We also create the id. */
+        /* We create/reuse the bridge id. */
         final String bridgeId = findFreeId( bridge, usedIds );
         bridge.setBrueckeId( bridgeId );
+
+        /* Search for ok profile object without bridge id and use it. */
+        final IProfileObject okPO = findOkProfileObjectWithoutId( clonedProfileObjectsArray );
+        if( okPO != null )
+        {
+          okPO.setValue( BuildingBruecke.KEY_BRUECKE_ID, bridgeId );
+          continue;
+        }
 
         final GenericProfileHorizon genericProfileHorizon = new GenericProfileHorizon();
         genericProfileHorizon.setValue( IGafConstants.PART_TYPE, GafKind.OK.toString() );
@@ -442,6 +450,12 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     return freeId;
   }
 
+  private IProfileObject findOkProfileObjectWithoutId( final IProfileObject[] clonedProfileObjectsArray )
+  {
+    // TODO
+    return null;
+  }
+
   private void updateFromComponents( final List<IProfileObject> clonedProfileObjects, final IProfile profile )
   {
     for( final IProfileObject clonedProfileObject : clonedProfileObjects )
@@ -463,6 +477,9 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
       if( clonedProfileObject instanceof BuildingKreis )
         ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingKreis)clonedProfileObject, null, IGafConstants.CODE_KRFS, IGafConstants.CODE_KRUK );
+
+      if( clonedProfileObject instanceof BuildingMaul )
+        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingMaul)clonedProfileObject, ((BuildingMaul)clonedProfileObject).getHoehe(), IGafConstants.CODE_MAFS, IGafConstants.CODE_MAUK );
     }
   }
 
@@ -491,7 +508,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     final CrossSectionPartTypes partTypes = new CrossSectionPartTypes( session );
     final double station = profile.getStation();
 
-    // REAMRK: do not set event, even for 'W' part types -> the original 'W' points of GAF should remain, even if corresponding event is deleted
+    // REMARK: do not set event, even for 'W' part types -> the original 'W' points of GAF should remain, even if corresponding event is deleted
     final Event event = null;
 
     final int dbSRID = m_data.getGeometryFactory().getSRID();

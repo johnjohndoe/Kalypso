@@ -115,8 +115,6 @@ public interface IGafConstants
 
   String PART_TYPE = "PART_TYPE"; //$NON-NLS-1$
 
-  String PART_EVENT = "PART_EVENT"; //$NON-NLS-1$
-
   /** profile object metadata key for discharge of 2d waterlevels */
   String METADATA_WATERLEVEL_DISCHARGE = "WATERLEVEL_DISCHARGE"; //$NON-NLS-1$
 }

@@ -47,6 +47,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.IBeanValueProperty;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
@@ -80,6 +82,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.Building
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -296,6 +299,9 @@ public class CrossSectionConverter implements IProfileTransaction
     if( profileObjects.size() > 0 )
       m_profile.addProfileObjects( profileObjects.toArray( new IProfileObject[] {} ) );
 
+    // TODO Search one bridge and one ok without id and repair...
+    repairBridges();
+
     /* Update the components in the profile. */
     final IProfileObject[] pos = m_profile.getProfileObjects();
     for( final IProfileObject po : pos )
@@ -343,8 +349,8 @@ public class CrossSectionConverter implements IProfileTransaction
     if( partCategory.equals( GafKind.OK.toString() ) )
     {
       /* REMARK: If OK and UK exists we have a bridge, else a weir. */
-      final CrossSectionPart part = m_section.findPartByCategory( GafKind.UK.toString() );
-      if( part == null )
+      final boolean hasCulvertOrBridge = hasCategory( GafKind.UK.toString(), GafKind.K.toString(), GafKind.EI.toString(), GafKind.MA.toString(), GafKind.AR.toString(), GafKind.HA.toString(), IGafConstants.KIND_TR );
+      if( !hasCulvertOrBridge )
         return new BuildingWehr( m_profile );
     }
 
@@ -358,6 +364,17 @@ public class CrossSectionConverter implements IProfileTransaction
       return new EnergylossProfileObject();
 
     return new GenericProfileHorizon();
+  }
+
+  private boolean hasCategory( final String... category )
+  {
+    for( final String element : category )
+    {
+      if( m_section.findPartByCategory( element ) != null )
+        return true;
+    }
+
+    return false;
   }
 
   private void fillProfileObjectRecords( final CrossSectionPart part, final IProfileObject profileObject )
@@ -390,6 +407,11 @@ public class CrossSectionConverter implements IProfileTransaction
       record.setHochwert( location.getY() );
       record.setCode( code );
     }
+  }
+
+  private void repairBridges( )
+  {
+    // TODO
   }
 
   private void updateComponents( final IProfileObject profileObject )
@@ -454,76 +476,58 @@ public class CrossSectionConverter implements IProfileTransaction
     /* Set specific metadata. */
     profileObject.setValue( IGafConstants.PART_NAME, part.getName() );
     profileObject.setValue( IGafConstants.PART_TYPE, part.getCrossSectionPartType().getCategory() );
-    // TODO profileObject.setValue( PART_EVENT, part.getEvent().getName() );
 
     /* Guess special cases. */
     if( profileObject instanceof BuildingKreis )
-    {
-      final BuildingKreis kreis = (BuildingKreis)profileObject;
-
-      final IProfileObjectRecord ukRecord = findPoint( profileObject, IGafConstants.CODE_KRUK );
-      final IProfileObjectRecord fsRecord = findPoint( profileObject, IGafConstants.CODE_KRFS );
-      if( ukRecord == null || fsRecord == null )
-        return;
-
-      final com.vividsolutions.jts.geom.Point ukPoint = ukRecord.getPoint();
-      final com.vividsolutions.jts.geom.Point fsPoint = fsRecord.getPoint();
-
-      final double bezugspunktX = fsPoint.getX();
-      final double bezugspunktY = fsPoint.getY();
-      final double durchmesser = fsPoint.distance( ukPoint );
-
-      kreis.setBezugspunktX( new Double( bezugspunktX ) );
-      kreis.setBezugspunktY( new Double( bezugspunktY ) );
-      kreis.setBreite( new Double( durchmesser ) );
-    }
+      guessSpecialCases( (ICulvertBuilding)profileObject, IGafConstants.CODE_KRUK, IGafConstants.CODE_KRFS );
 
     if( profileObject instanceof BuildingEi )
-    {
-      final BuildingEi ei = (BuildingEi)profileObject;
-
-      final IProfileObjectRecord ukRecord = findPoint( profileObject, IGafConstants.CODE_EIUK );
-      final IProfileObjectRecord fsRecord = findPoint( profileObject, IGafConstants.CODE_EIFS );
-      if( ukRecord == null || fsRecord == null )
-        return;
-
-      final com.vividsolutions.jts.geom.Point ukPoint = ukRecord.getPoint();
-      final com.vividsolutions.jts.geom.Point fsPoint = fsRecord.getPoint();
-
-      /* Egg buildings are interpreted with 1:1 diagonales. */
-      final double bezugspunktX = fsPoint.getX();
-      final double bezugspunktY = fsPoint.getY();
-      final double breite = fsPoint.distance( ukPoint );
-      final double hoehe = fsPoint.distance( ukPoint );
-
-      ei.setBezugspunktX( new Double( bezugspunktX ) );
-      ei.setBezugspunktY( new Double( bezugspunktY ) );
-      ei.setBreite( new Double( breite ) );
-      ei.setHoehe( new Double( hoehe ) );
-    }
+      guessSpecialCases( (ICulvertBuilding)profileObject, IGafConstants.CODE_EIUK, IGafConstants.CODE_EIFS );
 
     if( profileObject instanceof BuildingMaul )
+      guessSpecialCases( (ICulvertBuilding)profileObject, IGafConstants.CODE_MAUK, IGafConstants.CODE_MAFS );
+  }
+
+  private void guessSpecialCases( final ICulvertBuilding profileObject, final String ukCode, final String fsCode )
+  {
+    /* Check, if one value is set. */
+    final String[] properties = profileObject.getProperties();
+    for( final String property : properties )
     {
-      final BuildingMaul maul = (BuildingMaul)profileObject;
-
-      final IProfileObjectRecord ukRecord = findPoint( profileObject, IGafConstants.CODE_MAUK );
-      final IProfileObjectRecord fsRecord = findPoint( profileObject, IGafConstants.CODE_MAFS );
-      if( ukRecord == null || fsRecord == null )
+      /* If one value is set, we do not guess. */
+      final IBeanValueProperty beanValueProperty = BeanProperties.value( profileObject.getClass(), property );
+      final Object value = beanValueProperty.getValue( profileObject );
+      if( value != null )
         return;
+    }
 
-      final com.vividsolutions.jts.geom.Point ukPoint = ukRecord.getPoint();
-      final com.vividsolutions.jts.geom.Point fsPoint = fsRecord.getPoint();
+    /* Find the uk and fs point. */
+    final IProfileObjectRecord ukRecord = findPoint( profileObject, ukCode );
+    final IProfileObjectRecord fsRecord = findPoint( profileObject, fsCode );
+    if( ukRecord == null || fsRecord == null )
+      return;
 
-      /* Maul buildings are interpreted with 1:1 diagonales. */
-      final double bezugspunktX = fsPoint.getX();
-      final double bezugspunktY = fsPoint.getY();
-      final double breite = fsPoint.distance( ukPoint );
-      final double hoehe = fsPoint.distance( ukPoint );
+    /* Get the geometries. */
+    final com.vividsolutions.jts.geom.Point ukPoint = ukRecord.getPoint();
+    final com.vividsolutions.jts.geom.Point fsPoint = fsRecord.getPoint();
 
-      maul.setBezugspunktX( new Double( bezugspunktX ) );
-      maul.setBezugspunktY( new Double( bezugspunktY ) );
-      maul.setBreite( new Double( breite ) );
-      maul.setHoehe( new Double( hoehe ) );
+    /* Calcuate the values for the profile object. */
+    /* Egg/Maul buildings are interpreted with 1:1 diagonales. */
+    final double bezugspunktX = fsPoint.getX();
+    final double bezugspunktY = fsPoint.getY();
+    final double breite = fsPoint.distance( ukPoint );
+    final double hoehe = fsPoint.distance( ukPoint );
+
+    /* Set the values. */
+    profileObject.setBezugspunktX( new Double( bezugspunktX ) );
+    profileObject.setBezugspunktY( new Double( bezugspunktY ) );
+    profileObject.setBreite( new Double( breite ) );
+
+    /* Only the egg and maul buildings do have a height. */
+    if( profileObject instanceof BuildingEi || profileObject instanceof BuildingMaul )
+    {
+      final IBeanValueProperty beanValueProperty = BeanProperties.value( profileObject.getClass(), BuildingEi.PROPERTY_HOEHE );
+      beanValueProperty.setValue( profileObject, new Double( hoehe ) );
     }
   }
 
