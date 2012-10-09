@@ -50,7 +50,7 @@ public class BuildingEi extends AbstractCulvertBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_EI;
 
-  private static final String PROPERTY_HOEHE = "hoehe"; //$NON-NLS-1$
+  public static final String PROPERTY_HOEHE = "hoehe"; //$NON-NLS-1$
 
   public static final String KEY_HOEHE = "EI_HOEHE"; //$NON-NLS-1$
 

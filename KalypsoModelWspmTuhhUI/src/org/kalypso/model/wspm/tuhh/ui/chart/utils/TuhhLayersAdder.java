@@ -174,6 +174,7 @@ public final class TuhhLayersAdder
 
     setInitialWeirValues( bw, profil );
 
+    // REMARK: Does not delete the ok parts for bridges (in every add method)...
     final ProfileObjectRemove removeChange = new ProfileObjectRemove( profil, existingBuildings );
     final ProfileObjectAdd addChange = new ProfileObjectAdd( profil, bw );
     final IProfileChange[] changes = new IProfileChange[] { removeChange, addChange };
