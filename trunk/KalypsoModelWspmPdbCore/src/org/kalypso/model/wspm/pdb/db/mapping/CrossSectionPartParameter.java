@@ -129,5 +129,4 @@ public class CrossSectionPartParameter implements Serializable
   {
     m_crossSectionPart = crossSectionPart;
   }
-
 }

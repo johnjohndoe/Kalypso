@@ -16,20 +16,23 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.core.profile.profileobjects;
+package org.kalypso.model.wspm.pdb.wspm;
 
-import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
+import java.math.BigDecimal;
+
+import org.hibernatespatial.mgeom.MLineString;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 
 /**
- * @author Holger Albert
+ * Helper interface for {@link SaveEventOperation}, provides an optional {@link org.kalypso.model.wspm.pdb.db.mapping.CrossSection}, and the profile line for projection of the waterlevel.
+ *
+ * @author Gernot Belger
  */
-public class GenericProfileHorizon extends AbstractProfileObject
+public interface ISectionProvider
 {
-  public static final String ID = "GenericProfileHorizon"; //$NON-NLS-1$
+  BigDecimal getStation( );
 
-  @Override
-  public String getId( )
-  {
-    return ID;
-  }
+  CrossSection getSection( );
+
+  MLineString getProfileLine( );
 }
