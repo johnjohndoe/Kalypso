@@ -224,6 +224,8 @@ INSERT INTO style_array (id, name) VALUES (4,'Allgemeiner Bauwerkspunkt' );
 INSERT INTO style_array (id, name) VALUES (5,'Bauwerksunterkante' );
 INSERT INTO style_array (id, name) VALUES (6,'Durchlass' );
 INSERT INTO style_array (id, name) VALUES (7,'Bauwerksoberkante' );
+INSERT INTO style_array (id, name) VALUES (8,'Energieverlust' );
+INSERT INTO style_array (id, name) VALUES (9,'Sinuosität' );
 
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: insert into Style'  where key ='Version';
 INSERT INTO style (id, consecutive_num, name, description, style_array_id) VALUES (1, 1, 'Profillinie', '', 1 );
@@ -275,6 +277,9 @@ INSERT INTO cs_part_type (category, description, style_array_id) VALUES ('MA', '
 INSERT INTO cs_part_type (category, description, style_array_id) VALUES ('AR', 'ARMCO71-Profil', 6);
 INSERT INTO cs_part_type (category, description, style_array_id) VALUES ('HA', 'HAMCO84-Profil', 6);
 INSERT INTO cs_part_type (category, description, style_array_id) VALUES ('OK', 'Bauwerksoberkante', 7);
+INSERT INTO cs_part_type (category, description, style_array_id) VALUES ('TR', 'Trapez', 6);
+INSERT INTO cs_part_type (category, description, style_array_id) VALUES ('ENERGYLOSS', 'Energieverlust', 8);
+INSERT INTO cs_part_type (category, description, style_array_id) VALUES ('SINUOSITAET', 'Sinuosität', 9);
 
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: alter CS_Part (2)'  where key ='Version';
 ALTER TABLE Cross_Section_Part

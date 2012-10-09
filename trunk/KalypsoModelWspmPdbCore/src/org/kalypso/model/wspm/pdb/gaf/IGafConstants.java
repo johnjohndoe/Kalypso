@@ -101,7 +101,7 @@ public interface IGafConstants
 
   String HYK_RU = CODE_RU;
 
-  char HYK_CODE_SEPARATOR = ',';
+  char HYK_CODE_SEPARATOR = ','; //$NON-NLS-1$
 
   /* special building codes */
   String KIND_TR = "TR"; //$NON-NLS-1$
