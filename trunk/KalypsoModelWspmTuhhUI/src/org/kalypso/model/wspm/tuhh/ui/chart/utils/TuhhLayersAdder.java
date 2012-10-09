@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.Building
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
+import org.kalypso.model.wspm.tuhh.ui.chart.SecondProfileDataManager;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -73,7 +74,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * FIXME: ugly! introduce class 'LayerAdder' and have implementations for each type
- * 
+ *
  * @author Dirk Kuch
  */
 public final class TuhhLayersAdder
@@ -265,5 +266,11 @@ public final class TuhhLayersAdder
 
     final ProfileOperation operation = new ProfileOperation( "Insert Comments", profil, change, true ); //$NON-NLS-1$
     new ProfileOperationJob( operation ).schedule();
+  }
+
+  public static void addSeccondProfileLayer( final IProfilePointPropertyProvider provider, final IProfile profil )
+  {
+    SecondProfileDataManager.instance().addData( profil );
+    // TODO: fire event, so chart is re-created
   }
 }
