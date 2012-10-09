@@ -117,6 +117,8 @@ public class CheckoutPdbData extends AbstractModelObject
 
   private Session m_session;
 
+  private int m_dbSRID;
+
   public IStatus init( final Shell shell, final String windowTitle, final IPdbConnection connection )
   {
     try
@@ -127,6 +129,8 @@ public class CheckoutPdbData extends AbstractModelObject
       m_documentBase = findDocumentBase( shell, windowTitle, connection );
 
       m_session = connection.openSession();
+
+      m_dbSRID = connection.getInfo().getSRID();
 
       m_coefficients = loadCoefficients( m_session );
 
@@ -302,5 +306,10 @@ public class CheckoutPdbData extends AbstractModelObject
   public GafCodes getCodes( )
   {
     return m_codes;
+  }
+
+  public int getDbSRID( )
+  {
+    return m_dbSRID;
   }
 }

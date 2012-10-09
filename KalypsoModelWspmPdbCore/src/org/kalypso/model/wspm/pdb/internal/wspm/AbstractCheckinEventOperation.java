@@ -43,10 +43,10 @@ package org.kalypso.model.wspm.pdb.internal.wspm;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.hibernate.Session;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmLengthSectionProperties;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -60,6 +60,17 @@ import org.kalypso.model.wspm.pdb.wspm.SaveEventOperation;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.transformation.transformer.JTSTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Gernot Belger
@@ -67,6 +78,8 @@ import org.kalypso.observation.result.TupleResult;
 public abstract class AbstractCheckinEventOperation implements IPdbOperation
 {
   static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "AbstractCheckinEventOperation.0" ); //$NON-NLS-1$
+
+  private final GeometryFactory m_factory;
 
   private final Map<String, WaterBody> m_waterBodies;
 
@@ -86,6 +99,9 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
     m_wspmWaterBody = wspmWaterBody;
     m_event = event;
     m_waterBodies = waterHash;
+
+    final int dbSRID = connection.getInfo().getSRID();
+    m_factory = new GeometryFactory( new PrecisionModel(), dbSRID );
 
     m_monitor = monitor;
   }
@@ -113,32 +129,15 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
     /* set water body */
     m_event.setWaterBody( findWaterBody() );
 
-    /* convert observation to fixations */
-    final IObservation<TupleResult> observation = getObservation();
-
-    final TupleResult result = observation.getResult();
-
-    final int stationIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_STATION );
-    final int waterlevelIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_WATERLEVEL );
-    final int runoffIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_RUNOFF );
-
-    for( final IRecord record : result )
+    try
     {
-      final BigDecimal station = asBigDecimal( stationIndex, record );
-      final BigDecimal stationM = station == null ? null : station.movePointRight( 3 );
-      final BigDecimal wsp = asBigDecimal( waterlevelIndex, record );
-      final BigDecimal runoff = asBigDecimal( runoffIndex, record );
-
-      final WaterlevelFixation element = new WaterlevelFixation();
-      element.setDescription( StringUtils.EMPTY );
-      element.setDischarge( runoff );
-      // FIXME
-      element.setLocation( null );
-      element.setStation( stationM );
-      element.setWaterlevel( wsp );
-
-      element.setEvent( m_event );
-      m_event.getWaterlevelFixations().add( element );
+      /* convert observation to fixations */
+      convertWaterlevels();
+    }
+    catch( final FactoryException | MismatchedDimensionException | TransformException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed ot convert waterlevels", e );
     }
 
     /* save event */
@@ -151,21 +150,93 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
     m_monitor.subTask( Messages.getString( "AbstractCheckinEventOperation.4" ) ); //$NON-NLS-1$
   }
 
+  private void convertWaterlevels( ) throws FactoryException, MismatchedDimensionException, TransformException
+  {
+    /* geo transformer */
+    // TODO: it is not save using Kalypso srs here; we should rather save the srs in the waterlevel as well.
+    final int kalypsoSRID = JTSAdapter.toSrid( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    final JTSTransformer transformer = new JTSTransformer( kalypsoSRID, m_factory.getSRID() );
+
+    /* a waterlevle for each record of the observation */
+    final IObservation<TupleResult> observation = getObservation();
+
+    final TupleResult result = observation.getResult();
+
+    final int stationIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_STATION );
+    final int waterlevelIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_WATERLEVEL );
+    final int runoffIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_RUNOFF );
+    final int commentIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_TEXT );
+    final int eastingIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_EASTING );
+    final int northingIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_NORTHING );
+
+    for( final IRecord record : result )
+    {
+      /* retreive values */
+      final BigDecimal station = asBigDecimal( stationIndex, record );
+      final BigDecimal stationM = station == null ? null : station.movePointRight( 3 );
+      final BigDecimal wsp = asBigDecimal( waterlevelIndex, record );
+      final BigDecimal runoff = asBigDecimal( runoffIndex, record );
+      final String comment = asString( commentIndex, record );
+      final BigDecimal easting = asBigDecimal( eastingIndex, record );
+      final BigDecimal northing = asBigDecimal( northingIndex, record );
+
+      final Point location = toLocation( transformer, easting, northing );
+
+      /* create new fixation */
+      final WaterlevelFixation element = new WaterlevelFixation();
+
+      element.setStation( stationM );
+      element.setWaterlevel( wsp );
+      element.setDischarge( runoff );
+      element.setDescription( comment );
+
+      element.setLocation( location );
+
+      element.setEvent( m_event );
+      m_event.getWaterlevelFixations().add( element );
+    }
+  }
+
+  private Point toLocation( final JTSTransformer transformer, final BigDecimal easting, final BigDecimal northing ) throws MismatchedDimensionException, TransformException
+  {
+    if( Objects.isNull( easting, northing ) )
+      return null;
+
+    final Coordinate coordinate = new Coordinate( easting.doubleValue(), northing.doubleValue() );
+    final Coordinate transformed = transformer.transform( coordinate );
+
+    return m_factory.createPoint( transformed );
+  }
+
   protected abstract IObservation<TupleResult> getObservation( );
 
-  protected BigDecimal asBigDecimal( final int componentIndex, final IRecord record )
+  private BigDecimal asBigDecimal( final int componentIndex, final IRecord record )
+  {
+    final Object value = getValue( componentIndex, record );
+    if( value instanceof BigDecimal )
+      return (BigDecimal)value;
+
+    if( value instanceof Number )
+      return new BigDecimal( ((Number)value).doubleValue() );
+
+    return null;
+  }
+
+  private String asString( final int componentIndex, final IRecord record )
+  {
+    final Object value = getValue( componentIndex, record );
+    if( value == null )
+      return null;
+
+    return (String)value;
+  }
+
+  private Object getValue( final int componentIndex, final IRecord record )
   {
     if( componentIndex == -1 )
       return null;
 
-    final Object value = record.getValue( componentIndex );
-    if( value instanceof BigDecimal )
-      return (BigDecimal) value;
-
-    if( value instanceof Number )
-      return new BigDecimal( ((Number) value).doubleValue() );
-
-    return null;
+    return record.getValue( componentIndex );
   }
 
   private WaterBody findWaterBody( )
