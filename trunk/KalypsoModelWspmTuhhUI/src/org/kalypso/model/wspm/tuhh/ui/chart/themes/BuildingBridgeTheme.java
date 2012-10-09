@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
@@ -88,16 +89,22 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
   @Override
   public void removeYourself( )
   {
-    final IProfile profil = getProfil();
+    final IProfile profile = getProfil();
 
-    final BuildingBruecke building = WspmSohlpunkte.getBuilding( profil, BuildingBruecke.class );
+    final BuildingBruecke building = WspmSohlpunkte.getBuilding( profile, BuildingBruecke.class );
     if( building == null )
       return;
 
-    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.1" ), profil, true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectRemove( profil, building ) );
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) ) );
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) );
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.1" ), profile, true ); //$NON-NLS-1$
+    operation.addChange( new ProfileObjectRemove( profile, building ) );
+
+    final IProfileObject okProfileObject = building.findOkProfileObject( profile );
+    if( okProfileObject != null )
+      operation.addChange( new ProfileObjectRemove( profile, okProfileObject ) );
+
+    operation.addChange( new PointPropertyRemove( profile, profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) ) );
+    operation.addChange( new PointPropertyRemove( profile, profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) );
+
     new ProfileOperationJob( operation ).schedule();
   }
 }
