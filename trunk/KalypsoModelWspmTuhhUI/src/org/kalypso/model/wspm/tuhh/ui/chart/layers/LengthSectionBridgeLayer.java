@@ -10,12 +10,12 @@ import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.TooltipFormatter;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
+import de.openali.odysseus.chart.ext.base.layer.TooltipFormatter;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
