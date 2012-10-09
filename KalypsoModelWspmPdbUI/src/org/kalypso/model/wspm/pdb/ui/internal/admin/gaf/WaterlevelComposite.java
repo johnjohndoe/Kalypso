@@ -67,6 +67,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.conversion.IdentityConverter;
 import org.kalypso.commons.databinding.conversion.MapConverter;
 import org.kalypso.commons.databinding.property.value.DateTimeSelectionProperty;
+import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
@@ -252,6 +253,8 @@ public class WaterlevelComposite extends Composite
 
     binder.setModelToTargetConverter( nullToSpecial );
     binder.setTargetToModelConverter( specialToNull );
+
+    binder.addTargetAfterConvertValidator( new NotNullValidator<>( Object.class, IStatus.INFO, "State is not set" ) );
 
     m_binding.bindValue( binder );
   }
