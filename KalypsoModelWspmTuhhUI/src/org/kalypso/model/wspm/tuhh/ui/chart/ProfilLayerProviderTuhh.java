@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileO
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.EnergylossLayer;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.SecondProfileDataLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.SinuositaetLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingBridgeTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingTubesTheme;
@@ -152,55 +153,61 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     m_targetAxisRight.setPreferredAdjustment( new AxisAdjustment( 2, 40, 58 ) );
   }
 
-  // FIXME: once, this was nice and object oriented; we should do it agin like this: encapsulate adding layer into a class! -> this class is presented in the ui
+  // FIXME: once, this was nice and object oriented; we should do it again like this: encapsulate adding layer into a class! -> this class is presented in the ui
   @Override
   public void addLayerToProfile( final Shell shell, final IProfile profil, final String layerId )
   {
     final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
 
-    if( layerId.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
+    switch( layerId )
     {
-      TuhhLayersAdder.addVegetationLayer( provider, profil );
-    }
-    else if( layerId.equals( IWspmLayers.LAYER_GEOKOORDINATEN ) )
-    {
-      TuhhLayersAdder.addGeoLayer( provider, profil );
-    }
-    else if( layerId.equals( IWspmLayers.LAYER_GELAENDE ) )
-    {
-      TuhhLayersAdder.addGroundLayer( provider, profil );
-    }
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
-    {
-      TuhhLayersAdder.addRoughnessLayers( provider, profil, m_targetAxisRight, AXIS_LABEL );
-    }
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
-    {
-      TuhhLayersAdder.addBridgeLayer( shell, profil );
-    }
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
-    {
-      TuhhLayersAdder.addWeirLayer( shell, profil );
-    }
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_TUBES ) )
-    {
-      TuhhLayersAdder.addTubesLayer( shell, profil );
-    }
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
-    {
-      TuhhLayersAdder.addSinuositaetLayer( profil );
-    }
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_ENERGYLOSS ) )
-    {
-      TuhhLayersAdder.addEnergylossLayer( profil );
-    }
-    if( layerId.equals( IWspmTuhhConstants.LAYER_COMMENT ) )
-    {
-      TuhhLayersAdder.addCommentLayer( provider, profil );
-    }
-    else if( layerId.equals( IWspmLayers.LAYER_CODE ) )
-    {
-      TuhhLayersAdder.addCodeLayer( provider, profil );
+      case IWspmTuhhConstants.LAYER_BEWUCHS:
+        TuhhLayersAdder.addVegetationLayer( provider, profil );
+        break;
+
+      case IWspmLayers.LAYER_GEOKOORDINATEN:
+        TuhhLayersAdder.addGeoLayer( provider, profil );
+        break;
+
+      case IWspmLayers.LAYER_GELAENDE:
+        TuhhLayersAdder.addGroundLayer( provider, profil );
+        break;
+
+      case IWspmTuhhConstants.LAYER_RAUHEIT:
+        TuhhLayersAdder.addRoughnessLayers( provider, profil, m_targetAxisRight, AXIS_LABEL );
+        break;
+
+      case IWspmTuhhConstants.LAYER_BRUECKE:
+        TuhhLayersAdder.addBridgeLayer( shell, profil );
+        break;
+
+      case IWspmTuhhConstants.LAYER_WEHR:
+        TuhhLayersAdder.addWeirLayer( shell, profil );
+        break;
+
+      case IWspmTuhhConstants.LAYER_TUBES:
+        TuhhLayersAdder.addTubesLayer( shell, profil );
+        break;
+
+      case IWspmTuhhConstants.LAYER_SINUOSITAET:
+        TuhhLayersAdder.addSinuositaetLayer( profil );
+        break;
+
+      case IWspmTuhhConstants.LAYER_ENERGYLOSS:
+        TuhhLayersAdder.addEnergylossLayer( profil );
+        break;
+
+      case IWspmTuhhConstants.LAYER_COMMENT:
+        TuhhLayersAdder.addCommentLayer( provider, profil );
+        break;
+
+      case IWspmLayers.LAYER_CODE:
+        TuhhLayersAdder.addCodeLayer( provider, profil );
+        break;
+
+      case IWspmLayers.LAYER_SECOND_PROFILE:
+        TuhhLayersAdder.addSeccondProfileLayer( provider, profil );
+        break;
     }
   }
 
@@ -317,8 +324,19 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     }
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_COMMENT ) != null )
       layersToAdd.add( createLayer( profile, IWspmConstants.LAYER_COMMENT ) );
+
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_CODE ) != null )
       layersToAdd.add( createLayer( profile, IWspmConstants.LAYER_CODE ) );
+
+    /* second profile layers */
+    final SecondProfileDataManager secondProfileManager = SecondProfileDataManager.instance();
+    final SecondProfileData[] secondProfileData = secondProfileManager.findData( profile );
+    for( final SecondProfileData data : secondProfileData )
+    {
+      // FIXME: hm....
+      final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
+      layersToAdd.add( new SecondProfileDataLayer( profile, data, cmLeft ) );
+    }
 
     /* Prune 'null's returned from createLayer-subroutines */
     layersToAdd.removeAll( Collections.singleton( null ) );
@@ -390,6 +408,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       addable.add( new LayerDescriptor( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.7" ), IWspmTuhhConstants.LAYER_ENERGYLOSS ) ); //$NON-NLS-1$
     }
 
+    addable.add( new LayerDescriptor( "Profil einblenden", IWspmTuhhConstants.LAYER_SECOND_PROFILE ) );
+
     return addable.toArray( new LayerDescriptor[addable.size()] );
   }
 
@@ -399,24 +419,21 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     return new WspmTableUiHandlerProvider( profile );
   }
 
-  public IAxis getDomainAxis( )
+  protected IAxis getDomainAxis( )
   {
     return m_domainAxis;
   }
 
-  public LayerStyleProviderTuhh getLsp( )
+  protected LayerStyleProviderTuhh getLsp( )
   {
     return m_styleProvider;
   }
 
-  public IAxis getTargetAxisLeft( )
+  protected IAxis getTargetAxisLeft( )
   {
     return m_targetAxisLeft;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getChartAxis()
-   */
   @Override
   public IAxis[] registerAxis( final IMapperRegistry mapperRegistry )
   {
@@ -433,7 +450,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     return new IAxis[] { m_domainAxis, m_targetAxisLeft, m_targetAxisRight, m_screenAxisVertical };
   }
 
-  final void setAxisLabel( final IProfile profil )
+  private final void setAxisLabel( final IProfile profil )
   {
     final String domLabel = String.format( AXIS_LABEL, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) ) );
     m_domainAxis.clearLabels();
