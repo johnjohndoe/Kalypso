@@ -108,7 +108,7 @@ public class CheckinHorizonPartOperation
 
     /* Get the profile object records. */
     final IProfileObjectRecords records = m_profileObject.getRecords();
-    for( int i = 0; i < records.getSize(); i++ )
+    for( int i = 0; i < records.size(); i++ )
     {
       /* Get the profile object record. */
       final IProfileObjectRecord record = records.getRecord( i );
