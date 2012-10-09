@@ -479,7 +479,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
         continue;
 
       final IProfileObjectRecords records = clonedProfileObject.getRecords();
-      if( records.getSize() == 0 )
+      if( records.size() == 0 )
         clonedProfileObjects.remove( clonedProfileObject );
     }
   }

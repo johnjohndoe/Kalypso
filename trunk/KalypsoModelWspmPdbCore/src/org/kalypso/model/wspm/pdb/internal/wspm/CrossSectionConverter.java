@@ -414,7 +414,7 @@ public class CrossSectionConverter implements IProfileTransaction
   private void insertRecordsAs( final IProfileObject profileObject, final String asComponent )
   {
     final IProfileObjectRecords records = profileObject.getRecords();
-    for( int i = 0; i < records.getSize(); i++ )
+    for( int i = 0; i < records.size(); i++ )
     {
       final IProfileObjectRecord record = records.getRecord( i );
       final String id = record.getId();
@@ -530,7 +530,7 @@ public class CrossSectionConverter implements IProfileTransaction
   private IProfileObjectRecord findPoint( final IProfileObject profileObject, final String code )
   {
     final IProfileObjectRecords records = profileObject.getRecords();
-    for( int i = 0; i < records.getSize(); i++ )
+    for( int i = 0; i < records.size(); i++ )
     {
       final IProfileObjectRecord record = records.getRecord( i );
       final String recordCode = record.getCode();

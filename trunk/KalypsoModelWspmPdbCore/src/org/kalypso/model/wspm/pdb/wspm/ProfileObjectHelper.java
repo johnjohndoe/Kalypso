@@ -147,7 +147,7 @@ public class ProfileObjectHelper
     /* Clone the records. */
     final IProfileObjectRecords sourceRecords = source.getRecords();
     final IProfileObjectRecords targetRecords = target.getRecords();
-    for( int i = 0; i < sourceRecords.getSize(); i++ )
+    for( int i = 0; i < sourceRecords.size(); i++ )
     {
       final IProfileObjectRecord sourceRecord = sourceRecords.getRecord( i );
 
@@ -194,7 +194,7 @@ public class ProfileObjectHelper
 
   private static void guessCodes( final IProfileObjectRecords targetRecords, final String component )
   {
-    for( int i = 0; i < targetRecords.getSize(); i++ )
+    for( int i = 0; i < targetRecords.size(); i++ )
     {
       final IProfileObjectRecord targetRecord = targetRecords.getRecord( i );
 
@@ -211,7 +211,7 @@ public class ProfileObjectHelper
     if( i == 0 )
       return IGafConstants.CODE_UKAN;
 
-    if( i == targetRecords.getSize() - 1 )
+    if( i == targetRecords.size() - 1 )
       return IGafConstants.CODE_UKEN;
 
     return IGafConstants.CODE_UKPP;
@@ -222,7 +222,7 @@ public class ProfileObjectHelper
     if( i == 0 )
       return IGafConstants.CODE_OKAN;
 
-    if( i == targetRecords.getSize() - 1 )
+    if( i == targetRecords.size() - 1 )
       return IGafConstants.CODE_OKEN;
 
     return IGafConstants.CODE_OKPP;
