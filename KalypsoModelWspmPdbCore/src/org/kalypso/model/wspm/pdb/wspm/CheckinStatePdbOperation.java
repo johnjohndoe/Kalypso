@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartParameter;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
@@ -255,6 +256,10 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
       final Set<Point> points = part.getPoints();
       for( final Point point : points )
         session.save( point );
+
+      final Set<CrossSectionPartParameter> parameters = part.getCrossSectionPartParameters();
+      for( final CrossSectionPartParameter parameter : parameters )
+        session.save( parameter );
     }
   }
 
