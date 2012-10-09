@@ -168,6 +168,10 @@ public class ProfileObjectHelper
     final IComponent heightComponent = ProfileUtil.getFeatureComponent( component );
     final int heightIndex = sourceResult.indexOfComponent( heightComponent );
 
+    // REMARK: happens e.g. for OK-GenericObjects if not connected to a bridge
+    if( heightIndex == -1 )
+      return;
+
     final IProfileObjectRecords targetRecords = target.getRecords();
     targetRecords.clearRecords();
 
@@ -236,8 +240,7 @@ public class ProfileObjectHelper
     if( Objects.isNull( bezugspunktX, bezugspunktY, breite ) )
       return;
 
-    /* REMARK: The width is defined as the durchmesser (circle), if no height is given. */
-    final Double hoehe = height != null ? height : breite * 2;
+    final Double hoehe = height != null ? height : breite;
 
     final GM_Point geoPosition = WspmProfileHelper.getGeoPosition( bezugspunktX.doubleValue(), source );
 
