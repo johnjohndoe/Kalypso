@@ -42,6 +42,7 @@ import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.wspm.ISectionProvider;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.opengis.geometry.MismatchedDimensionException;
@@ -58,22 +59,22 @@ public class Waterlevel2dWorker
 {
   private final IStatusCollector m_log = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
-  private final Map<IProfileObject, BigDecimal> m_waterlevels2D = new HashMap<>();
+  private final Map<IProfileObject, ISectionProvider> m_waterlevels2D = new HashMap<>();
 
-  private final Map<BigDecimal, Collection<MLineString>> m_sectionsByStation;
+  private final Map<BigDecimal, Collection<ISectionProvider>> m_sectionsByStation;
 
   private final Collection<WaterlevelFixation> m_waterlevels;
 
   private final String m_eventName;
 
-  public Waterlevel2dWorker( final String eventName, final Collection<WaterlevelFixation> waterlevels, final Map<BigDecimal, Collection<MLineString>> sectionsByStation )
+  public Waterlevel2dWorker( final String eventName, final Collection<WaterlevelFixation> waterlevels, final Map<BigDecimal, Collection<ISectionProvider>> sectionsByStation )
   {
     m_eventName = eventName;
     m_waterlevels = waterlevels;
     m_sectionsByStation = sectionsByStation;
   }
 
-  public Map<IProfileObject, BigDecimal> getWaterlevels2D( )
+  public Map<IProfileObject, ISectionProvider> getWaterlevels2D( )
   {
     return Collections.unmodifiableMap( m_waterlevels2D );
   }
@@ -89,19 +90,21 @@ public class Waterlevel2dWorker
       final Collection<WaterlevelFixation> waterlevels = entry.getValue();
 
       /* find cross section(s) for station */
-      final Collection<MLineString> profileLines = m_sectionsByStation.get( station );
-      if( profileLines == null || profileLines.isEmpty() )
+      final Collection<ISectionProvider> sections = m_sectionsByStation.get( station );
+      if( sections == null || sections.isEmpty() )
       {
         m_log.add( IStatus.WARNING, "No cross section for watrlevel with station %s", null, station );
         continue;
       }
 
       // REMARK: assign waterlevel to all sections with same station, because if 2 sections have the same station, we do not know what to do...
-      for( final MLineString profileLine : profileLines )
+      for( final ISectionProvider section : sections )
       {
         /* create part */
+        final MLineString profileLine = section.getProfileLine();
+
         final IProfileObject part = createWaterlevel( profileLine, waterlevels );
-        m_waterlevels2D.put( part, station );
+        m_waterlevels2D.put( part, section );
       }
     }
 
@@ -125,12 +128,15 @@ public class Waterlevel2dWorker
     return hash;
   }
 
-  private IProfileObject createWaterlevel( final MLineString mProfileLine, final Collection<WaterlevelFixation> waterlevels )
+  private IProfileObject createWaterlevel( final MLineString profileLine, final Collection<WaterlevelFixation> waterlevels )
   {
     final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon();
 
+    // TODO: important, that name is unique iwithing the cross section, how can we force this here?
+    waterlevel2D.setValue( IGafConstants.PART_NAME, m_eventName );
     waterlevel2D.setValue( IGafConstants.PART_TYPE, GafKind.W.toString() );
-    waterlevel2D.setDescription( m_eventName );
+
+    // TODO: set description to object; either combination of wl-comments; or filename; or ?
 
     final BigDecimal discharge = findDischarge( waterlevels );
     if( discharge != null )
@@ -145,7 +151,7 @@ public class Waterlevel2dWorker
 
       try
       {
-        fillRecord( newRecord, mProfileLine, waterlevel );
+        fillRecord( newRecord, profileLine, waterlevel );
       }
       catch( final MismatchedDimensionException e )
       {
