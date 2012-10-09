@@ -100,11 +100,9 @@ public class Waterlevel2dWorker
       // REMARK: assign waterlevel to all sections with same station, because if 2 sections have the same station, we do not know what to do...
       for( final ISectionProvider section : sections )
       {
-        /* create part */
-        final MLineString profileLine = section.getProfileLine();
-
-        final IProfileObject part = createWaterlevel( profileLine, waterlevels );
-        m_waterlevels2D.put( part, section );
+        final IProfileObject part = createWaterlevel( section, waterlevels );
+        if( part != null )
+          m_waterlevels2D.put( part, section );
       }
     }
 
@@ -128,8 +126,11 @@ public class Waterlevel2dWorker
     return hash;
   }
 
-  private IProfileObject createWaterlevel( final MLineString profileLine, final Collection<WaterlevelFixation> waterlevels )
+  private IProfileObject createWaterlevel( final ISectionProvider section, final Collection<WaterlevelFixation> waterlevels )
   {
+    /* create part */
+    final MLineString profileLine = section.getProfileLine();
+
     final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon();
 
     // TODO: important, that name is unique iwithing the cross section, how can we force this here?
@@ -147,11 +148,9 @@ public class Waterlevel2dWorker
 
     for( final WaterlevelFixation waterlevel : waterlevels )
     {
-      final IProfileObjectRecord newRecord = records.addNewRecord();
-
       try
       {
-        fillRecord( newRecord, profileLine, waterlevel );
+        createRecord( records, profileLine, waterlevel );
       }
       catch( final MismatchedDimensionException e )
       {
@@ -170,6 +169,13 @@ public class Waterlevel2dWorker
       }
     }
 
+    if( records.size() == 0 )
+    {
+      final BigDecimal station = section.getStation();
+      m_log.add( IStatus.WARNING, "Skipping waterlevels at %s: no geometries available", null, station );
+      return null;
+    }
+
     return waterlevel2D;
   }
 
@@ -185,12 +191,21 @@ public class Waterlevel2dWorker
     return null;
   }
 
-  private void fillRecord( final IProfileObjectRecord record, final MLineString profileLine, final WaterlevelFixation waterlevel ) throws MismatchedDimensionException, FactoryException, TransformException
+  private IProfileObjectRecord createRecord( final IProfileObjectRecords records, final MLineString profileLine, final WaterlevelFixation waterlevel ) throws MismatchedDimensionException, FactoryException, TransformException
   {
+    /* Fetch data from waterlevel */
     final com.vividsolutions.jts.geom.Point waterlevelPoint = getWaterlevelLocationInProfileSrs( profileLine, waterlevel );
+
+    /* skip points without location, we cannot project them to the profile */
+    if( waterlevelPoint == null )
+      return null;
+
     final Coordinate waterlevelLocation = waterlevelPoint.getCoordinate();
 
     final String description = waterlevel.getDescription();
+
+    /* create record and add values */
+    final IProfileObjectRecord record = records.addNewRecord();
 
     record.setComment( description );
 
@@ -213,11 +228,16 @@ public class Waterlevel2dWorker
     final BigDecimal width = calculateWidth( profileLine, waterlevelLocation );
     // FIXME: why doubles in record??
     record.setBreite( width.doubleValue() );
+
+    return record;
   }
 
   private com.vividsolutions.jts.geom.Point getWaterlevelLocationInProfileSrs( final MLineString profileLine, final WaterlevelFixation waterlevel ) throws FactoryException, MismatchedDimensionException, TransformException
   {
     final com.vividsolutions.jts.geom.Point location = waterlevel.getLocation();
+    if( location == null )
+      return null;
+
     final Coordinate coordinate = location.getCoordinate();
 
     final int wSRID = location.getSRID();

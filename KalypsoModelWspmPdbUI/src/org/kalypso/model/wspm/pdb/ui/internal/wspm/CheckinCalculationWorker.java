@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckInEventData;
 import org.kalypso.model.wspm.pdb.wspm.CheckinCalculationOperation;
+import org.kalypso.model.wspm.pdb.wspm.SaveEventOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -170,6 +171,9 @@ public class CheckinCalculationWorker implements ICheckInWorker
   @Override
   public boolean performFinish( final IWizardContainer container )
   {
+    if( !SaveEventOperation.askForEmptyState( m_data.getEvent(), container.getShell(), container.getCurrentPage().getWizard().getWindowTitle() ) )
+      return false;
+
     final CheckinCalculationOperation operation = new CheckinCalculationOperation( m_data );
 
     final WspmResultLengthSection[] lengthSections = m_resultPage.getSelectedLengthSections();

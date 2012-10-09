@@ -52,7 +52,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -237,12 +236,8 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
     final Event event = m_data.getEvent();
 
-    if( event.getState() == null )
-    {
-      final String message = "Das Ereignis ist keinem Zustand zugeordnet, 2D-Wasserspiegel werden nicht erzeugt. Trotzdem fortfahren?";
-      if( !MessageDialog.openConfirm( getShell(), getWindowTitle(), message ) )
-        return false;
-    }
+    if( SaveEventOperation.askForEmptyState( event, getShell(), getWindowTitle() ) )
+      return false;
 
     final IStatus status = runOperation( connection, event );
     if( !status.isOK() )

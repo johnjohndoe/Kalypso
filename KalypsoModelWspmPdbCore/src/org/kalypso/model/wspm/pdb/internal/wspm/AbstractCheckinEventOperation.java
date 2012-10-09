@@ -45,6 +45,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.core.IWspmLengthSectionProperties;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -77,6 +78,8 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
 
   private final IPdbConnection m_connection;
 
+  private IStatus m_log;
+
   public AbstractCheckinEventOperation( final IPdbConnection connection, final Map<String, WaterBody> waterHash, final WspmWaterBody wspmWaterBody, final Event event, final IProgressMonitor monitor )
   {
     m_connection = connection;
@@ -85,6 +88,11 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
     m_waterBodies = waterHash;
 
     m_monitor = monitor;
+  }
+
+  public IStatus getLog( )
+  {
+    return m_log;
   }
 
   @Override
@@ -100,10 +108,12 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
 
     m_monitor.subTask( Messages.getString( "AbstractCheckinEventOperation.3" ) ); //$NON-NLS-1$
 
+    // FIXME: we should clone the event object, else we get problems if the upload fails with an error
+
+    /* set water body */
     m_event.setWaterBody( findWaterBody() );
 
-    session.save( m_event );
-
+    /* convert observation to fixations */
     final IObservation<TupleResult> observation = getObservation();
 
     final TupleResult result = observation.getResult();
@@ -126,6 +136,9 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
       element.setLocation( null );
       element.setStation( stationM );
       element.setWaterlevel( wsp );
+
+      element.setEvent( m_event );
+      m_event.getWaterlevelFixations().add( element );
     }
 
     /* save event */
@@ -133,6 +146,7 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
     final int dbSRSID = m_connection.getInfo().getSRID();
     final SaveEventOperation operation = new SaveEventOperation( m_event, username, dbSRSID );
     operation.execute( session );
+    m_log = operation.getLog();
 
     m_monitor.subTask( Messages.getString( "AbstractCheckinEventOperation.4" ) ); //$NON-NLS-1$
   }
