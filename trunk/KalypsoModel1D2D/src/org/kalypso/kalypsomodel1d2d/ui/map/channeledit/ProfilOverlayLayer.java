@@ -85,6 +85,8 @@ class ProfilOverlayLayer extends PointsLineLayer
 
   final private RGB COLOR_LINE = new RGB( 0, 153, 255 );
 
+  private IProfile m_profile;
+
   /**
    * manages the displaying of the intersected profile layer in the profile chart view and handles the user
    * interactivity.
@@ -99,6 +101,12 @@ class ProfilOverlayLayer extends PointsLineLayer
     getPointStyle().getStroke().setColor( COLOR_LINE );
     getLineStyleHover().setColor( COLOR_LINE );
     getLineStyleHover().setAlpha( getLineStyleHover().getAlpha() * 4 );
+  }
+
+  @Override
+  public IProfile getProfil( )
+  {
+    return m_profile;
   }
 
   @Override
@@ -322,7 +330,7 @@ class ProfilOverlayLayer extends PointsLineLayer
 
   public void setProfile( final IProfile profile, final ChannelEditData data )
   {
-    super.setProfil( profile );
+    m_profile = profile;
 
     m_data = data;
 
