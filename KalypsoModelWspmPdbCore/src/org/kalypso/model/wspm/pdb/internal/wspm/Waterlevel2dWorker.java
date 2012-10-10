@@ -23,10 +23,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.hibernatespatial.mgeom.MCoordinate;
 import org.hibernatespatial.mgeom.MGeomUtils;
@@ -128,18 +131,19 @@ public class Waterlevel2dWorker
 
   private IProfileObject createWaterlevel( final ISectionProvider section, final Collection<WaterlevelFixation> waterlevels )
   {
-    /* create part */
+    /* gather some data */
     final MLineString profileLine = section.getProfileLine();
+    final BigDecimal discharge = findDischarge( waterlevels );
+    final String description = buildDescription( waterlevels );
 
+    /* create part */
     final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon();
 
-    // TODO: important, that name is unique iwithing the cross section, how can we force this here?
+    /* set general data */
+    // TODO: important, that name is unique withing the cross section, how can we force this here?
     waterlevel2D.setValue( IGafConstants.PART_NAME, m_eventName );
     waterlevel2D.setValue( IGafConstants.PART_TYPE, GafKind.W.toString() );
-
-    // TODO: set description to object; either combination of wl-comments; or filename; or ?
-
-    final BigDecimal discharge = findDischarge( waterlevels );
+    waterlevel2D.setDescription( description );
     if( discharge != null )
       waterlevel2D.setValue( IGafConstants.METADATA_WATERLEVEL_DISCHARGE, discharge.toString() );
 
@@ -177,6 +181,23 @@ public class Waterlevel2dWorker
     }
 
     return waterlevel2D;
+  }
+
+  /* build description from all waterlevels */
+  private String buildDescription( final Collection<WaterlevelFixation> waterlevels )
+  {
+    final Set<String> descriptions = new LinkedHashSet<>();
+
+    for( final WaterlevelFixation waterlevel : waterlevels )
+    {
+      /* collect description, ignore blanks/empty */
+      final String description = waterlevel.getDescription();
+      descriptions.add( StringUtils.trimToNull( description ) );
+    }
+
+    /* Build combined description without null elements */
+    descriptions.remove( null );
+    return StringUtils.join( descriptions, ", " ); //$NON-NLS-1$
   }
 
   private BigDecimal findDischarge( final Collection<WaterlevelFixation> waterlevels )
