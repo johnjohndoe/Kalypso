@@ -408,7 +408,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       addable.add( new LayerDescriptor( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.7" ), IWspmTuhhConstants.LAYER_ENERGYLOSS ) ); //$NON-NLS-1$
     }
 
-    addable.add( new LayerDescriptor( "Profil einblenden", IWspmTuhhConstants.LAYER_SECOND_PROFILE ) );
+    // FIXME
+    // addable.add( new LayerDescriptor( "Profil einblenden", IWspmTuhhConstants.LAYER_SECOND_PROFILE ) );
 
     return addable.toArray( new LayerDescriptor[addable.size()] );
   }
