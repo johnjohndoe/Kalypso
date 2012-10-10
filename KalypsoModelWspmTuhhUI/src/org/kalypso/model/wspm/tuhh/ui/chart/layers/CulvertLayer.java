@@ -49,7 +49,6 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
@@ -77,11 +76,11 @@ public class CulvertLayer extends AbstractProfilLayer
     getLineStyle().setColor( new RGB( 255, 255, 100 ) );
   }
 
-  @Override
-  public String getIdentifier( )
-  {
-    return getTube() == null ? Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.TubeLayer.0" ) : getTube().getId(); //$NON-NLS-1$
-  }
+//  @Override
+//  public String getIdentifier( )
+//  {
+//    return getTube() == null ? Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.TubeLayer.0" ) : getTube().getId(); //$NON-NLS-1$
+//  }
 
   private ICulvertBuilding getTube( )
   {

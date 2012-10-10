@@ -74,7 +74,7 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
     }
   }
 
-  public static final String ID = IWspmTuhhConstants.BUILDING_TYP_WEHR;
+  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR"; //$NON-NLS-1$
 
   private static final String PROPERTY_WEHRART = "wehrart"; //$NON-NLS-1$
 

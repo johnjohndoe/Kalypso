@@ -44,6 +44,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileO
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_GERINNE_ART;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_KENNUNG;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
+import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.DoubleDataBlock;
@@ -291,7 +292,8 @@ public class ProfileObjectsPrfWriter
     {
       final ISinuositaetProfileObject sinuosity = (ISinuositaetProfileObject)profileObject;
 
-      final DataBlockHeader header = PrfHeaders.createHeader( sinuosity.getId() );
+      final DataBlockHeader header = new DataBlockHeader( IPrfConstants.HEADER_SINUOSITAET, "[-]", IWspWinConstants.SPEZIALPROFIL_SINUOSITAET );//$NON-NLS-1$ //$NON-NLS-2$
+
       final DoubleDataBlock dataBlock = new SinuositaetDataBlock( header );
       final SINUOSITAET_KENNUNG kennung = sinuosity.getKennung();
       final double sinus = sinuosity.getSn();

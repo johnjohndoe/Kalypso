@@ -40,15 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-
 /**
  * @author Kim Werner
  * @author Holger Albert
  */
 public class BuildingMaul extends AbstractCulvertBuilding
 {
-  public static final String ID = IWspmTuhhConstants.BUILDING_TYP_MAUL;
+  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#MAUL"; //$NON-NLS-1$
 
   private static final String PROPERTY_HOEHE = "hoehe"; //$NON-NLS-1$
 

@@ -25,7 +25,7 @@ import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
  */
 public class GenericProfileHorizon extends AbstractProfileObject
 {
-  public static final String ID = "GenericProfileHorizon"; //$NON-NLS-1$
+  private static final String ID = "GenericProfileHorizon"; //$NON-NLS-1$
 
   @Override
   public String getId( )

@@ -53,10 +53,7 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AddRoughnessResolution;
@@ -147,10 +144,10 @@ public class RauheitRule extends AbstractValidatorRule
 
   private boolean isDurchlass( final IProfileObject[] objects )
   {
-    if( objects == null || objects.length < 1 || objects[0] == null )
+    if( objects == null || objects.length < 1 )
       return false;
 
-    final String building = objects[0].getId();
-    return building.equals( BuildingEi.ID ) || building.equals( BuildingMaul.ID ) || building.equals( BuildingKreis.ID ) || building.equals( BuildingTrapez.ID );
+    final IProfileObject object = objects[0];
+    return object instanceof ICulvertBuilding;
   }
 }

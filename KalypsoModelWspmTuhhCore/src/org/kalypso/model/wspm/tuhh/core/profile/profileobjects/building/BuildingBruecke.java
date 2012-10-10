@@ -53,7 +53,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class BuildingBruecke extends AbstractProfileObject implements IProfileBuilding
 {
-  public static final String ID = IWspmTuhhConstants.BUILDING_TYP_BRUECKE;
+  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#BRUECKE"; //$NON-NLS-1$
 
   private static final String PROPERTY_BREITE = "breite"; //$NON-NLS-1$
 
