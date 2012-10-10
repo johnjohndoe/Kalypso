@@ -187,10 +187,9 @@ public class WeirPanel extends AbstractProfilView
     for( final Control ctrl : ctrls )
     {
       if( !ctrl.isDisposed() )
-      {
         ctrl.dispose();
-      }
     }
+
     final IComponent cmpWehrTrenner = profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
     final IProfilePointMarker[] deviders = profile.getPointMarkerFor( cmpWehrTrenner );
     int i = 0;
@@ -209,7 +208,6 @@ public class WeirPanel extends AbstractProfilView
     {
       final UIJob job = new UIJob( Messages.getString( "WeirPanel.0" ) ) //$NON-NLS-1$
       {
-
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
         {

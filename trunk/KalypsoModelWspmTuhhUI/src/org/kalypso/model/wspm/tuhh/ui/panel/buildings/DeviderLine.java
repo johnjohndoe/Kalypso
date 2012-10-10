@@ -130,7 +130,11 @@ class DeviderLine
 
   private IProfilePointMarker getDevider( )
   {
-    return m_profile.getPointMarkerFor( m_componentID )[m_deviderID];
+    final IProfilePointMarker[] pointMarker = m_profile.getPointMarkerFor( m_componentID );
+    if( pointMarker == null || pointMarker.length <= m_deviderID )
+      return null;
+
+    return pointMarker[m_deviderID];
   }
 
   protected void addDevider( final String text )
