@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/../../../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
   <Chart id="runoffChart">
-    <ChartInsets bottom="0" left="0" top="10" right="10"/>
+    <ChartInsets bottom="0" left="0" top="10" right="10" />
     <Layers>
       <Layer visible="true" legend="false" id="runoffGridLayer">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
@@ -151,7 +151,7 @@
   </Chart>
 
   <Chart id="areaChart">
-    <ChartInsets bottom="0" left="0" top="10" right="10"/>
+    <ChartInsets bottom="0" left="0" top="10" right="10" />
     <Layers>
       <Layer visible="true" legend="false" id="areaGridLayer">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
@@ -290,7 +290,7 @@
 
   <!-- ALPHA -->
   <Chart id="alphaChart">
-    <ChartInsets bottom="0" left="0" top="10" right="10"/>
+    <ChartInsets bottom="0" left="0" top="10" right="10" />
     <Layers>
       <Layer visible="true" legend="false" id="alphyGridLayer">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
@@ -429,7 +429,7 @@
 
   <!-- new chart configurations -->
   <Chart id="runoffChannelAndFloodplainChart">
-    <ChartInsets bottom="0" left="0" top="10" right="10"/>
+    <ChartInsets bottom="0" left="0" top="10" right="10" />
     <Layers>
       <!-- grid and border -->
       <Layer visible="true" legend="false" id="runoffChannelAndFloodplainGridLayer">
@@ -476,7 +476,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
             <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
-            <Parameter name="legendMode" value="point" />            
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Summe</Title>
@@ -658,7 +658,7 @@
   </Chart>
 
   <Chart id="areaChannelAndFloodplainChart">
-    <ChartInsets bottom="0" left="0" top="10" right="10"/>
+    <ChartInsets bottom="0" left="0" top="10" right="10" />
     <Layers>
       <!-- grid and border -->
       <Layer visible="true" legend="false" id="areaChannelAndFloodplainGridLayer">
@@ -873,7 +873,7 @@
   </Chart>
 
   <Chart id="widthChannelAndFloodplainChart">
-    <ChartInsets bottom="0" left="0" top="10" right="10"/>
+    <ChartInsets bottom="0" left="0" top="10" right="10" />
     <Layers>
       <!-- grid and border -->
       <Layer visible="true" legend="false" id="widthChannelAndFloodplainGridLayer">
