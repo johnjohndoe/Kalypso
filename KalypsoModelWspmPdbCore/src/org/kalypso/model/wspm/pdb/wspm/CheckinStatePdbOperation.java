@@ -45,10 +45,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.hibernate.Session;
@@ -75,6 +73,7 @@ import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
+import org.kalypso.model.wspm.pdb.internal.wspm.BridgeIdHelper;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinPartOperation;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
@@ -370,11 +369,13 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
   private void repairBridges( final List<IProfileObject> clonedProfileObjects )
   {
-    /* The used ids. */
-    final Set<String> usedIds = findUsedIds( clonedProfileObjects );
-
     /* Iterate over the array, because we may change the list. */
     final IProfileObject[] clonedProfileObjectsArray = clonedProfileObjects.toArray( new IProfileObject[] {} );
+
+    /* The used ids. */
+    final Set<String> usedIds = BridgeIdHelper.findUsedIds( clonedProfileObjectsArray );
+
+    /* Check each profile object. */
     for( final IProfileObject clonedProfileObject : clonedProfileObjectsArray )
     {
       /* Repair bridges. */
@@ -389,11 +390,11 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
           continue;
 
         /* We create/reuse the bridge id. */
-        final String bridgeId = findFreeId( bridge, usedIds );
+        final String bridgeId = BridgeIdHelper.findFreeId( bridge, usedIds );
         bridge.setBrueckeId( bridgeId );
 
         /* Search for ok profile object without bridge id and use it. */
-        final IProfileObject okPO = findOkProfileObjectWithoutId( clonedProfileObjectsArray );
+        final IProfileObject okPO = BridgeIdHelper.findOkProfileObjectWithoutId( clonedProfileObjectsArray );
         if( okPO != null )
         {
           okPO.setValue( BuildingBruecke.KEY_BRUECKE_ID, bridgeId );
@@ -407,53 +408,6 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
         clonedProfileObjects.add( genericProfileHorizon );
       }
     }
-  }
-
-  private Set<String> findUsedIds( final List<IProfileObject> clonedProfileObjects )
-  {
-    final Set<String> usedIds = new HashSet<>();
-
-    for( final IProfileObject clonedProfileObject : clonedProfileObjects )
-    {
-      if( clonedProfileObject instanceof BuildingBruecke )
-      {
-        final String brueckeId = ((BuildingBruecke)clonedProfileObject).getBrueckeId();
-        if( !StringUtils.isEmpty( brueckeId ) )
-          usedIds.add( brueckeId );
-      }
-
-      if( clonedProfileObject instanceof GenericProfileHorizon )
-      {
-        if( GafKind.OK.toString().equals( clonedProfileObject.getValue( IGafConstants.PART_TYPE, null ) ) )
-        {
-          final String brueckeId = ((GenericProfileHorizon)clonedProfileObject).getValue( BuildingBruecke.KEY_BRUECKE_ID, null );
-          if( !StringUtils.isEmpty( brueckeId ) )
-            usedIds.add( brueckeId );
-        }
-      }
-    }
-
-    return usedIds;
-  }
-
-  private String findFreeId( final BuildingBruecke bridge, final Set<String> usedIds )
-  {
-    final String brueckeId = bridge.getBrueckeId();
-    if( !StringUtils.isEmpty( brueckeId ) )
-      return brueckeId;
-
-    int cnt = 1;
-    String freeId = String.format( Locale.PRC, "bridge_%d", cnt++ );
-    while( usedIds.contains( freeId ) )
-      freeId = String.format( Locale.PRC, "bridge_%d", cnt++ );
-
-    return freeId;
-  }
-
-  private IProfileObject findOkProfileObjectWithoutId( final IProfileObject[] clonedProfileObjectsArray )
-  {
-    // TODO
-    return null;
   }
 
   private void updateFromComponents( final List<IProfileObject> clonedProfileObjects, final IProfile profile )
