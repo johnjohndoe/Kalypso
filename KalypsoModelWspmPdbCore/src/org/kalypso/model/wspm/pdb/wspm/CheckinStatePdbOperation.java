@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
+import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
@@ -427,13 +428,13 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
         ProfileObjectHelper.updateObjectFromComponents( profile, clonedProfileObject, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
 
       if( clonedProfileObject instanceof BuildingEi )
-        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingEi)clonedProfileObject, ((BuildingEi)clonedProfileObject).getHoehe(), IGafConstants.CODE_EIFS, IGafConstants.CODE_EIUK );
+        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingEi)clonedProfileObject, ((BuildingEi)clonedProfileObject).getHoehe(), GafPointCode.EIFS.getKey(), GafPointCode.EIUK.getKey() );
 
       if( clonedProfileObject instanceof BuildingKreis )
-        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingKreis)clonedProfileObject, null, IGafConstants.CODE_KRFS, IGafConstants.CODE_KRUK );
+        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingKreis)clonedProfileObject, null, GafPointCode.KRFS.getKey(), GafPointCode.KRUK.getKey() );
 
       if( clonedProfileObject instanceof BuildingMaul )
-        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingMaul)clonedProfileObject, ((BuildingMaul)clonedProfileObject).getHoehe(), IGafConstants.CODE_MAFS, IGafConstants.CODE_MAUK );
+        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingMaul)clonedProfileObject, ((BuildingMaul)clonedProfileObject).getHoehe(), GafPointCode.MAFS.getKey(), GafPointCode.MAUK.getKey() );
     }
   }
 

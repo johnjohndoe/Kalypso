@@ -27,6 +27,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
+import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
@@ -213,23 +214,23 @@ public class ProfileObjectHelper
   private static String getUkCode( final int i, final IProfileObjectRecords targetRecords )
   {
     if( i == 0 )
-      return IGafConstants.CODE_UKAN;
+      return GafPointCode.UKAN.getKey();
 
     if( i == targetRecords.size() - 1 )
-      return IGafConstants.CODE_UKEN;
+      return GafPointCode.UKEN.getKey();
 
-    return IGafConstants.CODE_UKPP;
+    return GafPointCode.UKPP.getKey();
   }
 
   private static String getOkCode( final int i, final IProfileObjectRecords targetRecords )
   {
     if( i == 0 )
-      return IGafConstants.CODE_OKAN;
+      return GafPointCode.OKAN.getKey();
 
     if( i == targetRecords.size() - 1 )
-      return IGafConstants.CODE_OKEN;
+      return GafPointCode.OKEN.getKey();
 
-    return IGafConstants.CODE_OKPP;
+    return GafPointCode.OKPP.getKey();
   }
 
   public static void updateObjectFromMetadata( final IProfile source, final ICulvertBuilding target, final Double height, final String fsCode, final String ukCode )

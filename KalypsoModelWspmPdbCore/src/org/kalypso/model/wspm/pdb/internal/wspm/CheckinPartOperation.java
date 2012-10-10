@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
+import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
@@ -243,7 +244,7 @@ public class CheckinPartOperation
     if( gafCode != null && gafCode.getKind() == kind )
       return gafCode.getCode();
 
-    return IGafConstants.CODE_PP;
+    return GafPointCode.PP.getKey();
   }
 
   public String getHykCode( final IProfileRecord record )
@@ -253,17 +254,17 @@ public class CheckinPartOperation
     // IMPORTANT: This order is important for gaf file export, do not change.
 
     final IProfilePointMarker[] dbMarkers = m_profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    final String codeBD = checkMarker( record, dbMarkers, IGafConstants.CODE_PA, IGafConstants.CODE_PE );
+    final String codeBD = checkMarker( record, dbMarkers, GafPointCode.PA.getKey(), GafPointCode.PE.getKey() );
     if( codeBD != null )
       codes.add( codeBD );
 
     final IProfilePointMarker[] tfMarkers = m_profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final String codeTF = checkMarker( record, tfMarkers, IGafConstants.CODE_LU, IGafConstants.CODE_RU );
+    final String codeTF = checkMarker( record, tfMarkers, GafPointCode.LU.getKey(), GafPointCode.RU.getKey() );
     if( codeTF != null )
       codes.add( codeTF );
 
     final IProfilePointMarker[] bvMarkers = m_profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
-    final String codeBV = checkMarker( record, bvMarkers, IGafConstants.CODE_LBOK, IGafConstants.CODE_RBOK );
+    final String codeBV = checkMarker( record, bvMarkers, GafPointCode.LBOK.getKey(), GafPointCode.RBOK.getKey() );
     if( codeBV != null )
       codes.add( codeBV );
 

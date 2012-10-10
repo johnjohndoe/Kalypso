@@ -43,6 +43,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
+import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.wspm.ISectionProvider;
@@ -234,7 +235,7 @@ public class Waterlevel2dWorker
     record.setRechtswert( waterlevelLocation.x );
     record.setHochwert( waterlevelLocation.y );
 
-    record.setCode( IGafConstants.CODE_WS );
+    record.setCode( GafPointCode.WS.getKey() );
 
     record.setHoehe( waterlevel.getWaterlevel().doubleValue() );
 
