@@ -50,8 +50,6 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
  */
 public interface IEnergylossProfileObject extends IProfileObject
 {
-  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossTypes#ENERGYLOSS"; //$NON-NLS-1$
-
   public static final String KEY_TYPE = "ENERGYLOSS_TYPE"; //$NON-NLS-1$
 
   public static final String KEY_DESCRIPTION = "ENERGYLOSS_DESCRIPTION"; //$NON-NLS-1$

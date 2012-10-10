@@ -215,7 +215,7 @@ public class QIntervallResult extends Feature_Impl
     return new Observation<>( "", "", tupleResult ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public void setWeirObservation( final IObservation<TupleResult> observation )
+  public void setBuildingObservation( final IObservation<TupleResult> observation )
   {
     final Feature obsFeature = getProperty( QNAME_P_QIntervallResult_buildingMember, Feature.class );
 

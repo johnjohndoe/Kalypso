@@ -52,6 +52,8 @@ import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
  */
 public class EnergylossProfileObject extends AbstractProfileObject implements IEnergylossProfileObject
 {
+  private static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossTypes#ENERGYLOSS"; //$NON-NLS-1$
+
   private static final String PROPERTY_TYPE = "type"; //$NON-NLS-1$
 
   private static final String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
@@ -66,7 +68,7 @@ public class EnergylossProfileObject extends AbstractProfileObject implements IE
   @Override
   public String getId( )
   {
-    return IEnergylossProfileObject.ID;
+    return ID;
   }
 
   @Override

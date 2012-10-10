@@ -46,7 +46,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.Building
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
-import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 
@@ -59,7 +58,11 @@ public final class PrfHeaders
   {
   }
 
+  /**
+   * @deprecated: inline! Each case is used at exactly one place.
+   */
   // TODO: this is nonsense, because the given key is 'random' -> probably we should just inline
+  @Deprecated
   public static DataBlockHeader createHeader( final String key )
   {
     if( IWspmPointProperties.POINT_PROPERTY_HOEHE.equals( key ) ) //$NON-NLS-1$
@@ -122,9 +125,6 @@ public final class PrfHeaders
 
     if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "OK-WEHR" ); //$NON-NLS-1$
-
-    if( ISinuositaetProfileObject.ID.equals( key ) )
-      return new DataBlockHeader( IPrfConstants.HEADER_SINUOSITAET, "[-]", IWspWinConstants.SPEZIALPROFIL_SINUOSITAET );//$NON-NLS-1$ //$NON-NLS-2$
 
     // FIXME: we should probably throw an exception here: finding the error afterwards is very difficult
     return new DataBlockHeader( key );

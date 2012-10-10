@@ -44,7 +44,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 
 /**
  * Contains constants for the wspm models.
- * 
+ *
  * @author thuel2
  */
 public interface IWspmTuhhConstants extends IWspmConstants
@@ -53,7 +53,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   /**
    * The scale (i.e. fraction digits) for station values.
-   * 
+   *
    * @see BigDecimal
    */
   int STATION_SCALE = 4;
@@ -68,7 +68,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   String MARKER_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#"; //$NON-NLS-1$
 
-  String BUILDING_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#"; //$NON-NLS-1$
 
   String POINT_PROPERTY = IWspmConstants.POINT_PROPERTY;
 
@@ -80,19 +79,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
   String POINT_PROPERTY_OBERKANTEWEHR = POINT_PROPERTY + "OBERKANTEWEHR"; //$NON-NLS-1$
 
   String POINT_PROPERTY_UNTERKANTEBRUECKE = POINT_PROPERTY + "UNTERKANTEBRUECKE"; //$NON-NLS-1$
-
-  /* BUILDING_TYP */
-  String BUILDING_TYP_BRUECKE = BUILDING_TYP + "BRUECKE"; //$NON-NLS-1$
-
-  String BUILDING_TYP_EI = BUILDING_TYP + "EI"; //$NON-NLS-1$
-
-  String BUILDING_TYP_KREIS = BUILDING_TYP + "KREIS"; //$NON-NLS-1$
-
-  String BUILDING_TYP_MAUL = BUILDING_TYP + "MAUL"; //$NON-NLS-1$
-
-  String BUILDING_TYP_TRAPEZ = BUILDING_TYP + "TRAPEZ"; //$NON-NLS-1$
-
-  String BUILDING_TYP_WEHR = BUILDING_TYP + "WEHR"; //$NON-NLS-1$
 
   /* MARKER_TYP */
   String MARKER_TYP_BORDVOLL = MARKER_TYP + "BORDVOLL"; //$NON-NLS-1$
@@ -182,7 +168,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   String FILE_OVERVIEW_MAP = "Übersichtskarte.gmt"; //$NON-NLS-1$
 
-  String FILE_LAENGSSCHNITT_GML = "Längsschnitt.gml";//$NON-NLS-1$ 
+  String FILE_LAENGSSCHNITT_GML = "Längsschnitt.gml";//$NON-NLS-1$
 
   String DIR_RESULT_DATEN = "Daten"; //$NON-NLS-1$
 }

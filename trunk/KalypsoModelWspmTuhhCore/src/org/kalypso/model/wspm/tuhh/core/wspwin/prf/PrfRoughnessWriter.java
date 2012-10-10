@@ -116,18 +116,16 @@ public class PrfRoughnessWriter
 
     for( final IProfileObject object : objects )
     {
-      final String identifier = object.getId();
-
-      if( BuildingEi.ID.equals( identifier ) )
+      if( object instanceof BuildingEi )
         return ((BuildingEi)object).getRauheit();
 
-      if( BuildingMaul.ID.equals( identifier ) )
+      if( object instanceof BuildingMaul )
         return ((BuildingMaul)object).getRauheit();
 
-      if( BuildingKreis.ID.equals( identifier ) )
+      if( object instanceof BuildingKreis )
         return ((BuildingKreis)object).getRauheit();
 
-      if( BuildingTrapez.ID.equals( identifier ) )
+      if( object instanceof BuildingTrapez )
         return ((BuildingTrapez)object).getRauheit();
     }
 
