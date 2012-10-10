@@ -299,11 +299,11 @@ public class CrossSectionConverter implements IProfileTransaction
     if( profileObjects.size() > 0 )
       m_profile.addProfileObjects( profileObjects.toArray( new IProfileObject[] {} ) );
 
-    // TODO Search one bridge and one ok without id and repair...
-    repairBridges();
+    /* Search one bridge and one ok without id and repair. */
+    final IProfileObject[] pos = m_profile.getProfileObjects();
+    repairBridges( pos );
 
     /* Update the components in the profile. */
-    final IProfileObject[] pos = m_profile.getProfileObjects();
     for( final IProfileObject po : pos )
       updateComponents( po );
   }
@@ -409,9 +409,40 @@ public class CrossSectionConverter implements IProfileTransaction
     }
   }
 
-  private void repairBridges( )
+  private void repairBridges( final IProfileObject[] profileObjects )
   {
-    // TODO
+    /* The used ids. */
+    final Set<String> usedIds = BridgeIdHelper.findUsedIds( profileObjects );
+
+    /* Check each profile object. */
+    for( final IProfileObject profileObject : profileObjects )
+    {
+      /* Repair bridges. */
+      if( profileObject instanceof BuildingBruecke )
+      {
+        /* Cast. */
+        final BuildingBruecke bridge = (BuildingBruecke)profileObject;
+
+        /* If a ok profile object was found, both, bridge and ok profile object have an id. */
+        final IProfileObject okProfileObject = BuildingBruecke.findOkProfileObject( bridge, profileObjects );
+        if( okProfileObject != null )
+          continue;
+
+        /* We create/reuse the bridge id. */
+        final String bridgeId = BridgeIdHelper.findFreeId( bridge, usedIds );
+        bridge.setBrueckeId( bridgeId );
+
+        /* Search for ok profile object without bridge id and use it. */
+        final IProfileObject okPO = BridgeIdHelper.findOkProfileObjectWithoutId( profileObjects );
+        if( okPO != null )
+        {
+          okPO.setValue( BuildingBruecke.KEY_BRUECKE_ID, bridgeId );
+          continue;
+        }
+
+        /* REMARK: We do not create new ok profile objects. */
+      }
+    }
   }
 
   private void updateComponents( final IProfileObject profileObject )
