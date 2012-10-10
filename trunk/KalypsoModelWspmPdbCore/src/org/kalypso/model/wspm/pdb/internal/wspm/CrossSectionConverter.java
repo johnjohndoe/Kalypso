@@ -72,6 +72,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.utils.ConsecutiveNumComparator;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
+import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
@@ -169,18 +170,23 @@ public class CrossSectionConverter implements IProfileTransaction
 
   private String toMarkerType( final String hyk )
   {
-    switch( hyk )
+    if( StringUtils.isBlank( hyk ) )
+      return null;
+
+    final GafPointCode gafPointCode = GafPointCode.valueOf( hyk );
+
+    switch( gafPointCode )
     {
-      case IGafConstants.HYK_PA:
-      case IGafConstants.HYK_PE:
+      case PA:
+      case PE:
         return IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE;
 
-      case IGafConstants.HYK_LBOK:
-      case IGafConstants.HYK_RBOK:
+      case LBOK:
+      case RBOK:
         return IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
 
-      case IGafConstants.HYK_LU:
-      case IGafConstants.HYK_RU:
+      case LU:
+      case RU:
         return IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE;
 
       default:
@@ -348,7 +354,6 @@ public class CrossSectionConverter implements IProfileTransaction
 
     if( partCategory.equals( GafKind.OK.toString() ) )
     {
-      /* REMARK: If OK and UK exists we have a bridge, else a weir. */
       final boolean hasCulvertOrBridge = hasCategory( GafKind.UK.toString(), GafKind.K.toString(), GafKind.EI.toString(), GafKind.MA.toString(), GafKind.AR.toString(), GafKind.HA.toString(), IGafConstants.KIND_TR );
       if( !hasCulvertOrBridge )
         return new BuildingWehr( m_profile );
@@ -510,13 +515,13 @@ public class CrossSectionConverter implements IProfileTransaction
 
     /* Guess special cases. */
     if( profileObject instanceof BuildingKreis )
-      guessSpecialCases( (ICulvertBuilding)profileObject, IGafConstants.CODE_KRUK, IGafConstants.CODE_KRFS );
+      guessSpecialCases( (ICulvertBuilding)profileObject, GafPointCode.KRUK.getKey(), GafPointCode.KRFS.getKey() );
 
     if( profileObject instanceof BuildingEi )
-      guessSpecialCases( (ICulvertBuilding)profileObject, IGafConstants.CODE_EIUK, IGafConstants.CODE_EIFS );
+      guessSpecialCases( (ICulvertBuilding)profileObject, GafPointCode.EIUK.getKey(), GafPointCode.EIFS.getKey() );
 
     if( profileObject instanceof BuildingMaul )
-      guessSpecialCases( (ICulvertBuilding)profileObject, IGafConstants.CODE_MAUK, IGafConstants.CODE_MAFS );
+      guessSpecialCases( (ICulvertBuilding)profileObject, GafPointCode.MAUK.getKey(), GafPointCode.MAFS.getKey() );
   }
 
   private void guessSpecialCases( final ICulvertBuilding profileObject, final String ukCode, final String fsCode )

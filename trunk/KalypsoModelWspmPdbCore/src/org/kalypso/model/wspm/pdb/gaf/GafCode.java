@@ -42,11 +42,11 @@ package org.kalypso.model.wspm.pdb.gaf;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 
 /**
- * Represents the 'Kennziffer' (KZ) of a gaf file.
- *
+ * Represents the 'Kennziffer' (KZ) of a gaf file.<br/>
+ * FIXME: Should be replaced by {@link GafPointCode}.
+ * 
  * @author Gernot Belger
  */
 public class GafCode implements Comparable<GafCode>
@@ -67,20 +67,6 @@ public class GafCode implements Comparable<GafCode>
 
   private final boolean m_isDefault;
 
-  public GafCode( final String key, final String value )
-  {
-    m_key = StringUtils.trim( key );
-
-    final String[] tokens = value.split( ";", 7 ); //$NON-NLS-1$
-    m_number = Integer.parseInt( tokens[0] );
-    m_dbCode = StringUtils.trim( tokens[1] );
-    m_description = StringUtils.trim( tokens[2] );
-    m_hyk = StringUtils.trim( tokens[3] );
-    m_kind = GafKind.valueOf( StringUtils.trim( tokens[4] ) );
-    m_color = ColorUtilities.toRGBFromHTML( StringUtils.trim( tokens[5] ) );
-    m_isDefault = Boolean.valueOf( tokens[6] );
-  }
-
   public GafCode( final int number, final String key, final String dbCode, final String description, final String hyk, final GafKind kind, final RGB color, final boolean isDefault )
   {
     m_number = number;
@@ -91,6 +77,18 @@ public class GafCode implements Comparable<GafCode>
     m_kind = kind;
     m_color = color;
     m_isDefault = isDefault;
+  }
+
+  public GafCode( final GafPointCode gafPointCode )
+  {
+    m_number = gafPointCode.getNumber();
+    m_key = gafPointCode.name();
+    m_dbCode = gafPointCode.getDbCode();
+    m_description = gafPointCode.getDescription();
+    m_hyk = gafPointCode.getHyk();
+    m_kind = gafPointCode.getKind();
+    m_color = gafPointCode.getColor();
+    m_isDefault = gafPointCode.isDefault();
   }
 
   @Override

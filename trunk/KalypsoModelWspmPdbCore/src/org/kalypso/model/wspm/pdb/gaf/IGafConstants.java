@@ -47,60 +47,6 @@ public interface IGafConstants
 {
   String POINT_KIND_GAF = "GAF"; //$NON-NLS-1$
 
-  /* CODES */
-  String CODE_PP = "PP"; //$NON-NLS-1$
-
-  String CODE_PA = "PA"; //$NON-NLS-1$
-
-  String CODE_PE = "PE";//$NON-NLS-1$
-
-  String CODE_LU = "LU";//$NON-NLS-1$
-
-  String CODE_RU = "RU";//$NON-NLS-1$
-
-  String CODE_LBOK = "LBOK";//$NON-NLS-1$
-
-  String CODE_RBOK = "RBOK";//$NON-NLS-1$
-
-  String CODE_UKAN = "UKAN"; //$NON-NLS-1$
-
-  String CODE_UKEN = "UKEN"; //$NON-NLS-1$
-
-  String CODE_UKPP = "UKPP"; //$NON-NLS-1$
-
-  String CODE_OKAN = "OKAN"; //$NON-NLS-1$
-
-  String CODE_OKEN = "OKEN"; //$NON-NLS-1$
-
-  String CODE_OKPP = "OKPP"; //$NON-NLS-1$
-
-  String CODE_WS = "WS"; //$NON-NLS-1$
-
-  String CODE_KRUK = "KRUK"; //$NON-NLS-1$
-
-  String CODE_KRFS = "KRFS"; //$NON-NLS-1$
-
-  String CODE_EIUK = "EIUK"; //$NON-NLS-1$
-
-  String CODE_EIFS = "EIFS"; //$NON-NLS-1$
-
-  String CODE_MAUK = "MAUK"; //$NON-NLS-1$
-
-  String CODE_MAFS = "MAFS"; //$NON-NLS-1$
-
-  /* HYK */
-  String HYK_PA = CODE_PA;
-
-  String HYK_PE = CODE_PE;
-
-  String HYK_LBOK = CODE_LBOK;
-
-  String HYK_RBOK = CODE_RBOK;
-
-  String HYK_LU = CODE_LU;
-
-  String HYK_RU = CODE_RU;
-
   char HYK_CODE_SEPARATOR = ','; //$NON-NLS-1$
 
   /* special building codes */

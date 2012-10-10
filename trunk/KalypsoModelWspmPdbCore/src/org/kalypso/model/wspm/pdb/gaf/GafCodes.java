@@ -40,19 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
-import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * Represents the 'Kennziffer' (KZ) of a GAF file.
- *
+ * 
  * @author Gernot Belger
  */
 public class GafCodes
@@ -66,14 +63,12 @@ public class GafCodes
   /* kind -> default code */
   private final Map<GafKind, GafCode> m_defaultCodes = new HashMap<>();
 
-  public GafCodes( ) throws IOException
+  public GafCodes( )
   {
-    final Properties properties = PropertiesUtilities.load( getClass().getResource( "../internal/gaf/kz.properties" ) ); //$NON-NLS-1$
-    for( final String key : properties.stringPropertyNames() )
+    final GafPointCode[] gafPointCodes = GafPointCode.values();
+    for( final GafPointCode gafPointCode : gafPointCodes )
     {
-      final String value = properties.getProperty( key );
-
-      final GafCode gafCode = new GafCode( key, value );
+      final GafCode gafCode = new GafCode( gafPointCode );
 
       m_codes.put( gafCode.getCode(), gafCode );
       m_hykCodes.put( gafCode.getHyk(), gafCode );

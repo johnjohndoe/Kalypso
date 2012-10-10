@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
-import java.io.IOException;
 import java.net.URI;
 
 import org.eclipse.core.runtime.CoreException;
@@ -79,9 +78,9 @@ public class CheckoutPdbData extends AbstractModelObject
   /** Choice what shall be removed from the local data. */
   public enum RemoveStrategy
   {
-    keepAll(Messages.getString( "CheckoutPdbData.0" )), //$NON-NLS-1$
-    keepWaterBodies(Messages.getString( "CheckoutPdbData.1" )), //$NON-NLS-1$
-    removeAll(Messages.getString( "CheckoutPdbData.2" )); //$NON-NLS-1$
+    keepAll( Messages.getString( "CheckoutPdbData.0" ) ), //$NON-NLS-1$
+    keepWaterBodies( Messages.getString( "CheckoutPdbData.1" ) ), //$NON-NLS-1$
+    removeAll( Messages.getString( "CheckoutPdbData.2" ) ); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -142,10 +141,6 @@ public class CheckoutPdbData extends AbstractModelObject
       return Status.OK_STATUS;
     }
     catch( final HibernateException e )
-    {
-      return StatusUtilities.statusFromThrowable( e );
-    }
-    catch( final IOException e )
     {
       return StatusUtilities.statusFromThrowable( e );
     }
