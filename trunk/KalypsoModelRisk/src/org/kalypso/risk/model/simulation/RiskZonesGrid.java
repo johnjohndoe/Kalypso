@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,10 +79,6 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid
 
   private final IFeatureBindingCollection<ILandusePolygon> m_landusePolygonCollection;
 
-  private BigDecimal m_min;
-
-  private BigDecimal m_max;
-
   private final List<IRiskZoneDefinition> m_riskZoneDefinitionsList;
 
   private final IGeoGrid m_resultGrid;
@@ -105,6 +100,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid
   public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureBindingCollection<IAnnualCoverageCollection> annualCoverageCollection, final ILandusePolygonCollection landusePolygonCollection, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
   {
     super( resultGrid );
+
     m_riskZoneDefinitionsList = riskZoneDefinitionsList;
     m_produceZoneIdentifiers = false;
     m_resultGrid = resultGrid;
@@ -150,14 +146,13 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid
       m_gridMap.put( collection.getId(), gridList );
     }
 
-    m_min = new BigDecimal( Double.MAX_VALUE ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
-    m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
-
     for( final IRiskZoneDefinition riskZoneDefinition : m_riskZoneDefinitionsList )
+    {
       if( riskZoneDefinition.isUrbanLanduseType() )
         m_urbanZonesDefinitions.put( riskZoneDefinition.getLowerBoundary(), riskZoneDefinition );
       else
         m_nonUrbanZonesDefinitions.put( riskZoneDefinition.getLowerBoundary(), riskZoneDefinition );
+    }
   }
 
   @Override
@@ -225,10 +220,6 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid
 
           if( Double.isInfinite( returnValue ) || Double.isNaN( returnValue ) )
             return Double.NaN;
-
-          /* check min/max */
-          m_min = m_min.min( new BigDecimal( returnValue ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP ) );
-          m_max = m_max.max( new BigDecimal( returnValue ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP ) );
 
           return returnValue;
         }
