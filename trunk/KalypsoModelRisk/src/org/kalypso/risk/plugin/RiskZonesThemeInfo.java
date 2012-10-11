@@ -51,7 +51,7 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo
   @Override
   protected String initFormatString( final Properties props )
   {
-    final int digits = KalypsoRiskPlugin.getPreferences_themeInfoPrecision();
+    final int digits = KalypsoRiskPlugin.getThemeInfoPrecision();
     return props.getProperty( PROP_FORMAT, new StringBuffer( "%,." ).append( digits ).append( "f \u20ac/m\u00b2/a - %s" ).toString() ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 

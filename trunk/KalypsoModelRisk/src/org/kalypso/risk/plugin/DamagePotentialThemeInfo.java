@@ -12,7 +12,7 @@ public class DamagePotentialThemeInfo extends CoverageThemeInfo
   @Override
   protected String initFormatString( final Properties props )
   {
-    final int digits = KalypsoRiskPlugin.getPreferences_themeInfoPrecision();
+    final int digits = KalypsoRiskPlugin.getThemeInfoPrecision();
     final String i18Format = Messages.getString( "SpecificDamagePotentialMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
     final String customPrecision = String.format( "%%,.%df", digits ); //$NON-NLS-1$
     return props.getProperty( PROP_FORMAT, i18Format.replaceAll( "\\[CUSTOM_PRECISION\\]", customPrecision ) ); //$NON-NLS-1$

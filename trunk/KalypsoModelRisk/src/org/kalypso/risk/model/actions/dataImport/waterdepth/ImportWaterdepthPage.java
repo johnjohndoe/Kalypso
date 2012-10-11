@@ -270,13 +270,15 @@ public class ImportWaterdepthPage extends WizardPage
     m_fldReturnPeriod.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     m_fldReturnPeriod.setValues( 1, 1, 1000, 0, 1, 50 );
     m_fldReturnPeriod.setEnabled( false );
+
+    final Spinner fldReturnPeriod = m_fldReturnPeriod;
     m_fldReturnPeriod.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        m_rasterInfos.get( m_selectedRasterIndex ).setReturnPeriod( m_fldReturnPeriod.getSelection() );
-        m_tableViewer.getItem( m_selectedRasterIndex ).setText( 1, Integer.toString( m_fldReturnPeriod.getSelection() ) );
+        m_rasterInfos.get( m_selectedRasterIndex ).setReturnPeriod( fldReturnPeriod.getSelection() );
+        m_tableViewer.getItem( m_selectedRasterIndex ).setText( 1, Integer.toString( fldReturnPeriod.getSelection() ) );
         m_tableViewer.redraw();
         getWizard().getContainer().updateButtons();
       }
