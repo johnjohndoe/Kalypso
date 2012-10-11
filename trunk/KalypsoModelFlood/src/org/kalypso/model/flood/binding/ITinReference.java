@@ -24,7 +24,7 @@
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  Lesser General License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
@@ -61,94 +61,85 @@ public interface ITinReference extends Feature
 {
   enum SOURCETYPE
   {
-    gml
+    gml( "GML" ), //$NON-NLS-1$
+    hmo( "HMO-Datei" ), //$NON-NLS-1$
+    shape( "ESRI Shape-Datei" ); //$NON-NLS-1$
+
+    private final String m_label;
+
+    private SOURCETYPE( final String label )
     {
-      @Override
-      public String toString( )
-      {
-        return "GML"; //$NON-NLS-1$
-      }
-    },
-    hmo
+      m_label = label;
+    }
+
+    @Override
+    public String toString( )
     {
-      @Override
-      public String toString( )
-      {
-        return "HMO-Datei"; //$NON-NLS-1$
-      }
-    },
-    shape
-    {
-      @Override
-      public String toString( )
-      {
-        return "ESRI Shape-Datei"; //$NON-NLS-1$
-      }
+      return m_label;
     }
   }
 
-  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "TinReference" ); //$NON-NLS-1$
+  QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "TinReference" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_MIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "min" ); //$NON-NLS-1$
+  QName QNAME_PROP_MIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "min" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_MAX = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "max" ); //$NON-NLS-1$
+  QName QNAME_PROP_MAX = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "max" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_SOURCE_LOCATION = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceLocation" ); //$NON-NLS-1$
+  QName QNAME_PROP_SOURCE_LOCATION = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceLocation" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_SOURCE_PATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourcePath" ); //$NON-NLS-1$
+  QName QNAME_PROP_SOURCE_PATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourcePath" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_SOURCE_DATE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceDate" ); //$NON-NLS-1$
+  QName QNAME_PROP_SOURCE_DATE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceDate" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_SOURCE_TYPE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceType" ); //$NON-NLS-1$
+  QName QNAME_PROP_SOURCE_TYPE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceType" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_TIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "tin" ); //$NON-NLS-1$
+  QName QNAME_PROP_TIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "tin" ); //$NON-NLS-1$
 
-  public void setMin( BigDecimal min );
+  void setMin( BigDecimal min );
 
-  public BigDecimal getMin( );
+  BigDecimal getMin( );
 
-  public void setMax( BigDecimal max );
+  void setMax( BigDecimal max );
 
-  public BigDecimal getMax( );
+  BigDecimal getMax( );
 
-  public void setTin( GM_TriangulatedSurface surface );
+  void setTin( GM_TriangulatedSurface surface );
 
-  public GM_TriangulatedSurface getTin( );
+  GM_TriangulatedSurface getTin( );
 
-  public void setSourceLocation( URL location );
+  void setSourceLocation( URL location );
 
-  public URL getSourceLocation( );
+  URL getSourceLocation( );
 
-  public SOURCETYPE getSourceType( );
+  SOURCETYPE getSourceType( );
 
-  public void setSourceFeaturePath( final GMLXPath path );
+  void setSourceFeaturePath( final GMLXPath path );
 
-  public GMLXPath getSourceFeaturePath( );
+  GMLXPath getSourceFeaturePath( );
 
-  public void setUpdateDate( Date date );
+  void setUpdateDate( Date date );
 
-  public void setSourceType( final SOURCETYPE type );
+  void setSourceType( final SOURCETYPE type );
 
-  public Date getUpdateDate( );
+  Date getUpdateDate( );
 
   // Non-Binding helpers
 
   /**
    * Finds the (linearly-)interpolated value of this tin at the given position.<br>
    * If the position is not covered by this surface, {@link Double#NaN} will be returned.
-   * 
+   *
    * @param pos
    *            A position in the same coordinate system as this geometry.
    */
-  public double getValue( final GM_Position pos );
+  double getValue( final GM_Position pos );
 
   /**
    * Returns the parent of this referenz as a {@link IRunoffEvent}.
-   * 
+   *
    * @return The paretn feature adapted to {@link IRunoffEvent}, ma be <code>null</code>.
    */
-  public IRunoffEvent getRunoffEvent( );
+  IRunoffEvent getRunoffEvent( );
 
-  public GM_Triangle getTraingle( final GM_Position pos );
-
+  GM_Triangle getTriangle( final GM_Position pos );
 }
