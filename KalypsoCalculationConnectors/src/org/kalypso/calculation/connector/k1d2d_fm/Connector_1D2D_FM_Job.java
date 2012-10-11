@@ -7,6 +7,7 @@ import java.util.Date;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.calculation.connector.utils.Connectors;
 import org.kalypso.gml.ui.coverage.CoverageManagementHelper;
@@ -69,7 +70,7 @@ public class Connector_1D2D_FM_Job extends AbstractInternalStatusJob implements 
       final boolean deleteExistingRunoffEvents = deleteRunOffEvents( inputProvider );
       final int returnPeriod = Integer.parseInt( (String) inputProvider.getInputForID( INPUT_RETURN_PERIOD ) );
 
-      final File fmOutputFile = File.createTempFile( "outTempFM", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$ 
+      final File fmOutputFile = File.createTempFile( "outTempFM", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final Feature tinRootFeature = tinFile.getRootFeature();
       final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter( IFloodModel.class );
@@ -132,7 +133,7 @@ public class Connector_1D2D_FM_Job extends AbstractInternalStatusJob implements 
       tinReference.setUpdateDate( new Date() );
       tinReference.setSourceType( SOURCETYPE.gml );
       GmlSerializer.serializeWorkspace( fmOutputFile, fmModel, "UTF-8" ); //$NON-NLS-1$
-      setStatus( STATUS.OK, "Success" );
+      setStatus( IStatus.OK, "Success" );
       resultEater.addResult( OUTPUT_FLOOD_MODEL, fmOutputFile );
     }
     catch( final Exception e )

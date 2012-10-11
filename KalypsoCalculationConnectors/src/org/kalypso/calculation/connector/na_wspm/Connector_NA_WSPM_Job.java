@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_NA_WSPM;
 import org.kalypso.calculation.connector.utils.Connectors;
 import org.kalypso.commons.java.lang.Objects;
@@ -57,7 +58,7 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
     final GMLWorkspace workspaceNA = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_NA_WSPM.NA_Model.name() );
     if( Objects.isNull( workspaceNA ) )
     {
-      setStatus( STATUS.ERROR, "no input file" );
+      setStatus( IStatus.ERROR, "no input file" );
       return;
     }
 
@@ -96,7 +97,7 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
         if( Objects.isNull( axisNodeNr, axisMaxDischarge ) )
         {
           // TODO error report & exit
-          setStatus( STATUS.ERROR, "No proper axis found." );
+          setStatus( IStatus.ERROR, "No proper axis found." );
           return;
         }
 
@@ -139,7 +140,7 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
                 // TODO: what to do if there are
                 // duplicate values for river kilometer?
                 // It is not allowed as WSPM input!
-                setStatus( STATUS.ERROR, "Duplicate value for river kilometer (formatted to 0.0000): " + bigDecimalRiverKilometer );
+                setStatus( IStatus.ERROR, "Duplicate value for river kilometer (formatted to 0.0000): " + bigDecimalRiverKilometer );
                 return;
               }
               else
@@ -164,11 +165,11 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
         runOffEvent.setProperty( IRunOffEvent.PROPERTY_ANNUALITY, returnPeriodToSet );
 
         GmlSerializer.serializeWorkspace( outputFile, workspaceWSPM, "UTF-8" );
-        setStatus( STATUS.OK, "Success" );
+        setStatus( IStatus.OK, "Success" );
       }
       catch( final Exception e )
       {
-        setStatus( STATUS.ERROR, e.getLocalizedMessage() );
+        setStatus( IStatus.ERROR, e.getLocalizedMessage() );
       }
 
       if( isOkStatus() )
