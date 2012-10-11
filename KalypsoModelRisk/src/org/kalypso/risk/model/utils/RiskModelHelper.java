@@ -256,7 +256,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for one raster cell <br>
    * further informations: DVWK-Mitteilung 10
-   * 
+   *
    * @param damages
    *          damage values for all annualities
    * @param probabilities
@@ -275,7 +275,8 @@ public class RiskModelHelper
     for( int j = 1; j < probabilities.length; j++ )
     {
       final double dP = Math.abs( probabilities[j - 1] - probabilities[j] );
-      result += (damages[j - 1] + damages[j]) * dP / 2;
+      final double meanHeight = (damages[j - 1] + damages[j]) / 2;
+      result += meanHeight * dP;
     }
     return result;
   }

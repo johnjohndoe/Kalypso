@@ -46,7 +46,6 @@ import java.util.List;
 
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.IGeoGrid;
-import org.kalypso.grid.parallel.ParallelBinaryGridProcessorBean;
 import org.kalypso.grid.parallel.SequentialBinaryGeoGridReader;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
@@ -91,7 +90,7 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
   }
 
   @Override
-  protected double getValue( final int x, final int y, final Coordinate crd, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
+  protected double getValue( final int x, final int y, final Coordinate crd ) throws GeoGridException
   {
     final double value = crd.z;
     if( Double.isNaN( value ) )
