@@ -177,7 +177,7 @@ public class CheckoutPdbData extends AbstractModelObject
     throw new IllegalArgumentException();
   }
 
-  private ICoefficients loadCoefficients( final Session session )
+  private ICoefficients loadCoefficients( final Session session ) throws PdbConnectException
   {
     final GetCoefficients operation = new GetCoefficients( IGafConstants.POINT_KIND_GAF );
     operation.execute( session );

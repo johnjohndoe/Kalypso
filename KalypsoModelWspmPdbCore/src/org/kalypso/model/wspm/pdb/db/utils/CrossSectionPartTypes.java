@@ -56,4 +56,9 @@ public class CrossSectionPartTypes
 
     return null;
   }
+
+  public CrossSectionPartType[] getTypes( )
+  {
+    return m_types;
+  }
 }
