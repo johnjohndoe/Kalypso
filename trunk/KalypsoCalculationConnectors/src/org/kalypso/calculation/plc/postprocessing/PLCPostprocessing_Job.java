@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.calculation.plc.postprocessing.binding.IScenarioResults;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -130,7 +131,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       throw new SimulationException( "Problem bei der Verarbeitung der Ergebnisse der Prozesskette", e );
     }
     resultEater.addResult( OUTPUT_FOLDER, outputFolder ); //$NON-NLS-1$
-    setStatus( STATUS.OK, "Success" );
+    setStatus( IStatus.OK, "Success" );
   }
 
   private void addNAResults( final ISimulationDataProvider inputProvider, final File outputFolder ) throws SimulationException, IOException

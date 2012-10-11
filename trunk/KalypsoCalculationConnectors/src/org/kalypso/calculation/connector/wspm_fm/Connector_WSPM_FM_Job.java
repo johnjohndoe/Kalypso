@@ -7,6 +7,7 @@ import java.net.URL;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_WSPM_FM;
 import org.kalypso.calculation.connector.utils.Connectors;
@@ -73,7 +74,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
     try
     {
 
-      final File fmOutputFile = File.createTempFile( "outTempFM", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$ 
+      final File fmOutputFile = File.createTempFile( "outTempFM", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final Feature wspmTinRootFeature = wspmTinFile.getRootFeature();
       final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter( IFloodModel.class );
@@ -136,7 +137,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
       tinReference.setUpdateDate( date.toGregorianCalendar().getTime() );
       tinReference.setSourceType( SOURCETYPE.gml );
       GmlSerializer.serializeWorkspace( fmOutputFile, fmModel, "UTF-8" ); //$NON-NLS-1$
-      setStatus( STATUS.OK, "Success" );
+      setStatus( IStatus.OK, "Success" );
       resultEater.addResult( MODELSPEC_CONNECTOR_WSPM_FM.FM_Model.name(), fmOutputFile );
     }
     catch( final Exception e )

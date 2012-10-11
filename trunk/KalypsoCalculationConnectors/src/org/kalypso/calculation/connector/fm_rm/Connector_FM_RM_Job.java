@@ -7,6 +7,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_FM_RM;
 import org.kalypso.calculation.connector.utils.Connectors;
 import org.kalypso.model.flood.binding.IFloodModel;
@@ -126,11 +127,11 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
         resultEater.addResult( MODELSPEC_KALYPSORISK.MAP_WATERLEVEL.toString(), outMap );
       }
 
-      setStatus( STATUS.OK, "Success" );
+      setStatus( IStatus.OK, "Success" );
     }
     catch( final Exception e )
     {
-      setStatus( STATUS.ERROR, e.getLocalizedMessage() );
+      setStatus( IStatus.ERROR, e.getLocalizedMessage() );
       e.printStackTrace();
     }
   }
