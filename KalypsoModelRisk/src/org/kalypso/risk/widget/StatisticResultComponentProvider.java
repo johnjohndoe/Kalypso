@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnWidthInfo;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDecimalHandler;
@@ -71,43 +72,43 @@ final class StatisticResultComponentProvider implements IComponentUiHandlerProvi
       case "TotalDamage": //$NON-NLS-1$
       {
         final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.1", compNameStrings[1] ); //$NON-NLS-1$
-        return new ComponentUiDecimalHandler( componentIndex, false, true, false, headerName, SWT.RIGHT, 170, 10, NUMBER_FORMAT, nullFormat, null );
+        return new ComponentUiDecimalHandler( componentIndex, false, true, true, headerName, SWT.RIGHT, ColumnWidthInfo.PACK, -1, NUMBER_FORMAT, nullFormat, null );
       }
 
       case "FloodedArea": //$NON-NLS-1$
       {
         final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.2", compNameStrings[1] ); //$NON-NLS-1$
-        return new ComponentUiDecimalHandler( componentIndex, false, true, false, headerName, SWT.RIGHT, 170, 10, NUMBER_FORMAT, nullFormat, null );
+        return new ComponentUiDecimalHandler( componentIndex, false, true, true, headerName, SWT.RIGHT, ColumnWidthInfo.PACK, -1, NUMBER_FORMAT, nullFormat, null );
       }
 
       case "AveragedDamage": //$NON-NLS-1$
       {
         final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.3", compNameStrings[1] ); //$NON-NLS-1$
-        return new ComponentUiDecimalHandler( componentIndex, false, true, false, headerName, SWT.RIGHT, 170, 10, NUMBER_FORMAT, nullFormat, null );
+        return new ComponentUiDecimalHandler( componentIndex, false, true, true, headerName, SWT.RIGHT, ColumnWidthInfo.PACK, -1, NUMBER_FORMAT, nullFormat, null );
       }
 
       case "AnnualValue": //$NON-NLS-1$
       {
         final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.4" ); //$NON-NLS-1$
-        return new ComponentUiDoubleHandler( componentIndex, false, true, false, headerName, SWT.RIGHT, 190, 10, NUMBER_FORMAT, nullFormat, null );
+        return new ComponentUiDoubleHandler( componentIndex, false, true, true, headerName, SWT.RIGHT, ColumnWidthInfo.PACK, -1, NUMBER_FORMAT, nullFormat, null );
       }
 
       case "TotalPotentialDamage": //$NON-NLS-1$
       {
         final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.6" ); //$NON-NLS-1$
-        return new ComponentUiDoubleHandler( componentIndex, false, true, false, headerName, SWT.RIGHT, 190, 10, NUMBER_FORMAT, nullFormat, null );
+        return new ComponentUiDoubleHandler( componentIndex, false, true, true, headerName, SWT.RIGHT, ColumnWidthInfo.PACK, -1, NUMBER_FORMAT, nullFormat, null );
       }
 
       case "Landuse": //$NON-NLS-1$
       {
         final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.5" ); //$NON-NLS-1$
-        return new ComponentUiStringHandler( componentIndex, false, true, false, headerName, SWT.NONE, 120, 10, "%s", nullFormat, null ); //$NON-NLS-1$
+        return new ComponentUiStringHandler( componentIndex, false, true, true, headerName, SWT.NONE, ColumnWidthInfo.PACK, -1, "%s", nullFormat, null ); //$NON-NLS-1$
       }
 
       case "Group": //$NON-NLS-1$
       {
         final String headerName = "Group";
-        return new ComponentUiStringHandler( componentIndex, false, true, false, headerName, SWT.NONE, 120, 10, "%s", nullFormat, null ); //$NON-NLS-1$
+        return new ComponentUiStringHandler( componentIndex, false, true, true, headerName, SWT.NONE, ColumnWidthInfo.PACK, -1, "%s", nullFormat, null ); //$NON-NLS-1$
       }
 
       default:

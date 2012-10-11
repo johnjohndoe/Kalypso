@@ -47,14 +47,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
-import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
+import org.kalypso.ogc.gml.om.table.TupleResultContentProvider2;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -66,7 +64,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class StatisticResultComposite extends Composite
 {
-  private DefaultTableViewer m_viewer;
+  private TableViewer m_viewer;
 
   public StatisticResultComposite( final IRasterizationControlModel model, final Composite parent, final int style )
   {
@@ -81,18 +79,16 @@ public class StatisticResultComposite extends Composite
   {
     final IComponentUiHandlerProvider provider = new StatisticResultComponentProvider();
 
-    m_viewer = new DefaultTableViewer( this, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
-
-    final Table table = m_viewer.getTable();
+    final Table table = new Table( this, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    final TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
-    final TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
+    m_viewer = new TableViewer( table );
+    m_viewer.setUseHashlookup( true );
 
-    m_viewer.setContentProvider( tupleResultContentProvider );
-    m_viewer.setLabelProvider( tupleResultLabelProvider );
+    m_viewer.setContentProvider( new TupleResultContentProvider2( provider ) );
 
     final Feature observation = model.getStatisticObsFeature();
     final IObservation<TupleResult> obs = observation == null ? null : ObservationFeatureFactory.toObservation( observation );
