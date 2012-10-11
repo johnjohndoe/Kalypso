@@ -133,8 +133,8 @@ class StatisticObservationBuilder
     }
 
     /* add the average annual damage component */
-    result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_ANNUAL ) );
     result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_TOTAL ) );
+    result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_ANNUAL ) );
   }
 
   private void fillResultWithData( final TupleResult result )
@@ -169,8 +169,8 @@ class StatisticObservationBuilder
       newRecord.setValue( i++, new BigDecimal( specificDamamage.getAverageDamage() ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP ) );
     }
 
-    newRecord.setValue( components.length - 2, item.calcAnnualAverageDamage() );
-    newRecord.setValue( components.length - 1, item.calcAnnualTotalDamage() );
+    newRecord.setValue( components.length - 2, item.calcAnnualTotalDamage() );
+    newRecord.setValue( components.length - 1, item.calcAnnualAverageDamage() );
 
     result.add( newRecord );
   }
