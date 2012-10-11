@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,11 +52,8 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
-import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
-import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
-import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
@@ -123,23 +118,23 @@ public class RiskModelHelper
   static
   {
     LAYER_PROPERTY_MAP.put( LAYER_TYPE.WATERLEVEL, new HashMap<FIELD, String>()
-        {
+    {
       {
         put( FIELD.STYLE_URN, "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
         put( FIELD.THEMEINFO_CLASS, "org.kalypso.gml.ui.map.CoverageThemeInfo" ); //$NON-NLS-1$
         put( FIELD.I18N_THEMEINFO_LABEL, "WaterlevelMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
         put( FIELD.I18N_LAYER_NAME, "WaterlevelMap.gismapview.layer" ); //$NON-NLS-1$
       }
-        } );
+    } );
     LAYER_PROPERTY_MAP.put( LAYER_TYPE.SPECIFIC_DAMAGE_POTENTIAL, new HashMap<FIELD, String>()
-        {
+    {
       {
         put( FIELD.STYLE_URN, "urn:style:sld:risk:damage:specific" ); //$NON-NLS-1$
         put( FIELD.STYLE_NAME, "default" ); //$NON-NLS-1$
         put( FIELD.THEMEINFO_CLASS, "org.kalypso.risk.plugin.DamagePotentialThemeInfo" ); //$NON-NLS-1$
         put( FIELD.I18N_LAYER_NAME, "SpecificDamagePotentialMap.gismapview.layer" ); //$NON-NLS-1$
       }
-        } );
+    } );
   }
 
   /**
@@ -173,13 +168,6 @@ public class RiskModelHelper
     }
     SLDHelper.exportRasterSymbolyzerSLD( sldFile, minDamageValue.doubleValue(), maxDamageValue.doubleValue() * 1.05, 20, Color.lightGray, Color.red, "Kalypso style", "Kalypso style", null ); //$NON-NLS-1$ //$NON-NLS-2$
     sldFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
-  }
-
-  public synchronized static void fillStatistics( final int returnPeriod, final ILanduseClass landuseClass, final double damageValue, final double cellSize )
-  {
-    final IRiskLanduseStatistic statistic = RiskLanduseHelper.getLanduseStatisticEntry( landuseClass, returnPeriod, cellSize );
-    final BigDecimal value = new BigDecimal( damageValue ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_FINE, BigDecimal.ROUND_HALF_UP );
-    statistic.updateStatistic( value );
   }
 
   public static StyledLayerType createMapLayer( final LAYER_TYPE type, final IAnnualCoverageCollection coverageCollection ) throws Exception
@@ -254,16 +242,16 @@ public class RiskModelHelper
   }
 
   /**
-   * calculates the average annual damage value for one raster cell <br>
+   * Calculates the annual damage value from a list of specific damages and probabilites by integration.<br>
    * further informations: DVWK-Mitteilung 10
-   *
+   * 
    * @param damages
    *          damage values for all annualities
    * @param probabilities
    *          the probability values for all annualtities
    * @return damage potential value [€/a]
    */
-  public static double calcAverageAnnualDamageValue( final double[] damages, final double[] probabilities )
+  public static double calcPotentialAnnualDamageValue( final double[] damages, final double[] probabilities )
   {
     /* support for single flood event (no annuality) */
     if( probabilities.length == 1 && damages.length > 0 )
@@ -282,7 +270,6 @@ public class RiskModelHelper
   }
 
   /**
-   *
    * creates the land use raster files. The grid cells get the ordinal number of the the land use class.
    *
    * @param scenarioFolder
@@ -423,7 +410,7 @@ public class RiskModelHelper
       insertSpecificDamageMapLayer( parentKalypsoTheme, annualCoverageCollection );
 
     if( parentKalypsoTheme instanceof IKalypsoSaveableTheme )
-      ((IKalypsoSaveableTheme) parentKalypsoTheme).saveFeatures( new NullProgressMonitor() );
+      ((IKalypsoSaveableTheme)parentKalypsoTheme).saveFeatures( new NullProgressMonitor() );
   }
 
   /**
@@ -506,46 +493,6 @@ public class RiskModelHelper
     return 0;
   }
 
-  /**
-   * calculates the average annual damage value for each landuse class<br>
-   * The value is calculated by integrating the specific damage values.<br>
-   */
-  public static void calcLanduseAnnualAverageDamage( final IRasterizationControlModel rasterizationControlModel )
-  {
-    final List<ILanduseClass> landuseClassesList = rasterizationControlModel.getLanduseClassesList();
-    for( final ILanduseClass landuseClass : landuseClassesList )
-    {
-      /* get the statistical data for each landuse class */
-      final List<IRiskLanduseStatistic> landuseStatisticList = landuseClass.getLanduseStatisticList();
-      if( landuseStatisticList.size() == 0 )
-        landuseClass.setAverageAnnualDamage( 0.0 );
-      {
-        // generate a return period - sorted list
-        final Map<Integer, IRiskLanduseStatistic> periodSortedMap = new TreeMap<>();
-        for( int i = 0; i < landuseStatisticList.size(); i++ )
-        {
-          final IRiskLanduseStatistic riskLanduseStatistic = landuseStatisticList.get( i );
-          final int period = riskLanduseStatistic.getReturnPeriod();
-          periodSortedMap.put( period, riskLanduseStatistic );
-        }
-
-        final Set<Integer> keySet = periodSortedMap.keySet();
-
-        final Integer[] periods = keySet.toArray( new Integer[keySet.size()] );
-        final double[] probabilities = new double[periods.length];
-        for( int i = 0; i < probabilities.length; i++ )
-          probabilities[i] = 1.0 / periods[i];
-        final double[] values = new double[periods.length];
-        for( int i = 0; i < values.length; i++ )
-          values[i] = periodSortedMap.get( periods[i] ).getAverageDamage().doubleValue();
-
-        final double averageDamage = calcAverageAnnualDamageValue( values, probabilities );
-
-        landuseClass.setAverageAnnualDamage( averageDamage );
-      }
-    }
-  }
-
   public static void addEventThemes( final IKalypsoCascadingTheme parentKalypsoTheme, final IAnnualCoverageCollection annualCoverageCollection ) throws CoreException
   {
     // Check, if theme already exists
@@ -596,7 +543,6 @@ public class RiskModelHelper
 
   /**
    * Import new events into the risk model.<br>
-   *
    * The parameters 'names', 'returnPeriods', 'grids' must be of the same size.
    *
    * @param names
@@ -607,7 +553,7 @@ public class RiskModelHelper
    *          The return periods (probabilities) of the event to import.
    * @param grids
    *          Contains the coverages to import for every event.
-   * */
+   */
   public static void importEvents( final String[] names, final String[] descriptions, final Integer[] returnPeriods, final ICoverageCollection[] grids, final IProgressMonitor monitor ) throws CoreException, Exception, InvocationTargetException
   {
     Assert.isTrue( names.length == grids.length );
@@ -633,13 +579,13 @@ public class RiskModelHelper
     /* --- demo code for accessing the depth grid coverage collections --- */
     final IContainer scenarioFolder = riskDataProvider.getScenarioFolder();
     final String rasterFolderPath = "raster/input/"; //$NON-NLS-1$
-    final IFolder rasterFolder = (IFolder) scenarioFolder.findMember( "models/raster/input" ); //$NON-NLS-1$
+    final IFolder rasterFolder = (IFolder)scenarioFolder.findMember( "models/raster/input" ); //$NON-NLS-1$
 
     Assert.isNotNull( rasterFolder );
 
     /* Also add event themes to the map */
     // TRICKY: we get the map from the global map-context, let's hope it always works here
-    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final IHandlerService handlerService = (IHandlerService)PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext currentState = handlerService.getCurrentState();
     final IMapModell mapModell = MapHandlerUtils.getMapModell( currentState );
     final IKalypsoCascadingTheme wspThemes = mapModell != null ? getHQiTheme( mapModell ) : null;
@@ -686,7 +632,7 @@ public class RiskModelHelper
 
     /* ------ */
     // TODO: maybe save other models?
-    final Feature f1 = (Feature) rasterDataModel.getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
+    final Feature f1 = (Feature)rasterDataModel.getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
     final GMLWorkspace workspace = rasterDataModel.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, f1, createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     riskDataProvider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.20" ), false ) ); //$NON-NLS-1$
@@ -722,5 +668,4 @@ public class RiskModelHelper
 
     return true;
   }
-
 }

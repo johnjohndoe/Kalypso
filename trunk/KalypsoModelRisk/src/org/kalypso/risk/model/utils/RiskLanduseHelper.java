@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.utils;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +63,6 @@ import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
-import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -82,7 +80,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class RiskLanduseHelper
 {
-
   public static void createNewLanduseClasses( final Set<String> landuseTypeSet, final IRasterizationControlModel controlModel, final List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
   {
     for( final String landuseType : landuseTypeSet )
@@ -102,23 +99,6 @@ public class RiskLanduseHelper
           landuseClass.setDamageFunction( suggestedDamageFunction );
       }
     }
-  }
-
-  public static IRiskLanduseStatistic getLanduseStatisticEntry( final ILanduseClass landuseClass, final int returnPeriod, final double cellSize )
-  {
-    if( !landuseClass.containsStatisticEntry( returnPeriod ) )
-    {
-      final IRiskLanduseStatistic entry = landuseClass.createNewStatisticEntry();
-      final String entryName = Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.1", returnPeriod ); //$NON-NLS-1$
-
-      entry.setName( entryName );
-      entry.setReturnPeriod( returnPeriod );
-      entry.setCellSize( new BigDecimal( cellSize ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_MEDIUM, BigDecimal.ROUND_HALF_UP ) );
-      entry.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.2" ) + returnPeriod + Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      return entry;
-    }
-
-    return landuseClass.getStatistic( returnPeriod );
   }
 
   public static RGB getLanduseClassDefaultColor( final String landuseClassName, final List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )

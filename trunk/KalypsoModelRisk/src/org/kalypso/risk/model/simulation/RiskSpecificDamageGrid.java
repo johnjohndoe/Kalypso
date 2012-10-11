@@ -49,13 +49,14 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.parallel.SequentialBinaryGeoGridReader;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
-import org.kalypso.risk.model.utils.RiskModelHelper;
+import org.kalypso.risk.model.simulation.statistics.StatisticCollector;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
+import com.google.common.primitives.Doubles;
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
@@ -74,7 +75,9 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
 
   private final IGeoTransformer m_geoTransformer;
 
-  public RiskSpecificDamageGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ILandusePolygon> polygonCollection, final List<ILanduseClass> landuseClasses, final double cellSize, final int returnPeriod ) throws IOException, GeoGridException
+  private final StatisticCollector m_statistics;
+
+  public RiskSpecificDamageGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ILandusePolygon> polygonCollection, final List<ILanduseClass> landuseClasses, final double cellSize, final int returnPeriod, final StatisticCollector statistics ) throws IOException, GeoGridException
   {
     super( inputGrid, pUrl );
 
@@ -82,6 +85,7 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
     m_landuseClasses = landuseClasses;
     m_cellSize = cellSize;
     m_returnPeriod = returnPeriod;
+    m_statistics = statistics;
 
     final ILandusePolygon landusePolygon = m_polygonCollection.get( 0 );
     final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
@@ -92,12 +96,12 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
   @Override
   protected double getValue( final int x, final int y, final Coordinate crd ) throws GeoGridException
   {
-    final double value = crd.z;
-    if( Double.isNaN( value ) )
+    final double wspHeight = crd.z;
+    if( Double.isNaN( wspHeight ) )
       return Double.NaN;
 
     // possible that waterdepth input grid contains water depth less than zero!
-    if( value <= 0.0 )
+    if( wspHeight <= 0.0 )
       return Double.NaN;
 
     if( m_polygonCollection.size() == 0 )
@@ -110,42 +114,51 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
     {
       final GM_Position position = m_geoTransformer.transform( GeometryFactory.createGM_Position( cx, cy ), getSourceCRS() );
 
-      /* This list has some unknown cs. */
-      final List<ILandusePolygon> list = m_polygonCollection.query( position );
-      if( list == null || list.size() == 0 )
-        return Double.NaN;
-      else
-      {
-        for( final ILandusePolygon polygon : list )
-        {
-          if( polygon.contains( position ) )
-          {
-            final Integer landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
-            final double damageValue = polygon.getDamageValue( value );
+      final double damageValue = calculateDamageValue( position, wspHeight );
 
-            if( Double.isNaN( damageValue ) )
-              return Double.NaN;
+      final Coordinate resultCrd = new Coordinate( position.getX(), position.getY(), damageValue );
 
-            if( damageValue <= 0.0 )
-              return Double.NaN;
+      if( Doubles.isFinite( damageValue ) )
+        m_statistics.addSpecificDamage( m_returnPeriod, resultCrd, m_cellSize );
 
-            /* set statistic for landuse class */
-            final ILanduseClass landuseClass = m_landuseClasses.get( landuseClassOrdinalNumber );
-            if( landuseClass == null )
-              System.out.println( String.format( "Unknown landuse class: %s", landuseClassOrdinalNumber ) ); //$NON-NLS-1$
-            else
-              RiskModelHelper.fillStatistics( m_returnPeriod, landuseClass, damageValue, m_cellSize );
-            return damageValue;
-          }
-        }
-      }
-
-      return Double.NaN;
+      return damageValue;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       throw new GeoGridException( e.getLocalizedMessage(), e );
     }
+  }
+
+  private double calculateDamageValue( final GM_Position position, final double wspHeight )
+  {
+    /* This list has some unknown cs. */
+    final List<ILandusePolygon> list = m_polygonCollection.query( position );
+    if( list == null || list.size() == 0 )
+      return Double.NaN;
+
+    for( final ILandusePolygon polygon : list )
+    {
+      if( polygon.contains( position ) )
+      {
+        final Integer landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
+        final double damageValue = polygon.getDamageValue( wspHeight );
+
+        if( Double.isNaN( damageValue ) )
+          return Double.NaN;
+
+        if( damageValue <= 0.0 )
+          return Double.NaN;
+
+        /* set statistic for landuse class */
+        final ILanduseClass landuseClass = m_landuseClasses.get( landuseClassOrdinalNumber );
+        if( landuseClass == null )
+          System.out.println( String.format( "Unknown landuse class: %s", landuseClassOrdinalNumber ) ); //$NON-NLS-1$
+
+        return damageValue;
+      }
+    }
+
+    return Double.NaN;
   }
 }

@@ -63,9 +63,12 @@ import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 
 /**
  * @author Gernot Belger
@@ -74,7 +77,8 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
 {
   private final StatisticCalculationData m_data;
 
-  private final StatisticCollector m_statistics = new StatisticCollector();
+  // REMARK: we know that the landuse is transformed into the Kalypso srs after loading.
+  private final StatisticCollector m_statistics = new StatisticCollector( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
   public StatisticCalculationOperation( final StatisticCalculationData data )
   {
@@ -85,7 +89,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor );
-    progress.beginTask( Messages.getString("StatisticCalculationOperation_0"), 100 ); //$NON-NLS-1$
+    progress.beginTask( Messages.getString( "StatisticCalculationOperation_0" ), 100 ); //$NON-NLS-1$
 
     buildStatisticElements( progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
 
@@ -95,7 +99,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
 
     monitor.done();
 
-    return new Status( IStatus.OK, KalypsoRiskPlugin.PLUGIN_ID, Messages.getString("StatisticCalculationOperation_1") ); //$NON-NLS-1$
+    return new Status( IStatus.OK, KalypsoRiskPlugin.PLUGIN_ID, Messages.getString( "StatisticCalculationOperation_1" ) ); //$NON-NLS-1$
   }
 
   private void buildStatisticElements( final IProgressMonitor monitor ) throws CoreException
@@ -109,13 +113,13 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
       final String shapeNameAttribute = m_data.getSelectedAttribute();
       final String shapeSRS = m_data.getShapeSRS();
 
-      final StatisticElementBuilder builder = new StatisticElementBuilder( controlModel );
+      final StatisticElementBuilder builder = new StatisticElementBuilder( controlModel, m_statistics.getSRSName() );
       builder.createElements( landusePolygons, shape, shapeNameAttribute, shapeSRS, monitor );
       m_statistics.setItems( builder.getItems() );
     }
-    catch( final IOException | GM_Exception | DBaseException e )
+    catch( final IOException | GM_Exception | DBaseException | FactoryException | TransformException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoRiskPlugin.PLUGIN_ID, Messages.getString("StatisticCalculationOperation_2"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoRiskPlugin.PLUGIN_ID, Messages.getString( "StatisticCalculationOperation_2" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -135,7 +139,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
       coverageCount += coverages.size();
     }
 
-    progress.beginTask( Messages.getString("StatisticCalculationOperation_3"), coverageCount ); //$NON-NLS-1$
+    progress.beginTask( Messages.getString( "StatisticCalculationOperation_3" ), coverageCount ); //$NON-NLS-1$
 
     for( final IAnnualCoverageCollection specificDamageEvent : specificDamages )
     {
@@ -148,9 +152,9 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
       for( int i = 0; i < coverages.size(); i++ )
       {
         final ICoverage coverage = coverages.get( i );
-        progress.subTask( String.format( Messages.getString("StatisticCalculationOperation_4"), specificDamageEvent.getName(), i ) ); //$NON-NLS-1$
+        progress.subTask( String.format( Messages.getString( "StatisticCalculationOperation_4" ), specificDamageEvent.getName(), i ) ); //$NON-NLS-1$
 
-        final RectifiedGridCoverageGeoGrid templateGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( coverage );
+        final RectifiedGridCoverageGeoGrid templateGrid = (RectifiedGridCoverageGeoGrid)GeoGridUtilities.toGrid( coverage );
 
         try
         {
@@ -184,7 +188,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
   private void writeResultObservation( final IProgressMonitor monitor )
   {
     final SubMonitor progress = SubMonitor.convert( monitor );
-    progress.beginTask( Messages.getString("StatisticCalculationOperation_5"), 100 ); //$NON-NLS-1$
+    progress.beginTask( Messages.getString( "StatisticCalculationOperation_5" ), 100 ); //$NON-NLS-1$
 
     final IRasterizationControlModel controlModel = m_data.getControlModel();
     m_statistics.createResultObservation( controlModel );

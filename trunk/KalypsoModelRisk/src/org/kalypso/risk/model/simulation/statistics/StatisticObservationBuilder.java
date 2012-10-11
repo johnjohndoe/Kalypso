@@ -50,7 +50,6 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -65,6 +64,8 @@ class StatisticObservationBuilder
   private static final String DICT_URN = "urn:ogc:gml:dict:kalypso:risk:model:riskresultstat"; //$NON-NLS-1$
 
   private static final String DICT_ANNUAL = DICT_URN + "#ANNUAL"; //$NON-NLS-1$
+
+  private static final String DICT_TOTAL = DICT_URN + "#TOTAL"; //$NON-NLS-1$
 
   private final IRasterizationControlModel m_controlModel;
 
@@ -132,9 +133,8 @@ class StatisticObservationBuilder
     }
 
     /* add the average annual damage component */
-    final FeatureComponent createDictionaryComponent = ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_ANNUAL );
-
-    result.addComponent( createDictionaryComponent );
+    result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_ANNUAL ) );
+    result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_TOTAL ) );
   }
 
   private void fillResultWithData( final TupleResult result )
@@ -169,8 +169,8 @@ class StatisticObservationBuilder
       newRecord.setValue( i++, new BigDecimal( specificDamamage.getAverageDamage() ).setScale( RiskModelHelper.BIGDECIMAL_SCALE_COARSE, BigDecimal.ROUND_HALF_UP ) );
     }
 
-    newRecord.setValue( components.length - 1, item.calcAnnualAverageDamage() );
-    // newRecord.setValue( components.length - 1, item.getAnnualAverageDamage() );
+    newRecord.setValue( components.length - 2, item.calcAnnualAverageDamage() );
+    newRecord.setValue( components.length - 1, item.calcAnnualTotalDamage() );
 
     result.add( newRecord );
   }

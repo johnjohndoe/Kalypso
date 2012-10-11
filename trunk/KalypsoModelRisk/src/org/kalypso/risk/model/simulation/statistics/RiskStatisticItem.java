@@ -85,7 +85,7 @@ public class RiskStatisticItem
    * calculates the average annual damage value for this item <br>
    * The value is calculated by integrating the specific damage values.<br>
    */
-  public double calcAnnualAverageDamage( )
+  public double calcAnnualTotalDamage( )
   {
     if( m_specificDamagestatistics.size() == 0 )
       return 0.0;
@@ -96,11 +96,37 @@ public class RiskStatisticItem
     for( int i = 0; i < probabilities.length; i++ )
       probabilities[i] = 1.0 / periods[i];
 
-    final double[] values = new double[periods.length];
-    for( int i = 0; i < values.length; i++ )
-      values[i] = m_specificDamagestatistics.get( periods[i] ).getAverageDamage();
+    final double[] totalDamages = new double[periods.length];
+    for( int i = 0; i < totalDamages.length; i++ )
+      totalDamages[i] = m_specificDamagestatistics.get( periods[i] ).getTotalDamageValue();
 
-    return RiskModelHelper.calcAverageAnnualDamageValue( values, probabilities );
+    return RiskModelHelper.calcPotentialAnnualDamageValue( totalDamages, probabilities );
+  }
+
+  public double calcAnnualAverageDamage( )
+  {
+    final double totalDamage = calcAnnualTotalDamage();
+
+    final double floodedArea = calculateMaximalFloodedArea();
+
+    if( Double.isNaN( floodedArea ) || floodedArea == 0.0 )
+      return 0.0;
+
+    return totalDamage / floodedArea;
+  }
+
+  private double calculateMaximalFloodedArea( )
+  {
+    double floodedArea = 0.0;
+
+    final Collection<SpecificDamageStatistic> values = m_specificDamagestatistics.values();
+    for( final SpecificDamageStatistic specificDamageStatistic : values )
+    {
+      final double specificFloodedArea = specificDamageStatistic.getTotalFloodedArea();
+      floodedArea = Math.max( floodedArea, specificFloodedArea );
+    }
+
+    return floodedArea;
   }
 
   public void add( final Polygon area )
@@ -113,17 +139,17 @@ public class RiskStatisticItem
   {
     final StringBuilder buffer = new StringBuilder();
 
-    buffer.append( Messages.getString("RiskStatisticItem_0") ).append( m_key.getName() ).append( '\n' ); //$NON-NLS-1$
-    buffer.append( Messages.getString("RiskStatisticItem_1") ).append( m_key.getGroupLabel() ).append( '\n' ); //$NON-NLS-1$
-    buffer.append( Messages.getString("RiskStatisticItem_2") ); //$NON-NLS-1$
+    buffer.append( Messages.getString( "RiskStatisticItem_0" ) ).append( m_key.getName() ).append( '\n' ); //$NON-NLS-1$
+    buffer.append( Messages.getString( "RiskStatisticItem_1" ) ).append( m_key.getGroupLabel() ).append( '\n' ); //$NON-NLS-1$
+    buffer.append( Messages.getString( "RiskStatisticItem_2" ) ); //$NON-NLS-1$
 
     for( final Entry<Integer, SpecificDamageStatistic> entry : m_specificDamagestatistics.entrySet() )
     {
-      buffer.append( Messages.getString("RiskStatisticItem_3") ).append( entry.getKey() + "\t" ); //$NON-NLS-1$ //$NON-NLS-2$
+      buffer.append( Messages.getString( "RiskStatisticItem_3" ) ).append( entry.getKey() + "\t" ); //$NON-NLS-1$ //$NON-NLS-2$
       buffer.append( entry.getValue() ).append( '\n' );
     }
 
-    buffer.append( Messages.getString("RiskStatisticItem_5") ); //$NON-NLS-1$
+    buffer.append( Messages.getString( "RiskStatisticItem_5" ) ); //$NON-NLS-1$
 
     return buffer.toString();
   }

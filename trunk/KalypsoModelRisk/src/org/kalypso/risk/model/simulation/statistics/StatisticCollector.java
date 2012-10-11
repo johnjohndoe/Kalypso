@@ -64,6 +64,20 @@ public class StatisticCollector
 
   private final RiskStatisticItem m_total = new RiskStatisticItem( new StatisticItemKey( "Total", StringUtils.EMPTY ) ); //$NON-NLS-1$
 
+  private final String m_srsName;
+
+  /**
+   * @param srsName
+   *          See {@link #getSRSName()}.
+   */
+  public StatisticCollector( final String srsName )
+  {
+    m_srsName = srsName;
+  }
+
+  /**
+   * @pram position Must be in the coordinate system of {@link #getSRSName()}
+   */
   public void addSpecificDamage( final int returnPeriod, final Coordinate position, final double cellArea )
   {
     m_returnPeriods.add( returnPeriod );
@@ -107,4 +121,9 @@ public class StatisticCollector
     return m_items;
   }
 
+  /** The name of the coordinate system all statistic item are in; especially, whenn {@link #addSpecificDamage(int, Coordinate, double)}, th coordinate must be in this system. */
+  public String getSRSName( )
+  {
+    return m_srsName;
+  }
 }

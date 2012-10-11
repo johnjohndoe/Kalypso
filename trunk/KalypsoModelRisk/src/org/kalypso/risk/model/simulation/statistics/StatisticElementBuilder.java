@@ -60,10 +60,13 @@ import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.tools.SHP2JTS;
+import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -79,19 +82,27 @@ public class StatisticElementBuilder
 
   private final IRasterizationControlModel m_controlModel;
 
-  public StatisticElementBuilder( final IRasterizationControlModel controlModel )
+  private final String m_statisticsSRSName;
+
+  public StatisticElementBuilder( final IRasterizationControlModel controlModel, final String statisticsSRSName )
   {
     m_controlModel = controlModel;
+    m_statisticsSRSName = statisticsSRSName;
   }
 
-  public void createElements( final ILandusePolygonCollection landusePolygons, final ShapeFile shape, final String shapeNameField, final String shapeSRS, final IProgressMonitor monitor ) throws GM_Exception, IOException, DBaseException
+  public void createElements( final ILandusePolygonCollection landusePolygons, final ShapeFile shape, final String shapeNameField, final String shapeSRS, final IProgressMonitor monitor ) throws GM_Exception, IOException, DBaseException, FactoryException, TransformException
   {
     final SubMonitor progress = SubMonitor.convert( monitor );
     progress.beginTask( Messages.getString("StatisticElementBuilder_0"), 30 ); //$NON-NLS-1$
 
+    /* init geo transformer */
+    final int statisticsSRID = JTSAdapter.toSrid( m_statisticsSRSName );
+    final int shapeSRID = JTSAdapter.toSrid( shapeSRS );
+    final JTSTransformer geoTransformer = shapeSRID == JTSAdapter.DEFAULT_SRID ? null : new JTSTransformer( shapeSRID, statisticsSRID );
+
     /* Load shape if given */
     progress.subTask( Messages.getString("StatisticElementBuilder_1") ); //$NON-NLS-1$
-    final StatisticGroup[] groups = readShape( shape, shapeNameField, shapeSRS );
+    final StatisticGroup[] groups = readShape( shape, shapeNameField, shapeSRS, geoTransformer );
     ProgressUtilities.worked( progress, 50 );
 
     /* Intersect groups with landuses and build all areas */
@@ -152,7 +163,7 @@ public class StatisticElementBuilder
     return polygons.toArray( new Polygon[polygons.size()] );
   }
 
-  private StatisticGroup[] readShape( final ShapeFile shape, final String shapeNameField, final String shapeSRS ) throws IOException, DBaseException
+  private StatisticGroup[] readShape( final ShapeFile shape, final String shapeNameField, final String shapeSRS, final JTSTransformer geoTransformer ) throws IOException, DBaseException, TransformException
   {
     final int shapeSRID = JTSAdapter.toSrid( shapeSRS );
     final SHP2JTS shp2jts = new SHP2JTS( new GeometryFactory() );
@@ -170,10 +181,11 @@ public class StatisticElementBuilder
         final Geometry transformedShapeArea = shp2jts.transform( shapeSRID, shapeArea );
         final List< ? > polygons = PolygonExtracter.getPolygons( transformedShapeArea );
 
-        // TODO: transform to kalypso SRS
         for( final Object polygon : polygons )
         {
-          final StatisticGroup group = new StatisticGroup( name, (Polygon) polygon );
+          final Polygon transformedPolygon = geoTransformer.transformPolygon( (Polygon)polygon );
+
+          final StatisticGroup group = new StatisticGroup( name, transformedPolygon );
           groups.add( group );
         }
       }
