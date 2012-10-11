@@ -93,13 +93,15 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
     return getDefault().m_imageProvider;
   }
 
-  public static final int getPreferences_themeInfoPrecision( )
+  public static final int getThemeInfoPrecision( )
   {
     final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
-    int digits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_PRECISION );
-    if( digits < KalypsoRiskPreferencePage.MIN_RISKTHEMEINFO_PRECISION || digits > KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION )
-      digits = KalypsoRiskPreferencePage.DEFAULT_RISKTHEMEINFO_PRECISION;
-    return digits;
+    final int digits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_PRECISION );
+
+    if( digits >= KalypsoRiskPreferencePage.MIN_RISKTHEMEINFO_PRECISION && digits <= KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION )
+      return digits;
+
+    return KalypsoRiskPreferencePage.DEFAULT_RISKTHEMEINFO_PRECISION;
   }
 
   public SzenarioController getSzenarioController( )
