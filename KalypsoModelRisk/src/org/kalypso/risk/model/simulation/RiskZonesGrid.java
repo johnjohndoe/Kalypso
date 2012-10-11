@@ -198,7 +198,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid
       }
 
       /* calculate average annual damage */
-      final double averageAnnualDamageValue = RiskModelHelper.calcAverageAnnualDamageValue( damage, probability );
+      final double averageAnnualDamageValue = RiskModelHelper.calcPotentialAnnualDamageValue( damage, probability );
 
       if( averageAnnualDamageValue <= 0.0 || Double.isNaN( averageAnnualDamageValue ) )
         return Double.NaN;

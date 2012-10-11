@@ -7,8 +7,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public class VectorDataModel extends UnversionedModel implements IVectorDataModel
 {
-  
-  public VectorDataModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public VectorDataModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }

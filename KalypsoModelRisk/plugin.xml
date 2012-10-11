@@ -299,10 +299,6 @@
             qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}RasterizationControlModel">
       </feature>
       <feature
-            class="org.kalypso.risk.model.schema.binding.RiskLanduseStatistic"
-            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}StatisticClass">
-      </feature>
-      <feature
             class="org.kalypso.risk.model.schema.binding.RiskZoneDefinition"
             qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}RiskZoneDefinition">
       </feature>

@@ -92,6 +92,12 @@ final class StatisticResultComponentProvider implements IComponentUiHandlerProvi
         return new ComponentUiDoubleHandler( componentIndex, false, true, false, headerName, SWT.RIGHT, 190, 10, NUMBER_FORMAT, nullFormat, null );
       }
 
+      case "TotalPotentialDamage": //$NON-NLS-1$
+      {
+        final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.6" ); //$NON-NLS-1$
+        return new ComponentUiDoubleHandler( componentIndex, false, true, false, headerName, SWT.RIGHT, 190, 10, NUMBER_FORMAT, nullFormat, null );
+      }
+
       case "Landuse": //$NON-NLS-1$
       {
         final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.5" ); //$NON-NLS-1$
