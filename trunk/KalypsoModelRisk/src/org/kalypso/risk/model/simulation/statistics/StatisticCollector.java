@@ -40,16 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 
+import com.infomatiq.jsi.Rectangle;
+import com.infomatiq.jsi.SpatialIndex;
+import com.infomatiq.jsi.rtree.RTree;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.index.SpatialIndex;
-import com.vividsolutions.jts.index.quadtree.Quadtree;
 
 /**
  * @author Gernot Belger
@@ -58,13 +61,15 @@ public class StatisticCollector
 {
   private final Set<Integer> m_returnPeriods = new TreeSet<>();
 
-  private SpatialIndex m_elements;
-
   private RiskStatisticItem[] m_items;
 
   private final RiskStatisticItem m_total = new RiskStatisticItem( new StatisticItemKey( "Total", StringUtils.EMPTY ) ); //$NON-NLS-1$
 
   private final String m_srsName;
+
+  private StatisticArea[] m_areas;
+
+  private SpatialIndex m_index;
 
   /**
    * @param srsName
@@ -82,10 +87,10 @@ public class StatisticCollector
   {
     m_returnPeriods.add( returnPeriod );
 
-    final SpecificDamageVisitor visitor = new SpecificDamageVisitor( returnPeriod, position, cellArea );
+    final SpecificDamageVisitor visitor = new SpecificDamageVisitor( returnPeriod, position, cellArea, m_areas );
 
-    final Envelope searchEnv = new Envelope( position );
-    m_elements.query( searchEnv, visitor );
+    final Rectangle searchRect = new Rectangle( (float)position.x, (float)position.y, (float)position.x, (float)position.y );
+    m_index.intersects( searchRect, visitor );
 
     m_total.addSpecificDamage( returnPeriod, position.z, cellArea );
   }
@@ -94,19 +99,29 @@ public class StatisticCollector
   {
     m_items = items;
 
-    final Quadtree quadtree = new Quadtree();
+    final SpatialIndex index = new RTree();
+    index.init( null );
+
+    final Collection<StatisticArea> areaList = new ArrayList<>();
 
     for( final RiskStatisticItem item : items )
     {
       final StatisticArea[] areas = item.getAreas();
       for( final StatisticArea area : areas )
       {
+        final int id = areaList.size();
+
         final Envelope envelope = area.getArea().getEnvelopeInternal();
-        quadtree.insert( envelope, area );
+
+        final Rectangle rect = new Rectangle( (float)envelope.getMinX(), (float)envelope.getMinY(), (float)envelope.getMaxX(), (float)envelope.getMaxY() );
+
+        areaList.add( area );
+        index.add( rect, id );
       }
     }
 
-    m_elements = quadtree;
+    m_areas = areaList.toArray( new StatisticArea[areaList.size()] );
+    m_index = index;
   }
 
   public void createResultObservation( final IRasterizationControlModel controlModel )

@@ -40,13 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
+import gnu.trove.TIntProcedure;
+
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.index.ItemVisitor;
 
 /**
  * @author Gernot Belger
  */
-public class SpecificDamageVisitor implements ItemVisitor
+public class SpecificDamageVisitor implements TIntProcedure
 {
   private final int m_returnPeriod;
 
@@ -54,18 +55,23 @@ public class SpecificDamageVisitor implements ItemVisitor
 
   private final double m_cellArea;
 
-  public SpecificDamageVisitor( final int returnPeriod, final Coordinate position, final double cellArea )
+  private final StatisticArea[] m_areas;
+
+  public SpecificDamageVisitor( final int returnPeriod, final Coordinate position, final double cellArea, final StatisticArea[] areas )
   {
     m_returnPeriod = returnPeriod;
     m_position = position;
     m_cellArea = cellArea;
+    m_areas = areas;
   }
 
   @Override
-  public void visitItem( final Object item )
+  public boolean execute( final int id )
   {
-    final StatisticArea areaItem = (StatisticArea) item;
+    final StatisticArea areaItem = m_areas[id];
     if( areaItem.contains( m_position ) )
       areaItem.getItem().addSpecificDamage( m_returnPeriod, m_position.z, m_cellArea );
+
+    return true;
   }
 }
