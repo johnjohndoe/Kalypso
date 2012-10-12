@@ -84,10 +84,16 @@ public class LanduseStyleUpdateService extends Job
 
   private final IFile m_riskZonesSymbolizerSldFile;
 
-  public LanduseStyleUpdateService( final IFile file )
+  private final LanduseStyleUpdateListener m_landuseStyleUpdateListener;
+
+  public LanduseStyleUpdateService( final LanduseStyleUpdateListener landuseStyleUpdateListener, final IFile file )
   {
     super( Messages.getString( "org.kalypso.risk.model.services.LanduseStyleUpdateService.0" ) ); //$NON-NLS-1$
+
+    m_landuseStyleUpdateListener = landuseStyleUpdateListener;
+
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+
     m_dbFile = file;
     m_landuseVectorSymbolizerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" ); //$NON-NLS-1$
     m_riskZonesSymbolizerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" ); //$NON-NLS-1$
@@ -141,6 +147,7 @@ public class LanduseStyleUpdateService extends Job
             quantity = urbanZonesBoundaryList.get( urbanZonesBoundaryList.indexOf( zoneDef.getLowerBoundary() ) + 1 );
           else
             quantity = zoneDef.getLowerBoundary() > 0.0 ? -zoneDef.getLowerBoundary() : 0.0;
+
           final RGB rgb = zoneDef.getColorStyle();
           final Color color = rgb == null ? Color.WHITE : new Color( rgb.red, rgb.green, rgb.blue );
           riskZonesAdaptedList.add( new ColorMapEntry_Impl( color, 1.0, quantity, zoneDef.getName() ) );
@@ -181,5 +188,4 @@ public class LanduseStyleUpdateService extends Job
   {
     return m_landuseVectorSymbolizerSldFile;
   }
-
 }

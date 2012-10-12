@@ -255,11 +255,6 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
           inputGridReader.close();
 
-//          for( final ILanduseClass landuseClass : landuseClassesList )
-//          {
-//            landuseClass.updateStatistic( returnPeriod );
-//          }
-
           newCoverage.setName( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.2", srcAnnualCoverages.getReturnPeriod(), i ) ); //$NON-NLS-1$
           newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.3", new Date().toString() ) ); //$NON-NLS-1$
           inputGrid.dispose();
@@ -270,9 +265,6 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
         /* set the return period of the specific damage grid */
         destCoverageCollection.setReturnPeriod( srcAnnualCoverages.getReturnPeriod() );
       }
-
-      /* statistics: calculate average annual damage value for each landuse class */
-//      RiskModelHelper.calcLanduseAnnualAverageDamage( controlModel );
 
       /* save statistics */
       statistics.createResultObservation( controlModel );

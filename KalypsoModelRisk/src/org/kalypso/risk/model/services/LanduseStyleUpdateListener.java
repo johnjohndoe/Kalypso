@@ -69,15 +69,15 @@ public class LanduseStyleUpdateListener implements IResourceChangeListener
     final IResourceDelta rootDelta = event.getDelta();
     if( rootDelta == null )
       return;
-    final IPath roughnessPath = scenarioFolder.getProject().getFullPath().append( resourcePath );
-    final IResourceDelta fileDelta = rootDelta.findMember( roughnessPath );
-    // TODO: check if it is a 1d2d project, there may be other projects with the same file
 
-    if( fileDelta != null )
-    {
-      if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
-        startStyleUpdateJob( (IFile) fileDelta.getResource() );
-    }
+    final IPath roughnessPath = scenarioFolder.getProject().getFullPath().append( resourcePath );
+
+    final IResourceDelta fileDelta = rootDelta.findMember( roughnessPath );
+    if( fileDelta == null )
+      return;
+
+    if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
+      startStyleUpdateJob( (IFile)fileDelta.getResource() );
   }
 
   public void startStyleUpdateJob( final IFile gmlDatabaseFile )
@@ -85,7 +85,7 @@ public class LanduseStyleUpdateListener implements IResourceChangeListener
     if( m_jobStyleUpdate != null )
       m_jobStyleUpdate.cancel();
 
-    m_jobStyleUpdate = new LanduseStyleUpdateService( gmlDatabaseFile );
+    m_jobStyleUpdate = new LanduseStyleUpdateService( this, gmlDatabaseFile );
 
     // m_job.setSystem( true );
     m_jobStyleUpdate.setUser( false );
@@ -93,5 +93,4 @@ public class LanduseStyleUpdateListener implements IResourceChangeListener
     m_jobStyleUpdate.setRule( m_jobStyleUpdate.getPolygonSymbolzerSldFile().getProject() );
     m_jobStyleUpdate.schedule( 500 );
   }
-
 }
