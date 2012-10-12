@@ -78,9 +78,8 @@ public class SzenarioController implements IScenarioDataListener
   public synchronized void modelLoaded( final IModel model, final IStatus status )
   {
     if( m_scenario == null )
-    {
       return;
-    }
+
     if( model instanceof IRasterizationControlModel )
     {
       final Path path = new Path( "/models/RasterizationControlModel.gml" ); //$NON-NLS-1$
@@ -98,7 +97,9 @@ public class SzenarioController implements IScenarioDataListener
     // unregister any listeners
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( m_landuseStyleUpdateListener );
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( m_riskZonesChangeListener );
+
     m_scenario = scenario;
+
     if( scenario != null )
     {
       ResourcesPlugin.getWorkspace().addResourceChangeListener( m_landuseStyleUpdateListener, IResourceChangeEvent.POST_CHANGE );
@@ -107,5 +108,4 @@ public class SzenarioController implements IScenarioDataListener
 
     // maybe save status into dstatus model
   }
-
 }
