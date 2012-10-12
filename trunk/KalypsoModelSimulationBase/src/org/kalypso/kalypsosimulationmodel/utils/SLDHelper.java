@@ -169,8 +169,10 @@ public class SLDHelper
 
   private static void exportSLD( final IFile sldFile, final StyledLayerDescriptor descriptor, final IProgressMonitor progressMonitor ) throws IOException, SAXException, CoreException
   {
+    // FIXME: ugly! The bug is elsewhere!
     if( !sldFile.isSynchronized( IResource.DEPTH_ZERO ) )
       sldFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
+
     final ByteArrayInputStream stream = new ByteArrayInputStream( descriptor.exportAsXML().getBytes( "UTF-8" ) ); //$NON-NLS-1$
     final Document doc = XMLTools.parse( stream );
     final Source source = new DOMSource( doc );
