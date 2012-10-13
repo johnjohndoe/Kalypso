@@ -41,15 +41,14 @@
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
 import java.math.BigDecimal;
-import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.kalypso.commons.pair.IKeyValue;
-import org.kalypso.commons.pair.KeyValueFactory;
+import org.apache.commons.lang3.tuple.Pair;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -60,12 +59,12 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
-import com.google.common.collect.ComputationException;
-import com.google.common.collect.MapMaker;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
 
 public final class ProfileResultPattern extends AbstractPatternInput<IProfilePatternData> implements IValueWithFormat<Object>
 {
-  private final ConcurrentMap<IKeyValue<IProfileFeature, String>, WspmResultLengthSection> m_lengthSectionCache = new MapMaker().expiration( 5, TimeUnit.SECONDS ).makeComputingMap( new ResultFinder() );
+  private final LoadingCache<Pair<IProfileFeature, String>, WspmResultLengthSection> m_lengthSectionCache = CacheBuilder.newBuilder().expireAfterAccess( 5, TimeUnit.SECONDS ).build( new ResultFinder() );
 
   public ProfileResultPattern( )
   {
@@ -85,13 +84,12 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
 
   protected IComponent findComponent( final String params )
   {
-    final IKeyValue<String, String> parsedParams = parseParams( params );
+    final Pair<String, String> parsedParams = parseParams( params );
     if( parsedParams == null )
       return null;
 
     final String componentID = parsedParams.getValue();
-    final IComponent component = ComponentUtilities.getFeatureComponent( componentID );
-    return component;
+    return ComponentUtilities.getFeatureComponent( componentID );
   }
 
   @Override
@@ -101,7 +99,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     if( profileFeature == null )
       return null;
 
-    final IKeyValue<String, String> parsedParams = parseParams( param );
+    final Pair<String, String> parsedParams = parseParams( param );
     if( parsedParams == null )
       return null;
 
@@ -110,7 +108,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
 
     try
     {
-      final IKeyValue<IProfileFeature, String> pair = KeyValueFactory.createPairEqualsValue( profileFeature, nodeID );
+      final Pair<IProfileFeature, String> pair = Pair.of( profileFeature, nodeID );
       final WspmResultLengthSection lengthSection = m_lengthSectionCache.get( pair );
       final BigDecimal station = profileFeature.getBigStation();
       return lengthSection.getValue( station, component );
@@ -120,7 +118,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
       // happens, if cache has no value
       return StringUtils.EMPTY;
     }
-    catch( final ComputationException e )
+    catch( final ExecutionException e )
     {
       // happens, if computation function throws an exception
       return StringUtils.EMPTY;
@@ -129,7 +127,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
 
   public IWspmResult getResult( final IProfileFeature[] profiles, final String param )
   {
-    final IKeyValue<String, String> parsedParams = parseParams( param );
+    final Pair<String, String> parsedParams = parseParams( param );
     if( parsedParams == null )
       return null;
 
@@ -145,7 +143,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     return ResultFinder.findResult( profiles[0], nodeID );
   }
 
-  private IKeyValue<String, String> parseParams( final String param )
+  private Pair<String, String> parseParams( final String param )
   {
     final String[] params = param.split( "\\:", 2 ); //$NON-NLS-1$
     if( params.length != 2 )
@@ -159,12 +157,9 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     if( StringUtils.isBlank( component ) )
       return null;
 
-    return KeyValueFactory.createPairEqualsBoth( nodeID, component );
+    return Pair.of( nodeID, component );
   }
 
-  /**
-   * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
-   */
   @Override
   public String getReplacement( final IProfilePatternData data, final String param )
   {
@@ -198,9 +193,6 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     return ObjectUtils.toString( value );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getDefaultWidth(java.lang.String)
-   */
   @Override
   public int getDefaultWidth( final String params )
   {
@@ -214,9 +206,6 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     return 10;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getDefaultPrecision(java.lang.String)
-   */
   @Override
   public int getDefaultPrecision( final String params )
   {

@@ -1,25 +1,22 @@
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.kalypso.commons.pair.IKeyValue;
+import org.apache.commons.lang3.tuple.Pair;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.result.ProfileAndResults;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 
-import com.google.common.base.Function;
+import com.google.common.cache.CacheLoader;
 
 /**
  * @author Gernot Belger
  */
-public final class ResultFinder implements Function<IKeyValue<IProfileFeature, String>, WspmResultLengthSection>
+public final class ResultFinder extends CacheLoader<Pair<IProfileFeature, String>, WspmResultLengthSection>
 {
-  /**
-   * @see com.google.common.base.Function#apply(java.lang.Object)
-   */
   @Override
-  public WspmResultLengthSection apply( final IKeyValue<IProfileFeature, String> input )
+  public WspmResultLengthSection load( final Pair<IProfileFeature, String> input ) throws Exception
   {
     final IProfileFeature profileFeature = input.getKey();
     final String nodeID = input.getValue();
@@ -63,5 +60,4 @@ public final class ResultFinder implements Function<IKeyValue<IProfileFeature, S
 
     return null;
   }
-
 }
