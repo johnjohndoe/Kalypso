@@ -68,7 +68,7 @@ import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportColumnsPage;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSettings;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
@@ -90,7 +90,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
   {
     super.init( workbench, selection );
 
-    final ProfileSelection profileSelection = getProfileSelection();
+    final ProfilesSelection profileSelection = getProfileSelection();
 
     final String fileName = getFilename( profileSelection, selection );
 
@@ -108,7 +108,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     setNeedsProgressMonitor( true );
   }
 
-  private String getFilename( final ProfileSelection profileSelection, final ISelection selection )
+  private String getFilename( final ProfilesSelection profileSelection, final ISelection selection )
   {
     final String fileName = ExportShapeUtils.guessExportFileName( selection );
     if( !StringUtils.isEmpty( fileName ) )

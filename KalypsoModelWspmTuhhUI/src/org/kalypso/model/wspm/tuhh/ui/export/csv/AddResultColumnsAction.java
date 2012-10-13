@@ -55,7 +55,7 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 
 /**
  * @author Gernot Belger
@@ -64,9 +64,9 @@ public class AddResultColumnsAction extends Action
 {
   private final ExportColumnsComposite m_columnsComposite;
 
-  private final ProfileSelection m_profileSelection;
+  private final ProfilesSelection m_profileSelection;
 
-  public AddResultColumnsAction( final ExportColumnsComposite columnsComposite, final ProfileSelection profileSelection )
+  public AddResultColumnsAction( final ExportColumnsComposite columnsComposite, final ProfilesSelection profileSelection )
   {
     m_columnsComposite = columnsComposite;
     m_profileSelection = profileSelection;

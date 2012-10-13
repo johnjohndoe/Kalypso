@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.Group;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 
 /**
  * @author Gernot Belger
@@ -106,7 +106,7 @@ public class CsvExportColumnsPage extends WizardPage
 
   private ComboViewer m_typeCombo;
 
-  public CsvExportColumnsPage( final ProfileSelection profileSelection )
+  public CsvExportColumnsPage( final ProfilesSelection profileSelection )
   {
     super( "csvColumns" ); //$NON-NLS-1$
 

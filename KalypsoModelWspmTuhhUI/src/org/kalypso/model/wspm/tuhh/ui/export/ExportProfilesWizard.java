@@ -57,7 +57,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.util.GmlUiUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSettings;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -77,7 +77,7 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
 
   private ProfilesChooserPage m_profileChooserPage;
 
-  private ProfileSelection m_profileSelection;
+  private ProfilesSelection m_profileSelection;
 
   public ExportProfilesWizard( )
   {
@@ -88,7 +88,7 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    m_profileSelection = new ProfileSelection( selection );
+    m_profileSelection = new ProfilesSelection( selection );
     Feature[] profiles = m_profileSelection.getProfiles();
 
     final Feature[] selectedProfiles = m_profileSelection.getSelectedProfiles();
@@ -116,7 +116,7 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
     return 1;
   }
 
-  protected ProfileSelection getProfileSelection( )
+  protected ProfilesSelection getProfileSelection( )
   {
     return m_profileSelection;
   }
