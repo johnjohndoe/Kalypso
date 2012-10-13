@@ -289,7 +289,8 @@
          id="org.kalypso.model.wspm.tuhh.project.template"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"/>
+         version="12.7.0.qualifier"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.ewawi"
