@@ -71,6 +71,12 @@ public class WspWinExportData extends AbstractModelObject
 
   public static final String PROPERTY_PROJECT_TYPE = "projectType"; //$NON-NLS-1$
 
+  public static final String PROPERTY_ROUGHNESS_TYPE = "roughnessType"; //$NON-NLS-1$
+
+  public static final String PROPERTY_PREFER_ROUGHNESS_CLASSES = "preferRoughnessClasses"; //$NON-NLS-1$
+
+  public static final String PROPERTY_PREFER_VEGETATION_CLASSES = "preferVegetationClasses"; //$NON-NLS-1$
+
   private File m_outputDir;
 
   private String[] m_outputDirHistory = new String[0];
@@ -78,6 +84,13 @@ public class WspWinExportData extends AbstractModelObject
   private boolean m_overwriteExisting = false;
 
   private TYPE m_projectType = TYPE.PASCHE;
+
+  /** default: 'both' */
+  private String m_roughnessType = StringUtils.EMPTY;
+
+  private boolean m_preferRoughnessClasses = false;
+
+  private boolean m_preferVegetationClasses = false;
 
   public File getOutputDir( )
   {
@@ -186,5 +199,47 @@ public class WspWinExportData extends AbstractModelObject
     m_projectType = projectType;
 
     firePropertyChange( PROPERTY_PROJECT_TYPE, oldValue, projectType );
+  }
+
+  public String getRoughnessType( )
+  {
+    return m_roughnessType;
+  }
+
+  public void setRoughnessType( final String roughnessType )
+  {
+    final String oldValue = m_roughnessType;
+
+    m_roughnessType = roughnessType;
+
+    firePropertyChange( PROPERTY_ROUGHNESS_TYPE, oldValue, roughnessType );
+  }
+
+  public boolean getPreferRoughnessClasses( )
+  {
+    return m_preferRoughnessClasses;
+  }
+
+  public void setPreferRoughnessClasses( final boolean preferRoughnessClasses )
+  {
+    final boolean oldValue = m_preferRoughnessClasses;
+
+    m_preferRoughnessClasses = preferRoughnessClasses;
+
+    firePropertyChange( PROPERTY_PREFER_ROUGHNESS_CLASSES, oldValue, preferRoughnessClasses );
+  }
+
+  public boolean getPreferVegetationClasses( )
+  {
+    return m_preferVegetationClasses;
+  }
+
+  public void setPreferVegetationClasses( final boolean preferVegetationClasses )
+  {
+    final boolean oldValue = m_preferVegetationClasses;
+
+    m_preferVegetationClasses = preferVegetationClasses;
+
+    firePropertyChange( PROPERTY_PREFER_VEGETATION_CLASSES, oldValue, preferVegetationClasses );
   }
 }

@@ -130,6 +130,10 @@ public class WspWinExportProjectOperation implements ICoreRunnableWithProgress
 
     final WspWinOutputDirGenerator dirGenerator = new WspWinOutputDirGenerator( wspwinProjDir, overwriteExisting );
 
+    final String roughnessType = m_data.getRoughnessType();
+    final boolean preferRoughnessClasses = m_data.getPreferRoughnessClasses();
+    final boolean preferVegetationClasses = m_data.getPreferVegetationClasses();
+
     // write data into wspwinDir projectDir
     monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.6" ) ); //$NON-NLS-1$
 
@@ -145,7 +149,7 @@ public class WspWinExportProjectOperation implements ICoreRunnableWithProgress
       {
         FileUtils.deleteDirectory( outputDir );
 
-        final WspWinProjectExporter exporter = new WspWinProjectExporter( waterBody, reaches, projectType );
+        final WspWinProjectExporter exporter = new WspWinProjectExporter( waterBody, reaches, projectType, roughnessType, preferRoughnessClasses, preferVegetationClasses );
         exporter.export( outputDir );
       }
     }

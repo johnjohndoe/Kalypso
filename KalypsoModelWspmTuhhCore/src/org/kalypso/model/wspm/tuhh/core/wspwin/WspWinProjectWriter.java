@@ -95,10 +95,16 @@ public class WspWinProjectWriter
 
   private int m_prfCount = 1;
 
-  public WspWinProjectWriter( final String roughnessType, final TYPE projectType, final File outputDir, final String projectName )
+  private final boolean m_preferRoughnessClasses;
+
+  private final boolean m_preferVegetationClasses;
+
+  public WspWinProjectWriter( final String projectName, final TYPE projectType, final File outputDir, final String roughnessType, final boolean preferRoughnessClasses, final boolean preferVegetationClasses )
   {
     m_roughnessType = roughnessType;
     m_wspCfg = new WspCfg( new WspWinProject( outputDir ), projectType, projectName );
+    m_preferRoughnessClasses = preferRoughnessClasses;
+    m_preferVegetationClasses = preferVegetationClasses;
   }
 
   /**
@@ -289,7 +295,7 @@ public class WspWinProjectWriter
       final IProfile profil = entry.getValue();
       final File outPrfFile = new File( profDir, filename );
 
-      final WspWinProfileWriter profileWriter = new WspWinProfileWriter( profil, prfCount, m_roughnessType );
+      final WspWinProfileWriter profileWriter = new WspWinProfileWriter( profil, prfCount, m_roughnessType, m_preferRoughnessClasses, m_preferVegetationClasses );
       profileWriter.write( outPrfFile );
     }
 

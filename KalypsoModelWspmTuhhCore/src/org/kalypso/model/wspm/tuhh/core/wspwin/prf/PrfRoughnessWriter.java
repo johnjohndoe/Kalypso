@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
@@ -55,8 +58,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.Building
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfileBuilding;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
@@ -66,41 +67,56 @@ import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
  */
 public class PrfRoughnessWriter
 {
-  private boolean m_preferClasses;
-
   private final String m_defaultRoughnessType;
 
   private final IProfile m_profile;
 
   private final DataBlockWriter m_dbWriter;
 
-  public PrfRoughnessWriter( final DataBlockWriter dbWriter, final IProfile profile, final String defaultRoughnessType )
+  private final boolean m_preferClasses;
+
+  public PrfRoughnessWriter( final DataBlockWriter dbWriter, final IProfile profile, final String defaultRoughnessType, final boolean preferRoughnessClasses )
   {
     m_dbWriter = dbWriter;
     m_profile = profile;
     m_defaultRoughnessType = defaultRoughnessType;
+    m_preferClasses = preferRoughnessClasses;
   }
 
-  public void setPreferClasses( final boolean prefereClasses )
+  private String[] getRoughnessComponents( )
   {
-    m_preferClasses = prefereClasses;
-  }
+    final boolean hasClasses = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) != null;
+    final boolean hasKs = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) != null;
+    final boolean hasKst = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST ) != null;
 
-  private IComponent[] getRoughness( )
-  {
-    final IComponent defaultRoughness = m_profile.hasPointProperty( m_defaultRoughnessType );
-    if( Objects.isNotNull( defaultRoughness ) )
-      return new IComponent[] { defaultRoughness };
+    if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( m_defaultRoughnessType ) )
+    {
+      if( hasClasses || hasKs )
+        return new String[] { IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS };
+      else
+        return new String[] {};
+    }
 
-    final IComponent ks = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
-    final IComponent kst = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
+    if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( m_defaultRoughnessType ) )
+    {
+      if( hasClasses || hasKst )
+        return new String[] { IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST };
+      else
+        return new String[] {};
+    }
+    if( m_profile.indexOfProperty( m_defaultRoughnessType ) != -1 )
+      return new String[] { m_defaultRoughnessType };
 
-    if( Objects.allNull( ks, kst ) )
-      return new IComponent[] {};
-    else if( Objects.allNotNull( ks, kst ) )
-      return new IComponent[] { ks, kst };
+    // REMARK: if defaultRoughness is not specified, we return what we got (i.e. both, if both is present)
 
-    return new IComponent[] { Objects.firstNonNull( ks, kst ) };
+    final Set<String> components = new LinkedHashSet<>();
+    if( hasKs || hasClasses )
+      components.add( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+
+    if( hasKst || hasClasses )
+      components.add( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
+
+    return components.toArray( new String[components.size()] );
   }
 
   private Double getRoughnessFromBuilding( )
@@ -134,18 +150,19 @@ public class PrfRoughnessWriter
 
   void writeRauheit( )
   {
-    final IComponent[] components = getRoughness();
-    if( ArrayUtils.isEmpty( components ) )
+    final String[] componentIDs = getRoughnessComponents();
+    if( ArrayUtils.isEmpty( componentIDs ) )
     {
-      writeEmptyRauheit();
+      // makes no sense, if ordered roughness does not exist, do not write a datablock!,
+      // writeEmptyRauheit();
     }
     else
     {
-      for( final IComponent component : components )
+      for( final String component : componentIDs )
       {
         final Double building = getRoughnessFromBuilding();
 
-        final DataBlockHeader dbhr = PrfHeaders.createHeader( component.getId() ); //$NON-NLS-1$
+        final DataBlockHeader dbhr = PrfHeaders.createHeader( component ); //$NON-NLS-1$
         final CoordDataBlock dbr = new CoordDataBlock( dbhr );
         writeCoords( component, dbr, Objects.firstNonNull( building, 0.0 ) );
         if( Objects.isNotNull( building ) )
@@ -159,7 +176,7 @@ public class PrfRoughnessWriter
     }
   }
 
-  void writeCoords( final IComponent component, final CoordDataBlock db, final Double nullValue )
+  private void writeCoords( final String componentID, final CoordDataBlock db, final Double nullValue )
   {
     final IProfileRecord[] points = m_profile.getPoints();
 
@@ -171,55 +188,14 @@ public class PrfRoughnessWriter
     for( final IProfileRecord point : points )
     {
       final Double x = (Double)point.getValue( indexWidth );
-      final Double roughness = applyFactor( point, getValue( point, component ) );
+      final BigDecimal roughness = WspmClassifications.getRoughnessValue( point, componentID, m_preferClasses );
 
       arrX.add( x );
-      arrY.add( Objects.firstNonNull( roughness, nullValue ) );
+      arrY.add( ((Number) Objects.firstNonNull( roughness, nullValue )).doubleValue() );
     }
 
     final Double[] xArray = arrX.toArray( new Double[arrX.size()] );
     final Double[] yArray = arrY.toArray( new Double[arrY.size()] );
     db.setCoords( xArray, yArray );
-  }
-
-  private Double applyFactor( final IRecord point, final Double value )
-  {
-    if( Objects.isNull( value ) )
-      return null;
-
-    final IComponent componentFactor = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR );
-    if( Objects.isNull( componentFactor ) )
-      return value;
-
-    final Double factor = (Double)point.getValue( componentFactor );
-    if( Objects.isNull( factor ) )
-      return value;
-
-    return value * factor;
-  }
-
-  private Double getValue( final IProfileRecord point, final IComponent component )
-  {
-    final Double plainValue = (Double)point.getValue( component );
-    if( !m_preferClasses )
-      return plainValue;
-
-    return WspmClassifications.findRoughnessValue( point, component, plainValue );
-  }
-
-  private void writeEmptyRauheit( )
-  {
-    final Double building = getRoughnessFromBuilding();
-
-    final DataBlockHeader dbhr = PrfHeaders.createHeader( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ); //$NON-NLS-1$
-
-    final CoordDataBlock dbr = PrfWriter.writeCoords( m_profile, null, dbhr, Objects.firstNonNull( building, 0.0 ) );
-
-    if( Objects.isNotNull( building ) )
-    {
-      dbr.getY()[0] = building;
-    }
-
-    m_dbWriter.addDataBlock( dbr );
   }
 }

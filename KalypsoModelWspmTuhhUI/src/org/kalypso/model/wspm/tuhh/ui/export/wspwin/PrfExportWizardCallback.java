@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
@@ -75,10 +76,6 @@ public abstract class PrfExportWizardCallback implements IPrfExporterCallback
     m_results = results;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.wspwin.IPrfExporterCallback#getExportFile(org.kalypso.model.wspm.core.gml.IProfileFeature,
-   *      org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public File getExportFile( final IProfileFeature feature, final IProfile profil )
   {
@@ -134,5 +131,26 @@ public abstract class PrfExportWizardCallback implements IPrfExporterCallback
     }
 
     return waterlevels.toArray( new IWaterlevel[waterlevels.size()] );
+  }
+  @Override
+  public String getDefaultRoughnessType( )
+  {
+    // FIXME: get from wizard
+    // FIXME: "" means all compoentns get exported
+    return StringUtils.EMPTY;
+  }
+
+  @Override
+  public boolean getPreferRoughnessClasses( )
+  {
+    // FIXME: get from wizard
+    return false;
+  }
+
+  @Override
+  public boolean getPreferVegetationClasses( )
+  {
+    // FIXME: get from wizard
+    return false;
   }
 }
