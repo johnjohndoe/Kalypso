@@ -46,7 +46,7 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 
 /**
  * @author Gernot Belger
@@ -57,7 +57,7 @@ public class ChooseResultsWizard extends Wizard
 
   private WspmResultLengthSectionColumn[] m_selectedColumns;
 
-  public ChooseResultsWizard( final ProfileSelection profileSelection )
+  public ChooseResultsWizard( final ProfilesSelection profileSelection )
   {
     setWindowTitle( Messages.getString( "ChooseResultsWizard_0" ) ); //$NON-NLS-1$
     setHelpAvailable( false );

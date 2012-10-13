@@ -84,7 +84,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputRepla
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -110,9 +110,9 @@ public class ExportColumnsComposite
 
   private IDialogSettings m_dialogSettings;
 
-  private final ProfileSelection m_profileSelection;
+  private final ProfilesSelection m_profileSelection;
 
-  public ExportColumnsComposite( final PatternReplacementColumn[] columns, final ProfileSelection profileSelection )
+  public ExportColumnsComposite( final PatternReplacementColumn[] columns, final ProfilesSelection profileSelection )
   {
     m_profileSelection = profileSelection;
     m_columns = new ArrayList<>( Arrays.asList( columns ) );

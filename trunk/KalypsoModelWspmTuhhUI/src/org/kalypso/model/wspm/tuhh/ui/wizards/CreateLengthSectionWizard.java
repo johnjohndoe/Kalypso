@@ -77,7 +77,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.LengthSectionCreator;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.wspwin.ProfileFeatureSorter;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.observation.IObservation;
@@ -98,7 +98,7 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
 {
   private ProfilesChooserPage m_profileChooserPage;
 
-  private ProfileSelection m_profileSelection;
+  private ProfilesSelection m_profileSelection;
 
   public CreateLengthSectionWizard( )
   {
