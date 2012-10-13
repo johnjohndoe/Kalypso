@@ -93,7 +93,7 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
       tinFile = File.createTempFile( "tinTest", ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       tinFile.deleteOnExit();
 
-      final URL gmlLocation = getClass().getResource( "tinyTin.gml" ); //$NON-NLS-1$
+      final URL gmlLocation = getClass().getResource( "/etc/testdata/conv/tinyTin.gml" ); //$NON-NLS-1$
       assertNotNull( gmlLocation );
 
       loadAndMarshall( tinFile, gmlLocation );
@@ -112,7 +112,7 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
     final File tinFile = new File( System.getProperty( "user.dir" ) + "/src/org/kalypso/kalypsomodel1d2d/conv/test/tinTest.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
     tinFile.deleteOnExit();
 
-    final URL gmlLocation = getClass().getResource( "tinyTin2.gml" ); //$NON-NLS-1$
+    final URL gmlLocation = getClass().getResource( "/etc/testdata/conv/tinyTin2.gml" ); //$NON-NLS-1$
     assertNotNull( gmlLocation );
 
     loadAndMarshall( tinFile, gmlLocation );

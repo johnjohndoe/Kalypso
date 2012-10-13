@@ -67,31 +67,31 @@ public class TestWorkspaces
 
   public static final URL URL_EMPTY_GML;
 
-  public static final String REL_RES_EMPTY_GML = "data/empty_gml.xml"; //$NON-NLS-1$
+  public static final String REL_RES_EMPTY_GML = "/etc/testdata/data/empty_gml.xml"; //$NON-NLS-1$
 
   public static final URL URL_FE1D2DNODE;
 
-  public static final String REL_RES_FE1D2DNODE = "data/test_fe1d2dnode.xml"; //$NON-NLS-1$
+  public static final String REL_RES_FE1D2DNODE = "/etc/testdata/data/test_fe1d2dnode.xml"; //$NON-NLS-1$
 
   public static final URL URL_FE1D2DEDGE;
 
-  public static final String REL_RES_FE1D2DEDGE = "data/test_fe1d2dedge.xml"; //$NON-NLS-1$
+  public static final String REL_RES_FE1D2DEDGE = "/etc/testdata/data/test_fe1d2dedge.xml"; //$NON-NLS-1$
 
   public static final URL URL_FE1D2D_QUADRI_ELE;
 
-  public static final String REL_RES_FE1D2D_QUADRI_ELE = "data/test_fe1d2d_quadri_element.xml"; //$NON-NLS-1$
+  public static final String REL_RES_FE1D2D_QUADRI_ELE = "/etc/testdata/data/test_fe1d2d_quadri_element.xml"; //$NON-NLS-1$
 
   public static final URL URL_FE1D2D_TRI_ELE;
 
-  public static final String REL_RES_FE1D2D_TRI_ELE = "data/test_fe1d2d_tri_element.xml"; //$NON-NLS-1$
+  public static final String REL_RES_FE1D2D_TRI_ELE = "/etc/testdata/data/test_fe1d2d_tri_element.xml"; //$NON-NLS-1$
 
   public static final URL URL_AGGER_2D;
 
-  public static final String REL_RES_AGGER_2D = "data/test_model_2d_agger.2d"; //$NON-NLS-1$
+  public static final String REL_RES_AGGER_2D = "/etc/testdata/data/test_model_2d_agger.2d"; //$NON-NLS-1$
 
   public static final URL URL_STOER_2D;
 
-  public static final String REL_RES_STOER_2D = "data/stoer_will_buenz.2d"; //$NON-NLS-1$
+  public static final String REL_RES_STOER_2D = "/etc/testdata/data/stoer_will_buenz.2d"; //$NON-NLS-1$
 
   public static final QName GML_PROP_FEATURE_MEMBER = new QName( NS.GML3, "featureMember" ); //$NON-NLS-1$
 
