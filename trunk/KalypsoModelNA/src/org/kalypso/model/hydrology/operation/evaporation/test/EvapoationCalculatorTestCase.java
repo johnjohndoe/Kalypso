@@ -74,10 +74,10 @@ public class EvapoationCalculatorTestCase
   @Test
   public void testWaterbasedEvaporationCalculator( ) throws SensorException, IOException
   {
-    final ITimeseriesCache humidity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./water_mean_humidity.zml" ) ) ); //$NON-NLS-1$
-    final ITimeseriesCache sunshine = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./water_sunshine_hours.zml" ) ) ); //$NON-NLS-1$
-    final ITimeseriesCache temperature = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./water_mean_temperature.zml" ) ) ); //$NON-NLS-1$
-    final ITimeseriesCache windVelocity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./water_mean_wind_velocity.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache humidity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "/etc/test/resources/evaporation/water_mean_humidity.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache sunshine = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "/etc/test/resources/evaporation/water_sunshine_hours.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache temperature = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "/etc/test/resources/evaporation/water_mean_temperature.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache windVelocity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "/etc/test/resources/evaporation/water_mean_wind_velocity.zml" ) ) ); //$NON-NLS-1$
 
     final DateRange daterange = getDateRange( humidity, sunshine, temperature, windVelocity );
 
@@ -96,10 +96,10 @@ public class EvapoationCalculatorTestCase
   @Test
   public void testLandbasedEvaporationCalculator( ) throws SensorException, IOException
   {
-    final ITimeseriesCache humidity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./land_mean_humidity.zml" ) ) ); //$NON-NLS-1$
-    final ITimeseriesCache sunshine = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./land_sunshine_hours.zml" ) ) ); //$NON-NLS-1$
-    final ITimeseriesCache temperature = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./land_mean_temperature.zml" ) ) ); //$NON-NLS-1$
-    final ITimeseriesCache windVelocity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./land_mean_wind_velocity.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache humidity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "/etc/test/resources/evaporation/land_mean_humidity.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache sunshine = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "/etc/test/resources/evaporation/land_sunshine_hours.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache temperature = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "/etc/test/resources/evaporation/land_mean_temperature.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache windVelocity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "/etc/test/resources/evaporation/land_mean_wind_velocity.zml" ) ) ); //$NON-NLS-1$
 
     final DateRange daterange = getDateRange( humidity, sunshine, temperature, windVelocity );
 

@@ -87,7 +87,7 @@ public class NAPostprocessingTest
   @Test
   public void testDemoModel( ) throws Exception
   {
-    testPostprocessing( "naDemoModel", "resources/demoModel_Langzeit" ); //$NON-NLS-1$ //$NON-NLS-2$
+    testPostprocessing( "naDemoModel", "/etc/test/resources/simulation/demoModel_Langzeit" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void testPostprocessing( final String label, final String resourceBasePath ) throws Exception
@@ -167,7 +167,7 @@ public class NAPostprocessingTest
   {
     /* Fetch the expected results */
     resultExpectedDir.mkdirs();
-    ZipUtilities.unzip( getClass().getResource( "resources/demoModel_Langzeit/results.zip" ), resultExpectedDir ); //$NON-NLS-1$
+    ZipUtilities.unzip( getClass().getResource( "/etc/test/resources/simulation/demoModel_Langzeit/results.zip" ), resultExpectedDir ); //$NON-NLS-1$
 
     /* compare with expected results */
     final File currentResultsDir = new File( resultsDir, "results/Ergebnisse" ); //$NON-NLS-1$

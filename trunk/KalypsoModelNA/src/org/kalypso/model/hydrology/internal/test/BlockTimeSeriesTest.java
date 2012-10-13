@@ -28,8 +28,8 @@ public class BlockTimeSeriesTest extends TestCase
   {
     KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
 
-//    final Block block = load( "resources/timeseries.dat", "4500" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final Block block = load( "resources/WinterSommerTest.dat", "103" ); //$NON-NLS-1$ //$NON-NLS-2$
+//    final Block block = load( "/etc/test/resources/simulation/timeseries.dat", "4500" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final Block block = load( "/etc/test/resources/simulation/WinterSommerTest.dat", "103" ); //$NON-NLS-1$ //$NON-NLS-2$
     check( block );
   }
 
