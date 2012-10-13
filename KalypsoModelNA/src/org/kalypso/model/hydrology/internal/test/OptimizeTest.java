@@ -103,7 +103,7 @@ public class OptimizeTest
 
   private ISimulationDataProvider prepareData( final File dataDir ) throws SimulationException, IOException
   {
-    final URL dataLocation = getClass().getResource( "resources/weisseElster_optimize/gmlInput.zip" ); //$NON-NLS-1$
+    final URL dataLocation = getClass().getResource( "/etc/test/resources/simulation/weisseElster_optimize/gmlInput.zip" ); //$NON-NLS-1$
     ZipUtilities.unzip( dataLocation, dataDir );
 
     final NaModelCalcJob naModelCalcJob = new NaModelCalcJob();
