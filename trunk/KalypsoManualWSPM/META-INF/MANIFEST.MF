@@ -5,6 +5,4 @@ Bundle-SymbolicName: org.kalypso.KalypsoManualWSPM;singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Require-Bundle: org.eclipse.help
-Export-Package: org.kalypso.KalypsoManualWSPM.help
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-ClassPath: library.jar
