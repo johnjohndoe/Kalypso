@@ -91,7 +91,7 @@ public class NodeResultsHandler2DTest
       final ILog log = KalypsoModel1D2DPlugin.getDefault().getLog();
       log.log( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "Start Result Processing Test (2D only)" ) ); //$NON-NLS-1$
 
-      final URL zipLocation = getClass().getResource( "resources/original.2d.zip" ); //$NON-NLS-1$
+      final URL zipLocation = getClass().getResource( "/etc/testdata/results/original.2d.zip" ); //$NON-NLS-1$
       ZipUtilities.unzip( zipLocation, tempDir );
 
       // get 2d-file from resources

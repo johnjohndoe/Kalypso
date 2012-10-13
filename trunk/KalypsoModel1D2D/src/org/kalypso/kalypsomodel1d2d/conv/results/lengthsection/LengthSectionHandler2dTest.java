@@ -47,6 +47,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -75,7 +76,7 @@ public class LengthSectionHandler2dTest extends TestCase
     try
     {
       // Demo river line file (Stör)
-      final URL resourceShape = getClass().getResource( "resources/stoer_kompl2.shp" ); //$NON-NLS-1$
+      final URL resourceShape = getClass().getResource( "/etc/testdata/data/stoer_kompl2.shp" ); //$NON-NLS-1$
 
       final ShapeCollection shapeWorkspace = ShapeSerializer.deserialize( resourceShape.toString(), "EPSG:31467" ); //$NON-NLS-1$
 
@@ -100,14 +101,14 @@ public class LengthSectionHandler2dTest extends TestCase
       }
 
       // Demo Observations
-      final URL lsObsUrl = LengthSectionHandler2dTest.class.getResource( "resources/lengthSectionTemplate.gml" ); //$NON-NLS-1$
+      final URL lsObsUrl = LengthSectionHandler2dTest.class.getResource( "/etc/testdata/data/lengthSectionTemplate.gml" ); //$NON-NLS-1$
       final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
       final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
 
       // Triangulated surfaces
 
       GM_TriangulatedSurface surface = null;
-      final URL resource = getClass().getResource( "resources/tin_Terrain.gml" ); //$NON-NLS-1$
+      final URL resource = getClass().getResource( "/etc/testdata/data/tin_Terrain.gml" ); //$NON-NLS-1$
       GMLWorkspace w = GmlSerializer.createGMLWorkspace( resource, null );
 
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -127,7 +128,7 @@ public class LengthSectionHandler2dTest extends TestCase
 
       LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, data, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new NullProgressMonitor() );
 
-      final URL resource2 = getClass().getResource( "resources/tin_WATERLEVEL.gml" ); //$NON-NLS-1$
+      final URL resource2 = getClass().getResource( "/etc/testdata/data/tin_WATERLEVEL.gml" ); //$NON-NLS-1$
       w = GmlSerializer.createGMLWorkspace( resource2, null );
 
       w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
@@ -144,7 +145,7 @@ public class LengthSectionHandler2dTest extends TestCase
       if( lsObs.getResult().size() > 0 )
       {
         ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
-        final File lsObsFile = new File( "d:/temp/lengthSection.gml" ); //$NON-NLS-1$
+        final File lsObsFile = FileUtilities.getNewTempFile( "lengthSection", "gml" ); //$NON-NLS-1$ //$NON-NLS-2$
         GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" ); //$NON-NLS-1$
       }
 
