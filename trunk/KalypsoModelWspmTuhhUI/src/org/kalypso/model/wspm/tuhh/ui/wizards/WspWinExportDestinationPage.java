@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
@@ -66,9 +67,12 @@ import org.kalypso.commons.databinding.swt.DirectoryBinding;
 import org.kalypso.commons.databinding.validation.FileIsAsciiPrintable;
 import org.kalypso.commons.databinding.validation.StringMustNotContainValidator;
 import org.kalypso.commons.databinding.validation.StringTooLongValidator;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportData;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportProjectData;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.wspwin.core.WspCfg.TYPE;
 
 /**
@@ -92,7 +96,7 @@ public class WspWinExportDestinationPage extends WizardPage
 
   /**
    * Creates an instance of this class
-   * 
+   *
    * @param aWorkbench
    *          IWorkbench
    */
@@ -126,7 +130,7 @@ public class WspWinExportDestinationPage extends WizardPage
 
   /**
    * Create the export destination specification widgets
-   * 
+   *
    * @param parent
    *          org.eclipse.swt.widgets.Composite
    */
@@ -172,8 +176,68 @@ public class WspWinExportDestinationPage extends WizardPage
     group.setText( Messages.getString( "WspWinExportDestinationPage.1" ) ); //$NON-NLS-1$
 
     createOverwriteExisting( group );
-
     createProjectType( group );
+    createRoughnessType( group );
+    createPreferClasses( group, "Rauheitsklassen", WspWinExportData.PROPERTY_PREFER_ROUGHNESS_CLASSES );
+    createPreferClasses( group, "Bewuchsklassen", WspWinExportData.PROPERTY_PREFER_VEGETATION_CLASSES );
+  }
+
+  private void createRoughnessType( final Group group )
+  {
+    final Label label = new Label( group, SWT.NONE );
+    label.setText( "Roughness Type" );
+
+    final ComboViewer viewer = new ComboViewer( group );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new LabelProvider()
+    {
+      @Override
+      public String getText( final Object element )
+      {
+        final String componentID = (String) element;
+        if( StringUtils.isBlank( componentID ) )
+          return "Beide (ks und kst)";
+
+        final IComponent component = ComponentUtilities.getFeatureComponent( componentID );
+        return ComponentUtilities.getComponentLabel( component );
+      }
+    } );
+
+    final String[] input = new String[] { StringUtils.EMPTY, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST };
+    viewer.setInput( input );
+
+    /* binding */
+    final IViewerObservableValue targetSelection = ViewersObservables.observeSinglePostSelection( viewer );
+    final IObservableValue modelSelection = BeansObservables.observeValue( m_data, WspWinExportData.PROPERTY_ROUGHNESS_TYPE );
+    m_binding.bindValue( targetSelection, modelSelection );
+  }
+
+  private void createPreferClasses( final Group group, final String text, final String property )
+  {
+    final Label label = new Label( group, SWT.NONE );
+    label.setText( text );
+
+    final ComboViewer viewer = new ComboViewer( group );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new LabelProvider()
+    {
+      @Override
+      public String getText( final Object element )
+      {
+        final Boolean value = (Boolean) element;
+        if( value == false )
+          return "normale Werte überschreiben Klassenwerte (standard)";
+        else
+          return "Klassenwerte überschreiben normale Werte";
+      }
+    } );
+
+    viewer.setInput( new Boolean[] { Boolean.FALSE, Boolean.TRUE } );
+
+    /* binding */
+    final IViewerObservableValue targetSelection = ViewersObservables.observeSinglePostSelection( viewer );
+    final IObservableValue modelSelection = BeansObservables.observeValue( m_data, property );
+    m_binding.bindValue( targetSelection, modelSelection );
   }
 
   /**

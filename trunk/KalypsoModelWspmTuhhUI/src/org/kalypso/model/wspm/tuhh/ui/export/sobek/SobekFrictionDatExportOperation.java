@@ -2,44 +2,45 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
+import java.math.BigDecimal;
 import java.util.Formatter;
 import java.util.Locale;
 
@@ -165,13 +166,14 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
    */
   private double calculateFriction( final IProfile profil, final double from, final double to )
   {
-    final String roughnessId = getInfo().getRoughnessID();
+    final SobekExportInfo info = getInfo();
+
+    final Boolean preferRoughnessClasses = info.getPreferRoughnessClasses();
+    final String roughnessId = info.getRoughnessID();
 
     final int widthIndex = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    final int roughnessIndex = profil.indexOfProperty( roughnessId );
-    // FIXME: throw exception instead and collect stati and show them to user
-    if( roughnessIndex == -1 )
-      return -1.0;
+
+    // FIXME: check if there is any roughness defined, and give warning if this is not the case (neither classes nor
 
     double totalLength = 0.0;
     double totalRoughness = 0.0;
@@ -185,13 +187,16 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
       final double width1 = getRecordValue( widthIndex, point1 );
       final double width2 = getRecordValue( widthIndex, point2 );
 
-      final double roughness = getRoughness( profil, roughnessIndex, point1 );
+      final BigDecimal roughness = WspmClassifications.getRoughnessValue( point1, roughnessId, preferRoughnessClasses );
 
       if( from <= width1 && from <= width2 && width1 <= to && width2 <= to )
       {
         final double segmentLength = Math.abs( width2 - width1 );
         totalLength += segmentLength;
-        totalRoughness += roughness * segmentLength;
+
+        // REMARK: if no roughness set, we assume value of 0.0 (i.e. 0.0. goes into total)
+        if( roughness != null )
+          totalRoughness += roughness.doubleValue() * segmentLength;
       }
     }
 
@@ -200,15 +205,6 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
       return 0.0;
 
     return friction;
-  }
-
-  private double getRoughness( final IProfile profile, final int roughnessIndex, final IProfileRecord point )
-  {
-    final double plainValue = getRecordValue( roughnessIndex, point );
-    if( !getInfo().getPreferRoughnessClasses() )
-      return plainValue;
-
-    return WspmClassifications.findRoughnessValue( point, profile.hasPointProperty( getInfo().getRoughnessID() ), plainValue );
   }
 
   private double getRecordValue( final int componentIndex, final IRecord point )
