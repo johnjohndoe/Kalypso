@@ -46,7 +46,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
-import org.kalypso.model.wspm.tuhh.ui.internal.preferences.Preferences;
+import org.kalypso.model.wspm.tuhh.ui.internal.preferences.WspmTuhhUiPreferences;
 
 /**
  * @author Gernot Belger
@@ -56,15 +56,15 @@ public class ToggleKeepChannelRoughnessHandler extends AbstractHandler implement
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final boolean newValue = !Preferences.isKeepChannelRoughness();
-    Preferences.setKeepChannelRoughness( newValue );
+    final boolean newValue = !WspmTuhhUiPreferences.isKeepChannelRoughness();
+    WspmTuhhUiPreferences.setKeepChannelRoughness( newValue );
     return null;
   }
 
   @Override
   public void updateElement( final UIElement element, final Map parameters )
   {
-    final boolean isOn = Preferences.isKeepChannelRoughness();
+    final boolean isOn = WspmTuhhUiPreferences.isKeepChannelRoughness();
     element.setChecked( isOn );
   }
 }

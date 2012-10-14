@@ -1062,11 +1062,12 @@
               type="de.openali.odysseus.chart.framework.view.IChartComposite">
         </propertyTester>
      </extension>
+<!--              category="org.kalypso.ui.preferences.KalypsoPreferencePage/org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage" -->
      <extension
            point="org.eclipse.ui.preferencePages">
         <page
-              category="org.kalypso.ui.preferences.KalypsoPreferencePage/org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
-              class="org.kalypso.model.wspm.tuhh.ui.internal.preferences.WspmTuhhUiPreferencePage"
+              category="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
+              class="org.kalypso.model.wspm.tuhh.ui.internal.preferences.WspmChartPreferencePage"
               id="KalypsoModelWspmTuhhUIPreferencePage"
               name="%KalypsoModelWspmTuhhUIPreferencePage.name">
         </page>

@@ -46,7 +46,7 @@ import java.util.Map;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
+import org.kalypso.model.wspm.ui.preferences.WspmUiPreferences;
 
 /**
  * @author Gernot Belger
@@ -57,38 +57,34 @@ public class WspmTuhhUiPreferenceData extends AbstractModelObject
 
   public WspmTuhhUiPreferenceData( )
   {
-    final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
-
-    m_preferences.put( PreferenceConstants.WATERLEVEL_RESTRICTION_MARKER, store.getString( PreferenceConstants.WATERLEVEL_RESTRICTION_MARKER ) );
+    m_preferences.put( WspmUiPreferences.WATERLEVEL_RESTRICTION_MARKER, WspmUiPreferences.getWaterlevelRestrictionMarker() );
   }
 
   public void apply( )
   {
-    final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
-
-    store.setValue( PreferenceConstants.WATERLEVEL_RESTRICTION_MARKER, (String) m_preferences.get( PreferenceConstants.WATERLEVEL_RESTRICTION_MARKER ) );
+    WspmUiPreferences.setWaterlevelRestrictionMarker( (String)m_preferences.get( WspmUiPreferences.WATERLEVEL_RESTRICTION_MARKER ) );
   }
 
   public void restoreDefaults( )
   {
     final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
 
-    final String defaultMarkerId = store.getDefaultString( PreferenceConstants.WATERLEVEL_RESTRICTION_MARKER );
-    store.setValue( PreferenceConstants.WATERLEVEL_RESTRICTION_MARKER, defaultMarkerId );
+    final String defaultMarkerId = store.getDefaultString( WspmUiPreferences.WATERLEVEL_RESTRICTION_MARKER );
+    store.setValue( WspmUiPreferences.WATERLEVEL_RESTRICTION_MARKER, defaultMarkerId );
     setWaterlevelRestrictionMarker( defaultMarkerId );
   }
 
   public String getWaterlevelRestrictionMarker( )
   {
-    return (String) m_preferences.get( PreferenceConstants.WATERLEVEL_RESTRICTION_MARKER );
+    return (String)m_preferences.get( WspmUiPreferences.WATERLEVEL_RESTRICTION_MARKER );
   }
 
   public void setWaterlevelRestrictionMarker( final String markerId )
   {
     final String oldValue = getWaterlevelRestrictionMarker();
 
-    m_preferences.put( PreferenceConstants.WATERLEVEL_RESTRICTION_MARKER, markerId );
+    m_preferences.put( WspmUiPreferences.WATERLEVEL_RESTRICTION_MARKER, markerId );
 
-    firePropertyChange( PreferenceConstants.WATERLEVEL_RESTRICTION_MARKER, oldValue, markerId );
+    firePropertyChange( WspmUiPreferences.WATERLEVEL_RESTRICTION_MARKER, oldValue, markerId );
   }
 }
