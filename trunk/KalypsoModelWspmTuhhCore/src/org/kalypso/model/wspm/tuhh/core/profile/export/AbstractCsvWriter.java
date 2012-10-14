@@ -62,11 +62,22 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
  */
 public abstract class AbstractCsvWriter
 {
+  public static final String DEFAULT_TOKEN_SEPARATOR = "\t"; //$NON-NLS-1$
+
   private final IProfileExportColumn[] m_columns;
 
-  public AbstractCsvWriter( final IProfileExportColumn[] columns )
+  /** Separator between two tokens */
+  private final String m_tokenSeparator;
+
+  public AbstractCsvWriter( final IProfileExportColumn[] columns, final String tokenSeparator )
   {
     m_columns = columns;
+    m_tokenSeparator = tokenSeparator;
+  }
+
+  protected CharSequence getTokenSeparator( )
+  {
+    return m_tokenSeparator;
   }
 
   protected IProfileExportColumn[] getColumns( )
@@ -127,7 +138,7 @@ public abstract class AbstractCsvWriter
       writer.append( column.getHeader() );
       if( i != m_columns.length - 1 )
       {
-        writer.append( "\t" ); //$NON-NLS-1$
+        writer.append( m_tokenSeparator ); //$NON-NLS-1$
       }
     }
 
