@@ -45,53 +45,23 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.HandlerEvent;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.preferences.Preferences;
+import org.kalypso.model.wspm.ui.preferences.WspmUiPreferences;
 
 /**
  * @author Gernot Belger
  */
 public class ToggleRestrictWaterlevelToMarkerHandler extends AbstractHandler implements IElementUpdater
 {
-  private final IPropertyChangeListener m_changeListener = new IPropertyChangeListener()
-  {
-    @Override
-    public void propertyChange( final PropertyChangeEvent event )
-    {
-      handlePreferenceChanged();
-    }
-  };
-
-  public ToggleRestrictWaterlevelToMarkerHandler( )
-  {
-    final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
-
-    store.addPropertyChangeListener( m_changeListener );
-  }
-
-  @Override
-  public void dispose( )
-  {
-    final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
-    store.removePropertyChangeListener( m_changeListener );
-
-    super.dispose();
-  }
-
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final String oldValue = Preferences.getWaterlevelRestrictionMarker();
+    final String oldValue = WspmUiPreferences.getWaterlevelRestrictionMarker();
     final String newValue = StringUtils.isEmpty( oldValue ) ? IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE : StringUtils.EMPTY;
 
-    Preferences.setWaterlevelRestrictionMarker( newValue );
+    WspmUiPreferences.setWaterlevelRestrictionMarker( newValue );
 
     return null;
   }
@@ -99,12 +69,7 @@ public class ToggleRestrictWaterlevelToMarkerHandler extends AbstractHandler imp
   @Override
   public void updateElement( final UIElement element, final Map parameters )
   {
-    final boolean isOn = Preferences.getWaterlevelRestrictionMarker() != null;
+    final boolean isOn = StringUtils.isBlank( WspmUiPreferences.getWaterlevelRestrictionMarker() );
     element.setChecked( isOn );
-  }
-
-  protected void handlePreferenceChanged( )
-  {
-    fireHandlerChanged( new HandlerEvent( this, true, true ) );
   }
 }

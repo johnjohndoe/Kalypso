@@ -127,7 +127,6 @@ public final class TuhhLayerCreator
 
   public static IProfilChartLayer createWspLayer( final IProfile profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
   {
-
     final CoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
     final IWspLayerData wspLayerData = new TuhhResultDataProvider( result, "activeIds" ); //$NON-NLS-1$
 

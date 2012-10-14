@@ -48,7 +48,7 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 /**
  * @author Gernot Belger
  */
-public class PreferenceInitializer extends AbstractPreferenceInitializer implements IKalypsoModelWspmTuhhUIPreferences
+public class PreferenceInitializer extends AbstractPreferenceInitializer
 {
   @Override
   public void initializeDefaultPreferences( )
@@ -57,6 +57,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
     final IEclipsePreferences node = DefaultScope.INSTANCE.getNode( pluginID );
 
-    node.putBoolean( KEEP_CHANNEL_ROUGHNESS, true );
+    node.putBoolean( WspmTuhhUiPreferences.KEEP_CHANNEL_ROUGHNESS, true );
   }
 }
