@@ -1,6 +1,5 @@
 package org.kalypso.model.wspm.tuhh.ui.actions.simplify;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -43,7 +42,7 @@ final class SimplifyProfileManipulator implements IProfileManipulator
     monitor.beginTask( "", 1 );//$NON-NLS-1$
 
     final IProfileRecord[] points = m_simplifyPage.getSelectedPoints( profile );
-    final IPointsProvider provider = new SimplePointsProvider( StringUtils.EMPTY, points );
+    final IPointsProvider provider = new SimplePointsProvider( points );
 
     final SimplifyProfileOperation operation = new SimplifyProfileOperation( profile, provider, m_allowedDistance, getBuildingComponents() );
 
