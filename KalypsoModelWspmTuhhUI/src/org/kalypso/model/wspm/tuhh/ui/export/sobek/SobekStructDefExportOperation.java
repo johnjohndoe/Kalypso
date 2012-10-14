@@ -49,7 +49,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.Building
 
 /**
  * Exports WSPM profiles as struct.def SOBEK file.
- * 
+ *
  * @author Gernot Belger
  */
 public class SobekStructDefExportOperation extends AbstractSobekStructExportOperation
@@ -90,7 +90,8 @@ public class SobekStructDefExportOperation extends AbstractSobekStructExportOper
 
   private SobekStructDef buildBridge( final String buildingId, final IProfile profil, final String profileName, final BuildingBruecke profileObject )
   {
-    final double width = profileObject.getBreite();
+    final Double widthValue  = profileObject.getBreite();
+    final double width = widthValue == null ? 0.0 : widthValue.doubleValue();
 
     final IProfileRecord sohl = ProfileVisitors.findLowestPoint( profil );
     if( sohl == null )

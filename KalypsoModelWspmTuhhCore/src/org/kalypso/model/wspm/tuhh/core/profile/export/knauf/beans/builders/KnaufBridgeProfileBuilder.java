@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.builders;
 
@@ -95,7 +95,15 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     final Set<IStatus> stati = new LinkedHashSet<>();
 
     final Coordinate vector = getBaseVector();
-    final double distance = m_bridge.getBreite();
+    final Double distanceValue = m_bridge.getBreite();
+    if( distanceValue == null )
+    {
+      Collections.addAll( stati, buildDefaultBeans( m_profile ) );
+      final String message = String.format( "Failed to create upstream/downstream profiles for invalid bridge at %.4f km.", m_profile.getStation() );
+      return new Status( IStatus.WARNING, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message );
+    }
+
+    final double distance = distanceValue.doubleValue();
 
     /** move bridge into upstream direction */
     final IStatus status = moveBridgeProfile( distance / 2.0 );
@@ -134,17 +142,21 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     else
       station = m_profile.getStation() - distance / 1000.0;
 
+    if( previous == null || next == null )
+    {
+      final String msg = String.format( "Failed to move bridge at %.4f km: bridge at start or end of reach", station );
+      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), msg );
+    }
+
     if( !isBetween( Math.min( previous.getStation(), next.getStation() ), station, Math.max( previous.getStation(), next.getStation() ) ) )
     {
-      final String msg = String.format( Messages.getString("KnaufBridgeProfileBuilder.0"), station, previous.getStation(), next.getStation() ); //$NON-NLS-1$
-      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), msg );
-
-      return status;
+      final String msg = String.format( Messages.getString( "KnaufBridgeProfileBuilder.0" ), station, previous.getStation(), next.getStation() ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), msg );
     }
 
     m_profile.getProfile().setStation( station );
 
-    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString("KnaufBridgeProfileBuilder.1") ); //$NON-NLS-1$
+    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString( "KnaufBridgeProfileBuilder.1" ) ); //$NON-NLS-1$
   }
 
   private boolean isBetween( final double before, final double bridge, final double next )
