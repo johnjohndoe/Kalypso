@@ -147,13 +147,14 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
     final IProfileExportColumn[] columns = createColumns( userDefinedColumns, components, type );
 
+    final String tokenSeparator = CsvPointsWriter.DEFAULT_TOKEN_SEPARATOR;
     switch( type )
     {
       case point:
-        return new CsvPointsWriter( columns );
+        return new CsvPointsWriter( columns, tokenSeparator );
 
       case profiles:
-        return new CsvProfilesWriter( columns );
+        return new CsvProfilesWriter( columns, tokenSeparator );
     }
 
     throw new IllegalArgumentException();
