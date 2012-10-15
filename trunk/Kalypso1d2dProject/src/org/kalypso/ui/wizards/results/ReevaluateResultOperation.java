@@ -121,7 +121,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
       if( resultMeta instanceof IStepResultMeta )
       {
         /* handle result meta entries */
-        final IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
+        final IStepResultMeta stepResult = (IStepResultMeta)resultMeta;
         final ProcessResultsBean bean = new ProcessResultsBean();
 
         if( m_modell != null && m_commandTarget != null )
@@ -131,7 +131,12 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
         bean.deleteFollowers = false;
         bean.evaluateFullResults = true;
 
-        bean.userCalculatedSteps = new Date[] { stepResult.getStepTime() };
+        if( stepResult.getFullPath().toOSString().contains( ResultManager.STEADY_PREFIX ) )
+          bean.userCalculatedSteps = new Date[] { ResultManager.STEADY_DATE };
+        else if( stepResult.getFullPath().toOSString().contains( ResultManager.MAXI_PREFIX ) )
+          bean.userCalculatedSteps = new Date[] { ResultManager.MAXI_DATE };
+        else
+          bean.userCalculatedSteps = new Date[] { stepResult.getStepTime() };
 
         FileObject actResult = null;
         FileObject fileObjSWANResult = null;
@@ -179,7 +184,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
           try
           {
             // set the dirty flag of the results model
-            ((ICommandPoster) m_modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+            ((ICommandPoster)m_modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
           }
           catch( final Exception e )
           {
@@ -233,7 +238,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
       }
     }
 
-    return stati.asMultiStatusOrOK( Messages.getString("ReevaluateResultOperation.0") ); //$NON-NLS-1$
+    return stati.asMultiStatusOrOK( Messages.getString( "ReevaluateResultOperation.0" ) ); //$NON-NLS-1$
   }
 
   private List<String> removeAllOthersStepWithDate( final List<String> lListResultsToRemove, final String stepId )

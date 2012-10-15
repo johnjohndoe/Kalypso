@@ -56,7 +56,6 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Wizard to manage result data for Kalypso 1D/2D.
- *
  * allows to delete or reinterpret the existing results
  *
  * @author Thomas Jung
@@ -82,7 +81,7 @@ public class ResultManager1d2dWizard extends Wizard
     m_resultModel = resultModel;
     m_modelProvider = modelProvider;
 
-    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.1") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.1" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -92,7 +91,7 @@ public class ResultManager1d2dWizard extends Wizard
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
 
-    final SelectResultWizardPage selectResultWizardPage = new ResultManager1d2dWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2"), null, resultFilter, resultComparator, null, m_geoLog ); //$NON-NLS-1$
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2" ), null, resultFilter, resultComparator, null, m_geoLog ); //$NON-NLS-1$
     selectResultWizardPage.setResultMeta( m_resultModel );
 
     selectResultWizardPage.addAction( new DeleteResultAction( selectResultWizardPage, m_commandTarget, m_modell ) );
