@@ -368,6 +368,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
               final File modelTinPath = new File( modelPath, "Tin" ); //$NON-NLS-1$
               modelTinPath.mkdirs();
 
+              // FIXME: bad name; should be tin.gml.gz or tin.gmlz
               final File tinResultFile = new File( modelTinPath, "tin.gz" ); //$NON-NLS-1$
               final ITriangleEater gmlTriangleEater = createTinEater( tinResultFile, parameter, crs );
               multiEater.addEater( gmlTriangleEater );
@@ -379,6 +380,8 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
             final File tinPath = new File( m_outputDir, "Tin" ); //$NON-NLS-1$
             tinPath.mkdirs();
 
+            // FIXME: bad name; should be tin.gml.gz or tin.gmlz
+            // FIXME: move into constants
             final File tinZipResultFile = new File( tinPath, "tin.gz" ); //$NON-NLS-1$
             final ITriangleEater tinEater = createTinEater( tinZipResultFile, parameter, crs );
             multiEater.addEater( tinEater );
@@ -546,12 +549,12 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
         break;
 
       case WATERLEVEL:
-        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "mï¿½NN" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "mNN" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.49" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
 
       case SHEARSTRESS:
-        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/mï¿½" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/m²" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.53" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
 
