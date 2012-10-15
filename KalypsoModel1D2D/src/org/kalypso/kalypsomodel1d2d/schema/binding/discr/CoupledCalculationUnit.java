@@ -48,31 +48,17 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * Default implementation of {@link ICoupledCalculationUnit}
  * 
  * @author kurzbach
- * 
  */
 public class CoupledCalculationUnit extends CalculationUnit implements ICoupledCalculationUnit
 {
-
-  public CoupledCalculationUnit( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public CoupledCalculationUnit( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#isCoupledSimulation()
-   */
   @Override
   public boolean isCoupledSimulation( )
   {
     return FeatureHelper.booleanIsTrue( this, WB1D2D_PROP_COUPLED_SIMULATION, false );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#setCoupledSimulation()
-   */
-  @Override
-  public void setCoupledSimulation( final boolean isCoupled )
-  {
-    setProperty( WB1D2D_PROP_COUPLED_SIMULATION, isCoupled );
   }
 }
