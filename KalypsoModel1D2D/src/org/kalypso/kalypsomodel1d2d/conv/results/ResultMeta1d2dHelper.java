@@ -50,6 +50,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -158,6 +159,7 @@ public class ResultMeta1d2dHelper
               {
                 removeResourceFolder( resource, removeOriginalRawRes );
               }
+              // FIXME: the result meta needs to be kept as well in this case! -> this decision must be made on the meta level, not the resource level!
               else if( !resource.getLocation().toOSString().toLowerCase().contains( ORIGINAL_2D_FILE_NAME ) )
               {
                 resource.delete( true, new NullProgressMonitor() );
@@ -197,6 +199,7 @@ public class ResultMeta1d2dHelper
     return Status.OK_STATUS;
   }
 
+  // FIXM:E arg!
   private static void removeResourceFolder( final IResource resource, final boolean removeOriginalRawRes ) throws CoreException
   {
     final File[] children = resource.getLocation().toFile().listFiles();
@@ -210,29 +213,22 @@ public class ResultMeta1d2dHelper
         }
         catch( final Exception e )
         {
+          // FIXME: why?! the problem is elsewhere!!
+          e.printStackTrace();
+
+          // FIXME:
+
           final IOFileFilter lNoDirFilter = FalseFileFilter.INSTANCE;
+
           final WildcardFileFilter lFilter = new WildcardFileFilter( new String[] { "*" } ); //$NON-NLS-1$
-          final Collection< ? > files = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lNoDirFilter );
-          for( final Object lFile : files )
-          {
-            if( lFile instanceof File )
-              FileUtils.deleteQuietly( (File) lFile );
-          }
+          final Collection<File> files = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lNoDirFilter );
+          for( final File lFile : files )
+            deleteFileOrDirectory( lFile );
 
           final IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
-          final Collection< ? > dirs = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lDirFilter );
-          for( final Object lDir : dirs )
-          {
-            if( lDir instanceof File )
-              try
-            {
-                FileUtils.deleteDirectory( (File) lDir );
-            }
-            catch( final IOException e1 )
-            {
-              e1.printStackTrace();
-            }
-          }
+          final Collection<File> dirs = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lDirFilter );
+          for( final File lDir : dirs )
+            deleteFileOrDirectory( lDir );
         }
       }
       else
@@ -267,7 +263,21 @@ public class ResultMeta1d2dHelper
     {
       resource.delete( true, new NullProgressMonitor() );
     }
+  }
 
+  private static void deleteFileOrDirectory( final File lDir )
+  {
+    try
+    {
+      if( lDir.isDirectory() )
+        FileUtils.deleteDirectory( lDir );
+      else if( lDir.isFile() )
+        Files.delete( lDir.toPath() );
+    }
+    catch( final IOException e1 )
+    {
+      e1.printStackTrace();
+    }
   }
 
   /**
@@ -346,7 +356,6 @@ public class ResultMeta1d2dHelper
    *          min value of the document
    * @param maxValue
    *          max value of the document
-   *
    */
   public static IDocumentResultMeta addDocument( final IResultMeta resultMeta, final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue )
   {
@@ -386,7 +395,6 @@ public class ResultMeta1d2dHelper
    *          min value of the document
    * @param maxValue
    *          max value of the document
-   *
    */
   public static IDocumentResultMeta addDocument( final IResultMeta resultMeta, final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final NodeResultMinMaxCatcher minMaxCatcher )
   {
@@ -451,7 +459,7 @@ public class ResultMeta1d2dHelper
 
       if( child instanceof IStepResultMeta )
       {
-        final IStepResultMeta stepMeta = (IStepResultMeta) child;
+        final IStepResultMeta stepMeta = (IStepResultMeta)child;
         final boolean delete = checkDeleteResult( toDelete, stepMeta );
         if( delete )
           stati.add( removeResult( stepMeta ) );
@@ -485,7 +493,7 @@ public class ResultMeta1d2dHelper
 
       if( child instanceof IStepResultMeta )
       {
-        final IStepResultMeta stepMeta = (IStepResultMeta) child;
+        final IStepResultMeta stepMeta = (IStepResultMeta)child;
         final boolean delete = checkDeleteResult( toDelete, stepMeta );
         if( delete )
           stati.add( removeResult( stepMeta ) );
@@ -535,7 +543,7 @@ public class ResultMeta1d2dHelper
     {
       if( child instanceof IStepResultMeta )
       {
-        final IStepResultMeta stepMeta = (IStepResultMeta) child;
+        final IStepResultMeta stepMeta = (IStepResultMeta)child;
         switch( stepMeta.getStepType() )
         {
           case steady:
@@ -569,7 +577,7 @@ public class ResultMeta1d2dHelper
       Date l_date = null;
       if( child instanceof IStepResultMeta )
       {
-        final IStepResultMeta stepMeta = (IStepResultMeta) child;
+        final IStepResultMeta stepMeta = (IStepResultMeta)child;
         switch( stepMeta.getStepType() )
         {
           case steady:
@@ -591,7 +599,7 @@ public class ResultMeta1d2dHelper
       // log file should not be included in the list
       else if( child instanceof IDocumentResultMeta )
       {
-        final IDocumentResultMeta document = (IDocumentResultMeta) child;
+        final IDocumentResultMeta document = (IDocumentResultMeta)child;
         if( document.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.log )
         {
           // System.out.println( "log to delete: " + document );
@@ -616,7 +624,7 @@ public class ResultMeta1d2dHelper
     {
       if( stepChild instanceof IDocumentResultMeta )
       {
-        final IDocumentResultMeta docResult = (IDocumentResultMeta) stepChild;
+        final IDocumentResultMeta docResult = (IDocumentResultMeta)stepChild;
 
         // nodes:
         // final String resultNameNode = getNodeResultLayerName( docResult, stepResult, calcUnitMeta, "*" );
@@ -630,7 +638,7 @@ public class ResultMeta1d2dHelper
           if( kalypsoTheme instanceof IKalypsoFeatureTheme )
           {
             // UARGHH. We should implement some other method to recognize the right theme
-            final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) kalypsoTheme;
+            final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)kalypsoTheme;
             final String kftName = kft.getName().getKey().toLowerCase();
 
             // if( kftName.equals( resultNameNode ) || kftName.equals( resultNameIso ) || kftName.equals(
@@ -709,10 +717,12 @@ public class ResultMeta1d2dHelper
   {
     try
     {
-      if( url.toExternalForm().contains( ResultManager.STEADY_PREFIX ) ){
+      if( url.toExternalForm().contains( ResultManager.STEADY_PREFIX ) )
+      {
         return ResultManager.STEADY_DATE;
       }
-      if( url.toExternalForm().contains( ResultManager.MAXI_PREFIX ) ){
+      if( url.toExternalForm().contains( ResultManager.MAXI_PREFIX ) )
+      {
         return ResultManager.MAXI_DATE;
       }
 
@@ -744,7 +754,6 @@ public class ResultMeta1d2dHelper
    * format, checks the need for additional day in case of leap year
    *
    * @return {@link Date} interpreted from given line, in case of invalid format or bad string - null
-   *
    */
   public static Date interpreteRMA10TimeLine( final String line )
   {
@@ -795,7 +804,6 @@ public class ResultMeta1d2dHelper
    * @param file
    *          {@link FileObject} is the file object to search in, with linePrefix {@link String} will be specified what
    *          kind of line should be found, e.g. "DA" - is the time line according to 2d-files documentation
-   *
    * @return {@link String} the first matching line
    */
   public static String findFirstSpecifiedLine2dFile( final FileObject file, final String linePrefix ) throws IOException, URISyntaxException
@@ -852,7 +860,7 @@ public class ResultMeta1d2dHelper
     {
       if( child instanceof IStepResultMeta )
       {
-        final IStepResultMeta stepMeta = (IStepResultMeta) child;
+        final IStepResultMeta stepMeta = (IStepResultMeta)child;
         if( ResultMeta1d2dHelper.SWAN_RAW_DATA_META_NAME.equalsIgnoreCase( stepMeta.getName() ) )
         {
           return stepMeta.getPath();
@@ -860,7 +868,7 @@ public class ResultMeta1d2dHelper
       }
       else if( child instanceof IDocumentResultMeta )
       {
-        final IDocumentResultMeta stepMeta = (IDocumentResultMeta) child;
+        final IDocumentResultMeta stepMeta = (IDocumentResultMeta)child;
         if( ResultMeta1d2dHelper.SWAN_RAW_DATA_META_NAME.equalsIgnoreCase( stepMeta.getName() ) )
         {
           return stepMeta.getPath();
@@ -880,7 +888,7 @@ public class ResultMeta1d2dHelper
     {
       if( child instanceof IStepResultMeta )
       {
-        final IStepResultMeta stepMeta = (IStepResultMeta) child;
+        final IStepResultMeta stepMeta = (IStepResultMeta)child;
         final IPath lRes = getSavedSWANRawResultData( stepMeta );
         if( lRes != null )
         {
@@ -964,7 +972,7 @@ public class ResultMeta1d2dHelper
 
   public static boolean documentResultContainsTerrain( final IResultMeta resultMeta )
   {
-    final IDocumentResultMeta documentResult = (IDocumentResultMeta) resultMeta;
+    final IDocumentResultMeta documentResult = (IDocumentResultMeta)resultMeta;
     final DOCUMENTTYPE documentType = documentResult.getDocumentType();
 
     if( documentType == DOCUMENTTYPE.tinTerrain )
@@ -980,7 +988,7 @@ public class ResultMeta1d2dHelper
   public static ICalcUnitResultMeta getCalcUnitResultMeta( final IResultMeta result )
   {
     if( result instanceof ICalcUnitResultMeta )
-      return (ICalcUnitResultMeta) result;
+      return (ICalcUnitResultMeta)result;
     else
     {
       final IResultMeta parent = result.getOwner();
@@ -1001,7 +1009,7 @@ public class ResultMeta1d2dHelper
     {
       if( child instanceof IDocumentResultMeta )
       {
-        final IDocumentResultMeta document = (IDocumentResultMeta) child;
+        final IDocumentResultMeta document = (IDocumentResultMeta)child;
         final DOCUMENTTYPE documentType = document.getDocumentType();
         if( searchType == documentType )
           documents.add( document );
