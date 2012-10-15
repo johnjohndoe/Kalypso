@@ -232,25 +232,9 @@ public class SelectResultWizardPage extends WizardPage
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new RowLayout() );
 
-    // final ToolBarManager manager = new ToolBarManager( SWT.NONE );
-
     for( final IAction action : m_actions )
-    {
       ActionButton.createButton( null, panel, action );
-      // manager.add( action );
-    }
 
-    // panel.addDisposeListener( new DisposeListener()
-    // {
-    // @Override
-    // public void widgetDisposed( final DisposeEvent e )
-    // {
-    // manager.dispose();
-    // }
-    // } );
-    //
-    // manager.createControl( panel );
-    // return manager.getControl();
     return panel;
   }
 

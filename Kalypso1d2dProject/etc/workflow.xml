@@ -66,7 +66,6 @@
     </TaskGroup>
   </TaskGroup>
 
-
   <Perspectives>
     <con:PerspectiveContext id="Context1d2dModelling" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
       <con:ViewContext id="FeatureView" partId="org.kalypso.ui.views.featuretemplateview" parent="Context1d2dModelling">

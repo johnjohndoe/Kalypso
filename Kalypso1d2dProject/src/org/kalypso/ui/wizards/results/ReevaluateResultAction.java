@@ -118,7 +118,7 @@ public class ReevaluateResultAction extends Action
       final IWizardContainer container = wizard.getContainer();
       final IStatus status = RunnableContextHelper.execute( container, true, true, calculationOperation );
       if( !status.isOK() )
-        new StatusDialog( shell, status, wizard.getWindowTitle() ).open();
+        StatusDialog.open( shell, status, wizard.getWindowTitle() );
     }
     finally
     {

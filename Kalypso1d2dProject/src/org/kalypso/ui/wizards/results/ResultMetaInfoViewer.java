@@ -186,8 +186,8 @@ public class ResultMetaInfoViewer extends Viewer
     // String docName;
     // String docDescription;
     String docType = null;
-    String docMin = null;
-    String docMax = null;
+    BigDecimal docMin = null;
+    BigDecimal docMax = null;
 
     // TODO: uäargh! Lots of copy/paste code....!
     // final IScenarioResultMeta scenarioResult = getScenarioResultMeta( result );
@@ -309,17 +309,20 @@ public class ResultMetaInfoViewer extends Viewer
         BigDecimal maxValueForType = null;
         if( resultType.equals( NodeResultHelper.WAVE_DIRECTION_TYPE ) )
           continue;
+
         try
         {
           minValueForType = docResult.getMinValueForType( resultType );
-          docMin = minValueForType.toString();
+          docMin = minValueForType;
           maxValueForType = docResult.getMaxValueForType( resultType );
-          docMax = maxValueForType.toString();
+          docMax = maxValueForType;
         }
         catch( final Exception e )
         {
+          System.out.println();
           continue;
         }
+
         if( docMax != null )
         {
           buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"maximaler " + resultType + " Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -336,9 +339,12 @@ public class ResultMetaInfoViewer extends Viewer
         final int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
         final String stepNameStr = sourceFile.substring( beginIndex, beginIndex + 16 );
         final Map<String, Object> m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepNameStr );
-        m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MIN_PREFIX + resultType.toLowerCase(), minValueForType.doubleValue() );
-        m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MAX_PREFIX + resultType.toLowerCase(), maxValueForType.doubleValue() );
 
+        final Double minValueForTypeAsDouble = minValueForType == null ? null : minValueForType.doubleValue();
+        final Double maxValueForTypeAsDouble = maxValueForType == null ? null : maxValueForType.doubleValue();
+
+        m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MIN_PREFIX + resultType.toLowerCase(), minValueForTypeAsDouble );
+        m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MAX_PREFIX + resultType.toLowerCase(), maxValueForTypeAsDouble );
       }
       if( !bDone )
       {
@@ -346,12 +352,12 @@ public class ResultMetaInfoViewer extends Viewer
         docMax = null;
         try
         {
-          docMin = docResult.getMinValue().toString();
-          docMax = docResult.getMaxValue().toString();
+          docMin = docResult.getMinValue();
+          docMax = docResult.getMaxValue();
         }
         catch( final Exception e )
         {
-
+          System.out.println();
         }
         if( docMax != null )
         {
