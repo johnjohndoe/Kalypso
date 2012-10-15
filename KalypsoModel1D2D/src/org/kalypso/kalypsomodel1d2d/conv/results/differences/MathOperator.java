@@ -44,48 +44,26 @@ import java.math.BigDecimal;
 
 /**
  * @author Thomas Jung
- * 
  */
-public interface IMathOperatorDelegate
+public enum MathOperator
 {
-  public enum MATH_OPERATOR
+  ePlus
   {
-    ePlus,
-    eMinus;
-    public IMathOperatorDelegate getOperator( )
+    @Override
+    public BigDecimal getResult( final BigDecimal o1, final BigDecimal o2 )
     {
-      final MATH_OPERATOR type = valueOf( name() );
-
-      switch( type )
-      {
-        case eMinus:
-          return new IMathOperatorDelegate()
-          {
-
-            @Override
-            public BigDecimal getResult( final BigDecimal o1, final BigDecimal o2 )
-            {
-              return o1.subtract( o2 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-            }
-          };
-
-        case ePlus:
-          return new IMathOperatorDelegate()
-          {
-            @Override
-            public BigDecimal getResult( final BigDecimal o1, final BigDecimal o2 )
-            {
-              return o1.add( o2 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-            }
-          };
-
-        default:
-          throw (new UnsupportedOperationException());
-      }
-
+      return o1.add( o2 );
     }
+  },
 
-  }
+  eMinus
+  {
+    @Override
+    public BigDecimal getResult( final BigDecimal o1, final BigDecimal o2 )
+    {
+      return o1.subtract( o2 );
+    }
+  };
 
-  public BigDecimal getResult( BigDecimal o1, BigDecimal o2 );
+  public abstract BigDecimal getResult( BigDecimal o1, BigDecimal o2 );
 }
