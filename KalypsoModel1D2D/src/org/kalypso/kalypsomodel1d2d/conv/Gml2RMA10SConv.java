@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -165,9 +166,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
   private final Map<IPolyElement, IFlowRelation2D> m_mapPolyElementsWithWeir = new HashMap<>();
 
-  private final Set<String> m_calculationUnitIndex;
-
-  // TODO: check: calculation?
   public Gml2RMA10SConv( final IFEDiscretisationModel1d2d discretisationModel1d2d, final IFlowRelationshipModel flowrelationModel, final ICalculationUnit calcUnit, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode, final IGeoLog log )
   {
     m_discretisationModel1d2d = (discretisationModel1d2d);
@@ -179,9 +177,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     m_calculationUnit = calcUnit;
     m_log = log;
     m_restartNodes = restartNodes;
-
-    // REAMRK/FIX: lookup with calcUnit.ctonains() is VERY slow. Indexing the elements first is MUCH faster.
-    m_calculationUnitIndex = buildExistingElementIndex();
 
     // initialize Roughness IDs
     // TODO: Fishy!
@@ -200,6 +195,14 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         }
       }
     }
+  }
+
+  private boolean isCalcUnitElement( final IFENetItem element )
+  {
+    if( m_calculationUnit == null )
+      return true;
+
+    return m_calculationUnit.contains( element );
   }
 
   private IdMap createRoughnessIndex( final IRoughnessClsCollection roughnessModel )
@@ -287,7 +290,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     OutputStream outputStream = null;
     try
     {
-      outputStream = new FileOutputStream( file );
+      outputStream = new BufferedOutputStream( new FileOutputStream( file ) );
       writeRMA10sModel( outputStream );
     }
     finally
@@ -328,10 +331,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
   private void writeRMA10sModel( final Formatter formatter ) throws CoreException, IOException
   {
-    // we dont need all elements to check each one for membership in calculation unit.
-    // we get it direct from the calculation unit
-    // final IFeatureBindingCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
-
     writeElementsNodesAndEdges( formatter );
 
     final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = m_discretisationModel1d2d.getComplexElements();
@@ -914,23 +913,20 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
     final List<IFE1D2DElement> elementsInBBox = m_discretisationModel1d2d.getElements();
 
-    final List<IFE1D2DElement> lListAllElements = new ArrayList<>();
-    lListAllElements.addAll( elementsInBBox );
-
-    final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<>( lListAllElements.size() * 2 );
+    final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<>( elementsInBBox.size() * 2 );
 
     int lIntWeirDirection = 0;
-    if( lListAllElements.size() == 0 )
+    if( elementsInBBox.size() == 0 )
     {
       final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.25" ); //$NON-NLS-1$
       final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
       throw new CoreException( status );
     }
 
-    for( final IFE1D2DElement element : lListAllElements )
+    for( final IFE1D2DElement element : elementsInBBox )
     {
-      // TODO: shouldn't the check for calculation unit always happens? -> So export is per calculation unit? // FIXME:
-      // major performance problem here: this leads to a list search in all 2d-elements
+      // TODO: shouldn't the check for calculation unit always happens? -> So export is per calculation unit?
+      // -> why not iterate through calc unit's elements instead?
       if( !m_exportRequest && !isCalcUnitElement( element ) )
         continue;
 
@@ -1114,33 +1110,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
     // write edges
     writeEdgeSet( formatter, edgeSet );
-  }
-
-  private Set<String> buildExistingElementIndex( )
-  {
-    final Set<String> index = new HashSet<>();
-
-    if( m_calculationUnit == null )
-      return index;
-
-    final IFeatureBindingCollection<IFENetItem> elements = m_calculationUnit.getElements();
-    for( final IFENetItem item : elements )
-    {
-      index.add( item.getId() );
-    }
-
-    return index;
-  }
-
-  private boolean isCalcUnitElement( final Feature feature )
-  {
-    if( m_calculationUnit == null )
-      return true;
-
-    if( feature == null )
-      return false;
-
-    return m_calculationUnitIndex.contains( feature.getId() );
   }
 
   private List<IFE1D2DNode> getOrderedListOfNodes( final IFE1D2DElement element )
