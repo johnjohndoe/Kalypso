@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.conv.results.differences;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,20 +49,28 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
-import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate.MATH_OPERATOR;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.MinMaxCatcher;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -71,70 +80,105 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Thomas Jung
- *
  */
 public class DifferenceResultTinHandler
 {
-  public static IStatus generateDifferences( final GM_TriangulatedSurface[] surfaces, final MATH_OPERATOR operator, final IFile diffFile, final MinMaxCatcher minMaxCatcher, final IProgressMonitor monitor )
+  // FIXME: shoud not this come from outside?
+  private final TYPE m_parameter = ResultType.TYPE.DIFFERENCE;
+
+  private final GM_TriangulatedSurface m_master;
+
+  private final GM_TriangulatedSurface m_slave;
+
+  private final MinMaxCatcher m_minMaxCatcher;
+
+  private final MATH_OPERATOR m_operator;
+
+  public DifferenceResultTinHandler( final GM_TriangulatedSurface master, final GM_TriangulatedSurface slave, final MATH_OPERATOR operator, final MinMaxCatcher minMaxCatcher )
   {
-    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    m_master = master;
+    m_slave = slave;
+    m_operator = operator;
+    m_minMaxCatcher = minMaxCatcher;
+  }
 
-    final File tinResultFile = diffFile.getLocation().toFile();
-
+  public void generateDifferences( final IFile diffFile, final IProgressMonitor monitor ) throws CoreException
+  {
     try
     {
-      final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null ); //$NON-NLS-1$
-      final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
+      final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+      /* Create new workspace */
+      final QName tinResultName = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ); //$NON-NLS-1$
+
+      final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( tinResultName, null, null ); //$NON-NLS-1$
+      final GM_TriangulatedSurface surface = GeometryFactory.createGM_TriangulatedSurface( crs );
+
+      // FIXME: we should create binding classes for TinResult
       final Feature triangleFeature = triangleWorkspace.getRootFeature();
       triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface ); //$NON-NLS-1$
       triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "[-]" ); //$NON-NLS-1$ //$NON-NLS-2$
-      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      // Loop over master triangles
-      final GM_TriangulatedSurface masterSurface = surfaces[0];
-      final GM_TriangulatedSurface slaveSurface = surfaces[1];
+      generateDifferences( surface, m_parameter, monitor );
 
-      final TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, ResultType.TYPE.DIFFERENCE, new TinResultWriter.QNameAndString[] {} );
-
-      // monitor:
-      // 70% available
-      // => 70 / masterSurface.size()
-
-      // use monitor to display progress.
-      final BigDecimal maxProgress = new BigDecimal( 70 );
-      final BigDecimal stepNum = new BigDecimal( masterSurface.size() );
-      final BigDecimal val = stepNum.divide( maxProgress, 5, BigDecimal.ROUND_HALF_UP );
-      BigDecimal monitorValue = new BigDecimal( 0 );
-
-      for( int i = 0; i < masterSurface.size(); i++ )
+      if( surface.size() == 0 )
       {
-        final GM_Triangle triangle = masterSurface.get( i );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, "Difference tin is empty, no result generated." );
+        throw new CoreException( status );
+      }
 
-        if( monitor != null )
+      saveTin( diffFile, triangleWorkspace );
+    }
+    catch( GMLSchemaException | GM_Exception e )
+    {
+      // these exception happen if we got a problem else where, just a generic error message is sufficient
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.7" ) ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
+  }
+
+  private void generateDifferences( final GM_TriangulatedSurface surface, final ResultType.TYPE parameter, final IProgressMonitor monitor )
+  {
+    final String crs = surface.getCoordinateSystem();
+
+    // Loop over master triangles
+    final TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( surface, parameter );
+
+    // monitor:
+    // 70% available
+    // => 70 / masterSurface.size()
+
+    // use monitor to display progress.
+    final BigDecimal maxProgress = new BigDecimal( 70 );
+    final BigDecimal stepNum = new BigDecimal( m_master.size() );
+    final BigDecimal val = stepNum.divide( maxProgress, 5, BigDecimal.ROUND_HALF_UP );
+    BigDecimal monitorValue = new BigDecimal( 0 );
+
+    for( int i = 0; i < m_master.size(); i++ )
+    {
+      final GM_Triangle triangle = m_master.get( i );
+
+      if( monitor != null )
+        monitorValue = updateMonitor( monitor, val, monitorValue );
+
+      final List<GM_Point> nodeList = new LinkedList<>();
+
+      final GM_Position[] ring = triangle.getExteriorRing();
+
+      for( int j = 0; j < ring.length - 1; j++ )
+      {
+        final GM_Point point = GeometryFactory.createGM_Point( ring[j], crs );
+
+        final double o1 = point.getZ();
+        final double o2 = m_slave.getValue( point );
+
+        if( !Double.isNaN( o2 ) )
         {
-          monitorValue = updateMonitor( monitor, val, monitorValue );
-        }
+          final BigDecimal result = m_operator.getOperator().getResult( new BigDecimal( o1 ), new BigDecimal( o2 ) );
 
-        final List<GM_Point> nodeList = new LinkedList<>();
-
-        final GM_Position[] ring = triangle.getExteriorRing();
-
-        for( int j = 0; j < ring.length - 1; j++ )
-        {
-          final GM_Point point = GeometryFactory.createGM_Point( ring[j], crs );
-
-          final double o1 = point.getZ();
-          final double o2 = slaveSurface.getValue( point );
-
-          BigDecimal result = null;
-
-          if( !Double.isNaN( o2 ) )
-          {
-            result = operator.getOperator().getResult( new BigDecimal( o1 ), new BigDecimal( o2 ) );
-
-            if( minMaxCatcher != null )
-              minMaxCatcher.addResult( result );
-          }
+          if( m_minMaxCatcher != null )
+            m_minMaxCatcher.addResult( result );
 
           if( result != null )
           {
@@ -142,28 +186,20 @@ public class DifferenceResultTinHandler
             nodeList.add( newPoint );
           }
         }
-
-        if( nodeList.size() == 3 )
-        {
-          eater.addPoints( nodeList );
-
-        }
-
       }
-      if( monitor != null )
-        monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.6") ); //$NON-NLS-1$
 
-      eater.finished();
+      if( nodeList.size() == 3 )
+        eater.addPoints( nodeList );
+    }
+    if( monitor != null )
+      monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.6" ) ); //$NON-NLS-1$
 
-      return Status.OK_STATUS;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.7") ); //$NON-NLS-1$
-    }
+    // FIXME: if we have no results, the eater silently returns without a written file, leading to an inconsistent result
+    // database -> return with a message and do not add result meta!
+    eater.finished();
   }
 
+  // FIXME: what is the meaning of this??
   private static BigDecimal updateMonitor( final IProgressMonitor monitor, final BigDecimal val, BigDecimal monitorValue )
   {
     monitorValue = monitorValue.add( new BigDecimal( 1 ).divide( val, 4, BigDecimal.ROUND_HALF_UP ) );
@@ -175,4 +211,41 @@ public class DifferenceResultTinHandler
     return monitorValue;
   }
 
+  private void saveTin( final IFile diffFile, final GMLWorkspace triangleWorkspace ) throws CoreException
+  {
+    try
+    {
+      final File tinResultFile = diffFile.getLocation().toFile();
+
+      final String name = tinResultFile.getPath();
+
+      final int extensionIndex = name.lastIndexOf( "." ); //$NON-NLS-1$
+
+      final String substring = name.substring( 0, extensionIndex );
+      final String extension = name.substring( extensionIndex, name.length() );
+
+      // FIXME: strange: the caller gives a filename, but the file is really not save there... -> the caller should instead tweak the filename, this code does not belong here!
+
+      /* create filename */
+      String param;
+      if( m_parameter != null )
+        param = m_parameter.name();
+      else
+        param = ""; //$NON-NLS-1$
+
+      final String fileName = substring + "_" + param + extension; //$NON-NLS-1$
+
+      final File paramFile = new File( fileName );
+      GmlSerializer.serializeWorkspace( paramFile, triangleWorkspace, "UTF-8" ); //$NON-NLS-1$
+    }
+    catch( IOException | GmlSerializeException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "Failed to write difference tin", e );
+      throw new CoreException( status );
+    }
+    finally
+    {
+      diffFile.getParent().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+    }
+  }
 }

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.differences;
 
@@ -47,14 +47,12 @@ import java.net.URL;
 
 import javax.activation.UnsupportedDataTypeException;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -94,20 +92,17 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
 
   private final IResultMeta[] m_slaveResults;
 
-  private final GM_TriangulatedSurface[] m_surfaces;
-
-  public GenerateDifferenceResultTinOperation( final MATH_OPERATOR operator, final IResultMeta[] masterResults, final IResultMeta[] destinationResults, final IResultMeta[] slaveResults, final GM_TriangulatedSurface[] surfaces, final IFolder scenarioFolder )
+  public GenerateDifferenceResultTinOperation( final MATH_OPERATOR operator, final IResultMeta[] masterResults, final IResultMeta[] destinationResults, final IResultMeta[] slaveResults, final IFolder scenarioFolder )
   {
     m_operator = operator;
     m_masterResults = masterResults;
     m_destinationResults = destinationResults;
     m_slaveResults = slaveResults;
-    m_surfaces = surfaces;
     m_scenarioFolder = scenarioFolder;
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
+  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
   {
     monitor.beginTask( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.17"), 100 ); //$NON-NLS-1$
 
@@ -128,12 +123,9 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
       if( slaveSurface == null )
         return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.21" ) ); //$NON-NLS-1$
 
-      m_surfaces[0] = masterSurface;
-      m_surfaces[1] = slaveSurface;
-
       IResultMeta destResult = null;
 
-      // take the first selected step result
+      // take the first selected step result FIXME: why multiple results here, makes no sense
       for( final IResultMeta resultMeta : m_destinationResults )
       {
         if( resultMeta instanceof IStepResultMeta )
@@ -162,55 +154,50 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
       final IFolder destPath = folder.getFolder( "Tin" ); //$NON-NLS-1$
       final IFile destFile = destPath.getFile( uniqueFileName );
 
-      final IStatus status = DifferenceResultTinHandler.generateDifferences( m_surfaces, m_operator, destFile, m_minMaxCatcher, monitor );
-
-      /* update resource folder */
-      final IContainer parent = destFile.getParent();
-      parent.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+      final DifferenceResultTinHandler differenceHandler = new DifferenceResultTinHandler( masterSurface, slaveSurface, m_operator, m_minMaxCatcher );
+      differenceHandler.generateDifferences( destFile, monitor );
 
       monitor.worked( 3 );
 
       /* update the result db */
-      if( status.isOK() )
+      /* create the path entry for the document */
+      final int extensionIndex = destFile.getName().lastIndexOf( "." ); //$NON-NLS-1$
+      final String substring = destFile.getName().substring( 0, extensionIndex );
+
+      /* create filename */
+      final String param = "DIFFERENCE"; //$NON-NLS-1$
+      final String paramName = substring + "_" + param + extension; //$NON-NLS-1$
+
+      /* we "know", that the results are stored in the "Tin" folder */
+      final Path path = new Path( "Tin/" + paramName ); //$NON-NLS-1$
+
+      // get min max via a minmaxCatcher during processing.
+      final BigDecimal min = m_minMaxCatcher.getMinValue();
+      final BigDecimal max = m_minMaxCatcher.getMaxValue();
+
+      if( destResult instanceof IStepResultMeta )
       {
-        /* create the path entry for the document */
-        final int extensionIndex = destFile.getName().lastIndexOf( "." ); //$NON-NLS-1$
-        final String substring = destFile.getName().substring( 0, extensionIndex );
+        // TODO: set a good description e.g.
+        final String description = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.32" ); //$NON-NLS-1$
 
-        /* create filename */
-        final String param = "DIFFERENCE"; //$NON-NLS-1$
-        final String paramName = substring + "_" + param + extension; //$NON-NLS-1$
+        final IStepResultMeta stepResult = (IStepResultMeta)destResult;
+        ResultMeta1d2dHelper.addDocument( stepResult, "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max ); //$NON-NLS-1$
 
-        /* we "know", that the results are stored in the "Tin" folder */
-        final Path path = new Path( "Tin/" + paramName ); //$NON-NLS-1$
-
-        // get min max via a minmaxCatcher during processing.
-        final BigDecimal min = m_minMaxCatcher.getMinValue();
-        final BigDecimal max = m_minMaxCatcher.getMaxValue();
-
-        if( destResult instanceof IStepResultMeta )
-        {
-          // TODO: set a good description e.g.
-          final String description = Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.32"); //$NON-NLS-1$
-
-          final IStepResultMeta stepResult = (IStepResultMeta) destResult;
-          ResultMeta1d2dHelper.addDocument( stepResult, "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max ); //$NON-NLS-1$
-
-          // FIXME: workspace not correctly dirty
-
-        }
-        else
-        {
-          throw new UnsupportedDataTypeException( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.34") ); //$NON-NLS-1$
-          // TODO: cleanFiles();
-        }
+        // FIXME: workspace not correctly dirty
       }
       else
-        return status;
+      {
+        throw new UnsupportedDataTypeException( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.34" ) ); //$NON-NLS-1$
+        // TODO: cleanFiles();
+      }
 
       monitor.worked( 1 );
-
     }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
+    // FIXME: awful error handling!
     catch( final Exception e )
     {
       e.printStackTrace();
