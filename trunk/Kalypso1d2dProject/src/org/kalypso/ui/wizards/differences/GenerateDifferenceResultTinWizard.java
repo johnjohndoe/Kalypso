@@ -53,8 +53,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate;
-import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate.MATH_OPERATOR;
+import org.kalypso.kalypsomodel1d2d.conv.results.differences.MathOperator;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
@@ -125,7 +124,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final MATH_OPERATOR operator = IMathOperatorDelegate.MATH_OPERATOR.eMinus;
+    final MathOperator operator = MathOperator.eMinus;
 
     IDocumentResultMeta.DOCUMENTTYPE masterDocType = null;
     IDocumentResultMeta.DOCUMENTTYPE slaveDocType = null;

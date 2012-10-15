@@ -63,7 +63,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler;
-import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate.MATH_OPERATOR;
+import org.kalypso.kalypsomodel1d2d.conv.results.differences.MathOperator;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
@@ -84,7 +84,7 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
 
   private final IFolder m_scenarioFolder;
 
-  private final MATH_OPERATOR m_operator;
+  private final MathOperator m_operator;
 
   private final IResultMeta[] m_masterResults;
 
@@ -92,7 +92,7 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
 
   private final IResultMeta[] m_slaveResults;
 
-  public GenerateDifferenceResultTinOperation( final MATH_OPERATOR operator, final IResultMeta[] masterResults, final IResultMeta[] destinationResults, final IResultMeta[] slaveResults, final IFolder scenarioFolder )
+  public GenerateDifferenceResultTinOperation( final MathOperator operator, final IResultMeta[] masterResults, final IResultMeta[] destinationResults, final IResultMeta[] slaveResults, final IFolder scenarioFolder )
   {
     m_operator = operator;
     m_masterResults = masterResults;

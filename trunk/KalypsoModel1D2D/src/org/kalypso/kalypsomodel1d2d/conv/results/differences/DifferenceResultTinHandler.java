@@ -62,7 +62,6 @@ import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
-import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate.MATH_OPERATOR;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.MinMaxCatcher;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
@@ -92,9 +91,9 @@ public class DifferenceResultTinHandler
 
   private final MinMaxCatcher m_minMaxCatcher;
 
-  private final MATH_OPERATOR m_operator;
+  private final MathOperator m_operator;
 
-  public DifferenceResultTinHandler( final GM_TriangulatedSurface master, final GM_TriangulatedSurface slave, final MATH_OPERATOR operator, final MinMaxCatcher minMaxCatcher )
+  public DifferenceResultTinHandler( final GM_TriangulatedSurface master, final GM_TriangulatedSurface slave, final MathOperator operator, final MinMaxCatcher minMaxCatcher )
   {
     m_master = master;
     m_slave = slave;
@@ -157,34 +156,30 @@ public class DifferenceResultTinHandler
 
     for( int i = 0; i < m_master.size(); i++ )
     {
-      final GM_Triangle triangle = m_master.get( i );
+      final GM_Triangle masterTriangle = m_master.get( i );
 
       if( monitor != null )
         monitorValue = updateMonitor( monitor, val, monitorValue );
 
       final List<GM_Point> nodeList = new LinkedList<>();
 
-      final GM_Position[] ring = triangle.getExteriorRing();
-
-      for( int j = 0; j < ring.length - 1; j++ )
+      final GM_Position[] masterRing = masterTriangle.getExteriorRing();
+      for( int j = 0; j < masterRing.length - 1; j++ )
       {
-        final GM_Point point = GeometryFactory.createGM_Point( ring[j], crs );
+        final GM_Point masterPoint = GeometryFactory.createGM_Point( masterRing[j], crs );
 
-        final double o1 = point.getZ();
-        final double o2 = m_slave.getValue( point );
+        final double masterZ = masterPoint.getZ();
+        final double slaveZ = m_slave.getValue( masterPoint );
 
-        if( !Double.isNaN( o2 ) )
+        if( !Double.isNaN( slaveZ ) )
         {
-          final BigDecimal result = m_operator.getOperator().getResult( new BigDecimal( o1 ), new BigDecimal( o2 ) );
+          final BigDecimal result = m_operator.getResult( new BigDecimal( masterZ ), new BigDecimal( slaveZ ) );
 
           if( m_minMaxCatcher != null )
             m_minMaxCatcher.addResult( result );
 
-          if( result != null )
-          {
-            final GM_Point newPoint = GeometryFactory.createGM_Point( point.getX(), point.getY(), result.doubleValue(), crs );
-            nodeList.add( newPoint );
-          }
+          final GM_Point newPoint = GeometryFactory.createGM_Point( masterPoint.getX(), masterPoint.getY(), result.doubleValue(), crs );
+          nodeList.add( newPoint );
         }
       }
 
@@ -194,8 +189,6 @@ public class DifferenceResultTinHandler
     if( monitor != null )
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.6" ) ); //$NON-NLS-1$
 
-    // FIXME: if we have no results, the eater silently returns without a written file, leading to an inconsistent result
-    // database -> return with a message and do not add result meta!
     eater.finished();
   }
 
