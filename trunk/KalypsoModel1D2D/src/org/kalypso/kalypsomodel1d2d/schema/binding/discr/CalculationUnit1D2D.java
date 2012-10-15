@@ -67,6 +67,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
 
   private final IFeatureBindingCollection<ICalculationUnit> m_subCalculationUnits = new FeatureBindingCollection<>( this, ICalculationUnit.class, WB1D2D_PROP_CALC_UNIT );
 
+  // FIXME: check for all this business, seems fishy... -> also heavy memory consumption....
   private List<IFENetItem> m_virtualElements;
 
   private Set<String> m_virtualMemberIDs;
@@ -90,6 +91,8 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
       }
     }
     m_virtualElements = new ArrayList<>();
+
+    // FIXME: check if this works correctly for sub-sub-units
     for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
       m_virtualElements.addAll( calculationUnit.getElements() );
 
@@ -97,9 +100,6 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
     calculate2DElements();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D#getSubUnits()
-   */
   @Override
   public IFeatureBindingCollection<ICalculationUnit> getChangedSubUnits( )
   {
@@ -141,9 +141,6 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
     return getVirtualMemberIDs().contains( member.getId() );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit#getElements1D()
-   */
   @Override
   public List<IElement1D> getElements1D( )
   {
@@ -159,7 +156,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
     m_list1DElements = new ArrayList<>();
     for( final IFENetItem element : m_virtualElements )
       if( element instanceof IElement1D )
-        m_list1DElements.add( (IElement1D) element );
+        m_list1DElements.add( (IElement1D)element );
   }
 
   @Override
@@ -177,7 +174,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
     m_list2DElements = new ArrayList<>();
     for( final IFENetItem element : m_virtualElements )
       if( element instanceof IPolyElement )
-        m_list2DElements.add( (IPolyElement) element );
+        m_list2DElements.add( (IPolyElement)element );
 
   }
 
