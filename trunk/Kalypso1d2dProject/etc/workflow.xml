@@ -61,9 +61,7 @@
       <Task context="ResultMap" URI="org.kalypso.model.1d2d.workflow.ConfigureResultLengthSectionView" />
       <Task URI="org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView" />
     </TaskGroup>
-    <TaskGroup URI="org.kalypso.model.1d2d.workflow.DifferenceResultViewGroup" context="ResultMap">
-      <Task context="ResultMap" URI="org.kalypso.model.1d2d.workflow.GenerateDifferenceResultView" />
-    </TaskGroup>
+    <Task context="ResultMap" URI="org.kalypso.model.1d2d.workflow.GenerateDifferenceResultView" />
   </TaskGroup>
 
   <Perspectives>
