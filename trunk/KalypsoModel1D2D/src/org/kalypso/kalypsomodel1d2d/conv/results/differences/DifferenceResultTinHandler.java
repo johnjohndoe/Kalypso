@@ -175,10 +175,16 @@ public class DifferenceResultTinHandler
         {
           final BigDecimal result = m_operator.getResult( new BigDecimal( masterZ ), new BigDecimal( slaveZ ) );
 
-          if( m_minMaxCatcher != null )
-            m_minMaxCatcher.addResult( result );
+          // TODO: scale depends on data type.... should never be too small, because else we get situations,
+          // where the scaled values of the input tins are different, but the difference value is 0.0
+          final int newScale = 4;
 
-          final GM_Point newPoint = GeometryFactory.createGM_Point( masterPoint.getX(), masterPoint.getY(), result.doubleValue(), crs );
+          final BigDecimal scaledResult = result.setScale( newScale, BigDecimal.ROUND_HALF_UP );
+
+          if( m_minMaxCatcher != null )
+            m_minMaxCatcher.addResult( scaledResult );
+
+          final GM_Point newPoint = GeometryFactory.createGM_Point( masterPoint.getX(), masterPoint.getY(), scaledResult.doubleValue(), crs );
           nodeList.add( newPoint );
         }
       }
