@@ -82,6 +82,13 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
   private final ProcessResultsBean m_bean;
 
+  public ResultProcessingOperation( final ResultManager resultManager, final ProcessResultsBean bean )
+  {
+    m_resultManager = resultManager;
+    m_geoLog = m_resultManager.getGeoLog();
+    m_bean = bean;
+  }
+
   public String[] getOriginalStepsToDelete( )
   {
     return m_originalStepsToDelete;
@@ -92,16 +99,6 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     return m_outputDir;
   }
 
-  public ResultProcessingOperation( final ResultManager resultManager, final ProcessResultsBean bean )
-  {
-    m_resultManager = resultManager;
-    m_geoLog = m_resultManager.getGeoLog();
-    m_bean = bean;
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {

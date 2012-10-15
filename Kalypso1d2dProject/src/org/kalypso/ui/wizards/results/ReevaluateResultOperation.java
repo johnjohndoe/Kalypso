@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.command.EmptyCommand;
@@ -112,7 +113,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( "", 100 * m_selectedResults.length );//$NON-NLS-1$
+    monitor.beginTask( "Evaluating results", m_selectedResults.length );
 
     final IStatusCollector stati = new StatusCollector( Kalypso1d2dProjectPlugin.PLUGIN_ID );
 
@@ -120,125 +121,147 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
     {
       if( resultMeta instanceof IStepResultMeta )
       {
-        /* handle result meta entries */
-        final IStepResultMeta stepResult = (IStepResultMeta)resultMeta;
-        final ProcessResultsBean bean = new ProcessResultsBean();
-
-        if( m_modell != null && m_commandTarget != null )
-          ResultMeta1d2dHelper.deleteResultThemeFromMap( stepResult, m_modell, m_commandTarget );
-
-        bean.deleteAll = false;
-        bean.deleteFollowers = false;
-        bean.evaluateFullResults = true;
-
-        if( stepResult.getFullPath().toOSString().contains( ResultManager.STEADY_PREFIX ) )
-          bean.userCalculatedSteps = new Date[] { ResultManager.STEADY_DATE };
-        else if( stepResult.getFullPath().toOSString().contains( ResultManager.MAXI_PREFIX ) )
-          bean.userCalculatedSteps = new Date[] { ResultManager.MAXI_DATE };
-        else
-          bean.userCalculatedSteps = new Date[] { stepResult.getStepTime() };
-
-        FileObject actResult = null;
-        FileObject fileObjSWANResult = null;
-        final ILog lLog = KalypsoCommonsPlugin.getDefault().getLog();
-        try
-        {
-          actResult = VFSUtilities.getNewManager().resolveFile( m_scenarioFolder.getFolder( stepResult.getFullPath() ).getLocationURI().toURL().toExternalForm() );
-          fileObjSWANResult = actResult.resolveFile( ResultMeta1d2dHelper.getSavedSWANRawResultData( stepResult ).toOSString() );
-        }
-        catch( final Exception e )
-        {
-          final IStatus status = new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.8" ) ); //$NON-NLS-1$
-          lLog.log( status );
-        }
-
-        // final ICalcUnitResultMeta calcunitMeta = ResultMeta1d2dHelper.getCalcUnitResultMeta( stepResult );
-
-        ResultManager resultManager = null;
-        try
-        {
-          resultManager = new ResultManager( actResult, fileObjSWANResult, m_modelProvider, m_geoLog );
-        }
-        catch( final CoreException e )
-        {
-          // FIXME: this is no error handling!
-          lLog.log( StatusUtilities.statusFromThrowable( e ) );
-        }
-
-        try
-        {
-          resultManager.setStepsToProcess( bean.userCalculatedSteps, resultManager.getControlModel() );
-        }
-        catch( final IOException e1 )
-        {
-          return StatusUtilities.statusFromThrowable( e1 );
-        }
-
-        final ResultProcessingOperation processingOperation = new ResultProcessingOperation( resultManager, bean );
-
-        IStatus resultStatus = processingOperation.execute( monitor );
-        // if anything happened during the processing, restore the original results db from disk
-        if( resultStatus.isOK() != true )
-        {
-          lLog.log( resultStatus );
-          try
-          {
-            // set the dirty flag of the results model
-            ((ICommandPoster)m_modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
-          }
-          catch( final Exception e )
-          {
-            lLog.log( StatusUtilities.statusFromThrowable( e ) );
-          }
-
-          m_modelProvider.reloadModel();
-        }
-
-        // if OK move the new results data to the results folder
-        // this operation is not cancelable
-        if( resultStatus.isOK() )
-        {
-          // processing finished without problems, prepare the data-operation
-          // this is where the name of the result folder is actually set
-          final ICalcUnitResultMeta calcUnitMeta = processingOperation.getCalcUnitMeta();
-          final String calcUnitId = calcUnitMeta.getCalcUnit();
-          List<String> lListResultsToRemove = new ArrayList<>();
-          lListResultsToRemove.addAll( Arrays.asList( processingOperation.getOriginalStepsToDelete() ) );
-          if( lListResultsToRemove.size() == 0 )
-          {
-            lListResultsToRemove.add( stepResult.getId() );
-          }
-          lListResultsToRemove = removeAllOthersStepWithDate( lListResultsToRemove, stepResult.getId() );
-
-          final String[] lResultsToRemove = lListResultsToRemove.toArray( new String[lListResultsToRemove.size()] );
-
-          final Path unitFolderRelativePath = new Path( "results/" + calcUnitId ); //$NON-NLS-1$
-          // remove temporary unzipped swan data
-          try
-          {
-            final FileObject unzippedSwanFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." //$NON-NLS-1$
-                + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT );
-            final FileObject unzippedShiftFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
-            final FileObject unzippedTabFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "_out.tab" ); //$NON-NLS-1$
-            unzippedSwanFile.delete();
-            unzippedShiftFile.delete();
-            unzippedTabFile.delete();
-          }
-          catch( final FileSystemException e )
-          {
-            lLog.log( StatusUtilities.statusFromThrowable( e ) );
-          }
-          final IFolder unitFolder = m_scenarioFolder.getFolder( unitFolderRelativePath );
-          final ResultManagerOperation dataOperation = new ResultManagerOperation( resultManager, unitFolder.getLocation().toFile(), Status.OK_STATUS, processingOperation.getOutputDir(), calcUnitMeta, lResultsToRemove );
-          dataOperation.setBoolRemoveRawResult( false );
-          resultStatus = dataOperation.execute( monitor );
-        }
-
-        stati.add( resultStatus );
+        final IStatus status = processStepResult( (IStepResultMeta)resultMeta, new SubProgressMonitor( monitor, 1 ) );
+        stati.add( status );
       }
     }
 
     return stati.asMultiStatusOrOK( Messages.getString( "ReevaluateResultOperation.0" ) ); //$NON-NLS-1$
+  }
+
+  private IStatus processStepResult( final IStepResultMeta stepResult, final IProgressMonitor monitor )
+  {
+    /* delete map theme, if any */
+    if( m_modell != null && m_commandTarget != null )
+      ResultMeta1d2dHelper.deleteResultThemeFromMap( stepResult, m_modell, m_commandTarget );
+
+    final ProcessResultsBean bean = new ProcessResultsBean();
+    bean.deleteAll = false;
+    bean.deleteFollowers = false;
+    bean.evaluateFullResults = true;
+
+    if( stepResult.getFullPath().toOSString().contains( ResultManager.STEADY_PREFIX ) )
+      bean.userCalculatedSteps = new Date[] { ResultManager.STEADY_DATE };
+    else if( stepResult.getFullPath().toOSString().contains( ResultManager.MAXI_PREFIX ) )
+      bean.userCalculatedSteps = new Date[] { ResultManager.MAXI_DATE };
+    else
+      bean.userCalculatedSteps = new Date[] { stepResult.getStepTime() };
+
+    FileObject actResult = null;
+    FileObject fileObjSWANResult = null;
+
+    final ILog lLog = KalypsoCommonsPlugin.getDefault().getLog();
+
+
+    // FIXME: ugly, local try/catches are a sign of bad code!
+
+    try
+    {
+      // FIXME: file manager never closed, resource leak!, same for other elements below!
+      // FIXME: can it ever happen, that the results are not on the local file system
+      actResult = VFSUtilities.getNewManager().resolveFile( m_scenarioFolder.getFolder( stepResult.getFullPath() ).getLocationURI().toURL().toExternalForm() );
+      fileObjSWANResult = actResult.resolveFile( ResultMeta1d2dHelper.getSavedSWANRawResultData( stepResult ).toOSString() );
+    }
+    catch( final Exception e )
+    {
+      // FIXME: bad! this is no error handling! And also no way to handle missing results -> check for existence of file instead
+      final IStatus status = new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.8" ) ); //$NON-NLS-1$
+      lLog.log( status );
+    }
+
+    // FIXME: ugly, local try/catches are a sign of bad code!
+
+    ResultManager resultManager = null;
+    try
+    {
+      resultManager = new ResultManager( actResult, fileObjSWANResult, m_modelProvider, m_geoLog );
+    }
+    catch( final CoreException e )
+    {
+      // FIXME: this is no error handling!
+      lLog.log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    // FIXME ugly: if the result manager above was not initialize, we will run into another NPE here, this is really not necesary!
+
+    try
+    {
+      resultManager.setStepsToProcess( bean.userCalculatedSteps, resultManager.getControlModel() );
+    }
+    catch( final IOException e1 )
+    {
+      return StatusUtilities.statusFromThrowable( e1 );
+    }
+
+    // FIXME: dangerous: that operation also handles what results will be deleted etc. This should be separated, because that functionality is probably only needed
+    // directly after calculation. Better abstraction is needed.
+    final ResultProcessingOperation processingOperation = new ResultProcessingOperation( resultManager, bean );
+
+    final IStatus resultStatus = processingOperation.execute( monitor );
+    // if anything happened during the processing, restore the original results db from disk
+    if( !resultStatus.isOK() )
+    {
+      lLog.log( resultStatus );
+      try
+      {
+        // FIXME: cannot work -> model is reloaded for each error, this makes no sense! -> in this case, we need to stop the evaluation at all and reset everything!
+
+        // FIXME: also we will loose previously correctly processed steps
+
+        // FIXME: also: why is it needed at all: the code below makes sure, that bad results are not added to the result database, so where is the problem?
+
+        // set the dirty flag of the results model
+        ((ICommandPoster)m_modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+      }
+      catch( final Exception e )
+      {
+        lLog.log( StatusUtilities.statusFromThrowable( e ) );
+      }
+
+      m_modelProvider.reloadModel();
+
+      return resultStatus;
+    }
+
+    // if OK move the new results data to the results folder
+    // this operation is not cancelable
+
+    // processing finished without problems, prepare the data-operation
+    // this is where the name of the result folder is actually set
+    final ICalcUnitResultMeta calcUnitMeta = processingOperation.getCalcUnitMeta();
+    final String calcUnitId = calcUnitMeta.getCalcUnit();
+    List<String> lListResultsToRemove = new ArrayList<>();
+    lListResultsToRemove.addAll( Arrays.asList( processingOperation.getOriginalStepsToDelete() ) );
+    if( lListResultsToRemove.size() == 0 )
+    {
+      lListResultsToRemove.add( stepResult.getId() );
+    }
+    lListResultsToRemove = removeAllOthersStepWithDate( lListResultsToRemove, stepResult.getId() );
+
+    final String[] lResultsToRemove = lListResultsToRemove.toArray( new String[lListResultsToRemove.size()] );
+
+    // FIXME: this is not the right place to do delete these file! (and why is this not necessary for the other result types?)
+    // FIXME: better: the code that creates the files should be responsible to delete them
+    final Path unitFolderRelativePath = new Path( "results/" + calcUnitId ); //$NON-NLS-1$
+    // remove temporary unzipped swan data
+    try
+    {
+      final FileObject unzippedSwanFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." //$NON-NLS-1$
+          + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT );
+      final FileObject unzippedShiftFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
+      final FileObject unzippedTabFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "_out.tab" ); //$NON-NLS-1$
+      unzippedSwanFile.delete();
+      unzippedShiftFile.delete();
+      unzippedTabFile.delete();
+    }
+    catch( final FileSystemException e )
+    {
+      lLog.log( StatusUtilities.statusFromThrowable( e ) );
+    }
+    final IFolder unitFolder = m_scenarioFolder.getFolder( unitFolderRelativePath );
+    final ResultManagerOperation dataOperation = new ResultManagerOperation( resultManager, unitFolder.getLocation().toFile(), Status.OK_STATUS, processingOperation.getOutputDir(), calcUnitMeta, lResultsToRemove );
+    dataOperation.setBoolRemoveRawResult( false );
+    return dataOperation.execute( monitor );
   }
 
   private List<String> removeAllOthersStepWithDate( final List<String> lListResultsToRemove, final String stepId )

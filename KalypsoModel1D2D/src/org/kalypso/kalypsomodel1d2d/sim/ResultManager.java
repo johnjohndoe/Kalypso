@@ -138,6 +138,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IScenarioDataProvider caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
+    // FIXME: avoid throwing exception in constructor; clients should provide the models, not the caseDataProvider
     this( fileObjectRMA, fileObjectSWAN, (IFEDiscretisationModel1d2d) caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() ), ((IControlModelGroup) caseDataProvider.getModel( IControlModelGroup.class.getName() )).getModel1D2DCollection().getActiveControlModel(), (IFlowRelationshipModel) caseDataProvider.getModel( IFlowRelationshipModel.class.getName() ), (IScenarioResultMeta) caseDataProvider.getModel( IScenarioResultMeta.class.getName() ), geoLog );
   }
 
@@ -220,6 +221,7 @@ public class ResultManager implements ISimulation1D2DConstants
           // swan mat file should be unpacked for using in within JMatIO-Reader, so we put the uncompressed version in
           // to the working directory.
           ZipUtilities.unzip( new File( m_resultDirSWAN.getURL().toURI() ), new File( m_outputDir.toURI() ) );
+          // FIXME: resource leak, manager never closed!
           m_resultDirSWAN = VFSUtilities.getNewManager().resolveFile( m_outputDir.toURI().toURL().toExternalForm() );
         }
       }
@@ -386,7 +388,6 @@ public class ResultManager implements ISimulation1D2DConstants
           catch( final Exception e )
           {
             m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.15" ), resultFileName ); //$NON-NLS-1$
-
           }
         }
       }
