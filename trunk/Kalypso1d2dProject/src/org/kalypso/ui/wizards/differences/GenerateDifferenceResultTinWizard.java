@@ -45,13 +45,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate.MATH_OPERATOR;
@@ -65,7 +65,6 @@ import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.ThemeConstructionFactory;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypso.ui.wizards.results.filters.NonTinDocumentResultViewerFilter;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -126,10 +125,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-
     final MATH_OPERATOR operator = IMathOperatorDelegate.MATH_OPERATOR.eMinus;
-
-    final GM_TriangulatedSurface[] surfaces = new GM_TriangulatedSurface[2];
 
     IDocumentResultMeta.DOCUMENTTYPE masterDocType = null;
     IDocumentResultMeta.DOCUMENTTYPE slaveDocType = null;
@@ -207,11 +203,15 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     }
 
     /* Start */
-    final ICoreRunnableWithProgress op = new GenerateDifferenceResultTinOperation( operator, masterResults, destinationResults, slaveResults, surfaces, m_scenarioFolder );
+    final ICoreRunnableWithProgress op = new GenerateDifferenceResultTinOperation( operator, masterResults, destinationResults, slaveResults, m_scenarioFolder );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
+    {
+      //ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.37"), status ); //$NON-NLS-1$
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+      StatusDialog.open( getShell(), status, getWindowTitle() );
+    }
     else
     {
       try
@@ -224,8 +224,6 @@ public class GenerateDifferenceResultTinWizard extends Wizard
         e.printStackTrace();
       }
     }
-
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.37"), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
 

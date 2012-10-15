@@ -40,28 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
-
-import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
-import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter.QNameAndString;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -71,30 +57,12 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 {
   private final GM_TriangulatedSurface m_surface;
 
-  private ResultType.TYPE m_parameter = null;
+  private final ResultType.TYPE m_parameter;
 
-  private GMLWorkspace m_workspace = null;
-
-  private File m_tinResultFile = null;
-
-  public TriangulatedSurfaceTriangleEater( final String crs, final QNameAndString[] properties ) throws GM_Exception
-  {
-    this( null, null, new GM_TriangulatedSurface_Impl( crs ), null, properties );
-  }
-
-  public TriangulatedSurfaceTriangleEater( final File tinResultFile, final GMLWorkspace workspace, final GM_TriangulatedSurface surface, final ResultType.TYPE parameter, final QNameAndString[] properties )
+  public TriangulatedSurfaceTriangleEater( final GM_TriangulatedSurface surface, final ResultType.TYPE parameter )
   {
     m_surface = surface;
     m_parameter = parameter;
-    m_workspace = workspace;
-    m_tinResultFile = tinResultFile;
-
-    if( m_workspace != null )
-    {
-      final Feature rootFeature = m_workspace.getRootFeature();
-      for( final QNameAndString nameAndString : properties )
-        rootFeature.setProperty( nameAndString.m_qname, nameAndString.m_value );
-    }
   }
 
   /**
@@ -109,56 +77,24 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
       m_surface.add( gmTriangle );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#finished()
-   */
   @Override
   public void finished( )
   {
-    if( m_surface.size() == 0 || m_tinResultFile == null || m_workspace == null )
-      return;
-
-    final String name = m_tinResultFile.getPath();
-
-    final int extensionIndex = name.lastIndexOf( "." ); //$NON-NLS-1$
-
-    final String substring = name.substring( 0, extensionIndex );
-    final String extension = name.substring( extensionIndex, name.length() );
-
-    /* create filename */
-    String param;
-    if( m_parameter != null )
-      param = m_parameter.name();
-    else
-      param = ""; //$NON-NLS-1$
-
-    final String fileName = substring + "_" + param + extension; //$NON-NLS-1$
-
-    try
-    {
-      // TODO: zip Url + stream
-      final File paramFile = new File( fileName );
-      GmlSerializer.serializeWorkspace( paramFile, m_workspace, "UTF-8" ); //$NON-NLS-1$
-    }
-    catch( final Exception e )
-    {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      e.printStackTrace();
-    }
   }
 
   @Override
   public void setTime( final Date date )
   {
-    if( m_workspace == null )
-      return;
-
-    final Feature triangleFeature = m_workspace.getRootFeature();
-    if( triangleFeature != null )
-    {
-      final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
-      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), gregorianCalendar ); //$NON-NLS-1$
-    }
+//    if( m_workspace == null )
+//      return;
+//
+//    final Feature triangleFeature = m_workspace.getRootFeature();
+//    if( triangleFeature != null )
+//    {
+//      final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
+//      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), gregorianCalendar ); //$NON-NLS-1$
+//    }
+    throw new UnsupportedOperationException();
   }
 
   public void addPoints( final List<GM_Point> pointList )

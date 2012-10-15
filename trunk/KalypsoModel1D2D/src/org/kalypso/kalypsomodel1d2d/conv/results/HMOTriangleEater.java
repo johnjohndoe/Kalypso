@@ -189,12 +189,8 @@ public class HMOTriangleEater implements ITriangleEater
 
       e.printStackTrace();
     }
-
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(java.util.Date)
-   */
   @Override
   public void setTime( final Date time )
   {
