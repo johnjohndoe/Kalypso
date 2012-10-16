@@ -43,10 +43,11 @@ package org.kalypso.model.wspm.tuhh.core.gml;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -229,23 +230,27 @@ public class TuhhReach extends WspmReach implements IWspmTuhhConstants, IProfile
   public IProfileFeature[] getSelectedProfiles( final IRelationType selectionHint )
   {
     final FeatureList reachSegmentList = getReachSegmentList();
-    final SortedSet<IProfileFeature> profile = new TreeSet<>( new WspmProfileComparator( isDirectionUpstreams() ) );
+
+    final Set<IProfileFeature> profileHash = new HashSet<>(  );
 
     for( final Object object : reachSegmentList )
     {
-      final Feature segmentFeature = (Feature)object;
-      if( GMLSchemaUtilities.substitutes( segmentFeature.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) ) //$NON-NLS-1$
+      if( object instanceof TuhhReachProfileSegment )
       {
-        final TuhhReachProfileSegment segment = (TuhhReachProfileSegment)segmentFeature;
+        final TuhhReachProfileSegment segment = (TuhhReachProfileSegment)object;
         final IProfileFeature profileMember = segment.getProfileMember();
         if( profileMember != null )
         {
-          profile.add( profileMember );
+          profileHash.add( profileMember );
         }
       }
     }
 
-    return profile.toArray( new IProfileFeature[profile.size()] );
+    final IProfileFeature[] profiles = profileHash.toArray( new IProfileFeature[profileHash.size()] );
+
+    /* Sort by station; do no use TreeSet as stations may be duplicate */
+    Arrays.sort( profiles, new WspmProfileComparator( isDirectionUpstreams() ) );
+    return profiles;
   }
 
   /**
