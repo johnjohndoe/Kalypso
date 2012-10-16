@@ -225,6 +225,9 @@ public class GafExporter
 
     final IProfileFeature profile = profiles[0];
     final WspmWaterBody water = profile.getWater();
+    if( water == null )
+      return null;
+
     final WspmProject wspmProject = water.getProject();
 
     return wspmProject.getClassificationMember();
