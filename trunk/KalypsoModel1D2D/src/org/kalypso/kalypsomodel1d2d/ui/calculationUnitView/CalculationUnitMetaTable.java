@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -95,7 +96,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CloneCalculationUnitWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
@@ -255,16 +255,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     table.addControlListener( new ColumnsResizeControlListener() );
 
     /* Name column */
-    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
-    final ViewerColumnItem nameItem = new ViewerColumnItem( nameColumn );
-
-    final CalculationUnitViewerLabelProvider nameLabelProvider = new CalculationUnitViewerLabelProvider( parent.getDisplay() );
-
-    nameItem.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.0" ) ); //$NON-NLS-1$
-    nameItem.setResizable( true );
-    ColumnsResizeControlListener.setMinimumPackWidth( nameItem.getColumn() );
-    nameColumn.setLabelProvider( nameLabelProvider );
-    ColumnViewerSorter.registerSorter( nameColumn, new ViewerComparator() );
+    final ViewerColumn nameColumn = createUnitNameColumn( viewer );
 
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setInput( getCalcUnits() );
@@ -673,4 +664,20 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     }
   }
 
+  public static ViewerColumn createUnitNameColumn( final ColumnViewer viewer )
+  {
+    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    final ViewerColumnItem column = new ViewerColumnItem( nameColumn );
+
+    column.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.0" ) ); //$NON-NLS-1$
+    column.setResizable( false );
+    column.setMoveable( false );
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
+
+    nameColumn.setLabelProvider( new CalcUnitNameLabelProvider( viewer.getControl().getDisplay() ) );
+
+    ColumnViewerSorter.registerSorter( nameColumn, new ViewerComparator() );
+
+    return nameColumn;
+  }
 }

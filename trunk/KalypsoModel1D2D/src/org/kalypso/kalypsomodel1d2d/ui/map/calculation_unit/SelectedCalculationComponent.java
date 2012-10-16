@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -56,7 +58,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
+import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
@@ -65,6 +68,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition.BOUNDARY_TYPE;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
@@ -84,7 +88,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  */
 public class SelectedCalculationComponent
 {
-  private DefaultTableViewer m_subCalcUnitsTableViewer;
+  private TableViewer m_subCalcUnitsTableViewer;
 
   private Text m_txtCalcUnitName;
 
@@ -264,13 +268,16 @@ public class SelectedCalculationComponent
 
     final Label subUnitLabel = toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.21" ), SWT.BEGINNING ); //$NON-NLS-1$
     subUnitLabel.setLayoutData( new GridData( SWT.LEFT, SWT.BEGINNING, false, false ) );
-    m_subCalcUnitsTableViewer = new DefaultTableViewer( parent, SWT.FILL | SWT.BORDER );
+    m_subCalcUnitsTableViewer = new TableViewer( parent, SWT.FILL | SWT.BORDER );
+
     final Table subCalcUnitsTable = m_subCalcUnitsTableViewer.getTable();
+    subCalcUnitsTable.addControlListener( new ColumnsResizeControlListener() );
+
     subCalcUnitsTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 1, 1 ) );
     subCalcUnitsTable.setLinesVisible( false );
     m_subCalcUnitsTableViewer.setContentProvider( new ArrayContentProvider() );
-    m_subCalcUnitsTableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( parent.getDisplay() ) );
 
-    m_subCalcUnitsTableViewer.addColumn( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.22" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.23" ), null, 100, 100, false, SWT.LEFT, false, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final ViewerColumn nameColumn = CalculationUnitMetaTable.createUnitNameColumn( m_subCalcUnitsTableViewer );
+    ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
   }
 }
