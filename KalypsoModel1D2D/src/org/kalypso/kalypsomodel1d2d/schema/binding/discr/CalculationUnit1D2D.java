@@ -113,6 +113,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
     {
       refreshVirtualElements();
       m_virtualMemberIDs = new HashSet<>();
+
       for( final IFENetItem element : m_virtualElements )
         m_virtualMemberIDs.add( element.getId() );
     }
@@ -146,6 +147,8 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   {
     if( m_list1DElements == null )
     {
+      refreshVirtualElements();
+
       calculate1DElements();
     }
     return m_list1DElements;
@@ -154,9 +157,13 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   private void calculate1DElements( )
   {
     m_list1DElements = new ArrayList<>();
+
+    getVirtualMemberIDs();
     for( final IFENetItem element : m_virtualElements )
+    {
       if( element instanceof IElement1D )
         m_list1DElements.add( (IElement1D)element );
+    }
   }
 
   @Override
@@ -164,6 +171,8 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   {
     if( m_list2DElements == null )
     {
+      refreshVirtualElements();
+
       calculate2DElements();
     }
     return m_list2DElements;
@@ -172,10 +181,12 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   private void calculate2DElements( )
   {
     m_list2DElements = new ArrayList<>();
+
     for( final IFENetItem element : m_virtualElements )
+    {
       if( element instanceof IPolyElement )
         m_list2DElements.add( (IPolyElement)element );
-
+    }
   }
 
   @Override
