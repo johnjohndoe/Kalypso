@@ -101,7 +101,9 @@ public class KnaufReach
       }
     }
 
-    throw new UnsupportedOperationException();
+    /* if direction could not be determined, use default diretion */
+    m_direction = FLOW_DIRECTION.eEstuary2Src;
+    return m_direction;
   }
 
   public FLOW_DIRECTION getDirection( )
