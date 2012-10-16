@@ -1,5 +1,5 @@
-!define VERSION 12.11.0.120121012
+!define VERSION 12.11.0.20121016
 !define COMPANY "Björnsen Beratende Ingenieure"
 !define URL http://kalypso.bjoernsen.de/
 
-VIProductVersion 12.11.0.120121012
+VIProductVersion 12.11.0.20121016
