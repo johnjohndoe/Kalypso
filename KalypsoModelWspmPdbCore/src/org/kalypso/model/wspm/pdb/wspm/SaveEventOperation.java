@@ -64,6 +64,9 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
+import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
+import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
+import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.wspm.Waterlevel2dWorker;
 
 import com.vividsolutions.jts.geom.PrecisionModel;
@@ -102,6 +105,9 @@ public class SaveEventOperation implements IPdbOperation
   @Override
   public void execute( final Session session ) throws PdbConnectException
   {
+    /* Fetch coefficients, we need to known the unknown classes */
+    final ICoefficients coefficients = new Coefficients( session, IGafConstants.POINT_KIND_GAF );
+
     /* Prepare event for save */
     final Date now = new Date();
     m_event.setCreationDate( now );
@@ -132,7 +138,7 @@ public class SaveEventOperation implements IPdbOperation
     saveFixations( session, waterlevels, now );
 
     /* save 2d waterlevels */
-    saveWaterlevels2D( session, waterlevels2d );
+    saveWaterlevels2D( session, waterlevels2d, coefficients );
   }
 
   private void saveFixations( final Session session, final Set<WaterlevelFixation> waterlevels, final Date now )
@@ -152,7 +158,7 @@ public class SaveEventOperation implements IPdbOperation
     }
   }
 
-  private void saveWaterlevels2D( final Session session, final Map<IProfileObject, ISectionProvider> waterlevels2d ) throws PdbConnectException
+  private void saveWaterlevels2D( final Session session, final Map<IProfileObject, ISectionProvider> waterlevels2d, final ICoefficients coefficients ) throws PdbConnectException
   {
     try
     {
@@ -169,7 +175,7 @@ public class SaveEventOperation implements IPdbOperation
 
         final BigDecimal station = sectionProvider.getStation();
 
-        final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( object, profileSRID, targetSRID, station.doubleValue(), partTypes, m_event );
+        final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( object, profileSRID, targetSRID, station.doubleValue(), partTypes, m_event, coefficients );
         operation.execute();
 
         final CrossSectionPart part = operation.getPart();

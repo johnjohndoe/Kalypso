@@ -35,6 +35,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
+import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
@@ -68,7 +69,9 @@ public class CheckinHorizonPartOperation
 
   private final int m_targetSRID;
 
-  public CheckinHorizonPartOperation( final IProfileObject profileObject, final int profileSRID, final int targetSRID, final double station, final CrossSectionPartTypes partTypes, final Event event )
+  private final ICoefficients m_coefficients;
+
+  public CheckinHorizonPartOperation( final IProfileObject profileObject, final int profileSRID, final int targetSRID, final double station, final CrossSectionPartTypes partTypes, final Event event, final ICoefficients coefficients )
   {
     m_profileObject = profileObject;
     m_profileSRID = profileSRID;
@@ -76,6 +79,7 @@ public class CheckinHorizonPartOperation
     m_station = station;
     m_partTypes = partTypes;
     m_event = event;
+    m_coefficients = coefficients;
   }
 
   private JTSTransformer getTransformer( ) throws FactoryException
@@ -139,6 +143,9 @@ public class CheckinHorizonPartOperation
       point.setCode( pdbCode );
       point.setLocation( location );
 
+      point.setRoughness( m_coefficients.getUnknownRoughness() );
+      point.setVegetation( m_coefficients.getUnknownVegetation() );
+
       m_part.getPoints().add( point );
     }
 
@@ -188,9 +195,17 @@ public class CheckinHorizonPartOperation
     m_part.setName( name );
 
     final String type = m_profileObject.getValue( IGafConstants.PART_TYPE, null );
-    final CrossSectionPartType partType = m_partTypes.findPartType( type );
 
-    m_part.setCrossSectionPartType( partType );
+    if( m_partTypes != null )
+    {
+      final CrossSectionPartType partType = m_partTypes.findPartType( type );
+      m_part.setCrossSectionPartType( partType );
+    }
+    else
+    {
+      // REMARK: this only happens when exporting to GAF; else we need a valid type from the database
+      m_part.setCrossSectionPartType( new CrossSectionPartType( type, null, null, null ) );
+    }
 
     m_part.setEvent( m_event );
   }
