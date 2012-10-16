@@ -59,29 +59,21 @@ public class RiverProfileNetwork extends Feature_Impl implements IRiverProfileNe
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork#getNext(org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfile)
-   */
-  @Override
-  public IProfileFeature getNext( final IProfileFeature riverProfile )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork#getPrevious(org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfile)
-   */
-  @Override
-  public IProfileFeature getPrevious( final IProfileFeature riverProfile )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
   @Override
   public IFeatureBindingCollection<IProfileFeature> getProfiles( )
   {
     return m_profiles;
+  }
+
+  @Override
+  public IProfileFeature[] getSelectedProfiles( final IRelationType selectionHint )
+  {
+    if( selectionHint == null )
+      return new IProfileFeature[] {};
+
+    if( !QNAME_PROP_RIVER_PROFILE.equals( selectionHint.getQName() ) )
+      return new IProfileFeature[] {};
+
+    return m_profiles.toArray( new IProfileFeature[m_profiles.size()] );
   }
 }
