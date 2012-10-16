@@ -64,7 +64,6 @@ public class CoordDataBlockCreator
   {
     m_header = new DataBlockHeader( firstLine );
     m_header.setSecondLine( secondLine );
-
   }
 
   public IDataBlock createDataBlock( )
@@ -81,5 +80,4 @@ public class CoordDataBlockCreator
     m_xs.add( x );
     m_ys.add( y );
   }
-
 }

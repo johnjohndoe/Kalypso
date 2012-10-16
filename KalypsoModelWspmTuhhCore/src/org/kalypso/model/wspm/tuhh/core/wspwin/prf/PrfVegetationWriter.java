@@ -123,11 +123,16 @@ public class PrfVegetationWriter
 
     for( final IProfileRecord point : points )
     {
-      final Double x = (Double) point.getValue( indexWidth );
-      final BigDecimal roughness = WspmClassifications.getVegetationValue( point, valueComponentId, m_preferClasses );
+      final Double width = (Double)point.getValue( indexWidth );
 
-      arrX.add( x );
-      arrY.add( ((Number) Objects.firstNonNull( roughness, nullValue )).doubleValue() );
+      final BigDecimal value = WspmClassifications.getVegetationValue( point, valueComponentId, m_preferClasses );
+      final Number fixedValue = Objects.firstNonNull( value, nullValue );
+
+      if( value != null && fixedValue != null )
+      {
+        arrX.add( width );
+        arrY.add( fixedValue.doubleValue() );
+      }
     }
 
     final Double[] xArray = arrX.toArray( new Double[arrX.size()] );

@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -86,14 +85,12 @@ public class WaterlevelWriter
     final String calcName = waterlevel.getLabel();
     final String riverName = Messages.getString( "WaterlevelWriter_0" ); //$NON-NLS-1$
     final double discharge = waterlevel.getDischarge();
-    // TODO: enforce 3 significant digits
-// final BigDecimal bigDischarge = new BigDecimal( discharge, new MathContext( 3 ) );
 
     final String dischargeText;
     if( Double.isNaN( discharge ) )
       dischargeText = StringUtils.EMPTY;
     else
-      dischargeText = String.format( "%.3f m3/s", discharge ); //$NON-NLS-1$
+      dischargeText = String.format( "%.3g m3/s", discharge ); //$NON-NLS-1$
 
     final String secondLine = String.format( "%-100s%s@%s", dischargeText, calcName, riverName ); //$NON-NLS-1$ //$NON-NLS-2$
 
