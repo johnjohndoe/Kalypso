@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -137,8 +138,8 @@ public class PrfExporter
   {
     final String profileName = profil.getName();
     final String profileDescription = profil.getDescription();
-    final String riverId = water.getRefNr();
-    final String riverDescription = water.getDescription();
+    final String riverId = water == null ? StringUtils.EMPTY : water.getRefNr();
+    final String riverDescription = water == null ? StringUtils.EMPTY : water.getDescription();
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_4_PROJEKTBEZEICHNUNG_1, riverId );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_5_PROJEKTBEZEICHNUNG_2, profileDescription );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_6_PROJEKTBEZEICHNUNG_3, riverDescription );
