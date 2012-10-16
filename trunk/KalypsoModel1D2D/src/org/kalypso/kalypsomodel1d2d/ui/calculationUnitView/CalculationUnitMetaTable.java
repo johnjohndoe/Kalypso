@@ -159,6 +159,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
   private final Set<String> m_buttonsList = new HashSet<>();
 
+  // FIXME: use actions and toolbar instead
   private Button m_btnDeleteCalcUnit;
 
   private Button m_btnMaximizeCalcUnit;
@@ -185,7 +186,9 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
     final TableViewer tableViewer = createTableControl( composite, toolkit );
     final Table table = tableViewer.getTable();
-    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final GridData tableData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    tableData.minimumHeight = 200;
+    table.setLayoutData( tableData );
 
     final Display display = parent.getDisplay();
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()

@@ -193,20 +193,20 @@ public class SelectedCalculationComponent
     {
       m_txtCalcUnitType.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.6" ) ); //$NON-NLS-1$
       m_subCalcUnitsTableViewer.setInput( new Object[] {} );
-      m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements1D().size() ) );
+      m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit)newValue).getElements1D().size() ) );
     }
     else if( newValue instanceof ICalculationUnit2D )
     {
       m_txtCalcUnitType.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.7" ) ); //$NON-NLS-1$
       m_subCalcUnitsTableViewer.setInput( new Object[] {} );
-      m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements2D().size() ) );
+      m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit)newValue).getElements2D().size() ) );
     }
     else if( newValue instanceof ICalculationUnit1D2D )
     {
       m_txtCalcUnitType.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.8" ) ); //$NON-NLS-1$
-      m_subCalcUnitsTableViewer.setInput( ((ICalculationUnit1D2D) newValue).getChangedSubUnits().toArray() );
-      m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements1D().size() ) );
-      m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements2D().size() ) );
+      m_subCalcUnitsTableViewer.setInput( ((ICalculationUnit1D2D)newValue).getChangedSubUnits().toArray() );
+      m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit)newValue).getElements1D().size() ) );
+      m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit)newValue).getElements2D().size() ) );
     }
   }
 
@@ -229,42 +229,42 @@ public class SelectedCalculationComponent
   {
     toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.9" ) ); //$NON-NLS-1$
     m_txtCalcUnitName = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
-    m_txtCalcUnitName.setEditable( false );
+    m_txtCalcUnitName.setEnabled( false );
     m_txtCalcUnitName.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
     toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.11" ) ); //$NON-NLS-1$
     m_txtCalcUnitType = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
-    m_txtCalcUnitType.setEditable( false );
+    m_txtCalcUnitType.setEnabled( false );
     m_txtCalcUnitType.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
     toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.13" ) ); //$NON-NLS-1$
     m_txtNumberOfElements1D = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
-    m_txtNumberOfElements1D.setEditable( false );
+    m_txtNumberOfElements1D.setEnabled( false );
     m_txtNumberOfElements1D.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
     toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.15" ) ); //$NON-NLS-1$
     m_txtNumberOfElements2D = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
-    m_txtNumberOfElements2D.setEditable( false );
+    m_txtNumberOfElements2D.setEnabled( false );
     m_txtNumberOfElements2D.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
     toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.17" ) ); //$NON-NLS-1$
     m_numberOfContinuityLines = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_numberOfContinuityLines.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    m_numberOfContinuityLines.setEditable( false );
+    m_numberOfContinuityLines.setEnabled( false );
 
     toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.19" ) ); //$NON-NLS-1$
     m_numberOfBoundaryConditions = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_numberOfBoundaryConditions.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    m_numberOfBoundaryConditions.setEditable( false );
+    m_numberOfBoundaryConditions.setEnabled( false );
 
     toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.20" ) ); //$NON-NLS-1$
     m_numberOfBoundaryConditionsWaves = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_numberOfBoundaryConditionsWaves.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    m_numberOfBoundaryConditionsWaves.setEditable( false );
+    m_numberOfBoundaryConditionsWaves.setEnabled( false );
 
     final Label subUnitLabel = toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.21" ), SWT.BEGINNING ); //$NON-NLS-1$
     subUnitLabel.setLayoutData( new GridData( SWT.LEFT, SWT.BEGINNING, false, false ) );
-    m_subCalcUnitsTableViewer = new DefaultTableViewer( parent, SWT.FILL | SWT.BORDER | SWT.SCROLL_PAGE );
+    m_subCalcUnitsTableViewer = new DefaultTableViewer( parent, SWT.FILL | SWT.BORDER );
     final Table subCalcUnitsTable = m_subCalcUnitsTableViewer.getTable();
     subCalcUnitsTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 1, 1 ) );
     subCalcUnitsTable.setLinesVisible( false );
