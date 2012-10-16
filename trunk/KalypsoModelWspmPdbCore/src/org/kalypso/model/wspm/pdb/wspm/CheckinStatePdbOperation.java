@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
+import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
@@ -296,9 +297,15 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     {
       /* Instead of preserving the existing part name, we recreate it by the same system as when importing gaf */
       // REMARK: null happens, if we export to gaf format
-      final String category = part.getCrossSectionPartType().getCategory();
-      final String uniquePartName = partNameGenerator.createUniqueName( category );
-      part.setName( uniquePartName );
+      final CrossSectionPartType partType = part.getCrossSectionPartType();
+      if( partType != null )
+      {
+        final String category = partType.getCategory();
+
+        final String uniquePartName = partNameGenerator.createUniqueName( category );
+        part.setName( uniquePartName );
+      }
+
       part.setCrossSection( section );
       section.getCrossSectionParts().add( part );
     }
@@ -314,7 +321,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
   /**
    * This function creates a cross section part using the records of the profile.
-   * 
+   *
    * @param profile
    *          The profile.
    * @param profileSRS
@@ -460,7 +467,8 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
   {
     final List<CrossSectionPart> parts = new ArrayList<>();
 
-    final CrossSectionPartTypes partTypes = new CrossSectionPartTypes( session );
+    final CrossSectionPartTypes partTypes = session == null ? null : new CrossSectionPartTypes( session );
+
     final double station = profile.getStation();
 
     // REMARK: do not set event, even for 'W' part types -> the original 'W' points of GAF should remain, even if corresponding event is deleted
@@ -470,9 +478,11 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
     final int profileSRID = JTSAdapter.toSrid( profile.getSrsName() );
 
+    final ICoefficients coefficients = m_data.getCoefficients();
+
     for( final IProfileObject clonedProfileObject : clonedProfileObjects )
     {
-      final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( clonedProfileObject, profileSRID, dbSRID, station, partTypes, event );
+      final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( clonedProfileObject, profileSRID, dbSRID, station, partTypes, event, coefficients );
       operation.execute();
 
       final CrossSectionPart part = operation.getPart();
