@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -56,7 +56,7 @@ public class ProfileObjectHelper
 
   /**
    * This function creates a new profile object. It uses the class of the given profile object.
-   * 
+   *
    * @param profileObject
    *          The class of this object will be used for the new profile object.
    * @return A new profile object or null.
@@ -176,6 +176,7 @@ public class ProfileObjectHelper
     final IProfileObjectRecords targetRecords = target.getRecords();
     targetRecords.clearRecords();
 
+    int recordCount = 0;
     for( final IRecord sourceRecord : sourceResult )
     {
       /* Only records with a height in the special component may be copied. */
@@ -188,6 +189,9 @@ public class ProfileObjectHelper
 
       /* Copy all standard values from the profile record to the profile object record. */
       org.kalypso.model.wspm.core.profil.ProfileObjectHelper.updateStandardProperties( sourceRecord, targetRecord );
+
+      /* we create a new id */
+      targetRecord.setId( Integer.toString( recordCount++ ) );
 
       /* Replace the height with the height from the special component. */
       targetRecord.setHoehe( height );
