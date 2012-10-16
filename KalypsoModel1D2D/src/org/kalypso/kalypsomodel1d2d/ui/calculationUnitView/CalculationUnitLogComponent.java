@@ -45,9 +45,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -56,13 +53,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.core.status.StatusDialog;
-import org.kalypso.core.status.StatusViewer;
+import org.kalypso.core.status.StatusTableViewer;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -73,6 +66,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListe
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -113,23 +107,18 @@ public class CalculationUnitLogComponent
     noLogLabel.setLayoutData( noLogGridData );
     noLogLabel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.1" ) ); //$NON-NLS-1$
 
-    final DefaultTableViewer logTableViewer = new DefaultTableViewer( parent, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL );
+    final StatusTableViewer logViewer = new StatusTableViewer( parent, SWT.FULL_SELECTION | SWT.BORDER );
+    logViewer.addTimeColumn();
+    logViewer.setInput( null );
 
-    final Table table = logTableViewer.getTable();
-    toolkit.adapt( table );
+    final Control logControl = logViewer.getControl();
+
+    toolkit.adapt( (Composite)logControl );
+
     final GridData tableGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    table.setLayoutData( tableGridData );
+    logControl.setLayoutData( tableGridData );
 
-    table.setHeaderVisible( true );
-    table.setLinesVisible( true );
-
-    // FIXME: probably we can replace all this by the StatusTableViewer
-    StatusViewer.addSeverityColumn( logTableViewer );
-    StatusViewer.addMessageColumn( logTableViewer );
-    StatusViewer.addTimeColumn( logTableViewer );
-
-    logTableViewer.setContentProvider( new ArrayContentProvider() );
-    logTableViewer.addPostSelectionChangedListener( new ISelectionChangedListener()
+    logViewer.getViewer().addPostSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
@@ -138,24 +127,9 @@ public class CalculationUnitLogComponent
       }
     } );
 
-    logTableViewer.addDoubleClickListener( new IDoubleClickListener()
-    {
-      @Override
-      public void doubleClick( final DoubleClickEvent event )
-      {
-        final IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-        final IStatus status = (IStatus) sel.getFirstElement();
-        if( status != null )
-        {
-          final StatusDialog dialog = new StatusDialog( parent.getShell(), status, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.2" ) ); //$NON-NLS-1$
-          dialog.open();
-        }
-      }
-    } );
-
     noLogLabel.setVisible( false );
     noLogGridData.exclude = true;
-    table.setVisible( false );
+    logControl.setVisible( false );
     tableGridData.exclude = true;
 
     /* Data change events */
@@ -167,23 +141,24 @@ public class CalculationUnitLogComponent
       {
         if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) && newValue instanceof ICalculationUnit )
         {
-          final IStatusCollection list = findGeoStatusCollection( (ICalculationUnit) newValue );
-          if( list == null || list.isEmpty() )
+          final IStatusCollection collection = findGeoStatusCollection( (ICalculationUnit)newValue );
+          if( collection == null || collection.isEmpty() )
           {
             // FIXME: makes no sense: noLogLabel should show empty log, but actually its visible if table is not selected...
-            table.setVisible( false );
+            logControl.setVisible( false );
             noLogLabel.setVisible( true );
             noLogGridData.exclude = false;
             tableGridData.exclude = true;
-            ViewerUtilities.setInput( logTableViewer, new Object[] {}, false );
+            logViewer.setInput( new IStatus[] {} );
           }
           else
           {
-            table.setVisible( true );
+            logControl.setVisible( true );
             noLogLabel.setVisible( false );
             noLogGridData.exclude = true;
             tableGridData.exclude = false;
-            ViewerUtilities.setInput( logTableViewer, list.getStatusList(), false );
+            final IFeatureBindingCollection<IGeoStatus> statusList = collection.getStatusList();
+            logViewer.setInput( statusList.toArray( new IStatus[statusList.size()] ) );
           }
 
           parent.layout();
@@ -249,5 +224,4 @@ public class CalculationUnitLogComponent
 
     return null;
   }
-
 }
