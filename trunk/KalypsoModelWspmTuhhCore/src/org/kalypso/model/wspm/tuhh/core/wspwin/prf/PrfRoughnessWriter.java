@@ -164,7 +164,12 @@ public class PrfRoughnessWriter
 
         final DataBlockHeader dbhr = PrfHeaders.createHeader( component ); //$NON-NLS-1$
         final CoordDataBlock dbr = new CoordDataBlock( dbhr );
+
+        // TODO: not really nice, we write the building roughness for all coordinates, if no other orughness is defined, hm....
+        // TODO: not really nice, we set 0.0 if roughness is not defined. Instead, we should rather skip this record?
+
         writeCoords( component, dbr, Objects.firstNonNull( building, 0.0 ) );
+
         if( Objects.isNotNull( building ) )
         {
           dbr.getY()[0] = building;
@@ -172,7 +177,6 @@ public class PrfRoughnessWriter
 
         m_dbWriter.addDataBlock( dbr );
       }
-
     }
   }
 
@@ -187,11 +191,16 @@ public class PrfRoughnessWriter
 
     for( final IProfileRecord point : points )
     {
-      final Double x = (Double)point.getValue( indexWidth );
+      final Double width = (Double)point.getValue( indexWidth );
       final BigDecimal roughness = WspmClassifications.getRoughnessValue( point, componentID, m_preferClasses );
 
-      arrX.add( x );
-      arrY.add( ((Number) Objects.firstNonNull( roughness, nullValue )).doubleValue() );
+      final Number fixedRoughness = Objects.firstNonNull( roughness, nullValue );
+
+      if( width != null && fixedRoughness != null )
+      {
+        arrX.add( width );
+        arrY.add( fixedRoughness.doubleValue() );
+      }
     }
 
     final Double[] xArray = arrX.toArray( new Double[arrX.size()] );

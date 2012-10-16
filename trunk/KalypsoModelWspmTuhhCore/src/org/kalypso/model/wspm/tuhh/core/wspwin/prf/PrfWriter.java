@@ -283,20 +283,22 @@ public class PrfWriter implements IPrfConstants
     final int iProp = profil.indexOfProperty( componentID );
     for( final IRecord point : points )
     {
-      final Double x = (Double)point.getValue( iBreite );
+      final Double width = (Double)point.getValue( iBreite );
+      if( width == null )
+        continue;
 
       final Double value = iProp < 0 ? null : (Double)point.getValue( iProp );
       if( value == null )
       {
         if( nullValue != null )
         {
-          xs.add( x );
+          xs.add( width );
           ys.add( nullValue );
         }
       }
       else
       {
-        xs.add( x );
+        xs.add( width );
         ys.add( value );
       }
     }

@@ -81,9 +81,6 @@ public class CoordDataBlock extends AbstractDataBlock
 
   /**
    * Muss von allen Implementatoren zuerst aufgerufen werden
-   * 
-   * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.IDataBlock#readFromReader(java.lang.String,
-   *      java.io.BufferedReader)
    */
   @Override
   public final void readFromReader( final int count, final BufferedReader reader )
@@ -91,18 +88,12 @@ public class CoordDataBlock extends AbstractDataBlock
     setCoords( readDoubleBlock( count, reader ), readDoubleBlock( count, reader ) );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.ICoordDataBlock#getX()
-   */
   @Override
   public Double[] getX( )
   {
     return m_xs;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.ICoordDataBlock#getY()
-   */
   @Override
   public Double[] getY( )
   {
@@ -182,7 +173,6 @@ public class CoordDataBlock extends AbstractDataBlock
    * @param dbls
    *          -
    * @param pw
-   *          -
    */
   private void writeDoubleBlock( final Double[] dbls, final PrintWriter pw )
   {
@@ -212,7 +202,6 @@ public class CoordDataBlock extends AbstractDataBlock
     m_ys = ys;
   }
   
-
   @Override
   public String[] getText( )
   {
