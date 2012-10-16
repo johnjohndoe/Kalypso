@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Exports WSPM profiles as struct.def SOBEK file.
- * 
+ *
  * @author Gernot Belger
  */
 public class SobekStructShapeExportOperation extends AbstractSobekExportOperation
@@ -69,7 +69,7 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
 
   public SobekStructShapeExportOperation( final SobekExportInfo info )
   {
-    super( info );
+    super( info, "struct shape" );
 
     final IProfileFeature[] profilesToExport = info.getProfiles();
     m_shapePoint = new SobekShapePoint( profilesToExport, LOCATION );
@@ -94,9 +94,6 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
     m_shapePoint.close();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekExportOperation#closeQuiet()
-   */
   @Override
   protected void closeQuiet( )
   {
