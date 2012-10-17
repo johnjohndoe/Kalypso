@@ -343,13 +343,13 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public TuhhReach getReach( )
   {
-    final Feature reachFeature = FeatureHelper.resolveLink( this, QN_PROPERTY_STEADY_STATE_MEMBER ); //$NON-NLS-1$
+    final Feature reachFeature = FeatureHelper.resolveLink( this, QN_PROPERTY_STEADY_STATE_MEMBER, true ); //$NON-NLS-1$
     return (TuhhReach) reachFeature;
   }
 
   public IRunOffEvent getRunOffEvent( )
   {
-    return (IRunOffEvent) FeatureHelper.resolveLink( this, QN_PROPERTY_RUN_OFF_EVENT_MEMBER );
+    return (IRunOffEvent)FeatureHelper.resolveLink( this, QN_PROPERTY_RUN_OFF_EVENT_MEMBER, true );
   }
 
   public MODE getCalcMode( )
