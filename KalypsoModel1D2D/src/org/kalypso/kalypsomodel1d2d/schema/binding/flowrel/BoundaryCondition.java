@@ -146,9 +146,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     return obs;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setObservation(org.kalypso.observation.IObservation)
-   */
   @Override
   public void setObservation( final IObservation<TupleResult> obs )
   {
@@ -156,9 +153,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     m_observation = null;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getObservation()
-   */
   @Override
   public IObservation<TupleResult> getObservation( )
   {
@@ -168,9 +162,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     return m_observation;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getStationaryCondition()
-   */
   @Override
   public String getStationaryCondition( )
   {

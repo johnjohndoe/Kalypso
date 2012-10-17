@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
@@ -90,18 +89,17 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
   }
 
   @Override
-  public IProfile createProfil( final TupleResult result, final IProfileFeature source )
+  public IProfile createProfil( final IProfileFeature source )
   {
-    if( result.getComponents().length == 0 )
-    {
-      // Special case: result is yet empty: this can happen for a new profile created from a new profile-feature
-      result.addComponent( getPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
-      result.addComponent( getPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE ) );
-      result.addComponent( getPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
-      result.addComponent( getPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-    }
+    final TuhhProfil profil = new TuhhProfil( source );
 
-    return new TuhhProfil( result, source );
+    // Create required properties
+    profil.addPointProperty( getPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
+    profil.addPointProperty( getPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE ) );
+    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+
+    return profil;
   }
 
   @Override

@@ -79,7 +79,7 @@ class ProfileOverlayMovePointOperation
     {
       final IProfileRecord newPoint = newProfile.createProfilPoint();
 
-      if( oldRecord.getRecord() == recordToChange.getRecord() )
+      if( oldRecord == recordToChange )
       {
         newPoint.setBreite( newWidth );
         newPoint.setHoehe( newHeight );

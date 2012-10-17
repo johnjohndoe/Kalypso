@@ -643,7 +643,7 @@ public class PrfSource implements IProfileSource
   @Override
   public IProfile[] read( final String profileTyp, final Reader reader ) throws IOException
   {
-    final IProfile profil = ProfileFactory.createProfil( profileTyp );
+    final IProfile profil = ProfileFactory.createProfil( profileTyp, null );
 
     if( profil == null )
       throw new IOException( Messages.getString( "PrfSource.0" ) + profileTyp ); //$NON-NLS-1$

@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -52,10 +51,9 @@ import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfileFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfileSource;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -66,7 +64,7 @@ public class CsvSource implements IProfileSource
 {
   private IProfilePointPropertyProvider m_provider = null;
 
-  private final HashMap<String, TupleResult> m_profilesTable = new HashMap<>();
+  private final HashMap<String, IProfile> m_profilesTable = new HashMap<>();
 
   private String[] m_columns = null;
 
@@ -76,6 +74,72 @@ public class CsvSource implements IProfileSource
       if( id.equalsIgnoreCase( m_columns[i] ) ) //$NON-NLS-1$
         return i;
     return -1;
+  }
+
+  @Override
+  public IProfile[] read( final String profileTyp, final Reader reader ) throws IOException
+  {
+    m_provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileTyp );
+
+    extractDataBlocks( new CSVReader( reader, ';' ), profileTyp );
+
+    return m_profilesTable.values().toArray( new IProfile[m_profilesTable.values().size()] );
+  }
+
+  private void extractDataBlocks( final CSVReader tableReader, final String profileTyp ) throws IOException
+  {
+    m_columns = tableReader.readNext();
+
+    final int station = getColumnIndex( "STATION" ); //$NON-NLS-1$
+    String[] values = tableReader.readNext();
+    while( values != null )
+    {
+      if( values.length == m_columns.length )
+      {
+        final String key = station < 0 ? "-" : values[station]; //$NON-NLS-1$
+        final IProfile result = getResult( key, profileTyp );
+
+        final IProfileRecord record = result.createProfilPoint();
+
+        for( int i = 0; i < values.length; i++ )
+        {
+          final int index = result.indexOfProperty( getComponent( m_columns[i] ) );
+          if( index < 0 )
+            continue;
+
+          final Double dbl = NumberUtils.parseQuietDouble( values[i] );
+
+          if( dbl.isNaN() )
+            record.setValue( index, values[i] );
+          else
+            record.setValue( index, dbl );
+        }
+        result.addPoint( record );
+      }
+      values = tableReader.readNext();
+    }
+  }
+
+  private IProfile getResult( final String id, final String profileTyp ) throws IOException
+  {
+    if( m_profilesTable.containsKey( id ) )
+      return m_profilesTable.get( id );
+
+    final IProfile profil = ProfileFactory.createProfil( profileTyp, null );
+    if( profil == null )
+      throw new IOException( Messages.getString( "CsvSource_0" ) ); //$NON-NLS-1$
+
+    profil.setStation( NumberUtils.parseQuietDouble( id ) );
+
+    for( final String column : m_columns )
+    {
+      final IComponent component = getComponent( column );
+      if( component != null )
+        profil.addPointProperty( component );
+    }
+
+    m_profilesTable.put( id, profil );
+    return profil;
   }
 
   private IComponent getComponent( final String key )
@@ -88,82 +152,4 @@ public class CsvSource implements IProfileSource
       return null;
   }
 
-  private TupleResult getResult( final String id )
-  {
-    if( m_profilesTable.containsKey( id ) )
-      return m_profilesTable.get( id );
-    final TupleResult result = new TupleResult();
-    for( final String column : m_columns )
-    {
-      final IComponent component = getComponent( column );
-      if( component != null )
-      {
-        result.addComponent( component );
-      }
-    }
-    m_profilesTable.put( id, result );
-    return result;
-  }
-
-  private void extractDataBlocks( final CSVReader tableReader ) throws IOException
-  {
-
-    m_columns = tableReader.readNext();
-
-    final int station = getColumnIndex( "STATION" ); //$NON-NLS-1$
-    String[] values = tableReader.readNext();
-    while( values != null )
-    {
-      if( values.length == m_columns.length )
-      {
-        final String key = station < 0 ? "-" : values[station]; //$NON-NLS-1$
-        final TupleResult result = getResult( key );
-        final IRecord record = result.createRecord();
-
-        for( int i = 0; i < values.length; i++ )
-        {
-          final int index = result.indexOfComponent( getComponent( m_columns[i] ) );
-          if( index < 0 )
-          {
-            continue;
-          }
-          final Double dbl = NumberUtils.parseQuietDouble( values[i] );
-          if( dbl.isNaN() )
-          {
-            record.setValue( index, values[i] );
-          }
-          else
-          {
-            record.setValue( index, dbl );
-          }
-        }
-        result.add( record );
-      }
-      values = tableReader.readNext();
-    }
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSource#read(org.kalypso.model.wspm.core.profil.IProfil)
-   */
-
-  @Override
-  public IProfile[] read( final String profileTyp, final Reader reader ) throws IOException
-  {
-    m_provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileTyp );
-    extractDataBlocks( new CSVReader( reader, ';' ) );
-    final ArrayList<IProfile> profiles = new ArrayList<>();
-    for( final String key : m_profilesTable.keySet() )
-    {
-      final IProfile profil = ProfileFactory.createProfil( profileTyp );
-      if( profil == null )
-        throw new IOException( Messages.getString( "CsvSource_0" ) ); //$NON-NLS-1$
-
-      final TupleResult result = m_profilesTable.get( key );
-      profil.setStation( NumberUtils.parseQuietDouble( key ) );
-      profil.setResult( result );
-      profiles.add( profil );
-    }
-    return profiles.toArray( new IProfile[] {} );
-  }
 }

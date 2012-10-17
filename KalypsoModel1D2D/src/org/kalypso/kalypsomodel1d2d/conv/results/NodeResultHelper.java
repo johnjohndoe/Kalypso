@@ -371,7 +371,7 @@ public class NodeResultHelper
   public static GM_Curve getCurveForBoundaryLine( final GM_Point[] linePoints, final double waterlevel, final String crs ) throws GM_Exception, Exception
   {
     // we create a profile in order to use already implemented methods
-    final IProfile boundaryProfil = ProfileFactory.createProfil( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    final IProfile boundaryProfil = ProfileFactory.createProfil( IWspmTuhhConstants.PROFIL_TYPE_PASCHE, null );
     boundaryProfil.addPointProperty( ProfileObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_BREITE ) );
     boundaryProfil.addPointProperty( ProfileObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
     boundaryProfil.addPointProperty( ProfileObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
