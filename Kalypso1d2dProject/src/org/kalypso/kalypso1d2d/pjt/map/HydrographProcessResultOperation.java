@@ -144,7 +144,6 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
           /* clear existing results */
           final TupleResult result = obs.getResult();
           result.clear();
-          obs.setResult( result );
 
           obsMap.put( point, obs );
         }
@@ -300,7 +299,6 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
         System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
 
       tuples.add( newRecord );
-      o.setResult( tuples );
     }
   }
 
