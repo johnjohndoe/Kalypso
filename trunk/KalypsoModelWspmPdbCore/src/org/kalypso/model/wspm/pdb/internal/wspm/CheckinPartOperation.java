@@ -81,7 +81,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Translates a {@link org.kalypso.model.wspm.core.profil.IProfil} to a {@link org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart}.
- * 
+ *
  * @author Gernot Belger
  */
 public class CheckinPartOperation
@@ -278,7 +278,7 @@ public class CheckinPartOperation
   {
     for( final IProfilePointMarker marker : markers )
     {
-      if( marker.getPoint().getRecord() == record.getRecord() )
+      if( marker.getPoint() == record )
       {
         if( marker == markers[0] )
           return codeStart;

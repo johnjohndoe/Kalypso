@@ -129,7 +129,7 @@ public final class ChannelEditUtil
   public static IProfile createEmptyProfile( final IProfile templateProfile )
   {
     final String profileType = templateProfile.getType();
-    final IProfile newProfil = ProfileFactory.createProfil( profileType );
+    final IProfile newProfil = ProfileFactory.createProfil( profileType, null );
 
     newProfil.setStation( templateProfile.getStation() );
 

@@ -94,7 +94,7 @@ public class ProfileInterpolation
    */
   public IProfile interpolate( final BigDecimal station, final String profileType )
   {
-    final IProfile profile = ProfileFactory.createProfil( profileType );
+    final IProfile profile = ProfileFactory.createProfil( profileType, null );
 
     profile.setStation( station.doubleValue() );
 

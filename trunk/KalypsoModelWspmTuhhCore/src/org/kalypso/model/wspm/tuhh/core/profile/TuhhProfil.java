@@ -55,7 +55,6 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Dirk Kuch
@@ -65,10 +64,11 @@ public class TuhhProfil extends AbstractProfile
 {
   public static final String PROFIL_TYPE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
-  public TuhhProfil( final TupleResult result, final IProfileFeature source )
+  public TuhhProfil( final IProfileFeature source )
   {
-    super( PROFIL_TYPE, result, source );
-    result.setInterpolationHandler( new TUHHInterpolationHandler() );
+    super( PROFIL_TYPE, source );
+
+    getResult().setInterpolationHandler( new TUHHInterpolationHandler() );
   }
 
 //  @Override
