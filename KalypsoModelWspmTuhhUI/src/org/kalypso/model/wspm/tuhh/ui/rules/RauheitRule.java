@@ -77,7 +77,8 @@ public class RauheitRule extends AbstractValidatorRule
 
     if( !WspmClassifications.hasRoughnessProperties( profile ) && !WspmClassifications.hasRoughnessClass( profile ) )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3" ), stationId, 0, "", new AddRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST } ) ); //$NON-NLS-1$//$NON-NLS-2$
+      final AddRoughnessResolution resolution = new AddRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST } );
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3" ), stationId, 0, StringUtils.EMPTY, resolution ); //$NON-NLS-1$
       return;
     }
 
@@ -102,9 +103,10 @@ public class RauheitRule extends AbstractValidatorRule
       if( result == null )
       {
         final String msg = String.format( Messages.getString( "RauheitRule.0" ), point.getBreite() ); //$NON-NLS-1$
-        final AddRoughnessResolution resolution = new AddRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST,
-            IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS } );
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, stationId, point.getIndex(), StringUtils.EMPTY, resolution );
+        // TODO: this resolution makes no sense, as it adds a component, but this is already here; problem is the empty vlaue, we need another resolution instead
+        // final AddRoughnessResolution resolution = new AddRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST,
+        // IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS } );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, stationId, point.getIndex(), StringUtils.EMPTY );
 
         return;
       }
@@ -118,7 +120,6 @@ public class RauheitRule extends AbstractValidatorRule
         // ComponentUtilities.getComponentLabel( null );
 
         final String prefix = StringUtils.EMPTY;
-//        id + ": "; //$NON-NLS-1$
 
         final String message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0" ); //$NON-NLS-1$
 
@@ -131,7 +132,6 @@ public class RauheitRule extends AbstractValidatorRule
         // FIXME: this prefix is nonsense -> use real label
         // ComponentUtilities.getComponentLabel( null );
         final String prefix = StringUtils.EMPTY;
-//        final String prefix = id + ": "; //$NON-NLS-1$
 
         final String message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.1" ); //$NON-NLS-1$
 
