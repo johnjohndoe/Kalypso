@@ -58,22 +58,28 @@ import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
 
 /**
  * Brückenkanten dürfen nicht unterhalb des Geländeniveaus liegen. Oberkante darf nicht unter Unterkante.
- * 
+ *
  * @author Kim Werner
  */
 public class BrueckeRule extends AbstractValidatorRule
 {
   private boolean validateParams( final BuildingBruecke building, final ProfileAltitudeValidator pav ) throws CoreException
   {
+    /* brückenbreite */
     if( !validateParam( building.getBreite(), BuildingBruecke.KEY_BREITE, pav ) )
       return false;
 
+    /* unterwasser */
     if( !validateParam( building.getUnterwasser(), BuildingBruecke.KEY_UNTERWASSER, pav ) )
       return false;
 
-    if( !validateParam( building.getFormbeiwert(), BuildingBruecke.KEY_FORMBEIWERT, pav ) )
+    /* formbeiwert */
+    if( !validateIsSet( building.getFormbeiwert(), BuildingBruecke.KEY_FORMBEIWERT, pav ) )
+      return false;
+    if( !validateIsGreaterEqualZero( building.getFormbeiwert(), BuildingBruecke.KEY_FORMBEIWERT, pav ) )
       return false;
 
+    /* roguhness */
     if( !validateParam( building.getRauheit(), BuildingBruecke.KEY_RAUHEIT, pav ) )
       return false;
 
@@ -82,15 +88,37 @@ public class BrueckeRule extends AbstractValidatorRule
 
   private boolean validateParam( final Double oValue, final String propertyName, final ProfileAltitudeValidator pav ) throws CoreException
   {
-    if( oValue == null || oValue.isNaN() )
+    if( !validateIsSet( oValue, propertyName, pav ) )
+      return false;
+
+    return validateIsGreaterZero( oValue, propertyName, pav );
+  }
+
+  private boolean validateIsSet( final Double oValue, final String propertyName, final ProfileAltitudeValidator pav ) throws CoreException
+  {
+    if( oValue != null && !oValue.isNaN() )
+      return true;
+
+    pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.0", propertyName ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
+    return false;
+  }
+
+  private boolean validateIsGreaterZero( final Double oValue, final String propertyName, final ProfileAltitudeValidator pav ) throws CoreException
+  {
+    if( oValue.doubleValue() <= 0.0 )
     {
-      pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.0", propertyName ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
+      pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.1", propertyName ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
       return false;
     }
 
-    if( oValue.doubleValue() == 0.0 )
+    return true;
+  }
+
+  private boolean validateIsGreaterEqualZero( final Double oValue, final String propertyName, final ProfileAltitudeValidator pav ) throws CoreException
+  {
+    if( oValue.doubleValue() < 0.0 )
     {
-      pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.1", propertyName ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
+      pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.3", propertyName ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
       return false;
     }
 
