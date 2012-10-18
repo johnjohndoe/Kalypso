@@ -94,6 +94,9 @@ public class BewuchsRule extends AbstractValidatorRule
 
     final int leftIndex = leftP.getIndex();
     final int rightIndex = rightP.getIndex();
+
+    // FIXME: use durchströmte Berichte to determine vorland -> check what the calculation core really needs
+
     final IProfileRecord[] leftForeland = profile.getPoints( 0, leftIndex - 1 );
     final IProfileRecord[] rightForeland = profile.getPoints( rightIndex, points.length - 1 );
     final IProfileRecord[] riverTube = profile.getPoints( leftIndex, rightIndex - 1 );
