@@ -83,9 +83,6 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
 
   protected abstract IStatus runJob( GM_Curve curve, RichCoverageCollection richCoverages ) throws Exception;
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#run()
-   */
   @Override
   public void run( )
   {
@@ -107,9 +104,6 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
 
     final JobChangeAdapter listener = new JobChangeAdapter()
     {
-      /**
-       * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-       */
       @Override
       public void done( final IJobChangeEvent event )
       {
