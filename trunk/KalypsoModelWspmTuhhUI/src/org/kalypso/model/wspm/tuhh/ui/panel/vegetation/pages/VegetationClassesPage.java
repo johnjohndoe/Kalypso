@@ -73,7 +73,7 @@ import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.AbstractClassificationLabelProvider;
+import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.ClassificationLabelProvider;
 import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.WspmClassificationClassesComparator;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessPanelHelper;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.utils.VegetationsDataModel;
@@ -190,7 +190,7 @@ public class VegetationClassesPage extends AbstractElementPage
     final ComboViewer viewer = new ComboViewer( body, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setLabelProvider( new AbstractClassificationLabelProvider( m_profile, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) );
+    viewer.setLabelProvider( new ClassificationLabelProvider( m_profile, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) );
 
     viewer.setInput( getVegetationClasses() );
 

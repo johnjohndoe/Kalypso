@@ -71,7 +71,7 @@ import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.util.roughnesses.UpdateSimpleRoughnessProperty;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.AbstractClassificationLabelProvider;
+import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.ClassificationLabelProvider;
 import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.WspmClassificationClassesComparator;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessDataModel;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessPanelHelper;
@@ -191,7 +191,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     final ComboViewer viewer = new ComboViewer( body, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setLabelProvider( new AbstractClassificationLabelProvider( getProfile(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
+    viewer.setLabelProvider( new ClassificationLabelProvider( getProfile(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
 
     viewer.setInput( getRoughnessClasses() );
 

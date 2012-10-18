@@ -51,13 +51,13 @@ import org.kalypso.model.wspm.core.profil.IProfile;
 /**
  * @author Dirk Kuch
  */
-public class AbstractClassificationLabelProvider extends LabelProvider
+public class ClassificationLabelProvider extends LabelProvider
 {
   private final IProfile m_profile;
 
   private final String m_property;
 
-  public AbstractClassificationLabelProvider( final IProfile profile, final String property )
+  public ClassificationLabelProvider( final IProfile profile, final String property )
   {
     m_profile = profile;
     m_property = property;
@@ -70,13 +70,13 @@ public class AbstractClassificationLabelProvider extends LabelProvider
     {
       final IClassificationClass clazz = (IClassificationClass) element;
 
-      return clazz.getDescription();
+      return clazz.getLabelWithValues();
     }
     else if( element instanceof String )
     {
       final IClassificationClass clazz = findClass( (String) element );
       if( Objects.isNotNull( clazz ) )
-        return clazz.getDescription();
+        return clazz.getLabelWithValues();
     }
 
     return super.getText( element );
