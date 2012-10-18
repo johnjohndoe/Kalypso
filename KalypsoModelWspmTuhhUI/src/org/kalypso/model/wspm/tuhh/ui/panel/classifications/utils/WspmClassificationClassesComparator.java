@@ -49,14 +49,9 @@ import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
  */
 public class WspmClassificationClassesComparator implements Comparator<IClassificationClass>
 {
-
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
   @Override
   public int compare( final IClassificationClass c1, final IClassificationClass c2 )
   {
     return c1.getDescription().compareTo( c2.getDescription() );
   }
-
 }
