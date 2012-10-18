@@ -25,7 +25,9 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
@@ -33,7 +35,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.Building
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
@@ -79,20 +80,20 @@ public class WspmBuildingDecorator implements ILightweightLabelDecorator
 
     final IProfile profile = profileFeature.getProfile();
 
-    final IProfileBuilding[] buildings = profile.getProfileObjects( IProfileBuilding.class );
-    for( final IProfileBuilding building : buildings )
-    {
+    final IProfileObject[] buildings = profile.getProfileObjects();
+    for( final IProfileObject building : buildings )
       decorateBuilding( building, decoration );
-    }
   }
 
-  private void decorateBuilding( final IProfileBuilding building, final IDecoration decoration )
+  private void decorateBuilding( final IProfileObject building, final IDecoration decoration )
   {
     final String typeLabel = building.getTypeLabel();
 
     /* suffix */
     if( building instanceof ICulvertBuilding )
       decoration.addSuffix( String.format( " (Durchlass - %s)", typeLabel ) );
+    else if( building instanceof GenericProfileHorizon )
+      decoration.addSuffix( " (Generisch)" );
     else
       decoration.addSuffix( String.format( " (%s)", typeLabel ) );
 
@@ -102,7 +103,7 @@ public class WspmBuildingDecorator implements ILightweightLabelDecorator
       decoration.addOverlay( buildingImage, IDecoration.REPLACE );
   }
 
-  private ImageDescriptor getBuildingImage( final IProfileBuilding building )
+  private ImageDescriptor getBuildingImage( final IProfileObject building )
   {
     final PluginImageProvider imageProvider = KalypsoModelWspmTuhhUIPlugin.getImageProvider();
 
