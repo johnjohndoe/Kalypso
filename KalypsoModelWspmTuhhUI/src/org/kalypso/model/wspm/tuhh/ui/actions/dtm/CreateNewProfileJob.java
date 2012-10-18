@@ -11,6 +11,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.util.CreateProfileFromCrdsTransaction;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -101,7 +102,9 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
 
     // TODO: Would be nice to simplify the coords, but not the profile afterwards.
     // TODO: We need Douglas-Peucker for coordinates (with distance by z!).
-    final IProfile profile = WspmProfileHelper.createProfile( profileType, gridCrds, curve.getCoordinateSystem(), getSimplifyDistance() );
+
+    final String coordinateSystem = curve.getCoordinateSystem();
+    final IProfile profile = CreateProfileFromCrdsTransaction.createProfileFromCoordinates( profileType, gridCrds, coordinateSystem, getSimplifyDistance() );
     if( profile.getPoints().length == 0 )
       return WspmProfileHelper.convertLinestringToEmptyProfile( curve, profileType );
 
@@ -120,9 +123,6 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
     getGeoBuilder().addPoint( pos );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#removeLastPoint()
-   */
   @Override
   public void removeLastPoint( )
   {

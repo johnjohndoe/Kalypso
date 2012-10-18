@@ -14,7 +14,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.jface.validators.DoubleInputValidator;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.Arrays;
@@ -38,7 +37,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * Widget for drawing a line geometry and creating a profile from a DEM.
- * 
+ *
  * @author Holger Albert
  */
 public class CreateProfileFromDEMWidget extends AbstractWidget
@@ -62,7 +61,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
   private boolean m_strategyExtendProfile = true;
 
-  private double m_digitalizeDistance = 0.01;
+  private double m_digitalizeDistance = 0.10;
 
   public CreateProfileFromDEMWidget( )
   {
@@ -324,12 +323,14 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   {
     final Shell shell = SWT_AWT_Utilities.findActiveShell();
 
-    final InputDialog inputDialog = new InputDialog( shell, "Profil verlängern", "Digitalisierungsdistanz", String.format( "%.2f", m_digitalizeDistance ), new DoubleInputValidator() );
+    final InputDialog inputDialog = new InputDialog( shell, "Profil verlängern", "Digitalisierungsdistanz", String.format( "%.2f", m_digitalizeDistance ), new DigitalizeDistanceValidator() );
     final int result = SWT_AWT_Utilities.openSwtWindow( inputDialog );
     if( result != Window.OK )
       return Double.NaN;
 
-    return NumberUtils.parseQuietDouble( inputDialog.getValue() );
+    final double newDistance = NumberUtils.parseQuietDouble( inputDialog.getValue() );
+
+    return newDistance;
   }
 
   private void readSettings( )
