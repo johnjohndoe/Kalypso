@@ -74,7 +74,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * @author Patrice Congo
  * @author Madanagopal
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
 {
@@ -206,7 +206,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     {
       final Feature feature = this;
       final Object property = feature.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
-      return (IObservation<TupleResult>) ((Feature) property).getAdapter( IObservation.class );
+      return (IObservation<TupleResult>)((Feature)property).getAdapter( IObservation.class );
     }
     catch( final Throwable th )
     {
@@ -218,13 +218,13 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getIDNOPT( )
   {
-    return (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDNOPT );
+    return (Integer)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDNOPT );
   }
 
   @Override
   public String getVersion( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION );
+    return (String)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION );
   }
 
   @Override
@@ -251,35 +251,35 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getIcpu( )
   {
-    final Integer propertyValue = (Integer) getProperty( WB1D2DCONTROL_PROP_ICPU );
+    final Integer propertyValue = (Integer)getProperty( WB1D2DCONTROL_PROP_ICPU );
     return propertyValue != null ? propertyValue : 0;
   }
 
   @Override
   public Integer getMFW( )
   {
-    final Integer propertyValue = (Integer) getProperty( WB1D2DCONTROL_PROP_MFW );
+    final Integer propertyValue = (Integer)getProperty( WB1D2DCONTROL_PROP_MFW );
     return propertyValue != null ? propertyValue : 0;
   }
 
   @Override
   public Integer getBUFFSIZ( )
   {
-    final Integer propertyValue = (Integer) getProperty( WB1D2DCONTROL_PROP_BUFFSIZ );
+    final Integer propertyValue = (Integer)getProperty( WB1D2DCONTROL_PROP_BUFFSIZ );
     return propertyValue != null ? propertyValue : 0;
   }
 
   @Override
   public boolean getPercentCheck( )
   {
-    final Boolean propertyValue = (Boolean) getProperty( WB1D2DCONTROL_PROP_PERCENT_CHECK );
+    final Boolean propertyValue = (Boolean)getProperty( WB1D2DCONTROL_PROP_PERCENT_CHECK );
     return propertyValue != null ? propertyValue : false;
   }
 
   @Override
   public boolean getRestart( )
   {
-    return ((Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
+    return ((Boolean)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
   }
 
   @Override
@@ -291,7 +291,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public XMLGregorianCalendar getStartCalendar( )
   {
-    return (XMLGregorianCalendar) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STARTSIM );
+    return (XMLGregorianCalendar)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STARTSIM );
   }
 
   @Override
@@ -310,77 +310,77 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getIEDSW( )
   {
-    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IEDSW );
+    final Integer property = (Integer)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IEDSW );
     return property != null ? property : 0;
   }
 
   @Override
   public Double getTBFACT( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getTBFACT_ESCUDIER( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT_ESCUDIER );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT_ESCUDIER );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getTBMIN( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBMIN );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBMIN );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getOMEGA( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_OMEGA );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_OMEGA );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getELEV( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_ELEV );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_ELEV );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getUDIR( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UDIR );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UDIR );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getUNOM( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNOM );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNOM );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getHMIN( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HMIN );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HMIN );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getDSET( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSET );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSET );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getDSETD( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSETD );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSETD );
     return property != null ? property : 0.0;
   }
 
@@ -389,7 +389,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   {
     if( !isSteadySelected() )
       return 0;
-    Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_NITI );
+    Integer property = (Integer)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_NITI );
     if( property == null )
       property = 0;
     return property;
@@ -400,7 +400,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   {
     if( !isUnsteadySelected() )
       return 0;
-    Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_NITN );
+    Integer property = (Integer)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_NITN );
     if( property == null )
       property = 0;
     return property;
@@ -418,42 +418,42 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Double getCONV_1( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_1 );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_1 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getCONV_2( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_2 );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_2 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getCONV_3( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_3 );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_3 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Integer getIDRPT( )
   {
-    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDRPT );
+    final Integer property = (Integer)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDRPT );
     return property != null ? property : 0;
   }
 
   @Override
   public Double getDRFACT( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DRFACT );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DRFACT );
     return property != null ? property : 0.0;
   }
 
   @Override
   public boolean getVegeta( )
   {
-    return (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VEGETA );
+    return (Boolean)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VEGETA );
   }
 
   @Override
@@ -468,7 +468,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Double getChi( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CHI );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CHI );
     return property != null ? property : 0.0;
   }
 
@@ -479,47 +479,48 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   public boolean getBeient( )
   {
     final Object property = getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_BEIENT );
-    return property != null ? (Boolean) property : false;
+    return property != null ? (Boolean)property : false;
   }
 
   @Override
   public boolean getFixedMarshBottom( )
   {
-    return (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_FIXEDMARSHBOTTOM );
+    final Boolean property = (Boolean)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_FIXEDMARSHBOTTOM );
+    return property != null ? property : false;
   }
 
   @Override
   public Double getAC1( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC1 );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC1 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getAC2( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC2 );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC2 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getAC3( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC3 );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC3 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getAC4( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC4 );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC4 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getMarshFrictionFactor( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_MARSHFRICTIONFACTOR );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_MARSHFRICTIONFACTOR );
     return property != null ? property : 20.0;
   }
 
@@ -529,7 +530,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getMarshFrictionDistr( )
   {
-    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_MARSHFRICTIONDISTR );
+    final Integer property = (Integer)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_MARSHFRICTIONDISTR );
     return property != null ? property : 2;
   }
 
@@ -578,7 +579,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
       {
         throw e;
       }
-      final String featureId = ((IXLinkedFeature) resolveLink).getFeatureId();
+      final String featureId = ((IXLinkedFeature)resolveLink).getFeatureId();
       final IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class.getName() );
       if( model == null )
       {
@@ -590,7 +591,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
       {
         return null;
       }
-      final ICalculationUnit adapter = (ICalculationUnit) calUnitFeature.getAdapter( ICalculationUnit.class );
+      final ICalculationUnit adapter = (ICalculationUnit)calUnitFeature.getAdapter( ICalculationUnit.class );
       return adapter;
     }
   }
@@ -601,7 +602,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Double get_P_BOTTOM( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_P_BOTTOM );
+    final Double property = (Double)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_P_BOTTOM );
     return property != null ? property : 0.0;
   }
 
@@ -612,7 +613,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String get_RelaxationsFactor( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
+    return (String)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
   }
 
   // /**
@@ -626,14 +627,14 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public boolean isSteadySelected( )
   {
-    final Boolean property = (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STEADY_CHECKBOX );
+    final Boolean property = (Boolean)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STEADY_CHECKBOX );
     return property != null ? property.booleanValue() : false;
   }
 
   @Override
   public boolean isUnsteadySelected( )
   {
-    final Boolean property = (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX );
+    final Boolean property = (Boolean)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX );
     return property != null ? property.booleanValue() : false;
   }
 
@@ -655,7 +656,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     final Object swan = getProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN );
     if( swan == null )
       return false;
-    return ((Boolean) swan).booleanValue();
+    return ((Boolean)swan).booleanValue();
   }
 
   /**
@@ -664,7 +665,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getVersionSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION_SWAN );
+    return (String)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION_SWAN );
   }
 
   @Override
@@ -697,7 +698,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getINITialValuesSWAN( )
   {
-    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INITialValues );
+    final Integer property = (Integer)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INITialValues );
     return property != null ? property : 0;
   }
 
@@ -707,7 +708,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getINITialValuesParSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INITialValuesPar );
+    return (String)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INITialValuesPar );
   }
 
   /**
@@ -716,7 +717,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getAlgBoundarySWAN( )
   {
-    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_SWAN_BOUNDARY_ALG );
+    final Integer property = (Integer)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_SWAN_BOUNDARY_ALG );
     return property != null ? property : 0;
   }
 
@@ -726,7 +727,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public boolean isInCartCoordSWAN( )
   {
-    final Boolean propertyValue = (Boolean) getProperty( WB1D2DCONTROL_PROP_SWAN_COORD_CART );
+    final Boolean propertyValue = (Boolean)getProperty( WB1D2DCONTROL_PROP_SWAN_COORD_CART );
     return propertyValue != null ? propertyValue : false;
   }
 
@@ -736,7 +737,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public boolean isConstantWindSWAN( )
   {
-    final Boolean propertyValue = (Boolean) getProperty( WB1D2DCONTROL_PROP_SWAN_ConstantWind );
+    final Boolean propertyValue = (Boolean)getProperty( WB1D2DCONTROL_PROP_SWAN_ConstantWind );
     return propertyValue != null ? propertyValue : false;
   }
 
@@ -746,7 +747,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public boolean isWindGEN3SWAN( )
   {
-    final Boolean propertyValue = (Boolean) getProperty( WB1D2DCONTROL_PROP_SWAN_GEN3 );
+    final Boolean propertyValue = (Boolean)getProperty( WB1D2DCONTROL_PROP_SWAN_GEN3 );
     return propertyValue != null ? propertyValue : false;
   }
 
@@ -756,7 +757,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getConstantWindParSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_ConstantWindPar );
+    return (String)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_ConstantWindPar );
   }
 
   /**
@@ -765,7 +766,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getAdditionalResultsParSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_AdditionalResultsPar );
+    return (String)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_AdditionalResultsPar );
   }
 
   /**
@@ -774,7 +775,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getAdditionalSimParSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS );
+    return (String)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS );
   }
 
   /**
@@ -783,7 +784,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getInputFileAdditionalCoordSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE );
+    return (String)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE );
   }
 
 }
