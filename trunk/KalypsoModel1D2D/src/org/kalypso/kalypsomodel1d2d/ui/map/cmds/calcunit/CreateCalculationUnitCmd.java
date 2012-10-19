@@ -91,7 +91,7 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
   /**
    * the created calculation unit
    */
-  private ICalculationUnit m_calculationUnit;
+  ICalculationUnit m_calculationUnit;
 
   /**
    * the original calculation unit, that should be cloned to the new one
