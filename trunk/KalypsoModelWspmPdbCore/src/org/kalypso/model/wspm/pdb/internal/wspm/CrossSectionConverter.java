@@ -86,6 +86,8 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvert
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 /**
  * @author Gernot Belger
  */
@@ -126,8 +128,6 @@ public class CrossSectionConverter implements IProfileTransaction
     final CrossSectionPart part = m_section.findPartByCategory( GafKind.P.toString() );
     if( part == null )
       return;
-
-    // TODO: Put part's name, description etc. into profile objects.
 
     /* Add points in their natural order into the profile. */
     final Set<Point> points = part.getPoints();
@@ -332,7 +332,6 @@ public class CrossSectionConverter implements IProfileTransaction
     return profileObject;
   }
 
-  // FIXME: use mapping
   private IProfileObject createProfileObject( final String partCategory )
   {
     final String wspmPartType = new GafPartsMapping().kind2partType( partCategory );
@@ -520,13 +519,13 @@ public class CrossSectionConverter implements IProfileTransaction
       return;
 
     /* Get the geometries. */
-    final com.vividsolutions.jts.geom.Point ukPoint = ukRecord.getPoint();
-    final com.vividsolutions.jts.geom.Point fsPoint = fsRecord.getPoint();
+    final Coordinate ukPoint = ukRecord.getWidthHeightLocation();
+    final Coordinate fsPoint = fsRecord.getWidthHeightLocation();
 
     /* Calcuate the values for the profile object. */
     /* Egg/Maul buildings are interpreted with 1:1 diagonales. */
-    final double bezugspunktX = fsPoint.getX();
-    final double bezugspunktY = fsPoint.getY();
+    final double bezugspunktX = fsPoint.x;
+    final double bezugspunktY = fsPoint.y;
     final double breite = fsPoint.distance( ukPoint );
     final double hoehe = fsPoint.distance( ukPoint );
 
