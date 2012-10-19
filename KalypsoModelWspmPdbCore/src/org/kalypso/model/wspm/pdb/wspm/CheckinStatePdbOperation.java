@@ -57,6 +57,8 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
+import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
+import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
@@ -71,14 +73,12 @@ import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.pdb.internal.wspm.BridgeIdHelper;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinPartOperation;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
@@ -370,8 +370,13 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
   private IProfileObject cloneProfileObject( final IProfileObject profileObject )
   {
-    final IProfileObject newProfileObject = ProfileObjectHelper.createProfileObject( profileObject );
+    if( profileObject == null )
+      return null;
+
+    final IProfileObject newProfileObject = ProfileObjectFactory.createProfileObject( null, profileObject.getId() );
+
     ProfileObjectHelper.cloneProfileObject( profileObject, newProfileObject );
+
     return newProfileObject;
   }
 
@@ -409,8 +414,8 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
           continue;
         }
 
-        final GenericProfileHorizon genericProfileHorizon = new GenericProfileHorizon();
-        genericProfileHorizon.setValue( IGafConstants.PART_TYPE, GafKind.OK.toString() );
+        /* no ok part found, create it on the fly */
+        final GenericProfileHorizon genericProfileHorizon = new GenericProfileHorizon( BuildingBruecke.ID_OK );
         genericProfileHorizon.setValue( BuildingBruecke.KEY_BRUECKE_ID, bridgeId );
 
         clonedProfileObjects.add( genericProfileHorizon );
@@ -427,7 +432,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
       if( clonedProfileObject instanceof GenericProfileHorizon )
       {
-        if( GafKind.OK.toString().equals( clonedProfileObject.getValue( IGafConstants.PART_TYPE, null ) ) )
+        if( clonedProfileObject.getId().equals( BuildingBruecke.ID_OK ) )
           ProfileObjectHelper.updateObjectFromComponents( profile, clonedProfileObject, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
       }
 
@@ -454,12 +459,12 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
       if( !(clonedProfileObject instanceof GenericProfileHorizon) )
         continue;
 
-      if( !GafKind.OK.toString().equals( clonedProfileObject.getValue( IGafConstants.PART_TYPE, null ) ) )
-        continue;
-
-      final IProfileObjectRecords records = clonedProfileObject.getRecords();
-      if( records.size() == 0 )
-        clonedProfileObjects.remove( clonedProfileObject );
+      if( BuildingBruecke.ID_OK.equals( clonedProfileObject.getId() ) )
+      {
+        final IProfileObjectRecords records = clonedProfileObject.getRecords();
+        if( records.size() == 0 )
+          clonedProfileObjects.remove( clonedProfileObject );
+      }
     }
   }
 

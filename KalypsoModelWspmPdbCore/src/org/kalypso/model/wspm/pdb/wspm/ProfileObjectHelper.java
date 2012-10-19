@@ -26,20 +26,9 @@ import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
-import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
-import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -52,81 +41,6 @@ public class ProfileObjectHelper
 {
   private ProfileObjectHelper( )
   {
-  }
-
-  /**
-   * This function creates a new profile object. It uses the class of the given profile object.
-   *
-   * @param profileObject
-   *          The class of this object will be used for the new profile object.
-   * @return A new profile object or null.
-   */
-  public static IProfileObject createProfileObject( final IProfileObject profileObject )
-  {
-    if( profileObject instanceof BuildingBruecke )
-    {
-      final BuildingBruecke buildingBruecke = new BuildingBruecke( null );
-      buildingBruecke.setValue( IGafConstants.PART_TYPE, GafKind.UK.toString() );
-      return buildingBruecke;
-    }
-
-    if( profileObject instanceof BuildingWehr )
-    {
-      final BuildingWehr buildingWehr = new BuildingWehr( null );
-      buildingWehr.setValue( IGafConstants.PART_TYPE, GafKind.OK.toString() );
-      return buildingWehr;
-    }
-
-    if( profileObject instanceof BuildingEi )
-    {
-      final BuildingEi buildingEi = new BuildingEi();
-      buildingEi.setValue( IGafConstants.PART_TYPE, GafKind.EI.toString() );
-      return buildingEi;
-    }
-
-    if( profileObject instanceof BuildingKreis )
-    {
-      final BuildingKreis buildingKreis = new BuildingKreis();
-      buildingKreis.setValue( IGafConstants.PART_TYPE, GafKind.K.toString() );
-      return buildingKreis;
-    }
-
-    if( profileObject instanceof BuildingMaul )
-    {
-      final BuildingMaul buildingMaul = new BuildingMaul();
-      buildingMaul.setValue( IGafConstants.PART_TYPE, GafKind.MA.toString() );
-      return buildingMaul;
-    }
-
-    if( profileObject instanceof BuildingTrapez )
-    {
-      final BuildingTrapez buildingTrapez = new BuildingTrapez();
-      buildingTrapez.setValue( IGafConstants.PART_TYPE, IGafConstants.KIND_TR );
-      return buildingTrapez;
-    }
-
-    if( profileObject instanceof SinuositaetProfileObject )
-    {
-      final SinuositaetProfileObject sinuositaetProfileObject = new SinuositaetProfileObject();
-      sinuositaetProfileObject.setValue( IGafConstants.PART_TYPE, IGafConstants.KIND_SINUOSITAET );
-      return sinuositaetProfileObject;
-    }
-
-    if( profileObject instanceof EnergylossProfileObject )
-    {
-      final EnergylossProfileObject energylossProfileObject = new EnergylossProfileObject();
-      energylossProfileObject.setValue( IGafConstants.PART_TYPE, IGafConstants.KIND_ENERGYLOSS );
-      return energylossProfileObject;
-    }
-
-    if( profileObject instanceof GenericProfileHorizon )
-    {
-      // Should already have a part type in the original, so if the values are cloned, so is the part type.
-      final GenericProfileHorizon genericProfileHorizon = new GenericProfileHorizon();
-      return genericProfileHorizon;
-    }
-
-    return null;
   }
 
   public static void cloneProfileObject( final IProfileObject source, final IProfileObject target )

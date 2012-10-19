@@ -49,7 +49,7 @@ import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
  */
 public class SinuositaetProfileObject extends AbstractProfileObject implements ISinuositaetProfileObject
 {
-  private static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUOSITAET"; //$NON-NLS-1$
+  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUOSITAET"; //$NON-NLS-1$
 
   private static final SINUOSITAET_KENNUNG DEFAULT_KENNUNG = SINUOSITAET_KENNUNG.eBeides;
 

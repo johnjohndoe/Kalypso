@@ -39,6 +39,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
+import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
@@ -47,7 +48,6 @@ import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.wspm.ISectionProvider;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
@@ -138,12 +138,12 @@ public class Waterlevel2dWorker
     final String description = buildDescription( waterlevels );
 
     /* create part */
-    final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon();
+    // FIXME: is this a good id?
+    final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon( GafKind.W.toString() );
 
     /* set general data */
     // TODO: important, that name is unique withing the cross section, how can we force this here?
     waterlevel2D.setValue( IGafConstants.PART_NAME, m_eventName );
-    waterlevel2D.setValue( IGafConstants.PART_TYPE, GafKind.W.toString() );
     waterlevel2D.setDescription( description );
     if( discharge != null )
       waterlevel2D.setValue( IGafConstants.METADATA_WATERLEVEL_DISCHARGE, discharge.toString() );

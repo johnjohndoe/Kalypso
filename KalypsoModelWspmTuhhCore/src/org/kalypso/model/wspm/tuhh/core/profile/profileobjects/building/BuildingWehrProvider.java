@@ -62,6 +62,12 @@ import org.kalypsodeegree.model.feature.Feature;
 public class BuildingWehrProvider implements IProfileObjectProvider
 {
   @Override
+  public IProfileObject createProfileObject( final IProfile profile )
+  {
+    return new BuildingWehr( profile );
+  }
+
+  @Override
   public IProfileObject buildProfileObject( final IProfile profile, final Feature profileObjectFeature )
   {
     /* Create the profile object. */
