@@ -56,6 +56,9 @@ public interface IGafConstants
 
   String KIND_SINUOSITAET = "SINUOSITAET"; //$NON-NLS-1$
 
+  /** part type for 2d waterlevels */
+  String KIND_W2D = "W2D"; //$NON-NLS-1$
+
   /* special metadata for profile objects */
   String PART_NAME = "PART_NAME"; //$NON-NLS-1$
 

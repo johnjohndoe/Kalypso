@@ -23,38 +23,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.hibernatespatial.mgeom.MCoordinate;
-import org.hibernatespatial.mgeom.MGeomUtils;
 import org.hibernatespatial.mgeom.MLineString;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
-import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
-import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
-import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
-import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
-import org.kalypso.model.wspm.pdb.gaf.GafKind;
-import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.wspm.ISectionProvider;
-import org.kalypso.transformation.transformer.JTSTransformer;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
  * @author Gernot Belger
@@ -104,9 +87,9 @@ public class Waterlevel2dWorker
       // REMARK: assign waterlevel to all sections with same station, because if 2 sections have the same station, we do not know what to do...
       for( final ISectionProvider section : sections )
       {
-        final IProfileObject part = createWaterlevel( section, waterlevels );
-        if( part != null )
-          m_waterlevels2D.put( part, section );
+        final IProfileObject[] wParts = createWaterlevel( section, waterlevels );
+        for( final IProfileObject wPart : wParts )
+          m_waterlevels2D.put( wPart, section );
       }
     }
 
@@ -130,160 +113,29 @@ public class Waterlevel2dWorker
     return hash;
   }
 
-  private IProfileObject createWaterlevel( final ISectionProvider section, final Collection<WaterlevelFixation> waterlevels )
+  private IProfileObject[] createWaterlevel( final ISectionProvider section, final Collection<WaterlevelFixation> waterlevels )
   {
     /* gather some data */
+    final BigDecimal station = section.getStation();
     final MLineString profileLine = section.getProfileLine();
-    final BigDecimal discharge = findDischarge( waterlevels );
-    final String description = buildDescription( waterlevels );
 
-    /* create part */
-    // FIXME: is this a good id?
-    final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon( GafKind.W.toString() );
+    final ProjectedWaterlevels projectedWaterlevels = new ProjectedWaterlevels( m_eventName, station, profileLine, waterlevels );
 
-    /* set general data */
-    // TODO: important, that name is unique withing the cross section, how can we force this here?
-    waterlevel2D.setValue( IGafConstants.PART_NAME, m_eventName );
-    waterlevel2D.setDescription( description );
-    if( discharge != null )
-      waterlevel2D.setValue( IGafConstants.METADATA_WATERLEVEL_DISCHARGE, discharge.toString() );
-
-    /* convert to points */
-    final IProfileObjectRecords records = waterlevel2D.getRecords();
-
-    for( final WaterlevelFixation waterlevel : waterlevels )
+    try
     {
-      try
-      {
-        createRecord( records, profileLine, waterlevel );
-      }
-      catch( final MismatchedDimensionException e )
-      {
-        e.printStackTrace();
-        m_log.add( IStatus.ERROR, e.toString() );
-      }
-      catch( final FactoryException e )
-      {
-        e.printStackTrace();
-        m_log.add( IStatus.ERROR, e.toString() );
-      }
-      catch( final TransformException e )
-      {
-        e.printStackTrace();
-        m_log.add( IStatus.ERROR, e.toString() );
-      }
-    }
+      final IProfileObject[] parts = projectedWaterlevels.createParts();
 
-    if( records.size() == 0 )
+      final IStatus status = projectedWaterlevels.getStatus();
+      if( !status.isOK() )
+        m_log.add( status );
+
+      return parts;
+    }
+    catch( MismatchedDimensionException | FactoryException | TransformException e )
     {
-      final BigDecimal station = section.getStation();
-      m_log.add( IStatus.WARNING, "Skipping waterlevels at %s: no geometries available", null, station );
-      return null;
+      e.printStackTrace();
+      m_log.add( IStatus.ERROR, station.toPlainString(), e );
+      return new IProfileObject[] {};
     }
-
-    return waterlevel2D;
-  }
-
-  /* build description from all waterlevels */
-  private String buildDescription( final Collection<WaterlevelFixation> waterlevels )
-  {
-    final Set<String> descriptions = new LinkedHashSet<>();
-
-    for( final WaterlevelFixation waterlevel : waterlevels )
-    {
-      /* collect description, ignore blanks/empty */
-      final String description = waterlevel.getDescription();
-      descriptions.add( StringUtils.trimToNull( description ) );
-    }
-
-    /* Build combined description without null elements */
-    descriptions.remove( null );
-    return StringUtils.join( descriptions, ", " ); //$NON-NLS-1$
-  }
-
-  private BigDecimal findDischarge( final Collection<WaterlevelFixation> waterlevels )
-  {
-    for( final WaterlevelFixation waterlevel : waterlevels )
-    {
-      final BigDecimal discharge = waterlevel.getDischarge();
-      if( discharge != null )
-        return discharge;
-    }
-
-    return null;
-  }
-
-  private IProfileObjectRecord createRecord( final IProfileObjectRecords records, final MLineString profileLine, final WaterlevelFixation waterlevel ) throws MismatchedDimensionException, FactoryException, TransformException
-  {
-    /* Fetch data from waterlevel */
-    final com.vividsolutions.jts.geom.Point waterlevelPoint = getWaterlevelLocationInProfileSrs( profileLine, waterlevel );
-
-    /* skip points without location, we cannot project them to the profile */
-    if( waterlevelPoint == null )
-      return null;
-
-    final Coordinate waterlevelLocation = waterlevelPoint.getCoordinate();
-
-    final String description = waterlevel.getDescription();
-
-    /* create record and add values */
-    final IProfileObjectRecord record = records.addNewRecord();
-
-    record.setComment( description );
-
-    /* keep original location of waterlevel, not the projection on the section, which can be computed by width */
-    record.setRechtswert( waterlevelLocation.x );
-    record.setHochwert( waterlevelLocation.y );
-
-    record.setCode( GafPointCode.WS.getKey() );
-
-    record.setHoehe( waterlevel.getWaterlevel().doubleValue() );
-
-    final double distance = profileLine.distance( waterlevelPoint );
-    final double maxDistance = 1.0; // [m]
-    if( distance > maxDistance )
-    {
-      final BigDecimal station = waterlevel.getStation();
-      m_log.add( IStatus.WARNING, "Waterlevel with station %s: big distance to corresponding profile line: %d [m]", null, station, distance );
-    }
-
-    final BigDecimal width = calculateWidth( profileLine, waterlevelLocation );
-    // FIXME: why doubles in record??
-    record.setBreite( width.doubleValue() );
-
-    return record;
-  }
-
-  private com.vividsolutions.jts.geom.Point getWaterlevelLocationInProfileSrs( final MLineString profileLine, final WaterlevelFixation waterlevel ) throws FactoryException, MismatchedDimensionException, TransformException
-  {
-    final com.vividsolutions.jts.geom.Point location = waterlevel.getLocation();
-    if( location == null )
-      return null;
-
-    final Coordinate coordinate = location.getCoordinate();
-
-    final int wSRID = location.getSRID();
-    final int targetSRID = profileLine.getSRID();
-
-    final JTSTransformer transformer = new JTSTransformer( wSRID, targetSRID );
-    final Coordinate transformed = transformer.transform( coordinate );
-
-    return profileLine.getFactory().createPoint( transformed );
-  }
-
-  private BigDecimal calculateWidth( final MLineString mProfileLine, final Coordinate waterlevelLocation )
-  {
-    /* calculate width and location on profile line */
-    final LengthIndexedLine index = new LengthIndexedLine( mProfileLine );
-    final double projectedIndex = index.project( waterlevelLocation );
-    final MCoordinate projectedLocationWithM = MGeomUtils.extractPoint( mProfileLine, projectedIndex );
-
-    if( Double.isNaN( projectedLocationWithM.m ) )
-      return null;
-
-    final BigDecimal mWidth = new BigDecimal( projectedLocationWithM.m );
-
-    final int scale = PdbMappingUtils.findScale( Point.class, Point.PROPERTY_WIDTH );
-    return mWidth.setScale( scale, BigDecimal.ROUND_HALF_UP );
   }
 }
