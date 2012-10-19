@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -24,9 +24,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.pdb.gaf.GafKind;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
+import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 
 /**
@@ -53,7 +51,7 @@ public class BridgeIdHelper
 
       if( profileObject instanceof GenericProfileHorizon )
       {
-        if( GafKind.OK.toString().equals( profileObject.getValue( IGafConstants.PART_TYPE, null ) ) )
+        if( BuildingBruecke.ID_OK.equals( profileObject.getId() ) )
         {
           final String brueckeId = ((GenericProfileHorizon)profileObject).getValue( BuildingBruecke.KEY_BRUECKE_ID, null );
           if( !StringUtils.isEmpty( brueckeId ) )
@@ -86,7 +84,7 @@ public class BridgeIdHelper
       if( !(profileObject instanceof GenericProfileHorizon) )
         continue;
 
-      if( !GafKind.OK.toString().equals( profileObject.getValue( IGafConstants.PART_TYPE, null ) ) )
+      if( !BuildingBruecke.ID_OK.equals( profileObject.getId() ) )
         continue;
 
       final String bridgeId = profileObject.getValue( BuildingBruecke.KEY_BRUECKE_ID, null );

@@ -61,6 +61,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
+import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
@@ -72,19 +73,16 @@ import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.utils.ConsecutiveNumComparator;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
+import org.kalypso.model.wspm.pdb.gaf.GafPartsMapping;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
-import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -334,41 +332,20 @@ public class CrossSectionConverter implements IProfileTransaction
     return profileObject;
   }
 
+  // FIXME: use mapping
   private IProfileObject createProfileObject( final String partCategory )
   {
-    /* Ignore p horizont, because this one should be already imported. */
-    if( partCategory.equals( GafKind.P.toString() ) )
-      return null;
+    final String wspmPartType = new GafPartsMapping().kind2partType( partCategory );
 
-    if( partCategory.equals( GafKind.UK.toString() ) )
-      return new BuildingBruecke( m_profile );
-
-    if( partCategory.equals( GafKind.K.toString() ) )
-      return new BuildingKreis();
-
-    if( partCategory.equals( GafKind.EI.toString() ) )
-      return new BuildingEi();
-
-    if( partCategory.equals( GafKind.MA.toString() ) )
-      return new BuildingMaul();
-
-    if( partCategory.equals( GafKind.OK.toString() ) )
+    // REMARK: special case for OK-parts: if we have an OK but no culvert and no bridge, we assume that we have a weir. Problem is, that GAf does not distinguish between weirs and 'oberkanten'.
+    if( BuildingBruecke.ID_OK.equals( wspmPartType ) )
     {
       final boolean hasCulvertOrBridge = hasCategory( GafKind.UK.toString(), GafKind.K.toString(), GafKind.EI.toString(), GafKind.MA.toString(), GafKind.AR.toString(), GafKind.HA.toString(), IGafConstants.KIND_TR );
       if( !hasCulvertOrBridge )
-        return new BuildingWehr( m_profile );
+        return ProfileObjectFactory.createProfileObject( m_profile, BuildingWehr.ID );
     }
 
-    if( partCategory.equals( IGafConstants.KIND_TR ) )
-      return new BuildingTrapez();
-
-    if( partCategory.equals( IGafConstants.KIND_SINUOSITAET ) )
-      return new SinuositaetProfileObject();
-
-    if( partCategory.equals( IGafConstants.KIND_ENERGYLOSS ) )
-      return new EnergylossProfileObject();
-
-    return new GenericProfileHorizon();
+    return ProfileObjectFactory.createProfileObject( m_profile, wspmPartType );
   }
 
   private boolean hasCategory( final String... category )
@@ -511,7 +488,6 @@ public class CrossSectionConverter implements IProfileTransaction
 
     /* Set specific metadata. */
     profileObject.setValue( IGafConstants.PART_NAME, part.getName() );
-    profileObject.setValue( IGafConstants.PART_TYPE, part.getCrossSectionPartType().getCategory() );
 
     /* Guess special cases. */
     if( profileObject instanceof BuildingKreis )

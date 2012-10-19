@@ -35,6 +35,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
+import org.kalypso.model.wspm.pdb.gaf.GafPartsMapping;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
@@ -104,6 +105,10 @@ public class CheckinHorizonPartOperation
     final String description = m_profileObject.getDescription();
     m_part.setDescription( description );
 
+    /* set part type */
+    final CrossSectionPartType partType = determinePartType();
+    m_part.setCrossSectionPartType( partType );
+
     /* Copy metadata (except the part_* ones). */
     copyMetadata( m_profileObject, m_part );
 
@@ -149,9 +154,21 @@ public class CheckinHorizonPartOperation
       m_part.getPoints().add( point );
     }
 
-    final String type = m_profileObject.getValue( IGafConstants.PART_TYPE, null );
-    final String warning = String.format( Messages.getString( "CheckinPartOperation_0" ), m_station, type ); //$NON-NLS-1$
+    final String warning = String.format( Messages.getString( "CheckinPartOperation_0" ), m_station, partType.getCategory() ); //$NON-NLS-1$
     return m_stati.asMultiStatusOrOK( warning );
+  }
+
+  private CrossSectionPartType determinePartType( )
+  {
+    final String id = m_profileObject.getId();
+    // REMARK: the PDB works with part names of GAF, rather than of WPSM
+    final String gafKindName = new GafPartsMapping().partType2kindName( id );
+
+    if( m_partTypes != null )
+      return m_partTypes.findPartType( gafKindName );
+
+    // REMARK: this only happens when exporting to GAF; else we need a valid type from the database
+    return new CrossSectionPartType( gafKindName, null, null, null );
   }
 
   private com.vividsolutions.jts.geom.Point toDBLocation( final Double hoehe, final Double rechtswert, final Double hochwert ) throws PdbConnectException
@@ -193,19 +210,6 @@ public class CheckinHorizonPartOperation
   {
     final String name = m_profileObject.getValue( IGafConstants.PART_NAME, null );
     m_part.setName( name );
-
-    final String type = m_profileObject.getValue( IGafConstants.PART_TYPE, null );
-
-    if( m_partTypes != null )
-    {
-      final CrossSectionPartType partType = m_partTypes.findPartType( type );
-      m_part.setCrossSectionPartType( partType );
-    }
-    else
-    {
-      // REMARK: this only happens when exporting to GAF; else we need a valid type from the database
-      m_part.setCrossSectionPartType( new CrossSectionPartType( type, null, null, null ) );
-    }
 
     m_part.setEvent( m_event );
   }

@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
+import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -54,6 +54,9 @@ import org.kalypso.observation.result.IComponent;
 public class BuildingBruecke extends AbstractProfileObject implements IProfileBuilding
 {
   public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#BRUECKE"; //$NON-NLS-1$
+
+  /** constant for bridge 'oberkante', does not really belong here, but the ok object is using a generic horzon just for now. */
+  public static final String ID_OK = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#OK"; //$NON-NLS-1$
 
   private static final String PROPERTY_BREITE = "breite"; //$NON-NLS-1$
 

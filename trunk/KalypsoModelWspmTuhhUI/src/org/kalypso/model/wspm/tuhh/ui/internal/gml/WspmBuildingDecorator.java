@@ -26,8 +26,8 @@ import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
@@ -93,7 +93,10 @@ public class WspmBuildingDecorator implements ILightweightLabelDecorator
     if( building instanceof ICulvertBuilding )
       decoration.addSuffix( String.format( " (Durchlass - %s)", typeLabel ) );
     else if( building instanceof GenericProfileHorizon )
-      decoration.addSuffix( " (Generisch)" );
+    {
+      final String id = building.getId();
+      decoration.addSuffix( String.format( " ('%s')", id ) );
+    }
     else
       decoration.addSuffix( String.format( " (%s)", typeLabel ) );
 
