@@ -154,7 +154,7 @@ public class QIntervallResult extends Feature_Impl
       return;
 
     final IProfileObject building = buildings[0];
-    setProperty( QNAME_P_QIntervallResult_buildingId, building.getId() );
+    setProperty( QNAME_P_QIntervallResult_buildingId, building.getType() );
   }
 
   public String getBuildingId( )

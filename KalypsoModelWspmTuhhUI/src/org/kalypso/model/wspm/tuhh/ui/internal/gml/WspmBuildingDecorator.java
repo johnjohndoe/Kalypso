@@ -94,7 +94,7 @@ public class WspmBuildingDecorator implements ILightweightLabelDecorator
       decoration.addSuffix( String.format( " (Durchlass - %s)", typeLabel ) );
     else if( building instanceof GenericProfileHorizon )
     {
-      final String id = building.getId();
+      final String id = building.getType();
       decoration.addSuffix( String.format( " ('%s')", id ) );
     }
     else

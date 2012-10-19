@@ -72,7 +72,7 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
   }
 
   @Override
-  public String getId( )
+  public String getType( )
   {
     return ID;
   }

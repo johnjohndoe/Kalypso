@@ -58,7 +58,7 @@ public class BuildingEi extends AbstractCulvertBuilding
   }
 
   @Override
-  public String getId( )
+  public String getType( )
   {
     return ID;
   }

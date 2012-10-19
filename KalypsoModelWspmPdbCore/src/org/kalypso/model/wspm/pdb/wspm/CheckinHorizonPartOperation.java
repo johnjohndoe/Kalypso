@@ -160,7 +160,7 @@ public class CheckinHorizonPartOperation
 
   private CrossSectionPartType determinePartType( )
   {
-    final String id = m_profileObject.getId();
+    final String id = m_profileObject.getType();
     // REMARK: the PDB works with part names of GAF, rather than of WPSM
     final String gafKindName = new GafPartsMapping().partType2kindName( id );
 

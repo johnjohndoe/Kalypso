@@ -54,7 +54,7 @@ public class BuildingKreis extends AbstractCulvertBuilding
   }
 
   @Override
-  public String getId( )
+  public String getType( )
   {
     return ID;
   }

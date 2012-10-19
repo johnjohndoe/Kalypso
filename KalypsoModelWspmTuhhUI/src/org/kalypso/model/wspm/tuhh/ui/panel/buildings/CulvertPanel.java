@@ -227,7 +227,7 @@ public class CulvertPanel extends AbstractProfilView
 
         final IProfile profile = getProfile();
         final ICulvertBuilding old = WspmSohlpunkte.getBuilding( profile, ICulvertBuilding.class );
-        if( tube != null && !tube.getId().equals( old.getId() ) )
+        if( tube != null && !tube.getType().equals( old.getType() ) )
         {
           tube.copyValues( old );
 
@@ -245,7 +245,7 @@ public class CulvertPanel extends AbstractProfilView
 
     final ICulvertBuilding building = WspmSohlpunkte.getBuilding( getProfile(), ICulvertBuilding.class );
     if( building != null )
-      m_cmb.setSelection( new StructuredSelection( m_culverts.get( building.getId() ) ) );
+      m_cmb.setSelection( new StructuredSelection( m_culverts.get( building.getType() ) ) );
 
     final Label spacer = m_toolkit.createSeparator( m_propPanel, SWT.SEPARATOR | SWT.HORIZONTAL );
     spacer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );

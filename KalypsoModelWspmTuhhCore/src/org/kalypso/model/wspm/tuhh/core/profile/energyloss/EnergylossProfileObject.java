@@ -66,7 +66,7 @@ public class EnergylossProfileObject extends AbstractProfileObject implements IE
   }
 
   @Override
-  public String getId( )
+  public String getType( )
   {
     return ID;
   }
