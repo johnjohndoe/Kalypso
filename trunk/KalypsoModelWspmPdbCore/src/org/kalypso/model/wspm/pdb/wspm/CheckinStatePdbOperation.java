@@ -373,7 +373,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     if( profileObject == null )
       return null;
 
-    final IProfileObject newProfileObject = ProfileObjectFactory.createProfileObject( null, profileObject.getId() );
+    final IProfileObject newProfileObject = ProfileObjectFactory.createProfileObject( null, profileObject.getType() );
 
     ProfileObjectHelper.cloneProfileObject( profileObject, newProfileObject );
 
@@ -432,7 +432,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
       if( clonedProfileObject instanceof GenericProfileHorizon )
       {
-        if( clonedProfileObject.getId().equals( BuildingBruecke.ID_OK ) )
+        if( clonedProfileObject.getType().equals( BuildingBruecke.ID_OK ) )
           ProfileObjectHelper.updateObjectFromComponents( profile, clonedProfileObject, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
       }
 
@@ -459,7 +459,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
       if( !(clonedProfileObject instanceof GenericProfileHorizon) )
         continue;
 
-      if( BuildingBruecke.ID_OK.equals( clonedProfileObject.getId() ) )
+      if( BuildingBruecke.ID_OK.equals( clonedProfileObject.getType() ) )
       {
         final IProfileObjectRecords records = clonedProfileObject.getRecords();
         if( records.size() == 0 )

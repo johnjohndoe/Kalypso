@@ -84,7 +84,7 @@ public class BuildingBruecke extends AbstractProfileObject implements IProfileBu
   }
 
   @Override
-  public String getId( )
+  public String getType( )
   {
     return ID;
   }

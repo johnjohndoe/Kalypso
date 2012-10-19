@@ -58,7 +58,7 @@ public class BuildingMaul extends AbstractCulvertBuilding
   }
 
   @Override
-  public String getId( )
+  public String getType( )
   {
     return ID;
   }

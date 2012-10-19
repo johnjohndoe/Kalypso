@@ -230,7 +230,7 @@ public class ProfileObjectsPrfWriter
 
   private void writeCulvert( final ICulvertBuilding culvert )
   {
-    final DataBlockHeader dbh = PrfHeaders.createHeader( culvert.getId() );
+    final DataBlockHeader dbh = PrfHeaders.createHeader( culvert.getType() );
     final DoubleDataBlock db = new DoubleDataBlock( dbh );
 
     try

@@ -94,7 +94,7 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
   }
 
   @Override
-  public String getId( )
+  public String getType( )
   {
     return ID;
   }

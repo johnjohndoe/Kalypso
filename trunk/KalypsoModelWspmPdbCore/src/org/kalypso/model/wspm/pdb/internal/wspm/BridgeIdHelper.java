@@ -51,7 +51,7 @@ public class BridgeIdHelper
 
       if( profileObject instanceof GenericProfileHorizon )
       {
-        if( BuildingBruecke.ID_OK.equals( profileObject.getId() ) )
+        if( BuildingBruecke.ID_OK.equals( profileObject.getType() ) )
         {
           final String brueckeId = ((GenericProfileHorizon)profileObject).getValue( BuildingBruecke.KEY_BRUECKE_ID, null );
           if( !StringUtils.isEmpty( brueckeId ) )
@@ -84,7 +84,7 @@ public class BridgeIdHelper
       if( !(profileObject instanceof GenericProfileHorizon) )
         continue;
 
-      if( !BuildingBruecke.ID_OK.equals( profileObject.getId() ) )
+      if( !BuildingBruecke.ID_OK.equals( profileObject.getType() ) )
         continue;
 
       final String bridgeId = profileObject.getValue( BuildingBruecke.KEY_BRUECKE_ID, null );
