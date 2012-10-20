@@ -276,7 +276,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcSpecificDamageRunnable.1" ) + ": " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcSpecificDamageRunnable.1" ) + ": " + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
