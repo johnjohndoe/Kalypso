@@ -42,9 +42,9 @@ package org.kalypso.kalypsosimulationmodel.core.wind;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.math.BigDecimal;
 import java.net.URL;
+import java.nio.channels.FileChannel;
+import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.FileUtils;
 import org.deegree.framework.util.Pair;
@@ -56,24 +56,12 @@ import org.kalypso.grid.IGeoWalkingStrategy;
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
- *  Wrapper class for saving pairs of values in to standard binary grid {@link BinaryGeoGrid}.
- *
+ * Wrapper class for saving pairs of values in to standard binary grid {@link BinaryGeoGrid}.
  *
  * @author ig
  */
 public class BinaryGeoGridWrapperForPairsModel extends BinaryGeoGrid
 {
-
-  public BinaryGeoGridWrapperForPairsModel( final RandomAccessFile randomAccessFile, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws GeoGridException
-  {
-    super( randomAccessFile, sizeX * 2, sizeY, scale, origin, offsetX, offsetY, sourceCRS, fillGrid );
-  }
-
-  protected BinaryGeoGridWrapperForPairsModel( final RandomAccessFile randomAccessFile, final File binFile, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
-  {
-    super( randomAccessFile, binFile, origin, offsetX, offsetY, sourceCRS );
-  }
-
   /**
    * Opens an existing grid.<br>
    * Dispose the grid after it is no more needed in order to release the given resource.
@@ -101,31 +89,33 @@ public class BinaryGeoGridWrapperForPairsModel extends BinaryGeoGrid
       binFile = fileFromUrl; // set in order to delete on dispose
     }
 
-    final String flags = writeable ? "rw" : "r"; //$NON-NLS-1$ //$NON-NLS-2$
+    FileChannel channel;
+    if( writeable )
+      channel = FileChannel.open( fileFromUrl.toPath(), StandardOpenOption.WRITE, StandardOpenOption.READ );
+    else
+      channel = FileChannel.open( fileFromUrl.toPath(), StandardOpenOption.READ );
 
-    final RandomAccessFile randomAccessFile = new RandomAccessFile( fileFromUrl, flags );
-    return new BinaryGeoGridWrapperForPairsModel( randomAccessFile, binFile, origin, offsetX, offsetY, sourceCRS );
-
+    return new BinaryGeoGridWrapperForPairsModel( channel, binFile, origin, offsetX, offsetY, sourceCRS );
   }
-  /**
-   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeX()
-   */
+
+  private BinaryGeoGridWrapperForPairsModel( final FileChannel channel, final File binFile, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
+  {
+    super( channel, binFile, origin, offsetX, offsetY, sourceCRS );
+  }
+
   @Override
   public int getSizeX( )
   {
     return super.getSizeX() / 2;
   }
 
-  /**
-   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
-   */
   @Override
   public double getValue( final int x, final int y )
   {
     throw new UnsupportedOperationException( "In this grid you can only get the pairs of values, use appropriate mathod" ); //$NON-NLS-1$
   }
 
-  public Pair< Double, Double > getPairValue( final int x, final int y ) throws GeoGridException
+  public Pair<Double, Double> getPairValue( final int x, final int y ) throws GeoGridException
   {
     final double lDoubleFirst = super.getValue( x * 2, y );
     final double lDoubleSecond = super.getValue( x * 2 + 1, y );
@@ -134,15 +124,9 @@ public class BinaryGeoGridWrapperForPairsModel extends BinaryGeoGrid
   }
 
   @Override
-  public void setValue( final int x, final int y, final BigDecimal value )
-  {
-    throw new UnsupportedOperationException( "In this grid you can only put the pairs of values, use appropriate mathod" ); //$NON-NLS-1$
-  }
-
-  @Override
   public void setValue( final int x, final int y, final double value )
   {
-      throw new UnsupportedOperationException( "In this grid you can only put the pairs of values, use appropriate mathod" ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( "In this grid you can only put the pairs of values, use appropriate mathod" ); //$NON-NLS-1$
   }
 
   /**
@@ -152,7 +136,7 @@ public class BinaryGeoGridWrapperForPairsModel extends BinaryGeoGrid
    *           If the grid is not opened for write access.
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
    */
-  public void setPairValue( final int x, final int y, final Pair< Double, Double > value ) throws GeoGridException
+  public void setPairValue( final int x, final int y, final Pair<Double, Double> value ) throws GeoGridException
   {
     super.setValue( x * 2, y, value.first );
     super.setValue( x * 2 + 1, y, value.second );
