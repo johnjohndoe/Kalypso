@@ -14,7 +14,7 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.preferences.IKalypsoDeegreePreferences;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -40,9 +40,9 @@ public class DataContainer
 
   private String m_projectBaseFolder;
 
-  private final String m_AbsolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
+  private final String m_absolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 
-  private static final String m_defaultCoordinateSystem = IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE;
+  private static final String m_defaultCoordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   private LinkedHashMap<String, String> m_userSelectionMap;
 
@@ -174,7 +174,7 @@ public class DataContainer
    */
   public final URL getRoughnessDatabaseLocationURL( ) throws MalformedURLException
   {
-    return new URL( "file:" + m_AbsolutePath + "/" + m_projectBaseFolder + getRoughnessDatabaseLocation() ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new URL( "file:" + m_absolutePath + "/" + m_projectBaseFolder + getRoughnessDatabaseLocation() ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public final void setRoughnessDatabaseLocation( final String dbLocation, final IRoughnessClsCollection roughnessClsCollection ) throws Exception
@@ -209,7 +209,7 @@ public class DataContainer
     try
     {
       // TODO: use dialog settings stuff instead!
-      m_userSelectionFile = m_AbsolutePath + "/" + m_projectBaseFolder + "/" + userSelectionFile; //$NON-NLS-1$ //$NON-NLS-2$
+      m_userSelectionFile = m_absolutePath + "/" + m_projectBaseFolder + "/" + userSelectionFile; //$NON-NLS-1$ //$NON-NLS-2$
       final File file = new File( m_userSelectionFile );
       if( file.exists() && file.isFile() && file.length() > 0 )
       {
