@@ -48,8 +48,8 @@ import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
+import org.kalypso.model.wspm.tuhh.ui.chart.LayerStyleProviderTuhh;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.CulvertLayer;
-import org.kalypso.model.wspm.tuhh.ui.chart.utils.LayerStyleProviderTuhh;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.buildings.CulvertPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -92,6 +92,7 @@ public class BuildingTubesTheme extends AbstractProfilTheme
   {
     final IProfile profil = getProfil();
 
+    // FIXME: instead, we should have a reference to the building object of this layer
     final ICulvertBuilding building = WspmSohlpunkte.getBuilding( getProfil(), ICulvertBuilding.class );
     if( building == null )
       return;

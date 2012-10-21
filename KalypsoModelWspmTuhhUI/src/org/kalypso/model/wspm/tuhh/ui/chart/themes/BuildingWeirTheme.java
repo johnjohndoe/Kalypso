@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfile;
@@ -110,7 +111,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
   @Override
   public IChartLayer[] getLegendNodes( )
   {
-    final ArrayList<IChartLayer> cl = new ArrayList<>();
+    final List<IChartLayer> cl = new ArrayList<>();
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
       if( layer instanceof IProfilChartLayer )

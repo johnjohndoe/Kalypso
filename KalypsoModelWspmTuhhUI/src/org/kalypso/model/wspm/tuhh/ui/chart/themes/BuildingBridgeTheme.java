@@ -66,15 +66,6 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.0" ); //$NON-NLS-1$
 
-  @Override
-  public void onProfilChanged( final ProfileChangeHint hint )
-  {
-    if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isSelectionChanged() )
-    {
-      fireLayerContentChanged( ContentChangeType.value );
-    }
-  }
-
   public BuildingBridgeTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( profil, IWspmTuhhConstants.LAYER_BRUECKE, TITLE, chartLayers, cm );
@@ -106,5 +97,14 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
     operation.addChange( new PointPropertyRemove( profile, profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) );
 
     new ProfileOperationJob( operation ).schedule();
+  }
+
+  @Override
+  public void onProfilChanged( final ProfileChangeHint hint )
+  {
+    if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isSelectionChanged() )
+    {
+      fireLayerContentChanged( ContentChangeType.value );
+    }
   }
 }

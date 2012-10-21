@@ -128,6 +128,7 @@ public final class WspmSohlpunkte
     return p1.getBreite() + distance / 2.0;
   }
 
+  // FIXME: does not belong here or rename "WspmSohlpunkte"
   public static <T extends IProfileBuilding> T getBuilding( final IProfile profile, final Class<T> buildingType )
   {
     final IProfileBuilding[] profileObjects = profile.getProfileObjects( buildingType );
