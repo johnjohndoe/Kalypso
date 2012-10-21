@@ -72,7 +72,7 @@ public class WspmResultPolynomeCalculationNode extends AbstractWspmResultNode im
   }
 
   @Override
-  public IWspmResultNode[] getChildResults( )
+  protected IWspmResultNode[] createChildren( )
   {
     final Collection<IWspmResultNode> result = new ArrayList<>();
 
@@ -115,9 +115,6 @@ public class WspmResultPolynomeCalculationNode extends AbstractWspmResultNode im
     return project.getFolder( resultPath );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getLabel()
-   */
   @Override
   public String getLabel( )
   {
@@ -134,9 +131,6 @@ public class WspmResultPolynomeCalculationNode extends AbstractWspmResultNode im
     return m_calculation.getId();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getObject()
-   */
   @Override
   public Object getObject( )
   {
@@ -148,5 +142,4 @@ public class WspmResultPolynomeCalculationNode extends AbstractWspmResultNode im
   {
     return m_calculation;
   }
-
 }

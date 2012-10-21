@@ -74,35 +74,43 @@ public final class WspmResultFactory
     throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
+  /**
+   * IMPORTANT: once created, the nodes access lazily their content; BUT, once accessed, will not change their state any more. In ordr to refresh the result structure, the node must be recreated.
+   */
   public static IWspmResultNode createResultNode( final IWspmResultNode parent, final Feature feature )
   {
     if( feature instanceof TuhhReach )
-      return new WspmResultReachNode( parent, (TuhhReach) feature );
+      return new WspmResultReachNode( parent, (TuhhReach)feature );
 
     if( feature instanceof WspmWaterBody )
-      return new WspmResultWaterNode( parent, (WspmWaterBody) feature );
+      return new WspmResultWaterNode( parent, (WspmWaterBody)feature );
 
     if( feature instanceof TuhhCalculation )
-      return createCalculationNode( parent, (TuhhCalculation) feature );
+      return createCalculationNode( parent, (TuhhCalculation)feature );
 
     if( feature instanceof TuhhWspmProject )
-      return new WspmResultProjectNode( (TuhhWspmProject) feature );
-
-    return null;
-  }
-
-  public static IWspmResultNode createCalculationNode( final IWspmResultNode parent, final TuhhCalculation calculation )
-  {
-    if( calculation instanceof CalculationWspmTuhhSteadyState )
-      return new WspmResultCalculationNode( parent, (CalculationWspmTuhhSteadyState) calculation );
-    if( calculation instanceof CalculationReibConstWspmTuhhSteadyState )
-      return new WspmResultPolynomeCalculationNode( parent, (CalculationReibConstWspmTuhhSteadyState) calculation );
+      return new WspmResultProjectNode( (TuhhWspmProject)feature );
 
     return null;
   }
 
   /**
-   * This function creates wspm result nodes, containing WSPM projects in the workspace.
+   * IMPORTANT: see {@link #createResultNode(IWspmResultNode, Feature)}
+   */
+  public static IWspmResultNode createCalculationNode( final IWspmResultNode parent, final TuhhCalculation calculation )
+  {
+    if( calculation instanceof CalculationWspmTuhhSteadyState )
+      return new WspmResultCalculationNode( parent, (CalculationWspmTuhhSteadyState)calculation );
+    if( calculation instanceof CalculationReibConstWspmTuhhSteadyState )
+      return new WspmResultPolynomeCalculationNode( parent, (CalculationReibConstWspmTuhhSteadyState)calculation );
+
+    return null;
+  }
+
+  /**
+   * This function creates wspm result nodes, containing WSPM projects in the workspace.<br/>
+   * <br/>
+   * IMPORTANT: see {@link #createResultNode(IWspmResultNode, Feature)}
    *
    * @return The root nodes.
    */
@@ -120,7 +128,7 @@ public final class WspmResultFactory
     {
       final IWspmResultNode rootNode = createRootNode( project );
       if( rootNode != null )
-        rootNodes.add( new WspmResultEclipseNode( project, (WspmResultProjectNode) rootNode ) );
+        rootNodes.add( new WspmResultEclipseNode( project, (WspmResultProjectNode)rootNode ) );
 
       monitor.worked( 1 );
     }
@@ -147,7 +155,7 @@ public final class WspmResultFactory
     {
       final URL modelURL = ResourceUtilities.createURL( modelFile );
       final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
-      final TuhhWspmProject tuhhWspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
+      final TuhhWspmProject tuhhWspmProject = (TuhhWspmProject)modelWorkspace.getRootFeature();
 
       return createResultNode( null, tuhhWspmProject );
     }

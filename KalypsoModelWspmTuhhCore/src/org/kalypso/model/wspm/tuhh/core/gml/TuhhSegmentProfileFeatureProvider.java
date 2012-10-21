@@ -40,17 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.gml;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
 /**
  * @author Gernot Belger
  */
 public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvider
 {
+  // TODO: fixes a slight performance problem vfor now: results where reloaded for every profile, when selected.
+  // Problem is, that the cache does not know when to clear its state (wspm results are changed, fixations are change and so on).
+  // We use a small cache expiration time for now, so user will not have problems with that.
+  private final LoadingCache<Feature, IWspmResultNode> m_cache = CacheBuilder.newBuilder().expireAfterWrite( 30, TimeUnit.SECONDS ).maximumSize( 100 ).build( new CacheLoader<Feature, IWspmResultNode>()
+  {
+    @Override
+    public IWspmResultNode load( final Feature parent ) throws Exception
+    {
+      return WspmResultFactory.createResultNode( null, parent );
+    }
+  } );
+
   @Override
   public IWspmResultNode getResult( final IProfileFeature profile )
   {
@@ -58,6 +77,17 @@ public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvide
       return null;
 
     final Feature parent = profile.getOwner();
-    return WspmResultFactory.createResultNode( null, parent );
+    if( parent == null )
+      return null;
+
+    try
+    {
+      return m_cache.get( parent );
+    }
+    catch( final ExecutionException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

@@ -70,7 +70,7 @@ class WspmResultDummyNode extends AbstractWspmResultNode
   }
 
   @Override
-  public IWspmResultNode[] getChildResults( )
+  protected IWspmResultNode[] createChildren( )
   {
     return m_children;
   }
