@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.StyleArray;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
+import org.kalypso.model.wspm.pdb.gaf.GafPartsMapping;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -71,30 +72,31 @@ public class CheckoutPartTypesWorker
 
   public void execute( )
   {
+    final GafPartsMapping mapping = new GafPartsMapping();
+
     final CrossSectionPartType[] pdbTypes = m_partTypes.getTypes();
     for( final CrossSectionPartType pdbPartType : pdbTypes )
     {
       final String category = pdbPartType.getCategory();
 
-      final IPartType wspmPartType = m_classification.findPartType( category );
+      final String wspmCategory = mapping.kind2partType( category );
+
+      final IPartType wspmPartType = m_classification.findPartType( wspmCategory );
       if( wspmPartType == null )
-        createPartType( pdbPartType );
+        createPartType( wspmCategory, pdbPartType );
       else
         updatePartType( wspmPartType, pdbPartType );
     }
   }
 
-  private void createPartType( final CrossSectionPartType pdbPartType )
+  private void createPartType( final String wspmCategory, final CrossSectionPartType pdbPartType )
   {
     final IFeatureBindingCollection<IPartType> wspmPartTypes = m_classification.getPartTypeCollection();
 
     final IPartType newType = wspmPartTypes.addNew( IPartType.FEATURE_PART_TYPE );
 
     final String category = pdbPartType.getCategory();
-
-    // FIXME: map category to wspm part type id
-
-    newType.setName( category );
+    newType.setName( wspmCategory );
 
     updatePartType( newType, pdbPartType );
 
@@ -139,11 +141,11 @@ public class CheckoutPartTypesWorker
 
   private boolean updateStyleReference( final IPartType wspmPartType, final CrossSectionPartType pdbPartType )
   {
-    final StyleArray styleArray = pdbPartType.getStyleArray();
-    final String oldName = styleArray == null ? null : styleArray.getName();
-
     final IStyleDefinition styleDefinition = wspmPartType.getStyleDefinition();
-    final String newName = styleDefinition == null ? null : styleDefinition.getName();
+    final String oldName = styleDefinition == null ? null : styleDefinition.getName();
+
+    final StyleArray styleArray = pdbPartType.getStyleArray();
+    final String newName = styleArray == null ? null : styleArray.getName();
 
     if( ObjectUtils.equals( newName, oldName ) )
       return false;
