@@ -45,7 +45,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -84,7 +83,7 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   public void mouseDoubleClick( final MouseEvent e )
   {
     final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
-    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), getChart().getPlotRect() );
+    final Point plotPoint = new Point( e.x, e.y );
     final EditInfo info = layer.getEditInfo( plotPoint );
 
     if( info != null && info.getData() != null )
@@ -100,7 +99,7 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   public void mouseDown( final MouseEvent e )
   {
     final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
-    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), getChart().getPlotRect() );
+    final Point plotPoint = new Point( e.x, e.y );
     final EditInfo editInfo = layer.getEditInfo( plotPoint );
     if( editInfo != null && editInfo.getData() != null )
       m_info = editInfo;
@@ -109,7 +108,7 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   @Override
   public void mouseMove( final MouseEvent e )
   {
-    final Point point = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), getChart().getPlotRect() );
+    final Point point = new Point( e.x, e.y );
 
     // Show tooltip
     final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
@@ -131,7 +130,7 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   {
     final EditInfo info = m_info;
 
-    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), getChart().getPlotRect() );
+    final Point plotPoint = new Point( e.x, e.y );
 
     if( info == null )
     {
@@ -143,7 +142,7 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
         final Control ctrl = (Control)e.getSource();
         final Rectangle bounds = ctrl.getBounds();
         final int zoomFactor = 3;
-        final Point point = ChartHandlerUtilities.plotPoint2screen( editInfo.getPosition(), getChart().getPlotRect() );
+        final Point point = editInfo.getPosition();
         final Point zoomMin = new Point( point.x - bounds.width / zoomFactor, point.y - bounds.height / zoomFactor );
         final Point zoomMax = new Point( point.x + bounds.width / zoomFactor, point.y + bounds.height / zoomFactor );
 
