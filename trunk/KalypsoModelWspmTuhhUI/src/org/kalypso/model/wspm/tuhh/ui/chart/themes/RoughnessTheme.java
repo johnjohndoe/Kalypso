@@ -63,6 +63,7 @@ public class RoughnessTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.RoughnessTheme.0" ); //$NON-NLS-1$
 
+  // FIXME suspicious, why needs a chart layer to exhibit its component..??
   @Override
   public IComponent getTargetComponent( )
   {

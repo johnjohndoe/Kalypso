@@ -76,12 +76,6 @@ public class CulvertLayer extends AbstractProfilLayer
     getLineStyle().setColor( new RGB( 255, 255, 100 ) );
   }
 
-//  @Override
-//  public String getIdentifier( )
-//  {
-//    return getTube() == null ? Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.TubeLayer.0" ) : getTube().getId(); //$NON-NLS-1$
-//  }
-
   private ICulvertBuilding getTube( )
   {
     final ICulvertBuilding[] objects = getProfil().getProfileObjects( ICulvertBuilding.class );
