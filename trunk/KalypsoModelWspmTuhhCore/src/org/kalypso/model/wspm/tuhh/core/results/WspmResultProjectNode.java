@@ -63,7 +63,7 @@ public class WspmResultProjectNode extends AbstractWspmResultNode
   }
 
   @Override
-  public IWspmResultNode[] getChildResults( )
+  protected IWspmResultNode[] createChildren( )
   {
     final Collection<IWspmResultNode> results = new ArrayList<>();
 
@@ -103,13 +103,9 @@ public class WspmResultProjectNode extends AbstractWspmResultNode
     return m_project.getId();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getObject()
-   */
   @Override
   public Object getObject( )
   {
     return m_project;
   }
-
 }

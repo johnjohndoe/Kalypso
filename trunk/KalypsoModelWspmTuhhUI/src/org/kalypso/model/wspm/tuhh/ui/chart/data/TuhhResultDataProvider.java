@@ -65,7 +65,6 @@ public final class TuhhResultDataProvider implements IWspLayerData
     final IWspmResultNode[] childNodes = node.getChildResults();
     for( final IWspmResultNode child : childNodes )
     {
-
       initResults( child );
     }
   }

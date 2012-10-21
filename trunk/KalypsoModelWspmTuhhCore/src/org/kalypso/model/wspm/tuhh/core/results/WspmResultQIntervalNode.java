@@ -46,7 +46,7 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * This result container represents a WSPM result. TODO: als Ergebnisknoten (blatt) markieren
- * 
+ *
  * @author Holger Albert
  */
 public class WspmResultQIntervalNode extends AbstractWspmResultNode implements ITuhhCalculationNode
@@ -63,7 +63,7 @@ public class WspmResultQIntervalNode extends AbstractWspmResultNode implements I
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentNode
    *          The parent node.
    * @param qIntervalPath
@@ -79,45 +79,30 @@ public class WspmResultQIntervalNode extends AbstractWspmResultNode implements I
     m_label = label;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return Messages.getString( "WspmResultQIntervalNode_0" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getChildResults()
-   */
   @Override
-  public IWspmResultNode[] getChildResults( )
+  protected IWspmResultNode[] createChildren( )
   {
     return new IWspmResultNode[] {};
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getObject()
-   */
   @Override
   public Object getObject( )
   {
     return m_qIntervalPath;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.AbstractWspmResultNode#getInternalName()
-   */
   @Override
   protected String getInternalName( )
   {
     return m_label;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.ITuhhCalculationNode#getCalculation()
-   */
   @Override
   public TuhhCalculation getCalculation( )
   {

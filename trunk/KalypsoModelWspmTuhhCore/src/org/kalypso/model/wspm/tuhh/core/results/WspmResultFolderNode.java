@@ -71,7 +71,7 @@ public class WspmResultFolderNode extends AbstractWspmResultNode implements ITuh
   }
 
   @Override
-  public IWspmResultNode[] getChildResults( )
+  protected IWspmResultNode[] createChildren( )
   {
     final Collection<IWspmResultNode> result = new ArrayList<>();
 
@@ -112,36 +112,24 @@ public class WspmResultFolderNode extends AbstractWspmResultNode implements ITuh
     return result.toArray( new IWspmResultNode[result.size()] );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return m_folder.getName();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.AbstractWspmResultNode#getInternalName()
-   */
   @Override
   protected String getInternalName( )
   {
     return m_folder.getName();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getObject()
-   */
   @Override
   public Object getObject( )
   {
     return m_folder;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.ITuhhCalculationNode#getCalculation()
-   */
   @Override
   public TuhhCalculation getCalculation( )
   {

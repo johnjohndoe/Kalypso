@@ -79,7 +79,7 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
   }
 
   @Override
-  public IWspmResultNode[] getChildResults( )
+  protected IWspmResultNode[] createChildren( )
   {
     final IFolder resultFolder = findResultFolder( m_calculation );
     if( Objects.isNull( resultFolder ) )

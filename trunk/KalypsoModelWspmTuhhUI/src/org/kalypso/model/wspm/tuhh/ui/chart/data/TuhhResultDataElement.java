@@ -62,9 +62,6 @@ public class TuhhResultDataElement implements IWspLayerDataElement
     m_resultNode = resultNode;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.layer.IWspLayerDataElement#getLabel()
-   */
   @Override
   public String getLabel( )
   {
@@ -105,18 +102,12 @@ public class TuhhResultDataElement implements IWspLayerDataElement
     return searchValue( m_resultNode, station );
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
     return EqualsBuilder.reflectionEquals( this, obj );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
@@ -126,9 +117,6 @@ public class TuhhResultDataElement implements IWspLayerDataElement
     return m_resultNode.hashCode();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
@@ -161,9 +149,6 @@ public class TuhhResultDataElement implements IWspLayerDataElement
     return m_resultNode;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerDataElement#isWaterLevelFixation()
-   */
   @Override
   public boolean isWaterLevelFixation( )
   {
