@@ -41,11 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.ops;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Provides utility method to remove relationships between finite element concepts
@@ -59,23 +56,15 @@ public class LinksOps
    * Delete the geo/structural relationship between the given element and complex element
    * 
    * @param element
-   *            the element to unlink
+   *          the element to unlink
    * @param complexElement
-   *            the complex element to unlink
-   * 
+   *          the complex element to unlink
    */
   public static final void delRelationshipElementAndComplexElement( final IFENetItem element, final IFE1D2DComplexElement complexElement )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( complexElement, "complexElement" ); //$NON-NLS-1$
-
-    IFeatureBindingCollection containers = null;
-    if( element instanceof IFE1D2DElement )
-      containers = ((IFE1D2DElement) element).getContainers();
-    else if( element instanceof IFELine )
-      containers = ((IFELine) element).getContainers();
-    if( containers != null )
-      containers.remove( complexElement );
-    complexElement.removeElementAsRef( element );
+    element.removeLinkedComplexElement( complexElement );
+    complexElement.removeLinkedItem( element );
   }
 }

@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Provides mechanism to create delete command
- *
+ * 
  * @author Patrice Congo
  * @author Thomas Jung
  */
@@ -68,13 +68,13 @@ public class DeleteCmdFactory
   public static final IFeatureChangeCommand createDeleteCmd( final Feature feature, final IFEDiscretisationModel1d2d model1d2d )
   {
     Assert.throwIAEOnNullParam( feature, "feature" ); //$NON-NLS-1$
-    if( TypeInfo.isPolyElementFeature( feature ) )
+    if( feature instanceof IPolyElement )
     {
       return new DeletePolyElementCmd( model1d2d, feature );
     }
     else if( feature instanceof IElement1D )
     {
-      return new DeleteElement1DCmd( model1d2d, (IElement1D) feature );
+      return new DeleteElement1DCmd( model1d2d, (IElement1D)feature );
     }
     else
     {
@@ -92,7 +92,7 @@ public class DeleteCmdFactory
     {
       if( easyFeatureWrapper == null )
       {
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory.4") ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory.4" ) ); //$NON-NLS-1$
       }
       try
       {
@@ -106,7 +106,7 @@ public class DeleteCmdFactory
           }
           else
           {
-            throw new UnsupportedOperationException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory.5") + feature ); //$NON-NLS-1$
+            throw new UnsupportedOperationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory.5" ) + feature ); //$NON-NLS-1$
           }
         }
       }

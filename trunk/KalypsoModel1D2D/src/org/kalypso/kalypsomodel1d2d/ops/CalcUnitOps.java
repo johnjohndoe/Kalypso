@@ -65,7 +65,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Provide utility methods around calculation units
- *
+ * 
  * @author Patrice Congo
  */
 
@@ -135,7 +135,7 @@ public class CalcUnitOps
 
     for( final Feature f : elementsToAdd )
     {
-      final IFE1D2DElement ele = f == null ? null : (IFE1D2DElement) f.getAdapter( adapterCls );
+      final IFE1D2DElement ele = f == null ? null : (IFE1D2DElement)f.getAdapter( adapterCls );
       if( ele != null )
       {
         eleList.add( ele );
@@ -148,7 +148,7 @@ public class CalcUnitOps
 
   /**
    * To get the parent units of the given unit inside the specified model
-   *
+   * 
    * @param calculationUnit
    *          the calculation unit which parents are to be search
    * @param model1d2d
@@ -167,8 +167,8 @@ public class CalcUnitOps
     {
       if( ce instanceof ICalculationUnit1D2D )
       {
-        final ICalculationUnit1D2D parent = (ICalculationUnit1D2D) ce;
-        if( parent.getChangedSubUnits().contains( calculationUnit ) )
+        final ICalculationUnit1D2D parent = (ICalculationUnit1D2D)ce;
+        if( parent.getSubCalculationUnits().contains( calculationUnit ) )
         {
           parents.add( parent );
         }
@@ -179,7 +179,7 @@ public class CalcUnitOps
 
   /**
    * To get the all calculation units of the given discretisation model
-   *
+   * 
    * @param model1d2d
    *          the discretisation model
    * @return a collection containing the calculation unit of the dicretisation model
@@ -195,7 +195,7 @@ public class CalcUnitOps
     {
       if( ce instanceof ICalculationUnit )
       {
-        calUnits.add( (ICalculationUnit) ce );
+        calUnits.add( (ICalculationUnit)ce );
       }
     }
     return calUnits;
@@ -203,7 +203,7 @@ public class CalcUnitOps
 
   /**
    * Tests whether a given boundary is a boundary line of the specified calculation unit.
-   *
+   * 
    * @param boundaryLine
    *          the boundary line to assert
    * @param calUnit
@@ -216,94 +216,8 @@ public class CalcUnitOps
   }
 
   /**
-   * To get the bounding box of the given calculation unit.
-   *
-   * @param calUnit
-   *          the calculation which bounding box is to be get
-   * @return an {@link GM_Envelope} representing the bounding box of the calculation unit.
-   *
-   */
-  public static final GM_Envelope getBoundingBox( final ICalculationUnit calUnit )
-  {
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" ); //$NON-NLS-1$
-    final LinkedList<GM_Envelope> contributingBBox = new LinkedList<>();
-
-    // collect all contributing bboxes
-    contributingBBox.add( calUnit.getElements().getFeatureList().getBoundingBox() );
-    if( calUnit instanceof ICalculationUnit1D2D )
-    {
-      final LinkedList<ICalculationUnit> subUnits = new LinkedList<>( ((ICalculationUnit1D2D)calUnit).getChangedSubUnits() );
-      while( !subUnits.isEmpty() )
-      {
-        final ICalculationUnit removed = subUnits.remove( 0 );
-        contributingBBox.add( removed.getElements().getFeatureList().getBoundingBox() );
-        if( removed instanceof ICalculationUnit1D2D )
-        {
-          subUnits.addAll( ((ICalculationUnit1D2D) removed).getChangedSubUnits() );
-        }
-      }
-    }
-
-    GM_Envelope boundingBox = null;
-    // find the first non null
-    find_first_non_null: while( !contributingBBox.isEmpty() )
-    {
-      final GM_Envelope removeBB = contributingBBox.removeFirst();
-      if( removeBB != null )
-      {
-        boundingBox = removeBB;
-        break find_first_non_null;
-      }
-    }
-
-    // widden box the include following non nulls
-    while( !contributingBBox.isEmpty() )
-    {
-      final GM_Envelope removeBB = contributingBBox.removeFirst();
-      if( removeBB != null )
-      {
-        boundingBox = boundingBox.getMerged( removeBB );
-      }
-    }
-
-    return boundingBox;
-
-  }
-
-  /**
-   * Answer whether an element is part of the calculation unit.
-   *
-   * @param unit
-   *          the calculation unit
-   * @param element
-   */
-  public static final boolean isFiniteElementOf( final ICalculationUnit unit, final IFE1D2DElement element )
-  {
-    Assert.throwIAEOnNullParam( unit, "unit" ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
-
-    final IFeatureBindingCollection<IFE1D2DComplexElement> containers = element.getContainers();
-
-    final List<String> list = new ArrayList<>();
-    for( int i = 0; i < containers.size(); i++ )
-      list.add( (containers.get( i )).getId() );
-
-    final LinkedList<ICalculationUnit> subUnits = new LinkedList<>();
-    subUnits.add( unit );
-    while( !subUnits.isEmpty() )
-    {
-      final ICalculationUnit currentSubUnit = subUnits.remove( 0 );
-      if( currentSubUnit instanceof ICalculationUnit1D2D )
-        subUnits.addAll( ((ICalculationUnit1D2D) currentSubUnit).getChangedSubUnits() );
-      if( list.contains( currentSubUnit.getId() ) )
-        return true;
-    }
-    return false;
-  }
-
-  /**
    * Answer whether a boundary condition is assign to the given calculation unit
-   *
+   * 
    * @param unit
    *          the possible target calculation unit
    * @param bCondition
@@ -311,7 +225,6 @@ public class CalcUnitOps
    * @return true if the boundary condition is assign to the calculation unit otherwise false.
    * @throws IllegalArgumentException
    *           if unit or bCondition is null or unit does not have a model 1d 2d as parent feature
-   *
    */
   public static final boolean isBoundaryConditionOf( final ICalculationUnit unit, final IBoundaryCondition bCondition )
   {
@@ -321,7 +234,7 @@ public class CalcUnitOps
 
   /**
    * Returns all boundary condition assign to the specified unit found in the passed list of boundary conditions
-   *
+   * 
    * @param conditions
    *          the list of boundary condition
    * @param unit
@@ -335,8 +248,8 @@ public class CalcUnitOps
     final List<IBoundaryCondition> assignedConditions = new ArrayList<>();
     for( final IFlowRelationship condition : conditions )
     {
-      if( condition instanceof IBoundaryCondition && isBoundaryConditionOf( unit, (IBoundaryCondition) condition ) )
-        assignedConditions.add( (IBoundaryCondition) condition );
+      if( condition instanceof IBoundaryCondition && isBoundaryConditionOf( unit, (IBoundaryCondition)condition ) )
+        assignedConditions.add( (IBoundaryCondition)condition );
     }
 
     return assignedConditions;
@@ -344,7 +257,7 @@ public class CalcUnitOps
 
   /**
    * Counts the number of boundary conditions assigned to the calculation unit.
-   *
+   * 
    * @param conditions
    *          the collection condition to test
    * @param unit
@@ -355,7 +268,6 @@ public class CalcUnitOps
    *         calculation unit
    * @throws IllegalArgumentException
    *           if condition or unit is null or grabDistance is less than 0
-   *
    */
   public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit unit, final IBoundaryCondition.BOUNDARY_TYPE typeToCount )
   {
@@ -378,8 +290,8 @@ public class CalcUnitOps
   {
     if( calcUnit instanceof ICalculationUnit1D2D )
     {
-      final ICalculationUnit1D2D calcUnit1d2d = (ICalculationUnit1D2D) calcUnit;
-      final IFeatureBindingCollection<ICalculationUnit> subUnits = calcUnit1d2d.getChangedSubUnits();
+      final ICalculationUnit1D2D calcUnit1d2d = (ICalculationUnit1D2D)calcUnit;
+      final IFeatureBindingCollection<ICalculationUnit> subUnits = calcUnit1d2d.getSubCalculationUnits();
       for( final ICalculationUnit subUnit : subUnits )
       {
         final ICalculationUnit unit = findSubUnit( subUnit, element );

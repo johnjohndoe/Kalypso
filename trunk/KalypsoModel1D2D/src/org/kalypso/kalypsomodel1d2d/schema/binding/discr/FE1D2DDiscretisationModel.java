@@ -48,7 +48,6 @@ import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -61,11 +60,11 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Provide a implementation of {@link IFEDiscretisationModel1d2d} to bind wb1d2d:Discretisation gml elements
- *
+ * 
  * @author Gernot Belger
  * @author Patrice Congo
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings( "unchecked" )
 public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDiscretisationModel1d2d
 {
   private final IFeatureBindingCollection<IFE1D2DElement> m_elements = new FeatureBindingCollection<>( this, IFE1D2DElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
@@ -76,7 +75,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
 
   private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<>( this, IFELine.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
 
-  private final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = new FeatureBindingCollection<>( this, IFE1D2DComplexElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
+  private final IFeatureBindingCollection<IFE1D2DComplexElement> m_complexElements = new FeatureBindingCollection<>( this, IFE1D2DComplexElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
 
   public FE1D2DDiscretisationModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -86,26 +85,20 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   @Override
   public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
-    final IFeatureBindingCollection< ? extends IFENetItem> containers = node0.getContainers();
-    for( final IFENetItem featureWrapper : containers )
+    final Feature[] containers = node0.getLinkedEdges();
+    for( final Feature feature : containers )
     {
-      if( featureWrapper instanceof IFE1D2DEdge )
-      {
-        final IFE1D2DEdge edge = (IFE1D2DEdge) featureWrapper;
-        if( edge.getNodes().contains( node1 ) )
-        {
-          return edge;
-        }
-      }
+      final IFE1D2DEdge edge = (IFE1D2DEdge)feature;
+      if( edge.containsNode( node1 ) )
+        return edge;
     }
-
     return null;
   }
 
   @Override
   public IFeatureBindingCollection<IFE1D2DComplexElement> getComplexElements( )
   {
-    return complexElements;
+    return m_complexElements;
   }
 
   @Override
@@ -163,10 +156,22 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     }
   }
 
+  @Override
+  public IFE1D2DEdge createEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
+  {
+    Assert.throwIAEOnNullParam( node0, "node0" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( node1, "node1" ); //$NON-NLS-1$
+
+    final IFE1D2DEdge edge = m_edges.addNew( IFE1D2DEdge.QNAME );
+    edge.setNodes( node0, node1 );
+    node0.addLinkedEdge( edge );
+    node1.addLinkedEdge( edge );
+
+    return edge;
+  }
+
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findNode(org.kalypsodeegree.model.geometry.GM_Point,
-   *      double)
-   *
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findNode(org.kalypsodeegree.model.geometry.GM_Point, double)
    */
   @Override
   public IFE1D2DNode findNode( final GM_Point nodeLocation, final double searchRectWidth )
@@ -184,17 +189,16 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       {
         if( feature == null )
           continue; // TODO: this is a non-test: it should never happen, so we shouldnt test it here...
-        final IFE1D2DNode currentNode = (IFE1D2DNode) feature;
+        final IFE1D2DNode currentNode = (IFE1D2DNode)feature;
         final GM_Point point = currentNode.getPoint();
         if( point == null )
           throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel.0" ) + currentNode ); //$NON-NLS-1$
 
         /**
          * calculating the distance only between two nodes(simple operation) should not be done with vividsolutions
-         *
+         * 
          * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl.distance( final GM_Object gmo ) huge and complex
          *      computing of distance between two geometries of any kind
-         *
          *      replaced by local simple and fast implementation
          */
         final double currentDistance = calculateDistance2d( nodeLocation, point );
@@ -248,7 +252,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
 
     for( final IFE1D2DElement current : foundElements )
     {
-      if( elementClass.isInstance( current ))
+      if( elementClass.isInstance( current ) )
       {
         final GM_Object geometryFromNetItem = current.getDefaultGeometryPropertyValue();
         if( geometryFromNetItem != null )
@@ -256,7 +260,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
           final double curDist = position.distance( geometryFromNetItem );
           if( min > curDist && curDist <= grabDistance )
           {
-            nearest = (T) current;
+            nearest = (T)current;
             min = curDist;
           }
         }
@@ -279,7 +283,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       if( feature == null )
         continue; // This should never happen!
 
-      final IFE1D2DEdge current = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
+      final IFE1D2DEdge current = (IFE1D2DEdge)feature.getAdapter( IFE1D2DEdge.class );
       if( current != null )
       {
         final GM_Curve curve = current.getGeometry();
@@ -299,9 +303,8 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
 
   /**
    * Finds a continuity line near the given position.
-   *
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findContinuityLine(org.kalypsodeegree.model.geometry.GM_Point,
-   *      double)
+   * 
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findContinuityLine(org.kalypsodeegree.model.geometry.GM_Point, double)
    */
   @Override
   public IFELine findContinuityLine( final GM_Point position, final double grabDistance )
@@ -339,8 +342,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d#find1DElement(org.kalypsodeegree.model.geometry.GM_Point,
-   *      double)
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d#find1DElement(org.kalypsodeegree.model.geometry.GM_Point, double)
    */
   @Override
   public IElement1D find1DElement( final GM_Point position, final double grabDistance )

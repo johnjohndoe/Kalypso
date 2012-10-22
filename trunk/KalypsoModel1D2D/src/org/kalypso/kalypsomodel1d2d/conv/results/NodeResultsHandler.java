@@ -156,7 +156,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     m_discModel = discModel;
     m_resultMinMaxCatcher = resultMinMaxCatcher;
     m_lsHandler = lsHandler;
-    m_resultList = (FeatureList) m_resultWorkspace.getRootFeature().getProperty( INodeResultCollection.QNAME_PROP_NODERESULT_MEMBER );
+    m_resultList = (FeatureList)m_resultWorkspace.getRootFeature().getProperty( INodeResultCollection.QNAME_PROP_NODERESULT_MEMBER );
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_mapSWANResults = mapSWANResults;
@@ -169,7 +169,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   public void end( )
   {
     /* extrapolate the water level into dry areas */
-    //should not be done for calculated by RMA results
+    // should not be done for calculated by RMA results
     // extrapolateWaterLevel( 0 );
     // create the triangles for each element
     for( final ElementResult element : m_elemIndex.values() )
@@ -219,8 +219,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int,
-   *      int, int)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int, int, int)
    */
   @Override
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
@@ -232,7 +231,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     /* store the information of the connection between arcs and elements at the element object */
     /* left element */
     writeArcInfoAtElement( elementLeftID, arcResult );
-    if (elementLeftID != elementRightID)
+    if( elementLeftID != elementRightID )
       /* right element */
       writeArcInfoAtElement( elementRightID, arcResult );
 
@@ -298,8 +297,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int,
-   *      int)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int, int)
    */
   @Override
   public void handleElement( final String lineString, final int id, final int currentRougthnessClassID, final int previousRoughnessClassID, final int eleminationNumber )
@@ -414,7 +412,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         for( int pointIndex = 1; pointIndex < numArcs; pointIndex++ )
         {
-          final GMLNodeResult connectionNode = (GMLNodeResult) elementResult.getCornerNodes( pointIndex );
+          final GMLNodeResult connectionNode = (GMLNodeResult)elementResult.getCornerNodes( pointIndex );
           for( int arc = 1; arc < numArcs; arc++ )
           {
 
@@ -470,8 +468,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         /* check the element (number of arcs, nodes, mid-side nodes) */
 
         /* check water levels for dry nodes */
-        //should not be done for calculated by RMA results
-        //        elementResult.checkWaterlevels();
+        // should not be done for calculated by RMA results
+        // elementResult.checkWaterlevels();
       }
     }
     else
@@ -528,7 +526,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     /* discharge */
     // Q = v x A
     // A = A(y) //get it from the polynomials
-    final BigDecimal area = NodeResultHelper.getCrossSectionArea( (ITeschkeFlowRelation) flowRelation1d, depth );
+    final BigDecimal area = NodeResultHelper.getCrossSectionArea( (ITeschkeFlowRelation)flowRelation1d, depth );
 
     if( area == null )
     {
@@ -575,7 +573,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       if( !(lFlowRel instanceof IFlowRelation1D) )
         break;
 
-      final IFlowRelation1D flowRelation1d = (IFlowRelation1D) lFlowRel;
+      final IFlowRelation1D flowRelation1d = (IFlowRelation1D)lFlowRel;
 
       /* check, if node was already handled for lengthsection */
       if( !m_lengthsection1dNodes.contains( nodes[i].getId() ) )
@@ -620,13 +618,17 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       return null;
 
     IFE1D2DElement element = null;
-    final IFE1D2DElement[] elements = upNode.getElements();
+    final IFE1D2DElement[] elements = upNode.getAdjacentElements();
     for( final IFE1D2DElement anElement : elements )
     {
-      if( anElement.getNodes().contains( downNode ) )
+      final IFE1D2DNode[] nodes = anElement.getNodes();
+      for( IFE1D2DNode node : nodes )
       {
-        element = anElement;
-        break;
+        if( node.equals( downNode ) )
+        {
+          element = anElement;
+          break;
+        }
       }
     }
 
@@ -637,7 +639,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final ICalculationUnit subUnit = CalcUnitOps.findSubUnit( calculationUnit, element );
 
     if( subUnit instanceof ICalculationUnit1D )
-      return (ICalculationUnit1D) subUnit;
+      return (ICalculationUnit1D)subUnit;
 
     return null;
   }
@@ -667,18 +669,20 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final String crs = curveList.get( 0 ).getCoordinateSystem();
 
     final Set<GM_Position> lSetPositions = new HashSet<>();
-    for( final GM_Curve lCurve: curveList ){
+    for( final GM_Curve lCurve : curveList )
+    {
 
       final GM_Position[] lPositions = lCurve.getAsLineString().getPositions();
       for( int i = 0; i < lPositions.length; ++i )
-        lSetPositions.add( lPositions[ i ] );
+        lSetPositions.add( lPositions[i] );
     }
     final List<GM_Position> lListPos = new ArrayList<>();
     lListPos.addAll( lSetPositions );
-    if( !lListPos.get( 0 ).equals( lListPos.get( lListPos.size() - 1 ) ) ){
+    if( !lListPos.get( 0 ).equals( lListPos.get( lListPos.size() - 1 ) ) )
+    {
       lListPos.add( lListPos.get( 0 ) );
     }
-    final GM_Triangle[] elements2 = ConstraintDelaunayHelper.convertToTriangles( lListPos.toArray( new GM_Position[ lListPos.size() ] ), crs );
+    final GM_Triangle[] elements2 = ConstraintDelaunayHelper.convertToTriangles( lListPos.toArray( new GM_Position[lListPos.size()] ), crs );
 
     for( final GM_Triangle element : elements2 )
     {
@@ -686,6 +690,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       feedTriangleEaterWith1dResults( nodeResults, curves, 1.0, crs, Arrays.copyOf( ring, 3 ) );
     }
   }
+
   private void feedTriangleEaterWith1dResults( final INodeResult[] nodeResults, final GM_Curve[] curves, final double curveDistance, final String crs, final GM_Position[] ring )
   {
     final INodeResult[] nodes = new INodeResult[3];
@@ -813,7 +818,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * Splits the triangle into sub-triangles. At first, the arcs to split get identified and the split nodes are added to
    * the node list
-   *
+   * 
    * @param nodes
    *          node list of the triangle to split. In this list the split nodes are added.
    */
@@ -860,12 +865,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     switch( splitArcs.size() )
     {
-      /* case1: one arc is split */
+    /* case1: one arc is split */
       case 1:
         splitIntoTwoTriangles( nodesInserted.toArray( new INodeResult[nodesInserted.size()] ), splitArcs.get( 0 ) );
         break;
 
-        /* case2: two arcs were split */
+      /* case2: two arcs were split */
       case 2:
         splitIntoThreeTriangles( nodesInserted.toArray( new INodeResult[nodesInserted.size()] ), splitArcs.get( 0 ), splitArcs.get( 1 ) );
         break;
@@ -1083,7 +1088,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * - the inserted node lies between node0 and node1.<br>
    * - the inserted node lies between node1 and node2.<br>
    * - the inserted node lies between node2 and node0.<br>
-   *
+   * 
    * @param nodes
    *          list of all nodes of the triangle to split
    * @param splitArcs
@@ -1278,8 +1283,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
-   *      double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double)
    */
   @Override
   public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
@@ -1294,7 +1298,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       m_resultWorkspace.addFeatureAsComposition( parentFeature, parentRelation, -1, feature );
 
       /* Remember node result for additional result data */
-      final GMLNodeResult result = (GMLNodeResult) feature;
+      final GMLNodeResult result = (GMLNodeResult)feature;
       m_nodeIndex.put( id, result );
 
       /* Fill node result with data */
@@ -1343,8 +1347,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerError(java.lang.String,
-   *      org.kalypso.kalypsomodel1d2d.conv.EReadError)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerError(java.lang.String, org.kalypso.kalypsomodel1d2d.conv.EReadError)
    */
   @Override
   public void handleError( final String lineString, final EReadError errorHints )
@@ -1363,7 +1366,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final Set<String> lKeysSet = m_mapSWANResults.keySet();
     for( final Object element : lKeysSet )
     {
-      final String strKey = (String) element;
+      final String strKey = (String)element;
       if( strKey.toLowerCase().contains( ISimulation1D2DConstants.SIM_SWAN_HSIG_OUT_PARAM.toLowerCase() ) )
       {
         m_mapWAVEHsig = m_mapSWANResults.get( strKey );
@@ -1380,8 +1383,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double,
-   *      double, double, double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double, double, double, double)
    */
   @Override
   public void handleResult( final String lineString, final int id, final double vx, final double vy, final double virtualDepth, final double waterlevel )
@@ -1428,9 +1430,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         System.out.println( "normally the handleResult function can be called without water stage information! The 2D-file may be 'broken'" ); //$NON-NLS-1$
         break;
 
-        // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
-        // stage information!
-        // Normally this shouldn't happen, because otherwise the 2D-file is 'broken'
+    // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
+    // stage information!
+    // Normally this shouldn't happen, because otherwise the 2D-file is 'broken'
 
     }
   }
@@ -1454,8 +1456,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleJunction(java.lang.String, int, int, int,
-   *      int)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleJunction(java.lang.String, int, int, int, int)
    */
   @Override
   public void handleJunction( final String parseLine, final int junctionID, final int element1dID, final int boundaryLine2dID, final int node1dID )
@@ -1464,8 +1465,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNodeInformation(java.lang.String, int, int,
-   *      double, double, double, double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNodeInformation(java.lang.String, int, int, double, double, double, double)
    */
   @Override
   public void handleNodeInformation( final String line, final int id, final int dry, final double value1, final double value2, final double value3, final double value4 )
@@ -1515,7 +1515,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         {
           break;
         }
-        final IFlowRelation1D teschkeRelation = (IFlowRelation1D) lFlowRel;
+        final IFlowRelation1D teschkeRelation = (IFlowRelation1D)lFlowRel;
 
         final IProfileFeature profile = teschkeRelation.getProfile();
 

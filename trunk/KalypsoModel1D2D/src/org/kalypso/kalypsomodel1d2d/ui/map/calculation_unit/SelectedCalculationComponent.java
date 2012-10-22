@@ -208,7 +208,7 @@ public class SelectedCalculationComponent
     else if( newValue instanceof ICalculationUnit1D2D )
     {
       m_txtCalcUnitType.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.8" ) ); //$NON-NLS-1$
-      m_subCalcUnitsTableViewer.setInput( ((ICalculationUnit1D2D)newValue).getChangedSubUnits().toArray() );
+      m_subCalcUnitsTableViewer.setInput( ((ICalculationUnit1D2D)newValue).getSubCalculationUnits().toArray() );
       m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit)newValue).getElements1D().size() ) );
       m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit)newValue).getElements2D().size() ) );
     }

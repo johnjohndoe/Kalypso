@@ -67,11 +67,11 @@ import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
@@ -84,7 +84,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * This widget allows to delete the edge of to adjacent triangles and thus combining them into a single quad-element.
- *
+ * 
  * @author Gernot Belger
  */
 public class MergeTrianglesWidget extends DeprecatedMouseWidget
@@ -113,8 +113,7 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
@@ -139,7 +138,7 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
-      m_theme = (IKalypsoFeatureTheme) activeTheme;
+      m_theme = (IKalypsoFeatureTheme)activeTheme;
 
     mapPanel.repaintMap();
   }
@@ -161,10 +160,8 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
 
     try
     {
-      final IFeatureBindingCollection<IFE1D2DElement> adjacentElements = m_currentEdge.getAdjacentElements();
-      final IFE1D2DElement[] elements2remove = adjacentElements.toArray( new IFE1D2DElement[adjacentElements.size()] );
-
-      final GM_Surface<GM_SurfacePatch> newElement = createNewElement( (IPolyElement) elements2remove[0], (IPolyElement) elements2remove[1] );
+      final IFE1D2DElement[] elements2remove = m_currentEdge.getLinkedElements();
+      final GM_Polygon<GM_AbstractSurfacePatch> newElement = createNewElement( (IPolyElement)elements2remove[0], (IPolyElement)elements2remove[1] );
       newElement.setCoordinateSystem( m_currentEdge.getGeometry().getCoordinateSystem() );
       final CommandableWorkspace workspace = m_theme.getWorkspace();
 
@@ -190,10 +187,10 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
    * Creates the new element from the two adjacent triangles.<br>
    * We just make the geometric union, that should do it.
    */
-  private GM_Surface<GM_SurfacePatch> createNewElement( final IPolyElement element1, final IPolyElement element2 ) throws GM_Exception
+  private GM_Polygon<GM_AbstractSurfacePatch> createNewElement( final IPolyElement element1, final IPolyElement element2 ) throws GM_Exception
   {
-    final GM_Surface<GM_SurfacePatch> geom1 = element1.getGeometry();
-    final GM_Surface<GM_SurfacePatch> geom2 = element2.getGeometry();
+    final GM_Polygon<GM_PolygonPatch> geom1 = element1.getGeometry();
+    final GM_Polygon<GM_PolygonPatch> geom2 = element2.getGeometry();
 
     final Geometry jtsGeom1 = JTSAdapter.export( geom1 );
     final Geometry jtsGeom2 = JTSAdapter.export( geom2 );
@@ -202,7 +199,7 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
     // TRICK: buffer with 0 in order to get a single geometry
     final Geometry buffer = union.buffer( 0 );
 
-    return (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( buffer );
+    return (GM_Polygon<GM_AbstractSurfacePatch>)JTSAdapter.wrap( buffer );
   }
 
   @Override
@@ -221,12 +218,12 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
     // Validate and set warning
     if( m_currentEdge != null )
     {
-      final IFeatureBindingCollection<IFE1D2DElement> adjacentElements = m_currentEdge.getAdjacentElements();
-      if( adjacentElements.size() != 2 )
+      final IFE1D2DElement[] adjacentElements = m_currentEdge.getLinkedElements();
+      if( adjacentElements.length != 2 )
         m_warning = "Edge must have two adjacent 2D-elements"; //$NON-NLS-1$
       else
       {
-        if( adjacentElements.get( 0 ).getNodes().size() != 4 || adjacentElements.get( 1 ).getNodes().size() != 4 )
+        if( adjacentElements[0].getNodes().length != 4 || adjacentElements[1].getNodes().length != 4 )
           m_warning = "Both adjacent elements must be triangles"; //$NON-NLS-1$
       }
     }

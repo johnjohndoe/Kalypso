@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * Command for adding continuity line to the calculation unit
- *
+ * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  */
@@ -106,8 +106,8 @@ public class AddBoundaryLineToCalculationUnitCmd implements IFeatureChangeComman
     {
       if( !m_commandProcessed )
       {
-        if( m_calculationUnit.addElementAsRef( m_feLine ) )
-          m_feLine.getContainers().addRef( m_calculationUnit );
+        m_calculationUnit.addLinkedItem( m_feLine );
+        m_feLine.addLinkedComplexElement( m_calculationUnit );
         fireProcessChanges();
       }
     }

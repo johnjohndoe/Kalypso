@@ -71,7 +71,7 @@ import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -132,10 +132,10 @@ public final class RainfallGeneratorUtilities
 
   private static GM_MultiSurface toMultiSurface( final GMLXPath catchmentAreaXPath, final Object object ) throws CoreException
   {
-    if( object instanceof GM_Surface )
+    if( object instanceof GM_Polygon )
     {
-      final GM_Surface< ? > surface = (GM_Surface< ? >) object;
-      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, surface.getCoordinateSystem() );
+      final GM_Polygon< ? > surface = (GM_Polygon< ? >) object;
+      return GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { surface }, surface.getCoordinateSystem() );
     }
 
     if( object instanceof GM_MultiSurface )

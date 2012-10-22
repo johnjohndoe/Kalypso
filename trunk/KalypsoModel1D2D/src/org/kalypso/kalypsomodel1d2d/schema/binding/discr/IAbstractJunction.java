@@ -52,7 +52,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * Common interface for {@link ITransitionElement} and {@link IJunctionElement}
  * 
  * @author Dejan Antanaskovic
- *
  */
 public interface IAbstractJunction extends IFE1D2DComplexElement
 {

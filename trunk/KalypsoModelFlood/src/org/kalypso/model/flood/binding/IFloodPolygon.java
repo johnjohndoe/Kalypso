@@ -46,8 +46,8 @@ import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * @author Thomas Jung
@@ -65,7 +65,7 @@ public interface IFloodPolygon extends Feature
 
   public boolean contains( GM_Position pos );
 
-  public GM_Surface<GM_SurfacePatch> getArea( );
+  public GM_Polygon<GM_AbstractSurfacePatch> getArea( );
 
   public IFeatureBindingCollection<IRunoffEvent> getEvents( );
 }

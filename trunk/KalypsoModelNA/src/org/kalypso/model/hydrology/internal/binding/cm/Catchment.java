@@ -49,7 +49,7 @@ import org.kalypso.model.hydrology.binding.cm.IFactorizedTimeseries;
 import org.kalypso.model.hydrology.binding.cm.ILinearSumGenerator;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -96,7 +96,7 @@ public class Catchment extends Feature_Impl implements ICatchment
   }
 
   @Override
-  public GM_Surface< ? > resolveArea( )
+  public GM_Polygon< ? > resolveArea( )
   {
     final ILinearSumGenerator generator = getOwner();
 
@@ -111,8 +111,8 @@ public class Catchment extends Feature_Impl implements ICatchment
       return null;
 
     final Object area = GMLXPathUtilities.queryQuiet( areaPath, catchment );
-    if( area instanceof GM_Surface )
-      return (GM_Surface< ? >) area;
+    if( area instanceof GM_Polygon )
+      return (GM_Polygon< ? >) area;
 
     return null;
   }

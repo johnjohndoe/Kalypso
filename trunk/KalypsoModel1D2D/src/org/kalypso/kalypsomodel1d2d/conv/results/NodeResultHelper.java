@@ -136,7 +136,7 @@ public class NodeResultHelper
 
   /**
    * sets the mid-side node's water level and depth by interpolation between the corner nodes.
-   *
+   * 
    * @param nodeDown
    *          first node of the corresponding arc.
    * @param nodeUp
@@ -178,7 +178,7 @@ public class NodeResultHelper
   /**
    * interpolates the water level for the midside node by using the water levels of the corner nodes. The depth will be
    * calculated as well, using the interpolated water level.
-   *
+   * 
    * @param nodeDown
    *          first node of the arc on which the corner node lies.
    * @param nodeUp
@@ -244,7 +244,7 @@ public class NodeResultHelper
 
   /**
    * returns a simplified profile curve of a 1d-node, already cut at the intersection points with the water level
-   *
+   * 
    * @param nodeResult
    *          1d-node
    */
@@ -263,7 +263,7 @@ public class NodeResultHelper
     // final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
     // final GM_Curve curve = cutProfileAtWaterlevel( waterlevel, profil, crs );
     final GM_Curve curve = ProfileUtil.getLine( profil );
-    final GM_Curve transformCurve = (GM_Curve) curve.transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    final GM_Curve transformCurve = (GM_Curve)curve.transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     /* simplify the profile */
     final double epsThinning = 1.0;
     final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( transformCurve, epsThinning );
@@ -279,14 +279,14 @@ public class NodeResultHelper
 
   /**
    * returns {@link IProfileFeature} of the nearest profile to the given profile in the given network
-   *
+   * 
    * @param profileNetwork
    *          {@link IRiverProfileNetwork} final IRiverProfileNetwork profileNetwork,
    */
   private static IProfileFeature findNearestProfile( final IProfileFeature profile )
   {
     final Feature parent = profile.getOwner();
-    final IRiverProfileNetwork profileNetwork = (IRiverProfileNetwork) parent.getAdapter( IRiverProfileNetwork.class );
+    final IRiverProfileNetwork profileNetwork = (IRiverProfileNetwork)parent.getAdapter( IRiverProfileNetwork.class );
 
     double stationDistance = Double.MAX_VALUE;
     IProfileFeature nextProfile = null;
@@ -345,7 +345,7 @@ public class NodeResultHelper
   /**
    * gets the x-coordinate of the zero point of a line defined by y1 (>0), y2 (<0) and the difference of the
    * x-coordinates (x2-x1) = dx12.
-   *
+   * 
    * @param dx12
    *          distance between x1 and x2.
    * @param y1
@@ -403,13 +403,13 @@ public class NodeResultHelper
   public static INodeResult getNodeResult( final GM_Point point, final FeatureList resultList, final double searchDistance )
   {
     final Feature feature = GeometryUtilities.findNearestFeature( point, searchDistance, resultList, GMLNodeResult.QNAME_PROP_LOCATION );
-    return (INodeResult) feature.getAdapter( INodeResult.class );
+    return (INodeResult)feature.getAdapter( INodeResult.class );
   }
 
   public static GM_Point[] getLinePoints( final IContinuityLine2D continuityLine2D )
   {
-    final List<IFE1D2DNode> nodes = continuityLine2D.getNodes();
-    final GM_Point[] points = new GM_Point[nodes.size()];
+    final IFE1D2DNode[] nodes = continuityLine2D.getNodes();
+    final GM_Point[] points = new GM_Point[nodes.length];
     int i = 0;
     for( final IFE1D2DNode node : nodes )
     {
@@ -587,7 +587,7 @@ public class NodeResultHelper
 
   /**
    * 180 deg rotated; inversion of point b in respect to point a
-   *
+   * 
    * @param a
    *          to rotate on
    * @param b
@@ -618,13 +618,11 @@ public class NodeResultHelper
 
   /**
    * checks if all given points are placed on given curve,
-   *
+   * 
    * @param listPoses
    *          list of points {@link GM_Position} to check
-   *
    * @param curve
    *          {@link GM_Curve} should be checked for containing given points
-   *
    * @param simpleCheck
    *          if set true, only end and start points of the curve will be checked else the {@link GM_Object} contains
    *          method will be called

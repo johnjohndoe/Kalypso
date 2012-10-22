@@ -57,7 +57,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -75,7 +74,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Converts discretisation model to SMS .2dm file
- *
+ * 
  * @author Thomas Jung
  */
 public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
@@ -227,7 +226,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
       final int nodeID = getConversionID( node );
       final GM_Point point = node.getPoint();
 
-      if( DiscretisationModelUtils.is1DNode( node ) )
+      if( node.getAdjacentElements()[0] instanceof IElement1D )
       {
         // not handled
       }
@@ -300,19 +299,19 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
       }
       else if( element instanceof IPolyElement )
       {
-        for( final IFE1D2DEdge edge : ((IPolyElement) element).getEdges() )
+        for( final IFE1D2DEdge edge : ((IPolyElement)element).getEdges() )
         {
           edgeSet.add( edge );
         }
 
         final int roughnessID = m_roughnessIDProvider == null ? 0 : getRoughnessID( element );
-        final List<IFE1D2DNode> nodes = element.getNodes();
+        final IFE1D2DNode[] nodes = element.getNodes();
 
-        if( nodes.size() == 4 )
+        if( nodes.length == 4 )
         {
           writeTriangularElement( formatter, id, roughnessID, nodes );
         }
-        else if( nodes.size() == 5 )
+        else if( nodes.length == 5 )
         {
           writeQuadrangularElement( formatter, id, roughnessID, nodes );
         }
@@ -337,7 +336,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
 
     for( final IFE1D2DEdge edge : edgeSet )
     {
-      final IFeatureBindingCollection<IFE1D2DNode> nodes = edge.getNodes();
+      final IFE1D2DNode[] nodes = edge.getNodes();
       for( final IFE1D2DNode node : nodes )
       {
         nodeSet.add( node );
@@ -360,14 +359,14 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * n1-n4: The ID's of nodes in the element.<br>
    * matid: The ID of the material assigned to the element.
    */
-  private void writeQuadrangularElement( final Formatter formatter, final int id, final int roughnessID, final List<IFE1D2DNode> nodes )
+  private void writeQuadrangularElement( final Formatter formatter, final int id, final int roughnessID, final IFE1D2DNode[] nodes )
   {
     // TODO: check orientation
 
-    final int nodeID1 = getConversionID( nodes.get( 0 ) );
-    final int nodeID2 = getConversionID( nodes.get( 1 ) );
-    final int nodeID3 = getConversionID( nodes.get( 2 ) );
-    final int nodeID4 = getConversionID( nodes.get( 3 ) );
+    final int nodeID1 = getConversionID( nodes[0] );
+    final int nodeID2 = getConversionID( nodes[1] );
+    final int nodeID3 = getConversionID( nodes[2] );
+    final int nodeID4 = getConversionID( nodes[3] );
 
     formatter.format( "E4Q%10d%10d%10d%10d%10d%10d%n", id, nodeID1, nodeID2, nodeID3, nodeID4, roughnessID ); //$NON-NLS-1$
   }
@@ -385,14 +384,14 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * n1-n3: The ID's of nodes in the element.<br>
    * matid: The ID of the material assigned to the element.
    */
-  private void writeTriangularElement( final Formatter formatter, final int id, final int roughnessID, final List<IFE1D2DNode> nodes )
+  private void writeTriangularElement( final Formatter formatter, final int id, final int roughnessID, final IFE1D2DNode[] nodes )
   {
 
     // TODO: check orientation
 
-    final int nodeID1 = getConversionID( nodes.get( 0 ) );
-    final int nodeID2 = getConversionID( nodes.get( 1 ) );
-    final int nodeID3 = getConversionID( nodes.get( 2 ) );
+    final int nodeID1 = getConversionID( nodes[0] );
+    final int nodeID2 = getConversionID( nodes[1] );
+    final int nodeID3 = getConversionID( nodes[2] );
 
     formatter.format( "E3T%10d%10d%10d%10d%10d%n", id, nodeID1, nodeID2, nodeID3, roughnessID ); //$NON-NLS-1$
   }

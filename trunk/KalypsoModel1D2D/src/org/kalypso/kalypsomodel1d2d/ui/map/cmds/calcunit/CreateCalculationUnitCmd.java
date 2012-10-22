@@ -77,9 +77,8 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Command to create new calculation unit
- *
+ * 
  * @author Patrice Congo
- *
  */
 public class CreateCalculationUnitCmd implements IFeatureChangeCommand
 {
@@ -117,7 +116,7 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
 
   /**
    * Creates a Calculation unit of the given q-name
-   *
+   * 
    * @param cuFeatureQName
    *          the q-name of the calculation unit to create
    * @param model1d2d
@@ -139,7 +138,7 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
 
   /**
    * Creates a Calculation unit of the given q-name
-   *
+   * 
    * @param cuFeatureQName
    *          the q-name of the calculation unit to create
    * @param model1d2d
@@ -205,7 +204,7 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
         if( m_calculationUnitOrig instanceof ICalculationUnit1D2D )
         {
           final Feature calcUnitFeature = FeatureHelper.cloneFeature( m_calculationUnitOrig.getOwner(), m_calculationUnitOrig.getParentRelation(), m_calculationUnitOrig );
-          m_calculationUnit = (ICalculationUnit) calcUnitFeature.getAdapter( ICalculationUnit.class );
+          m_calculationUnit = (ICalculationUnit)calcUnitFeature.getAdapter( ICalculationUnit.class );
         }
       }
       else
@@ -214,7 +213,6 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
         m_calculationUnit = ce.addNew( m_calcUnitFeatureQName, ICalculationUnit.class );
         if( m_calcUnitDescription != null )
           m_calculationUnit.setDescription( m_calcUnitDescription );
-        m_calculationUnit.getElements().clear();
       }
 
       m_calculationUnit.setName( m_calcUnitName );
@@ -265,7 +263,7 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
       try
       {
         final Feature controlModelFeature = FeatureHelper.cloneFeature( controlModelOrig.getOwner(), controlModelOrig.getParentRelation(), controlModelOrig );
-        final IControlModel1D2D newControlModel = (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
+        final IControlModel1D2D newControlModel = (IControlModel1D2D)controlModelFeature.getAdapter( IControlModel1D2D.class );
 
         newControlModel.setCalculationUnit( m_calculationUnit );
         controlModel1D2DCollection.setActiveControlModel( newControlModel );
@@ -279,7 +277,6 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
   }
 
   /**
-   *
    * @param calculationUnit
    *          the added or removed calculation unit
    * @param added
@@ -335,7 +332,7 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
       throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd.1" ), e ); //$NON-NLS-1$
     }
     final IControlModel1D2DCollection parentFeature = modelGroup.getModel1D2DCollection();
-    final IRelationType relationType = (IRelationType) parentFeature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
+    final IRelationType relationType = (IRelationType)parentFeature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
     final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
     final int pos = 0;
     final IGMLSchema schema = parentFeature.getFeatureType().getGMLSchema();
@@ -347,13 +344,13 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
       {
         super.process();
         final Feature newControlFeature = getNewFeature();
-        final IControlModel1D2D newControlModel = (IControlModel1D2D) newControlFeature.getAdapter( IControlModel1D2D.class );
+        final IControlModel1D2D newControlModel = (IControlModel1D2D)newControlFeature.getAdapter( IControlModel1D2D.class );
 
         // newControlModel.setName( Messages.getString( "CreateCalculationUnitCmd.2" ) + m_calcUnitName ); //$NON-NLS-1$
         newControlModel.setCalculationUnit( m_calculationUnit );
         parentFeature.setActiveControlModel( newControlModel );
 
-        final Feature obsFeature = (Feature) newControlFeature.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+        final Feature obsFeature = (Feature)newControlFeature.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
 
         /*
          * If observation does not exist, create it. final Feature obsFeature; if( obsFeatureIfPresent == null ) { final
@@ -374,9 +371,6 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
           /**
            * <om:observedProperty xmlns:om="http://www.opengis.net/om"
            * xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-           *
-           *
-           *
            * IPhenomenon phenomenon = new DictionaryPhenomenon(
            * "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", "", "");
            * obs.setPhenomenon( phenomenon );

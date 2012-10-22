@@ -63,26 +63,25 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * TODO: separate (again) geometry building from 1d2d element building! This class is used to build new 1D2D Elements
- *
+ * 
  * @author Gernot Belger
  */
 public class ElementGeometryBuilder
@@ -104,7 +103,7 @@ public class ElementGeometryBuilder
 
   /**
    * The constructor.
-   *
+   * 
    * @param cnt_points
    *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
    *          count of the points will apply.
@@ -146,7 +145,7 @@ public class ElementGeometryBuilder
     final Feature parentFeature = featureList.getOwner();
 
     /* Initialize elements needed for edges and elements */
-    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature;
+    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d)parentFeature;
 
     final GM_Point[] nodes = m_nodes.toArray( new GM_Point[m_nodes.size()] );
     return new Create2dElementCommand( discModel, nodes );
@@ -255,7 +254,7 @@ public class ElementGeometryBuilder
         final IFE1D2DNode foundNode = discModel.findNode( newPoint, SEARCH_DISTANCE );
         if( foundNode == null )
         {
-          final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
+          final GM_Polygon<GM_PolygonPatch> surface = elementForNewNode.getGeometry();
           if( surface.contains( newPoint ) )
             return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.6" ) ); //$NON-NLS-1$
         }
@@ -265,12 +264,11 @@ public class ElementGeometryBuilder
       final IFE1D2DNode node = discModel.findNode( newPoint, SEARCH_DISTANCE );
       if( node != null )
       {
-        final IFeatureBindingCollection<IFENetItem> nodeEdges = node.getContainers();
-        for( final IFENetItem nodeItem : nodeEdges )
+        final IFE1D2DEdge[] nodeEdges = node.getLinkedEdges();
+        for( final IFE1D2DEdge nodeItem : nodeEdges )
         {
-          final IFE1D2DEdge nodeEdge = (IFE1D2DEdge) nodeItem;
-          final IFeatureBindingCollection< ? > containers = nodeEdge.getContainers();
-          for( final Feature edgeContainer : containers )
+          final IFE1D2DElement[] containers = nodeItem.getLinkedElements();
+          for( final IFE1D2DElement edgeContainer : containers )
           {
             if( edgeContainer instanceof IElement1D )
               return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "2D-Element cannot have a common vertice with an 1D-Element" );
@@ -294,7 +292,7 @@ public class ElementGeometryBuilder
         {
           if( element instanceof IPolyElement )
           {
-            final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
+            final GM_Polygon<GM_PolygonPatch> eleGeom = ((IPolyElement)element).getGeometry();
             if( eleGeom == null )
             {
               // check for null geometries... What to do?
@@ -307,7 +305,7 @@ public class ElementGeometryBuilder
               final GM_Object intersection = eleGeom.intersection( curve );
               if( intersection instanceof GM_Curve )
               {
-                final GM_Curve intersCurve = (GM_Curve) intersection;
+                final GM_Curve intersCurve = (GM_Curve)intersection;
                 final GM_Point startPoint = intersCurve.getAsLineString().getStartPoint();
                 final GM_Point endPoint = intersCurve.getAsLineString().getEndPoint();
 
@@ -330,7 +328,7 @@ public class ElementGeometryBuilder
       if( GeometryUtilities.isSelfIntersecting( ring ) && pBoolFinalPont )
         return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ); //$NON-NLS-1$
 
-      final GM_Surface< ? extends GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Polygon< ? extends GM_AbstractSurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
       // new element is not convex
       if( m_cnt_points > 0 && newSurface.getConvexHull().difference( newSurface ) != null )
@@ -342,11 +340,11 @@ public class ElementGeometryBuilder
       {
         if( element instanceof IPolyElement )
         {
-          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
+          final GM_Polygon<GM_PolygonPatch> eleGeom = ((IPolyElement)element).getGeometry();
           if( eleGeom.intersects( newSurface ) && pBoolFinalPont )
           {
             final GM_Object intersection = eleGeom.intersection( newSurface );
-            if( intersection instanceof GM_Surface )
+            if( intersection instanceof GM_Polygon )
               return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.5" ) ); //$NON-NLS-1$
           }
         }

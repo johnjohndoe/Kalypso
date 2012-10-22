@@ -44,13 +44,11 @@ import java.math.BigInteger;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 
 /**
  * Default implementation of {@link ICalculationUnit1D}
  * 
  * @author Patrice Congo
- * 
  */
 public class CalculationUnit1D extends CalculationUnit implements ICalculationUnit1D
 {
@@ -77,12 +75,10 @@ public class CalculationUnit1D extends CalculationUnit implements ICalculationUn
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement)
    */
   @Override
-  public boolean addElementAsRef( final IFENetItem element )
+  public void addLinkedItem( final IFENetItem element )
   {
     final boolean isElement1dOrLine = (element instanceof IElement1D) || (element instanceof IContinuityLine1D);
     if( isElement1dOrLine )
-      return super.addElementAsRef( element );
-
-    return false;
+      super.addLinkedItem( element );
   }
 }

@@ -59,7 +59,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
@@ -73,7 +73,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  *
  */
 // FIXME: never used, remove?
-public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitable<GM_SurfacePatch>
+public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitable<GM_AbstractSurfacePatch>
 {
   /**
    * The envelop if the region of interest
@@ -188,7 +188,7 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
    *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor )
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_AbstractSurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor )
   {
     final GM_Envelope env = GMRectanglesClip.getIntersectionEnv( maxEnvelope, envToVisit );
     final double xmin = env.getMin().getX();

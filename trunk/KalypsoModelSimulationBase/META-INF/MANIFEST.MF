@@ -13,7 +13,6 @@ Require-Bundle:
  org.kalypso.afgui;visibility:=reexport,
  org.junit;resolution:=optional
 Export-Package: org.kalypso.kalypsosimulationmodel.core,
- org.kalypso.kalypsosimulationmodel.core.discr,
  org.kalypso.kalypsosimulationmodel.core.flowrel,
  org.kalypso.kalypsosimulationmodel.core.modeling,
  org.kalypso.kalypsosimulationmodel.core.resultmeta,

@@ -77,7 +77,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
       final File fmOutputFile = File.createTempFile( "outTempFM", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final Feature wspmTinRootFeature = wspmTinFile.getRootFeature();
-      final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter( IFloodModel.class );
+      final IFloodModel floodModel = (IFloodModel)fmModel.getRootFeature().getAdapter( IFloodModel.class );
       final IFeatureBindingCollection<IRunoffEvent> floodModelEvents = floodModel.getEvents();
       if( deleteExistingRunoffEvents )
       {
@@ -107,8 +107,8 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
         polygon.getEvents().addRef( newRunoffEvent );
       }
       final ITinReference tinReference = newRunoffEvent.getTins().addNew( ITinReference.QNAME );
-      final GM_TriangulatedSurface triangulatedSurface = (GM_TriangulatedSurface) wspmTinRootFeature.getProperty( new QName( IWspmConstants.NS_WSPMCOMMONS, "triangulatedSurfaceMember" ) ); //$NON-NLS-1$
-      final XMLGregorianCalendar date = (XMLGregorianCalendar) wspmTinRootFeature.getProperty( new QName( IWspmConstants.NS_WSPMCOMMONS, "date" ) ); //$NON-NLS-1$
+      final GM_TriangulatedSurface triangulatedSurface = (GM_TriangulatedSurface)wspmTinRootFeature.getProperty( new QName( IWspmConstants.NS_WSPMCOMMONS, "triangulatedSurfaceMember" ) ); //$NON-NLS-1$
+      final XMLGregorianCalendar date = (XMLGregorianCalendar)wspmTinRootFeature.getProperty( new QName( IWspmConstants.NS_WSPMCOMMONS, "date" ) ); //$NON-NLS-1$
       final GMLXPath sourceFeaturePath = new GMLXPath( "TriangulatedSurfaceFeature/triangulatedSurfaceMember", wspmTinFile.getNamespaceContext() ); //$NON-NLS-1$
 
       double min = Double.MAX_VALUE;

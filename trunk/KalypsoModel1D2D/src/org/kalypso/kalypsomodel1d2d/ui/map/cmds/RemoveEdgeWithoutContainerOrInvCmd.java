@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.kalypso.commons.command.ICommand;
@@ -49,13 +48,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Command to remove an edge without container and inverted edge
- *
+ * 
  * @author Patrice Congo
  * @author ig, barbarins
  */
@@ -96,20 +92,12 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
     {
       edgesToRemove.add( lEdgeToDelete );
 
-      final List<IFE1D2DNode> nodes = lEdgeToDelete.getNodes();
-      changedNodes.addAll( nodes );
-
-      final IFE1D2DNode middleNode = lEdgeToDelete.getMiddleNode();
-
-      if( middleNode != null )
-      {
-        changedNodes.add( middleNode );
-        /* middle nodes can always be removed directly */
-        nodesToRemove.add( middleNode );
-      }
+      final IFE1D2DNode[] nodes = lEdgeToDelete.getNodes();
+      changedNodes.add( nodes[0] );
+      changedNodes.add( nodes[1] );
 
       for( final IFE1D2DNode node : nodes )
-        removeEdgeFromNode( node, lEdgeToDelete );
+        node.removeLinkedEdge( lEdgeToDelete );
     }
 
     /* Check if nodes can finally be removed */
@@ -121,43 +109,20 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
 
     m_model1d2d.getEdges().removeAll( edgesToRemove );
     m_model1d2d.getNodes().removeAll( nodesToRemove );
-
-    // The caller of this command is responsible for the event
-
-    // final IFE1D2DEdge[] removedEdges = edgesToRemove.toArray( new IFE1D2DEdge[edgesToRemove.size()] );
-    // final IFE1D2DNode[] removedNodes = nodesToRemove.toArray( new IFE1D2DNode[nodesToRemove.size()] );
-
-    // final GMLWorkspace workspace = m_model1d2d.getWorkspace();
-    // workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_model1d2d, removedEdges,
-    // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
-    // workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_model1d2d, removedNodes,
-    // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   private boolean shouldRemoveNode( final IFE1D2DNode node, final Set<IFE1D2DEdge> allRemovedEdges )
   {
-    final IFeatureBindingCollection< ? > lActNodeContainers = node.getContainers();
-
-    if( lActNodeContainers == null || lActNodeContainers.isEmpty() )
-      return true;
+    final IFE1D2DEdge[] lActNodeContainers = node.getLinkedEdges();
 
     /* As soon as ther is one edge on the node, that will not be removed, do not remove the node as well */
-    for( final Feature edge : lActNodeContainers )
+    for( final IFE1D2DEdge edge : lActNodeContainers )
     {
       if( !allRemovedEdges.contains( edge ) )
         return false;
     }
 
     return true;
-  }
-
-  private void removeEdgeFromNode( final IFE1D2DNode node, final IFE1D2DEdge lEdgeToDelete )
-  {
-    final FeatureList edgeContainer = node.getContainers().getFeatureList();
-
-    final boolean removed = edgeContainer.removeLink( lEdgeToDelete );
-    if( !removed )
-      System.out.println( "SEVERE: inconsistent net" ); //$NON-NLS-1$
   }
 
   public void addEdgeToRemove( final IFE1D2DEdge edgeToRemove )

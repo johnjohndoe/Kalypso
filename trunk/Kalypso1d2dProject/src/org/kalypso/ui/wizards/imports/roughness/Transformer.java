@@ -21,7 +21,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 
@@ -106,8 +106,8 @@ public class Transformer implements ICoreRunnableWithProgress
       if( gm_Whatever instanceof GM_MultiSurface )
       {
         final GM_MultiSurface multiSurface = (GM_MultiSurface) ((GM_MultiSurface) gm_Whatever).clone();
-        final GM_Surface< ? >[] surfaces = multiSurface.getAllSurfaces();
-        for( final GM_Surface< ? > element : surfaces )
+        final GM_Polygon< ? >[] surfaces = multiSurface.getAllSurfaces();
+        for( final GM_Polygon< ? > element : surfaces )
         {
           final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
           m_NumberOfEntriesAdded++;

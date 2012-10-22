@@ -42,43 +42,76 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 public abstract class FELine extends Feature_Impl implements IFELine
 {
-  protected final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<>( this, IFE1D2DNode.class, PROP_NODES );
-
-  private final IFeatureBindingCollection<IFE1D2DComplexElement> m_containers = new FeatureBindingCollection<>( this, IFE1D2DComplexElement.class, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
-
   public FELine( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  protected void setGeometry( final GM_Object value )
+  protected FeatureList complexElementsInternal( )
   {
-    setProperty( IFELine.PROP_GEOMETRY, value );
+    return (FeatureList)getProperty( WB1D2D_PROP_ELEMENT_CONTAINERS );
+  }
+
+  protected FeatureList nodesInternal( )
+  {
+    return (FeatureList)getProperty( PROP_NODES );
   }
 
   @Override
-  public IFeatureBindingCollection<IFE1D2DNode> getNodes( )
+  public void setGeometry( final GM_Curve value )
   {
-    return m_nodes;
+    setProperty( PROP_GEOMETRY, value );
+    setEnvelopesUpdated();
   }
 
   @Override
-  public IFeatureBindingCollection<IFE1D2DComplexElement> getContainers( )
+  public void addNode( final IFE1D2DNode node )
   {
-    return m_containers;
+    Assert.throwIAEOnNullParam( node, "node" );
+    if( nodesInternal().containsOrLinksTo( node ) )
+      return;
+    nodesInternal().addLink( node );
+    setEnvelopesUpdated();
+  }
+
+  @Override
+  public IFE1D2DNode[] getNodes( )
+  {
+    return nodesInternal().toFeatures( new IFE1D2DNode[nodesInternal().size()] );
+  }
+
+  @Override
+  public void addLinkedComplexElement( IFE1D2DComplexElement element )
+  {
+    Assert.throwIAEOnNullParam( element, "element" );
+    if( !complexElementsInternal().containsOrLinksTo( element ) )
+      complexElementsInternal().addLink( element );
+  }
+
+  @Override
+  public void removeLinkedComplexElement( IFE1D2DComplexElement element )
+  {
+    Assert.throwIAEOnNullParam( element, "element" );
+    if( complexElementsInternal().containsOrLinksTo( element ) )
+      complexElementsInternal().removeLink( element );
+  }
+
+  @Override
+  public IFE1D2DComplexElement[] getLinkedElements( )
+  {
+    return complexElementsInternal().toFeatures( new IFE1D2DComplexElement[complexElementsInternal().size()] );
   }
 
   @Override
   public GM_Curve getGeometry( )
   {
-    return (GM_Curve) getProperty( IFELine.PROP_GEOMETRY );
+    return (GM_Curve)getProperty( IFELine.PROP_GEOMETRY );
   }
 }

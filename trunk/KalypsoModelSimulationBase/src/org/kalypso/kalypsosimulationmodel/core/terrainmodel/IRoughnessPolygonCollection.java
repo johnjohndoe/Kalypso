@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * The interface implemented by classes representing simBase:RoughnessCollectionElement
@@ -32,7 +32,7 @@ public interface IRoughnessPolygonCollection extends IFeatureBindingCollection<I
    *          the area where to select the roughness polygon
    * @return a set of rougness polygons overlaping the given zone.
    */
-  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Surface< ? > selectionZone );
+  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Polygon< ? > selectionZone );
 
   /**
    * Gets all roughness polygons in this collection

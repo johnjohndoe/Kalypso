@@ -61,9 +61,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Converts discretisation model to .hmo file
- *
+ * 
  * @author felipe maximino
- *
  */
 public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshConverter, INativeIDProvider
 {
@@ -85,7 +84,7 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
   public void writeElements( final IFeatureBindingCollection<IFE1D2DElement> elements ) throws CoreException
   {
     final List<IFE1D2DElement> elementsInBBox = elements;
-    final List<List<IFE1D2DNode>> triangularElements = new ArrayList<>();
+    final List<IFE1D2DNode[]> triangularElements = new ArrayList<>();
 
     if( elementsInBBox.size() == 0 )
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.GmlMesh2HmoConverter.2" ) ) ); //$NON-NLS-1$
@@ -94,14 +93,14 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
     {
       if( element instanceof IPolyElement )
       {
-        final List<IFE1D2DNode> nodes = element.getNodes();
+        final IFE1D2DNode[] nodes = element.getNodes();
         writeNodes( nodes );
 
-        if( nodes.size() == 4 )
+        if( nodes.length == 4 )
         {
           triangularElements.add( nodes );
         }
-        else if( nodes.size() == 5 )
+        else if( nodes.length == 5 )
         {
           tranformToTriangularElement( nodes, triangularElements );
         }
@@ -112,38 +111,26 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
   }
 
   /* splits quadrangular element in 2 triangular elements */
-  private void tranformToTriangularElement( final List<IFE1D2DNode> nodes, final List<List<IFE1D2DNode>> triangularElements )
+  private void tranformToTriangularElement( final IFE1D2DNode[] nodes, final List<IFE1D2DNode[]> triangularElements )
   {
-    final List<IFE1D2DNode> newTriangle = new ArrayList<>();
-    newTriangle.add( nodes.get( 0 ) );
-    newTriangle.add( nodes.get( 1 ) );
-    newTriangle.add( nodes.get( 2 ) );
-
-    triangularElements.add( newTriangle );
-
-    final List<IFE1D2DNode> anotherNewTriangle = new ArrayList<>();
-
-    anotherNewTriangle.add( nodes.get( 0 ) );
-    anotherNewTriangle.add( nodes.get( 2 ) );
-    anotherNewTriangle.add( nodes.get( 3 ) );
-
-    triangularElements.add( anotherNewTriangle );
+    triangularElements.add( new IFE1D2DNode[] { nodes[0], nodes[1], nodes[2] } );
+    triangularElements.add( new IFE1D2DNode[] { nodes[0], nodes[2], nodes[3] } );
   }
 
-  private void writeTriangles( final List<List<IFE1D2DNode>> triangularElements )
+  private void writeTriangles( final List<IFE1D2DNode[]> triangularElements )
   {
     int count = 1;
-    for( final List<IFE1D2DNode> triangle : triangularElements )
+    for( final IFE1D2DNode[] triangle : triangularElements )
     {
-      final int nodeID1 = getConversionID( triangle.get( 0 ) );
-      final int nodeID2 = getConversionID( triangle.get( 1 ) );
-      final int nodeID3 = getConversionID( triangle.get( 2 ) );
+      final int nodeID1 = getConversionID( triangle[0] );
+      final int nodeID2 = getConversionID( triangle[1] );
+      final int nodeID3 = getConversionID( triangle[2] );
       hmoSerializer.formatTriangle( count++, nodeID1, nodeID2, nodeID3 );
     }
 
   }
 
-  private void writeNodes( final List<IFE1D2DNode> nodes )
+  private void writeNodes( final IFE1D2DNode[] nodes )
   {
     for( final IFE1D2DNode node : nodes )
     {

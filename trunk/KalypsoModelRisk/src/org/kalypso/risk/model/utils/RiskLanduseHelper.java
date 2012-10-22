@@ -70,7 +70,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
@@ -317,8 +317,8 @@ public class RiskLanduseHelper
       if( shpGeometryProperty instanceof GM_MultiSurface )
       {
         final GM_MultiSurface multiSurface = (GM_MultiSurface) ((GM_MultiSurface) shpGeometryProperty).clone();
-        final GM_Surface< ? >[] surfaces = multiSurface.getAllSurfaces();
-        for( final GM_Surface< ? > surface : surfaces )
+        final GM_Polygon< ? >[] surfaces = multiSurface.getAllSurfaces();
+        for( final GM_Polygon< ? > surface : surfaces )
         {
           final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
           polygon.setGeometry( surface );
@@ -328,12 +328,12 @@ public class RiskLanduseHelper
           // style and landuse class ordinal number will be set automatically (property functions)
         }
       }
-      else if( shpGeometryProperty instanceof GM_Surface )
+      else if( shpGeometryProperty instanceof GM_Polygon )
       {
         // FIXME: will never happen
 
         final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
-        polygon.setGeometry( (GM_Surface< ? >) shpGeometryProperty );
+        polygon.setGeometry( (GM_Polygon< ? >) shpGeometryProperty );
         polygon.setLanduseClass( getLanduseClassByName( polygon, shpPropertyValue, landuseClassesList ) );
         // polygon.setStyleType( shpPropertyValue );
         polygon.setEnvelopesUpdated();

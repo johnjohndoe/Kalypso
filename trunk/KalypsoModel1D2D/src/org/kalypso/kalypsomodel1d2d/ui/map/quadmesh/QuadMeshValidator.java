@@ -50,18 +50,19 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Validates a QuadMesh within itself and against a discretisation model.
- *
+ * 
  * @author Gernot Belger
  */
 public class QuadMeshValidator
@@ -102,17 +103,17 @@ public class QuadMeshValidator
         return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.5" ) ); //$NON-NLS-1$
 
       // New Element intersects other elements
-      final GM_Surface< ? extends GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Polygon< ? extends GM_AbstractSurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
       for( final IFE1D2DElement element : elements )
       {
         if( element instanceof IPolyElement )
         {
-          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
+          final GM_Polygon<GM_PolygonPatch> eleGeom = ((IPolyElement)element).getGeometry();
           if( eleGeom.intersects( newSurface ) )
           {
             final GM_Object intersection = eleGeom.intersection( newSurface );
-            if( intersection instanceof GM_Surface )
+            if( intersection instanceof GM_Polygon )
               return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.6" ) ); //$NON-NLS-1$
           }
         }

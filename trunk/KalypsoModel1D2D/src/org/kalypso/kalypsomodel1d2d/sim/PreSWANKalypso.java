@@ -438,7 +438,7 @@ public class PreSWANKalypso implements ISimulation
 
   private SWANWindDataWriter writeWindData( final FileObject pFileObjWorkingDir ) throws IOException
   {
-    final GM_Envelope lGmEnvelope = CalcUnitOps.getBoundingBox( m_controlModel.getCalculationUnit() );
+    final GM_Envelope lGmEnvelope = m_controlModel.getCalculationUnit().getBoundingBox();
     final SWANWindDataWriter lWindWriter = new SWANWindDataWriter( pFileObjWorkingDir, lGmEnvelope, m_calculatedSteps, m_windRelationshipModel.getWindDataModelSystems() );
     lWindWriter.setWindDataModel( m_windRelationshipModel );
     lWindWriter.write( m_controlModel.isConstantWindSWAN() );

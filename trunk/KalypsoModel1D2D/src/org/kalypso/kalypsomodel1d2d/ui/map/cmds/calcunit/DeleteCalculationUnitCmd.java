@@ -41,10 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -56,33 +53,28 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFENetItem;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Command to delete calculation unit
- *
+ * 
  * @author Patrice Congo
- *
  */
 public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
 {
@@ -91,19 +83,9 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
   private ICalculationUnit m_calcUnitToDelete;
 
   /**
-   * the QName of the deleted calculation unit
-   */
-  private QName m_undoQName;
-
-  /**
    * the parent/container units of the deleted calculation unit
    */
   private ICalculationUnit1D2D[] m_undoParentUnits;
-
-  /**
-   * the child units of the deleted calculation unit
-   */
-  private ICalculationUnit[] m_undoChildUnits;
 
   /**
    * the elements of the deleted calculation unit
@@ -111,20 +93,8 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
   private IFENetItem[] m_undoElements;
 
   /**
-   * the name the deleted calculation unit
-   */
-  private String m_undoName;
-
-  /**
-   * the description of the deleted calculation unit
-   */
-  private String m_undoDesc;
-
-  private final boolean m_calcUnitDeleted = false;
-
-  /**
    * Deletes the calculation unit
-   *
+   * 
    * @param cuFeatureQName
    *          the q-name of the calculation unit to create
    * @param model1d2d
@@ -145,10 +115,7 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
   @Override
   public Feature[] getChangedFeatures( )
   {
-    if( m_calcUnitDeleted )
-      return new Feature[] { m_model1d2d };
-    else
-      return new Feature[] {};
+    return new Feature[] { m_model1d2d };
   }
 
   @Override
@@ -163,22 +130,6 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
     return true;
   }
 
-  private final void cacheState( )
-  {
-    m_undoName = m_calcUnitToDelete.getName();
-    m_undoDesc = m_calcUnitToDelete.getDescription();
-    if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
-    {
-      final IFeatureBindingCollection<ICalculationUnit> subUnits = ((ICalculationUnit1D2D) m_calcUnitToDelete).getChangedSubUnits();
-      m_undoChildUnits = subUnits.toArray( new ICalculationUnit[0] );
-    }
-    final Collection<ICalculationUnit1D2D> parentUnits = CalcUnitOps.getParentUnit( m_calcUnitToDelete, m_model1d2d );
-    m_undoParentUnits = parentUnits.toArray( new ICalculationUnit1D2D[0] );
-    m_undoQName = m_calcUnitToDelete.getFeatureType().getQName();
-    final IFeatureBindingCollection<IFENetItem> elements = m_calcUnitToDelete.getElements();
-    m_undoElements = elements.toArray( new IFENetItem[] {} );
-  }
-
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
@@ -187,9 +138,6 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
   {
     try
     {
-      // cache state for undo
-      cacheState();
-
       if( m_undoParentUnits != null && m_undoParentUnits.length > 0 )
       {
         final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
@@ -205,20 +153,14 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
 
       // delete links to child units
       if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
-        ((ICalculationUnit1D2D) m_calcUnitToDelete).getChangedSubUnits().clear();
+        ((ICalculationUnit1D2D)m_calcUnitToDelete).getSubCalculationUnits().clear();
 
       // delete links to elements
-      for( final Feature element : m_undoElements )
+      for( final IFENetItem element : m_undoElements )
       {
-        if( element == null )
-          continue;
-        if( element instanceof IFE1D2DElement )
-          ((IFE1D2DElement) element).getContainers().remove( m_calcUnitToDelete );
-        else if( element instanceof IFELine )
-          ((IFELine) element).getContainers().remove( m_calcUnitToDelete );
+        m_calcUnitToDelete.removeLinkedItem( element );
       }
       deleteControlModel( m_calcUnitToDelete.getId() );
-      m_calcUnitToDelete.getElements().clear();
 
       // delete unit from the model
       m_model1d2d.getComplexElements().remove( m_calcUnitToDelete );
@@ -291,7 +233,7 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
     try
     {
       cmdWorkspace.postCommand( delControlCmd );
-      ((ICommandPoster) szenarioDataProvider).postCommand( IControlModelGroup.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+      ((ICommandPoster)szenarioDataProvider).postCommand( IControlModelGroup.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -323,7 +265,6 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
   }
 
   /**
-   *
    * @param calculationUnit
    *          the added or removed calculation unit
    * @param added
@@ -344,43 +285,11 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
   @Override
   public void redo( ) throws Exception
   {
-    if( !m_calcUnitDeleted )
-      process();
+    process();
   }
 
   @Override
   public void undo( ) throws Exception
   {
-    // create row c-unit
-    m_calcUnitToDelete = m_model1d2d.getComplexElements().addNew( m_undoQName, ICalculationUnit.class );
-
-    if( m_undoName != null )
-      m_calcUnitToDelete.setName( m_undoName );
-
-    if( m_undoDesc != null )
-      m_calcUnitToDelete.setDescription( m_undoDesc );
-
-    // set elements
-    for( final Feature element : m_undoElements )
-    {
-      m_calcUnitToDelete.addElementAsRef( (IFENetItem) element );
-      if( element instanceof IFE1D2DElement )
-        ((IFE1D2DElement) element).getContainers().addRef( m_calcUnitToDelete );
-    }
-
-    // set subunits
-    if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
-    {
-      final IFeatureBindingCollection<ICalculationUnit> subUnits = ((ICalculationUnit1D2D)m_calcUnitToDelete).getChangedSubUnits();
-      for( final ICalculationUnit subUnit : m_undoChildUnits )
-        subUnits.addRef( subUnit );
-    }
-
-    // set parent units
-    for( final ICalculationUnit1D2D parentUnit : m_undoParentUnits )
-      parentUnit.getChangedSubUnits().addRef( m_calcUnitToDelete );
-
-    final Feature[] changedFeatureArray = getChangedFeatureArray();
-    fireProcessChanges( changedFeatureArray, true );
   }
 }

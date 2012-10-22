@@ -79,7 +79,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -324,7 +324,7 @@ public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
       final IRoughnessPolygonCollection roughnessPolygonCollection = model.getRoughnessPolygonCollection( m_roughnessLayer );
       final IRoughnessPolygon newZone = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
 
-      newZone.setSurface( (GM_Surface< ? >) poly );
+      newZone.setSurface( (GM_Polygon< ? >) poly );
       newZone.setRoughnessClass( selectedClass );
 
       /* Inform workspace */

@@ -14,7 +14,7 @@ import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -40,9 +40,9 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   }
 
   @Override
-  public GM_Surface< ? > getSurface( )
+  public GM_Polygon< ? > getSurface( )
   {
-    return (GM_Surface< ? >) getProperty( PROPERTY_POLYGON_GEOMETRY );
+    return (GM_Polygon< ? >) getProperty( PROPERTY_POLYGON_GEOMETRY );
   }
 
   @Override
@@ -65,7 +65,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   }
 
   @Override
-  public void setSurface( final GM_Surface< ? > surface ) throws IllegalArgumentException
+  public void setSurface( final GM_Polygon< ? > surface ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNull( surface, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.7" ) ); //$NON-NLS-1$
 

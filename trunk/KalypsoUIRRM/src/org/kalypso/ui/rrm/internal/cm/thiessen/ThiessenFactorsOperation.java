@@ -57,7 +57,7 @@ import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -127,7 +127,7 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
       catchment.clearAllWeights();
 
       /* Get the area of the catchment. */
-      final GM_Surface< ? > catchmentArea = catchment.getCatchmentArea();
+      final GM_Polygon< ? > catchmentArea = catchment.getCatchmentArea();
       if( catchmentArea == null )
         System.out.println( "sososo" ); //$NON-NLS-1$
 

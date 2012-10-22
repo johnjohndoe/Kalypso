@@ -489,7 +489,7 @@ public class ImportWspmWizard extends Wizard
     final GMLWorkspace workspace = node.getWorkspace();
     final IFEDiscretisationModel1d2d model1d2d = DiscretisationModelUtils.modelForItem( node );
 
-    final IFE1D2DElement[] elements = node.getElements();
+    final IFE1D2DElement[] elements = node.getAdjacentElements();
     if( elements.length != 2 )
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.16" ) ) ); //$NON-NLS-1$
 
@@ -620,14 +620,16 @@ public class ImportWspmWizard extends Wizard
         {
           if( element instanceof IElement1D )
           {
-            final List<IFE1D2DNode> nodes = ((IElement1D)element).getNodes();
+            final IElement1D el1d = (IElement1D)element;
+            final IFE1D2DEdge edge = el1d.getEdge();
+            final IFE1D2DNode[] nodes = el1d.getNodes();
             if( nodes == null )
             {
               System.out.println( element.getId() );
               continue;
             }
 
-            if( nodes.contains( node ) && nodes.contains( lastNode ) )
+            if( edge.containsNode( node ) && edge.containsNode( lastNode ) )
             {
               found = true;
               break;
@@ -641,14 +643,7 @@ public class ImportWspmWizard extends Wizard
           final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
           addedFeatures.add( edge );
 
-          edge.addNode( lastNode.getId() );
-          edge.addNode( node.getId() );
-
-          lastNode.addContainer( edge.getId() );
-          node.addContainer( edge.getId() );
-
-          edge.setEnvelopesUpdated();
-
+          edge.setNodes( lastNode, node );
           edgeList.add( edge );
 
           /* Create corresponding element */

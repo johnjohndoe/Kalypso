@@ -51,7 +51,7 @@ import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * Infos about all hydrotops belonging to one catchment.
@@ -106,7 +106,7 @@ public class CatchmentInfo
 
   public String checkArea( )
   {
-    final GM_Surface< ? > geometry = m_catchment.getGeometry();
+    final GM_Polygon< ? > geometry = m_catchment.getGeometry();
     final double catchmentAre = geometry.getArea();
 
     final double hydrotopArea = getTotalSealing().getArea();

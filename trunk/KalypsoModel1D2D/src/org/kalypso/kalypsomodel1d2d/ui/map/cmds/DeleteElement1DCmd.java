@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -51,13 +50,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Command for deleting one 1D element. The change event has to fired from outside!
- *
+ * 
  * @author Patrice Congo
  * @author ig, barbarins
  */
@@ -96,56 +93,31 @@ public class DeleteElement1DCmd implements IFeatureChangeCommand
   @Override
   public void process( ) throws Exception
   {
-    final Set<Feature> lSetEdges = new HashSet<>();
-    final Set<Feature> elementsToRemove = new HashSet<>();
-
     final RemoveEdgeWithoutContainerOrInvCmd lCmdEdgeRemove = new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, null );
-
     for( final IElement1D element1d : m_elementsToRemove )
     {
-      elementsToRemove.add( element1d );
-
       m_changedFeatures.add( element1d );
 
-      final List<IFE1D2DComplexElement> elementConmtainers = element1d.getContainers();
-
       /* Remove element from itsa containers */
+      final IFE1D2DComplexElement[] elementConmtainers = element1d.getLinkedElements();
       for( final IFE1D2DComplexElement elementContainer : elementConmtainers )
       {
-        final IFeatureBindingCollection<IFENetItem> elements = elementContainer.getElements();
-        elements.getFeatureList().removeLink( element1d );
-
+        elementContainer.removeLinkedItem( element1d );
         m_changedFeatures.add( elementContainer );
       }
 
       /* Remove corresponding edge */
       final IFE1D2DEdge edge = element1d.getEdge();
-
-      /* Remove edge from its containers */
-
-      // TODO: why is this necessary? The edge is removed, so are its container list
-      final IFeatureBindingCollection edgeContainers = edge.getContainers();
-      final boolean isRemoved = edgeContainers.getFeatureList().removeLink( element1d );
-      if( !isRemoved )
-        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.1" ) ); //$NON-NLS-1$
-
-      final IFeatureBindingCollection<IFE1D2DNode> nodes = edge.getNodes();
-      m_changedFeatures.addAll( nodes );
-
-      lSetEdges.add( edge );
-
+      final IFE1D2DNode[] nodes = edge.getNodes();
+      m_changedFeatures.add( nodes[0] );
+      m_changedFeatures.add( nodes[1] );
       m_changedFeatures.add( edge );
 
       lCmdEdgeRemove.addEdgeToRemove( edge );
     }
 
     lCmdEdgeRemove.process();
-
-    // FIXME: did not the edge command remove the edges?
-    // FIXME: makes no sense: elements list never contains edges at all!
-    m_model1d2d.getElements().removeAll( lSetEdges );
-
-    m_model1d2d.getElements().removeAll( elementsToRemove );
+    m_model1d2d.getElements().removeAll( m_elementsToRemove );
   }
 
   @Override

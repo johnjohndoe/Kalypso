@@ -49,7 +49,6 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
  * Command to remove a node that has no container
  * 
  * @author Patrice Congo
- * 
  */
 public class RemoveNodeWithoutContainer implements ICommand
 {
@@ -58,10 +57,10 @@ public class RemoveNodeWithoutContainer implements ICommand
 
   private IFE1D2DNode nodeToDel;
 
-  public RemoveNodeWithoutContainer( IFE1D2DNode nodeToDel, IFEDiscretisationModel1d2d model1d2d )
+  public RemoveNodeWithoutContainer( IFE1D2DNode lNodeToDel, IFEDiscretisationModel1d2d lModel1d2d )
   {
-    this.nodeToDel = nodeToDel;
-    this.model1d2d = model1d2d;
+    this.nodeToDel = lNodeToDel;
+    this.model1d2d = lModel1d2d;
   }
 
   /**
@@ -70,7 +69,7 @@ public class RemoveNodeWithoutContainer implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.RemoveNodeWithoutContainer.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.RemoveNodeWithoutContainer.0" ); //$NON-NLS-1$
   }
 
   /**
@@ -95,7 +94,7 @@ public class RemoveNodeWithoutContainer implements ICommand
       return;
     }
 
-    if( !node.getContainers().isEmpty() )
+    if( node.getLinkedEdges().length > 0 )
     {
       return;
     }
@@ -104,9 +103,9 @@ public class RemoveNodeWithoutContainer implements ICommand
 
   }
 
-  public void setNodeToDel( IFE1D2DNode nodeToDel )
+  public void setNodeToDel( IFE1D2DNode lNodeToDel )
   {
-    this.nodeToDel = nodeToDel;
+    this.nodeToDel = lNodeToDel;
   }
 
   /**

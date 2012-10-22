@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author Patrice Congo
  *
  */
-public class ASCTerrainElevationModel implements IElevationModel, ISurfacePatchVisitable<GM_SurfacePatch>
+public class ASCTerrainElevationModel implements IElevationModel, ISurfacePatchVisitable<GM_AbstractSurfacePatch>
 {
   private static final int PROPORTIONAL_FACTOR = 160;
 
@@ -225,7 +225,7 @@ public class ASCTerrainElevationModel implements IElevationModel, ISurfacePatchV
    * after getting close enough will refine the representation of model.
    */
   @Override
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor )
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_AbstractSurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor )
   {
     // FIXME: painting a grid with the triangle stuff is NOT appropriate! -> makes never sense, because a grid cell has
     // only onse single value; so splitting up
@@ -272,7 +272,7 @@ public class ASCTerrainElevationModel implements IElevationModel, ISurfacePatchV
 
           try
           {
-            final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( new GM_Position[] { pos0, pos1, pos2, pos3, pos0 }, null, crs );
+            final GM_AbstractSurfacePatch patch = GeometryFactory.createGM_PolygonPatch( new GM_Position[] { pos0, pos1, pos2, pos3, pos0 }, null, crs );
             surfacePatchVisitor.visit( patch );
           }
           catch( final Throwable e )

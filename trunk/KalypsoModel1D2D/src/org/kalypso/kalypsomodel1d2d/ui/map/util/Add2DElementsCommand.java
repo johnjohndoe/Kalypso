@@ -51,7 +51,6 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -60,12 +59,13 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -77,7 +77,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * General command that adds 2D-Elements into the net.<br/>
  * FIXME: clean up this ugly code!
- *
+ * 
  * @author Gernot Belger
  */
 public class Add2DElementsCommand implements ICommand
@@ -133,7 +133,7 @@ public class Add2DElementsCommand implements ICommand
   @Override
   public void process( ) throws Exception
   {
-    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) m_discretisationModel.getRootFeature();
+    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d)m_discretisationModel.getRootFeature();
 
     for( final GM_Ring ring : m_elements )
       createElementFromRing( discModel, ring );
@@ -147,7 +147,6 @@ public class Add2DElementsCommand implements ICommand
   {
     final GMLWorkspace workspace = discModel.getWorkspace();
     final Collection<Feature> newFeatures = new ArrayList<>();
-
 
     for( final String id : newFeatureIDs )
       newFeatures.add( workspace.getFeature( id ) );
@@ -194,7 +193,7 @@ public class Add2DElementsCommand implements ICommand
       return false;
 
     // REMARK: test with surface, because ring has no interior (being a hole)
-    final GM_Surface< ? extends GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( positions, null, srsName );
+    final GM_Polygon< ? extends GM_AbstractSurfacePatch> newSurface = GeometryFactory.createGM_Surface( positions, null, srsName );
     final Geometry newPolygon = JTSAdapter.export( newSurface );
 
     final List<IFE1D2DElement> foundElements = discModel.getElements().query( newSurface, IFE1D2DElement.PROP_GEOMETRY, false );
@@ -202,11 +201,11 @@ public class Add2DElementsCommand implements ICommand
     {
       if( foundElement instanceof IPolyElement )
       {
-        final GM_Surface<GM_SurfacePatch> foundGeometry = ((IPolyElement) foundElement).getGeometry();
+        final GM_Polygon<GM_PolygonPatch> foundGeometry = ((IPolyElement)foundElement).getGeometry();
         final Geometry foundPolygon = JTSAdapter.export( foundGeometry );
         if( foundPolygon.overlaps( newPolygon ) )
         {
-          m_log.add( IStatus.WARNING, "Element not added: overlaps existing elements: %s", null, (Object) positions );
+          m_log.add( IStatus.WARNING, "Element not added: overlaps existing elements: %s", null, (Object)positions );
           return false;
         }
       }
@@ -234,8 +233,8 @@ public class Add2DElementsCommand implements ICommand
         final IPolyElement foundElement = discModel.find2DElement( nodeLocation, SNAP_DISTANCE );
         if( foundElement != null )
         {
-          final GM_Surface<GM_SurfacePatch> geometry = foundElement.getGeometry();
-          if( geometry.contains( position ) )
+          final GM_Polygon<GM_PolygonPatch> geometry = foundElement.getGeometry();
+          if( geometry.contains( nodeLocation ) )
           {
             // do not insert nodes that are placed on existing model(overlapped elements)
             m_log.add( IStatus.WARNING, "Node not added: overlaps existing element: %s", null, position );
@@ -291,7 +290,7 @@ public class Add2DElementsCommand implements ICommand
       if( edges[i] == null )
       {
         /* Needs to create a new edge */
-        edges[i] = FE1D2DEdge.createFromModel( discModel, node1, node2 );
+        edges[i] = discModel.createEdge( node1, node2 );
         m_newEdgeIDs.add( edges[i].getId() );
       }
     }
@@ -310,8 +309,7 @@ public class Add2DElementsCommand implements ICommand
     for( final IFE1D2DEdge lEdge : edges )
     {
       // add edge to element and element to edge
-      element.addEdge( lEdge.getId() );
-      lEdge.addContainer( elementId );
+      element.addEdge( lEdge );
     }
 
     return element;

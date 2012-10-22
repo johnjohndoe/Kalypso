@@ -40,20 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Interface for classes representing a wb1d2d:CalculationUnit2D
- *
+ * 
  * @author Patrice Congo
- *
  */
 public interface ICalculationUnit1D2D extends ICoupledCalculationUnit
 {
@@ -62,7 +57,5 @@ public interface ICalculationUnit1D2D extends ICoupledCalculationUnit
   QName WB1D2D_PROP_CALC_UNIT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "calculationUnit" ); //$NON-NLS-1$
 
   // FIXME: why 'changed' sbu units?
-  IFeatureBindingCollection<ICalculationUnit> getChangedSubUnits( );
-
-  List<IFENetItem> query( final GM_Envelope envelope );
+  IFeatureBindingCollection<ICalculationUnit> getSubCalculationUnits( );
 }

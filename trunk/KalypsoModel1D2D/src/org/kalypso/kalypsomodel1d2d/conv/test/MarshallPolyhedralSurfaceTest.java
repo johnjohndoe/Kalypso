@@ -53,7 +53,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.xml.serializer.ToXMLStream;
 import org.junit.Test;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.io.sax.marshaller.PolyhedralSurfaceMarshaller;
@@ -83,8 +83,8 @@ public class MarshallPolyhedralSurfaceTest extends TestCase
   @Test
   public void testWritePolyhedralSurface( ) throws Exception
   {
-    final GM_Polygon[] polygons = createPolygons();
-    final GM_PolyhedralSurface<GM_Polygon> surface = GeometryFactory.createGM_PolyhedralSurface( polygons, crs );
+    final GM_PolygonPatch[] polygons = createPolygons();
+    final GM_PolyhedralSurface<GM_PolygonPatch> surface = GeometryFactory.createGM_PolyhedralSurface( polygons, crs );
 
     File polyFile = null;
     OutputStream os = null;
@@ -127,16 +127,16 @@ public class MarshallPolyhedralSurfaceTest extends TestCase
     }
   }
 
-  private GM_Polygon[] createPolygons( ) throws Exception
+  private GM_PolygonPatch[] createPolygons( ) throws Exception
   {
     final GM_Position[] ring1 = new GM_Position[] { pos1, pos2, pos3, pos1 };
     final GM_Position[] ring2 = new GM_Position[] { pos3, pos4, pos5, pos6, pos3 };
 
-    final List<GM_Polygon> list = new ArrayList<>( 2 );
+    final List<GM_PolygonPatch> list = new ArrayList<>( 2 );
 
-    list.add( (GM_Polygon) GeometryFactory.createGM_SurfacePatch( ring1, null, crs ) );
-    list.add( (GM_Polygon) GeometryFactory.createGM_SurfacePatch( ring2, null, crs ) );
+    list.add( (GM_PolygonPatch) GeometryFactory.createGM_PolygonPatch( ring1, null, crs ) );
+    list.add( (GM_PolygonPatch) GeometryFactory.createGM_PolygonPatch( ring2, null, crs ) );
 
-    return list.toArray( new GM_Polygon[list.size()] );
+    return list.toArray( new GM_PolygonPatch[list.size()] );
   }
 }

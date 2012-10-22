@@ -129,7 +129,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   {
     if( m_calcUnit == null )
       return null;
-    return CalcUnitOps.getBoundingBox( m_calcUnit );
+    return m_calcUnit.getBoundingBox();
   }
 
   @Override

@@ -49,45 +49,52 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Default implementation for {@link ICalculationUnit}
- *
+ * 
  * @author Patrice Congo
  * @author Stefan Kurzbach
- *
  */
 public class CalculationUnit extends Feature_Impl implements ICalculationUnit
 {
   public final static QName QN_PROPERTY_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" ); //$NON-NLS-1$
-
-  private final FeatureBindingCollection<IFENetItem> m_elements = new FeatureBindingCollection<>( this, IFENetItem.class, QN_PROPERTY_ELEMENT );
 
   public CalculationUnit( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  @Override
-  public FeatureBindingCollection<IFENetItem> getElements( )
+  private FeatureList elementsInternal( )
   {
-    return m_elements;
+    return (FeatureList)getProperty( QN_PROPERTY_ELEMENT );
   }
 
   @Override
-  public boolean addElementAsRef( final IFENetItem element )
+  public IFENetItem[] getElements( )
+  {
+    return elementsInternal().toFeatures( new IFENetItem[elementsInternal().size()] );
+  }
+
+  @Override
+  public void addLinkedItem( final IFENetItem element )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
-    return m_elements.addRef( element );
+    if( !elementsInternal().containsOrLinksTo( element ) )
+      elementsInternal().addLink( element );
+    element.addLinkedComplexElement( this );
   }
 
   @Override
-  public void removeElementAsRef( final IFENetItem element )
+  public void removeLinkedItem( final IFENetItem element )
   {
-    m_elements.getFeatureList().removeLink( element );
+    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
+    if( elementsInternal().containsOrLinksTo( element ) )
+      elementsInternal().removeLink( element );
+    element.removeLinkedComplexElement( this );
   }
 
   @Override
@@ -106,25 +113,26 @@ public class CalculationUnit extends Feature_Impl implements ICalculationUnit
   public List<IFELine> getContinuityLines( )
   {
     final List<IFELine> continuityLines = new ArrayList<>();
-    for( final IFENetItem element : m_elements )
+    for( final IFENetItem element : getElements() )
       if( element instanceof IFELine )
-        continuityLines.add( (IFELine) element );
+        continuityLines.add( (IFELine)element );
     return continuityLines;
   }
 
   @Override
   public boolean contains( final IFENetItem member )
   {
-    return m_elements.contains( member );
+    Assert.throwIAEOnNullParam( member, "member" ); //$NON-NLS-1$
+    return elementsInternal().containsOrLinksTo( member );
   }
 
   @Override
   public List<IElement1D> getElements1D( )
   {
     final List<IElement1D> list = new ArrayList<>();
-    for( final IFENetItem element : m_elements )
+    for( final IFENetItem element : getElements() )
       if( element instanceof IElement1D )
-        list.add( (IElement1D) element );
+        list.add( (IElement1D)element );
     return list;
   }
 
@@ -132,11 +140,33 @@ public class CalculationUnit extends Feature_Impl implements ICalculationUnit
   public List<IPolyElement> getElements2D( )
   {
     final List<IPolyElement> list = new ArrayList<>();
-    for( final IFENetItem element : m_elements )
+    for( final IFENetItem element : getElements() )
     {
       if( element instanceof IPolyElement )
-        list.add( (IPolyElement) element );
+        list.add( (IPolyElement)element );
     }
     return list;
+  }
+
+  @Override
+  public int size( )
+  {
+    return elementsInternal().size();
+  }
+
+  @Override
+  public List<IFENetItem> query( final GM_Envelope env, List<IFENetItem> result )
+  {
+    if( result == null )
+    {
+      result = new ArrayList<>( 100 );
+    }
+    return elementsInternal().queryResolved( env, result );
+  }
+
+  @Override
+  public GM_Envelope getBoundingBox( )
+  {
+    return elementsInternal().getBoundingBox();
   }
 }

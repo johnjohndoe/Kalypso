@@ -272,7 +272,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   {
     final Map<String, IFlowRelationship> elementWithFlowRelationship = new HashMap<>();
 
-    for( final IFE1D2DElement element : startNode.getElements() )
+    for( final IFE1D2DElement element : startNode.getAdjacentElements() )
     {
       if( element instanceof IPolyElement )
       {
@@ -289,7 +289,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
   private void setNewPositionsOfFlowrelations( final Map<String, IFlowRelationship> elementWithFlowRelationship )
   {
-    for( final IFE1D2DElement element : m_editor.getStartNode().getElements() )
+    for( final IFE1D2DElement element : m_editor.getStartNode().getAdjacentElements() )
     {
       if( element instanceof IPolyElement )
       {

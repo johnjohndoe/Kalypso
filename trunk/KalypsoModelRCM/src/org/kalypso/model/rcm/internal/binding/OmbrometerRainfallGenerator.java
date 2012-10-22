@@ -81,7 +81,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -176,10 +176,10 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
       monitor.worked( 100 );
       monitor.subTask( "Erzeuge Ombrometerflächen..." );
 
-      final GM_Surface< ? >[] ombrometerAreas = FeatureHelper.getProperties( ombrometerFeatures, areaXPath, new GM_Surface[ombrometerFeatures.length] );
+      final GM_Polygon< ? >[] ombrometerAreas = FeatureHelper.getProperties( ombrometerFeatures, areaXPath, new GM_Polygon[ombrometerFeatures.length] );
 
       final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      final GM_Surface< ? >[] transformedAreas = GeometryUtilities.transform( ombrometerAreas, transformer );
+      final GM_Polygon< ? >[] transformedAreas = GeometryUtilities.transform( ombrometerAreas, transformer );
 
       /* Convert to JTS geometries. */
       final Polygon[] ombrometerPolygons = JTSAdapter.export( transformedAreas, Polygon.class );
@@ -281,8 +281,8 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
     /* Recalculate Thiessen */
     final ThiessenAreaOperation worker = new ThiessenAreaOperation( IOmbrometer.QNAME_PROP_STATIONLOCATION, IOmbrometer.QNAME_PROP_ISUSED );
-    final Map<Feature, GM_Surface< ? >> areas = worker.execute( Arrays.asList( ombrometerFeatures ), bufferCalculator, monitor );
-    for( final Entry<Feature, GM_Surface< ? >> entry : areas.entrySet() )
+    final Map<Feature, GM_Polygon< ? >> areas = worker.execute( Arrays.asList( ombrometerFeatures ), bufferCalculator, monitor );
+    for( final Entry<Feature, GM_Polygon< ? >> entry : areas.entrySet() )
     {
       final IOmbrometer ombrometer = (IOmbrometer) entry.getKey();
       ombrometer.setAffectedArea( entry.getValue() );

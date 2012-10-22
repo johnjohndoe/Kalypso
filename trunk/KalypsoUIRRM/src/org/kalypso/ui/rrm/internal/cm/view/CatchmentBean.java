@@ -72,7 +72,7 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -95,7 +95,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
 
   private IStatus m_status;
 
-  private GM_Surface< ? > m_catchmentArea;
+  private GM_Polygon< ? > m_catchmentArea;
 
   public CatchmentBean( )
   {
@@ -151,7 +151,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return m_catchmentDescription;
   }
 
-  public GM_Surface< ? > getCatchmentArea( )
+  public GM_Polygon< ? > getCatchmentArea( )
   {
     return m_catchmentArea;
   }
@@ -171,7 +171,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_catchmentDescription = catchmentDescription;
   }
 
-  public void setCatchmentArea( final GM_Surface< ? > catchmentArea )
+  public void setCatchmentArea( final GM_Polygon< ? > catchmentArea )
   {
     m_catchmentArea = catchmentArea;
   }

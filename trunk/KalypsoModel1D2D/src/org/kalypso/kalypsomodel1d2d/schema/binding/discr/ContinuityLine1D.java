@@ -40,21 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -67,83 +56,14 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   }
 
   @Override
-  public IFeatureBindingCollection<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
+  public void addNode( final IFE1D2DNode node )
   {
-    if( nodes.size() != 1 )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.0" ) ) ); //$NON-NLS-1$
-
-    final IFE1D2DNode continuityLineNode = nodes.get( 0 );
-
-    final FeatureList nodeList = getNodes().getFeatureList();
-    nodeList.clear();
-    nodeList.add( continuityLineNode.getId() );
-
-    IFE1D2DNode neighbour1 = null;
-    IFE1D2DNode neighbour2 = null;
-    final IFeatureBindingCollection< ? extends IFENetItem> containers = continuityLineNode.getContainers();
-    for( final IFENetItem container : containers )
-    {
-      if( container instanceof IFE1D2DEdge )
-      {
-        final List<IFE1D2DNode> edgeNodes = ((IFE1D2DEdge) container).getNodes();
-        for( final IFE1D2DNode edgeNode : edgeNodes )
-        {
-          if( edgeNode.equals( continuityLineNode ) )
-            continue;
-          else if( neighbour1 == null )
-            neighbour1 = edgeNode;
-          else if( neighbour2 == null )
-            neighbour2 = edgeNode;
-        }
-      }
-    }
-
-    try
-    {
-      recalculateGeometry( continuityLineNode, neighbour1, neighbour2 );
-    }
-    catch( final GM_Exception e )
-    {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
-    }
-
-    // nodeList.invalidate();
-
-    setEnvelopesUpdated();
-    return m_nodes;
+    setGeometry( calculateCurve( node, node.getAdjacentNodes().get( 0 ) ) );
+    nodesInternal().clear();
+    super.addNode( node );
   }
 
-  @Override
-  public GM_Object recalculateElementGeometry( )
-  {
-    try
-    {
-      final ArrayList<IFE1D2DNode> list = new ArrayList<>();
-      list.addAll( getNodes() );
-      createFullNodesList( list );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
-    return (GM_Object) getProperty( IFELine.PROP_GEOMETRY );
-  }
-
-  private void recalculateGeometry( final IFE1D2DNode node, final IFE1D2DNode neighbour1, final IFE1D2DNode neighbour2 ) throws CoreException, GM_Exception
-  {
-    if( neighbour1 == null && neighbour2 == null )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.2" ) ) ); //$NON-NLS-1$
-    final GM_Object geometry;
-    if( neighbour1 == null )
-      geometry = getGeometry( node, neighbour2 );
-    else if( neighbour2 == null )
-      geometry = getGeometry( node, neighbour1 );
-    else
-      geometry = getGeometry( node, neighbour1, neighbour2 );
-    setGeometry( geometry );
-  }
-
-  private GM_Object getGeometry( final IFE1D2DNode node, final IFE1D2DNode neighbour ) throws GM_Exception
+  private GM_Curve calculateCurve( final IFE1D2DNode node, final IFE1D2DNode neighbour )
   {
     final GM_Point p1 = node.getPoint();
     final GM_Point p2 = neighbour.getPoint();
@@ -152,40 +72,47 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     final double x2 = p1.getX() + (p2.getY() - p1.getY());
     final double y2 = p1.getY() - (p2.getX() - p1.getX());
     final GM_Position[] positions = new GM_Position[] { GeometryFactory.createGM_Position( x1, y1 ), GeometryFactory.createGM_Position( x2, y2 ) };
-    return GeometryFactory.createGM_Curve( positions, p1.getCoordinateSystem() );
+    try
+    {
+      return GeometryFactory.createGM_Curve( positions, p1.getCoordinateSystem() );
+    }
+    catch( final GM_Exception e )
+    {
+      throw new IllegalArgumentException( e );
+    }
   }
 
-  private GM_Object getGeometry( final IFE1D2DNode node, final IFE1D2DNode neighbour1, final IFE1D2DNode neighbour2 ) throws GM_Exception
-  {
-    final GM_Point pointToCreateLineAt = node.getPoint();
-    final double xcenter = pointToCreateLineAt.getX();
-    final double ycenter = pointToCreateLineAt.getY();
-    GM_Point p1 = neighbour1.getPoint();
-    GM_Point p2 = neighbour2.getPoint();
-
-    final double length1 = Math.sqrt( Math.pow( p1.getX() - xcenter, 2.0 ) + Math.pow( p1.getY() - ycenter, 2.0 ) );
-    final double length2 = Math.sqrt( Math.pow( p2.getX() - xcenter, 2.0 ) + Math.pow( p2.getY() - ycenter, 2.0 ) );
-    if( length1 >= length2 )
-      p1 = GeometryFactory.createGM_Point( xcenter + (p1.getX() - xcenter) / length1 * length2, ycenter + (p1.getY() - ycenter) / length1 * length2, pointToCreateLineAt.getCoordinateSystem() );
-    else
-      p2 = GeometryFactory.createGM_Point( xcenter + (p2.getX() - xcenter) / length2 * length1, ycenter + (p2.getY() - ycenter) / length2 * length1, pointToCreateLineAt.getCoordinateSystem() );
-
-    final GM_Point centerpoint = GeometryFactory.createGM_Point( (p1.getX() + p2.getX()) / 2.0, (p1.getY() + p2.getY()) / 2.0, node.getPoint().getCoordinateSystem() );
-    final double xoffset = pointToCreateLineAt.getX() - centerpoint.getX();
-    final double yoffset = pointToCreateLineAt.getY() - centerpoint.getY();
-
-    GM_Point pointtocreatefrom = null;
-    if( length1 >= length2 )
-      pointtocreatefrom = p1;
-    else
-      pointtocreatefrom = p2;
-
-    final double x1 = centerpoint.getX() - (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
-    final double y1 = centerpoint.getY() + (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
-    final double x2 = centerpoint.getX() + (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
-    final double y2 = centerpoint.getY() - (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
-
-    final GM_Position[] positions = new GM_Position[] { GeometryFactory.createGM_Position( x1, y1 ), GeometryFactory.createGM_Position( x2, y2 ) };
-    return GeometryFactory.createGM_Curve( positions, p1.getCoordinateSystem() );
-  }
+//  private GM_Curve getGeometry( final IFE1D2DNode node, final IFE1D2DNode neighbour1, final IFE1D2DNode neighbour2 ) throws GM_Exception
+//  {
+//    final GM_Point pointToCreateLineAt = node.getPoint();
+//    final double xcenter = pointToCreateLineAt.getX();
+//    final double ycenter = pointToCreateLineAt.getY();
+//    GM_Point p1 = neighbour1.getPoint();
+//    GM_Point p2 = neighbour2.getPoint();
+//
+//    final double length1 = Math.sqrt( Math.pow( p1.getX() - xcenter, 2.0 ) + Math.pow( p1.getY() - ycenter, 2.0 ) );
+//    final double length2 = Math.sqrt( Math.pow( p2.getX() - xcenter, 2.0 ) + Math.pow( p2.getY() - ycenter, 2.0 ) );
+//    if( length1 >= length2 )
+//      p1 = GeometryFactory.createGM_Point( xcenter + (p1.getX() - xcenter) / length1 * length2, ycenter + (p1.getY() - ycenter) / length1 * length2, pointToCreateLineAt.getCoordinateSystem() );
+//    else
+//      p2 = GeometryFactory.createGM_Point( xcenter + (p2.getX() - xcenter) / length2 * length1, ycenter + (p2.getY() - ycenter) / length2 * length1, pointToCreateLineAt.getCoordinateSystem() );
+//
+//    final GM_Point centerpoint = GeometryFactory.createGM_Point( (p1.getX() + p2.getX()) / 2.0, (p1.getY() + p2.getY()) / 2.0, node.getPoint().getCoordinateSystem() );
+//    final double xoffset = pointToCreateLineAt.getX() - centerpoint.getX();
+//    final double yoffset = pointToCreateLineAt.getY() - centerpoint.getY();
+//
+//    GM_Point pointtocreatefrom = null;
+//    if( length1 >= length2 )
+//      pointtocreatefrom = p1;
+//    else
+//      pointtocreatefrom = p2;
+//
+//    final double x1 = centerpoint.getX() - (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
+//    final double y1 = centerpoint.getY() + (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
+//    final double x2 = centerpoint.getX() + (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
+//    final double y2 = centerpoint.getY() - (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
+//
+//    final GM_Position[] positions = new GM_Position[] { GeometryFactory.createGM_Position( x1, y1 ), GeometryFactory.createGM_Position( x2, y2 ) };
+//    return GeometryFactory.createGM_Curve( positions, p1.getCoordinateSystem() );
+//  }
 }

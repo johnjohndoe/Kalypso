@@ -5,16 +5,11 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -23,139 +18,62 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge
 {
-  private final IFeatureBindingCollection<IFE1D2DElement> m_containers = new FeatureBindingCollection<>( this, IFE1D2DElement.class, WB1D2D_PROP_EDGE_CONTAINERS );
-
-  protected final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<>( this, IFE1D2DNode.class, WB1D2D_PROP_DIRECTEDNODE );
-
   public FE1D2DEdge( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public static final IFE1D2DEdge createFromModel( final IFEDiscretisationModel1d2d model, final IFE1D2DNode node0, final IFE1D2DNode node1 )
+  private FeatureList elementsInternal( )
   {
-    final IFeatureBindingCollection<IFE1D2DEdge> edges = model.getEdges();
-    final IFE1D2DEdge curEdge = edges.addNew( IFE1D2DEdge.QNAME );
-    final String edgeGmlID = curEdge.getId();
-    curEdge.addNode( node0.getId() );
-    node0.addContainer( edgeGmlID );
-    //
-    curEdge.addNode( node1.getId() );
-    node1.addContainer( edgeGmlID );
+    return (FeatureList)getProperty( WB1D2D_PROP_EDGE_CONTAINERS );
+  }
 
-    curEdge.setEnvelopesUpdated();
-
-    return curEdge;
+  private FeatureList nodesInternal( )
+  {
+    return (FeatureList)getProperty( WB1D2D_PROP_DIRECTEDNODE );
   }
 
   @Override
-  public IFeatureBindingCollection<IFE1D2DNode> getNodes( )
+  public IFE1D2DNode[] getNodes( )
   {
-    return m_nodes;
+    return nodesInternal().toFeatures( new IFE1D2DNode[nodesInternal().size()] );
   }
 
   @Override
-  public IFE1D2DNode getMiddleNode( )
-  {
-    if( getProperty( IFE1D2DEdge.WB1D2D_PROP_MIDDLE_NODE ) != null )
-    {
-      final Feature middleNodeFeature = FeatureHelper.getSubFeature( this, IFE1D2DEdge.WB1D2D_PROP_MIDDLE_NODE );
-      if( middleNodeFeature == null )
-        return null;
-      else
-        return (IFE1D2DNode) middleNodeFeature.getAdapter( IFE1D2DNode.class );
-    }
-    return null;
-  }
-
-  @Override
-  public void setMiddleNode( final IFE1D2DNode middleNode )
-  {
-    String newMiddleNodeID = null;
-    if( middleNode != null )
-    {
-      newMiddleNodeID = middleNode.getId();
-    }
-    setProperty( IFE1D2DEdge.WB1D2D_PROP_MIDDLE_NODE, newMiddleNodeID );
-  }
-
-  /* static helper functions */
-  @Override
-  public GM_Curve recalculateElementGeometry( ) throws GM_Exception
-  {
-    return ModelGeometryBuilder.computeEgdeGeometry( this );
-  }
-
-  @SuppressWarnings("unchecked")
   public void setNodes( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
-    final FeatureList nodeList = (FeatureList) getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
-    nodeList.clear();
-    nodeList.add( node0.getId() );
-    nodeList.add( node1.getId() );
-
+    Assert.throwIAEOnNullParam( node0, "node0" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( node1, "node1" ); //$NON-NLS-1$
+    nodesInternal().clear();
+    nodesInternal().addLink( node0 );
+    nodesInternal().addLink( node1 );
+    node0.addLinkedEdge( this );
+    node1.addLinkedEdge( this );
     setEnvelopesUpdated();
   }
 
   @Override
-  public IFeatureBindingCollection<IFE1D2DElement> getContainers( )
+  public void addLinkedElement( final IFE1D2DElement element )
   {
-    return m_containers;
+    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
+    if( !elementsInternal().containsOrLinksTo( element ) )
+      elementsInternal().addLink( element );
   }
 
   @Override
-  public void addContainer( final String containerID )
+  public void removeLinkedElement( final IFE1D2DElement element )
   {
-    Assert.throwIAEOnNullParam( containerID, "containerID" ); //$NON-NLS-1$
-    final FeatureList wrappedList = m_containers.getFeatureList();
-    if( wrappedList.contains( containerID ) )
-    {
-      return;
-    }
-    else
-    {
-      wrappedList.add( containerID );
-    }
-  }
-
-  @Override
-  public IFE1D2DNode getNode( final int index ) throws IndexOutOfBoundsException
-  {
-    return m_nodes.get( index );
-  }
-
-  @Override
-  public void addNode( final String nodeID )
-  {
-    final FeatureList nodeList = m_nodes.getFeatureList();
-    nodeList.add( nodeID );
-
-    // // changeing the nodes invalidates my geometry
-    // nodeList.invalidate();
-
-    setEnvelopesUpdated();
-  }
-
-  @Override
-  public String toString( )
-  {
-    final StringBuffer buf = new StringBuffer( 256 );
-    buf.append( this.getClass().getSimpleName() );
-    buf.append( '[' );
-    for( final IFE1D2DNode node : m_nodes )
-    {
-      buf.append( node );
-      buf.append( ' ' );
-    }
-    buf.append( ']' );
-    return buf.toString();
+    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
+    if( elementsInternal().containsOrLinksTo( element ) )
+      elementsInternal().removeLink( element );
   }
 
   @Override
   public GM_Point getMiddleNodePoint( )
   {
-    final GM_Point point1 = m_nodes.get( 0 ).getPoint();
-    final GM_Point point2 = m_nodes.get( 1 ).getPoint();
+    Feature[] nodes = getNodes();
+    final GM_Point point1 = ((IFE1D2DNode)nodes[0]).getPoint();
+    final GM_Point point2 = ((IFE1D2DNode)nodes[1]).getPoint();
     final double x = (point1.getX() + point2.getX()) / 2;
     final double y = (point1.getY() + point2.getY()) / 2;
     if( point1.getCoordinateDimension() > 2 && point2.getCoordinateDimension() > 2 )
@@ -168,21 +86,42 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge
   }
 
   @Override
-  public IFeatureBindingCollection<IFE1D2DElement> getAdjacentElements( )
+  public IFE1D2DElement[] getLinkedElements( )
   {
-    return getContainers();
+    return elementsInternal().toFeatures( new IFE1D2DElement[elementsInternal().size()] );
   }
 
   @Override
   public boolean isBorder( )
   {
-    final IFeatureBindingCollection<IFE1D2DElement> containers = getContainers();
-    return containers.size() == 1;
+    return elementsInternal().size() == 1;
   }
 
   @Override
   public GM_Curve getGeometry( )
   {
     return getProperty( WB1D2D_PROP_MIDDLE_GEOM, GM_Curve.class );
+  }
+
+  @Override
+  public boolean containsNode( final IFE1D2DNode node )
+  {
+    Assert.throwIAEOnNullParam( node, "node" );
+    return nodesInternal().containsOrLinksTo( node );
+  }
+
+  @Override
+  public String toString( )
+  {
+    final StringBuffer buf = new StringBuffer( 256 );
+    buf.append( this.getClass().getSimpleName() );
+    buf.append( '[' );
+    for( final Feature node : getNodes() )
+    {
+      buf.append( node );
+      buf.append( ' ' );
+    }
+    buf.append( ']' );
+    return buf.toString();
   }
 }

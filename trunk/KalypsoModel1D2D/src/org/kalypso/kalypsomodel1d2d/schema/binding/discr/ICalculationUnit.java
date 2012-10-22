@@ -42,14 +42,13 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Tagging interface for classes representing a wb1d2d:CalculationUnit
  * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
- * 
  */
 public interface ICalculationUnit extends IFE1D2DComplexElement
 {
@@ -61,16 +60,19 @@ public interface ICalculationUnit extends IFE1D2DComplexElement
     TYPE_NON_DEFINED
   }
 
-  /**
-   * Type of calculation unit (1D, 2D or 1D2D)
-   */
-  public TYPE getType( );
+  TYPE getType( );
 
-  public List<IFELine> getContinuityLines( );
+  List<IFELine> getContinuityLines( );
 
-  public List<IElement1D> getElements1D( );
+  List<IElement1D> getElements1D( );
 
-  public List<IPolyElement> getElements2D( );
+  List<IPolyElement> getElements2D( );
 
-  public boolean contains( final IFENetItem member );
+  boolean contains( IFENetItem member );
+
+  List<IFENetItem> query( GM_Envelope env, List<IFENetItem> result );
+
+  int size( );
+
+  GM_Envelope getBoundingBox( );
 }

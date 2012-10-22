@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.List;
-
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
@@ -50,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Utility stuff related to the 1d2d discretisation model.
- *
+ * 
  * @author Gernot Belger
  */
 public class DiscretisationModelUtils
@@ -58,23 +56,6 @@ public class DiscretisationModelUtils
   private DiscretisationModelUtils( )
   {
     throw new UnsupportedOperationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils.0" ) ); //$NON-NLS-1$
-  }
-
-  /**
-   * Checks if a node is a 1d-node.
-   * <p>
-   * A 1d-node is a node which as at least on 1D-element connected to it. TODO move this into the TypeInfo class
-   */
-  public static boolean is1DNode( final IFE1D2DNode node )
-  {
-    final IFE1D2DElement[] elements = node.getElements();
-    for( final IFE1D2DElement element : elements )
-    {
-      if( element instanceof IElement1D )
-        return true;
-    }
-
-    return false;
   }
 
   /**
@@ -110,7 +91,7 @@ public class DiscretisationModelUtils
   /** Find the opposite node from an element.@return The first node of the element which is not qual tro the given node. */
   public static IFE1D2DNode findOtherNode( final IFE1D2DNode node, final IFE1D2DElement element )
   {
-    final List<IFE1D2DNode> nodes = element.getNodes();
+    final IFE1D2DNode[] nodes = element.getNodes();
     for( final IFE1D2DNode otherNode : nodes )
     {
       if( otherNode != null && !(otherNode.equals( node )) )
@@ -122,13 +103,13 @@ public class DiscretisationModelUtils
 
   /**
    * Finds the discretisation model for an item of a model.
-   *
+   * 
    * @return <code>null</code>, if the parent feature of the given item is not a discretisation model.
    */
   public static IFEDiscretisationModel1d2d modelForItem( final Feature modelItem )
   {
     final Feature parent = modelItem.getOwner();
-    return (IFEDiscretisationModel1d2d) parent.getAdapter( IFEDiscretisationModel1d2d.class );
+    return (IFEDiscretisationModel1d2d)parent.getAdapter( IFEDiscretisationModel1d2d.class );
   }
 
   /**
@@ -141,6 +122,6 @@ public class DiscretisationModelUtils
       return null;
 
     final Feature parentFeature = featureList.getOwner();
-    return (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
+    return (IFEDiscretisationModel1d2d)parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
   }
 }

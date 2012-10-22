@@ -46,7 +46,7 @@ import java.util.List;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import com.vividsolutions.jts.geom.TopologyException;
@@ -110,23 +110,23 @@ public final class PolygonIntersectionHelper
   {
     if( geometry instanceof GM_MultiSurface )
       return (GM_MultiSurface) geometry;
-    else if( geometry instanceof GM_Surface )
+    else if( geometry instanceof GM_Polygon )
     {
-      final GM_Surface< ? > surface = (GM_Surface< ? >) geometry;
-      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, geometry.getCoordinateSystem() );
+      final GM_Polygon< ? > surface = (GM_Polygon< ? >) geometry;
+      return GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { surface }, geometry.getCoordinateSystem() );
     }
     else if( geometry instanceof GM_MultiPrimitive )
     {
       final GM_Object[] all = ((GM_MultiPrimitive) geometry).getAll();
-      final List<GM_Surface< ? >> outputList = new ArrayList<>( all.length );
+      final List<GM_Polygon< ? >> outputList = new ArrayList<>( all.length );
       for( final GM_Object geom : all )
       {
-        if( geom instanceof GM_Surface )
+        if( geom instanceof GM_Polygon )
         {
-          outputList.add( (GM_Surface< ? >) geom );
+          outputList.add( (GM_Polygon< ? >) geom );
         }
       }
-      return GeometryFactory.createGM_MultiSurface( outputList.toArray( new GM_Surface< ? >[outputList.size()] ), geometry.getCoordinateSystem() );
+      return GeometryFactory.createGM_MultiSurface( outputList.toArray( new GM_Polygon< ? >[outputList.size()] ), geometry.getCoordinateSystem() );
     }
     return null;
   }

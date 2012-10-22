@@ -45,8 +45,7 @@ import java.util.List;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -68,98 +67,27 @@ public class Element1D extends FE1D2DElement implements IElement1D
   public IFE1D2DEdge getEdge( )
   {
     final Object property = getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
-    final Feature edgeFeature = FeatureHelper.getFeature( this.getWorkspace(), property );
-    if( edgeFeature == null )
-      return null;
-
-    return (IFE1D2DEdge) edgeFeature;
+    final IFE1D2DEdge edgeFeature = (IFE1D2DEdge)FeatureHelper.getFeature( this.getWorkspace(), property );
+    return edgeFeature;
   }
 
   @Override
   public void setEdge( final IFE1D2DEdge edge )
   {
+    Assert.throwIAEOnNullParam( edge, "edge" );
     final IFE1D2DEdge oldEdge = getEdge();
     if( oldEdge != null )
-    {
-      // Remove ALL references to this element
-      for( ; oldEdge.getContainers().getFeatureList().removeLink( this ); )
-      {
-
-      }
-    }
-
-    if( edge == null )
-    {
-      setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, null );
-    }
-    else
-    {
-      final String linkToEdge = edge.getId();
-      setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, linkToEdge );
-
-      final IFeatureBindingCollection containers = edge.getContainers();
-
-      // TODO: only add if not already present.
-      // May the containers contain me twice?
-
-      // Remove ALL references to the new element in order to avoid duplicates -> can only happen if we have a bug
-      // elsewhere
-      for( ; containers.getFeatureList().removeLink( this ); )
-      {
-
-      }
-
-      containers.addRef( this );
-    }
-
-    // Setting the edge causes the envelope to become invalid
+      oldEdge.removeLinkedElement( this );
+    setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, edge.getId() );
+    edge.addLinkedElement( this );
     setEnvelopesUpdated();
   }
 
   @Override
-  public List<IFE1D2DNode> getNodes( )
+  public IFE1D2DNode[] getNodes( )
   {
     final IFE1D2DEdge edge = getEdge();
-    if( edge == null )
-      return null;
-
     return edge.getNodes();
-  }
-
-  /**
-   * Recalculates the geometry of this element. Used by the corresponding property function.
-   */
-  @Override
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception
-  {
-    final IFE1D2DEdge edge = getEdge();
-    if( edge == null )
-    {
-      return null;
-    }
-
-    final List<IFE1D2DNode> nodes = edge.getNodes();
-
-    final int SIZE = nodes.size();
-    if( SIZE != 2 )
-    {
-      return null;
-    }
-
-    String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
-    if( crs == null )
-      crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-
-    final GM_Position positions[] = new GM_Position[SIZE];
-    GM_Point point;
-
-    for( int i = 0; i < SIZE; i++ )
-    {
-      point = nodes.get( i ).getPoint();
-      positions[i] = point.getPosition();
-    }
-
-    return GeometryFactory.createGM_Curve( positions, crs );
   }
 
   @Override
@@ -174,19 +102,19 @@ public class Element1D extends FE1D2DElement implements IElement1D
   @Override
   public Double getRoughnessCorrectionAxAy( )
   {
-    return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY );
+    return (Double)getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY );
   }
 
   @Override
   public Double getRoughnessCorrectionDP( )
   {
-    return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP );
+    return (Double)getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP );
   }
 
   @Override
   public Double getRoughnessCorrectionKS( )
   {
-    return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS );
+    return (Double)getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS );
   }
 
   @Override

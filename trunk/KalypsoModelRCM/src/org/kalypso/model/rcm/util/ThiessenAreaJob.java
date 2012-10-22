@@ -59,7 +59,7 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * @author Gernot Belger
@@ -117,11 +117,11 @@ public final class ThiessenAreaJob extends Job
 
   protected void doThiessen( final IBoundaryCalculator boundaryCalculator, final IProgressMonitor monitor ) throws GM_Exception, CoreException
   {
-    final Map<Feature, GM_Surface< ? >> changeMap = m_worker.execute( m_stations, boundaryCalculator, monitor );
+    final Map<Feature, GM_Polygon< ? >> changeMap = m_worker.execute( m_stations, boundaryCalculator, monitor );
 
     final Collection<FeatureChange> changes = new ArrayList<>( changeMap.size() );
 
-    for( final Map.Entry<Feature, GM_Surface< ? >> entry : changeMap.entrySet() )
+    for( final Map.Entry<Feature, GM_Polygon< ? >> entry : changeMap.entrySet() )
       changes.add( new FeatureChange( entry.getKey(), m_propertyArea, entry.getValue() ) );
 
     m_change = new ChangeFeaturesCommand( m_workspace, changes.toArray( new FeatureChange[changes.size()] ) );

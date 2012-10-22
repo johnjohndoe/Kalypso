@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
 
 /**
  * Helper class concerning {@link org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode}.
- *
+ * 
  * @author Gernot Belger
  * @author Thomas Jung
  */
@@ -87,13 +87,13 @@ public class NodeOps
     IFE1D2DNode nearestNode = null;
     for( final Object object : foundElements )
     {
-      final IPolyElement ele = (IPolyElement) ((Feature) object).getAdapter( IPolyElement.class );
+      final IPolyElement ele = (IPolyElement)((Feature)object).getAdapter( IPolyElement.class );
       if( ele == null )
         continue;
-      final List<IFE1D2DEdge> edges = ele.getEdges();
+      final IFE1D2DEdge[] edges = ele.getEdges();
       for( final IFE1D2DEdge edge : edges )
       {
-        final List<IFE1D2DNode> nodes = edge.getNodes();
+        final IFE1D2DNode[] nodes = edge.getNodes();
         for( final IFE1D2DNode node : nodes )
         {
           final GM_Point nodePoint = node.getPoint();

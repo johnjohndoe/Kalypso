@@ -43,20 +43,19 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Undoable command to change the position of a node. the change can be specified as a point or a change elevation
- *
+ * 
  * @author Patrice Congo
  */
 public class ChangeNodePositionCommand implements IFeatureChangeCommand
@@ -113,15 +112,15 @@ public class ChangeNodePositionCommand implements IFeatureChangeCommand
     if( m_fireEventsForDependendElements )
     {
       /* Edges etc. */
-      final IFeatureBindingCollection< ? extends IFENetItem> containers = m_node.getContainers();
-      for( final IFENetItem container : containers )
+      final IFE1D2DEdge[] containers = m_node.getLinkedEdges();
+      for( final IFE1D2DEdge edge : containers )
       {
-        changedFeatures.add( container );
-        container.setEnvelopesUpdated();
+        changedFeatures.add( edge );
+        edge.setEnvelopesUpdated();
       }
 
       /* Elements */
-      final IFE1D2DElement[] elements = m_node.getElements();
+      final IFE1D2DElement[] elements = m_node.getAdjacentElements();
       for( final IFE1D2DElement element : elements )
       {
         changedFeatures.add( element );

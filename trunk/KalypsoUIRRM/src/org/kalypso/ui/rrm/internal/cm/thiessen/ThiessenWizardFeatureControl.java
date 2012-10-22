@@ -82,7 +82,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -146,7 +146,7 @@ public class ThiessenWizardFeatureControl extends AbstractFeatureControl
       {
         try
         {
-          final GM_Surface< ? > geometry = catchment.getGeometry();
+          final GM_Polygon< ? > geometry = catchment.getGeometry();
           patches.add( JTSAdapter.export( geometry ) );
         }
         catch( final GM_Exception e )

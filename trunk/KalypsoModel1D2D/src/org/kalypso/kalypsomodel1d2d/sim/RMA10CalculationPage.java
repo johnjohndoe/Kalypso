@@ -259,7 +259,7 @@ public class RMA10CalculationPage extends WizardPage
       {
         // if coupled simulation is selected, display one iteration composite per subunit
         final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D) calculationUnit;
-        final IFeatureBindingCollection<ICalculationUnit> subUnits = calculationUnit1D2D.getChangedSubUnits();
+        final IFeatureBindingCollection<ICalculationUnit> subUnits = calculationUnit1D2D.getSubCalculationUnits();
 
         final int numSubunits = subUnits.size();
         m_iterGroup.setLayout( new GridLayout( (int) Math.ceil( numSubunits / 2.0 ), true ) );

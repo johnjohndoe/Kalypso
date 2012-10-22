@@ -56,8 +56,8 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -75,16 +75,16 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
    */
   @SuppressWarnings("unchecked")
   @Override
-  public GM_Surface<GM_SurfacePatch> getAffectedArea( )
+  public GM_Polygon<GM_AbstractSurfacePatch> getAffectedArea( )
   {
-    return getProperty( QNAME_PROP_AFFECTEDAREA, GM_Surface.class );
+    return getProperty( QNAME_PROP_AFFECTEDAREA, GM_Polygon.class );
   }
 
   /**
    * @see org.kalypso.model.rcm.binding.IOmbrometer#getAffectedArea(org.kalypsodeegree.model.geometry.GM_Surface)
    */
   @Override
-  public void setAffectedArea( final GM_Surface< ? > area )
+  public void setAffectedArea( final GM_Polygon< ? > area )
   {
     setProperty( QNAME_PROP_AFFECTEDAREA, area );
   }
