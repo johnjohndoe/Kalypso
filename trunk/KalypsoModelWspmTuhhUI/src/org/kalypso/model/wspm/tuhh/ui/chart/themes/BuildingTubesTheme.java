@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
@@ -50,6 +52,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvert
 import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.chart.LayerStyleProviderTuhh;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.CulvertLayer;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.ProfileObjectsLayer;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.buildings.CulvertPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -67,23 +70,51 @@ public class BuildingTubesTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.0" ); //$NON-NLS-1$
 
-  public BuildingTubesTheme( final IProfile profil, final ICoordinateMapper cm, final LayerStyleProviderTuhh styleProvider )
+  private final ICulvertBuilding m_culvert;
+
+  public BuildingTubesTheme( final IProfile profil, final ICulvertBuilding culvert, final ICoordinateMapper cm, final LayerStyleProviderTuhh styleProvider )
   {
-    super( profil, IWspmTuhhConstants.LAYER_TUBES, TITLE, new IProfilChartLayer[] { new CulvertLayer( profil, styleProvider ) }, cm );
+    super( profil, IWspmTuhhConstants.LAYER_TUBES, TITLE, createSubLayers( profil, culvert, styleProvider ), cm, styleProvider );
+
+    m_culvert = culvert;
+
+    getLineStyle().setColor( new RGB( 255, 255, 100 ) );
+  }
+
+  private static IProfilChartLayer[] createSubLayers( final IProfile profile, final ICulvertBuilding culvert, final LayerStyleProviderTuhh styleProvider )
+  {
+    final CulvertLayer culvertLayer = new CulvertLayer( profile, culvert, styleProvider );
+
+    final IProfileObjectRecords records = culvert.getRecords();
+    if( records.size() == 0 )
+      return new IProfilChartLayer[] { culvertLayer };
+
+    final String id = IWspmTuhhConstants.LAYER_TUBES + "_records"; //$NON-NLS-1$
+    final IProfilChartLayer profilePartLayer = new ProfileObjectsLayer( id, profile, culvert, "Messpunkte" );
+
+    return new IProfilChartLayer[] { culvertLayer, profilePartLayer };
+  }
+
+  @Override
+  public String getTitle( )
+  {
+    return m_culvert.getTypeLabel();
   }
 
   @Override
   public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isObjectDataChanged() || hint.isObjectChanged() )
-    {
       getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
-    }
   }
 
   @Override
   public IChartLayer[] getLegendNodes( )
   {
+    final IChartLayer[] layers = getLayerManager().getLayers();
+    if( layers.length > 1 )
+      return layers;
+
     return new IChartLayer[] {};
   }
 

@@ -46,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -63,14 +64,15 @@ import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilLayerUtils;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
 import com.google.common.primitives.Doubles;
 
+import de.openali.odysseus.chart.ext.base.layer.TooltipFormatter;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
@@ -117,7 +119,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
     final Double x = point.getBreite();
     if( !Doubles.isFinite( x ) )
-        return null;
+      return null;
 
     final Point screen = getCoordinateMapper().numericToScreen( x, 0 );
 
@@ -222,7 +224,17 @@ public class PointMarkerLayer extends AbstractProfilLayer
     final Point2D p = getPoint2D( point );
     try
     {
-      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer.0", new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName() } ); //$NON-NLS-1$
+      final IComponent domainComponent = getDomainComponent();
+      final IComponent targetComponent = getTargetComponent();
+
+      final String header = targetComponent.getName();
+
+      final TooltipFormatter formatter = new TooltipFormatter( header, new String[] { "%s", "%.4f", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+      final String domainUnit = ComponentUtilities.getComponentUnitLabel( domainComponent ); //$NON-NLS-1$
+      formatter.addLine( domainComponent.getName(), p.getX(), domainUnit );
+
+      return formatter.format();
     }
     catch( final RuntimeException e )
     {

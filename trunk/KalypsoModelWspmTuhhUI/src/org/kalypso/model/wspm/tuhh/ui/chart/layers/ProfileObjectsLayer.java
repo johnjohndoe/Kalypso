@@ -32,6 +32,8 @@ import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -54,7 +56,7 @@ public class ProfileObjectsLayer extends AbstractProfilLayer
 
   private final PartTypeAccessor m_partInfo;
 
-  public ProfileObjectsLayer( final String id, final IProfile profil, final IProfileObject object )
+  public ProfileObjectsLayer( final String id, final IProfile profil, final IProfileObject object, final String title )
   {
     super( id, profil, null, null );
 
@@ -64,22 +66,96 @@ public class ProfileObjectsLayer extends AbstractProfilLayer
 
     final String label = m_partInfo.getTypeLabel();
 
-    final String title = String.format( "%s %s", label, m_object.getDescription() );
-    setTitle( title );
+    final String typeTitle = String.format( "%s %s", label, m_object.getDescription() );
+
+    if( title == null )
+      setTitle( typeTitle );
+    else
+      setTitle( title );
   }
 
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    final LegendEntry entry = new LegendEntry( this, getTitle() )
+    final ILegendEntry entry = new LegendEntry( this, getTitle() )
     {
       @Override
       public void paintSymbol( final GC gc, final Point size )
       {
+        paintLegendSymbol( gc, size );
       }
     };
 
     return new ILegendEntry[] { entry };
+  }
+
+  protected void paintLegendSymbol( final GC gc, final Point size )
+  {
+    final IStyle[] styles = m_partInfo.getStyles();
+    final Point[] legendPointPoints = new Point[] { new Point( size.x / 2, size.y / 2 ) };
+    final Point[] legendLinePoints = new Point[6];
+    legendLinePoints[0] = new Point( 0, size.x / 2 );
+    legendLinePoints[1] = new Point( size.x / 5, size.y / 2 );
+    legendLinePoints[2] = new Point( size.x / 5 * 2, size.y / 4 );
+    legendLinePoints[3] = new Point( size.x / 5 * 3, size.y / 4 * 3 );
+    legendLinePoints[4] = new Point( size.x / 5 * 4, size.y / 2 );
+    legendLinePoints[5] = new Point( size.x, size.y / 2 );
+
+    for( final IStyle style : styles )
+    {
+      if( style instanceof IPointStyle )
+        paintPoints( gc, legendPointPoints, (IPointStyle)style );
+      else if( style instanceof ILineStyle )
+        paintLine( gc, legendLinePoints, (ILineStyle)style );
+    }
+  }
+
+  @Override
+  public IDataRange< ? > getDomainRange( )
+  {
+    DataRange<Double> range = new DataRange<>( null, null );
+
+    final IProfileObjectRecords records = m_object.getRecords();
+    for( int i = 0; i < records.size(); i++ )
+    {
+      final IProfileObjectRecord record = records.getRecord( i );
+      final Double breite = record.getBreite();
+
+      range = extendRange( range, breite );
+    }
+
+    return range;
+  }
+
+  @Override
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainRange )
+  {
+    DataRange<Double> range = new DataRange<>( null, null );
+
+    final IProfileObjectRecords records = m_object.getRecords();
+    for( int i = 0; i < records.size(); i++ )
+    {
+      final IProfileObjectRecord record = records.getRecord( i );
+      final Double hoehe = record.getHoehe();
+
+      range = extendRange( range, hoehe );
+    }
+
+    return range;
+  }
+
+  private DataRange<Double> extendRange( final DataRange<Double> range, final Double value )
+  {
+    if( value == null )
+      return range;
+
+    final Double min = range.getMin();
+    final Double max = range.getMin();
+
+    final double newMin = min == null ? value : Math.min( min, value );
+    final double newMax = max == null ? value : Math.min( max, value );
+
+    return new DataRange<>( newMin, newMax );
   }
 
   @Override

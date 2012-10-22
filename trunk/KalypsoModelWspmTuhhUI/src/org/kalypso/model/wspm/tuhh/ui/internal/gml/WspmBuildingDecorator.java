@@ -106,7 +106,7 @@ public class WspmBuildingDecorator implements ILightweightLabelDecorator
       decoration.addOverlay( buildingImage, IDecoration.REPLACE );
   }
 
-  private ImageDescriptor getBuildingImage( final IProfileObject building )
+  public static ImageDescriptor getBuildingImage( final IProfileObject building )
   {
     final PluginImageProvider imageProvider = KalypsoModelWspmTuhhUIPlugin.getImageProvider();
 
