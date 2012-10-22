@@ -63,8 +63,8 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
       // folder absolute path on server FS
       final String fmScenarioFolderAbsolutePath = new File( Connectors.getURL( inputProvider, MODELSPEC_CONNECTOR_FM_RM.FM_Model.name() ).getFile() ).getParent().concat( File.separator );
 
-      final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter( IFloodModel.class );
-      final IRasterDataModel riskRasterDataModel = (IRasterDataModel) rmModel.getRootFeature().getAdapter( IRasterDataModel.class );
+      final IFloodModel floodModel = (IFloodModel)fmModel.getRootFeature().getAdapter( IFloodModel.class );
+      final IRasterDataModel riskRasterDataModel = (IRasterDataModel)rmModel.getRootFeature().getAdapter( IRasterDataModel.class );
 
       final IFeatureBindingCollection<IRunoffEvent> floodModelEvents = floodModel.getEvents();
       final IFeatureBindingCollection<IAnnualCoverageCollection> riskWaterlevelCoverageCollection = riskRasterDataModel.getWaterlevelCoverageCollection();
@@ -80,13 +80,13 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
         {
           if( fmScenarioFolderAbsolutePath != null && coverage instanceof RectifiedGridCoverage )
           {
-            final RectifiedGridCoverage rCoverage = (RectifiedGridCoverage) coverage;
+            final RectifiedGridCoverage rCoverage = (RectifiedGridCoverage)coverage;
             final Object rangeSet = rCoverage.getRangeSet();
             // TODO: support other rangeSet types; possibly put this
             // code into a helper class
             if( rangeSet instanceof RangeSetFile )
             {
-              final RangeSetFile fileType = (RangeSetFile) rangeSet;
+              final RangeSetFile fileType = (RangeSetFile)rangeSet;
               final File eventFile = new File( fmScenarioFolderAbsolutePath.concat( fileType.getFileName() ) );
               if( eventFile.exists() && eventFile.isFile() )
               {
@@ -106,7 +106,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
       final boolean updateMap = inputProvider.hasID( MODELSPEC_KALYPSORISK.MAP_WATERLEVEL.toString() );
       if( updateMap )
       {
-        final URL mapURL = (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.MAP_WATERLEVEL.toString() );
+        final URL mapURL = (URL)inputProvider.getInputForID( MODELSPEC_KALYPSORISK.MAP_WATERLEVEL.toString() );
         final File mapFile = new File( mapURL.getPath() );
 
         /* Load the map template. */

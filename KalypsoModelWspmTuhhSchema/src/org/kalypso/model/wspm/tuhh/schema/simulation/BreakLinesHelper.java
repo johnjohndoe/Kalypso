@@ -70,8 +70,8 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -173,7 +173,7 @@ public class BreakLinesHelper implements IWspmConstants
         // add first point to close the ring
         posList.add( firstLeftPoint.getPosition() );
 
-        final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( posList.toArray( new GM_Position[posList.size()] ), null, crs );
+        final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = GeometryFactory.createGM_Surface( posList.toArray( new GM_Position[posList.size()] ), null, crs );
         rootFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), surface ); //$NON-NLS-1$
       }
 

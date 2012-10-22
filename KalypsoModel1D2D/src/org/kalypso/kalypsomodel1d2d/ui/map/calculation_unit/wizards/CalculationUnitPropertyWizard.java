@@ -138,7 +138,7 @@ public class CalculationUnitPropertyWizard extends Wizard
         if( m_parentCalcUnit instanceof ICalculationUnit1D2D )
         {
           final ICalculationUnit1D2D calcUnit1D2D = (ICalculationUnit1D2D) m_parentCalcUnit;
-          final IFeatureBindingCollection<ICalculationUnit> subUnits = calcUnit1D2D.getChangedSubUnits();
+          final IFeatureBindingCollection<ICalculationUnit> subUnits = calcUnit1D2D.getSubCalculationUnits();
 
           final RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( subUnits.toArray( new ICalculationUnit[subUnits.size()] ), calcUnit1D2D );
           final AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd = new AddSubCalcUnitsToCalcUnit1D2DCmd( newSubUnits, calcUnit1D2D );

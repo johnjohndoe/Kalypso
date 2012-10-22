@@ -9,7 +9,7 @@ import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -122,7 +122,7 @@ public class RoughnessPolygonCollection extends FeatureBindingCollection<IRoughn
   }
 
   @Override
-  public List<IRoughnessPolygon> selectRoughnessPolygons( final GM_Surface< ? > selectionZone )
+  public List<IRoughnessPolygon> selectRoughnessPolygons( final GM_Polygon< ? > selectionZone )
   {
     return query( selectionZone, IRoughnessPolygon.PROP_GEOMETRY, false );
   }

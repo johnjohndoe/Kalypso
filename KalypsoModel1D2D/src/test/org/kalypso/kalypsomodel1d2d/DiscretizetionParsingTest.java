@@ -53,16 +53,16 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Felipe Maximino
- *
  */
 public class DiscretizetionParsingTest extends GmlParsingTester
 {
   private static final double DELTA = 0.01;
 
   private static final GM_Point point1 = GeometryFactory.createGM_Point( 0.0, 0.0, 0.0, "EPSG:31467" ); //$NON-NLS-1$
+
   private static final GM_Point point2 = GeometryFactory.createGM_Point( 0.0, 1.0, 1.0, "EPSG:31467" ); //$NON-NLS-1$
 
-  public void testTinyDiscretization() throws Exception
+  public void testTinyDiscretization( ) throws Exception
   {
     final GMLWorkspace workspace = readGml( "/etc/testdata/data/tinyDiscretization.gml" ); //$NON-NLS-1$
     assertNotNull( workspace );
@@ -70,7 +70,7 @@ public class DiscretizetionParsingTest extends GmlParsingTester
     final Feature rootFeature = workspace.getRootFeature();
     assertNotNull( rootFeature );
 
-    final IFEDiscretisationModel1d2d discrModel = (IFEDiscretisationModel1d2d) rootFeature.getAdapter( IFEDiscretisationModel1d2d.class );
+    final IFEDiscretisationModel1d2d discrModel = (IFEDiscretisationModel1d2d)rootFeature.getAdapter( IFEDiscretisationModel1d2d.class );
     assertNotNull( discrModel );
 
     assertEquals( 6, discrModel.getNodes().size() );
@@ -78,13 +78,13 @@ public class DiscretizetionParsingTest extends GmlParsingTester
     assertEquals( 3, discrModel.getElements().size() );
     assertEquals( 1, discrModel.getComplexElements().size() );
 
-    //assert one node
+    // assert one node
     final IFE1D2DNode node = discrModel.getNodes().get( 0 );
     assertNotNull( node );
     assertTrue( node.getPoint().distance( point1 ) < DELTA );
 
-    //getAdjacentNode
-    final IFE1D2DNode adjacentNode = node.getNeighbours().get( 0 );
+    // getAdjacentNode
+    final IFE1D2DNode adjacentNode = node.getAdjacentNodes().get( 0 );
     assertNotNull( adjacentNode );
     assertTrue( adjacentNode.getPoint().distance( point2 ) < DELTA );
 
@@ -93,15 +93,15 @@ public class DiscretizetionParsingTest extends GmlParsingTester
     final IFE1D2DEdge edge2 = discrModel.getEdges().get( 1 );
     assertNotNull( edge2 );
 
-    //assert the edges of a polyElement
-    final PolyElement polyEl1 = (PolyElement) discrModel.getElements().get( 0 );
+    // assert the edges of a polyElement
+    final PolyElement polyEl1 = (PolyElement)discrModel.getElements().get( 0 );
     assertNotNull( polyEl1 );
-    assertTrue( polyEl1.getEdges().contains( edge1 ) );
-    assertTrue( polyEl1.getEdges().contains( edge2 ) );
+    assertTrue( polyEl1.containsEdge( edge1 ) );
+    assertTrue( polyEl1.containsEdge( edge2 ) );
 
-    //assert complex Element
+    // assert complex Element
     final IFE1D2DComplexElement complexEl1 = discrModel.getComplexElements().get( 0 );
     assertNotNull( complexEl1 );
-    assertTrue( complexEl1.getElements().get(0).equals( polyEl1 ) );
+    assertTrue( complexEl1.getElements()[0].equals( polyEl1 ) );
   }
 }

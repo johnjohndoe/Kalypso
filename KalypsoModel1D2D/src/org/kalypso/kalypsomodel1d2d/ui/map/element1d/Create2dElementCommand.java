@@ -115,12 +115,10 @@ public class Create2dElementCommand implements ICommand
 
     /* Build new element */
     final IPolyElement newElement = m_discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
-
-    newElement.setEdges( edges );
-
-    /* add element as container to its edges */
     for( final IFE1D2DEdge edge : edges )
-      edge.getContainers().addRef( newElement );
+    {
+      newElement.addEdge( edge );
+    }
 
     m_newElement = newElement;
 

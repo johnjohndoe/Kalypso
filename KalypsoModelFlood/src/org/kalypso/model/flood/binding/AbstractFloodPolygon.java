@@ -44,8 +44,8 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -82,9 +82,9 @@ public abstract class AbstractFloodPolygon extends Feature_Impl implements IFloo
   }
 
   @Override
-  public GM_Surface<GM_SurfacePatch> getArea( )
+  public GM_Polygon<GM_AbstractSurfacePatch> getArea( )
   {
-    return getProperty( QNAME_PROP_AREA, GM_Surface.class );
+    return getProperty( QNAME_PROP_AREA, GM_Polygon.class );
   }
 
   @Override

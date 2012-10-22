@@ -565,7 +565,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     {
       return;
     }
-    final GM_Envelope boundingBox = CalcUnitOps.getBoundingBox( calUnitToMax );
+    final GM_Envelope boundingBox = calUnitToMax.getBoundingBox();
     if( boundingBox == null )
     {
       return;

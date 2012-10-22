@@ -43,13 +43,12 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 
 /**
  * Interface corresponding to the wb1d2d:PolyElementType in the sim_1d2d_discretisation.xsd
- *
+ * 
  * @author Gernot Belger
  */
 public interface IPolyElement extends IFE1D2DElement
@@ -58,14 +57,12 @@ public interface IPolyElement extends IFE1D2DElement
 
   QName QNAME_PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 
-  GM_Surface<GM_SurfacePatch> getGeometry( );
+  GM_Polygon<GM_PolygonPatch> getGeometry( );
 
-  IFeatureBindingCollection<IFE1D2DEdge> getEdges( );
+  IFE1D2DEdge[] getEdges( );
 
-  void addEdge( String edgeID );
+  void addEdge( IFE1D2DEdge edge );
 
-  /**
-   * Resets the edges of this element. DOES NOT handle the containers of the involded edges.
-   */
-  void setEdges( IFE1D2DEdge[] edges );
+  boolean containsEdge( IFE1D2DEdge edge );
+
 }

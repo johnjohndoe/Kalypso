@@ -42,7 +42,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 
 /**
@@ -59,6 +59,6 @@ public interface ITriangleAlgorithm
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void acceptSurfacePatches( GM_Envelope envToVisit, ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor ) throws GM_Exception;
+  public void acceptSurfacePatches( GM_Envelope envToVisit, ISurfacePatchVisitor<GM_AbstractSurfacePatch> surfacePatchVisitor ) throws GM_Exception;
 
 }

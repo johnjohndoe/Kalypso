@@ -7,7 +7,7 @@ import org.kalypso.risk.model.utils.FunctionParserCache;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -19,7 +19,7 @@ public class LandusePolygon extends Feature_Impl implements ILandusePolygon
   }
 
   @Override
-  public void setGeometry( final GM_Surface< ? > surface )
+  public void setGeometry( final GM_Polygon< ? > surface )
   {
     setProperty( ILandusePolygon.PROPERTY_GEOMETRY, surface );
   }
@@ -125,9 +125,9 @@ public class LandusePolygon extends Feature_Impl implements ILandusePolygon
    * @see org.kalypso.risk.model.schema.binding.ILandusePolygon#getGeometry()
    */
   @Override
-  public GM_Surface< ? > getGeometry( )
+  public GM_Polygon< ? > getGeometry( )
   {
-    return getProperty( ILandusePolygon.PROPERTY_GEOMETRY, GM_Surface.class );
+    return getProperty( ILandusePolygon.PROPERTY_GEOMETRY, GM_Polygon.class );
   }
 
   @Override

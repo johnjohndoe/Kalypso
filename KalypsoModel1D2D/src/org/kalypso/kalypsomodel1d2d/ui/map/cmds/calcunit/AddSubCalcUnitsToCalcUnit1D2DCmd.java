@@ -88,9 +88,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements ICommand
   {
     for( final ICalculationUnit subCalcUnit : m_subUnitsToAdd )
     {
-      m_parentCalcUnit.getChangedSubUnits().addRef( subCalcUnit );
-      // / ... the next line is dubious
-      m_parentCalcUnit.getElements().clear();
+      m_parentCalcUnit.getSubCalculationUnits().addRef( subCalcUnit );
     }
 
     final Feature[] changedFeatures = new Feature[m_subUnitsToAdd.length];

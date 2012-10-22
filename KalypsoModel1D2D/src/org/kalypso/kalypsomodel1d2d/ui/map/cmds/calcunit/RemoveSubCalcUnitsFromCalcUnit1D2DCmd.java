@@ -84,7 +84,7 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements ICommand
   @Override
   public void process( ) throws Exception
   {
-    final IFeatureBindingCollection<ICalculationUnit> subUnits = m_parentCalculationUnit.getChangedSubUnits();
+    final IFeatureBindingCollection<ICalculationUnit> subUnits = m_parentCalculationUnit.getSubCalculationUnits();
     for( final ICalculationUnit ele : m_calculationUnitsToRemove )
       subUnits.remove( ele );
 

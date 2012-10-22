@@ -343,7 +343,7 @@ public class PreRMAKalypso implements ISimulation
       /* Wind File */
       m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.16" ) ); //$NON-NLS-1$
       progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.17" ) ); //$NON-NLS-1$
-      final GM_Envelope lGmEnvelope = CalcUnitOps.getBoundingBox( calculationUnit );
+      final GM_Envelope lGmEnvelope = calculationUnit.getBoundingBox();
       final IWindDataWriter lRMA10WindWriter = new RMA10WindDataWriter( workingDir, lGmEnvelope, controlConverter.getListDateSteps(), windRelationshipModel.getWindDataModelSystems() );
       lRMA10WindWriter.setWindDataModel( windRelationshipModel );
       lRMA10WindWriter.write( controlModel.isConstantWindSWAN() );

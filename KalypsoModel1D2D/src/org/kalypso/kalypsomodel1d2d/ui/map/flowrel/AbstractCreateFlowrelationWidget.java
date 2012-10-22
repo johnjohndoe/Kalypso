@@ -87,9 +87,9 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
@@ -158,7 +158,7 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
 
     final FeatureList featureList = m_flowTheme.getFeatureList();
     final Feature parentFeature = featureList.getOwner();
-    m_flowRelCollection = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
+    m_flowRelCollection = (IFlowRelationshipModel)parentFeature.getAdapter( IFlowRelationshipModel.class );
   }
 
   @Override
@@ -209,17 +209,17 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
       /* Node: return its position */
       if( m_modelElement instanceof IFE1D2DNode )
       {
-        final GM_Point point = ((IFE1D2DNode) m_modelElement).getPoint();
+        final GM_Point point = ((IFE1D2DNode)m_modelElement).getPoint();
         final Point nodePoint = MapUtilities.retransform( getMapPanel(), point );
-        g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+        g.drawRect( (int)nodePoint.getX() - smallRect, (int)nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
         if( m_existingFlowRelation != null )
-          g.fillRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+          g.fillRect( (int)nodePoint.getX() - smallRect, (int)nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
       }
       /* ContinuityLine: return middle of line */
       else if( m_modelElement instanceof IElement1D )
       {
-        final IElement1D element = (IElement1D) m_modelElement;
-        final GM_Curve line = (GM_Curve) element.recalculateElementGeometry();
+        final IElement1D element = (IElement1D)m_modelElement;
+        final GM_Curve line = element.getEdge().getGeometry();
 
         final LineSymbolizer symb = new LineSymbolizer_Impl();
         final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
@@ -231,7 +231,7 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
       }
       else if( m_modelElement instanceof IFELine )
       {
-        final IFELine element = (IFELine) m_modelElement;
+        final IFELine element = (IFELine)m_modelElement;
         final GM_Curve line = element.getGeometry();
 
         final LineSymbolizer symb = new LineSymbolizer_Impl();
@@ -244,8 +244,8 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
       }
       else if( m_modelElement instanceof IPolyElement )
       {
-        final IPolyElement polyElement = (IPolyElement) m_modelElement;
-        final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) polyElement.recalculateElementGeometry();
+        final IPolyElement polyElement = (IPolyElement)m_modelElement;
+        final GM_Polygon<GM_PolygonPatch> surface = polyElement.getGeometry();
 
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
         final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
@@ -280,7 +280,7 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
       int countBCs = 0;
       for( final Object bcFeature : m_flowRelCollection.getFlowRelationsShips().getFeatureList() )
       {
-        final IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
+        final IBoundaryCondition bc = (IBoundaryCondition)((Feature)bcFeature).getAdapter( IBoundaryCondition.class );
         if( bc == null )
           continue;
         if( bc.getParentElementID().equals( m_modelElement.getId() ) )
@@ -289,7 +289,7 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
       int i = 0;
       for( final Object bcFeature : m_flowRelCollection.getFlowRelationsShips().getFeatureList() )
       {
-        final IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
+        final IBoundaryCondition bc = (IBoundaryCondition)((Feature)bcFeature).getAdapter( IBoundaryCondition.class );
         if( bc == null )
           continue;
         if( bc.getParentElementID().equals( m_modelElement.getId() ) )
@@ -371,7 +371,7 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
 
   /**
    * Really create the new object.
-   *
+   * 
    * @return The new object, if null, nothing happens..
    */
   protected abstract IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement );
@@ -387,7 +387,7 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
     {
       return null;
     }
-    final Feature lBuildingExisting = FlowRelationUtilitites.findBuildingElement1D( (IElement1D) lFoundElement, m_flowRelCollection );
+    final Feature lBuildingExisting = FlowRelationUtilitites.findBuildingElement1D( (IElement1D)lFoundElement, m_flowRelCollection );
     if( lBuildingExisting == null )
     {
       return lFoundElement;
@@ -405,7 +405,7 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
     {
       if( FlowRelationUtilitites.findBuildingElementFromPosition( node.getPoint(), m_flowRelCollection ) != null )
         return null;
-      final IFE1D2DElement[] elements = node.getElements();
+      final IFE1D2DElement[] elements = node.getAdjacentElements();
       for( final IFE1D2DElement element : elements )
       {
         if( element instanceof IElement1D )

@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * The catchment.
@@ -91,7 +91,7 @@ public interface ICatchment extends Feature
   /**
    * Returns the area from the underlying linked feature via the area property of the generator.
    */
-  GM_Surface< ? > resolveArea( );
+  GM_Polygon< ? > resolveArea( );
 
   /**
    * Returns the name from the underlying linked feature via the name property of the generator.

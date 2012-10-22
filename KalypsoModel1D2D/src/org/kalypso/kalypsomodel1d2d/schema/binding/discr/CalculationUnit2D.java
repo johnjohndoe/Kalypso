@@ -43,13 +43,11 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 
 /**
  * Default implementation of {@link ICalculationUnit2D}
  * 
  * @author Patrice Congo
- * 
  */
 public class CalculationUnit2D extends CalculationUnit implements ICalculationUnit2D
 {
@@ -60,11 +58,11 @@ public class CalculationUnit2D extends CalculationUnit implements ICalculationUn
   }
 
   @Override
-  public boolean addElementAsRef( final IFENetItem element )
+  public void addLinkedItem( final IFENetItem element )
   {
     final boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IContinuityLine2D);
     if( !isPolyElementOrBoundaryLine )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D.0" ) ); //$NON-NLS-1$
-    return super.addElementAsRef( element );
+    super.addLinkedItem( element );
   }
 }

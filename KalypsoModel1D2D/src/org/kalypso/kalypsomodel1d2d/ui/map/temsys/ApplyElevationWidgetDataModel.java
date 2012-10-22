@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.ICommandPoster;
-import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
@@ -63,7 +62,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -80,7 +79,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   public static final String NODE_THEME = "_NODE_THEME_"; //$NON-NLS-1$
 
   private static final String[] KEYS = { ITerrainModel.class.toString(), ITerrainElevationModelSystem.class.toString(), ITerrainElevationModel.class.toString(), IMapModell.class.toString(),
-    SELECTED_NODE_KEY, GM_Polygon.class.toString(), IFEDiscretisationModel1d2d.class.toString(), IMapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };
+      SELECTED_NODE_KEY, GM_PolygonPatch.class.toString(), IFEDiscretisationModel1d2d.class.toString(), IMapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };
 
   private final boolean m_ignoreMapSelection = false;
 
@@ -104,7 +103,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   public IMapModell getMapModell( )
   {
     // return mapModell;
-    return (IMapModell) getData( IMapModell.class.toString() );
+    return (IMapModell)getData( IMapModell.class.toString() );
   }
 
   public IFEDiscretisationModel1d2d getDiscretisationModel( )
@@ -124,7 +123,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   {
     try
     {
-      return ((ICommandPoster) m_dataProvider).getCommandableWorkSpace( IFEDiscretisationModel1d2d.class.getName() );
+      return ((ICommandPoster)m_dataProvider).getCommandableWorkSpace( IFEDiscretisationModel1d2d.class.getName() );
     }
     catch( final IllegalArgumentException e )
     {
@@ -139,7 +138,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   private ITerrainElevationModel[] getElevationModels( )
   {
-    return (ITerrainElevationModel[]) getData( ITerrainElevationModel.class.toString() );
+    return (ITerrainElevationModel[])getData( ITerrainElevationModel.class.toString() );
   }
 
   public void setElevationModels( final ITerrainElevationModel[] elevationModels )
@@ -149,7 +148,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   public ITerrainElevationModelSystem getElevationModelSystem( )
   {
-    return (ITerrainElevationModelSystem) getData( ITerrainElevationModelSystem.class.toString() );
+    return (ITerrainElevationModelSystem)getData( ITerrainElevationModelSystem.class.toString() );
   }
 
   public void setElevationModelSystem( final ITerrainElevationModelSystem elevationModelSystem )
@@ -159,7 +158,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   public List<IFE1D2DNode> getSelectedNode( )
   {
-    return (List<IFE1D2DNode>) getData( SELECTED_NODE_KEY );
+    return (List<IFE1D2DNode>)getData( SELECTED_NODE_KEY );
   }
 
   public void setSelectedNode( final List<IFE1D2DNode> selectedNode )
@@ -167,22 +166,22 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setData( SELECTED_NODE_KEY, selectedNode, false );
   }
 
-  public GM_Polygon getSelectionArea( )
+  public GM_PolygonPatch getSelectionArea( )
   {
     // return selectionArea;
-    return (GM_Polygon) getData( GM_Polygon.class.toString() );
+    return (GM_PolygonPatch)getData( GM_PolygonPatch.class.toString() );
   }
 
-  public void setSelectionArea( final GM_Polygon selectionArea )
+  public void setSelectionArea( final GM_PolygonPatch selectionArea )
   {
     // this.selectionArea = selectionArea;
-    setData( GM_Polygon.class.toString(), selectionArea );
+    setData( GM_PolygonPatch.class.toString(), selectionArea );
   }
 
   public IKalypsoFeatureTheme getElevationTheme( )
   {
     // return elevationTheme;
-    return (IKalypsoFeatureTheme) getData( ELEVATION_THEME );
+    return (IKalypsoFeatureTheme)getData( ELEVATION_THEME );
   }
 
   public void setElevationTheme( final IKalypsoFeatureTheme elevationTheme )
@@ -193,7 +192,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   public IMapPanel getMapPanel( )
   {
-    return (IMapPanel) getData( IMapPanel.class.toString() );
+    return (IMapPanel)getData( IMapPanel.class.toString() );
   }
 
   public void setMapPanel( final IMapPanel mapPanel )
@@ -214,9 +213,9 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     for( final EasyFeatureWrapper wrapper : selection.getAllFeatures() )
     {
       final Feature feature = wrapper.getFeature();
-      if( TypeInfo.isNode( feature ) )
+      if( feature instanceof IFE1D2DNode )
       {
-        nodes.add( (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class ) );
+        nodes.add( (IFE1D2DNode)feature.getAdapter( IFE1D2DNode.class ) );
       }
     }
 

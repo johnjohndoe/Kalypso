@@ -67,9 +67,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
-import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -97,9 +94,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -108,7 +105,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * The handler that converts the RMA-Kalypso element events into discretisation model elements and links
- *
+ * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
  * @author ilya
@@ -282,7 +279,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   /**
    * reconstructs 2d flow parameters (2d weir elements)
-   *
    * this function implements the reconstruction of 2d parameters with according poly elements
    */
   private void createFlowRels2d( )
@@ -300,15 +296,10 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   /**
    * merges all poly elements of the same building type( weir id > 900 ) into one poly element and creates a new weir
    * flow relationship on this element.
-   *
    * after creating of weir flow relationship on new poly element the flow direction is reconstructed from 2d file, the
    * observation is not reconstructed, only initialized
-   *
-   *
-   *
    * lNodePrev lNodeAct +--------->+--------->+ |lPolyPrev | lPoly | | | | | | | | lCommonEdge | | | | | | |
    * +<---------+<---------+ lNodeBckPrev lNodeBckAct
-   *
    */
   private IPolyElement mergeElementsToWeir( final List<Integer> pListElementsIdsRma, final int pIntDegrees )
   {
@@ -320,17 +311,17 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     PolyElement lPolyPrev = null;
     IFE1D2DNode lNodePrev = null;
     IFE1D2DNode lNodeBckPrev = null;
-    IFE1D2DNode lNodeAct = null;
-    IFE1D2DNode lNodeBckAct = null;
+    IFE1D2DNode node0 = null;
+    IFE1D2DNode node1 = null;
     IFE1D2DEdge lCommonEdge = null;
     try
     {
       for( final Object element : pListElementsIdsRma )
       {
-        final Integer lIntRMAId = (Integer) element;
+        final Integer lIntRMAId = (Integer)element;
 
         final Feature polyFeature = m_workspace.getFeature( m_elementsNameConversionMap.get( lIntRMAId ) );
-        lPoly = (PolyElement) polyFeature.getAdapter( IPolyElement.class );
+        lPoly = (PolyElement)polyFeature.getAdapter( IPolyElement.class );
         if( lPolyPrev != null )
         {
           lCommonEdge = findCommonEdge( lPoly, lPolyPrev );
@@ -341,47 +332,48 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
             // throw new Exception( "Error in model file, cannot reconstruct 2d building element" );
             return null;
           }
+          final Feature[] nodes = lCommonEdge.getNodes();
           if( lNodePrev == null )
           {
-            lNodePrev = findConnectedNode( lCommonEdge.getNode( 0 ), lPolyPrev, lCommonEdge, null );
-            lNodeAct = lCommonEdge.getNode( 0 );
+            node0 = (IFE1D2DNode)nodes[0];
+            lNodePrev = findConnectedNode( node0, lPolyPrev, lCommonEdge, null );
             lListRes.add( lNodePrev.getPoint() );
           }
           else
           {
-            lNodeAct = findConnectedNode( lNodePrev, lPolyPrev, lCommonEdge, lNodeBckPrev );
+            node0 = findConnectedNode( lNodePrev, lPolyPrev, lCommonEdge, lNodeBckPrev );
           }
 
           if( lNodeBckPrev == null )
           {
-            lNodeBckPrev = findConnectedNode( lCommonEdge.getNode( 1 ), lPolyPrev, lCommonEdge, null );
-            lNodeBckAct = lCommonEdge.getNode( 1 );
+            node1 = (IFE1D2DNode)nodes[1];
+            lNodeBckPrev = findConnectedNode( node1, lPolyPrev, lCommonEdge, null );
             lListResBck.add( lNodeBckPrev.getPoint() );
           }
           else
           {
-            lNodeBckAct = findConnectedNode( lNodeBckPrev, lPolyPrev, lCommonEdge, lNodePrev );
+            node1 = findConnectedNode( lNodeBckPrev, lPolyPrev, lCommonEdge, lNodePrev );
           }
 
-          lListRes.add( lNodeAct.getPoint() );
-          lNodePrev = lNodeAct;
-          lListResBck.add( lNodeBckAct.getPoint() );
-          lNodeBckPrev = lNodeBckAct;
+          lListRes.add( node0.getPoint() );
+          lNodePrev = node0;
+          lListResBck.add( node1.getPoint() );
+          lNodeBckPrev = node1;
         }
         lListElementsToRemove.add( lPoly );
         lPolyPrev = lPoly;
       }
 
-      if( lNodeAct != null )
+      if( node0 != null )
       {
-        lNodeAct = findConnectedNode( lNodeAct, lPoly, lCommonEdge, lNodeBckAct );
-        lListRes.add( lNodeAct.getPoint() );
+        node0 = findConnectedNode( node0, lPoly, lCommonEdge, node1 );
+        lListRes.add( node0.getPoint() );
       }
 
-      if( lNodeBckAct != null )
+      if( node1 != null )
       {
-        lNodeBckAct = findConnectedNode( lNodeBckAct, lPoly, lCommonEdge, lNodeAct );
-        lListResBck.add( lNodeBckAct.getPoint() );
+        node1 = findConnectedNode( node1, lPoly, lCommonEdge, node0 );
+        lListResBck.add( node1.getPoint() );
       }
 
       Collections.reverse( lListResBck );
@@ -391,7 +383,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       e.printStackTrace();
     }
-
 
     final IPolyElement lNewPoly = lPoly;
     if( pListElementsIdsRma.size() > 1 )
@@ -426,12 +417,13 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private IFE1D2DNode findConnectedNode( final IFE1D2DNode pNodeGiven, final PolyElement lPoly, final IFE1D2DEdge pEdgeToSkip, final IFE1D2DNode pNodeToSkip )
   {
-    for( final IFE1D2DEdge lEdge : lPoly.getEdges() )
+    for( final Feature feature : lPoly.getEdges() )
     {
-      if( lEdge.getId().equals( pEdgeToSkip.getId() ) )
+      if( feature.getId().equals( pEdgeToSkip.getId() ) )
         continue;
-      final IFE1D2DNode lNode0 = lEdge.getNode( 0 );
-      final IFE1D2DNode lNode1 = lEdge.getNode( 1 );
+      final Feature[] nodes = ((IFE1D2DEdge)feature).getNodes();
+      final IFE1D2DNode lNode0 = (IFE1D2DNode)nodes[0];
+      final IFE1D2DNode lNode1 = (IFE1D2DNode)nodes[1];
       if( lNode0.equals( pNodeGiven ) && !lNode1.equals( pNodeToSkip ) )
         return lNode1;
       if( lNode1.equals( pNodeGiven ) && !lNode0.equals( pNodeToSkip ) )
@@ -440,12 +432,12 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     return null;
   }
 
-  private IFE1D2DEdge findCommonEdge( final PolyElement pPoly0, final PolyElement pPoly1 )
+  private IFE1D2DEdge findCommonEdge( final IPolyElement pPoly0, final IPolyElement pPoly1 )
   {
-    for( final IFE1D2DEdge lEdge : pPoly0.getEdges() )
+    for( final Feature lEdge : pPoly0.getEdges() )
     {
-      if( pPoly1.getEdges().contains( lEdge ) )
-        return lEdge;
+      if( pPoly1.containsEdge( (IFE1D2DEdge)lEdge ) )
+        return (IFE1D2DEdge)lEdge;
     }
     return null;
   }
@@ -454,7 +446,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     final IFeatureType newFT = GMLSchemaUtilities.getFeatureTypeQuiet( IWeirFlowRelation.QNAME );
     final Feature newFeature = m_flowWorkspace.createFeature( parentFeature, parentRelation, newFT, -1 );
-    final IWeirFlowRelation weirRelation = (IWeirFlowRelation) newFeature.getAdapter( IWeirFlowRelation.class );
+    final IWeirFlowRelation weirRelation = (IWeirFlowRelation)newFeature.getAdapter( IWeirFlowRelation.class );
 
     /* Call getObservation once to initialize it */
     weirRelation.getBuildingObservation();
@@ -476,11 +468,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   /**
    * creates 1d flow parameters that was found on 2d model
-   *
    * this function implements the reconstruction of 1d parameters on the according 1d elements, profile data are not
    * handled in 2d file, so only the polynomials are created and the flow relationships are not connected to any
    * profiles
-   *
    */
   private int createFlowRels1d( )
   {
@@ -491,7 +481,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     final SortedMap<BigDecimal, IProfileFeature> profilesByStation = new TreeMap<>();
     for( final Object element : m_set1dFlowNodes )
     {
-      final Integer lId = (Integer) element;
+      final Integer lId = (Integer)element;
       final IFE1D2DNode lActNode = getNode( lId );
       final QIntervallResult lQResult = m_mapQResults.get( lId );
       try
@@ -518,7 +508,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       if( feature != null )
       {
 
-        if( TypeInfo.isPolyElementFeature( feature ) )
+        if( feature instanceof IPolyElement )
         {
           deleteCmdPolyElement.addElementToRemove( feature );
         }
@@ -544,7 +534,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       if( lElement instanceof IPolyElement )
       {
-        final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) lElement).getGeometry();
+        final GM_Polygon<GM_PolygonPatch> eleGeom = ((IPolyElement)lElement).getGeometry();
         if( eleGeom == null )
         {
           lSetToRemove.add( lElement );
@@ -588,7 +578,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     }
     else
     {
-      edge = FE1D2DEdge.createFromModel( m_model, node1, node2 );
+      edge = m_model.createEdge( node1, node2 );
     }
 
     final String gmlID = edge.getId();
@@ -613,31 +603,28 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       return null;
 
     final Feature nodeFeature = m_workspace.getFeature( nodeGmlID );
-    return (IFE1D2DNode) nodeFeature.getAdapter( IFE1D2DNode.class );
+    return (IFE1D2DNode)nodeFeature.getAdapter( IFE1D2DNode.class );
   }
 
   private final void maybeAddEdgeToElement( final int rmaID, final IFE1D2DEdge edge )
   {
     final String edgeId = edge.getId();
 
-    final IFeatureBindingCollection< ? > lContainers = edge.getContainers();
+    final Feature[] elements = edge.getLinkedElements();
 
     int iCountPolyElements = 0;
-    for( int i = 0; i < lContainers.size(); ++i )
+    for( int i = 0; i < elements.length; ++i )
     {
-      final Object lFeature = lContainers.get( i );
-      if( lFeature instanceof IPolyElement )
+      final Object lFeature = elements[i];
+      iCountPolyElements++;
+      if( rmaID != 0 )
       {
-        iCountPolyElements++;
-        if( rmaID != 0 )
-        {
-          final String gmlID = m_elementsNameConversionMap.get( rmaID );
+        final String gmlID = m_elementsNameConversionMap.get( rmaID );
 
-          final String elementID = ((IPolyElement) lFeature).getId();
-          if( gmlID == null && !m_elementsNameConversionMap.values().contains( elementID ) )
-          {
-            m_elementsNameConversionMap.put( rmaID, elementID );
-          }
+        final String elementID = ((IPolyElement)lFeature).getId();
+        if( gmlID == null && !m_elementsNameConversionMap.values().contains( elementID ) )
+        {
+          m_elementsNameConversionMap.put( rmaID, elementID );
         }
       }
 
@@ -651,8 +638,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       // add edge to element and element to edge
       final String elementId = element.getId();
-      element.addEdge( edgeId );
-      edge.addContainer( elementId );
+      element.addEdge( edge );
+
       if( rmaID != 0 )
       {
         // remember imported element
@@ -679,7 +666,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     if( gmlID != null )
     {
       // this is an imported element
-      return (IPolyElement) m_workspace.getFeature( gmlID ).getAdapter( IPolyElement.class );
+      return (IPolyElement)m_workspace.getFeature( gmlID ).getAdapter( IPolyElement.class );
     }
 
     // really create a new element
@@ -699,7 +686,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       }
       else
       {
-        element1d = ModelOps.createElement1d( m_model, edge );
+        final IFeatureBindingCollection<IFE1D2DElement> elements = m_model.getElements();
+        element1d = elements.addNew( IElement1D.QNAME, IElement1D.class );
+        element1d.setEdge( edge );
       }
       m_elementsNameConversionMap.put( rmaID, element1d.getId() );
     }
@@ -857,6 +846,10 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private QIntervallResult getQResult( final int id )
   {
+    if( m_mapQResults == null )
+    {
+      initMapsPolynoms();
+    }
     try
     {
       final QIntervallResult qresultFound = m_mapQResults.get( id );
@@ -925,7 +918,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     try
     {
       m_qResWorkspace = FeatureFactory.createGMLWorkspace( QIntervallResultCollection.QNAME_F_QIntervallResultCollection, null, GmlSerializer.DEFAULT_FACTORY );
-      m_qresultCollection = (QIntervallResultCollection) m_qResWorkspace.getRootFeature();
+      m_qresultCollection = (QIntervallResultCollection)m_qResWorkspace.getRootFeature();
       m_mapQResults = new HashMap<>();
       m_map1dPolynomial = new HashMap<>();
       m_set1dFlowNodes = new HashSet<>();

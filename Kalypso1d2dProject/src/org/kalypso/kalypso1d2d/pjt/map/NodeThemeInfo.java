@@ -185,8 +185,8 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     {
       final IPolyElement lPolyEl = (IPolyElement) nodeObject;
 
-      final List<IFE1D2DNode> nodes = lPolyEl.getNodes();
-      if( nodes.size() > 5 )
+      final IFE1D2DNode[] nodes = lPolyEl.getNodes();
+      if( nodes.length > 5 )
       {
         return getNodePropertyAtPos( pos );
       }

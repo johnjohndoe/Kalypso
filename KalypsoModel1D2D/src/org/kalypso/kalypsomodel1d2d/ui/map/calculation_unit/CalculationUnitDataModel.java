@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 
@@ -55,8 +52,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
  */
 public class CalculationUnitDataModel extends KeyBasedDataModel
 {
-  private final Map<ICalculationUnit, List<IProblem>> validateMessages = new HashMap<>();
-
   public CalculationUnitDataModel( )
   {
     super( new String[] { ICommonKeys.KEY_FEATURE_WRAPPER_LIST, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, ICommonKeys.KEY_DATA_PROVIDER, ICommonKeys.KEY_DISCRETISATION_MODEL,
@@ -66,28 +61,13 @@ public class CalculationUnitDataModel extends KeyBasedDataModel
 
   public ICalculationUnit getSelectedCalculationUnit( )
   {
-    return (ICalculationUnit) getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    return (ICalculationUnit)getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
   }
 
   public ICalculationUnit[] getCalculationUnits( )
   {
-    final List<ICalculationUnit> data = (List<ICalculationUnit>) getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    final List<ICalculationUnit> data = (List<ICalculationUnit>)getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
     return data.toArray( new ICalculationUnit[data.size()] );
-  }
-
-  public void setValidatingMessages( final ICalculationUnit key, final List<IProblem> strList )
-  {
-    validateMessages.put( key, strList );
-  }
-
-  public List<IProblem> getValidatingMessages( final ICalculationUnit key )
-  {
-    return validateMessages.get( key );
-  }
-
-  public void addValidatingMessage( final ICalculationUnit key, final List<IProblem> problemList )
-  {
-    validateMessages.put( key, problemList );
   }
 
 }

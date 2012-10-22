@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ops;
 
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 
@@ -60,17 +61,14 @@ public class EdgeOps
    */
   public static final IFE1D2DNode find1DEdgeEndNode( IFE1D2DEdge elementEdge )
   {
-    if( !TypeInfo.is1DEdge( elementEdge ) )
-    {
-      throw new IllegalArgumentException(  Messages.getString("org.kalypso.kalypsomodel1d2d.ops.EdgeOps.0" , elementEdge.getFeatureType().getQName() ,elementEdge )); //$NON-NLS-1$
-    }
-    IFE1D2DNode node1 = elementEdge.getNode( 1 );
-    if( node1.getContainers().size() == 1 )
+    final IFE1D2DNode[] nodes = elementEdge.getNodes();
+    IFE1D2DNode node1 = nodes[1];
+    if( node1.getLinkedEdges().length == 1 )
     {
       return node1;
     }
-    IFE1D2DNode node0 = elementEdge.getNode( 0 );
-    if( node0.getContainers().size() == 1 )
+    IFE1D2DNode node0 = nodes[0];
+    if( node0.getLinkedEdges().length == 1 )
     {
       return node0;
     }

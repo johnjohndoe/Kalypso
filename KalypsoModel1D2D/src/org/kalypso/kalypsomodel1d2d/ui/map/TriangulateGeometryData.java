@@ -55,8 +55,8 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_MultiCurve_Impl;
@@ -81,7 +81,7 @@ class TriangulateGeometryData extends AbstractModelObject
 
   private GM_MultiCurve m_breaklines = null;
 
-  private GM_Surface< ? extends GM_SurfacePatch> m_boundaryGeom;
+  private GM_Polygon< ? extends GM_AbstractSurfacePatch> m_boundaryGeom;
 
   private GM_TriangulatedSurface m_tin;
 
@@ -159,7 +159,7 @@ class TriangulateGeometryData extends AbstractModelObject
     return m_tin;
   }
 
-  public void setBoundary( final GM_Surface< ? > boundaryGeom )
+  public void setBoundary( final GM_Polygon< ? > boundaryGeom )
   {
     m_boundaryGeom = boundaryGeom;
   }

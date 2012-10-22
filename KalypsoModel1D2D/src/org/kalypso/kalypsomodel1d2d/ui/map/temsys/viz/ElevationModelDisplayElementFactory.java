@@ -49,7 +49,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
@@ -61,7 +61,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDis
  */
 public class ElevationModelDisplayElementFactory
 {
-  public static final SurfacePatchVisitableDisplayElement<GM_Polygon> createDisplayElement( final Feature feature )
+  public static final SurfacePatchVisitableDisplayElement<GM_PolygonPatch> createDisplayElement( final Feature feature )
   {
     if( feature == null )
     {
@@ -74,17 +74,17 @@ public class ElevationModelDisplayElementFactory
 
       if( elevationProvider instanceof ISurfacePatchVisitable )
       {
-        final IVisitorFactory<GM_Polygon> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Polygon>()
+        final IVisitorFactory<GM_PolygonPatch> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_PolygonPatch>()
         {
           @Override
-          public ISurfacePatchVisitor<GM_Polygon> createVisitor( final Graphics g, final GeoTransform projection )
+          public ISurfacePatchVisitor<GM_PolygonPatch> createVisitor( final Graphics g, final GeoTransform projection )
           {
             final IElevationColorModel colorModel = createColorModel( elevationProvider, projection );
             return new SurfacePaintPlainTriangleVisitor<>( g, colorModel );
           }
         };
 
-        return new SurfacePatchVisitableDisplayElement<>( feature, (ISurfacePatchVisitable<GM_Polygon>)elevationProvider, visitorFactory );
+        return new SurfacePatchVisitableDisplayElement<>( feature, (ISurfacePatchVisitable<GM_PolygonPatch>)elevationProvider, visitorFactory );
       }
       else
       {

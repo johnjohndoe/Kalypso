@@ -56,7 +56,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -133,14 +133,14 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel
     }
   }
 
-  public GM_Polygon getSelectionArea( )
+  public GM_PolygonPatch getSelectionArea( )
   {
-    return (GM_Polygon) getData( GM_Polygon.class.toString() );
+    return (GM_PolygonPatch) getData( GM_PolygonPatch.class.toString() );
   }
 
-  public void setSelectionArea( final GM_Polygon selectionArea )
+  public void setSelectionArea( final GM_PolygonPatch selectionArea )
   {
-    setData( GM_Polygon.class.toString(), selectionArea );
+    setData( GM_PolygonPatch.class.toString(), selectionArea );
   }
 
   public IKalypsoFeatureTheme getWindTheme( )

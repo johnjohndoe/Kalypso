@@ -56,7 +56,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -76,7 +75,6 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -136,18 +134,18 @@ public class DeleteFeElementsHelper
       final DeletePolyElementCmd deleteCmdPolyElement = new DeletePolyElementCmd( discretisationModel );
 
       final FeatureList flowRelationsList = lFlowTheme.getFeatureList();
-      final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) flowRelationsList.getOwner();
+      final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel)flowRelationsList.getOwner();
 
       final List<IFE1D2DElement> element1DtoRemove = new ArrayList<>();
       for( final EasyFeatureWrapper easyFeatureWrapper : selected )
       {
         final Feature feature = easyFeatureWrapper.getFeature();
-        if( TypeInfo.isPolyElementFeature( feature ) )
+        if( feature instanceof IPolyElement )
           deleteCmdPolyElement.addElementToRemove( feature );
         else if( feature instanceof IElement1D )
         {
-          deleteCmd1dElement.addElementToRemove( (IElement1D) feature );
-          element1DtoRemove.add( (IFE1D2DElement) feature );
+          deleteCmd1dElement.addElementToRemove( (IElement1D)feature );
+          element1DtoRemove.add( (IFE1D2DElement)feature );
         }
       }
 
@@ -185,15 +183,15 @@ public class DeleteFeElementsHelper
     for( final EasyFeatureWrapper easyFeatureWrapper : selected )
     {
       final Feature feature = easyFeatureWrapper.getFeature();
-      if( TypeInfo.isPolyElementFeature( feature ) )
+      if( feature instanceof IPolyElement )
       {
-        final IFE1D2DElement element = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
+        final IFE1D2DElement element = (IFE1D2DElement)feature.getAdapter( IFE1D2DElement.class );
         final IBuildingFlowRelation2D toDelete = deleteParameter2D( element, lFlowRelCollection );
         parametersToDelete.addAll( Arrays.asList( toDelete ) );
       }
-      else if( TypeInfo.isElement1DFeature( feature ) )
+      else if( feature instanceof IElement1D )
       {
-        final IFE1D2DElement element = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
+        final IFE1D2DElement element = (IFE1D2DElement)feature.getAdapter( IFE1D2DElement.class );
         final IFlowRelationship[] toDelete = deleteParameter1D( element, lFlowRelCollection, element1DtoRemove, discModel );
         parametersToDelete.addAll( Arrays.asList( toDelete ) );
       }
@@ -229,7 +227,7 @@ public class DeleteFeElementsHelper
     final List<IFE1D2DNode> clNodes = new ArrayList<>();
     final IFeatureBindingCollection<IFELine> continuityLines = discretisationModel.getContinuityLines();
     for( final IFELine line : continuityLines )
-      clNodes.addAll( line.getNodes() ); // usually lines are not overlapped so there is no need to check if some of
+      clNodes.addAll( Arrays.asList( line.getNodes() ) ); // usually lines are not overlapped so there is no need to check if some of
     // the nodes are already in the list
 
     // 2D: check if any of the selected elements have nodes that belongs to any continuity line; if so, deleting is
@@ -243,8 +241,8 @@ public class DeleteFeElementsHelper
     {
       if( easyFeatureWrapper == null )
         throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.4" ) ); //$NON-NLS-1$
-      final IFE1D2DElement element = (IFE1D2DElement) easyFeatureWrapper.getFeature().getAdapter( IFE1D2DElement.class );
-      final List<IFE1D2DNode> nodes = element.getNodes();
+      final IFE1D2DElement element = (IFE1D2DElement)easyFeatureWrapper.getFeature().getAdapter( IFE1D2DElement.class );
+      final IFE1D2DNode[] nodes = element.getNodes();
       for( final IFE1D2DNode node : nodes )
         if( clNodes.contains( node ) )
         {
@@ -255,14 +253,8 @@ public class DeleteFeElementsHelper
           }
           if( element instanceof IElement1D )
           {
-            final IFeatureBindingCollection<IFENetItem> containers = node.getContainers();
-            int numberOfEdgeContainers = 0;
-            for( final Object container : containers )
-            {
-              if( container instanceof IFE1D2DEdge ) // container can be also a line
-                numberOfEdgeContainers++;
-            }
-
+            final IFE1D2DEdge[] containers = node.getLinkedEdges();
+            int numberOfEdgeContainers = containers.length;
             if( numberOfEdgeContainers < 2 )
             {
               SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.7" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -278,7 +270,7 @@ public class DeleteFeElementsHelper
   private static IBuildingFlowRelation2D deleteParameter2D( final IFE1D2DElement element, final IFlowRelationshipModel lFlowRelCollection ) throws Exception
   {
     if( element instanceof IPolyElement )
-      return FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) element, lFlowRelCollection );
+      return FlowRelationUtilitites.findBuildingElement2D( (IPolyElement)element, lFlowRelCollection );
     else
       return null;
   }
@@ -288,7 +280,7 @@ public class DeleteFeElementsHelper
     final List<IFlowRelationship> parametersToRemove = new ArrayList<>();
     if( element instanceof IElement1D )
     {
-      final IElement1D element1D = (IElement1D) element;
+      final IElement1D element1D = (IElement1D)element;
 
       final Set<IFlowRelationship> flowRelsOfElement = FlowRelationUtilitites.findBuildingElements1D( element1D, lFlowRelCollection );
 
@@ -332,7 +324,7 @@ public class DeleteFeElementsHelper
       {
         if( complexElement instanceof ITransitionElement )
         {
-          final ITransitionElement transitionElement = (ITransitionElement) complexElement;
+          final ITransitionElement transitionElement = (ITransitionElement)complexElement;
           final List<IFELine> continuityLines = transitionElement.getContinuityLines();
           for( final IFELine line : continuityLines )
           {
@@ -347,7 +339,7 @@ public class DeleteFeElementsHelper
         }
         if( complexElement instanceof IJunctionElement )
         {
-          final IJunctionElement junctionElement = (IJunctionElement) complexElement;
+          final IJunctionElement junctionElement = (IJunctionElement)complexElement;
           final List<IFELine> continuityLines = junctionElement.getContinuityLines();
           for( final IFELine line : continuityLines )
           {
@@ -367,7 +359,7 @@ public class DeleteFeElementsHelper
       final IFeatureBindingCollection<IFlowRelationship> wrappedList = flowRelationshipModel.getFlowRelationsShips();
       for( final IFlowRelationship flowRelationship : wrappedList )
       {
-        final IBoundaryCondition bc = (IBoundaryCondition) flowRelationship;
+        final IBoundaryCondition bc = (IBoundaryCondition)flowRelationship;
         if( bc != null )
         {
           final String parentElementID = bc.getParentElementID();

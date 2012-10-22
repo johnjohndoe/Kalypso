@@ -88,7 +88,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
@@ -244,7 +244,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     {
       if( m_modePolygon )
       {
-        final GM_Surface< ? > boundaryGeom = (GM_Surface< ? >) m_boundaryGeometryBuilder.finish();
+        final GM_Polygon< ? > boundaryGeom = (GM_Polygon< ? >) m_boundaryGeometryBuilder.finish();
         m_data.setBoundary( boundaryGeom );
       }
       else
@@ -286,7 +286,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     {
       m_boundaryGeometryBuilder.addPoint( point );
 
-      final GM_Surface< ? > finish = (GM_Surface< ? >) m_boundaryGeometryBuilder.finish();
+      final GM_Polygon< ? > finish = (GM_Polygon< ? >) m_boundaryGeometryBuilder.finish();
       if( finish == null )
         return null;
 
@@ -300,7 +300,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
         if( geom.intersects( finish ) )
         {
           final GM_Object intersection = geom.intersection( finish );
-          if( intersection instanceof GM_Surface )
+          if( intersection instanceof GM_Polygon )
             return Messages.getString( "TriangulateGeometryWidget.1" ); //$NON-NLS-1$
         }
       }

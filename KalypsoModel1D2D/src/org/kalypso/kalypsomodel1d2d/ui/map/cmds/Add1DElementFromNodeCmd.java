@@ -40,19 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Undoable Add 1D fe element command from add node cmds
- *
+ * 
  * @author Patrice Congo
  */
 public class Add1DElementFromNodeCmd implements IFeatureChangeCommand
@@ -66,24 +67,24 @@ public class Add1DElementFromNodeCmd implements IFeatureChangeCommand
   /**
    * @param model
    * @param elementEdgeCmds
-   *            an array the command used to create the edges of the element to be created by this command. the array
-   *            must contains only {@link AddEdgeCommand} and {@link AddEdgeInvCommand} commands
+   *          an array the command used to create the edges of the element to be created by this command. the array
+   *          must contains only {@link AddEdgeCommand} and {@link AddEdgeInvCommand} commands
    */
   public Add1DElementFromNodeCmd( final IFEDiscretisationModel1d2d model, final AddNodeCommand[] elementNodeCmds )
   {
-    Assert.throwIAEOnNullParam( model, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.0") ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( elementNodeCmds, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.1") ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( model, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.0" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( elementNodeCmds, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.1" ) ); //$NON-NLS-1$
 
     for( final IFeatureChangeCommand cmd : elementNodeCmds )
     {
       if( cmd == null )
       {
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.2") + elementNodeCmds ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.2" ) + elementNodeCmds ); //$NON-NLS-1$
       }
     }
     if( elementNodeCmds.length != 2 )
     {
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.3") + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.4") + elementNodeCmds.length + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.5") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.3" ) + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.4" ) + elementNodeCmds.length + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     m_model = model;
@@ -94,7 +95,7 @@ public class Add1DElementFromNodeCmd implements IFeatureChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.6"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.6" ); //$NON-NLS-1$
   }
 
   @Override
@@ -115,35 +116,32 @@ public class Add1DElementFromNodeCmd implements IFeatureChangeCommand
       final IFE1D2DNode node1 = m_elementNodeCmds[1].getAddedNode();
       if( node0 == null || node1 == null )
       {
-        throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.7") + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.8") + node0 + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.9") + node1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        throw new IllegalStateException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.7" ) + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.8" ) + node0 + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.9" ) + node1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
       if( node0.equals( node1 ) )
       {
-        throw new UnsupportedOperationException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.10") ); //$NON-NLS-1$
+        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.10" ) ); //$NON-NLS-1$
       }
 
       curEdge = m_model.findEdge( node0, node1 );
       if( curEdge == null )
       {
         final int size1 = m_model.getEdges().size();
-        curEdge = FE1D2DEdge.createFromModel( m_model, node0, node1 );
-        final int size2 = m_model.getEdges().size();
-        if( size2 - size1 != 1 )
-        {
-          throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.11") ); //$NON-NLS-1$
-        }
+        curEdge = m_model.createEdge( node0, node1 );
       }
       else
       {
         // test whether the edge is in an element
-        if( ModelOps.isContainedInAnElement( curEdge ) )
+        if( curEdge.getLinkedElements().length == 0 )
         {
-
           return;
         }
       }
 
-      m_addedElement = ModelOps.createElement1d( m_model, curEdge );
+      // TODO: move this into discretisation model
+      final IFeatureBindingCollection<IFE1D2DElement> elements = m_model.getElements();
+      m_addedElement = elements.addNew( IElement1D.QNAME, IElement1D.class );
+      m_addedElement.setEdge( curEdge );
     }
   }
 
@@ -173,7 +171,7 @@ public class Add1DElementFromNodeCmd implements IFeatureChangeCommand
 
   /**
    * Returns the newly created element.
-   *
+   * 
    * @return <code>null</code>, if the command was not yet processed.
    */
   public IElement1D getAddedElement( )

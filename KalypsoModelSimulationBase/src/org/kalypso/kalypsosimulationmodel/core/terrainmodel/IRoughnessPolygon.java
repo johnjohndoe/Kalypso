@@ -8,7 +8,7 @@ import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * The interface to be implemented by classes representing a simBase:RoughnessPolygon element
@@ -53,9 +53,9 @@ public interface IRoughnessPolygon extends Feature
 
   public FeatureChange[] resetRoughnessClassMemberXLink( );
 
-  public GM_Surface< ? > getSurface( );
+  public GM_Polygon< ? > getSurface( );
 
-  public void setSurface( GM_Surface< ? > surface );
+  public void setSurface( GM_Polygon< ? > surface );
 
   public void setCorrectionParameterKS( double value );
 

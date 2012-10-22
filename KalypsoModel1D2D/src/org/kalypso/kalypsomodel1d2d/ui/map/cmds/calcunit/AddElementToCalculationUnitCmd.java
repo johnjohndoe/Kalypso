@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -56,14 +55,12 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * Command to add element to calculation unit
- *
+ * 
  * @author Patrice Congo
  */
 public class AddElementToCalculationUnitCmd implements IFeatureChangeCommand
 {
   private final IFE1D2DElement[] m_elementsToAdd;
-
-  private boolean added = false;
 
   private final ICalculationUnit m_calculationUnit;
 
@@ -88,16 +85,9 @@ public class AddElementToCalculationUnitCmd implements IFeatureChangeCommand
   @Override
   public Feature[] getChangedFeatures( )
   {
-    if( added )
-    {
-      final List<Feature> changed = new ArrayList<>();
-      changed.addAll( Arrays.asList( m_elementsToAdd ) );
-      return changed.toArray( new Feature[changed.size()] );
-    }
-    else
-    {
-      return new Feature[] {};
-    }
+    final List<Feature> changed = new ArrayList<>();
+    changed.addAll( Arrays.asList( m_elementsToAdd ) );
+    return changed.toArray( new Feature[changed.size()] );
   }
 
   @Override
@@ -115,45 +105,13 @@ public class AddElementToCalculationUnitCmd implements IFeatureChangeCommand
   @Override
   public void process( ) throws Exception
   {
-    if( !added )
+    for( final IFE1D2DElement ele : m_elementsToAdd )
     {
-      try
-      {
-        for( final IFE1D2DElement ele : m_elementsToAdd )
-        {
-          ele.getContainers().addRef( m_calculationUnit );
-          m_calculationUnit.addElementAsRef( ele );
-        }
-
-        added = true;
-        // fire change
-        fireProcessChanges();
-      }
-      catch( final Exception th )
-      {
-        for( final IFE1D2DElement ele : m_elementsToAdd )
-        {
-          try
-          {
-            ele.getContainers().add( m_calculationUnit );
-          }
-          catch( final Throwable e )
-          {
-
-          }
-          try
-          {
-            m_calculationUnit.addElementAsRef( ele );
-          }
-          catch( final Throwable e )
-          {
-
-          }
-        }
-        th.printStackTrace();
-        throw th;
-      }
+      m_calculationUnit.addLinkedItem( ele );
     }
+
+    // fire change
+    fireProcessChanges();
   }
 
   private final void fireProcessChanges( )
@@ -178,53 +136,12 @@ public class AddElementToCalculationUnitCmd implements IFeatureChangeCommand
   @Override
   public void redo( ) throws Exception
   {
-    if( !added )
-      process();
+    process();
   }
 
   @Override
   public void undo( ) throws Exception
   {
-    if( added )
-    {
-      MultiException multiException = null;
-      for( final IFE1D2DElement ele : m_elementsToAdd )
-      {
-        try
-        {
-          ele.getContainers().add( m_calculationUnit );
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-          if( multiException == null )
-          {
-            multiException = new MultiException();
-          }
-          multiException.addException( e );
-        }
-        try
-        {
-          m_calculationUnit.addElementAsRef( ele );
-        }
-        catch( final Exception e )
-        {
-          if( multiException == null )
-          {
-            multiException = new MultiException();
-          }
-          multiException.addException( e );
-        }
-      }
-      if( multiException != null )
-      {
-        throw multiException;
-      }
-      else
-      {
-        added = false;
-        fireProcessChanges();
-      }
-    }
+
   }
 }

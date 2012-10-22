@@ -58,8 +58,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -88,7 +88,7 @@ public class TimeseriesThiessenPolygons
       {
         if( station.isActive() )
         {
-          final GM_Surface<GM_SurfacePatch> gmSurface = station.getThiessenArea();
+          final GM_Polygon<GM_AbstractSurfacePatch> gmSurface = station.getThiessenArea();
           final Polygon polygon = (Polygon) JTSAdapter.export( gmSurface );
           final IXLinkedFeature timeseriesLink = station.getStation();
 

@@ -162,7 +162,7 @@ public class Control1D2DConverter
     {
       if( relationship instanceof IBoundaryCondition )
       {
-        final IBoundaryCondition boundaryCondition = (IBoundaryCondition) relationship;
+        final IBoundaryCondition boundaryCondition = (IBoundaryCondition)relationship;
         if( boundaryCondition.isMemberOf( calculationUnitID ) )
           m_unitBoundaryConditions.add( boundaryCondition );
       }
@@ -389,8 +389,7 @@ public class Control1D2DConverter
     formatter.format( "SCL%9d%n", continuityLines.size() ); //$NON-NLS-1$
     for( final IFELine line : continuityLines )
     {
-      final IFE1D2DNode[] nodes = new IFE1D2DNode[line.getNodes().size()];
-      line.getNodes().toArray( nodes );
+      final IFE1D2DNode[] nodes = line.getNodes();
       for( int i = 0; i < nodes.length; i++ )
       {
         final IFE1D2DNode node = nodes[i];
@@ -420,15 +419,15 @@ public class Control1D2DConverter
       // check if line is an inner boundary line (only for coupled 1d2d units and enabled coupled simulation)
       // this is the case if it is contained in two 2d calculation units of this coupled unit
       final ICalculationUnit parentCalculationUnit = m_controlModel.getCalculationUnit();
-      if( parentCalculationUnit.getType() == TYPE.TYPE1D2D && ((ICalculationUnit1D2D) parentCalculationUnit).isCoupledSimulation() )
+      if( parentCalculationUnit.getType() == TYPE.TYPE1D2D && ((ICalculationUnit1D2D)parentCalculationUnit).isCoupledSimulation() )
       {
-        final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D) parentCalculationUnit;
-        final IFeatureBindingCollection<ICalculationUnit> changedSubUnits = calculationUnit1D2D.getChangedSubUnits();
+        final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D)parentCalculationUnit;
+        final IFeatureBindingCollection<ICalculationUnit> changedSubUnits = calculationUnit1D2D.getSubCalculationUnits();
         int in2DCalcUnitCount = 0;
-        final IFeatureBindingCollection<IFE1D2DComplexElement> containers = line.getContainers();
+        final IFE1D2DComplexElement[] containers = line.getLinkedElements();
         for( final Feature calcUnit : containers )
         {
-          if( ((ICalculationUnit) calcUnit).getType() == TYPE.TYPE2D && changedSubUnits.contains( calcUnit ) )
+          if( ((ICalculationUnit)calcUnit).getType() == TYPE.TYPE2D && changedSubUnits.contains( calcUnit ) )
           {
             in2DCalcUnitCount++;
           }
@@ -510,7 +509,7 @@ public class Control1D2DConverter
         final int indexTime = owner.indexOfComponent( componentTime );
         final int indexRelaxationsFaktor = owner.indexOfComponent( componentRelaxationsFaktor );
 
-        final XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( indexTime );
+        final XMLGregorianCalendar cal = (XMLGregorianCalendar)firstRecord.getValue( indexTime );
         Calendar lastStepCal = cal.toGregorianCalendar();
         m_listDateSteps.add( DateUtilities.toDate( cal ) );
         // lastStepCal.setTimeZone( DEFAULT_TIMEZONE );
@@ -520,8 +519,8 @@ public class Control1D2DConverter
           final IRecord record = iterator.next();
 
           // final float uRVal = ((BigDecimal) record.getValue( indexRelaxationsFaktor )).floatValue();
-          final String uRVal = ((String) record.getValue( indexRelaxationsFaktor ));
-          final XMLGregorianCalendar stepXMLGrCal = (XMLGregorianCalendar) record.getValue( indexTime );
+          final String uRVal = ((String)record.getValue( indexRelaxationsFaktor ));
+          final XMLGregorianCalendar stepXMLGrCal = (XMLGregorianCalendar)record.getValue( indexTime );
           final Calendar stepCal = stepXMLGrCal.toGregorianCalendar();
           m_listDateSteps.add( DateUtilities.toDate( stepXMLGrCal ) );
           // stepCal.setTimeZone( DEFAULT_TIMEZONE );
@@ -583,7 +582,7 @@ public class Control1D2DConverter
         return;
       }
 
-      timeStepMinutes = (double) timeStepInterval / (60 * 1000);
+      timeStepMinutes = (double)timeStepInterval / (60 * 1000);
       ihre = getTimeInPercentage( kalypsoCalendarStep );
     }
     // steady don´t need startdate
@@ -619,21 +618,21 @@ public class Control1D2DConverter
       int lIntDirection = 0;
       if( building instanceof IBuildingFlowRelation )
       {
-        if( ((IBuildingFlowRelation) building).getKind() != KIND.TABULAR )
+        if( ((IBuildingFlowRelation)building).getKind() != KIND.TABULAR )
         {
-          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43", ((IBuildingFlowRelation) building).getKind() );//$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43", ((IBuildingFlowRelation)building).getKind() );//$NON-NLS-1$
           throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
         }
-        lIntDirection = ((IBuildingFlowRelation) building).getDirection();
+        lIntDirection = ((IBuildingFlowRelation)building).getDirection();
       }
       else if( building instanceof IBuildingFlowRelation2D )
       {
-        if( ((IBuildingFlowRelation2D) building).getKind() != KIND2D.TABULAR )
+        if( ((IBuildingFlowRelation2D)building).getKind() != KIND2D.TABULAR )
         {
-          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43", ((IBuildingFlowRelation) building).getKind() );//$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43", ((IBuildingFlowRelation)building).getKind() );//$NON-NLS-1$
           throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
         }
-        lIntDirection = ((IBuildingFlowRelation2D) building).getDirection();
+        lIntDirection = ((IBuildingFlowRelation2D)building).getDirection();
       }
       final double direction = Math.toRadians( lIntDirection );
       formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", buildingID, buildingKind, 0.0, 0.0, 0.0, 0.0, direction ); //$NON-NLS-1$
@@ -713,7 +712,7 @@ public class Control1D2DConverter
           else if( stepCal != null )
           {
             final TupleResultIndex tupleResultIndex = m_BCTupleResultIndexCache.get( boundaryCondition.getId() );
-            final Number result = (Number) tupleResultIndex.getValue( ordinateComponent, stepCal.getTime() );
+            final Number result = (Number)tupleResultIndex.getValue( ordinateComponent, stepCal.getTime() );
             stepValue = (result == null || Double.isNaN( result.doubleValue() )) ? 0.0 : result.doubleValue();
           }
           else
@@ -856,7 +855,7 @@ public class Control1D2DConverter
 
     for( int i = 0; i < pIntNumberIterations; ++i )
     {
-      final int buffVal = 10 - (int) (lListFactors.get( i ) * 10);
+      final int buffVal = 10 - (int)(lListFactors.get( i ) * 10);
       lListFactorsRes.add( buffVal );
     }
 
@@ -881,13 +880,13 @@ public class Control1D2DConverter
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
         throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
       }
-      final float lFloatInc = (float) ((lFloatEnd - lFloatStart) / 0.1);
-      final int lIntPer = (int) (pIntNumberIterations / (Math.abs( lFloatInc ) + 1));
+      final float lFloatInc = (float)((lFloatEnd - lFloatStart) / 0.1);
+      final int lIntPer = (int)(pIntNumberIterations / (Math.abs( lFloatInc ) + 1));
       int lIntInc = 0;
       final float lFloatSignum = Math.signum( lFloatInc );
       for( int i = 1; i <= pIntNumberIterations; ++i )
       {
-        pListFactors.add( (float) (lFloatStart + 0.1 * lIntInc * lFloatSignum) );
+        pListFactors.add( (float)(lFloatStart + 0.1 * lIntInc * lFloatSignum) );
         if( (i) % lIntPer == 0 && pIntNumberIterations - i > Math.abs( lIntPer ) && lIntInc < Math.abs( lFloatInc ) )
         {
           lIntInc++;
@@ -945,7 +944,7 @@ public class Control1D2DConverter
   {
     final StringTokenizer lStringTokenizer = new StringTokenizer( pStrValue, ";" ); //$NON-NLS-1$
     int lIntCounter = 0;
-    float lFloatValAct = (float) 0.1;
+    float lFloatValAct = (float)0.1;
     while( lIntCounter < pIntNumberIterations )
     {
       if( lStringTokenizer.hasMoreTokens() )
@@ -960,7 +959,7 @@ public class Control1D2DConverter
 
   private float getFloatFromSimpleFloatString( final String pStrFloat ) throws CoreException
   {
-    float lFloatValue = (float) 0.1;
+    float lFloatValue = (float)0.1;
     try
     {
       lFloatValue = Float.parseFloat( pStrFloat.trim() );
@@ -984,15 +983,14 @@ public class Control1D2DConverter
   {
     final int i = cal.get( Calendar.HOUR_OF_DAY );
     final int j2 = cal.get( Calendar.MINUTE );
-    final float j = (float) (j2 / 60.0);
-    return (double) i + j;
+    final float j = (float)(j2 / 60.0);
+    return (double)i + j;
   }
 
   /**
    * @return If unsteady calculation is selected, returns date/time of the first timestep from the control model.
    *         <p>
-   *         If unsteady calculation is not selected, returns current date/time (in the case of steady calculation, this
-   *         value is not considered by RMA·Kalypso)
+   *         If unsteady calculation is not selected, returns current date/time (in the case of steady calculation, this value is not considered by RMA·Kalypso)
    */
   private Date getFirstTimeStep( ) throws CoreException
   {
@@ -1019,7 +1017,7 @@ public class Control1D2DConverter
 
     final TupleResult owner = firstRecord.getOwner();
     final int indexTime = owner.indexOfComponent( compTime );
-    return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( indexTime ) );
+    return DateUtilities.toDate( (XMLGregorianCalendar)firstRecord.getValue( indexTime ) );
   }
 
   public LinkedHashMap<Integer, IBoundaryCondition> getBoundaryConditionsIDProvider( )

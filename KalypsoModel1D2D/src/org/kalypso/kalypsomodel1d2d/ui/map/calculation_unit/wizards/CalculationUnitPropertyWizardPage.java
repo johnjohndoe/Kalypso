@@ -104,7 +104,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
       m_interpolationCount = ((ICalculationUnit1D) m_parentCalcUnit).getInterpolationCount();
 
     if( m_parentCalcUnit instanceof ICalculationUnit1D2D )
-      m_selectedSubUnits.addAll( ((ICalculationUnit1D2D) calcUnit).getChangedSubUnits() );
+      m_selectedSubUnits.addAll( ((ICalculationUnit1D2D) calcUnit).getSubCalculationUnits() );
 
     setTitle( m_parentCalcUnit.getName() );
     setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizardPage.1") ); //$NON-NLS-1$

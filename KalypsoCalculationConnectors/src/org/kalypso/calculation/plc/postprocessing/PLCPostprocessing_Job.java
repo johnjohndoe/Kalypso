@@ -139,7 +139,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     if( !inputProvider.hasID( INPUT_NA_RESULTS_FOLDER ) )
       return;
 
-    final File naResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_NA_RESULTS_FOLDER ) );
+    final File naResultsFolder = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_NA_RESULTS_FOLDER ) );
     final File naFolder = new File( outputFolder, "rrm" ); //$NON-NLS-1$
     naFolder.mkdirs();
     FileUtils.moveDirectoryToDirectory( naResultsFolder, naFolder, false );
@@ -151,30 +151,30 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       return;
 
     // adding risk zones coverages to the model
-    final GMLWorkspace riskStatusQuoRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( INPUT_RISK_STATUS_QUO_RASTER_DATA_MODEL ), null );
-    final IRasterDataModel riskStatusQuoRasterDataModel = (IRasterDataModel) riskStatusQuoRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
-    final File riskStatusQuoRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RISK_STATUS_QUO_RASTER_FOLDER_OUTPUT ) );
-    final ICoverageCollection riskStatusQuoCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_RISK_STATUS_QUO_COVERAGES )).getAdapter( ICoverageCollection.class );
+    final GMLWorkspace riskStatusQuoRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL)inputProvider.getInputForID( INPUT_RISK_STATUS_QUO_RASTER_DATA_MODEL ), null );
+    final IRasterDataModel riskStatusQuoRasterDataModel = (IRasterDataModel)riskStatusQuoRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
+    final File riskStatusQuoRasterFolderOutput = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_RISK_STATUS_QUO_RASTER_FOLDER_OUTPUT ) );
+    final ICoverageCollection riskStatusQuoCoverageCollection = (ICoverageCollection)((Feature)resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_RISK_STATUS_QUO_COVERAGES )).getAdapter( ICoverageCollection.class );
     for( final ICoverage coverage : riskStatusQuoRasterDataModel.getRiskZonesCoverage().getCoverages() )
     {
       changeCoverageFilePathPrefix( coverage, "statusQuo/" + riskStatusQuoRasterFolderOutput.getName() ); //$NON-NLS-1$
       riskStatusQuoCoverageCollection.getCoverages().add( coverage );
     }
 
-    final GMLWorkspace riskCalculatedRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( INPUT_RISK_CALCULATED_RASTER_DATA_MODEL ), null );
-    final IRasterDataModel riskCalculatedRasterDataModel = (IRasterDataModel) riskCalculatedRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
-    final ICoverageCollection riskCalculatedCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_RISK_CALCULATED_COVERAGES )).getAdapter( ICoverageCollection.class );
-    final File riskCalculatedRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RISK_CALCULATED_RASTER_FOLDER_OUTPUT ) );
+    final GMLWorkspace riskCalculatedRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL)inputProvider.getInputForID( INPUT_RISK_CALCULATED_RASTER_DATA_MODEL ), null );
+    final IRasterDataModel riskCalculatedRasterDataModel = (IRasterDataModel)riskCalculatedRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
+    final ICoverageCollection riskCalculatedCoverageCollection = (ICoverageCollection)((Feature)resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_RISK_CALCULATED_COVERAGES )).getAdapter( ICoverageCollection.class );
+    final File riskCalculatedRasterFolderOutput = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_RISK_CALCULATED_RASTER_FOLDER_OUTPUT ) );
     for( final ICoverage coverage : riskCalculatedRasterDataModel.getRiskZonesCoverage().getCoverages() )
     {
       changeCoverageFilePathPrefix( coverage, "calculated/" + riskCalculatedRasterFolderOutput.getName() ); //$NON-NLS-1$
       riskCalculatedCoverageCollection.getCoverages().add( coverage );
     }
 
-    final GMLWorkspace riskDifferenceRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( INPUT_RISK_DIFFERENCE_RASTER_DATA_MODEL ), null );
-    final IRasterDataModel riskDifferenceRasterDataModel = (IRasterDataModel) riskDifferenceRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
-    final ICoverageCollection riskDifferenceCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_RISK_DIFFERENCES_COVERAGES )).getAdapter( ICoverageCollection.class );
-    final File riskDifferenceRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RISK_DIFFERENCE_RASTER_FOLDER_OUTPUT ) );
+    final GMLWorkspace riskDifferenceRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL)inputProvider.getInputForID( INPUT_RISK_DIFFERENCE_RASTER_DATA_MODEL ), null );
+    final IRasterDataModel riskDifferenceRasterDataModel = (IRasterDataModel)riskDifferenceRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
+    final ICoverageCollection riskDifferenceCoverageCollection = (ICoverageCollection)((Feature)resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_RISK_DIFFERENCES_COVERAGES )).getAdapter( ICoverageCollection.class );
+    final File riskDifferenceRasterFolderOutput = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_RISK_DIFFERENCE_RASTER_FOLDER_OUTPUT ) );
     for( final ICoverage coverage : riskDifferenceRasterDataModel.getRiskZonesCoverage().getCoverages() )
     {
       changeCoverageFilePathPrefix( coverage, "difference/" + riskDifferenceRasterFolderOutput.getName() ); //$NON-NLS-1$
@@ -190,7 +190,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     final File sldFile = new File( riskFolder, "RiskZonesCoverage.sld" ); //$NON-NLS-1$
     try
     {
-      FileUtils.copyURLToFile( (URL) inputProvider.getInputForID( INPUT_RISK_RASTERIZATION_CONTROL_MODEL ), controlModelFile ); //$NON-NLS-1$
+      FileUtils.copyURLToFile( (URL)inputProvider.getInputForID( INPUT_RISK_RASTERIZATION_CONTROL_MODEL ), controlModelFile ); //$NON-NLS-1$
       FileUtils.copyURLToFile( getSLD(), sldFile );
       // FileUtils.copyFileToDirectory( sldFile, riskFolder );
     }
@@ -199,7 +199,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       Logger.getAnonymousLogger().log( Level.WARNING, "Could not copy SLD file. Reason: " + e.getLocalizedMessage() );
     }
 
-    final File statisticsFile = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RISK_DIFFERENCE_STATISTICS ) );
+    final File statisticsFile = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_RISK_DIFFERENCE_STATISTICS ) );
     FileUtils.moveFileToDirectory( statisticsFile, riskFolder, true );
 
     final File riskFolderStatusQuo = new File( riskFolder, "statusQuo" ); //$NON-NLS-1$
@@ -222,11 +222,11 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     // STATUS QUO
     final File floodFolderStatusQuo = new File( floodFolder, "statusQuo" ); //$NON-NLS-1$
     floodFolderStatusQuo.mkdirs();
-    final File floodStatusQuoRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_FLOOD_STATUS_QUO_RESULT_FOLDER ) ); //$NON-NLS-1$
+    final File floodStatusQuoRasterFolderInput = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_FLOOD_STATUS_QUO_RESULT_FOLDER ) ); //$NON-NLS-1$
     FileUtils.moveDirectoryToDirectory( floodStatusQuoRasterFolderInput, floodFolderStatusQuo, false );
 
-    final GMLWorkspace floodStatusQuoWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( INPUT_FLOOD_STATUS_QUO_MODEL ), null ); //$NON-NLS-1$
-    final IFloodModel floodStatusQuoModel = (IFloodModel) floodStatusQuoWS.getRootFeature().getAdapter( IFloodModel.class );
+    final GMLWorkspace floodStatusQuoWS = GmlSerializer.createGMLWorkspace( (URL)inputProvider.getInputForID( INPUT_FLOOD_STATUS_QUO_MODEL ), null ); //$NON-NLS-1$
+    final IFloodModel floodStatusQuoModel = (IFloodModel)floodStatusQuoWS.getRootFeature().getAdapter( IFloodModel.class );
     final IFeatureBindingCollection<IRunoffEvent> statusQuoEvents = floodStatusQuoModel.getEvents();
 
     // adding representative (highest HQ) inundation coverages to the model
@@ -240,7 +240,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       }
     }
 
-    final ICoverageCollection inundationStatusQuoCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_INUNDATION_STATUS_QUO_COVERAGES )).getAdapter( ICoverageCollection.class );
+    final ICoverageCollection inundationStatusQuoCoverageCollection = (ICoverageCollection)((Feature)resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_INUNDATION_STATUS_QUO_COVERAGES )).getAdapter( ICoverageCollection.class );
     final String statusQuoPath = "flood/statusQuo/events"; //$NON-NLS-1$
     for( final IRunoffEvent coverageCollection : statusQuoEvents )
     {
@@ -258,12 +258,12 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     // CALCULATED
     final File floodFolderCalculated = new File( floodFolder, "calculated" ); //$NON-NLS-1$
     floodFolderCalculated.mkdirs();
-    final File floodCalculatedRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_FLOOD_CALCULATED_RESULT_FOLDER ) ); //$NON-NLS-1$
+    final File floodCalculatedRasterFolderInput = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_FLOOD_CALCULATED_RESULT_FOLDER ) ); //$NON-NLS-1$
     FileUtils.moveDirectoryToDirectory( floodCalculatedRasterFolderInput, floodFolderCalculated, false );
 
-    final GMLWorkspace floodCalculatedWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( INPUT_FLOOD_CALCULATED_MODEL ), null ); //$NON-NLS-1$
-    final IFloodModel floodCalculatedModel = (IFloodModel) floodCalculatedWS.getRootFeature().getAdapter( IFloodModel.class );
-    final ICoverageCollection inundationCalculatedCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_INUNDATION_CALCULATED_COVERAGES )).getAdapter( ICoverageCollection.class );
+    final GMLWorkspace floodCalculatedWS = GmlSerializer.createGMLWorkspace( (URL)inputProvider.getInputForID( INPUT_FLOOD_CALCULATED_MODEL ), null ); //$NON-NLS-1$
+    final IFloodModel floodCalculatedModel = (IFloodModel)floodCalculatedWS.getRootFeature().getAdapter( IFloodModel.class );
+    final ICoverageCollection inundationCalculatedCoverageCollection = (ICoverageCollection)((Feature)resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_INUNDATION_CALCULATED_COVERAGES )).getAdapter( ICoverageCollection.class );
     final String calculatedPath = "flood/calculated/events"; //$NON-NLS-1$
     final IFeatureBindingCollection<IRunoffEvent> calculatedEvents = floodCalculatedModel.getEvents();
     for( final IRunoffEvent coverageCollection : calculatedEvents )
@@ -282,12 +282,12 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     // DIFFERENCE
     final File floodFolderDifference = new File( floodFolder, "difference" ); //$NON-NLS-1$
     floodFolderDifference.mkdirs();
-    final File floodDifferenceRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_FLOOD_DIFFERENCE_RESULT_FOLDER ) ); //$NON-NLS-1$
+    final File floodDifferenceRasterFolderInput = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_FLOOD_DIFFERENCE_RESULT_FOLDER ) ); //$NON-NLS-1$
     FileUtils.moveDirectoryToDirectory( floodDifferenceRasterFolderInput, floodFolderDifference, false );
 
-    final GMLWorkspace floodDifferenceWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( INPUT_FLOOD_DIFFERENCE_MODEL ), null ); //$NON-NLS-1$
-    final IFloodModel floodDifferenceModel = (IFloodModel) floodDifferenceWS.getRootFeature().getAdapter( IFloodModel.class );
-    final ICoverageCollection inundationDifferenceCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_INUNDATION_DIFFERENCES_COVERAGES )).getAdapter( ICoverageCollection.class );
+    final GMLWorkspace floodDifferenceWS = GmlSerializer.createGMLWorkspace( (URL)inputProvider.getInputForID( INPUT_FLOOD_DIFFERENCE_MODEL ), null ); //$NON-NLS-1$
+    final IFloodModel floodDifferenceModel = (IFloodModel)floodDifferenceWS.getRootFeature().getAdapter( IFloodModel.class );
+    final ICoverageCollection inundationDifferenceCoverageCollection = (ICoverageCollection)((Feature)resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_INUNDATION_DIFFERENCES_COVERAGES )).getAdapter( ICoverageCollection.class );
     final String differencePath = "flood/difference/events"; //$NON-NLS-1$
     final IFeatureBindingCollection<IRunoffEvent> differenceEvents = floodDifferenceModel.getEvents();
     for( final IRunoffEvent coverageCollection : differenceEvents )
@@ -316,20 +316,20 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
 
     // STATUS QUO
     final File lengthSectionFolderStatusQuo = new File( lengthSectionFolder, "statusQuo" ); //$NON-NLS-1$
-    final File inputLengthSectionStatusQuo = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_LENGTH_SECTION_STATUS_QUO_FOLDER ) );
+    final File inputLengthSectionStatusQuo = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_LENGTH_SECTION_STATUS_QUO_FOLDER ) );
 
     // CALCULATED
     final File lengthSectionFolderCalculated = new File( lengthSectionFolder, "calculated" ); //$NON-NLS-1$
-    final File inputLengthSectionCalculated = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_LENGTH_SECTION_CALCULATED_FOLDER ) );
+    final File inputLengthSectionCalculated = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_LENGTH_SECTION_CALCULATED_FOLDER ) );
 
     // DIFFERENCE
     final File lengthSectionFolderDifference = new File( lengthSectionFolder, "difference" ); //$NON-NLS-1$
-    final File inputLengthSectionDifference = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_LENGTH_SECTION_DIFFERENCE_FOLDER ) );
+    final File inputLengthSectionDifference = FileUtils.toFile( (URL)inputProvider.getInputForID( INPUT_LENGTH_SECTION_DIFFERENCE_FOLDER ) );
     FileUtils.copyDirectory( inputLengthSectionDifference, lengthSectionFolderDifference, GML_FILE_FILTER );
 
     // store in results GML
-    final IScenarioResults scenarioResults = (IScenarioResults) resultsWorkspace.getRootFeature();
-    final Feature resultCollection = (Feature) scenarioResults.getProperty( IScenarioResults.QN_PROPERTY_LENGTH_SECTION_RESULT_COLLECTION );
+    final IScenarioResults scenarioResults = (IScenarioResults)resultsWorkspace.getRootFeature();
+    final Feature resultCollection = (Feature)scenarioResults.getProperty( IScenarioResults.QN_PROPERTY_LENGTH_SECTION_RESULT_COLLECTION );
     for( final File file : lengthSectionFolderDifference.listFiles() )
     {
       final String fileName = file.getName();
@@ -352,7 +352,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
   {
     final String href = fileRef + "#LengthSectionResult"; //$NON-NLS-1$
     final IFeatureType lcFT = resultMember.getFeatureType();
-    final IRelationType pt = (IRelationType) lcFT.getProperty( property );
+    final IRelationType pt = (IRelationType)lcFT.getProperty( property );
 
     resultMember.setLink( pt, href, lcFT );
   }
@@ -361,11 +361,11 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
   {
     if( coverage instanceof RectifiedGridCoverage )
     {
-      final RectifiedGridCoverage gridCoverage = (RectifiedGridCoverage) coverage;
+      final RectifiedGridCoverage gridCoverage = (RectifiedGridCoverage)coverage;
       final Object rangeSet = gridCoverage.getRangeSet();
       if( rangeSet instanceof RangeSetFile )
       {
-        final RangeSetFile file = (RangeSetFile) rangeSet;
+        final RangeSetFile file = (RangeSetFile)rangeSet;
         final Path filePath = new Path( file.getFileName() );
         // this works for both flood and risk
         final String fileName = new Path( prefix ).append( filePath.removeFirstSegments( 2 ) ).toString();

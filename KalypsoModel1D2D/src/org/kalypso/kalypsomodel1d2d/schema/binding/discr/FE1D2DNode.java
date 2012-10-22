@@ -6,27 +6,26 @@ import java.util.List;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The default implementation of {@link IFE1D2DNode} based on {@link Feature_Impl} to bind wb1d2d:Node elements
- *
+ * 
  * @author Gernot Belger, Patrice Congo
  */
 public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
 {
-  /** Edges that contains this node */
-  private final IFeatureBindingCollection<IFENetItem> m_containers = new FeatureBindingCollection<>( this, IFENetItem.class, MEMBER_NODE_CONTAINERS );
-
   public FE1D2DNode( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  private FeatureList linkedItemsInternal( )
+  {
+    return (FeatureList)getProperty( MEMBER_NODE_CONTAINERS );
   }
 
   @Override
@@ -38,74 +37,104 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   @Override
   public void setPoint( final GM_Point point )
   {
-    if( point.getCoordinateSystem() == null )
-      throw new IllegalStateException();
-
+    Assert.throwIAEOnNullParam( point, "point" );
+    Assert.throwIAEOnNull( point.getCoordinateSystem(), "Point must have a coordinate system." );
     setProperty( IFE1D2DNode.PROPERTY_POINT, point );
   }
 
   @Override
-  public IFeatureBindingCollection<IFENetItem> getContainers( )
+  public IFE1D2DEdge[] getLinkedEdges( )
   {
-    return m_containers;
+    final FeatureList linkedItemsInternal = linkedItemsInternal();
+    final Feature[] features = linkedItemsInternal.toFeatures( new Feature[linkedItemsInternal.size()] );
+    final List<IFE1D2DEdge> results = new ArrayList<>( linkedItemsInternal.size() );
+    for( Feature item : features )
+    {
+      if( item instanceof IFE1D2DEdge )
+        results.add( (IFE1D2DEdge)item );
+    }
+    return results.toArray( new IFE1D2DEdge[results.size()] );
   }
+
+//  @Override
+//  public IFELine[] getLinkedLines( )
+//  {
+//    final FeatureList linkedItemsInternal = linkedItemsInternal();
+//    final IFENetItem[] features = linkedItemsInternal.toFeatures( new IFENetItem[linkedItemsInternal.size()] );
+//    final List<IFELine> results = new ArrayList<>();
+//    for( IFENetItem item : features )
+//    {
+//      if( item instanceof IFELine )
+//        results.add( (IFELine)item );
+//    }
+//    return results.toArray( new IFELine[results.size()] );
+//  }
 
   /**
    * Returns all elements, this node is part of.
    */
   @Override
-  public IFE1D2DElement[] getElements( )
+  public IFE1D2DElement[] getAdjacentElements( )
   {
-    // REMARK: method reworked to use references instead of geometry (by Dejan)
-    // (we had Splitsort problem before: sometimes the search query in SplitSort does not return anything)
-    final List<IFE1D2DElement> elementsList = new ArrayList<>();
-    for( final Object element : m_containers )
+    final List<IFE1D2DElement> result = new ArrayList<>();
+    for( final IFE1D2DEdge edge : getLinkedEdges() )
     {
-      if( element instanceof IFE1D2DElement )
+      final IFE1D2DElement[] elements = edge.getLinkedElements();
+      for( final IFE1D2DElement element : elements )
       {
-        if( !elementsList.contains( element ) )
-          elementsList.add( (IFE1D2DElement)element );
-      }
-      else if( element instanceof IFE1D2DEdge )
-      {
-        final IFE1D2DEdge edge = (IFE1D2DEdge)element;
-        final IFeatureBindingCollection<IFE1D2DElement> edgeContainers = edge.getContainers();
-        for( final IFE1D2DElement edgeContainer : edgeContainers )
-        {
-          if( !elementsList.contains( edgeContainer ) )
-            elementsList.add( edgeContainer );
-        }
+        if( !result.contains( element ) )
+          result.add( element );
       }
     }
-    return elementsList.toArray( new IFE1D2DElement[0] );
+    return result.toArray( new IFE1D2DElement[result.size()] );
   }
 
   @Override
-  public List<IFE1D2DNode> getNeighbours( )
+  public List<IFE1D2DNode> getAdjacentNodes( )
   {
-    final List<IFE1D2DNode> list = new ArrayList<>();
-    final IFeatureBindingCollection<IFENetItem> nodeContainers = getContainers();
-    for( final Object container : nodeContainers )
+    final List<IFE1D2DNode> result = new ArrayList<>();
+    final IFE1D2DEdge[] edges = getLinkedEdges();
+    for( final IFE1D2DEdge edge : edges )
     {
-      if( container instanceof IFE1D2DEdge )
-      {
-        final IFeatureBindingCollection<IFE1D2DNode> nodes = ((IFE1D2DEdge)container).getNodes();
-        for( final IFE1D2DNode node : nodes )
-          if( !getId().equals( node.getId() ) )
-            list.add( node );
-      }
+      final IFE1D2DNode[] nodes = edge.getNodes();
+      for( final IFE1D2DNode node : nodes )
+        if( !this.equals( node ) )
+          result.add( node );
     }
-    return list;
+    return result;
   }
 
   @Override
-  public void addContainer( String linkRef )
+  public void addLinkedEdge( IFE1D2DEdge edge )
   {
-    linkRef = Assert.throwIAEOnNullOrEmpty( linkRef );
-    final FeatureList wrappedList = m_containers.getFeatureList();
-    if( !wrappedList.contains( linkRef ) )
-      wrappedList.add( linkRef );
+    Assert.throwIAEOnNullParam( edge, "edge" );
+    if( !linkedItemsInternal().containsOrLinksTo( edge ) )
+      linkedItemsInternal().addLink( edge );
   }
+
+  @Override
+  public void removeLinkedEdge( IFE1D2DEdge edge )
+  {
+    Assert.throwIAEOnNullParam( edge, "edge" );
+    if( linkedItemsInternal().containsOrLinksTo( edge ) )
+      linkedItemsInternal().removeLink( edge );
+  }
+
+//  @Override
+//  public void addLinkedLine( IFELine line )
+//  {
+//    Assert.throwIAEOnNullParam( line, "line" );
+//    if( !linkedItemsInternal().containsOrLinksTo( line ) )
+//      linkedItemsInternal().addLink( line );
+//  }
+//
+//  @Override
+//  public void removeLinkedLine( IFELine line )
+//  {
+//    Assert.throwIAEOnNullParam( line, "line" );
+//    if( linkedItemsInternal().containsOrLinksTo( line ) )
+//      linkedItemsInternal().removeLink( line );
+//  }
 
   @Override
   public String toString( )
@@ -116,19 +145,13 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
     buf.append( '[' );
     buf.append( getPoint() );
     // edges
-    final IFeatureBindingCollection<IFENetItem> containers = getContainers();
+    final Feature[] containers = getLinkedEdges();
     buf.append( "{Edges=" ); //$NON-NLS-1$
-    for( int i = 0; i < containers.size(); i++ )
-      if( containers.get( i ) instanceof IFE1D2DEdge )
-        buf.append( ((IFE1D2DEdge)containers.get( i )).getId() );
+    for( int i = 0; i < containers.length; i++ )
+      buf.append( ((IFE1D2DEdge)containers[i]).getId() );
     buf.append( '}' );
     buf.append( ']' );
     return buf.toString();
   }
 
-  @Override
-  public GM_Object recalculateElementGeometry( )
-  {
-    return null;
-  }
 }

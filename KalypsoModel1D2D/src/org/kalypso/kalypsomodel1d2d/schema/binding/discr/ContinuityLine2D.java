@@ -45,18 +45,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -68,69 +61,39 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
   }
 
   @Override
-  public IFeatureBindingCollection<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
-  {
-    if( nodes.size() < 2 )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.0" ) ) ); //$NON-NLS-1$
-
-    final List<IFE1D2DNode> fullNodeList;
-    try
-    {
-      fullNodeList = recalculateGeometry( nodes );
-    }
-    catch( final GM_Exception e )
-    {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
-    }
-
-    final FeatureList nodeList = getNodes().getFeatureList();
-    nodeList.clear();
-
-    for( final IFE1D2DNode node : fullNodeList )
-      nodeList.add( node.getId() );
-
-    // nodeList.invalidate();
-    setEnvelopesUpdated();
-    return m_nodes;
-  }
-
-  @Override
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception
-  {
-    try
-    {
-      final List<IFE1D2DNode> list = new ArrayList<>();
-      list.addAll( getNodes() );
-      recalculateGeometry( list );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
-    return (GM_Object) getProperty( IFELine.PROP_GEOMETRY );
-  }
-
-  private List<IFE1D2DNode> recalculateGeometry( final List<IFE1D2DNode> nodes ) throws GM_Exception, CoreException
+  public void setNodes( final List<IFE1D2DNode> nodes )
   {
     final List<IFE1D2DNode> recalculatedNodes = recalculateCurve( nodes );
-    final GM_Position[] nodePositions = new GM_Position[recalculatedNodes.size()];
+    nodesInternal().clear();
+    for( final IFE1D2DNode node : recalculatedNodes )
+      addNode( node );
+    setGeometry( calculateGeometry( recalculatedNodes ) );
+  }
+
+  private GM_Curve calculateGeometry( final List<IFE1D2DNode> nodes )
+  {
+    final GM_Position[] nodePositions = new GM_Position[nodes.size()];
     for( int i = 0; i < nodePositions.length; i++ )
-      nodePositions[i] = recalculatedNodes.get( i ).getPoint().getPosition();
+      nodePositions[i] = nodes.get( i ).getPoint().getPosition();
 
     String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
 
     if( crs == null )
       crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-    setGeometry( GeometryFactory.createGM_Curve( nodePositions, crs ) );
-    return recalculatedNodes;
+    try
+    {
+      return GeometryFactory.createGM_Curve( nodePositions, crs );
+    }
+    catch( final GM_Exception e )
+    {
+      throw new IllegalArgumentException( e );
+    }
   }
 
-  private final List<IFE1D2DNode> recalculateCurve( final List<IFE1D2DNode> nodes ) throws CoreException
+  private final List<IFE1D2DNode> recalculateCurve( final List<IFE1D2DNode> nodes )
   {
     final Iterator<IFE1D2DNode> iterator = nodes.iterator();
     final IFE1D2DNode startNode = iterator.next();
-    // final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) startNode.getWorkspace().getRootFeature();
     final List<IFE1D2DNode> curveNodes = new ArrayList<>();
     curveNodes.add( startNode );
     IFE1D2DNode currentNode = startNode;
@@ -140,12 +103,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
       // TODO: !!!Potential endless loop!! I once got it (Gernot)
       while( !nextMilestoneNode.getId().equals( currentNode.getId() ) )
       {
-        final Collection<IFE1D2DNode> neighbourNodes = currentNode.getNeighbours();
-        if( neighbourNodes.size() == 0 )
-        {
-          final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.2" ) + currentNode.getId() ); //$NON-NLS-1$
-          throw new CoreException( status );
-        }
+        final Collection<IFE1D2DNode> neighbourNodes = currentNode.getAdjacentNodes();
         IFE1D2DNode bestCandidateNode = null;
         double shortestDistance = Double.MAX_VALUE;
         for( final IFE1D2DNode node : neighbourNodes )

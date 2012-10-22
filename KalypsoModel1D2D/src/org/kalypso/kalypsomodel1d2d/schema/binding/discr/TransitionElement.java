@@ -44,7 +44,6 @@ import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -100,18 +99,17 @@ public class TransitionElement extends Feature_Impl implements ITransitionElemen
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
    */
   @Override
-  public boolean addElementAsRef( final IFENetItem element )
+  public void addLinkedItem( final IFENetItem element )
   {
-    return m_continuityLines.addRef( (IFELine) element );
+    m_continuityLines.addRef( (IFELine) element );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#getElements()
    */
   @Override
-  public IFeatureBindingCollection<IFENetItem> getElements( )
+  public IFENetItem[] getElements( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -119,9 +117,8 @@ public class TransitionElement extends Feature_Impl implements ITransitionElemen
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
    */
   @Override
-  public void removeElementAsRef( final IFENetItem elment )
+  public void removeLinkedItem( final IFENetItem elment )
   {
-    // TODO Auto-generated method stub
   }
 
   /**

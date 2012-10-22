@@ -84,7 +84,7 @@ public class RoughnessAssignListener implements ModellEventListener
 
   /**
    * Starts the roughness (re)assignment job
-   *
+   * 
    * @param envelope
    *          The area where roughness recalculation is needed; if <code>null</code>, whole model will be recalculated
    */
@@ -113,7 +113,7 @@ public class RoughnessAssignListener implements ModellEventListener
     /* In every other case: refresh the roughnes assignment */
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
-      final FeatureStructureChangeModellEvent event = (FeatureStructureChangeModellEvent) modellEvent;
+      final FeatureStructureChangeModellEvent event = (FeatureStructureChangeModellEvent)modellEvent;
       final Feature[] changedFeatures = event.getChangedFeatures();
       final GM_Envelope envelope = isRoughnessAssignNeeded( changedFeatures );
       if( envelope != null )
@@ -121,7 +121,7 @@ public class RoughnessAssignListener implements ModellEventListener
     }
     else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
-      final FeaturesChangedModellEvent event = (FeaturesChangedModellEvent) modellEvent;
+      final FeaturesChangedModellEvent event = (FeaturesChangedModellEvent)modellEvent;
       final Feature[] changedFeatures = event.getFeatures();
       final GM_Envelope envelope = isRoughnessAssignNeeded( changedFeatures );
       if( envelope != null )
@@ -159,7 +159,7 @@ public class RoughnessAssignListener implements ModellEventListener
         // elements to be reassigned, which is not a problem.
         // REMARK: the size of the buffer depends on the coordinate system...; lets hope no one uses lat/lon here...
         // TODO: instead of using the location, we could directly determine the relevant elements...
-        return envelope.getBuffer( 1.0 );
+        return envelope == null ? null : envelope.getBuffer( 1.0 );
       }
     }
 

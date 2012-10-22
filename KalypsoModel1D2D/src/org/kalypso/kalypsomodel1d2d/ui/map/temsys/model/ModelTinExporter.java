@@ -63,9 +63,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * @author Gernot Belger
@@ -112,10 +112,10 @@ public class ModelTinExporter implements ICoreRunnableWithProgress
         if( element instanceof IPolyElement )
         {
           final IPolyElement poly = (IPolyElement)element;
-          final GM_Surface<GM_SurfacePatch> surface = poly.getGeometry();
+          final GM_Polygon<GM_PolygonPatch> surface = poly.getGeometry();
           if( surface != null )
           {
-            final GM_Position[] exteriorRing = surface.get( 0 ).getExteriorRing();
+            final GM_Position[] exteriorRing = surface.getSurfacePatch().getExteriorRing();
             setMinMax( exteriorRing );
             triangleWriter.add( exteriorRing[0], exteriorRing[1], exteriorRing[2] );
             if( exteriorRing.length > 4 )

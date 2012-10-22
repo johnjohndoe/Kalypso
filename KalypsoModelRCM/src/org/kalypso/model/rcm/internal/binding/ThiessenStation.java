@@ -45,8 +45,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IThiessenStation;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -73,13 +73,13 @@ public class ThiessenStation extends Feature_Impl implements IThiessenStation
 
   @SuppressWarnings("unchecked")
   @Override
-  public GM_Surface<GM_SurfacePatch> getThiessenArea( )
+  public GM_Polygon<GM_AbstractSurfacePatch> getThiessenArea( )
   {
-    return getProperty( PROPERTY_THIESSEN_AREA, GM_Surface.class );
+    return getProperty( PROPERTY_THIESSEN_AREA, GM_Polygon.class );
   }
 
   @Override
-  public void setThiessenArea( final GM_Surface< ? > area )
+  public void setThiessenArea( final GM_Polygon< ? > area )
   {
     setProperty( PROPERTY_THIESSEN_AREA, area );
   }

@@ -77,7 +77,7 @@ public class CreateContinuityLineCommand implements IFeatureChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateContinuityLineCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateContinuityLineCommand.0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -96,14 +96,18 @@ public class CreateContinuityLineCommand implements IFeatureChangeCommand
     final IFeatureBindingCollection<IFELine> continuityLines = m_model.getContinuityLines();
 
     if( m_lineElementQName.equals( IContinuityLine1D.QNAME ) )
-      m_line = continuityLines.addNew( m_lineElementQName, IContinuityLine1D.class );
+    {
+      IContinuityLine1D line1d = continuityLines.addNew( m_lineElementQName, IContinuityLine1D.class );
+      line1d.addNode( m_nodeList.get( 0 ) );
+      m_line = line1d;
+    }
     else
-      m_line = continuityLines.addNew( m_lineElementQName, IContinuityLine2D.class );
+    {
+      IContinuityLine2D line2d = continuityLines.addNew( m_lineElementQName, IContinuityLine2D.class );
+      line2d.setNodes( m_nodeList );
+      m_line = line2d;
+    }
 
-    final List<IFE1D2DNode> nodes = m_line.createFullNodesList( m_nodeList );
-    for( int i = 0; i < nodes.size(); i++ )
-      nodes.get( i ).addContainer( m_line.getId() );
-    m_line.setEnvelopesUpdated();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, m_line, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     m_processed = true;
   }

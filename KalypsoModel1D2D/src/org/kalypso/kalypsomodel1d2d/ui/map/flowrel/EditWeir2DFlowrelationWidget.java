@@ -84,8 +84,8 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
@@ -112,40 +112,40 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
 
   public EditWeir2DFlowrelationWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IFlowRelation2D.QNAME //, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        ,IBuildingFlowRelation2D.QNAME
-    }, IFlowRelationship.QNAME_PROP_POSITION ) );
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { IFlowRelation2D.QNAME //, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        , IBuildingFlowRelation2D.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
 
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.4") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.4" ) ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
-  //  public EditWeir2DFlowrelationWidget( )
-  //  {
+
+  // public EditWeir2DFlowrelationWidget( )
+  // {
   //    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.0"), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   //
   //    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.1" ) ); //$NON-NLS-1$
-  //    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
-  //  }
+  // m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
+  // }
 
-  //  /**
-  //   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-  //   */
-  //  @Override
-  //  public void paint( final Graphics g )
-  //  {
-  //    super.paint( g );
+  // /**
+  // * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
+  // */
+  // @Override
+  // public void paint( final Graphics g )
+  // {
+  // super.paint( g );
   //
-  //    final IMapPanel mapPanel = getMapPanel();
-  //    if( mapPanel != null )
-  //    {
-  //      final Rectangle bounds = mapPanel.getScreenBounds();
-  //      final String delegateTooltip = getDelegate().getToolTip();
+  // final IMapPanel mapPanel = getMapPanel();
+  // if( mapPanel != null )
+  // {
+  // final Rectangle bounds = mapPanel.getScreenBounds();
+  // final String delegateTooltip = getDelegate().getToolTip();
   //
   //      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.5") + delegateTooltip ); //$NON-NLS-1$
   //
-  //      m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
-  //    }
-  //  }
+  // m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+  // }
+  // }
 
   @Override
   public void paint( final Graphics g )
@@ -158,8 +158,8 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
       /* Node: return its position */
       if( m_modelElement instanceof IPolyElement )
       {
-        final IPolyElement polyElement = ( IPolyElement ) m_modelElement;
-        final GM_Surface<GM_SurfacePatch> surface = ( GM_Surface< GM_SurfacePatch > ) polyElement.recalculateElementGeometry();
+        final IPolyElement polyElement = (IPolyElement)m_modelElement;
+        final GM_Polygon<GM_PolygonPatch> surface = polyElement.getGeometry();
 
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
         final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
@@ -197,7 +197,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
       {
         final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
 
-        final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius  );
+        final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius );
         final Feature lFoundPolyElement = findModelElementFromCurrentPosition( m_discModel, currentPos, grabDistance );
 
         if( lFoundPolyElement == null )
@@ -205,7 +205,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
           mapPanel.repaintMap();
           return;
         }
-        final Feature lFoundFlowRel = FlowRelationUtilitites.findBuildingElement2D( ( IPolyElement ) lFoundPolyElement, m_flowRelModel );
+        final Feature lFoundFlowRel = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement)lFoundPolyElement, m_flowRelModel );
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
         selectionManager.clear();
 
@@ -295,12 +295,11 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
       return;
     }
 
-    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius  );
+    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius );
     m_modelElement = findModelElementFromCurrentPosition( m_discModel, currentPos, grabDistance );
 
     mapPanel.repaintMap();
   }
-
 
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
@@ -327,7 +326,8 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
     } );
   }
 
-  private void init( final IMapPanel mapPanel ){
+  private void init( final IMapPanel mapPanel )
+  {
     m_flowTheme = UtilMap.findEditableTheme( mapPanel, IFlowRelationship.QNAME );
     m_discModel = UtilMap.findFEModelTheme( mapPanel );
     if( m_flowTheme == null )
@@ -335,49 +335,50 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
 
     final FeatureList featureList = m_flowTheme.getFeatureList();
     final Feature parentFeature = featureList.getOwner();
-    m_flowRelModel = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
+    m_flowRelModel = (IFlowRelationshipModel)parentFeature.getAdapter( IFlowRelationshipModel.class );
 
     final IMapModell mapModell = mapPanel.getMapModell();
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    if( activeTheme instanceof IKalypsoFeatureTheme ){
+    if( activeTheme instanceof IKalypsoFeatureTheme )
+    {
       m_themes = new IKalypsoFeatureTheme[1];
-      m_themes[0] = (IKalypsoFeatureTheme) activeTheme;
+      m_themes[0] = (IKalypsoFeatureTheme)activeTheme;
     }
   }
 
-  //  /**
-  //   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
-  //   */
-  //  @Override
-  //  public void keyTyped( final KeyEvent e )
-  //  {
-  //    if( e.getKeyChar() == '\n' )
-  //    {
-  //      e.consume();
+  // /**
+  // * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
+  // */
+  // @Override
+  // public void keyTyped( final KeyEvent e )
+  // {
+  // if( e.getKeyChar() == '\n' )
+  // {
+  // e.consume();
   //
-  ////      final EasyFeatureWrapper[] features = getMapPanel().getSelectionManager().getAllFeatures();
-  ////      final List<IFlowRelationship> flowRels = new ArrayList<IFlowRelationship>( features.length );
-  ////      for( final EasyFeatureWrapper feature : features )
-  ////      {
-  ////        final IFlowRelationship adapter = (IFlowRelationship) feature.getAdapter( IFlowRelationship.class );
-  ////        if( adapter != null )
-  ////          flowRels.add( adapter );
-  ////      }
-  ////
-  ////      // Force it into swt
-  ////      final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-  ////      final Shell shell = (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
-  ////      shell.getDisplay().asyncExec( new Runnable()
-  ////      {
-  ////        public void run( )
-  ////        {
-  ////          startCalculation( shell, flowRels.toArray( new IFlowRelationship[flowRels.size()] ) );
-  ////        }
-  ////      } );
-  //      return;
-  //    }
-  //    super.keyTyped( e );
-  //  }
+  // // final EasyFeatureWrapper[] features = getMapPanel().getSelectionManager().getAllFeatures();
+  // // final List<IFlowRelationship> flowRels = new ArrayList<IFlowRelationship>( features.length );
+  // // for( final EasyFeatureWrapper feature : features )
+  // // {
+  // // final IFlowRelationship adapter = (IFlowRelationship) feature.getAdapter( IFlowRelationship.class );
+  // // if( adapter != null )
+  // // flowRels.add( adapter );
+  // // }
+  // //
+  // // // Force it into swt
+  // // final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+  // // final Shell shell = (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
+  // // shell.getDisplay().asyncExec( new Runnable()
+  // // {
+  // // public void run( )
+  // // {
+  // // startCalculation( shell, flowRels.toArray( new IFlowRelationship[flowRels.size()] ) );
+  // // }
+  // // } );
+  // return;
+  // }
+  // super.keyTyped( e );
+  // }
 
   @Override
   public void finish( )
@@ -389,7 +390,6 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
     super.finish();
   }
 
-
   protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     final Feature lFoundElement2d = discModel.find2DElement( currentPos, grabDistance );
@@ -397,7 +397,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
     {
       return null;
     }
-    final Feature lBuildingExisting = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) lFoundElement2d, m_flowRelModel );
+    final Feature lBuildingExisting = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement)lFoundElement2d, m_flowRelModel );
     if( lBuildingExisting != null )
     {
       return lFoundElement2d;

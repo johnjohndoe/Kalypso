@@ -62,8 +62,9 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -127,12 +128,7 @@ public class RoughnessAssignService extends Job
 
   private void assignRoughness( final List<FeatureChange> allChanges, final IPolyElement element )
   {
-    final GM_Object geometryProperty = element.getGeometry();
-
-    // this might happen if 2d network is just imported, and new elements are created
-    // (by the widget) before saving anything
-    if( geometryProperty == null )
-      return;
+    final GM_Polygon<GM_PolygonPatch> geometryProperty = element.getGeometry();
 
     final GM_Point centroid = geometryProperty.getCentroid();
     final GM_Position position = centroid.getPosition();

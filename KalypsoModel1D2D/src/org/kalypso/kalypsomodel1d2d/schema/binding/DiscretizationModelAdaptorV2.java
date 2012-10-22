@@ -24,13 +24,13 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
+import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Adapter from version 1.0 1d2d discretization model to version 2.0
- *
+ * 
  * @author kurzbach
  */
 public class DiscretizationModelAdaptorV2 implements IModelAdaptor
@@ -69,34 +69,33 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
 
     // final IRelationType complexElementsProperty = (IRelationType) modelFeatureType.getProperty(
     // IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
-    final IRelationType elementsProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
-    final IRelationType edgesProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
+    final IRelationType elementsProperty = (IRelationType)modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
+    final IRelationType edgesProperty = (IRelationType)modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
     // final IRelationType continuityLinesProperty = (IRelationType) modelFeatureType.getProperty(
     // IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
-    final IRelationType nodesProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
+    final IRelationType nodesProperty = (IRelationType)modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
 
     // final FeatureList complexElements = (FeatureList) model.getProperty( complexElementsProperty );
     // final FeatureList continuityLines = (FeatureList) model.getProperty( continuityLinesProperty );
 
-    final FeatureList elements = (FeatureList) model.getProperty( elementsProperty );
-    final FeatureList edges = (FeatureList) model.getProperty( edgesProperty );
-    final FeatureList nodes = (FeatureList) model.getProperty( nodesProperty );
+    final FeatureList elements = (FeatureList)model.getProperty( elementsProperty );
+    final FeatureList edges = (FeatureList)model.getProperty( edgesProperty );
+    final FeatureList nodes = (FeatureList)model.getProperty( nodesProperty );
 
     try
     {
-      final IRelationType meshProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_MESH );
+      final IRelationType meshProperty = (IRelationType)modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_MESH );
       final Feature mesh = workspace.createFeature( model, meshProperty, meshProperty.getTargetFeatureType() );
-      final GM_Surface<GM_Polygon> surface = GeometryFactory.createGM_PolyhedralSurface( new GM_Polygon[0], KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_PolyhedralSurface<GM_PolygonPatch> surface = GeometryFactory.createGM_PolyhedralSurface( new GM_PolygonPatch[0], KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
-      final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) model.getAdapter( IFEDiscretisationModel1d2d.class );
+      final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d)model.getAdapter( IFEDiscretisationModel1d2d.class );
       final IFeatureBindingCollection<IFE1D2DElement> elements2 = discModel.getElements();
       for( final IFE1D2DElement element : elements2 )
       {
         if( element instanceof PolyElement )
         {
-          final GM_Surface<GM_SurfacePatch> geometry = ((PolyElement) element).getGeometry();
-          final GM_SurfacePatch sp = geometry.get( 0 );
-          surface.add( (GM_Polygon) sp );
+          final GM_Polygon<GM_PolygonPatch> sp = ((PolyElement)element).getGeometry();
+          surface.add( sp.getSurfacePatch() );
         }
       }
       mesh.setProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_MESH_SURFACE, surface );

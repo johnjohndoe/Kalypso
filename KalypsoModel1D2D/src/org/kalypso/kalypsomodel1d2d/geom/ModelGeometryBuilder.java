@@ -40,94 +40,76 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.geom;
 
-import java.util.List;
-
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Provide methods to build the geometry of the 1D 2D finite element model constituants like 2D element, continuity line
  * ...
- *
+ * 
  * @author Patrice Congo
- *
  */
 public class ModelGeometryBuilder
 {
   /**
    * Create a surface given its exterior ring represented by a list of nodes
-   *
+   * 
    * @param nodes
    *          the nodes representing the exterior of the surface
    * @return a surface which has its exterior specified by the nodes or null if less than 3 nodes have been provided
-   *
    * @throws IllegalArgumentException
    *           if nodes is null
    */
-  public static final GM_Surface< ? > createSurfaceFromNode( final List<IFE1D2DNode> nodes ) throws GM_Exception
+  public static final GM_PolygonPatch createSurfaceFromNode( final IFE1D2DNode[] nodes ) throws GM_Exception
   {
-    Assert.throwIAEOnNullParam( nodes, "nodes" ); //$NON-NLS-1$
+    final int nodeCount = nodes.length;
 
-    final int SIZE = nodes.size();
     /* Positions from nodes */
-    final GM_Position[] poses = new GM_Position[SIZE];
+    final GM_Position[] poses = new GM_Position[nodeCount];
 
-    if( SIZE <= 3 )
-      return null;
-
-    String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
-    if( crs == null )
-      crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-    for( int i = 0; i < poses.length; i++ )
+    final String crs = nodes[0].getPoint().getCoordinateSystem();
+    for( int i = 0; i < nodeCount; i++ )
     {
-      final GM_Point point = nodes.get( i ).getPoint();
+      final GM_Point point = nodes[i].getPoint();
       poses[i] = point.getPosition();
     }
 
-    return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], crs );
+    return GeometryFactory.createGM_PolygonPatch( poses, new GM_Position[0][], crs );
   }
 
-  public static final GM_Curve computeEgdeGeometry( final IFE1D2DEdge edge ) throws GM_Exception
+  public static final GM_CurveSegment computeEgdeGeometry( final IFE1D2DEdge edge )
   {
     // REMARK: we assume here, that all nodes live in the same coordinate
     // system.
-    if( edge == null )
-      return null;
-
-    final List<IFE1D2DNode> nodes = edge.getNodes();
-    final int SIZE = nodes.size();
-
-    if( SIZE != 2 )
-      return null;
-
-    final IFE1D2DNode node0 = nodes.get( 0 );
-    if( node0 == null )
-      return null;
-
+    final IFE1D2DNode[] nodes = edge.getNodes();
+    final int nodeCount = nodes.length;
+    final IFE1D2DNode node0 = nodes[0];
     final GM_Point point0 = node0.getPoint();
     final String crs = point0.getCoordinateSystem();
 
-    final GM_Position positions[] = new GM_Position[SIZE];
-    for( int i = 0; i < SIZE; i++ )
+    final GM_Position positions[] = new GM_Position[nodeCount];
+    for( int i = 0; i < nodeCount; i++ )
     {
-      final IFE1D2DNode nodei = nodes.get( i );
-      if( nodei == null )
-        return null;
-
+      final IFE1D2DNode nodei = nodes[i];
       final GM_Point point = nodei.getPoint();
       positions[i] = point.getPosition();
     }
 
-    final GM_Curve curve = GeometryFactory.createGM_Curve( positions, crs );
+    try
+    {
+      return GeometryFactory.createGM_CurveSegment( positions, crs );
+    }
+    catch( final GM_Exception e )
+    {
+      throw new IllegalStateException( e );
+    }
 
     // FIXME: we must make sure that the envelope is updated when the location of the nodes
     // or the coordinate system has changed.
@@ -140,7 +122,5 @@ public class ModelGeometryBuilder
     // final String curveCrs = curve.getCoordinateSystem();
     // if( curveCrs != null && !curveCrs.equals( envCrs ) )
     // edge.setEnvelopesUpdated();
-
-    return curve;
   }
 }

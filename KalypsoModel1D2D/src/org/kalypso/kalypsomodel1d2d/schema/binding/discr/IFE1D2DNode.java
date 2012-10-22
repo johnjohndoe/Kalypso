@@ -46,17 +46,15 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Interface for classes representing an finite element node of the 1D, 2D model.
- *
+ * 
  * @author Patrice Congo
- *
  */
-public interface IFE1D2DNode extends IFENetItem
+public interface IFE1D2DNode extends Feature
 {
   public static final QName FEATURE_1D2DNODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Node" ); //$NON-NLS-1$
 
@@ -66,48 +64,24 @@ public interface IFE1D2DNode extends IFENetItem
 
   public static final QName PROPERTY_HAS_ELEVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "hasElevation" ); //$NON-NLS-1$
 
-  /**
-   * To get the position of this fe-node
-   *
-   * @return the position of this node as {@link GM_Point}
-   */
   GM_Point getPoint( );
 
-  /**
-   * To set the position of this node to the given point
-   *
-   * @param the
-   *          new position to set as {@link GM_Point} note that null is a legal value
-   *
-   *
-   */
   void setPoint( GM_Point newLocation );
 
-  /**
-   * To get all elements containing this node
-   *
-   * @return the element containing this as array
-   */
-  IFE1D2DElement[] getElements( );
+  List<IFE1D2DNode> getAdjacentNodes( );
 
-  /**
-   * Gets all neighbours of this node. Neighbours nodes are nodes on the other side of all edges ending with this node.
-   */
-  List<IFE1D2DNode> getNeighbours( );
+  void addLinkedEdge( IFE1D2DEdge edge );
 
-  /**
-   * Add a container (typically an Edge) to the node
-   *
-   * @param the
-   *          id of the container
-   *
-   */
-  void addContainer( String linkRef );
+  void removeLinkedEdge( IFE1D2DEdge edge );
+  
+  IFE1D2DEdge[] getLinkedEdges( );
 
-  /**
-   * Get the containers of this node, typically edges
-   *
-   * @return the containers of this node as {@link IFeatureBindingCollection}
-   */
-  <T extends IFENetItem> IFeatureBindingCollection<T> getContainers( );
+//  void addLinkedLine( IFELine line );
+//  
+//  void removeLinkedLine( IFELine line );
+//
+//  IFELine[] getLinkedLines( );
+
+  IFE1D2DElement[] getAdjacentElements( );
+
 }

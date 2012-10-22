@@ -40,19 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Interface for classes that represents a feature of the type wb1d2d:Element
- *
+ * 
  * @author Patrice Congo
- *
  */
 public interface IFE1D2DElement extends IFENetItem
 {
@@ -94,17 +89,6 @@ public interface IFE1D2DElement extends IFENetItem
 
   Double getRoughnessCorrectionDP( );
 
-  /**
-   * To get the containers, complex elements, containing this element
-   *
-   * @return a list of complex element features containg this element
-   */
-  IFeatureBindingCollection<IFE1D2DComplexElement> getContainers( );
-
-  /**
-   * To get the nodes of this element
-   *
-   * @return a list of the nodes of this elements
-   */
-  List<IFE1D2DNode> getNodes( );
+  IFE1D2DNode[] getNodes( );
+  
 }

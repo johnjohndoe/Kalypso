@@ -84,8 +84,8 @@ public class CreateTransitionElementCommand implements IFeatureChangeCommand
       try
       {
         m_transitionElement = m_model.getComplexElements().addNew( ITransitionElement.QNAME, ITransitionElement.class );
-        m_transitionElement.addElementAsRef( m_line1D );
-        m_transitionElement.addElementAsRef( m_line2D );
+        m_transitionElement.addLinkedItem( m_line1D );
+        m_transitionElement.addLinkedItem( m_line2D );
         m_transitionElement.setTransitionType( m_transitionType );
         final Feature feature = m_transitionElement;
         feature.setEnvelopesUpdated();

@@ -62,13 +62,13 @@ import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 
 /**
  * @author Thomas Jung
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings( "rawtypes" )
 public class ValidateDiscretisationOperation implements ICoreRunnableWithProgress
 {
   private final CompositeCommand m_commands = new CompositeCommand( "Fix validation problems" );
@@ -96,8 +96,8 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
       if( element instanceof IPolyElement )
       {
         // get surface
-        final IPolyElement element2D = (IPolyElement) element;
-        final GM_Surface<GM_SurfacePatch> eleGeom = element2D.getGeometry();
+        final IPolyElement element2D = (IPolyElement)element;
+        final GM_Polygon<GM_PolygonPatch> eleGeom = element2D.getGeometry();
 
         if( eleGeom == null )
         {
@@ -109,10 +109,10 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
           // TODO: this check has to be made with all nodes!!
           log.add( IStatus.INFO, "checking nodes..." );
 
-          final List<IFE1D2DNode> nodes = element2D.getNodes();
+          final IFE1D2DNode[] nodes = element2D.getNodes();
           for( final IFE1D2DNode node : nodes )
           {
-            final IFE1D2DElement[] nodeElems = node.getElements();
+            final IFE1D2DElement[] nodeElems = node.getAdjacentElements();
             if( nodeElems.length == 0 )
             {
               // delete node
@@ -133,12 +133,12 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
     for( final IFE1D2DEdge edge : edges )
     {
       // get nodes of the edge
-      final IFeatureBindingCollection nodes = edge.getNodes();
+      final IFE1D2DNode[] nodes = edge.getNodes();
 
       // check number of nodes
-      if( nodes.size() != 2 )
+      if( nodes.length != 2 )
       {
-        log.add( IStatus.WARNING, "edge with id " + edge.getId() + "has " + nodes.size() + " nodes." );
+        log.add( IStatus.WARNING, "edge with id " + edge.getId() + "has " + nodes.length + " nodes." );
         // delete node
         // log.add( IStatus.WARNING, "node with id " + node.getGmlID() +
         // "has corresponding element and will be removed." );
@@ -162,27 +162,24 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
       }
 
       // check containers of node
-      final IFeatureBindingCollection containers = node.getContainers();
+      final IFE1D2DEdge[] containers = node.getLinkedEdges();
 
       for( final Object container : containers )
       {
         // handle edges
         if( container instanceof FE1D2DEdge )
         {
-          final FE1D2DEdge edge = (FE1D2DEdge) container;
+          final FE1D2DEdge edge = (FE1D2DEdge)container;
 
           // get containers of edge
-          final IFeatureBindingCollection<IFE1D2DElement> edgeElements = edge.getContainers();
+          final IFE1D2DElement[] elementArray = edge.getLinkedElements();
 
           // get nodes of edge
-          final IFeatureBindingCollection<IFE1D2DNode> edgeNodes = edge.getNodes();
+          final IFE1D2DNode[] edgeNodes = edge.getNodes();
 
           // TODO: this check was done above already
-          if( edgeNodes.size() != 2 )
-            log.add( IStatus.WARNING, "edge with id " + edge.getId() + "has " + edgeNodes.size() + " nodes." );
-
-          // check elements of edge
-          final IFE1D2DElement[] elementArray = edgeElements.toArray( new IFE1D2DElement[edgeElements.size()] );
+          if( edgeNodes.length != 2 )
+            log.add( IStatus.WARNING, "edge with id " + edge.getId() + "has " + edgeNodes.length + " nodes." );
 
           // check number of elements at edge
           if( elementArray.length > 2 )
@@ -204,7 +201,6 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
 
     /**
      * checking edge <-> element relations
-     *
      * every edge should have the information about its elements. for some reason there occur missing element references
      * at the edge. in order to find the real relation between edges and elements, we loop over all elements, collect
      * the edges of that element and store the relationship in a Map<edge,List<element>>. Later we loop over all edges
@@ -228,7 +224,7 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
 
       if( list == null )
       {
-        //bad element or edge???
+        // bad element or edge???
         continue;
       }
       if( list.size() != numOfElementsAtEdge )
@@ -249,41 +245,34 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
     {
       final IFE1D2DElement element = elements.get( i );
 
-      final List elementNodes = element.getNodes();
+      final IFE1D2DNode[] elementNodes = element.getNodes();
       if( elementNodes == null )
       {
         log.add( IStatus.WARNING, "element with id " + element.getId() + " has no nodes" );
         continue;
       }
 
-      for( int j = 0; j < elementNodes.size(); j++ )
+      for( int j = 0; j < elementNodes.length; j++ )
       {
-        final IFE1D2DNode feNode = (IFE1D2DNode) elementNodes.get( j );
-        final IFeatureBindingCollection nodeContainers = feNode.getContainers();
-        for( final Object nodeContainer : nodeContainers )
+        final IFE1D2DEdge[] nodeContainers = elementNodes[j].getLinkedEdges();
+        for( final IFE1D2DEdge edge : nodeContainers )
         {
-          if( nodeContainer instanceof IFE1D2DEdge )
+          // be sure, that we use only edges of the current element!
+          if( !edgeIsPartOfCurrentElement( element, edge ) )
+            continue;
+
+          if( edgeMap.containsKey( edge ) )
           {
-            final IFE1D2DEdge edge = (IFE1D2DEdge) nodeContainer;
+            final List<IFE1D2DElement> list = edgeMap.get( edge );
+            if( !list.contains( element ) )
 
-            // be sure, that we use only edges of the current element!
-
-            if( !edgeIsPartOfCurrentElement( element, edge ) )
-              continue;
-
-            if( edgeMap.containsKey( edge ) )
-            {
-              final List<IFE1D2DElement> list = edgeMap.get( edge );
-              if( !list.contains( element ) )
-
-                list.add( element );
-            }
-            else
-            {
-              final List<IFE1D2DElement> elementList = new ArrayList<>();
-              elementList.add( element );
-              edgeMap.put( edge, elementList );
-            }
+              list.add( element );
+          }
+          else
+          {
+            final List<IFE1D2DElement> elementList = new ArrayList<>();
+            elementList.add( element );
+            edgeMap.put( edge, elementList );
           }
         }
       }
@@ -293,31 +282,33 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
   private boolean edgeIsPartOfCurrentElement( final IFE1D2DElement element, final IFE1D2DEdge edge )
   {
     // get nodes of the edge
-    final IFeatureBindingCollection edgeNodes = edge.getNodes();
+    final IFE1D2DNode[] edgeNodes = edge.getNodes();
 
     // get nodes of the IFE1d2dElement
-    final List elementNodes = element.getNodes();
-    if( elementNodes == null || elementNodes.size() == 0 )
+    final IFE1D2DNode[] elementNodes = element.getNodes();
+    if( elementNodes == null || elementNodes.length == 0 )
       return false;
 
     // check, if all nodes of the edge are in the nodes list of the element => edge is part of the element
-    for( int i = 0; i < edgeNodes.size(); i++ )
+    for( int i = 0; i < edgeNodes.length; i++ )
     {
-      final IFE1D2DNode edgeNode = (IFE1D2DNode) edgeNodes.get( i );
-      if( !elementNodes.contains( edgeNode ) )
+      boolean contained = false;
+      for( IFE1D2DNode node : elementNodes )
+        if( node.equals( edgeNodes[i] ) )
+          contained = true;
+      if( !contained )
         return false;
     }
-
     return true;
   }
 
   private int getNumOfElementsAtEdge( final IFE1D2DEdge edge )
   {
     int numOfContainers = 0;
-    final IFeatureBindingCollection edgeContainers = edge.getContainers();
-    for( int i = 0; i < edgeContainers.size(); i++ )
+    final IFE1D2DElement[] edgeContainers = edge.getLinkedElements();
+    for( int i = 0; i < edgeContainers.length; i++ )
     {
-      final Object object = edgeContainers.get( i );
+      final Object object = edgeContainers[i];
       if( object == null )
         continue;
       if( object instanceof IFE1D2DElement )
@@ -330,7 +321,7 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
 
   private void removeEdgeElement( final FE1D2DEdge edge, final int index )
   {
-    final FeatureList fList = (FeatureList) edge.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
+    final FeatureList fList = (FeatureList)edge.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
     fList.remove( index );
   }
 

@@ -5,21 +5,19 @@ package org.kalypso.kalypsomodel1d2d.schema.functions;
 
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Creates the edge geometry from the two referenced nodes.
- *
+ * 
  * @author Gernot Belger
  */
 public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
@@ -36,26 +34,18 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
     if( !GeometryCalcControl.doCalcEdge )
       return null;
 
-    final QName featureQName = feature.getFeatureType().getQName();
-
-    if( IFE1D2DEdge.QNAME.equals( featureQName ) )
+    final IFE1D2DNode[] nodes = ((IFE1D2DEdge)feature).getNodes();
+    final IFE1D2DNode node0 = nodes[0];
+    final GM_Point point0 = node0.getPoint();
+    final IFE1D2DNode node1 = nodes[1];
+    final GM_Position positions[] = new GM_Position[] { point0.getPosition(), node1.getPoint().getPosition() };
+    try
     {
-      final FE1D2DEdge edge = (FE1D2DEdge) feature;
-      try
-      {
-        return edge.recalculateElementGeometry();
-      }
-      catch( final GM_Exception e )
-      {
-        e.printStackTrace();
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-        return null;
-      }
+      return GeometryFactory.createGM_Curve( positions, point0.getCoordinateSystem() );
     }
-    else
+    catch( final GM_Exception e )
     {
-      return null;
+      throw new IllegalStateException( e );
     }
   }
 

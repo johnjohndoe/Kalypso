@@ -68,12 +68,12 @@ public class Connector_1D2D_FM_Job extends AbstractInternalStatusJob implements 
       final GMLWorkspace fmModel = Connectors.getWorkspace( inputProvider, INPUT_FLOOD_MODEL );
 
       final boolean deleteExistingRunoffEvents = deleteRunOffEvents( inputProvider );
-      final int returnPeriod = Integer.parseInt( (String) inputProvider.getInputForID( INPUT_RETURN_PERIOD ) );
+      final int returnPeriod = Integer.parseInt( (String)inputProvider.getInputForID( INPUT_RETURN_PERIOD ) );
 
       final File fmOutputFile = File.createTempFile( "outTempFM", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final Feature tinRootFeature = tinFile.getRootFeature();
-      final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter( IFloodModel.class );
+      final IFloodModel floodModel = (IFloodModel)fmModel.getRootFeature().getAdapter( IFloodModel.class );
       final IFeatureBindingCollection<IRunoffEvent> floodModelEvents = floodModel.getEvents();
       if( deleteExistingRunoffEvents )
       {
@@ -104,7 +104,7 @@ public class Connector_1D2D_FM_Job extends AbstractInternalStatusJob implements 
         polygon.getEvents().addRef( newRunoffEvent );
       }
       final ITinReference tinReference = newRunoffEvent.getTins().addNew( ITinReference.QNAME );
-      final GM_TriangulatedSurface triangulatedSurface = (GM_TriangulatedSurface) tinRootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ) ); //$NON-NLS-1$
+      final GM_TriangulatedSurface triangulatedSurface = (GM_TriangulatedSurface)tinRootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ) ); //$NON-NLS-1$
       final GMLXPath sourceFeaturePath = new GMLXPath( "TinResult/triangulatedSurfaceMember", tinFile.getNamespaceContext() ); //$NON-NLS-1$
 
       double min = Double.MAX_VALUE;

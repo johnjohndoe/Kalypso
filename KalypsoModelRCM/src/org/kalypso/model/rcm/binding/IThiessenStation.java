@@ -46,8 +46,8 @@ import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * GML-binding for the th:ThiessenStation
@@ -70,9 +70,9 @@ public interface IThiessenStation extends Feature
 
   void setActive( boolean active );
 
-  GM_Surface<GM_SurfacePatch> getThiessenArea( );
+  GM_Polygon<GM_AbstractSurfacePatch> getThiessenArea( );
 
-  void setThiessenArea( GM_Surface< ? > area );
+  void setThiessenArea( GM_Polygon< ? > area );
 
   IXLinkedFeature getStation( );
 

@@ -67,7 +67,6 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
- *
  * @author Gernot Belger
  */
 public class TinResultWriter
@@ -108,7 +107,7 @@ public class TinResultWriter
   /**
    * add a triangle to the eater. The triangle is defined by its three nodes ({@link INodeResult} and a information, if
    * the triangle is marked as wet or dry.
-   *
+   * 
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
   public void add( final GM_Position... nodes ) throws SAXException
@@ -151,7 +150,7 @@ public class TinResultWriter
       m_xmlStream.endDocument();
 
       if( os instanceof ZipOutputStream )
-        ((ZipOutputStream) os).closeEntry();
+        ((ZipOutputStream)os).closeEntry();
     }
     catch( final Exception e )
     {
@@ -181,6 +180,7 @@ public class TinResultWriter
 
       m_xmlStream.startDocument();
 
+      m_xmlStream.setEncoding( "UTF-8" ); //$NON-NLS-1$
       m_xmlStream.startPrefixMapping( "gml", NS.GML3 ); // the attribute does not trigger the prefix mapping //$NON-NLS-1$
       m_xmlStream.startElement( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult", "TinResult" ); //$NON-NLS-1$ //$NON-NLS-2$
       m_xmlStream.addAttribute( NS.GML3, "id", "gml:id", "string", "root" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$

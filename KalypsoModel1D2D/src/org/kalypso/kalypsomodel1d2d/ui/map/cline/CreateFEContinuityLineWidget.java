@@ -20,6 +20,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
@@ -118,14 +119,14 @@ public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
       {
         if( m_lineType.equals( IContinuityLine1D.QNAME ) )
         {
-          if( DiscretisationModelUtils.is1DNode( candidateNode ) )
+          if( candidateNode.getAdjacentElements()[0] instanceof IElement1D )
             m_currentNode = candidateNode;
           else
             m_currentNode = null;
         }
         else
         {
-          if( DiscretisationModelUtils.is1DNode( candidateNode ) )
+          if( candidateNode.getAdjacentElements()[0] instanceof IElement1D )
             m_currentNode = null;
           else
             m_currentNode = candidateNode;
@@ -173,7 +174,7 @@ public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
 
     m_nodeList.add( m_currentNode );
 
-    if( DiscretisationModelUtils.is1DNode( m_currentNode ) )
+    if( m_currentNode.getAdjacentElements()[0] instanceof IElement1D )
     {
       m_lineType = IContinuityLine1D.QNAME;
 
@@ -182,7 +183,6 @@ public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
       {
         createBoundaryLine();
         m_nodeList.clear();
-
       }
       else
         reinit();

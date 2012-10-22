@@ -43,19 +43,20 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Undoable Add fe element command
- *
+ * 
  * @author Patrice Congo
  */
 public class AddElementCmdFromNodeCmd implements IFeatureChangeCommand
@@ -120,7 +121,7 @@ public class AddElementCmdFromNodeCmd implements IFeatureChangeCommand
         curEdge = m_model.findEdge( node0, node1 );
         if( curEdge == null )
         {
-          curEdge = FE1D2DEdge.createFromModel( m_model, node0, node1 );
+          curEdge = m_model.createEdge( node0, node1 );
           edges.add( curEdge );
         }
         else
@@ -128,8 +129,14 @@ public class AddElementCmdFromNodeCmd implements IFeatureChangeCommand
           edges.add( curEdge );
         }
       }
-      m_addedElement = ModelOps.createElement2d( m_model, edges );
-      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd.4" ) ); //$NON-NLS-1$
+
+      // TODO: move this into discretization model
+      final IFeatureBindingCollection<IFE1D2DElement> elements = m_model.getElements();
+      final IPolyElement polyElement = elements.addNew( IPolyElement.QNAME, IPolyElement.class );
+      for( final IFE1D2DEdge edge : edges )
+      {
+        polyElement.addEdge( edge );
+      }
     }
   }
 

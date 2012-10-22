@@ -47,14 +47,14 @@ import java.util.Set;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Default implementation of {@link ICalculationUnit2D}
- *
+ * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  */
@@ -68,7 +68,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   private final IFeatureBindingCollection<ICalculationUnit> m_subCalculationUnits = new FeatureBindingCollection<>( this, ICalculationUnit.class, WB1D2D_PROP_CALC_UNIT );
 
   // FIXME: check for all this business, seems fishy... -> also heavy memory consumption....
-  private List<IFENetItem> m_virtualElements;
+  private IFENetItem[] m_virtualElements;
 
   private Set<String> m_virtualMemberIDs;
 
@@ -78,30 +78,33 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
 
   private void refreshVirtualElements( )
   {
-    if( m_virtualElements != null )
+    int lIntCountAllElements = 0;
+    for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
     {
-      int lIntCountAllElements = 0;
+      lIntCountAllElements += calculationUnit.size();
+    }
+
+    if( m_virtualElements == null || m_virtualElements.length != lIntCountAllElements )
+    {
+
+      m_virtualElements = new IFENetItem[lIntCountAllElements];
+
+      // FIXME: check if this works correctly for sub-sub-units
+      int pos = 0;
       for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
       {
-        lIntCountAllElements += calculationUnit.getElements().size();
+        IFENetItem[] elements = calculationUnit.getElements();
+        System.arraycopy( elements, 0, m_virtualElements, pos, elements.length );
+        pos += elements.length;
       }
-      if( m_virtualElements.size() == lIntCountAllElements )
-      {
-        return;
-      }
+
+      calculate1DElements();
+      calculate2DElements();
     }
-    m_virtualElements = new ArrayList<>();
-
-    // FIXME: check if this works correctly for sub-sub-units
-    for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
-      m_virtualElements.addAll( calculationUnit.getElements() );
-
-    calculate1DElements();
-    calculate2DElements();
   }
 
   @Override
-  public IFeatureBindingCollection<ICalculationUnit> getChangedSubUnits( )
+  public IFeatureBindingCollection<ICalculationUnit> getSubCalculationUnits( )
   {
     refreshVirtualElements();
     return m_subCalculationUnits;
@@ -190,11 +193,24 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   }
 
   @Override
-  public List<IFENetItem> query( final GM_Envelope envelope )
+  public List<IFENetItem> query( final GM_Envelope env, List<IFENetItem> result )
   {
-    final List<IFENetItem> selectedElements = new ArrayList<>();
+    if( result == null )
+    {
+      result = new ArrayList<>( 100 );
+    }
     for( final ICalculationUnit subUnit : m_subCalculationUnits )
-      selectedElements.addAll( subUnit.getElements().query( envelope ) );
-    return selectedElements;
+      subUnit.query( env, result );
+    return result;
+  }
+
+  @Override
+  public GM_Envelope getBoundingBox( )
+  {
+    final int numSubunits = m_subCalculationUnits.size();
+    final GM_Envelope[] envs = new GM_Envelope[numSubunits];
+    for( int i = 0; i < envs.length; i++ )
+      envs[i] = m_subCalculationUnits.get( i ).getBoundingBox();
+    return GeometryUtilities.mergeEnvelopes( envs );
   }
 }

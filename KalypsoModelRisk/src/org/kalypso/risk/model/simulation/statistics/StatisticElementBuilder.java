@@ -63,7 +63,7 @@ import org.kalypso.shape.tools.SHP2JTS;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
@@ -113,7 +113,7 @@ public class StatisticElementBuilder
 
     for( final ILandusePolygon landusePolygon : landusePolygonCollection )
     {
-      final GM_Surface< ? > landuseSurface = landusePolygon.getGeometry();
+      final GM_Polygon< ? > landuseSurface = landusePolygon.getGeometry();
       final Polygon landuseArea = (Polygon) JTSAdapter.export( landuseSurface );
 
       final ILanduseClass landuseClass = landusePolygon.getLanduseClass( m_controlModel );

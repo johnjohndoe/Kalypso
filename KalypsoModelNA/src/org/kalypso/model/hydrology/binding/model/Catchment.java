@@ -50,7 +50,7 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -180,9 +180,9 @@ public class Catchment extends AbstractNaModelElement
     return (Node) FeatureHelper.resolveLink( this, LINK_IZKN_NODE, true );
   }
 
-  public GM_Surface< ? > getGeometry( )
+  public GM_Polygon< ? > getGeometry( )
   {
-    return getProperty( PROP_GEOM, GM_Surface.class );
+    return getProperty( PROP_GEOM, GM_Polygon.class );
   }
 
   public synchronized IFeatureBindingCollection<Bodenschichtkorrektur> getBodenKorrekturCollection( )

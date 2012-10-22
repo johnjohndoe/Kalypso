@@ -40,36 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Interface to be implemented by classes to provide a java representation compatible with the wb1d2d:ComplexElement
- *
  */
 public interface IFE1D2DComplexElement extends Feature
 {
-  /**
-   * To get the element this complex element is made of
-   *
-   * @return a {@link IFeatureBindingCollection} of element composing this complex elements
-   */
-  IFeatureBindingCollection<IFENetItem> getElements( );
+  IFENetItem[] getElements( );
 
-  /**
-   * Adds the given element as reference to this complex type
-   *
-   * @param element
-   *          the 1d 2d element to be added as reference
-   * @return true if the element has been added otherwise false
-   */
-  boolean addElementAsRef( IFENetItem element );
+  void addLinkedItem( IFENetItem element );
 
-  /**
-   * Remove all reference to this element from this complex element
-   *
-   * @return true if a referen to the given element as been added otherwis false
-   */
-  void removeElementAsRef( IFENetItem elment );
+  void removeLinkedItem( IFENetItem elment );
 }

@@ -54,7 +54,7 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -95,7 +95,7 @@ class OverlayHydrotopeInput extends AbstractHydrotopeInput<OverlayElement>
     {
       try
       {
-        final GM_Surface< ? > geometry = catchment.getGeometry();
+        final GM_Polygon< ? > geometry = catchment.getGeometry();
         final Polygon catchmentPolygon = (Polygon) JTSAdapter.export( geometry );
         catchmentArea = catchmentArea.union( catchmentPolygon );
       }

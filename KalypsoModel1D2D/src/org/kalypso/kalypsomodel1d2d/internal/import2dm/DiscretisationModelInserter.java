@@ -54,8 +54,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 import org.kalypsodeegree_impl.model.sort.SplitSortSpatialIndex;
@@ -221,7 +221,7 @@ public class DiscretisationModelInserter
     try
     {
       final Polygon polygon = item.getPolygon();
-      final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrapWithSrid( polygon );
+      final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon<GM_AbstractSurfacePatch>) JTSAdapter.wrapWithSrid( polygon );
 
       final Feature parentFeature = m_workspace.getRootFeature();
       final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );

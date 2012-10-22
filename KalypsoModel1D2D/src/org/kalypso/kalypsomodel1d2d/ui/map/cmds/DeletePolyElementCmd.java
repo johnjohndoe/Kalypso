@@ -41,22 +41,20 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Command for deleting one element. The change event has to fired from outside!
- *
+ * 
  * @author Patrice Congo
  */
 public class DeletePolyElementCmd implements IFeatureChangeCommand
@@ -98,28 +96,26 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
 
     for( final Feature lFeature : m_setFeaturesToRemove )
     {
-      final IPolyElement lElement = (IPolyElement) lFeature.getAdapter( IPolyElement.class );
-      final String elementID = lElement.getId();
+      final IPolyElement lElement = (IPolyElement)lFeature.getAdapter( IPolyElement.class );
 
       // delete link to complex elements
-      final List<IFE1D2DComplexElement> parentComplexElements = lElement.getContainers();
+      final IFE1D2DComplexElement[] parentComplexElements = lElement.getLinkedElements();
       for( final IFE1D2DComplexElement complexElement : parentComplexElements )
       {
-        complexElement.getElements().getFeatureList().removeLink( lElement );
+        complexElement.removeLinkedItem( lElement );
         m_changedFeatures.add( complexElement );
       }
       m_changedFeatures.add( lElement );
 
       // delete link to edges and the edges itself (with the nodes)
-      final IFeatureBindingCollection<IFE1D2DEdge> edges = lElement.getEdges();
+      final IFE1D2DEdge[] edges = lElement.getEdges();
       for( final IFE1D2DEdge edge : edges )
       {
-        final FeatureList containers = edge.getContainers().getFeatureList();
-        final IFeatureBindingCollection<IFE1D2DElement> lListContainers = edge.getContainers();
+        final IFE1D2DElement[] lListContainers = edge.getLinkedElements();
         boolean lBoolContainsAll = true;
         for( final IFE1D2DElement element : lListContainers )
         {
-          final IPolyElement lFeatureAct = (IPolyElement) element;
+          final IPolyElement lFeatureAct = (IPolyElement)element;
           if( !m_setFeaturesToRemove.contains( lFeatureAct ) )
           {
             lBoolContainsAll = false;
@@ -131,10 +127,10 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
         {
           remEdgeCmd.addEdgeToRemove( edge );
         }
-        containers.remove( elementID );
+        edge.removeLinkedElement( lElement );
         m_changedFeatures.add( edge );
 
-        final IFeatureBindingCollection< ? > nodes = edge.getNodes();
+        final IFE1D2DNode[] nodes = edge.getNodes();
         for( final Feature feature : nodes )
         {
           m_changedFeatures.add( feature );

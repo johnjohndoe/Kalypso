@@ -45,14 +45,13 @@ import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -86,7 +85,7 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
 
     if( m_continuityLines.size() > 2 )
       for( int i = 0; i < m_continuityLines.size(); i++ )
-        elementPositions.add( m_continuityLines.get( i ).getNodes().get( 0 ).getPoint().getPosition() );
+        elementPositions.add( m_continuityLines.get( i ).getNodes()[0].getPoint().getPosition() );
     else
       for( int i = 0; i < m_continuityLines.size(); i++ )
       {
@@ -98,25 +97,24 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
     // close the ring
     elementPositions.add( elementPositions.get( 0 ) );
 
-    final GM_Surface< ? extends GM_SurfacePatch> createGM_Surface = GeometryFactory.createGM_Surface( elementPositions.toArray( new GM_Position[] {} ), new GM_Position[][] {}, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
+    final GM_Polygon< ? extends GM_AbstractSurfacePatch> createGM_Surface = GeometryFactory.createGM_Surface( elementPositions.toArray( new GM_Position[] {} ), new GM_Position[][] {}, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
     final Geometry export = JTSAdapter.export( createGM_Surface );
     final Geometry convexHull = export.convexHull();
     return JTSAdapter.wrap( convexHull );
   }
 
   @Override
-  public boolean addElementAsRef( final IFENetItem element )
+  public void addLinkedItem( final IFENetItem element )
   {
-    return m_continuityLines.addRef( (IFELine) element );
+    m_continuityLines.addRef( (IFELine)element );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#getElements()
    */
   @Override
-  public IFeatureBindingCollection<IFENetItem> getElements( )
+  public IFENetItem[] getElements( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -124,7 +122,7 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
    */
   @Override
-  public void removeElementAsRef( final IFENetItem elment )
+  public void removeLinkedItem( final IFENetItem elment )
   {
     // TODO Auto-generated method stub
   }

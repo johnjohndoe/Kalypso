@@ -68,19 +68,20 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This class is used to edit 1D2D Elements
- *
+ * 
  * @author Thomas Jung
  */
 public class ElementGeometryEditor
@@ -140,13 +141,13 @@ public class ElementGeometryEditor
     {
       final List<GM_Point> pointsToDraw = new ArrayList<>();
 
-      final List<IFE1D2DNode> nodes = element.getNodes();
-      for( int i = 0; i < nodes.size(); i++ )
+      final IFE1D2DNode[] nodes = element.getNodes();
+      for( int i = 0; i < nodes.length; i++ )
       {
-        if( nodes.get( i ).equals( m_startNode ) )
+        if( nodes[i].equals( m_startNode ) )
           pointsToDraw.add( MapUtilities.transform( m_mapPanel, currentPoint ) );
         else
-          pointsToDraw.add( nodes.get( i ).getPoint() );
+          pointsToDraw.add( nodes[i].getPoint() );
       }
       paintPreviewElement( g, projection, pointsToDraw.toArray( new GM_Point[pointsToDraw.size()] ) );
     }
@@ -193,7 +194,7 @@ public class ElementGeometryEditor
 
       /* A) element type checks */
       // A.1) check for 1d-elements (they are not supported yet)
-      final IFE1D2DElement[] startElements = m_startNode.getElements();
+      final IFE1D2DElement[] startElements = m_startNode.getAdjacentElements();
       for( final IFE1D2DElement element : startElements )
       {
         if( element instanceof Element1D )
@@ -215,7 +216,7 @@ public class ElementGeometryEditor
         final IPolyElement elementForNewNode = discModel.find2DElement( m_endPoint, 0.0 );
         if( elementForNewNode != null )
         {
-          final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
+          final GM_Polygon<GM_PolygonPatch> surface = elementForNewNode.getGeometry();
           if( surface.contains( m_endPoint ) && !m_elementList.contains( elementForNewNode ) )
             return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.2" ) ); //$NON-NLS-1$
         }
@@ -237,7 +238,7 @@ public class ElementGeometryEditor
         if( GeometryUtilities.isSelfIntersecting( poses ) )
           return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.4" ) ); //$NON-NLS-1$
 
-        final GM_Surface< ? extends GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, crs );
+        final GM_Polygon< ? extends GM_AbstractSurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, crs );
 
         // D.2) new element is not convex
         if( newSurface.getConvexHull().difference( newSurface ) != null && poses.length < 4 )
@@ -249,12 +250,12 @@ public class ElementGeometryEditor
         {
           if( element instanceof IPolyElement )
           {
-            final IPolyElement element2D = (IPolyElement) element;
-            final GM_Surface<GM_SurfacePatch> eleGeom = element2D.getGeometry();
+            final IPolyElement element2D = (IPolyElement)element;
+            final GM_Polygon<GM_PolygonPatch> eleGeom = element2D.getGeometry();
             if( eleGeom.intersects( newSurface ) && !m_elementList.contains( element2D ) )
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );
-              if( intersection instanceof GM_Surface )
+              if( intersection instanceof GM_Polygon )
                 return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.5" ) ); //$NON-NLS-1$
             }
           }
@@ -311,10 +312,10 @@ public class ElementGeometryEditor
   private GM_Position[] getEditedNodesPositions( final IFE1D2DElement element )
   {
     final List<GM_Position> posList = new ArrayList<>();
-    final List<IFE1D2DNode> nodes = element.getNodes();
-    for( int i = 0; i < nodes.size(); i++ )
+    final IFE1D2DNode[] nodes = element.getNodes();
+    for( int i = 0; i < nodes.length; i++ )
     {
-      final IFE1D2DNode node = nodes.get( i );
+      final IFE1D2DNode node = nodes[i];
       if( node.equals( m_startNode ) )
       {
         final GM_Position position = m_endPoint.getPosition();
@@ -359,7 +360,7 @@ public class ElementGeometryEditor
 
     if( startNode != null && m_elementList.size() == 0 )
     {
-      addElements( startNode.getElements() );
+      addElements( startNode.getAdjacentElements() );
     }
   }
 
@@ -371,13 +372,13 @@ public class ElementGeometryEditor
     /* set the new end node candidate */
     if( newNode instanceof IFE1D2DNode )
     {
-      m_endNode = (IFE1D2DNode) newNode;
+      m_endNode = (IFE1D2DNode)newNode;
       m_endPoint = m_endNode.getPoint();
     }
     else
     {
       m_endNode = null;
-      m_endPoint = (GM_Point) newNode;
+      m_endPoint = (GM_Point)newNode;
     }
 
     final IStatus status = checkNewElements();

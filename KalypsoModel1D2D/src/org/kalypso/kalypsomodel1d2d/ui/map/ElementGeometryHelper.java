@@ -49,7 +49,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -57,10 +56,10 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
@@ -83,7 +82,7 @@ public class ElementGeometryHelper
    * Creates new {@link IFE1D2DNode}s specified by their geometry {@link GM_Point} <br/>
    * Via a given search distance it is checked, if there are already existing {@link IFE1D2DNode}s in the neighborhood.
    * If this is the case,no new nodes will be generated.
-   *
+   * 
    * @param discModel
    * @param points
    *          the points
@@ -148,13 +147,7 @@ public class ElementGeometryHelper
       final IFE1D2DEdge edge = discModel.findEdge( node0, node1 );
       if( edge == null )
       {
-        final FE1D2DEdge newEdge = discModel.getEdges().addNew( IFE1D2DEdge.QNAME, FE1D2DEdge.class );
-
-        newEdge.setNodes( node0, node1 );
-        edges[i] = newEdge;
-
-        node0.getContainers().addRef( newEdge );
-        node1.getContainers().addRef( newEdge );
+        edges[i] = discModel.createEdge( node0, node1 );
       }
       else
         edges[i] = edge;
@@ -173,16 +166,16 @@ public class ElementGeometryHelper
 
     for( final GM_Point node : nodes )
     {
-      final int x = (int) projection.getDestX( node.getX() );
-      final int y = (int) projection.getDestY( node.getY() );
+      final int x = (int)projection.getDestX( node.getX() );
+      final int y = (int)projection.getDestY( node.getY() );
 
       xArray.add( x );
       yArray.add( y );
 
     }
 
-    final int x = (int) projection.getDestX( nodes[0].getX() );
-    final int y = (int) projection.getDestY( nodes[0].getY() );
+    final int x = (int)projection.getDestX( nodes[0].getX() );
+    final int y = (int)projection.getDestY( nodes[0].getY() );
 
     xArray.add( x );
     yArray.add( y );
@@ -201,8 +194,8 @@ public class ElementGeometryHelper
     final List<Integer> xArray = new ArrayList<>();
     final List<Integer> yArray = new ArrayList<>();
 
-    final int x = (int) projection.getDestX( node1.getX() );
-    final int y = (int) projection.getDestY( node1.getY() );
+    final int x = (int)projection.getDestX( node1.getX() );
+    final int y = (int)projection.getDestY( node1.getY() );
 
     xArray.add( x );
     yArray.add( y );
@@ -247,10 +240,10 @@ public class ElementGeometryHelper
     return poses;
   }
 
-  public static void createFE1D2DfromSurface( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Surface<GM_SurfacePatch> surface ) throws Exception
+  public static void createFE1D2DfromSurface( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Polygon<GM_AbstractSurfacePatch> surface ) throws Exception
   {
     final String crs = surface.getCoordinateSystem();
-    for( final GM_SurfacePatch surfacePatch : surface )
+    for( final GM_AbstractSurfacePatch surfacePatch : surface )
     {
       final GM_Position[] poses = surfacePatch.getExteriorRing();
       createFE1D2DfromPositions( workspace, discModel, poses, crs );

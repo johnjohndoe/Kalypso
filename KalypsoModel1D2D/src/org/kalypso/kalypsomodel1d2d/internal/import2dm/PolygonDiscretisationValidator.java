@@ -51,8 +51,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.bce.gis.io.zweidm.IPolygonWithName;
@@ -64,7 +64,7 @@ import com.vividsolutions.jts.geom.Polygon;
 /**
  * Validates a {@link com.vividsolutions.jts.geom.Polygon} against an {@link IFEDiscretisationModel1d2d}, i.e. if thi
  * polygon can be safelyinserted into the model.
- *
+ * 
  * @author Gernot Belger
  */
 public class PolygonDiscretisationValidator
@@ -104,10 +104,10 @@ public class PolygonDiscretisationValidator
     try
     {
       if( element instanceof IElement1D )
-        return validateElement1D( item, (IElement1D) element );
+        return validateElement1D( item, (IElement1D)element );
 
       if( element instanceof IPolyElement )
-        return validateElement2D( item, (IPolyElement) element );
+        return validateElement2D( item, (IPolyElement)element );
 
       throw new IllegalStateException();
     }
@@ -121,7 +121,7 @@ public class PolygonDiscretisationValidator
   {
     final IFE1D2DEdge edge = element.getEdge();
     final GM_Curve geometry = edge.getGeometry();
-    final LineString line = (LineString) JTSAdapter.export( geometry );
+    final LineString line = (LineString)JTSAdapter.export( geometry );
 
     final Polygon polygon = item.getPolygon();
 
@@ -133,8 +133,8 @@ public class PolygonDiscretisationValidator
 
   private String validateElement2D( final IPolygonWithName item, final IPolyElement element ) throws GM_Exception
   {
-    final GM_Surface<GM_SurfacePatch> surface = element.getGeometry();
-    final Polygon polygon = (Polygon) JTSAdapter.export( surface );
+    final GM_Polygon<GM_PolygonPatch> surface = element.getGeometry();
+    final Polygon polygon = (Polygon)JTSAdapter.export( surface );
 
     final PolygonWithName elementItem = new PolygonWithName( element.getId(), polygon );
 

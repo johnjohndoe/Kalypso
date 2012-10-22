@@ -40,14 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 public interface IFELine extends IFENetItem
@@ -56,13 +51,16 @@ public interface IFELine extends IFENetItem
 
   public static final QName PROP_NODES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" ); //$NON-NLS-1$
 
+  public static final QName WB1D2D_PROP_ELEMENT_CONTAINERS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "elementContainer" ); //$NON-NLS-1$
+
   public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 
-  public IFeatureBindingCollection<IFE1D2DComplexElement>  getContainers( );
+  void addNode( IFE1D2DNode node );
 
-  public IFeatureBindingCollection<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException;
+  public IFE1D2DNode[] getNodes( );
 
-  public IFeatureBindingCollection<IFE1D2DNode> getNodes( );
+  public void setGeometry( GM_Curve curve );
 
   public GM_Curve getGeometry( );
+
 }

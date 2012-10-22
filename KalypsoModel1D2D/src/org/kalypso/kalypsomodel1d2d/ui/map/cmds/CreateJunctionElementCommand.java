@@ -79,7 +79,7 @@ public class CreateJunctionElementCommand implements IFeatureChangeCommand
       {
         m_junctionElement = m_model.getComplexElements().addNew( IJunctionElement.QNAME, IJunctionElement.class );
         for( final IContinuityLine1D line : m_lines )
-          m_junctionElement.addElementAsRef( line );
+          m_junctionElement.addLinkedItem( line );
         final Feature feature = m_junctionElement;
         feature.setEnvelopesUpdated();
         final GMLWorkspace workspace = feature.getWorkspace();
@@ -120,6 +120,6 @@ public class CreateJunctionElementCommand implements IFeatureChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateJunctionElementCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateJunctionElementCommand.0" ); //$NON-NLS-1$
   }
 }
