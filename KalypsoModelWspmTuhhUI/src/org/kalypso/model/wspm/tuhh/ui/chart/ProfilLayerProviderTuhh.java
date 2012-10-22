@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
@@ -65,6 +66,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileO
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.EnergylossLayer;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.ProfileObjectsLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.SecondProfileDataLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.SinuositaetLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingBridgeTheme;
@@ -74,7 +76,6 @@ import org.kalypso.model.wspm.tuhh.ui.chart.themes.CodeTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.CommentTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.DeviderTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.GeoCoordinateTheme;
-import org.kalypso.model.wspm.tuhh.ui.chart.themes.ProfileObjectsTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.RoughnessTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.VegetationTheme;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -262,7 +263,17 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     for( final SecondProfileData data : secondProfileData )
       layersToAdd.add( new SecondProfileDataLayer( profile, data, cmLeft ) );
 
-    layersToAdd.add( new ProfileObjectsTheme( profile, cmLeft ) );
+    /* profile objects, not handled by other layers */
+    final IProfileObject[] profileObjects = profile.getProfileObjects();
+    int objectLayer = 0;
+    for( final IProfileObject profileObject : profileObjects )
+    {
+      if( shouldHaveOwnLayer( profileObject ) )
+      {
+        final String id = profileObject.getType() + objectLayer++;
+        layersToAdd.add( new ProfileObjectsLayer( id, profile, profileObject, null ) );
+      }
+    }
 
     /* sinuosität */
     final ISinuositaetProfileObject[] sinObj = profile.getProfileObjects( ISinuositaetProfileObject.class );
@@ -304,7 +315,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       return TuhhLayers.createWehrLayer( profile, cmLeft, cmScreen, m_styleProvider );
 
     if( building instanceof ICulvertBuilding )
-      return new BuildingTubesTheme( profile, cmLeft, m_styleProvider );
+      return new BuildingTubesTheme( profile, (ICulvertBuilding)building, cmLeft, m_styleProvider );
 
     return null;
   }
@@ -439,5 +450,33 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     }
     m_targetAxisRight.clearLabels();
     m_targetAxisRight.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_targetAxisRight.getPosition(), rightLabel, new Insets( 1, 2, 4, 2 ), StyleUtils.getDefaultTextStyle() ) );
+  }
+
+  private static boolean shouldHaveOwnLayer( final IProfileObject profileObject )
+  {
+    // ignore ojects that have own specialized layers and will never have own records
+
+    if( profileObject instanceof IProfileBuilding )
+      return false;
+
+    if( profileObject instanceof ISinuositaetProfileObject )
+      return false;
+
+    if( profileObject instanceof IEnergylossProfileObject )
+      return false;
+
+    if( profileObject instanceof GenericProfileHorizon )
+    {
+      final GenericProfileHorizon horizon = (GenericProfileHorizon)profileObject;
+      final String type = horizon.getType();
+      // TODO: get constant from elsewhere?
+      if( type.startsWith( "W" ) )
+        return false;
+
+      if( BuildingBruecke.ID_OK.equals( type ) )
+        return false;
+    }
+
+    return true;
   }
 }
