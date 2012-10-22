@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -54,7 +53,9 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.IFigure;
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IFill;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -70,40 +71,49 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class CulvertLayer extends AbstractProfilLayer
 {
-  public CulvertLayer( final IProfile profil, final ILayerStyleProvider styleProvider )
+  private final ICulvertBuilding m_culvert;
+
+  private EditInfo m_editInfo;
+
+  public CulvertLayer( final IProfile profil, final ICulvertBuilding culvert, final ILayerStyleProvider styleProvider )
   {
     super( IWspmTuhhConstants.LAYER_TUBES, profil, IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
+
+    m_culvert = culvert;
+
     getLineStyle().setColor( new RGB( 255, 255, 100 ) );
-  }
-
-  private ICulvertBuilding getTube( )
-  {
-    final ICulvertBuilding[] objects = getProfil().getProfileObjects( ICulvertBuilding.class );
-    if( ArrayUtils.isEmpty( objects ) )
-      return null;
-
-    return objects[0];
   }
 
   @Override
   public String getTitle( )
   {
-    return getTube() == null ? "" : getTube().getTypeLabel(); //$NON-NLS-1$
+    return m_culvert.getTypeLabel();
+  }
+
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    final ILegendEntry entry = new CulvertLegendEntry( this, m_culvert );
+
+    return new ILegendEntry[] { entry };
   }
 
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-    final ICulvertBuilding tube = getTube();
-    if( tube == null )
-      return;
+    m_editInfo = null;
 
-    final CulvertPainter painter = new CulvertPainter( tube );
+    final CulvertPainter painter = new CulvertPainter( m_culvert );
 
     final IFigure<IAreaStyle> tubeFigure = painter.createFigure( getCoordinateMapper() );
 
     if( tubeFigure == null )
       return;
+
+    final IPaintable hoverFigure = tubeFigure;
+    final String tooltip = "TUBE!";
+
+    m_editInfo = new EditInfo( this, hoverFigure, null, null, tooltip, null );
 
     final IAreaStyle areaStyle = createStyle();
     tubeFigure.setStyle( areaStyle );
@@ -121,19 +131,19 @@ public class CulvertLayer extends AbstractProfilLayer
   @Override
   public IDataRange<Number> getDomainRange( )
   {
-    return new CulvertPainter( getTube() ).getDomainRange();
+    return new CulvertPainter( m_culvert ).getDomainRange();
   }
 
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    return new CulvertPainter( getTube() ).getTargetRange();
+    return new CulvertPainter( m_culvert ).getTargetRange();
   }
 
   @Override
   public EditInfo getHover( final Point pos )
   {
-    // TODO get figure of culvert and tooltip with parameters of culvert
+    // FIXME: we need a 'contains' method for the hover figure or something similar
     return null;
   }
 }
