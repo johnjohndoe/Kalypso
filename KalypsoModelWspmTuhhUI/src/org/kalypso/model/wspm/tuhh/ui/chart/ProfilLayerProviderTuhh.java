@@ -57,6 +57,9 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
@@ -71,12 +74,9 @@ import org.kalypso.model.wspm.tuhh.ui.chart.themes.CodeTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.CommentTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.DeviderTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.GeoCoordinateTheme;
+import org.kalypso.model.wspm.tuhh.ui.chart.themes.ProfileObjectsTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.RoughnessTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.VegetationTheme;
-import org.kalypso.model.wspm.tuhh.ui.chart.utils.LayerStyleProviderTuhh;
-import org.kalypso.model.wspm.tuhh.ui.chart.utils.TuhhLayerCreator;
-import org.kalypso.model.wspm.tuhh.ui.chart.utils.TuhhLayers;
-import org.kalypso.model.wspm.tuhh.ui.chart.utils.TuhhLayersAdder;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
@@ -143,6 +143,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     axisRendererConfigD.axisInsets = new Insets( 0, 0, 0, 0 );
     axisRendererConfigD.hideCut = true;
 
+    // FIXME: strange?! axis created per provider?? should be per chart....
     m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_VERTICAL_SCREEN", POSITION.RIGHT );//$NON-NLS-1$
     m_screenAxisVertical.setPreferredAdjustment( new AxisAdjustment( 0, 1, 0 ) );
     m_domainAxis = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_DOMAIN", POSITION.BOTTOM, axisRendererConfigD );//$NON-NLS-1$
@@ -208,135 +209,82 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       case IWspmLayers.LAYER_SECOND_PROFILE:
         TuhhLayersAdder.addSeccondProfileLayer( provider, profil );
         break;
-    }
-  }
 
-  @Override
-  public IProfilChartLayer createLayer( final IProfile profil, final String layerID )
-  {
-    if( layerID == null || profil == null )
-      return null;
-
-    final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
-    final CoordinateMapper cmRight = new CoordinateMapper( m_domainAxis, m_targetAxisRight );
-    final CoordinateMapper cmScreen = new CoordinateMapper( m_domainAxis, m_screenAxisVertical );
-
-    switch( layerID )
-    {
-      case IWspmTuhhConstants.LAYER_BEWUCHS:
-        return TuhhLayers.createVegetationLayer( profil, cmLeft, m_styleProvider );
-
-      case IWspmConstants.LAYER_GEOKOORDINATEN:
-        return new GeoCoordinateTheme( profil );
-
-      case IWspmConstants.LAYER_COMMENT:
-        return new CommentTheme( profil );
-
-      case IWspmConstants.LAYER_CODE:
-        return new CodeTheme( profil );
-
-      case IWspmLayers.LAYER_GELAENDE:
-        return TuhhLayers.createGelaendeLayer( profil, cmLeft, m_styleProvider );
-
-      case IWspmTuhhConstants.LAYER_RAUHEIT:
-        return TuhhLayers.createRoughnessLayer( profil, cmRight, m_styleProvider );
-
-      case IWspmTuhhConstants.LAYER_BRUECKE:
-        return TuhhLayers.createBridgetLayer( profil, cmLeft, m_styleProvider );
-
-      case IWspmTuhhConstants.LAYER_WEHR:
-        return TuhhLayers.createWehrLayer( profil, layerID, cmLeft, cmScreen, m_styleProvider );
-
-      case IWspmTuhhConstants.LAYER_TUBES:
-        return new BuildingTubesTheme( profil, cmLeft, m_styleProvider );
-
-      case IWspmTuhhConstants.LAYER_SINUOSITAET:
-        return new SinuositaetLayer( profil );
-
-      case IWspmTuhhConstants.LAYER_DEVIDER:
-        return TuhhLayers.createDeviderLayer( profil, cmScreen, m_styleProvider );
-
-      case IWspmTuhhConstants.LAYER_ENERGYLOSS:
-        return new EnergylossLayer( profil );
-
-      default:
-        return null;
+      case IWspmLayers.LAYER_PROFILE_OBJECTS:
+        TuhhLayersAdder.addSeccondProfileLayer( provider, profil );
+        break;
     }
   }
 
   @Override
   public IProfilChartLayer[] createLayers( final IProfile profile, final Object result )
   {
+    final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
+    final CoordinateMapper cmRight = new CoordinateMapper( m_domainAxis, m_targetAxisRight );
+    final CoordinateMapper cmScreen = new CoordinateMapper( m_domainAxis, m_screenAxisVertical );
+
     // Achtung: diese Reihenfolge ist die natürliche Ordnung im Layermanager
     final List<IProfilChartLayer> layersToAdd = new ArrayList<>();
 
-    /** geo coordinates */
-    if( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT ) != null )
-      layersToAdd.add( createLayer( profile, IWspmLayers.LAYER_GEOKOORDINATEN ) );
+    /* water level layer */
+    layersToAdd.add( TuhhLayers.createWspLayer( profile, (IWspmResultNode)result, m_domainAxis, m_targetAxisLeft, m_styleProvider ) );
 
-    /** roughnesses */
+    /* water level fixation layer */
+    layersToAdd.add( TuhhLayers.createWspFixationLayer( profile, (IWspmResultNode)result, m_domainAxis, m_targetAxisLeft, m_styleProvider ) );
+
+    /* roughnesses */
     if( TuhhProfiles.hasRoughness( profile ) )
-      layersToAdd.add( createLayer( profile, IWspmTuhhConstants.LAYER_RAUHEIT ) );
+      layersToAdd.add( TuhhLayers.createRoughnessLayer( profile, cmRight, m_styleProvider ) );
 
-    /** vegetation layer */
+    /* vegetation layer */
     if( TuhhProfiles.hasVegetation( profile ) )
-    {
-      layersToAdd.add( createLayer( profile, IWspmTuhhConstants.LAYER_BEWUCHS ) );
-    }
+      layersToAdd.add( TuhhLayers.createVegetationLayer( profile, cmLeft, m_styleProvider ) );
 
-    /** profile buildings layer */
-    final IProfilChartLayer buildingLayer = TuhhLayerCreator.createBuildingLayer( profile, this );
-    if( Objects.isNotNull( buildingLayer ) )
-    {
-      layersToAdd.add( buildingLayer );
-    }
+    /* profile buildings layer(s) */
+    final IProfileObject[] buildings = profile.getProfileObjects( IProfileBuilding.class );
+    for( final IProfileObject building : buildings )
+      layersToAdd.add( createBuildingLayer( profile, building, cmLeft, cmScreen ) );
 
-    /** water level layer */
-    layersToAdd.add( TuhhLayerCreator.createWspLayer( profile, (IWspmResultNode)result, m_domainAxis, m_targetAxisLeft, m_styleProvider ) );
-
-    /** water level fixation layer */
-    layersToAdd.add( TuhhLayerCreator.createWspFixationLayer( profile, (IWspmResultNode)result, m_domainAxis, m_targetAxisLeft, m_styleProvider ) );
-
-    /** 2d layers */
-    final IProfilChartLayer[] twoDLayers = TuhhLayerCreator.create2DWaterLevelLayers( profile, m_domainAxis, m_targetAxisLeft, m_styleProvider );
+    /* 2d layers */
+    final IProfilChartLayer[] twoDLayers = TuhhLayers.create2DWaterLevelLayers( profile, m_domainAxis, m_targetAxisLeft, m_styleProvider );
     Collections.addAll( layersToAdd, twoDLayers );
 
-    /** ground layer */
+    /* profile deviders (trennflächen) */
+    layersToAdd.add( TuhhLayers.createDeviderLayer( profile, cmScreen, m_styleProvider ) );
+
+    /* ground layer */
     if( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE ) != null )
-    {
-      layersToAdd.add( createLayer( profile, IWspmLayers.LAYER_GELAENDE ) );
-    }
-
-    /** profile deviders (trennflächen) */
-    layersToAdd.add( createLayer( profile, IWspmTuhhConstants.LAYER_DEVIDER ) );
-
-    /** sinuosität profile layer */
-    final ISinuositaetProfileObject[] sinObj = profile.getProfileObjects( ISinuositaetProfileObject.class );
-    if( ArrayUtils.isNotEmpty( sinObj ) )
-    {
-      layersToAdd.add( createLayer( profile, IWspmTuhhConstants.LAYER_SINUOSITAET ) );
-    }
-    /** energyloss profile layer */
-    final IEnergylossProfileObject[] elpo = profile.getProfileObjects( IEnergylossProfileObject.class );
-    if( ArrayUtils.isNotEmpty( elpo ) )
-    {
-      layersToAdd.add( createLayer( profile, IWspmTuhhConstants.LAYER_ENERGYLOSS ) );
-    }
-    if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_COMMENT ) != null )
-      layersToAdd.add( createLayer( profile, IWspmConstants.LAYER_COMMENT ) );
-
-    if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_CODE ) != null )
-      layersToAdd.add( createLayer( profile, IWspmConstants.LAYER_CODE ) );
+      layersToAdd.add( TuhhLayers.createGelaendeLayer( profile, cmLeft, m_styleProvider ) );
 
     /* second profile layers */
     final SecondProfileDataManager secondProfileManager = SecondProfileDataManager.instance();
     final SecondProfileData[] secondProfileData = secondProfileManager.findData( profile );
     for( final SecondProfileData data : secondProfileData )
-    {
-      // FIXME: hm....
-      final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
       layersToAdd.add( new SecondProfileDataLayer( profile, data, cmLeft ) );
-    }
+
+    layersToAdd.add( new ProfileObjectsTheme( profile, cmLeft ) );
+
+    /* sinuosität */
+    final ISinuositaetProfileObject[] sinObj = profile.getProfileObjects( ISinuositaetProfileObject.class );
+    if( ArrayUtils.isNotEmpty( sinObj ) )
+      layersToAdd.add( new SinuositaetLayer( profile ) );
+
+    /* energyloss */
+    final IEnergylossProfileObject[] elpo = profile.getProfileObjects( IEnergylossProfileObject.class );
+    if( ArrayUtils.isNotEmpty( elpo ) )
+      layersToAdd.add( new EnergylossLayer( profile ) );
+
+    /* geo coordinates */
+    if( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT ) != null )
+      layersToAdd.add( new GeoCoordinateTheme( profile ) );
+
+    /* code */
+    if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_CODE ) != null )
+      layersToAdd.add( new CodeTheme( profile ) );
+
+    /* comment */
+    if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_COMMENT ) != null )
+      layersToAdd.add( new CommentTheme( profile ) );
 
     /* Prune 'null's returned from createLayer-subroutines */
     layersToAdd.removeAll( Collections.singleton( null ) );
@@ -347,10 +295,23 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     return layersToAdd.toArray( new IProfilChartLayer[layersToAdd.size()] );
   }
 
+  private IProfilChartLayer createBuildingLayer( final IProfile profile, final IProfileObject building, final CoordinateMapper cmLeft, final CoordinateMapper cmScreen )
+  {
+    if( building instanceof BuildingBruecke )
+      return TuhhLayers.createBridgeLayer( profile, cmLeft, m_styleProvider );
+
+    if( building instanceof BuildingWehr )
+      return TuhhLayers.createWehrLayer( profile, cmLeft, cmScreen, m_styleProvider );
+
+    if( building instanceof ICulvertBuilding )
+      return new BuildingTubesTheme( profile, cmLeft, m_styleProvider );
+
+    return null;
+  }
+
   @Override
   public LayerDescriptor[] getAddableLayers( final ProfilChartModel chartModel )
   {
-
     final IProfile profile = chartModel.getProfil();
     if( Objects.isNull( profile ) )
       return new LayerDescriptor[] {};
@@ -367,6 +328,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       addable.add( new LayerDescriptor( BuildingWeirTheme.TITLE, IWspmTuhhConstants.LAYER_WEHR ) );
       addable.add( new LayerDescriptor( BuildingTubesTheme.TITLE, IWspmTuhhConstants.LAYER_TUBES ) );
     }
+
+    // FIXME: nonse: layers to add decided by already existing layers? should only depend on profile data!
+
     // always show devider and roughness
     if( !ArrayUtils.contains( existing, IWspmTuhhConstants.LAYER_RAUHEIT ) )
     {
@@ -445,8 +409,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     mapperRegistry.addMapper( m_targetAxisLeft );
     mapperRegistry.addMapper( m_targetAxisRight );
     mapperRegistry.addMapper( m_screenAxisVertical );
-
-    // setAxisLabel()
 
     return new IAxis[] { m_domainAxis, m_targetAxisLeft, m_targetAxisRight, m_screenAxisVertical };
   }
