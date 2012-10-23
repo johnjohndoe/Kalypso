@@ -2,6 +2,9 @@ package org.kalypso.model.wspm.tuhh.ui.chart.data;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -25,26 +28,55 @@ public final class TuhhResultDataProvider implements IWspLayerData
 
   private final IDialogSettings m_settings;
 
-  private final String m_settingId;
-
   private final IProfile m_profile;
 
-  private final TuhhResultDataElement m_rootElement;
+  private final TuhhResultDataElement[] m_rootElements;
+
+  private final String m_sectionName;
 
   public TuhhResultDataProvider( final IProfile profile, final IWspmResultNode results, final String settingId )
   {
     m_profile = profile;
-    m_settingId = settingId;
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
+    m_sectionName = createSectionName( results, settingId );
 
-    m_rootElement = new TuhhResultDataElement( null, results );
+    // FIXME: also fetch waterlevel objects from profile
+    m_rootElements = createRootElements( profile, results );
 
-    final String settingsName = getSettingsName();
-    final IDialogSettings section = DialogSettingsUtils.getSection( m_settings, settingsName );
+    final IDialogSettings section = DialogSettingsUtils.getSection( m_settings, m_sectionName );
 
-    // FIXME: build all data element now and here...
+    /* initialize active elements from settings */
+    for( final TuhhResultDataElement rootElement : m_rootElements )
+      initResults( rootElement, section );
+  }
 
-    initResults( m_rootElement, section );
+  private TuhhResultDataElement[] createRootElements( final IProfile profile, final IWspmResultNode results )
+  {
+    final TuhhResultDataElement rootData = new TuhhResultDataElement( null, results );
+
+    final Collection<TuhhResultDataElement> rootElements = new ArrayList<>();
+    /* 'traditional' elements from results */
+    rootElements.addAll( Arrays.asList( rootData.getChildren() ) );
+
+    /* waterlevels from waterlevel objects of profile */
+    final WaterlelevelObjectSearcher searcher = new WaterlelevelObjectSearcher( m_profile );
+
+    /* attach waterlevels to data elements, can only be attached at root level */
+    for( final TuhhResultDataElement dataElement : rootData.getChildren() )
+    {
+      final WaterlevelObject waterlevel = searcher.getWaterlevel( dataElement.getId() );
+      dataElement.setWaterlevel( waterlevel );
+    }
+
+    /* add waterlevels without name to root */
+    final WaterlevelObject[] namelessWaterlevels = searcher.getNamelessWaterlevels();
+    for( final WaterlevelObject namelessWaterlevel : namelessWaterlevels )
+    {
+      final TuhhResultDataElement namelessData = new TuhhResultDataElement( rootData, null );
+      namelessData.setWaterlevel( namelessWaterlevel );
+    }
+
+    return rootElements.toArray( new TuhhResultDataElement[rootElements.size()] );
   }
 
   @Override
@@ -98,8 +130,7 @@ public final class TuhhResultDataProvider implements IWspLayerData
       return;
 
     /* Recreate the sub-section */
-    final String settingsBase = getSettingsName();
-    final IDialogSettings section = m_settings.addNewSection( settingsBase );
+    final IDialogSettings section = m_settings.addNewSection( m_sectionName );
     for( final TuhhResultDataElement resultNode : m_activeElements )
       section.put( resultNode.getId(), true );
   }
@@ -119,9 +150,8 @@ public final class TuhhResultDataProvider implements IWspLayerData
   /**
    * We use the gml context as base name for the settings. That means, we remember the settings per wspm-model.
    */
-  private String getSettingsName( )
+  private String createSectionName( final IWspmResultNode results, final String settingId )
   {
-    final IWspmResultNode results = m_rootElement.getResultNode();
     final Object object = results.getObject();
     if( object instanceof Feature )
     {
@@ -131,15 +161,15 @@ public final class TuhhResultDataProvider implements IWspLayerData
       {
         final URL context = workspace.getContext();
         if( context != null )
-          return m_settingId + context.toExternalForm();
+          return settingId + context.toExternalForm();
       }
     }
 
-    return m_settingId;
+    return settingId;
   }
 
   TuhhResultDataElement[] getRootElements( )
   {
-    return m_rootElement.getChildren();
+    return m_rootElements;
   }
 }
