@@ -53,13 +53,23 @@ import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerDataElement;
 /**
  * @author Gernot Belger
  */
-public class TuhhResultDataElement implements IWspLayerDataElement
+class TuhhResultDataElement implements IWspLayerDataElement
 {
   private final IWspmResultNode m_resultNode;
 
-  public TuhhResultDataElement( final IWspmResultNode resultNode )
+  private final TuhhResultDataElement m_parentElement;
+
+  private TuhhResultDataElement[] m_children;
+
+  public TuhhResultDataElement( final TuhhResultDataElement parentElement, final IWspmResultNode resultNode )
   {
+    m_parentElement = parentElement;
     m_resultNode = resultNode;
+  }
+
+  TuhhResultDataElement getParent( )
+  {
+    return m_parentElement;
   }
 
   @Override
@@ -76,6 +86,7 @@ public class TuhhResultDataElement implements IWspLayerDataElement
     }
 
     if( m_resultNode == null )
+      // FIXME: 2d waterlevel?
       return toString();
 
     final IWspmResultNode[] childResults = m_resultNode.getChildResults();
@@ -88,6 +99,7 @@ public class TuhhResultDataElement implements IWspLayerDataElement
   @Override
   public String getId( )
   {
+    // FIXME: 2d waterlevel?
     if( m_resultNode == null )
       return ""; //$NON-NLS-1$
 
@@ -158,5 +170,28 @@ public class TuhhResultDataElement implements IWspLayerDataElement
       return true;
 
     return false;
+  }
+
+  public TuhhResultDataElement[] getChildren( )
+  {
+    if( m_children == null )
+      m_children = createChildren();
+
+    return m_children;
+  }
+
+  private TuhhResultDataElement[] createChildren( )
+  {
+    final IWspmResultNode resultNode = getResultNode();
+    if( resultNode == null )
+      return new TuhhResultDataElement[] {};
+
+    final IWspmResultNode[] childResults = resultNode.getChildResults();
+    final TuhhResultDataElement[] childElements = new TuhhResultDataElement[childResults.length];
+
+    for( int i = 0; i < childElements.length; i++ )
+      childElements[i] = new TuhhResultDataElement( this, childResults[i] );
+
+    return childElements;
   }
 }

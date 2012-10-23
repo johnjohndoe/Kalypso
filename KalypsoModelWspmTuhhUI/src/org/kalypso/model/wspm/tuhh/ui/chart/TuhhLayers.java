@@ -61,6 +61,7 @@ import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingWeirTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.DeviderTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.RoughnessTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.VegetationTheme;
+import org.kalypso.model.wspm.tuhh.ui.chart.themes.WspFixationLayer;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -70,13 +71,13 @@ import org.kalypso.model.wspm.ui.view.chart.layer.CrossSectionTheme;
 import org.kalypso.model.wspm.ui.view.chart.layer.StationLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
-import org.kalypso.model.wspm.ui.view.chart.layer.wspfixation.WspFixationLayer;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 
 /**
@@ -88,7 +89,7 @@ final class TuhhLayers
   {
   }
 
-  public static IProfilChartLayer createBridgeLayer( final IProfile profil, final CoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createBridgeLayer( final IProfile profil, final ICoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
     final PointsLineLayer unterkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, styleProvider ); //$NON-NLS-1$
     final PointsLineLayer oberkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, styleProvider ); //$NON-NLS-1$
@@ -183,7 +184,7 @@ final class TuhhLayers
   public static IProfilChartLayer createWspLayer( final IProfile profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
   {
     final CoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
-    final IWspLayerData wspLayerData = new TuhhResultDataProvider( result, "activeIds" ); //$NON-NLS-1$
+    final IWspLayerData wspLayerData = new TuhhResultDataProvider( profile, result, "activeIds" ); //$NON-NLS-1$
 
     return new WspLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL, styleProvider, wspLayerData, cm );
   }
@@ -191,7 +192,7 @@ final class TuhhLayers
   public static IProfilChartLayer createWspFixationLayer( final IProfile profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
   {
     final CoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
-    final IWspLayerData data = new TuhhResultDataProvider( result, "activeFixationIds" ); //$NON-NLS-1$
+    final IWspLayerData data = new TuhhResultDataProvider( profile, result, "activeFixationIds" ); //$NON-NLS-1$
 
     return new WspFixationLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL_FIXIERUNG, styleProvider, data, cm );
   }

@@ -38,46 +38,38 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart.data;
+package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
+import org.kalypso.model.wspm.ui.view.IProfilView;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspPanel;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelFixationFilter;
+
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-class TuhhResultDataElementLabelProvider extends LabelProvider
+public class WspFixationLayer extends WspLayer
 {
-  private final WspmResultLabelProvider m_delegate = new WspmResultLabelProvider( null );
-
-  @Override
-  public void dispose( )
+  public WspFixationLayer( final IProfile profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper< ? , ? > mapper )
   {
-    m_delegate.dispose();
+    super( profile, layerId, styleProvider, data, mapper );
 
-    super.dispose();
+    setTitle( Messages.getString( "WspFixationLayer_0" ) ); //$NON-NLS-1$
   }
 
   @Override
-  public String getText( final Object element )
+  public IProfilView createLayerPanel( )
   {
-    final TuhhResultDataElement dataElement = (TuhhResultDataElement)element;
-    return dataElement.getLabel();
+    return new WspPanel( this, new WaterLevelFixationFilter() );
   }
 
-  @Override
-  public Image getImage( final Object element )
-  {
-    final TuhhResultDataElement dataElement = (TuhhResultDataElement)element;
+  // TODO: sub? element with object base waterlevels
 
-    final IWspmResultNode node = dataElement.getResultNode();
-    if( node == null )
-    {
-      // FIXME: 2d waterlevle, return waterlevel image
-    }
-
-    return m_delegate.getImage( node );
-  }
+  // TODO: if element contains objects, do not paint base data
 }
