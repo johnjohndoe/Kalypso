@@ -104,15 +104,19 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
   private IProgressMonitor m_monitor;
 
+  /** if true, the records of culvert objects are recreated form the culvert metadata. Only used for GAF export; else we want to keep the original data */
+  private final boolean m_updateCulvertObjects;
+
   /**
    * @param dbSrs
    *          The coordinate system of the database
    */
-  public CheckinStatePdbOperation( final CheckinStateOperationData data, final boolean checkSectionNames )
+  public CheckinStatePdbOperation( final CheckinStateOperationData data, final boolean checkSectionNames, final boolean updateCulvertObjects )
   {
     m_data = data;
 
     m_checkSectionNames = checkSectionNames;
+    m_updateCulvertObjects = updateCulvertObjects;
   }
 
   @Override
@@ -439,6 +443,8 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
       if( clonedProfileObject instanceof BuildingWehr )
         ProfileObjectHelper.updateObjectFromComponents( profile, clonedProfileObject, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
 
+      if( m_updateCulvertObjects )
+      {
       if( clonedProfileObject instanceof BuildingEi )
         ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingEi)clonedProfileObject, ((BuildingEi)clonedProfileObject).getHoehe(), GafPointCode.EIFS.getKey(), GafPointCode.EIUK.getKey() );
 
@@ -447,6 +453,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
       if( clonedProfileObject instanceof BuildingMaul )
         ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingMaul)clonedProfileObject, ((BuildingMaul)clonedProfileObject).getHoehe(), GafPointCode.MAFS.getKey(), GafPointCode.MAUK.getKey() );
+      }
     }
   }
 
