@@ -57,8 +57,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter.QNameAndString;
@@ -118,7 +118,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.1" ), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.1" ), e ); //$NON-NLS-1$
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
     }
   }
@@ -199,9 +199,6 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
 
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#finished()
-   */
   @Override
   public void finished( ) throws CoreException
   {
@@ -215,7 +212,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.0" ), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.0" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
@@ -224,9 +221,6 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(java.util.Date)
-   */
   @Override
   public void setTime( final Date date )
   {
@@ -264,7 +258,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.1" ), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.1" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
