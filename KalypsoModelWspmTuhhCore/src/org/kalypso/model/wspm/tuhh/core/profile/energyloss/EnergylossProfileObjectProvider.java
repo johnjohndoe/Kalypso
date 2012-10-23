@@ -122,7 +122,7 @@ public class EnergylossProfileObjectProvider implements IProfileObjectProvider
 
       final String type = (String)record.getValue( typeIndex );
       final String description = (String)record.getValue( descriptionIndex );
-      final BigDecimal value = (BigDecimal)record.getValue( valueIndex );
+      final BigDecimal value = BigDecimal.valueOf( (Double)record.getValue( valueIndex ) );
 
       final Energyloss energyloss = new Energyloss( type, description, value );
       energylosses.add( energyloss );

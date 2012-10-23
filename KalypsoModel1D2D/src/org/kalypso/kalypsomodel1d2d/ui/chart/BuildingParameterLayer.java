@@ -138,6 +138,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     m_hoverIndex = updateEditInfos();
   }
 
+  @SuppressWarnings( { "rawtypes", "unchecked" } )
   private HoverIndex updateEditInfos( )
   {
     final HoverIndex index = new HoverIndex();
@@ -160,8 +161,8 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
 
       // FIXME: this does not work correct
 
-      final int x = xAxis.numericToScreen( domainValue );
-      final int y = yAxis.numericToScreen( targetValue );
+      final int x = xAxis.logicalToScreen( domainValue );
+      final int y = yAxis.logicalToScreen( targetValue );
       final Point pos = new Point( x, y );
 
       // Edit info
@@ -174,8 +175,8 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     for( final Coordinate crd : m_paintCrossPoints )
     {
       // convert to screen-point
-      final int x = xAxis.numericToScreen( new BigDecimal( crd.x ) );
-      final int y = yAxis.numericToScreen( new BigDecimal( crd.y ) );
+      final int x = xAxis.logicalToScreen( new BigDecimal( crd.x ) );
+      final int y = yAxis.logicalToScreen( new BigDecimal( crd.y ) );
       final Point pos = new Point( x, y );
 
       // Edit info
@@ -197,6 +198,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     return r;
   }
 
+  @SuppressWarnings( { "rawtypes", "unchecked" } )
   private Point[] toPointArray( final Coordinate[] crds )
   {
     final IAxis xAxis = getDomainAxis();
@@ -206,8 +208,8 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     for( int i = 0; i < crds.length; i++ )
     {
       final Coordinate crd = crds[i];
-      final int x = xAxis.numericToScreen( new BigDecimal( crd.x ) );
-      final int y = yAxis.numericToScreen( new BigDecimal( crd.y ) );
+      final int x = xAxis.logicalToScreen( new BigDecimal( crd.x ) );
+      final int y = yAxis.logicalToScreen( new BigDecimal( crd.y ) );
       final Point pos = new Point( x, y );
       points[i] = pos;
     }
@@ -215,34 +217,35 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     return rangeForComponent( m_domainComponent );
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return rangeForComponent( m_valueComponent );
   }
 
-  private IDataRange<Number> rangeForComponent( final int component )
+  @SuppressWarnings( { "rawtypes", "unchecked" } )
+  private IDataRange<Double> rangeForComponent( final int component )
   {
-    BigDecimal min = new BigDecimal( Double.MAX_VALUE );
-    BigDecimal max = new BigDecimal( -Double.MAX_VALUE );
+    Double min = Double.MAX_VALUE;
+    Double max = -Double.MAX_VALUE;
 
     for( final IRecord record : m_result )
     {
-      final BigDecimal value = (BigDecimal)record.getValue( component );
+      final Double value = (Double)record.getValue( component );
 
       if( value == null )
         continue;
 
-      max = max.max( value );
-      min = min.min( value );
+      max = Math.max( max, value );
+      min = Math.min( min, value );
     }
 
-    return DataRange.createFromComparable( (Number)min, (Number)max );
+    return new DataRange( min, max );
   }
 
   public EditInfo getEditInfo( final Point p )

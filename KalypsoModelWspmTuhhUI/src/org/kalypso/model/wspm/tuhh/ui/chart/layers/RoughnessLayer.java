@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import java.math.BigDecimal;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -90,7 +91,7 @@ public class RoughnessLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final IProfile profil = getProfil();
     if( profil == null )
@@ -99,7 +100,7 @@ public class RoughnessLayer extends AbstractProfilLayer
     if( !hasRoughnessProperties() )
       return;
 
-    final int baseLine = chartImageInfo.getLayerRect().y+chartImageInfo.getLayerRect().height;
+    final int baseLine = chartImageInfo.getLayerRect().y + chartImageInfo.getLayerRect().height;
     final FullRectangleFigure fr = new FullRectangleFigure();
 
     final IPointStyle ps = getPointStyle();
@@ -126,9 +127,9 @@ public class RoughnessLayer extends AbstractProfilLayer
       if( Objects.isNull( px1, py1, px2 ) )
         continue;
 
-      final int x1 = dom.numericToScreen( px1 );
-      final int y1 = tar.numericToScreen( py1 );
-      final int x2 = dom.numericToScreen( px2 );
+      final int x1 = dom.logicalToScreen( px1 );
+      final int y1 = tar.logicalToScreen( py1 );
+      final int x2 = dom.logicalToScreen( px2 );
 
       fr.setRectangle( new Rectangle( x1, y1, Math.abs( x2 - x1 ), Math.abs( baseLine - y1 ) ) );
       fr.paint( gc );
@@ -143,7 +144,7 @@ public class RoughnessLayer extends AbstractProfilLayer
     {
       // nonsense...
 //      if( Objects.isNull( profil.getProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) ) )
-        return false;
+      return false;
     }
 
     return true;
@@ -186,7 +187,7 @@ public class RoughnessLayer extends AbstractProfilLayer
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( IDataRange domainIntervall )
   {
     final IProfile profil = getProfil();
     if( Objects.isNull( profil ) )
@@ -205,10 +206,10 @@ public class RoughnessLayer extends AbstractProfilLayer
       }
     }
 
-    if( min == Double.MAX_VALUE || max == -Double.MAX_VALUE )
+    if( min.doubleValue() == Double.MAX_VALUE || max.doubleValue() == -Double.MAX_VALUE )
       return null;
 
-    return DataRange.create( min, max );
+    return new DataRange<>( min, max );
   }
 
   @Override

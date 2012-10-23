@@ -70,6 +70,7 @@ public class KingLayer extends AbstractChartLayer
     m_kingRelation = kingRelation;
   }
 
+  @SuppressWarnings( "rawtypes" )
   @Override
   public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
   {
@@ -104,8 +105,9 @@ public class KingLayer extends AbstractChartLayer
 
   }
 
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     final BigDecimal width = m_kingRelation.getWidth();
     final BigDecimal widthStorage = m_kingRelation.getWidthStorage();
@@ -119,12 +121,12 @@ public class KingLayer extends AbstractChartLayer
     /* 10% insets */
     widthProfile *= 1.10;
 
-    return DataRange.create( (Number) (-widthProfile / 2), widthProfile / 2 );
+    return new DataRange( (-widthProfile / 2), widthProfile / 2 );
 
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > range )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > range )
   {
     return null;
   }

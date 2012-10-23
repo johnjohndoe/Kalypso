@@ -129,13 +129,13 @@ public class CulvertLayer extends AbstractProfilLayer
   }
 
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     return new CulvertPainter( m_culvert ).getDomainRange();
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( IDataRange domainIntervall )
   {
     return new CulvertPainter( m_culvert ).getTargetRange();
   }

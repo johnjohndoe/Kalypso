@@ -203,7 +203,7 @@ public class VegetationTheme extends AbstractProfilTheme
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( IDataRange domainIntervall )
   {
     // don't calculate axis size and ticks
     return null;

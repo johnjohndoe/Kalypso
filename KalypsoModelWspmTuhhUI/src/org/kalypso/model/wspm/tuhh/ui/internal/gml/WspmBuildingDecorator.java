@@ -79,6 +79,8 @@ public class WspmBuildingDecorator implements ILightweightLabelDecorator
       return;
 
     final IProfile profile = profileFeature.getProfile();
+    if( profile == null )
+      return;
 
     final IProfileObject[] buildings = profile.getProfileObjects();
     for( final IProfileObject building : buildings )

@@ -121,7 +121,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
     if( !Doubles.isFinite( x ) )
       return null;
 
-    final Point screen = getCoordinateMapper().numericToScreen( x, 0 );
+    final Point screen = getCoordinateMapper().numericToScreen( x, 0.0 );
 
     final Rectangle hoverRect = new Rectangle( screen.x - 5, startRectangle.y, 10, startRectangle.height );
 
@@ -213,7 +213,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( IDataRange domainIntervall )
   {
     return null;
   }
