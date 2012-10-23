@@ -46,7 +46,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -129,7 +128,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
 
     /* Only ILinearSumGenerator's are supported. */
     if( !(generator instanceof ILinearSumGenerator) )
-      throw new NotImplementedException( "Only ILinearSumGenerator's are supported..." ); //$NON-NLS-1$
+      throw new UnsupportedOperationException( "Only ILinearSumGenerator's are supported..." ); //$NON-NLS-1$
 
     /* Cast. */
     final ILinearSumGenerator linearGenerator = (ILinearSumGenerator) generator;
