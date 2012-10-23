@@ -40,10 +40,10 @@ import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
 import org.kalypso.model.wspm.core.util.JTSWaterlevelIntersector;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
-import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
@@ -120,8 +120,7 @@ class ProjectedWaterlevels
   {
     final IStatusCollector log = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
-    // FIXME: is this a good type??
-    final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon( GafKind.W.toString() );
+    final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon( IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS );
 
     /* set general data */
     // TODO: important, that name is unique withing the cross section, how can we force this here?
@@ -308,7 +307,7 @@ class ProjectedWaterlevels
     final Range<Double> widthRange = Range.between( waterlevelLine.getStartPoint().getX(), waterlevelLine.getEndPoint().getX() );
 
     /* create generic part of 2d waterlevel */
-    final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon( IGafConstants.KIND_W2D );
+    final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon( IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_SEGMENT );
 
     /* get description only from involved points */
     final String description = getDescription( widthRange );

@@ -18,6 +18,7 @@
  */
 package org.kalypso.model.wspm.pdb.gaf;
 
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
@@ -66,6 +67,12 @@ public class GafPartsMapping
       case EnergylossProfileObject.ID:
         return IGafConstants.KIND_ENERGYLOSS;
 
+      case IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS:
+        return GafKind.W.toString();
+
+      case IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_SEGMENT:
+        return IGafConstants.KIND_W2D;
+
       default:
         // Must be a generic type, just return
         return partType;
@@ -96,6 +103,9 @@ public class GafPartsMapping
       case IGafConstants.KIND_ENERGYLOSS:
         return EnergylossProfileObject.ID;
 
+      case IGafConstants.KIND_W2D:
+        return IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_SEGMENT;
+
       default:
         return gafKindName;
     }
@@ -123,6 +133,9 @@ public class GafPartsMapping
 
       case OK:
         return BuildingBruecke.ID_OK;
+
+      case W:
+        return IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS;
 
       default:
         /* 'generic' using kind as id */

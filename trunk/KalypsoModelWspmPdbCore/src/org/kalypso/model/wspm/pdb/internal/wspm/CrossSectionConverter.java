@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartParameter;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
@@ -487,6 +488,11 @@ public class CrossSectionConverter implements IProfileTransaction
 
     /* Set specific metadata. */
     profileObject.setValue( IGafConstants.PART_NAME, part.getName() );
+
+    /* remember event */
+    final Event event = part.getEvent();
+    if( event != null )
+      profileObject.setValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT, event.getName() );
 
     /* Guess special cases. */
     if( profileObject instanceof BuildingKreis )
