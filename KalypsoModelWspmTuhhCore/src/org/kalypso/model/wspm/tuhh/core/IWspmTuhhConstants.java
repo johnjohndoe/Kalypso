@@ -102,6 +102,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   String PROFIL_PROPERTY_WASSERSPIEGEL = PROFIL_PROPERTY + "WASSERSPIEGEL"; //$NON-NLS-1$
 
+  String PROFIL_PROPERTY_EVENT = "eventName"; //$NON-NLS-1$
+
   /* Layer */
   String PROFILE_LAYER = "org.kalypso.model.wspm.tuhh.ui.chart.LAYER_"; //$NON-NLS-1$
 
@@ -171,4 +173,12 @@ public interface IWspmTuhhConstants extends IWspmConstants
   String FILE_LAENGSSCHNITT_GML = "Längsschnitt.gml";//$NON-NLS-1$
 
   String DIR_RESULT_DATEN = "Daten"; //$NON-NLS-1$
+
+  /* hard coded, special profile objects */
+
+  String OBJECT_TYPE_WATERLEVEL_POINTS = "W_POINTS"; //$NON-NLS-1$
+
+  /* waterlevels brought into the profile as 'segments' */
+  String OBJECT_TYPE_WATERLEVEL_SEGMENT = "W_SEGMENTS"; //$NON-NLS-1$
+
 }
