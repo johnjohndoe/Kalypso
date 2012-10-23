@@ -46,7 +46,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -78,7 +77,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * This class executes a catchment model with a multi generator.
- *
+ * 
  * @author Holger Albert
  */
 public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
@@ -91,8 +90,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
   }
 
   /**
-   * @see org.kalypso.ui.rrm.internal.calccase.AbstractCatchmentModelRunner#executeCatchmentModel(org.kalypso.ui.rrm.internal.calccase.ICatchmentModelInfo,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ui.rrm.internal.calccase.AbstractCatchmentModelRunner#executeCatchmentModel(org.kalypso.ui.rrm.internal.calccase.ICatchmentModelInfo, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public void executeCatchmentModel( final ICatchmentModelInfo info, final IProgressMonitor monitor ) throws CoreException
@@ -107,10 +105,10 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
     /* Only IMultiGenerator's are supported. */
     if( !(generator instanceof IMultiGenerator) )
-      throw new NotImplementedException( "Only IMultiGenerator's are supported..." ); //$NON-NLS-1$
+      throw new UnsupportedOperationException( "Only IMultiGenerator's are supported..." ); //$NON-NLS-1$
 
     /* Cast. */
-    final IMultiGenerator multiGenerator = (IMultiGenerator) generator;
+    final IMultiGenerator multiGenerator = (IMultiGenerator)generator;
 
     /* Get the sub generators. */
     final IFeatureBindingCollection<IRainfallGenerator> subGenerators = multiGenerator.getSubGenerators();
@@ -138,7 +136,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* Run all contained generators. */
       for( int i = 0; i < subGenerators.size(); i++ )
-        runGenerator( String.format( Locale.PRC, "%d", i ), simulation, control, model, (ILinearSumGenerator) subGenerators.get( i ), targetLink, parameterType, hash, new SubProgressMonitor( monitor, 100 ) ); //$NON-NLS-1$
+        runGenerator( String.format( Locale.PRC, "%d", i ), simulation, control, model, (ILinearSumGenerator)subGenerators.get( i ), targetLink, parameterType, hash, new SubProgressMonitor( monitor, 100 ) ); //$NON-NLS-1$
 
       /* Monitor. */
       monitor.subTask( Messages.getString( "MultiCatchmentModelRunner_4" ) ); //$NON-NLS-1$
@@ -174,7 +172,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
   /**
    * This function runs the linear sum generator.
-   *
+   * 
    * @param prefix
    *          This prefix is used when writing the timeseries.
    * @param simulation
@@ -271,7 +269,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
    * This function saves the observations and adjusts the model.gml. For each catchment in the simulation.gml there must
    * be an observation in the observation hash. If for several catchments an equal observation exists, it will only be
    * saved for the first catchment and the created link will be set in all other catchments.
-   *
+   * 
    * @param simulation
    *          The simulation.
    * @param targetLink
