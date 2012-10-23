@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="evaporation">
+  <ChartInsets left="5" bottom="0" right="5" top="0"/>
     <Styles>
       <AreaStyle role="e_area_0">
         <Alpha>32</Alpha>

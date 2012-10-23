@@ -113,6 +113,7 @@
           <MinValue>0</MinValue>
           <MaxValue>100</MaxValue>
         </NumberRange>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="runoff_Axis">
@@ -120,6 +121,7 @@
         <Label>Abfluss [m³/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <NumberRange>
           <MinValue>5</MinValue>
           <MaxValue>10</MaxValue>
@@ -131,6 +133,7 @@
         <Label>Abfluss-Delta [m³/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <NumberRange>
           <MinValue>5</MinValue>
           <MaxValue>10</MaxValue>
@@ -258,6 +261,7 @@
         <Label>Fläche [m²]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <NumberRange>
           <MinValue>5</MinValue>
           <MaxValue>10</MaxValue>
@@ -269,6 +273,7 @@
         <Label>Fläche-Delta [m³/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <NumberRange>
           <MinValue>5</MinValue>
           <MaxValue>10</MaxValue>
@@ -397,6 +402,7 @@
         <Label>Alpha [-]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <NumberRange>
           <MinValue>5</MinValue>
           <MaxValue>10</MaxValue>
@@ -408,6 +414,7 @@
         <Label>Alpha-Delta [-]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <NumberRange>
           <MinValue>5</MinValue>
           <MaxValue>10</MaxValue>
@@ -627,6 +634,7 @@
         <Label>Wasserspiegel [mNN]</Label>
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <NumberRange>
           <MinValue>0</MinValue>
           <MaxValue>100</MaxValue>
@@ -638,6 +646,7 @@
         <Label>Abfluss [m³/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <NumberRange>
           <MinValue>5</MinValue>
           <MaxValue>10</MaxValue>
@@ -853,6 +862,7 @@
         <Label>Fläche [m²]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <NumberRange>
           <MinValue>5</MinValue>
           <MaxValue>10</MaxValue>
@@ -1068,6 +1078,7 @@
         <Label>Breite [m²]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <NumberRange>
           <MinValue>5</MinValue>
           <MaxValue>10</MaxValue>
