@@ -18,7 +18,6 @@
  */
 package org.kalypso.model.wspm.pdb.wspm;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -44,7 +43,6 @@ import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 
@@ -97,12 +95,6 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
 
       return Status.OK_STATUS;
     }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "CheckinStateOperation.2" ), e ); //$NON-NLS-1$
-      throw new CoreException( status );
-    }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
@@ -133,7 +125,7 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
     return new State( templateState );
   }
 
-  private CheckinStateOperationData createOperationData( final Session session, final WaterBody waterBody, final State state, final String username ) throws IOException, PdbConnectException
+  private CheckinStateOperationData createOperationData( final Session session, final WaterBody waterBody, final State state, final String username ) throws PdbConnectException
   {
     final TuhhReach reach = m_data.getReach();
     final IProfileFeature[] profiles = findProfiles( reach );
@@ -191,7 +183,10 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
 
   public CheckinStateOperation createCheckinOperation( )
   {
-    final CheckinStatePdbOperation pdbOperation = new CheckinStatePdbOperation( m_operationData, true );
+    // REMARK: we want to keep the original gaf records; the real data of the culverts is in the metadata
+    final boolean updateCulvertObjects = false;
+
+    final CheckinStatePdbOperation pdbOperation = new CheckinStatePdbOperation( m_operationData, true, updateCulvertObjects );
 
     return new CheckinStateOperation( m_session, m_data, pdbOperation );
   }

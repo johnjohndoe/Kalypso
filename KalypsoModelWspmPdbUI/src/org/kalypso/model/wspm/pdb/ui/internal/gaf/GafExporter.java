@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.pdb.ui.internal.gaf;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -185,7 +184,7 @@ public class GafExporter
     }
   }
 
-  private Set<CrossSection> getCrossSections( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws IOException, PdbConnectException
+  private Set<CrossSection> getCrossSections( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws PdbConnectException
   {
     final GafCodes gafCodes = new GafCodes();
     final ICoefficients coefficients = new SimpleCoefficients();
@@ -196,7 +195,10 @@ public class GafExporter
 
     final CheckinStateOperationData data = new CheckinStateOperationData( partTypes, gafCodes, coefficients, null, state, null, profiles, coordinateSystem, null, StringUtils.EMPTY );
 
-    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( data, false );
+    // REMARK: in case of GAF export, the culvert points are created from the metadata; this is necessary, as GAF export does not contain the metadata
+    final boolean updateCulvertObjects = true;
+
+    final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( data, false, updateCulvertObjects );
     operation.setMonitor( monitor );
     operation.execute( null );
 
