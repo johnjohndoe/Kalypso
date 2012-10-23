@@ -61,6 +61,8 @@ class TuhhResultDataElement implements IWspLayerDataElement
 
   private TuhhResultDataElement[] m_children;
 
+  private WaterlevelObject m_waterlevel;
+
   public TuhhResultDataElement( final TuhhResultDataElement parentElement, final IWspmResultNode resultNode )
   {
     m_parentElement = parentElement;
@@ -193,5 +195,10 @@ class TuhhResultDataElement implements IWspLayerDataElement
       childElements[i] = new TuhhResultDataElement( this, childResults[i] );
 
     return childElements;
+  }
+
+  public void setWaterlevel( final WaterlevelObject waterlevel )
+  {
+    m_waterlevel = waterlevel;
   }
 }
