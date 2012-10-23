@@ -301,7 +301,7 @@
     <Mappers>
       <!-- possible x-Axis -->
       <Axis id="timeAxis">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.GenericCalendarAxisProvider" />
         <Label>Datum</Label>
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>

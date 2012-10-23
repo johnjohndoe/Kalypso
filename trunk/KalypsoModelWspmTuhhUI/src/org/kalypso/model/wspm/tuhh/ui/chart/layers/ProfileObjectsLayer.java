@@ -47,7 +47,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * Layer that renders the records of a {@link org.kalypso.model.wspm.core.profil.IProfileObject}.
- *
+ * 
  * @author Gernot Belger
  */
 public class ProfileObjectsLayer extends AbstractProfilLayer
@@ -111,7 +111,7 @@ public class ProfileObjectsLayer extends AbstractProfilLayer
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     DataRange<Double> range = new DataRange<>( null, null );
 
@@ -128,7 +128,7 @@ public class ProfileObjectsLayer extends AbstractProfilLayer
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainRange )
+  public IDataRange<Double> getTargetRange( final IDataRange domainRange )
   {
     DataRange<Double> range = new DataRange<>( null, null );
 

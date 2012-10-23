@@ -58,7 +58,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * A vertical line layer.
- *
+ * 
  * @author Holger Albert
  */
 public class VerticalLineLayer extends AbstractLineLayer
@@ -70,7 +70,7 @@ public class VerticalLineLayer extends AbstractLineLayer
 
   /**
    * The constructor.
-   *
+   * 
    * @param points
    *          A list of values at the domain axis, where the vertical lines should be drawn.
    */
@@ -87,26 +87,34 @@ public class VerticalLineLayer extends AbstractLineLayer
   @Override
   public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
   {
-    final IAxis domainAxis = getDomainAxis();
-    final IAxis targetAxis = getTargetAxis();
-
+    final IAxis< ? > domainAxis = getDomainAxis();
+    final IAxis< ? > targetAxis = getTargetAxis();
     for( final BigDecimal point : m_points )
     {
       final Integer x = domainAxis.numericToScreen( point.doubleValue() );
-      final IDataRange<Number> numericRange = targetAxis.getNumericRange();
+      final IDataRange<Double> numericRange = targetAxis.getNumericRange();
       final Integer yMin = targetAxis.numericToScreen( numericRange.getMin() );
       final Integer yMax = targetAxis.numericToScreen( numericRange.getMax() );
 
       final PolylineFigure polylineFigure = new PolylineFigure();
-      polylineFigure.setStyle( (ILineStyle) getStyleSet().getStyle( "line" ) ); //$NON-NLS-1$
+      polylineFigure.setStyle( (ILineStyle)getStyleSet().getStyle( "line" ) ); //$NON-NLS-1$
       polylineFigure.setPoints( new Point[] { new Point( x, yMin ), new Point( x, yMax ) } );
       polylineFigure.paint( gc );
     }
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
-    return DataRange.create( m_points[0].doubleValue() - 0.1, m_points[0].doubleValue() + 0.1 );
+    final Double min = m_points[0].doubleValue() - 0.1;
+    final Double max = m_points[0].doubleValue() + 0.1;
+    return new DataRange<>( min, max );
+  }
+
+  @Override
+  public IDataRange<Double> getTargetRange( IDataRange< ? > domainIntervall )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

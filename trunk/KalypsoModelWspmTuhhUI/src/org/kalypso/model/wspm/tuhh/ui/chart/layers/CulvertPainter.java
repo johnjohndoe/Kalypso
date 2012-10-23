@@ -73,6 +73,7 @@ class CulvertPainter
     m_tube = tube;
   }
 
+  @SuppressWarnings( "rawtypes" )
   IFigure<IAreaStyle> createFigure( final ICoordinateMapper cm )
   {
     if( m_tube == null )
@@ -87,6 +88,7 @@ class CulvertPainter
     return null;
   }
 
+  @SuppressWarnings( "rawtypes" )
   private IFigure<IAreaStyle> paintTrapez( final BuildingTrapez trapezBuilding, final ICoordinateMapper cm )
   {
     final Coordinate[] points = calculateTrapezCoordinates( trapezBuilding );
@@ -175,6 +177,7 @@ class CulvertPainter
     return b.doubleValue();
   }
 
+  @SuppressWarnings( "rawtypes" )
   private IFigure<IAreaStyle> paintEllipsis( final ICulvertBuilding building, final ICoordinateMapper cm )
   {
     final Coordinate[] points = calculateEllipsisCoordinates( building );
@@ -194,22 +197,24 @@ class CulvertPainter
     return new EllipsisFigure( leftX, upperY, width, height );
   }
 
-  public IDataRange<Number> getDomainRange( )
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
+  public IDataRange<Double> getDomainRange( )
   {
     final Envelope box = getEnvelope();
     if( box == null )
       return null;
 
-    return DataRange.create( (Number)box.getMinX(), (Number)box.getMaxX() );
+    return new DataRange(box.getMinX(), box.getMaxX() );
   }
 
-  public IDataRange<Number> getTargetRange( )
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
+  public IDataRange<Double> getTargetRange( )
   {
     final Envelope box = getEnvelope();
     if( box == null )
       return null;
 
-    return DataRange.create( (Number)box.getMinY(), (Number)box.getMaxY() );
+    return new DataRange(box.getMinY(),box.getMaxY());
   }
 
   private Envelope getEnvelope( )

@@ -34,7 +34,7 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     final IObservation<TupleResult> obs = valueData.getObservation();
@@ -44,14 +44,14 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     return getDataRange( obs == null ? null : obs.getResult(), IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND );
   }
 
-  private IDataRange<Number> getDataRange( final TupleResult tupleResult, final String id )
+  private IDataRange<Double> getDataRange( final TupleResult tupleResult, final String id )
   {
     final IRecord[] record = tupleResult == null ? new IRecord[] {} : tupleResult.toArray( new IRecord[] {} );
     final IComponent[] components = tupleResult == null ? null : tupleResult.getComponents();
     final IComponent component = ProfileUtil.getComponentForID( components, id );
-    final Number min = ProfileUtil.getSectionMinValueFor( record, component );
-    final Number max = ProfileUtil.getSectionMaxValueFor( record, component );
-    return DataRange.create( min, max );
+    final Double min = ProfileUtil.getSectionMinValueFor( record, component );
+    final Double max = ProfileUtil.getSectionMaxValueFor( record, component );
+    return new DataRange<>( min, max );
   }
 
   @Override
@@ -131,10 +131,10 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     if( uK.isNaN() || dN.isNaN() || sT.isNaN() )
       return null;
 
-    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
+    final ICoordinateMapper<Double,Double> coordinateMapper = getCoordinateMapper();
 
     final Point pOK = coordinateMapper.numericToScreen( sT, uK );
-    final Point pBase = coordinateMapper.numericToScreen( 0, 0 );
+    final Point pBase = coordinateMapper.numericToScreen( 0.0, 0.0 );
     final Point pDN = coordinateMapper.numericToScreen( dN / 1000, dN );
     final int dx = pBase.x - pDN.x;
     final int dy = pBase.y - pDN.y;

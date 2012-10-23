@@ -146,13 +146,4 @@
             class="org.kalypso.statistics.gui.chart.StatisticsDBChartLayerProvider"
             id="org.kalypso.statistics.gui.chart.StatisticsDBChartLayerProvider"/>
    </extension>
-   <!--
-   <extension
-         point="de.openali.odysseus.chart.factory.MapperProvider">
-      <provider
-            class="org.kalypso.chart.ext.observation.mapper.provider.MarkerIconMapperProvider"
-            id="org.kalypso.mapperprovider.observation.MarkerIconMapperProvider">
-      </provider>
-   </extension>
-   -->
-</plugin>
+ </plugin>
