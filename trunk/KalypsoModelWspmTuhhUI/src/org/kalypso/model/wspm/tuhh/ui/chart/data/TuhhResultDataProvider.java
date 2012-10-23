@@ -9,6 +9,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
@@ -20,65 +21,63 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public final class TuhhResultDataProvider implements IWspLayerData
 {
-  private final IWspmResultNode m_results;
-
   private final Set<TuhhResultDataElement> m_activeElements = new LinkedHashSet<>();
 
   private final IDialogSettings m_settings;
 
   private final String m_settingId;
 
-  public TuhhResultDataProvider( final IWspmResultNode results, final String settingId )
+  private final IProfile m_profile;
+
+  private final TuhhResultDataElement m_rootElement;
+
+  public TuhhResultDataProvider( final IProfile profile, final IWspmResultNode results, final String settingId )
   {
-    m_results = results;
+    m_profile = profile;
     m_settingId = settingId;
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
 
-    initResults( m_results );
+    m_rootElement = new TuhhResultDataElement( null, results );
+
+    final String settingsName = getSettingsName();
+    final IDialogSettings section = DialogSettingsUtils.getSection( m_settings, settingsName );
+
+    // FIXME: build all data element now and here...
+
+    initResults( m_rootElement, section );
   }
 
   @Override
   public double searchValue( final Object element, final BigDecimal station )
   {
-    if( element instanceof TuhhResultDataElement )
-    {
-      final TuhhResultDataElement wspElement = (TuhhResultDataElement) element;
-      return wspElement.getValue( station );
-    }
-
-    return Double.NaN;
+    final TuhhResultDataElement wspElement = (TuhhResultDataElement)element;
+    return wspElement.getValue( station );
   }
 
   @Override
   public Object getInput( )
   {
-    return m_results;
+    return this;
   }
 
-  private void initResults( final IWspmResultNode node )
+  private void initResults( final TuhhResultDataElement element, final IDialogSettings section )
   {
-    if( node == null )
+    if( element == null )
       return;
 
-    initActive( node );
+    initActive( element, section );
 
-    final IWspmResultNode[] childNodes = node.getChildResults();
-    for( final IWspmResultNode child : childNodes )
-    {
-      initResults( child );
-    }
+    final TuhhResultDataElement[] children = element.getChildren();
+    for( final TuhhResultDataElement child : children )
+      initResults( child, section );
   }
 
-  private void initActive( final IWspmResultNode resultNode )
+  private void initActive( final TuhhResultDataElement element, final IDialogSettings section )
   {
-    final String id = resultNode.getName();
-    final String settingsName = getSettingsName();
-    final IDialogSettings section = DialogSettingsUtils.getSection( m_settings, settingsName );
+    final String id = element.getId();
     final boolean isActive = section.getBoolean( id );
     if( isActive )
-    {
-      m_activeElements.add( new TuhhResultDataElement( resultNode ) );
-    }
+      m_activeElements.add( element );
   }
 
   @Override
@@ -93,16 +92,7 @@ public final class TuhhResultDataProvider implements IWspLayerData
     m_activeElements.clear();
 
     for( final Object element : elements )
-    {
-      if( element instanceof IWspmResultNode )
-      {
-        m_activeElements.add( new TuhhResultDataElement( (IWspmResultNode) element ) );
-      }
-      else if( element instanceof TuhhResultDataElement )
-      {
-        m_activeElements.add( (TuhhResultDataElement) element );
-      }
-    }
+      m_activeElements.add( (TuhhResultDataElement)element );
 
     if( m_settings == null )
       return;
@@ -111,23 +101,15 @@ public final class TuhhResultDataProvider implements IWspLayerData
     final String settingsBase = getSettingsName();
     final IDialogSettings section = m_settings.addNewSection( settingsBase );
     for( final TuhhResultDataElement resultNode : m_activeElements )
-    {
       section.put( resultNode.getId(), true );
-    }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.layer.IWspLayerData#createLabelProvider()
-   */
   @Override
   public ILabelProvider createLabelProvider( )
   {
     return new TuhhResultDataElementLabelProvider();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.layer.IWspLayerData#createContentProvider()
-   */
   @Override
   public ITreeContentProvider createContentProvider( )
   {
@@ -139,10 +121,11 @@ public final class TuhhResultDataProvider implements IWspLayerData
    */
   private String getSettingsName( )
   {
-    final Object object = m_results.getObject();
+    final IWspmResultNode results = m_rootElement.getResultNode();
+    final Object object = results.getObject();
     if( object instanceof Feature )
     {
-      final Feature feature = (Feature) object;
+      final Feature feature = (Feature)object;
       final GMLWorkspace workspace = feature.getWorkspace();
       if( workspace != null )
       {
@@ -153,5 +136,10 @@ public final class TuhhResultDataProvider implements IWspLayerData
     }
 
     return m_settingId;
+  }
+
+  TuhhResultDataElement[] getRootElements( )
+  {
+    return m_rootElement.getChildren();
   }
 }

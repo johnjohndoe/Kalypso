@@ -76,9 +76,6 @@ public class WspmResultContentProvider implements ITreeContentProvider
 
     tree.addControlListener( new ControlAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-       */
       @Override
       public void controlResized( final ControlEvent e )
       {
@@ -87,17 +84,11 @@ public class WspmResultContentProvider implements ITreeContentProvider
     } );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-   */
   @Override
   public Object[] getChildren( final Object parentElement )
   {
@@ -110,9 +101,6 @@ public class WspmResultContentProvider implements ITreeContentProvider
     return ArrayUtils.EMPTY_OBJECT_ARRAY;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-   */
   @Override
   public Object getParent( final Object element )
   {
@@ -125,9 +113,6 @@ public class WspmResultContentProvider implements ITreeContentProvider
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-   */
   @Override
   public boolean hasChildren( final Object element )
   {
@@ -140,9 +125,6 @@ public class WspmResultContentProvider implements ITreeContentProvider
     return false;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-   */
   @Override
   public Object[] getElements( final Object inputElement )
   {
@@ -155,10 +137,6 @@ public class WspmResultContentProvider implements ITreeContentProvider
     return ArrayUtils.EMPTY_OBJECT_ARRAY;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
