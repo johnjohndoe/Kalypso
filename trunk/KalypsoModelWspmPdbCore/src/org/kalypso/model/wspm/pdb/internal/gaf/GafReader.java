@@ -84,7 +84,7 @@ public class GafReader
   {
     /* Reading gaf with progress stream to show nice progress for large files */
     final long contentLength = gafFile.length();
-    monitor.beginTask( Messages.getString( "GafReader.0" ), (int) contentLength ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "GafReader.0" ), (int)contentLength ); //$NON-NLS-1$
 
     /* Open Reader */
     final InputStream fileStream = new BufferedInputStream( new FileInputStream( gafFile ) );
@@ -220,7 +220,7 @@ public class GafReader
   private BigDecimal asDecimal( final Object item, final String label ) throws CoreException
   {
     if( item instanceof BigDecimal )
-      return (BigDecimal) item;
+      return (BigDecimal)item;
 
     final String message = String.format( Messages.getString( "GafReader.12" ), label ); //$NON-NLS-1$
     throw failLine( IStatus.ERROR, message );
@@ -231,13 +231,13 @@ public class GafReader
     if( item == null )
       return null;
 
-    if( item instanceof String && StringUtils.isBlank( (String) item ) )
+    if( item instanceof String && StringUtils.isBlank( (String)item ) )
       return null;
 
     if( item instanceof BigDecimal )
-      return (BigDecimal) item;
+      return (BigDecimal)item;
 
-    final String message = String.format( Messages.getString("GafReader.14"), label ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "GafReader.14" ), label ); //$NON-NLS-1$
     throw failLine( IStatus.ERROR, message );
   }
 
