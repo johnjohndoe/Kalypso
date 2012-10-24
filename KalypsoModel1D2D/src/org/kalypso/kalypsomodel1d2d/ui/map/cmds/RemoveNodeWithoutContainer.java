@@ -99,8 +99,7 @@ public class RemoveNodeWithoutContainer implements ICommand
       return;
     }
 
-    model1d2d.getNodes().remove( node );
-
+    model1d2d.removeNode( node );
   }
 
   public void setNodeToDel( IFE1D2DNode lNodeToDel )

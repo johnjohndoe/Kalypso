@@ -60,7 +60,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
@@ -88,7 +87,7 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
     log.add( IStatus.INFO, "validate elements" );
 
     // get the elements from discModel
-    List<IFE1D2DElement> elements = m_discModel.getElements();
+    IFE1D2DElement[] elements = m_discModel.getElements();
 
     for( final IFE1D2DElement element : elements )
     {
@@ -128,7 +127,7 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
     log.add( IStatus.INFO, "validate edges" );
 
     // get edges from discModel
-    final IFeatureBindingCollection<IFE1D2DEdge> edges = m_discModel.getEdges();
+    final IFE1D2DEdge[] edges = m_discModel.getEdges();
 
     for( final IFE1D2DEdge edge : edges )
     {
@@ -149,7 +148,7 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
     log.add( IStatus.INFO, "validate nodes" );
 
     // get nodes from discModel
-    final IFeatureBindingCollection<IFE1D2DNode> nodes = m_discModel.getNodes();
+    final IFE1D2DNode[] nodes = m_discModel.getNodes();
 
     for( final IFE1D2DNode node : nodes )
     {
@@ -239,11 +238,11 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
     return log.asMultiStatusOrOK( "Model Validation has warnings", "Validation terminated without warnings" );
   }
 
-  private void checkEdgeEntries( final List<IFE1D2DElement> elements, final Map<IFE1D2DEdge, List<IFE1D2DElement>> edgeMap, final IStatusCollector log )
+  private void checkEdgeEntries( final IFE1D2DElement[] elements, final Map<IFE1D2DEdge, List<IFE1D2DElement>> edgeMap, final IStatusCollector log )
   {
-    for( int i = 0; i < elements.size(); i++ )
+    for( int i = 0; i < elements.length; i++ )
     {
-      final IFE1D2DElement element = elements.get( i );
+      final IFE1D2DElement element = elements[i];
 
       final IFE1D2DNode[] elementNodes = element.getNodes();
       if( elementNodes == null )

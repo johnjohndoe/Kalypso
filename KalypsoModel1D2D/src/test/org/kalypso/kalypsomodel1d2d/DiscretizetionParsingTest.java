@@ -43,8 +43,10 @@ package test.org.kalypso.kalypsomodel1d2d;
 import org.kalypso.gml.test.GmlParsingTester;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFENetItem;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -73,13 +75,17 @@ public class DiscretizetionParsingTest extends GmlParsingTester
     final IFEDiscretisationModel1d2d discrModel = (IFEDiscretisationModel1d2d)rootFeature.getAdapter( IFEDiscretisationModel1d2d.class );
     assertNotNull( discrModel );
 
-    assertEquals( 6, discrModel.getNodes().size() );
-    assertEquals( 9, discrModel.getEdges().size() );
-    assertEquals( 3, discrModel.getElements().size() );
-    assertEquals( 1, discrModel.getComplexElements().size() );
+    final IFE1D2DNode[] nodes = discrModel.getNodes();
+    assertEquals( 6, nodes.length );
+    final IFE1D2DEdge[] edges = discrModel.getEdges();
+    assertEquals( 9, edges.length );
+    final IFE1D2DElement[] elements = discrModel.getElements();
+    assertEquals( 3, elements.length );
+    final IFE1D2DComplexElement<IFENetItem>[] complexElements = discrModel.getComplexElements();
+    assertEquals( 1, complexElements.length );
 
     // assert one node
-    final IFE1D2DNode node = discrModel.getNodes().get( 0 );
+    final IFE1D2DNode node = nodes[0];
     assertNotNull( node );
     assertTrue( node.getPoint().distance( point1 ) < DELTA );
 
@@ -88,19 +94,19 @@ public class DiscretizetionParsingTest extends GmlParsingTester
     assertNotNull( adjacentNode );
     assertTrue( adjacentNode.getPoint().distance( point2 ) < DELTA );
 
-    final IFE1D2DEdge edge1 = discrModel.getEdges().get( 0 );
+    final IFE1D2DEdge edge1 = edges[0];
     assertNotNull( edge1 );
-    final IFE1D2DEdge edge2 = discrModel.getEdges().get( 1 );
+    final IFE1D2DEdge edge2 = edges[1];
     assertNotNull( edge2 );
 
     // assert the edges of a polyElement
-    final PolyElement polyEl1 = (PolyElement)discrModel.getElements().get( 0 );
+    final PolyElement polyEl1 = (PolyElement)elements[0];
     assertNotNull( polyEl1 );
     assertTrue( polyEl1.containsEdge( edge1 ) );
     assertTrue( polyEl1.containsEdge( edge2 ) );
 
     // assert complex Element
-    final IFE1D2DComplexElement complexEl1 = discrModel.getComplexElements().get( 0 );
+    final IFE1D2DComplexElement complexEl1 = complexElements[0];
     assertNotNull( complexEl1 );
     assertTrue( complexEl1.getElements()[0].equals( polyEl1 ) );
   }

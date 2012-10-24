@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
@@ -53,11 +51,9 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * 
  * @author Dejan Antanaskovic
  */
-public interface IAbstractJunction extends IFE1D2DComplexElement
+public interface IAbstractJunction extends IFE1D2DComplexElement<IFELine>
 {
   public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
-
-  public List<IFELine> getContinuityLines( );
 
   public GM_Object recalculateElementGeometry( ) throws GM_Exception;
 

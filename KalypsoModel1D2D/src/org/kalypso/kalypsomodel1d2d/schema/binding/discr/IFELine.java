@@ -55,12 +55,8 @@ public interface IFELine extends IFENetItem
 
   public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 
-  void addNode( IFE1D2DNode node );
+  IFE1D2DNode[] getNodes( );
 
-  public IFE1D2DNode[] getNodes( );
-
-  public void setGeometry( GM_Curve curve );
-
-  public GM_Curve getGeometry( );
+  GM_Curve getGeometry( );
 
 }

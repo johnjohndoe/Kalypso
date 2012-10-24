@@ -287,7 +287,7 @@ public class ElementGeometryBuilder
         final GM_Position[] line = ElementGeometryHelper.linePositionsFromNodes( allNodes );
 
         final GM_Curve curve = GeometryFactory.createGM_Curve( line, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-        final List<IFE1D2DElement> elements = discModel.getElements().query( curve.getEnvelope() );
+        final List<IFE1D2DElement> elements = discModel.queryElements( curve.getEnvelope(), null );
         for( final IFE1D2DElement element : elements )
         {
           if( element instanceof IPolyElement )
@@ -335,7 +335,7 @@ public class ElementGeometryBuilder
         return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.7" ) ); //$NON-NLS-1$
 
       // new element intersects other elements
-      final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
+      final List<IFE1D2DElement> elements = discModel.queryElements( newSurface.getEnvelope(), null );
       for( final IFE1D2DElement element : elements )
       {
         if( element instanceof IPolyElement )

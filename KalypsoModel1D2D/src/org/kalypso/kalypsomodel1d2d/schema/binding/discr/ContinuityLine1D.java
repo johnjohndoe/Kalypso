@@ -42,6 +42,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -56,11 +58,14 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   }
 
   @Override
-  public void addNode( final IFE1D2DNode node )
+  public void setNode( final IFE1D2DNode node )
   {
+    Assert.throwIAEOnNullParam( node, "node" ); //$NON-NLS-1$
     setGeometry( calculateCurve( node, node.getAdjacentNodes().get( 0 ) ) );
-    nodesInternal().clear();
-    super.addNode( node );
+    final FeatureList nodes = nodesInternal();
+    nodes.clear();
+    nodes.addLink( node );
+    setEnvelopesUpdated();
   }
 
   private GM_Curve calculateCurve( final IFE1D2DNode node, final IFE1D2DNode neighbour )

@@ -42,6 +42,9 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -50,8 +53,10 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  */
-public interface ICalculationUnit extends IFE1D2DComplexElement
+public interface ICalculationUnit extends IFE1D2DComplexElement<IFENetItem>
 {
+  public final static QName QN_PROPERTY_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" ); //$NON-NLS-1$
+
   public static enum TYPE
   {
     TYPE1D,

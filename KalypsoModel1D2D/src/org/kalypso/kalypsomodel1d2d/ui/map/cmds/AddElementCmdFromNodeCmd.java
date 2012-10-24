@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -52,7 +51,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Undoable Add fe element command
@@ -130,9 +128,7 @@ public class AddElementCmdFromNodeCmd implements IFeatureChangeCommand
         }
       }
 
-      // TODO: move this into discretization model
-      final IFeatureBindingCollection<IFE1D2DElement> elements = m_model.getElements();
-      final IPolyElement polyElement = elements.addNew( IPolyElement.QNAME, IPolyElement.class );
+      final IPolyElement polyElement = m_model.createElement2D();
       for( final IFE1D2DEdge edge : edges )
       {
         polyElement.addEdge( edge );

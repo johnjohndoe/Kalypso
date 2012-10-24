@@ -45,14 +45,12 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 public class CreateContinuityLineCommand implements IFeatureChangeCommand
@@ -93,20 +91,11 @@ public class CreateContinuityLineCommand implements IFeatureChangeCommand
 
     final Feature parentFeature = m_model;
     final GMLWorkspace workspace = parentFeature.getWorkspace();
-    final IFeatureBindingCollection<IFELine> continuityLines = m_model.getContinuityLines();
 
     if( m_lineElementQName.equals( IContinuityLine1D.QNAME ) )
-    {
-      IContinuityLine1D line1d = continuityLines.addNew( m_lineElementQName, IContinuityLine1D.class );
-      line1d.addNode( m_nodeList.get( 0 ) );
-      m_line = line1d;
-    }
+      m_line = m_model.createContinuityLine1D( m_nodeList.get( 0 ) );
     else
-    {
-      IContinuityLine2D line2d = continuityLines.addNew( m_lineElementQName, IContinuityLine2D.class );
-      line2d.setNodes( m_nodeList );
-      m_line = line2d;
-    }
+      m_line = m_model.createContinuityLine2D( m_nodeList.toArray( new IFE1D2DNode[m_nodeList.size()] ) );
 
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, m_line, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     m_processed = true;

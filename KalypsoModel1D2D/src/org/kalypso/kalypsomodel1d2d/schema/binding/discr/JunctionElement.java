@@ -45,14 +45,14 @@ import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -62,34 +62,31 @@ import com.vividsolutions.jts.geom.Geometry;
 public class JunctionElement extends Feature_Impl implements IJunctionElement
 {
 
-  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<>( this, IFELine.class, PROP_CONTI_LINES );
-
   public JunctionElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  @Override
-  public List<IFELine> getContinuityLines( )
+  private FeatureList getLinesInternal( )
   {
-    return m_continuityLines;
+    return (FeatureList)getProperty( PROP_CONTI_LINES );
   }
 
   @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    if( m_continuityLines.size() < 2 )
-      return null;
+    final IFELine[] linesInternal = getElements();
+    final int numLines = linesInternal.length;
 
     final List<GM_Position> elementPositions = new ArrayList<>();
 
-    if( m_continuityLines.size() > 2 )
-      for( int i = 0; i < m_continuityLines.size(); i++ )
-        elementPositions.add( m_continuityLines.get( i ).getNodes()[0].getPoint().getPosition() );
+    if( numLines > 2 )
+      for( int i = 0; i < numLines; i++ )
+        elementPositions.add( linesInternal[i].getNodes()[0].getPoint().getPosition() );
     else
-      for( int i = 0; i < m_continuityLines.size(); i++ )
+      for( int i = 0; i < numLines; i++ )
       {
-        final GM_LineString lineString = m_continuityLines.get( i ).getGeometry().getAsLineString();
+        final GM_LineString lineString = linesInternal[i].getGeometry().getAsLineString();
         elementPositions.add( lineString.getStartPoint().getPosition() );
         elementPositions.add( lineString.getEndPoint().getPosition() );
       }
@@ -97,39 +94,38 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
     // close the ring
     elementPositions.add( elementPositions.get( 0 ) );
 
-    final GM_Polygon< ? extends GM_AbstractSurfacePatch> createGM_Surface = GeometryFactory.createGM_Surface( elementPositions.toArray( new GM_Position[] {} ), new GM_Position[][] {}, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
+    final String crs = linesInternal[0].getGeometry().getCoordinateSystem();
+    final GM_Polygon< ? extends GM_AbstractSurfacePatch> createGM_Surface = GeometryFactory.createGM_Surface( elementPositions.toArray( new GM_Position[] {} ), new GM_Position[][] {}, crs );
     final Geometry export = JTSAdapter.export( createGM_Surface );
     final Geometry convexHull = export.convexHull();
-    return JTSAdapter.wrap( convexHull );
+    return JTSAdapter.wrap( convexHull, crs );
   }
 
   @Override
-  public void addLinkedItem( final IFENetItem element )
+  public void addLinkedItem( final IFELine element )
   {
-    m_continuityLines.addRef( (IFELine)element );
+    Assert.throwIAEOnNullParam( element, "element" );
+    final FeatureList linesInternal = getLinesInternal();
+    if( !linesInternal.containsOrLinksTo( element ) )
+      linesInternal.addLink( element );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#getElements()
-   */
   @Override
-  public IFENetItem[] getElements( )
+  public IFELine[] getElements( )
   {
-    return null;
+    final FeatureList linesInternal = getLinesInternal();
+    return linesInternal.toFeatures( new IFELine[linesInternal.size()] );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
-   */
   @Override
-  public void removeLinkedItem( final IFENetItem elment )
+  public void removeLinkedItem( final IFELine element )
   {
-    // TODO Auto-generated method stub
+    Assert.throwIAEOnNullParam( element, "element" );
+    final FeatureList linesInternal = getLinesInternal();
+    if( linesInternal.containsOrLinksTo( element ) )
+      linesInternal.remove( element.getId() );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement#isMemberOfCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
-   */
   @Override
   public boolean isMemberOfCalculationUnit( final ICalculationUnit calculationUnit )
   {
@@ -138,7 +134,7 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
       final List<IFELine> calcUnitContinuityLines = calculationUnit.getContinuityLines();
       boolean allLinesFound = true;
       boolean lineFound = false;
-      for( final IFELine myLine : m_continuityLines )
+      for( final IFELine myLine : getElements() )
       {
         if( !allLinesFound )
           break;

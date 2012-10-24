@@ -245,7 +245,7 @@ public class ElementGeometryEditor
           return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.7" ) ); //$NON-NLS-1$
 
         // D.3) new elements intersect other elements
-        final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
+        final List<IFE1D2DElement> elements = discModel.queryElements( newSurface.getEnvelope(), null );
         for( final IFE1D2DElement element : elements )
         {
           if( element instanceof IPolyElement )

@@ -29,10 +29,6 @@ public class Element1DTypeGeometry extends FeaturePropertyFunction
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     final IFE1D2DEdge edge = ((IElement1D)feature).getEdge();
-    if( edge == null )
-    {
-      return null;
-    }
     return edge.getGeometry();
   }
 

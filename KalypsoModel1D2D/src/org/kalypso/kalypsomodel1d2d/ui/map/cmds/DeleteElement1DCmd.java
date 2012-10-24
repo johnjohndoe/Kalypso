@@ -114,10 +114,10 @@ public class DeleteElement1DCmd implements IFeatureChangeCommand
       m_changedFeatures.add( edge );
 
       lCmdEdgeRemove.addEdgeToRemove( edge );
+      m_model1d2d.removeElement( element1d );
     }
 
     lCmdEdgeRemove.process();
-    m_model1d2d.getElements().removeAll( m_elementsToRemove );
   }
 
   @Override

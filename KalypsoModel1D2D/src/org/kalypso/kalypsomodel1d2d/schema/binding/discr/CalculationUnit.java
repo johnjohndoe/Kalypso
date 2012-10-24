@@ -43,11 +43,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -59,10 +56,8 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * @author Patrice Congo
  * @author Stefan Kurzbach
  */
-public class CalculationUnit extends Feature_Impl implements ICalculationUnit
+public abstract class CalculationUnit extends Feature_Impl implements ICalculationUnit
 {
-  public final static QName QN_PROPERTY_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" ); //$NON-NLS-1$
-
   public CalculationUnit( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );

@@ -59,8 +59,8 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -114,10 +114,6 @@ public class FlowRelationUtilitites
 
       return point.getPosition();
     }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
     catch( final Throwable th )
     {
       th.printStackTrace();
@@ -126,7 +122,7 @@ public class FlowRelationUtilitites
     return null;
   }
 
-  private static GM_Point getFlowPointFromElement( final Feature modelElement ) throws GM_Exception
+  private static GM_Point getFlowPointFromElement( final Feature modelElement )
   {
     /* Node: return its position */
     if( modelElement instanceof IFELine )
@@ -464,10 +460,8 @@ public class FlowRelationUtilitites
   public static IFE1D2DElement[] findElementsForFlowRelation( final IFlowRelationship flowRel, final IFEDiscretisationModel1d2d discModel )
   {
     final GM_Point position = flowRel.getPosition();
-    final GM_Position pos = position.getPosition();
-
-    final IFeatureBindingCollection<IFE1D2DElement> elements = discModel.getElements();
-    final List<IFE1D2DElement> query = elements.query( pos );
+    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, SEARCH_DISTANCE );
+    final List<IFE1D2DElement> query = discModel.queryElements( reqEnvelope, null );
 
     final List<IFE1D2DElement> hits = new ArrayList<>();
 

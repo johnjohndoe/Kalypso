@@ -138,9 +138,9 @@ public class Add2DElementsCommand implements ICommand
     for( final GM_Ring ring : m_elements )
       createElementFromRing( discModel, ring );
 
-    fireEvents( discModel, m_newNodeIDs );
-    fireEvents( discModel, m_newEdgeIDs );
-    fireEvents( discModel, m_newElementIDs );
+//    fireEvents( discModel, m_newNodeIDs );
+//    fireEvents( discModel, m_newEdgeIDs );
+//    fireEvents( discModel, m_newElementIDs );
   }
 
   private void fireEvents( final IFEDiscretisationModel1d2d discModel, final Collection<String> newFeatureIDs )
@@ -196,7 +196,7 @@ public class Add2DElementsCommand implements ICommand
     final GM_Polygon< ? extends GM_AbstractSurfacePatch> newSurface = GeometryFactory.createGM_Surface( positions, null, srsName );
     final Geometry newPolygon = JTSAdapter.export( newSurface );
 
-    final List<IFE1D2DElement> foundElements = discModel.getElements().query( newSurface, IFE1D2DElement.PROP_GEOMETRY, false );
+    final List<IFE1D2DElement> foundElements = discModel.queryElements( newSurface.getEnvelope(), null );
     for( final IFE1D2DElement foundElement : foundElements )
     {
       if( foundElement instanceof IPolyElement )
@@ -267,7 +267,7 @@ public class Add2DElementsCommand implements ICommand
       {
         /* no existing node, create a new one */
         final GM_Point point = GeometryFactory.createGM_Point( positions[i], srsName );
-        nodes[i] = discModel.createNode( point, -1, NOT_CREATED );
+        nodes[i] = discModel.createNode( point );
 
         m_newNodeIDs.add( nodes[i].getId() );
       }
@@ -300,7 +300,7 @@ public class Add2DElementsCommand implements ICommand
 
   private IPolyElement createElement( final IFEDiscretisationModel1d2d discModel, final IFE1D2DEdge[] edges )
   {
-    final IPolyElement element = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
+    final IPolyElement element = discModel.createElement2D();
 
     final String elementId = element.getId();
 

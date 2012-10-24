@@ -45,11 +45,11 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * Interface to be implemented by classes to provide a java representation compatible with the wb1d2d:ComplexElement
  */
-public interface IFE1D2DComplexElement extends Feature
+public interface IFE1D2DComplexElement<T extends IFENetItem> extends Feature
 {
-  IFENetItem[] getElements( );
+  T[] getElements( );
 
-  void addLinkedItem( IFENetItem element );
+  void addLinkedItem( T element );
 
-  void removeLinkedItem( IFENetItem elment );
+  void removeLinkedItem( T elment );
 }

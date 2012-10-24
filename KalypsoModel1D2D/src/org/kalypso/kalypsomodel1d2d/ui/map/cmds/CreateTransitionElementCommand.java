@@ -83,7 +83,7 @@ public class CreateTransitionElementCommand implements IFeatureChangeCommand
     {
       try
       {
-        m_transitionElement = m_model.getComplexElements().addNew( ITransitionElement.QNAME, ITransitionElement.class );
+        m_transitionElement = m_model.createTransitionElement();
         m_transitionElement.addLinkedItem( m_line1D );
         m_transitionElement.addLinkedItem( m_line2D );
         m_transitionElement.setTransitionType( m_transitionType );
@@ -127,6 +127,6 @@ public class CreateTransitionElementCommand implements IFeatureChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateTransitionElementCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateTransitionElementCommand.0" ); //$NON-NLS-1$
   }
 }

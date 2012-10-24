@@ -163,7 +163,7 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
       deleteControlModel( m_calcUnitToDelete.getId() );
 
       // delete unit from the model
-      m_model1d2d.getComplexElements().remove( m_calcUnitToDelete );
+      m_model1d2d.removeComplexElement( m_calcUnitToDelete );
       m_calcUnitToDelete = null;
       final Feature[] changedFeatureArray = getChangedFeatureArray();
       fireProcessChanges( changedFeatureArray, false );

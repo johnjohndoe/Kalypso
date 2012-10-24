@@ -96,8 +96,15 @@ public class RoughnessAssignService extends Job
 
     try
     {
-      final List<IFE1D2DElement> elementsInWorkarea = (m_workArea != null) ? m_model1d2d.getElements().query( m_workArea ) : m_model1d2d.getElements();
-      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.kalypsomodel1d2d.services.RoughnessAssignService.0" ), elementsInWorkarea.size() ); //$NON-NLS-1$
+      final IFE1D2DElement[] elementsInWorkarea;
+      if( m_workArea != null )
+      {
+        final List<IFE1D2DElement> els = m_model1d2d.queryElements( m_workArea, null );
+        elementsInWorkarea = els.toArray( new IFE1D2DElement[els.size()] );
+      }
+      else
+        elementsInWorkarea = m_model1d2d.getElements();
+      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.kalypsomodel1d2d.services.RoughnessAssignService.0" ), elementsInWorkarea.length ); //$NON-NLS-1$
 
       for( final IFE1D2DElement element : elementsInWorkarea )
       {

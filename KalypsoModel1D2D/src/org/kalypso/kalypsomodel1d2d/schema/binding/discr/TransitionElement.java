@@ -44,36 +44,33 @@ import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class TransitionElement extends Feature_Impl implements ITransitionElement
 {
-  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<>( this, IFELine.class, PROP_CONTI_LINES );
-
   public TransitionElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  @Override
-  public List<IFELine> getContinuityLines( )
+  private FeatureList getLinesInternal( )
   {
-    return m_continuityLines;
+    return (FeatureList)getProperty( PROP_CONTI_LINES );
   }
 
   @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    if( m_continuityLines.size() < 2 )
-      return null;
-    final GM_Position[] positions0 = m_continuityLines.get( 0 ).getGeometry().getAsLineString().getPositions();
-    final GM_Position[] positions1 = m_continuityLines.get( 1 ).getGeometry().getAsLineString().getPositions();
+    final IFELine[] linesInternal = getElements();
+
+    final GM_Position[] positions0 = linesInternal[0].getGeometry().getAsLineString().getPositions();
+    final GM_Position[] positions1 = linesInternal[1].getGeometry().getAsLineString().getPositions();
 
     final GM_Position[] positions = new GM_Position[positions0.length + positions1.length + 1];
     for( int i = 0; i < positions0.length; i++ )
@@ -92,38 +89,34 @@ public class TransitionElement extends Feature_Impl implements ITransitionElemen
 
     // close the ring
     positions[positions.length - 1] = positions0[0];
-    return GeometryFactory.createGM_Surface( positions, new GM_Position[][] {}, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
+    return GeometryFactory.createGM_Surface( positions, new GM_Position[][] {}, linesInternal[0].getGeometry().getCoordinateSystem() );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
-   */
   @Override
-  public void addLinkedItem( final IFENetItem element )
+  public void addLinkedItem( final IFELine element )
   {
-    m_continuityLines.addRef( (IFELine) element );
+    Assert.throwIAEOnNullParam( element, "element" );
+    final FeatureList linesInternal = getLinesInternal();
+    if( !linesInternal.containsOrLinksTo( element ) )
+      linesInternal.addLink( element );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#getElements()
-   */
   @Override
-  public IFENetItem[] getElements( )
+  public IFELine[] getElements( )
   {
-    return null;
+    final FeatureList linesInternal = getLinesInternal();
+    return linesInternal.toFeatures( new IFELine[linesInternal.size()] );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
-   */
   @Override
-  public void removeLinkedItem( final IFENetItem elment )
+  public void removeLinkedItem( final IFELine element )
   {
+    Assert.throwIAEOnNullParam( element, "element" );
+    final FeatureList linesInternal = getLinesInternal();
+    if( linesInternal.containsOrLinksTo( element ) )
+      linesInternal.remove( element.getId() );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement#isMemberOfCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
-   */
   @Override
   public boolean isMemberOfCalculationUnit( final ICalculationUnit calculationUnit )
   {
@@ -132,7 +125,7 @@ public class TransitionElement extends Feature_Impl implements ITransitionElemen
       final List<IFELine> calcUnitContinuityLines = calculationUnit.getContinuityLines();
       boolean allLinesFound = true;
       boolean lineFound = false;
-      for( final IFELine myLine : m_continuityLines )
+      for( final IFELine myLine : getElements() )
       {
         if( !allLinesFound )
           break;
@@ -156,7 +149,7 @@ public class TransitionElement extends Feature_Impl implements ITransitionElemen
   @Override
   public TRANSITION_TYPE getTransitionType( )
   {
-    final String property = (String) getProperty( PROP_TRANSITION_TYPE );
+    final String property = (String)getProperty( PROP_TRANSITION_TYPE );
     if( property == null )
       return TRANSITION_TYPE.TYPE1D2D;
     return TRANSITION_TYPE.fromValue( property );
