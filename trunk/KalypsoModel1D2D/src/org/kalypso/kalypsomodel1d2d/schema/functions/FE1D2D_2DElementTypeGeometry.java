@@ -9,6 +9,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -46,7 +47,7 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
 
     try
     {
-      final GM_AbstractSurfacePatch patch;
+      final GM_PolygonPatch patch;
       if( nodeCount == 4 )
         patch = GeometryFactory.createGM_Triangle( pos[0], pos[1], pos[2], crs );
       else if( nodeCount == 5 )

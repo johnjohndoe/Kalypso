@@ -113,7 +113,7 @@ public class StatisticElementBuilder
 
     for( final ILandusePolygon landusePolygon : landusePolygonCollection )
     {
-      final GM_Polygon< ? > landuseSurface = landusePolygon.getGeometry();
+      final GM_Polygon landuseSurface = landusePolygon.getGeometry();
       final Polygon landuseArea = (Polygon) JTSAdapter.export( landuseSurface );
 
       final ILanduseClass landuseClass = landusePolygon.getLanduseClass( m_controlModel );

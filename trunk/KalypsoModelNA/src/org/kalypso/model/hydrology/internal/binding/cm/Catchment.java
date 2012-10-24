@@ -96,7 +96,7 @@ public class Catchment extends Feature_Impl implements ICatchment
   }
 
   @Override
-  public GM_Polygon< ? > resolveArea( )
+  public GM_Polygon resolveArea( )
   {
     final ILinearSumGenerator generator = getOwner();
 
@@ -112,7 +112,7 @@ public class Catchment extends Feature_Impl implements ICatchment
 
     final Object area = GMLXPathUtilities.queryQuiet( areaPath, catchment );
     if( area instanceof GM_Polygon )
-      return (GM_Polygon< ? >) area;
+      return (GM_Polygon) area;
 
     return null;
   }

@@ -93,7 +93,7 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
       {
         if( element instanceof PolyElement )
         {
-          final GM_Polygon<GM_PolygonPatch> sp = ((PolyElement)element).getGeometry();
+          final GM_Polygon sp = ((PolyElement)element).getGeometry();
           surface.add( sp.getSurfacePatch() );
         }
       }

@@ -88,7 +88,7 @@ public class TimeseriesThiessenPolygons
       {
         if( station.isActive() )
         {
-          final GM_Polygon<GM_AbstractSurfacePatch> gmSurface = station.getThiessenArea();
+          final GM_Polygon gmSurface = station.getThiessenArea();
           final Polygon polygon = (Polygon) JTSAdapter.export( gmSurface );
           final IXLinkedFeature timeseriesLink = station.getStation();
 

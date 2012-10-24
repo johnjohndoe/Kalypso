@@ -231,7 +231,7 @@ public class ElementGeometryHelper
     return poses;
   }
 
-  public static void createFE1D2DfromSurface( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Polygon<GM_AbstractSurfacePatch> surface ) throws Exception
+  public static void createFE1D2DfromSurface( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Polygon surface ) throws Exception
   {
     final String crs = surface.getCoordinateSystem();
     for( final GM_AbstractSurfacePatch surfacePatch : surface )

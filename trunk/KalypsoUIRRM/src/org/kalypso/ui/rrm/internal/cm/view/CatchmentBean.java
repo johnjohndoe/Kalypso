@@ -95,7 +95,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
 
   private IStatus m_status;
 
-  private GM_Polygon< ? > m_catchmentArea;
+  private GM_Polygon m_catchmentArea;
 
   public CatchmentBean( )
   {
@@ -151,7 +151,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return m_catchmentDescription;
   }
 
-  public GM_Polygon< ? > getCatchmentArea( )
+  public GM_Polygon getCatchmentArea( )
   {
     return m_catchmentArea;
   }
@@ -171,7 +171,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_catchmentDescription = catchmentDescription;
   }
 
-  public void setCatchmentArea( final GM_Polygon< ? > catchmentArea )
+  public void setCatchmentArea( final GM_Polygon catchmentArea )
   {
     m_catchmentArea = catchmentArea;
   }

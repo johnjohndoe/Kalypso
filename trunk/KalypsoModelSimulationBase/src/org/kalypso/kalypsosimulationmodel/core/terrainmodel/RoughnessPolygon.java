@@ -40,9 +40,9 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   }
 
   @Override
-  public GM_Polygon< ? > getSurface( )
+  public GM_Polygon getSurface( )
   {
-    return (GM_Polygon< ? >) getProperty( PROPERTY_POLYGON_GEOMETRY );
+    return (GM_Polygon) getProperty( PROPERTY_POLYGON_GEOMETRY );
   }
 
   @Override
@@ -65,7 +65,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   }
 
   @Override
-  public void setSurface( final GM_Polygon< ? > surface ) throws IllegalArgumentException
+  public void setSurface( final GM_Polygon surface ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNull( surface, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.7" ) ); //$NON-NLS-1$
 

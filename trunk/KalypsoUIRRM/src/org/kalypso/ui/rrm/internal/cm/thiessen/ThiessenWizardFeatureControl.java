@@ -146,7 +146,7 @@ public class ThiessenWizardFeatureControl extends AbstractFeatureControl
       {
         try
         {
-          final GM_Polygon< ? > geometry = catchment.getGeometry();
+          final GM_Polygon geometry = catchment.getGeometry();
           patches.add( JTSAdapter.export( geometry ) );
         }
         catch( final GM_Exception e )

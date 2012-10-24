@@ -130,7 +130,7 @@ public class PolygonDiscretisationValidator
 
   private String validateElement2D( final IPolygonWithName item, final IPolyElement element ) throws GM_Exception
   {
-    final GM_Polygon<GM_PolygonPatch> surface = element.getGeometry();
+    final GM_Polygon surface = element.getGeometry();
     final Polygon polygon = (Polygon)JTSAdapter.export( surface );
 
     final PolygonWithName elementItem = new PolygonWithName( element.getId(), polygon );

@@ -97,6 +97,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
@@ -314,7 +315,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     {
       if( object instanceof GM_Polygon )
       {
-        final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon)object;
+        final GM_Polygon surface = (GM_Polygon)object;
         final String crs = surface.getCoordinateSystem();
 
         for( final GM_AbstractSurfacePatch surfacePatch : surface )
@@ -403,7 +404,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
       {
         if( object instanceof GM_Polygon )
         {
-          final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon<GM_AbstractSurfacePatch>)object;
+          final GM_Polygon surface = (GM_Polygon)object;
           lListAdded.addAll( createPolyElement( surface, discModel ) );
           // ElementGeometryHelper.createFE1D2DfromSurface( workspace, discModel, surface );
         }
@@ -429,7 +430,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
   // FIXME: who the HELL does such a thing?! This is just copy paste from other widget implementations! Is this really
   // SO hard to understand why this is really bad?!
   // FIXME: use the Add2DElementsCommand instead
-  private List<Feature> createPolyElement( final GM_Polygon<GM_AbstractSurfacePatch> surface, final IFEDiscretisationModel1d2d discModel )
+  private List<Feature> createPolyElement( final GM_Polygon surface, final IFEDiscretisationModel1d2d discModel )
   {
     final List<Feature> lListRes = new ArrayList<>();
     final List<IFE1D2DEdge> lListEdges = new ArrayList<>();
@@ -516,7 +517,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
         final GM_Object geom = (GM_Object)feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
         if( geom instanceof GM_Polygon )
         {
-          final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon)geom;
+          final GM_Polygon surface = (GM_Polygon)geom;
 
           for( final GM_Point centroid : centroidList )
           {
@@ -538,7 +539,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     {
       if( object instanceof GM_Polygon )
       {
-        final GM_Polygon<GM_AbstractSurfacePatch> surf = (GM_Polygon<GM_AbstractSurfacePatch>)object;
+        final GM_Polygon surf = (GM_Polygon)object;
         final GM_Point centroid = surf.getCentroid();
 
         centroidList.add( centroid );
@@ -597,7 +598,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
         final GM_Object selectedGeom = (GM_Object)feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
         if( selectedGeom instanceof GM_Polygon )
         {
-          final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon)selectedGeom;
+          final GM_Polygon surface = (GM_Polygon)selectedGeom;
 
           surfaceList.add( surface );
         }
@@ -621,8 +622,8 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     {
       if( refineGeom instanceof GM_Polygon )
       {
-        final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon)refineGeom;
-        final GM_AbstractSurfacePatch surfacePatch = surface.getSurfacePatch();
+        final GM_Polygon surface = (GM_Polygon)refineGeom;
+        final GM_PolygonPatch surfacePatch = surface.getSurfacePatch();
         final int nodeCount = surfacePatch.getExteriorRing().length;
         final GM_Polygon newSurface = GeometryFactory.createGM_Surface( surfacePatch );
         if( nodeCount > 5 || !newSurface.getConvexHull().equals( newSurface ) )

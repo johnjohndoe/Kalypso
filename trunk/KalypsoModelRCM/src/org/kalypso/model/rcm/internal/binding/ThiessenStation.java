@@ -73,13 +73,13 @@ public class ThiessenStation extends Feature_Impl implements IThiessenStation
 
   @SuppressWarnings("unchecked")
   @Override
-  public GM_Polygon<GM_AbstractSurfacePatch> getThiessenArea( )
+  public GM_Polygon getThiessenArea( )
   {
     return getProperty( PROPERTY_THIESSEN_AREA, GM_Polygon.class );
   }
 
   @Override
-  public void setThiessenArea( final GM_Polygon< ? > area )
+  public void setThiessenArea( final GM_Polygon area )
   {
     setProperty( PROPERTY_THIESSEN_AREA, area );
   }

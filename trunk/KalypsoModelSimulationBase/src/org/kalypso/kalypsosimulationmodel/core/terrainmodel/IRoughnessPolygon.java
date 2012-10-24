@@ -53,9 +53,9 @@ public interface IRoughnessPolygon extends Feature
 
   public FeatureChange[] resetRoughnessClassMemberXLink( );
 
-  public GM_Polygon< ? > getSurface( );
+  public GM_Polygon getSurface( );
 
-  public void setSurface( GM_Polygon< ? > surface );
+  public void setSurface( GM_Polygon surface );
 
   public void setCorrectionParameterKS( double value );
 

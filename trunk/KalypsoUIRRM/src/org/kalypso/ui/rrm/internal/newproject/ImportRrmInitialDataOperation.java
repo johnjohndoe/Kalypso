@@ -251,7 +251,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
       copyValues( sourceFeature, targetFeature, mapping, GEO_MAPPING_MULTISURFACE_2_SURFACE );
 
       /* Set area: TODO: probably not needed any more, check! */
-      final GM_Polygon< ? > geometry = targetFeature.getGeometry();
+      final GM_Polygon geometry = targetFeature.getGeometry();
       if( geometry != null )
         targetFeature.setProperty( NaModelConstants.NA_MODEL_FLAECH_PROP, new Long( (long) geometry.getArea() ) );
 
@@ -408,13 +408,13 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
   {
     if( (mappingOption & GEO_MAPPING_SURFACE_2_MULTISURFACE) != 0 && sourceValue instanceof GM_Polygon )
     {
-      final GM_Polygon< ? >[] surfaces = new GM_Polygon[] { (GM_Polygon< ? >) (GM_Polygon< ? >) sourceValue };
-      return GeometryFactory.createGM_MultiSurface( surfaces, ((GM_Polygon< ? >) (GM_Polygon< ? >) sourceValue).getCoordinateSystem() );
+      final GM_Polygon[] surfaces = new GM_Polygon[] { (GM_Polygon) (GM_Polygon) sourceValue };
+      return GeometryFactory.createGM_MultiSurface( surfaces, ((GM_Polygon) (GM_Polygon) sourceValue).getCoordinateSystem() );
     }
 
     if( (mappingOption & GEO_MAPPING_MULTISURFACE_2_SURFACE) != 0 && sourceValue instanceof GM_MultiSurface )
     {
-      final GM_Polygon< ? >[] surfaces = new GM_Polygon[] { ((GM_MultiSurface) sourceValue).getSurfaceAt( 0 ) };
+      final GM_Polygon[] surfaces = new GM_Polygon[] { ((GM_MultiSurface) sourceValue).getSurfaceAt( 0 ) };
       return surfaces[0];
     }
 

@@ -244,7 +244,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     {
       if( m_modePolygon )
       {
-        final GM_Polygon< ? > boundaryGeom = (GM_Polygon< ? >) m_boundaryGeometryBuilder.finish();
+        final GM_Polygon boundaryGeom = (GM_Polygon) m_boundaryGeometryBuilder.finish();
         m_data.setBoundary( boundaryGeom );
       }
       else
@@ -286,7 +286,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     {
       m_boundaryGeometryBuilder.addPoint( point );
 
-      final GM_Polygon< ? > finish = (GM_Polygon< ? >) m_boundaryGeometryBuilder.finish();
+      final GM_Polygon finish = (GM_Polygon) m_boundaryGeometryBuilder.finish();
       if( finish == null )
         return null;
 

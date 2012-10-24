@@ -93,9 +93,9 @@ public interface IOmbrometer extends Feature
 
   void setStationLocation( GM_Point location );
 
-  GM_Polygon<GM_AbstractSurfacePatch> getAffectedArea( );
+  GM_Polygon getAffectedArea( );
 
-  void setAffectedArea( GM_Polygon< ? > area );
+  void setAffectedArea( GM_Polygon area );
 
   IObservation getTimeserie( ) throws MalformedURLException, SensorException;
 

@@ -75,7 +75,7 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
    */
   @SuppressWarnings("unchecked")
   @Override
-  public GM_Polygon<GM_AbstractSurfacePatch> getAffectedArea( )
+  public GM_Polygon getAffectedArea( )
   {
     return getProperty( QNAME_PROP_AFFECTEDAREA, GM_Polygon.class );
   }
@@ -84,7 +84,7 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
    * @see org.kalypso.model.rcm.binding.IOmbrometer#getAffectedArea(org.kalypsodeegree.model.geometry.GM_Surface)
    */
   @Override
-  public void setAffectedArea( final GM_Polygon< ? > area )
+  public void setAffectedArea( final GM_Polygon area )
   {
     setProperty( QNAME_PROP_AFFECTEDAREA, area );
   }

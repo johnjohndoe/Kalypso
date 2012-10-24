@@ -373,7 +373,7 @@ public class Gml2SWANConv implements INativeIDProvider
         final IPolyElement lPolyElement = (IPolyElement)object;
         try
         {
-          final GM_Polygon<GM_PolygonPatch> lGM_Surface = lPolyElement.getGeometry();
+          final GM_Polygon lGM_Surface = lPolyElement.getGeometry();
           //          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, "-YY" ); //$NON-NLS-1$
           final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, false, "-YY" ); //$NON-NLS-1$
           lListResults.addAll( Arrays.asList( triangles ) );

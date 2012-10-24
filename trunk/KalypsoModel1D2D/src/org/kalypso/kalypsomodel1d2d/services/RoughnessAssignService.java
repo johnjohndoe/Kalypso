@@ -135,7 +135,7 @@ public class RoughnessAssignService extends Job
 
   private void assignRoughness( final List<FeatureChange> allChanges, final IPolyElement element )
   {
-    final GM_Polygon<GM_PolygonPatch> geometryProperty = element.getGeometry();
+    final GM_Polygon geometryProperty = element.getGeometry();
 
     final GM_Point centroid = geometryProperty.getCentroid();
     final GM_Position position = centroid.getPosition();

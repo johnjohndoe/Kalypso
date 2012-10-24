@@ -116,7 +116,7 @@ public class ThiessenAreaOperation
    * @param boundaryCalculator
    *          Determines the area that will be devided in thiessen polygons
    */
-  public Map<Feature, GM_Polygon< ? >> execute( final List< ? > stations, final IBoundaryCalculator boundaryCalculator, final IProgressMonitor monitor ) throws CoreException, GM_Exception
+  public Map<Feature, GM_Polygon> execute( final List< ? > stations, final IBoundaryCalculator boundaryCalculator, final IProgressMonitor monitor ) throws CoreException, GM_Exception
   {
     monitor.beginTask( "Thiessen Polygone ermitteln", 6 );
 
@@ -133,7 +133,7 @@ public class ThiessenAreaOperation
     // - feature changes for ombrometers to null, in order to delete old geometries
     final List<com.vividsolutions.jts.geom.Point> points = new ArrayList<com.vividsolutions.jts.geom.Point>();
     final FeatureList geoIndex = FeatureFactory.createFeatureList( parentFeature, parentRelation, m_envelopeProvider );
-    final Map<Feature, GM_Polygon< ? >> changeMap = new HashMap<>();
+    final Map<Feature, GM_Polygon> changeMap = new HashMap<>();
     final List<Coordinate> crds = new ArrayList<Coordinate>();
     String crs = null;
     for( final Object listEntry : stations )
@@ -173,7 +173,7 @@ public class ThiessenAreaOperation
     else if( geoIndex.size() == 1 )
     {
       final Feature ombro = (Feature) geoIndex.get( 0 );
-      final GM_Polygon< ? > gmBoundary = (GM_Polygon< ? >) JTSAdapter.wrap( thiessenBoundary, crs );
+      final GM_Polygon gmBoundary = (GM_Polygon) JTSAdapter.wrap( thiessenBoundary, crs );
       gmBoundary.setCoordinateSystem( crs );
       changeMap.put( ombro, gmBoundary );
     }
@@ -187,7 +187,7 @@ public class ThiessenAreaOperation
 
       for( final Polygon polygon : thiessenPolys )
       {
-        final GM_Polygon< ? > affectedArea = (GM_Polygon< ? >) JTSAdapter.wrap( polygon, crs );
+        final GM_Polygon affectedArea = (GM_Polygon) JTSAdapter.wrap( polygon, crs );
         final Feature ombro = findOmbrometerFor( affectedArea, geoIndex, m_propertyLocation );
         if( ombro == null )
           throw new GM_Exception( "Fehler bei der Ermittlung der Thiessen Polygone" );
@@ -203,7 +203,7 @@ public class ThiessenAreaOperation
     return changeMap;
   }
 
-  private static Feature findOmbrometerFor( final GM_Polygon< ? > surface, final FeatureList geoIndex, final QName propertyLocation )
+  private static Feature findOmbrometerFor( final GM_Polygon surface, final FeatureList geoIndex, final QName propertyLocation )
   {
     @SuppressWarnings("unchecked")
     final List< ? > query = geoIndex.query( surface.getEnvelope(), null );
