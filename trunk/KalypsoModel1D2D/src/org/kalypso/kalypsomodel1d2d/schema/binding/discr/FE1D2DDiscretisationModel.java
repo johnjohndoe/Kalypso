@@ -42,118 +42,31 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * Provide a implementation of {@link IFEDiscretisationModel1d2d} to bind wb1d2d:Discretisation gml elements
+ * A mesh with its elements, edges, nodes, complex elements (calculation units, transitions, junctions), continuity (boundary) lines
  * 
- * @author Gernot Belger
- * @author Patrice Congo
+ * @author Stefan Kurzbach
  */
-@SuppressWarnings( "unchecked" )
 public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDiscretisationModel1d2d
 {
-  private final IFeatureBindingCollection<IFE1D2DElement> m_elements = new FeatureBindingCollection<>( this, IFE1D2DElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
-
-  private final IFeatureBindingCollection<IFE1D2DEdge> m_edges = new FeatureBindingCollection<>( this, IFE1D2DEdge.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
-
-  private final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<>( this, IFE1D2DNode.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
-
-  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<>( this, IFELine.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
-
-  private final IFeatureBindingCollection<IFE1D2DComplexElement> m_complexElements = new FeatureBindingCollection<>( this, IFE1D2DComplexElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
+  private static final double CLUSTER_TOLERANCE = 0.001;
 
   public FE1D2DDiscretisationModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
-  }
-
-  @Override
-  public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
-  {
-    final Feature[] containers = node0.getLinkedEdges();
-    for( final Feature feature : containers )
-    {
-      final IFE1D2DEdge edge = (IFE1D2DEdge)feature;
-      if( edge.containsNode( node1 ) )
-        return edge;
-    }
-    return null;
-  }
-
-  @Override
-  public IFeatureBindingCollection<IFE1D2DComplexElement> getComplexElements( )
-  {
-    return m_complexElements;
-  }
-
-  @Override
-  public final IFeatureBindingCollection<IFE1D2DElement> getElements( )
-  {
-    return m_elements;
-  }
-
-  @Override
-  public IFeatureBindingCollection<IFE1D2DNode> getNodes( )
-  {
-    return m_nodes;
-  }
-
-  @Override
-  public IFeatureBindingCollection<IFE1D2DEdge> getEdges( )
-  {
-    return m_edges;
-  }
-
-  @Override
-  public IFE1D2DNode createNode( final GM_Point nodeLocation, final double searchRectWidth, final boolean[] alreadyExists )
-  {
-    Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" ); //$NON-NLS-1$
-
-    // TODO: major performance bug for adding large numbers of points:
-    // searching and adding each single node/location will cause
-    // the geo-index of the nodes to be reindexed for each call of this method
-
-    IFE1D2DNode node = null;
-    if( searchRectWidth >= 0 )
-    {
-      // donot search if rect width is negative
-      node = findNode( nodeLocation, searchRectWidth );
-    }
-    if( node != null )
-    {
-      if( alreadyExists != null )
-      {
-        if( alreadyExists.length > 0 )
-        {
-          alreadyExists[0] = false;
-        }
-      }
-      return node;
-    }
-    else
-    {
-      // FeatureList nodeList = m_nodes.getFeatureList();
-
-      node = m_nodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, IFE1D2DNode.class );
-      node.setPoint( nodeLocation );
-      alreadyExists[0] = false;
-      return node;
-    }
   }
 
   @Override
@@ -162,79 +75,78 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     Assert.throwIAEOnNullParam( node0, "node0" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( node1, "node1" ); //$NON-NLS-1$
 
-    final IFE1D2DEdge edge = m_edges.addNew( IFE1D2DEdge.QNAME );
-    edge.setNodes( node0, node1 );
-    node0.addLinkedEdge( edge );
-    node1.addLinkedEdge( edge );
+    IFE1D2DEdge edge = findEdge( node0, node1 );
+    if( edge != null )
+      return edge;
 
-    return edge;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findNode(org.kalypsodeegree.model.geometry.GM_Point, double)
-   */
-  @Override
-  public IFE1D2DNode findNode( final GM_Point nodeLocation, final double searchRectWidth )
-  {
-    final FeatureList nodeList = m_nodes.getFeatureList();
-    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( nodeLocation, searchRectWidth );
-    final List<Feature> foundNodes = nodeList.query( reqEnvelope, null );
-    if( foundNodes.isEmpty() )
-      return null;
-    else
+    try
     {
-      double minDistance = Double.MAX_VALUE;
-      IFE1D2DNode nearestNode = null;
-      for( final Feature feature : foundNodes )
-      {
-        if( feature == null )
-          continue; // TODO: this is a non-test: it should never happen, so we shouldnt test it here...
-        final IFE1D2DNode currentNode = (IFE1D2DNode)feature;
-        final GM_Point point = currentNode.getPoint();
-        if( point == null )
-          throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel.0" ) + currentNode ); //$NON-NLS-1$
-
-        /**
-         * calculating the distance only between two nodes(simple operation) should not be done with vividsolutions
-         * 
-         * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl.distance( final GM_Object gmo ) huge and complex
-         *      computing of distance between two geometries of any kind
-         *      replaced by local simple and fast implementation
-         */
-        final double currentDistance = calculateDistance2d( nodeLocation, point );
-        if( minDistance > currentDistance )
-        {
-          nearestNode = currentNode;
-          minDistance = currentDistance;
-        }
-      }
-
-      // HACK: check again for the grab distance. This is necessary as the geoindex doe not work properly at the moment
-      if( minDistance > searchRectWidth )
-        return null;
-
-      return nearestNode;
+      edge = (IFE1D2DEdge)FeatureHelper.createFeatureForListProp( getEdgesInternal(), IFE1D2DEdge.QNAME, -1 );
+      edge.setNodes( node0, node1 );
+      return edge;
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new IllegalStateException( e );
     }
   }
 
-  private double calculateDistance2d( final GM_Point firstPoint, final GM_Point secondPoint )
+  @Override
+  public IElement1D createElement1D( final IFE1D2DEdge edge )
   {
     try
     {
-      final double dx = firstPoint.getX() - secondPoint.getX();
-      final double dy = firstPoint.getY() - secondPoint.getY();
-
-      return Math.sqrt( dx * dx + dy * dy );
+      final IElement1D element = (IElement1D)FeatureHelper.createFeatureForListProp( getElementsInternal(), IElement1D.QNAME, -1 );
+      element.setEdge( edge );
+      return element;
     }
-    catch( final Exception e )
+    catch( final GMLSchemaException e )
     {
-      return Double.MAX_VALUE;
+      throw new IllegalStateException( e );
     }
   }
 
-  /**
-   * Finds an element-2d near to the given point.
-   */
+  @Override
+  public IPolyElement createElement2D( )
+  {
+    try
+    {
+      final IPolyElement element = (IPolyElement)FeatureHelper.createFeatureForListProp( getElementsInternal(), IPolyElement.QNAME, -1 );
+      return element;
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new IllegalStateException( e );
+    }
+  }
+
+  @Override
+  public IFE1D2DNode createNode( final GM_Point nodeLocation )
+  {
+    Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" ); //$NON-NLS-1$
+
+    IFE1D2DNode node = findNode( nodeLocation, CLUSTER_TOLERANCE );
+    if( node != null )
+      return node;
+
+    try
+    {
+      node = (IFE1D2DNode)FeatureHelper.createFeatureForListProp( getNodesInternal(), IFE1D2DNode.FEATURE_1D2DNODE, -1 );
+      node.setPoint( nodeLocation );
+      return node;
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new IllegalStateException( e );
+    }
+  }
+
+  @Override
+  public IElement1D find1DElement( final GM_Point position, final double grabDistance )
+  {
+    return findElement( position, grabDistance, IElement1D.class );
+  }
+
   @Override
   public IPolyElement find2DElement( final GM_Point position, final double grabDistance )
   {
@@ -242,10 +154,57 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   }
 
   @Override
-  public <T extends IFENetItem> T findElement( final GM_Point position, final double grabDistance, final Class<T> elementClass )
+  public IFELine findContinuityLine( final GM_Point position, final double grabDistance )
   {
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
-    final List<IFE1D2DElement> foundElements = m_elements.query( reqEnvelope );
+    final List<IFELine> query = getLinesInternal().queryResolved( reqEnvelope, null );
+    for( final IFELine line : query )
+    {
+      final GM_Curve geometry = line.getGeometry();
+      if( geometry.distance( position ) < grabDistance )
+        return line;
+    }
+    return null;
+  }
+
+  @Override
+  public IFE1D2DEdge findEdge( final GM_Point position, final double grabDistance )
+  {
+    final FeatureList modelList = getEdgesInternal();
+    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
+    final List<IFE1D2DEdge> foundEdges = modelList.queryResolved( reqEnvelope, null );
+    double min = Double.MAX_VALUE;
+    IFE1D2DEdge nearest = null;
+    for( final IFE1D2DEdge current : foundEdges )
+    {
+      final GM_Curve curve = current.getGeometry();
+      final double curDist = position.distance( curve );
+      if( min > curDist && curDist <= grabDistance )
+      {
+        nearest = current;
+        min = curDist;
+      }
+    }
+    return nearest;
+  }
+
+  @Override
+  public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
+  {
+    final IFE1D2DEdge[] containers = node0.getLinkedEdges();
+    for( final IFE1D2DEdge edge : containers )
+    {
+      if( edge.containsNode( node1 ) )
+        return edge;
+    }
+    return null;
+  }
+
+  @SuppressWarnings( "unchecked" )
+  private <T extends IFENetItem> T findElement( final GM_Point position, final double grabDistance, final Class<T> elementClass )
+  {
+    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
+    final List<IFE1D2DElement> foundElements = getElementsInternal().queryResolved( reqEnvelope, null );
 
     double min = Double.MAX_VALUE;
     T nearest = null;
@@ -255,14 +214,11 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       if( elementClass.isInstance( current ) )
       {
         final GM_Object geometryFromNetItem = current.getDefaultGeometryPropertyValue();
-        if( geometryFromNetItem != null )
+        final double curDist = position.distance( geometryFromNetItem );
+        if( min > curDist && curDist <= grabDistance )
         {
-          final double curDist = position.distance( geometryFromNetItem );
-          if( min > curDist && curDist <= grabDistance )
-          {
-            nearest = (T)current;
-            min = curDist;
-          }
+          nearest = (T)current;
+          min = curDist;
         }
       }
     }
@@ -270,92 +226,253 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     return nearest;
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findNode(org.kalypsodeegree.model.geometry.GM_Point, double)
+   */
   @Override
-  public IFE1D2DEdge findEdge( final GM_Point position, final double grabDistance )
+  public IFE1D2DNode findNode( final GM_Point nodeLocation, final double grabDistance )
   {
-    final FeatureList modelList = m_edges.getFeatureList();
-    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
-    final List<Feature> foundEdges = modelList.query( reqEnvelope, null );
-    double min = Double.MAX_VALUE;
-    IFE1D2DEdge nearest = null;
-    for( final Feature feature : foundEdges )
-    {
-      if( feature == null )
-        continue; // This should never happen!
+    final FeatureList nodeList = getNodesInternal();
+    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( nodeLocation, grabDistance );
+    final List<IFE1D2DNode> foundNodes = nodeList.queryResolved( reqEnvelope, null );
+    if( foundNodes.isEmpty() )
+      return null;
 
-      final IFE1D2DEdge current = (IFE1D2DEdge)feature.getAdapter( IFE1D2DEdge.class );
-      if( current != null )
+    else
+    {
+      double minDistance = Double.MAX_VALUE;
+      IFE1D2DNode nearestNode = null;
+      for( final IFE1D2DNode currentNode : foundNodes )
       {
-        final GM_Curve curve = current.getGeometry();
-        if( curve != null )
+        final GM_Point point = currentNode.getPoint();
+        final double currentDistance = point.distance( nodeLocation );
+        if( minDistance > currentDistance )
         {
-          final double curDist = position.distance( curve );
-          if( min > curDist && curDist <= grabDistance )
-          {
-            nearest = current;
-            min = curDist;
-          }
+          nearestNode = currentNode;
+          minDistance = currentDistance;
         }
       }
+
+      return nearestNode;
     }
-    return nearest;
   }
 
-  /**
-   * Finds a continuity line near the given position.
-   * 
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findContinuityLine(org.kalypsodeegree.model.geometry.GM_Point, double)
-   */
   @Override
-  public IFELine findContinuityLine( final GM_Point position, final double grabDistance )
+  public GM_Envelope getBoundingBox( )
   {
-    // if we just search for the first line within the line envelope, and line is z.B. under 45 deg angle,
-    // then envelope is very big and nothing else within that envelope cannot be selected (2D element or node(s)).
-    // maybe user wanted to select 2D element near the line, but he cannot do so
+    return getNodesInternal().getBoundingBox();
+  }
 
-    // solution: get nodes from all the lines within the envelope; if mouse is near to any node, line is selected
+  @Override
+  public IFE1D2DComplexElement<IFENetItem>[] getComplexElements( )
+  {
+    final FeatureList complexElements = getComplexElementsInternal();
+    return complexElements.toFeatures( new IFE1D2DComplexElement[complexElements.size()] );
+  }
 
-    // final IFE1D2DNode nodeUnderMouse = findNode( position, grabDistance );
-    // if( nodeUnderMouse == null )
-    // return null;
-    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
-    final List<IFELine> query = m_continuityLines.query( reqEnvelope );
-    for( final IFELine line : query )
+  private FeatureList getComplexElementsInternal( )
+  {
+    return (FeatureList)getProperty( WB1D2D_PROP_COMPLEX_ELEMENTS );
+  }
+
+  @Override
+  public IFELine[] getContinuityLines( )
+  {
+    final FeatureList lines = getLinesInternal();
+    return lines.toFeatures( new IFELine[lines.size()] );
+  }
+
+  @Override
+  public IFE1D2DEdge[] getEdges( )
+  {
+    final FeatureList edges = getEdgesInternal();
+    return edges.toFeatures( new IFE1D2DEdge[edges.size()] );
+  }
+
+  private FeatureList getEdgesInternal( )
+  {
+    return (FeatureList)getProperty( WB1D2D_PROP_EDGES );
+  }
+
+  @Override
+  public final IFE1D2DElement[] getElements( )
+  {
+    final FeatureList elements = getElementsInternal();
+    return elements.toFeatures( new IFE1D2DElement[elements.size()] );
+  }
+
+  private FeatureList getElementsInternal( )
+  {
+    return (FeatureList)getProperty( WB1D2D_PROP_ELEMENTS );
+  }
+
+  private FeatureList getLinesInternal( )
+  {
+    return (FeatureList)getProperty( WB1D2D_PROP_CONTINUITY_LINES );
+  }
+
+  @Override
+  public IFE1D2DNode[] getNodes( )
+  {
+    final FeatureList nodes = getNodesInternal();
+    return nodes.toFeatures( new IFE1D2DNode[nodes.size()] );
+  }
+
+  private FeatureList getNodesInternal( )
+  {
+    return (FeatureList)getProperty( WB1D2D_PROP_NODES );
+  }
+
+  @Override
+  public void removeContinuityLine( final IFELine line )
+  {
+    Assert.throwIAEOnNullParam( line, "line" );//$NON-NLS-1$
+    final FeatureList lines = getLinesInternal();
+    if( lines.contains( line ) )
+      lines.remove( line );
+  }
+
+  @Override
+  public void removeEdge( final IFE1D2DEdge edge )
+  {
+    Assert.throwIAEOnNullParam( edge, "edge" );//$NON-NLS-1$
+    final FeatureList edges = getEdgesInternal();
+    if( edges.contains( edge ) )
+      edges.remove( edge );
+  }
+
+  @Override
+  public void removeElement( final IFE1D2DElement element )
+  {
+    Assert.throwIAEOnNullParam( element, "element" );//$NON-NLS-1$
+    final FeatureList elements = getElementsInternal();
+    if( elements.contains( element ) )
+      elements.remove( element );
+  }
+
+  @Override
+  public void removeNode( final IFE1D2DNode node )
+  {
+    Assert.throwIAEOnNullParam( node, "node" );//$NON-NLS-1$
+    final FeatureList nodes = getNodesInternal();
+    if( nodes.contains( node ) )
+      nodes.remove( node );
+  }
+
+  @Override
+  public List<IFE1D2DElement> queryElements( final GM_Envelope env, final List<IFE1D2DElement> result )
+  {
+    return getElementsInternal().queryResolved( env, result );
+  }
+
+  @Override
+  public IContinuityLine1D createContinuityLine1D( final IFE1D2DNode node )
+  {
+    Assert.throwIAEOnNullParam( node, "node" ); //$NON-NLS-1$
+    try
     {
-      final GM_Curve geometry = line.getGeometry();
-
-      if( geometry == null )
-        return null;
-
-      if( geometry.distance( position ) < grabDistance )
-        return line;
-      // final List<IFE1D2DNode> nodes = line.getNodes();
-      // for( final IFE1D2DNode node : nodes )
-      // if( node != null && nodeUnderMouse.equals( node ) )
-      // return line;
+      final IContinuityLine1D line = (IContinuityLine1D)FeatureHelper.createFeatureForListProp( getLinesInternal(), ICalculationUnit1D.QNAME, -1 );
+      line.setNode( node );
+      return line;
     }
-    // if( query != null && query.size() > 0 )
-    // return query.get( 0 );
-    // else
-    return null;
-    // return findElement( position, grabDistance, IFELine.class );
+    catch( final GMLSchemaException e )
+    {
+      throw new IllegalStateException( e );
+    }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d#find1DElement(org.kalypsodeegree.model.geometry.GM_Point, double)
-   */
   @Override
-  public IElement1D find1DElement( final GM_Point position, final double grabDistance )
+  public IContinuityLine2D createContinuityLine2D( final IFE1D2DNode[] nodes )
   {
-    return findElement( position, grabDistance, IElement1D.class );
+    Assert.throwIAEOnNullParam( nodes, "nodes" ); //$NON-NLS-1$
+    try
+    {
+      final IContinuityLine2D line = (IContinuityLine2D)FeatureHelper.createFeatureForListProp( getLinesInternal(), IContinuityLine2D.QNAME, -1 );
+      line.setNodes( nodes );
+      return line;
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new IllegalStateException( e );
+    }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d#getContinuityLines()
-   */
   @Override
-  public IFeatureBindingCollection<IFELine> getContinuityLines( )
+  public ICalculationUnit1D createCalculationUnit1D( )
   {
-    return m_continuityLines;
+    try
+    {
+      final ICalculationUnit1D calcUnit = (ICalculationUnit1D)FeatureHelper.createFeatureForListProp( getComplexElementsInternal(), ICalculationUnit1D.QNAME, -1 );
+      return calcUnit;
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new IllegalStateException( e );
+    }
+  }
+
+  @Override
+  public ICalculationUnit2D createCalculationUnit2D( )
+  {
+    try
+    {
+      final ICalculationUnit2D calcUnit = (ICalculationUnit2D)FeatureHelper.createFeatureForListProp( getComplexElementsInternal(), ICalculationUnit2D.QNAME, -1 );
+      return calcUnit;
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new IllegalStateException( e );
+    }
+  }
+
+  @Override
+  public ICalculationUnit1D2D createCalculationUnit1D2D( )
+  {
+    try
+    {
+      final ICalculationUnit1D2D calcUnit = (ICalculationUnit1D2D)FeatureHelper.createFeatureForListProp( getComplexElementsInternal(), ICalculationUnit1D2D.QNAME, -1 );
+      return calcUnit;
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new IllegalStateException( e );
+    }
+  }
+
+  @Override
+  public ITransitionElement createTransitionElement( )
+  {
+    try
+    {
+      final ITransitionElement transElement = (ITransitionElement)FeatureHelper.createFeatureForListProp( getComplexElementsInternal(), ITransitionElement.QNAME, -1 );
+      return transElement;
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new IllegalStateException( e );
+    }
+  }
+
+  @Override
+  public IJunctionElement createJunctionElement( )
+  {
+    try
+    {
+      final IJunctionElement junctElement = (IJunctionElement)FeatureHelper.createFeatureForListProp( getComplexElementsInternal(), IJunctionElement.QNAME, -1 );
+      return junctElement;
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new IllegalStateException( e );
+    }
+  }
+
+  @Override
+  public void removeComplexElement( final IFE1D2DComplexElement< ? extends IFENetItem> complexElement )
+  {
+    Assert.throwIAEOnNullParam( complexElement, "complexElement" );//$NON-NLS-1$
+    final FeatureList complexElements = getComplexElementsInternal();
+    if( complexElements.contains( complexElement ) )
+      complexElements.remove( complexElement );
   }
 }

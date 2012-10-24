@@ -62,7 +62,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -89,8 +88,8 @@ public class ModelTinExporter implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    final IFeatureBindingCollection<IFE1D2DElement> elements = m_model.getElements();
-    final int size = elements.size();
+    final IFE1D2DElement[] elements = m_model.getElements();
+    final int size = elements.length;
     monitor.beginTask( "Exporting triangles", size ); //$NON-NLS-1$
 
     OutputStream os = null;

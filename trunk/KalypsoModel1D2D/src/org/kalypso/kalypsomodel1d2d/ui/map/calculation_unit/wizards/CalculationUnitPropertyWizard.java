@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -58,6 +59,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFENetItem;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -91,7 +93,7 @@ public class CalculationUnitPropertyWizard extends Wizard
 
     m_wizardPage = new CalculationUnitPropertyWizardPage( m_parentCalcUnit, calculationUnits );
 
-    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.0") );  //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -125,7 +127,7 @@ public class CalculationUnitPropertyWizard extends Wizard
 
         if( m_parentCalcUnit instanceof ICalculationUnit1D )
         {
-          final ICalculationUnit1D calcUnit1D = (ICalculationUnit1D) m_parentCalcUnit;
+          final ICalculationUnit1D calcUnit1D = (ICalculationUnit1D)m_parentCalcUnit;
           final int newInterpolationCount = m_wizardPage.getChangedInterpolationCount();
           if( !ObjectUtils.equals( calcUnit1D.getInterpolationCount(), newInterpolationCount ) )
           {
@@ -137,7 +139,7 @@ public class CalculationUnitPropertyWizard extends Wizard
 
         if( m_parentCalcUnit instanceof ICalculationUnit1D2D )
         {
-          final ICalculationUnit1D2D calcUnit1D2D = (ICalculationUnit1D2D) m_parentCalcUnit;
+          final ICalculationUnit1D2D calcUnit1D2D = (ICalculationUnit1D2D)m_parentCalcUnit;
           final IFeatureBindingCollection<ICalculationUnit> subUnits = calcUnit1D2D.getSubCalculationUnits();
 
           final RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( subUnits.toArray( new ICalculationUnit[subUnits.size()] ), calcUnit1D2D );
@@ -151,14 +153,14 @@ public class CalculationUnitPropertyWizard extends Wizard
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.2"), status ); //$NON-NLS-1$
+        ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.2" ), status ); //$NON-NLS-1$
       }
 
       return true;
     }
     else
     {
-      MessageDialog.openWarning( getShell(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.3"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.4") );   //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openWarning( getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.3" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
   }
@@ -218,14 +220,14 @@ public class CalculationUnitPropertyWizard extends Wizard
     // check if current unit have common transition element with any unit from the list
     // --------------------------------------------------------------------------------
     final List<IFELine> currentUnitContinuityLines = currentUnit.getContinuityLines();
-    final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = model.getComplexElements();
+    final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d)m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+    final IFE1D2DComplexElement<IFENetItem>[] complexElements = model.getComplexElements();
 
     // get all transition elements from the discretisation model
     final List<ITransitionElement> allTransitionElements = new ArrayList<>();
     for( final IFE1D2DComplexElement complexElement : complexElements )
       if( complexElement instanceof ITransitionElement )
-        allTransitionElements.add( (ITransitionElement) complexElement );
+        allTransitionElements.add( (ITransitionElement)complexElement );
 
     // get all transition elements between already connected units
     final List<ITransitionElement> connectedTransitionElements = new ArrayList<>();
@@ -235,7 +237,7 @@ public class CalculationUnitPropertyWizard extends Wizard
       {
         final List<IFELine> connectedUnitLines = connectedUnit.getContinuityLines();
         for( final IFELine line : connectedUnitLines )
-          if( transitionElement.getContinuityLines().contains( line ) )
+          if( Arrays.asList( transitionElement.getElements() ).contains( line ) )
             if( !connectedTransitionElements.contains( transitionElement ) )
               connectedTransitionElements.add( transitionElement );
       }
@@ -246,7 +248,7 @@ public class CalculationUnitPropertyWizard extends Wizard
     {
       for( final ITransitionElement transitionElement : connectedTransitionElements )
       {
-        if( transitionElement.getContinuityLines().contains( line ) )
+        if( Arrays.asList( transitionElement.getElements() ).contains( line ) )
           return true;
       }
     }
@@ -260,7 +262,7 @@ public class CalculationUnitPropertyWizard extends Wizard
       final List<IJunctionElement> allJunctionElements = new ArrayList<>();
       for( final IFE1D2DComplexElement complexElement : complexElements )
         if( complexElement instanceof IJunctionElement )
-          allJunctionElements.add( (IJunctionElement) complexElement );
+          allJunctionElements.add( (IJunctionElement)complexElement );
 
       // get all junction elements between already connected units
       final List<IJunctionElement> connectedJunctionElements = new ArrayList<>();
@@ -272,7 +274,7 @@ public class CalculationUnitPropertyWizard extends Wizard
           {
             final List<IFELine> connectedUnitLines = connectedUnit.getContinuityLines();
             for( final IFELine line : connectedUnitLines )
-              if( junctionElement.getContinuityLines().contains( line ) )
+              if( Arrays.asList( junctionElement.getElements() ).contains( line ) )
                 if( !connectedJunctionElements.contains( junctionElement ) )
                   connectedJunctionElements.add( junctionElement );
           }
@@ -284,7 +286,7 @@ public class CalculationUnitPropertyWizard extends Wizard
       {
         for( final IJunctionElement junctionElement : connectedJunctionElements )
         {
-          if( junctionElement.getContinuityLines().contains( line ) )
+          if( Arrays.asList( junctionElement.getElements() ).contains( line ) )
             return true;
         }
       }

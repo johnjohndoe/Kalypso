@@ -51,7 +51,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
@@ -69,7 +68,6 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -207,13 +205,14 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
           m_calculationUnit = (ICalculationUnit)calcUnitFeature.getAdapter( ICalculationUnit.class );
         }
       }
-      else
-      {
-        final IFeatureBindingCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
-        m_calculationUnit = ce.addNew( m_calcUnitFeatureQName, ICalculationUnit.class );
-        if( m_calcUnitDescription != null )
-          m_calculationUnit.setDescription( m_calcUnitDescription );
-      }
+      // TODO: this does not make sense
+//      else
+//      {
+//        final IFeatureBindingCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
+//        m_calculationUnit = ce.addNew( m_calcUnitFeatureQName, ICalculationUnit.class );
+//        if( m_calcUnitDescription != null )
+//          m_calculationUnit.setDescription( m_calcUnitDescription );
+//      }
 
       m_calculationUnit.setName( m_calcUnitName );
       if( m_calculationUnitOrig == null )
@@ -306,12 +305,6 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
   @Override
   public void undo( ) throws Exception
   {
-    final IFeatureBindingCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
-    ce.remove( m_calculationUnit );
-    final ICalculationUnit deletedCreatedCU = m_calculationUnit;
-    m_calculationUnit = null;
-    fireProcessChanges( deletedCreatedCU, true );
-
   }
 
   public ICalculationUnit getCreatedCalculationUnit( )

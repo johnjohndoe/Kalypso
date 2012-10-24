@@ -47,7 +47,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -78,14 +77,12 @@ public class PolygonDiscretisationValidator
 
   public String validate( final IPolygonWithName item )
   {
-    final IFeatureBindingCollection<IFE1D2DElement> elements = m_model.getElements();
-
     final Envelope envelope = item.getEnvelope();
     final Polygon polygon = item.getPolygon();
     final int srid = polygon.getSRID();
     final GM_Envelope searchExtent = JTSAdapter.wrap( envelope, JTSAdapter.toSrs( srid ) );
 
-    final List<IFE1D2DElement> query = elements.query( searchExtent );
+    final List<IFE1D2DElement> query = m_model.queryElements( searchExtent, null );
 
     for( final IFE1D2DElement element : query )
     {

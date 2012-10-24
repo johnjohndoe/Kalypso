@@ -75,7 +75,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -545,9 +544,6 @@ public class ImportWspmWizard extends Wizard
     Arrays.sort( segments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
     /* Get some common variables */
-    // final IFeatureBindingCollection<IFE1D2DElement> discElements = discretisationModel.getElements();
-    final IFeatureBindingCollection<IFE1D2DEdge> discEdges = discretisationModel.getEdges();
-
     /* add complex-element to model: Automatically create a calculation unit 1d */
 
     /*
@@ -592,17 +588,14 @@ public class ImportWspmWizard extends Wizard
       if( existingNode == null )
       {
         /* add new node */
-        node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-        addedFeatures.add( node );
-
-        node.setName( "" ); //$NON-NLS-1$
-        final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.18" + profileMember.getDescription() ); //$NON-NLS-1$
-        node.setDescription( desc );
-
         if( point == null )
           throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.19", station ) ) ); //$NON-NLS-1$
 
-        node.setPoint( point );
+        node = discretisationModel.createNode( point );
+        addedFeatures.add( node );
+
+        final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.18" + profileMember.getDescription() ); //$NON-NLS-1$
+        node.setDescription( desc );
       }
       else
       {
@@ -615,7 +608,7 @@ public class ImportWspmWizard extends Wizard
         // for example, it is possible that both last nodes are existing nodes so element was there
         boolean found = false;
         final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, FlowRelationUtilitites.SEARCH_DISTANCE );
-        final List<IFE1D2DElement> list = discretisationModel.getElements().query( reqEnvelope );
+        final List<IFE1D2DElement> list = discretisationModel.queryElements( reqEnvelope, null );
         for( final IFE1D2DElement element : list )
         {
           if( element instanceof IElement1D )
@@ -640,18 +633,13 @@ public class ImportWspmWizard extends Wizard
         if( !found && (nodesList.size() == 0 || !(node.getPoint().getX() == nodesList.get( 0 ).getPoint().getX() && node.getPoint().getY() == nodesList.get( 0 ).getPoint().getY())) )
         {
           /* Create an edge between lastNode and node */
-          final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
+          final IFE1D2DEdge edge = discretisationModel.createEdge( lastNode, node );
           addedFeatures.add( edge );
-
-          edge.setNodes( lastNode, node );
           edgeList.add( edge );
 
           /* Create corresponding element */
-          final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
-
+          final IElement1D element1d = discretisationModel.createElement1D( edge );
           addedFeatures.add( element1d );
-
-          element1d.setEdge( edge );
         }
       }
       nodesList.add( node );

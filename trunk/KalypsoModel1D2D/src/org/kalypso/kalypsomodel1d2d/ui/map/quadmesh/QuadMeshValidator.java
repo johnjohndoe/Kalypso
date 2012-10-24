@@ -104,7 +104,7 @@ public class QuadMeshValidator
 
       // New Element intersects other elements
       final GM_Polygon< ? extends GM_AbstractSurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
+      final List<IFE1D2DElement> elements = discModel.queryElements( newSurface.getEnvelope(), null );
       for( final IFE1D2DElement element : elements )
       {
         if( element instanceof IPolyElement )

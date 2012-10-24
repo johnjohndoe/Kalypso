@@ -49,7 +49,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Undoable command to add node to a simulation model Broken links are not removed
- *
+ * 
  * @author Patrice Congo
  */
 public class AddNodeCommand implements IFeatureChangeCommand
@@ -60,25 +60,21 @@ public class AddNodeCommand implements IFeatureChangeCommand
 
   private final IFEDiscretisationModel1d2d m_discretisationModel;
 
-  private final boolean m_notCreated[] = new boolean[1];
-
   private final double m_searchRectWidth;
 
   /**
    * Adds a node at the given point if there is no node within the specified rectangle
-   *
+   * 
    * @param model
-   *            the model to add the new node to
+   *          the model to add the new node to
    * @param searchRectWidth
-   *            the width of the search rectangle , its center if given by nodePoint
+   *          the width of the search rectangle , its center if given by nodePoint
    * @param nodePoint
-   *            the position of the node
-   *            <ul>
-   *            <li/>true to have the set coordinate of the point ignored (meaning a 2D point is created) <li/>false to
-   *            use the position without change
-   *            </ul>
-   *
-   *
+   *          the position of the node
+   *          <ul>
+   *          <li/>true to have the set coordinate of the point ignored (meaning a 2D point is created)
+   *          <li/>false to use the position without change
+   *          </ul>
    */
   public AddNodeCommand( final IFEDiscretisationModel1d2d model, final GM_Point nodePoint, final double searchRectWidth )
   {
@@ -87,18 +83,18 @@ public class AddNodeCommand implements IFeatureChangeCommand
 
   /**
    * Adds a node at the given point if there is no node within the specified rectangle
-   *
+   * 
    * @param model
-   *            the model to add the new node to
+   *          the model to add the new node to
    * @param nodePoint
-   *            the position of the node
+   *          the position of the node
    * @param searchRectWidth
-   *            the width of the search rectangle , its center if given by nodePoint
+   *          the width of the search rectangle , its center if given by nodePoint
    * @param ignoreZCoordinate
-   *            <ul>
-   *            <li/>true to have the set coordinate of the point ignored (meaning a 2D point is created) <li/>false to
-   *            use the position without change
-   *            </ul>
+   *          <ul>
+   *          <li/>true to have the set coordinate of the point ignored (meaning a 2D point is created)
+   *          <li/>false to use the position without change
+   *          </ul>
    */
   public AddNodeCommand( final IFEDiscretisationModel1d2d model, final GM_Point nodePoint, final double searchRectWidth, final boolean ignoreZCoordinate )
   {
@@ -122,16 +118,12 @@ public class AddNodeCommand implements IFeatureChangeCommand
     }
     // PERFORMANCE-BUGFIX: first search for all nodes, then add it
     m_addedNode = model.findNode( nodePoint, searchRectWidth );
-    if( m_addedNode != null )
-    {
-      m_notCreated[0] = true;
-    }
   }
 
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -145,8 +137,7 @@ public class AddNodeCommand implements IFeatureChangeCommand
   {
     if( m_addedNode == null )
     {
-      m_addedNode = m_discretisationModel.createNode( m_nodePoint, -1, m_notCreated );
-      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.1" ) + m_addedNode + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.2" ) + m_notCreated[0] ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_addedNode = m_discretisationModel.createNode( m_nodePoint );
     }
   }
 
@@ -162,16 +153,6 @@ public class AddNodeCommand implements IFeatureChangeCommand
   @Override
   public void undo( ) throws Exception
   {
-    if( m_notCreated[0] )
-    {
-      return;
-    }
-    else
-    {
-      // TODO check broken links issue
-      m_discretisationModel.getNodes().remove( m_addedNode.getId() );
-      m_addedNode = null;
-    }
   }
 
   public IFE1D2DNode getAddedNode( )
@@ -199,7 +180,7 @@ public class AddNodeCommand implements IFeatureChangeCommand
   public String toString( )
   {
     final StringBuffer buf = new StringBuffer();
-    buf.append( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.3") ); //$NON-NLS-1$
+    buf.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.3" ) ); //$NON-NLS-1$
     buf.append( m_nodePoint );
     buf.append( ']' );
     return buf.toString();

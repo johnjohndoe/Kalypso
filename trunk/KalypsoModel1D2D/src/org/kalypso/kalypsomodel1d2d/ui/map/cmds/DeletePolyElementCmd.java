@@ -136,10 +136,10 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
           m_changedFeatures.add( feature );
         }
       }
+      // delete element from model
+      m_model1d2d.removeElement( lElement );
     }
     remEdgeCmd.process();
-    // delete element from model
-    m_model1d2d.getElements().removeAll( m_setFeaturesToRemove );
   }
 
   @Override

@@ -166,8 +166,7 @@ public class Create1DElementCommand implements ICommand
     final IFE1D2DEdge edge = ElementGeometryHelper.buildNewEdges( m_discModel, nodes, 1 )[0];
 
     /* Build new element */
-    final IElement1D newElement = m_discModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
-    newElement.setEdge( edge );
+    final IElement1D newElement = m_discModel.createElement1D( edge );
 
     /* Remember new elements for events */
     m_changedNodes.addAll( Arrays.asList( nodes ) );

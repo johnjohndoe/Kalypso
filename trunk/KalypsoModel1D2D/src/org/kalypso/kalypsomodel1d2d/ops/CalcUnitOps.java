@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -55,13 +54,13 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFENetItem;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Provide utility methods around calculation units
@@ -147,37 +146,6 @@ public class CalcUnitOps
   }
 
   /**
-   * To get the parent units of the given unit inside the specified model
-   * 
-   * @param calculationUnit
-   *          the calculation unit which parents are to be search
-   * @param model1d2d
-   *          the model where to look for the parent units
-   * @return a collection containing the parent unit of the given model1d2d
-   * @throws IllegalArgumentException
-   *           if any argument is null
-   */
-  public static final Collection<ICalculationUnit1D2D> getParentUnit( final ICalculationUnit calculationUnit, final IFEDiscretisationModel1d2d model1d2d ) throws IllegalArgumentException
-  {
-    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
-    final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
-    final Collection<ICalculationUnit1D2D> parents = new ArrayList<>();
-    for( final IFE1D2DComplexElement ce : complexElements )
-    {
-      if( ce instanceof ICalculationUnit1D2D )
-      {
-        final ICalculationUnit1D2D parent = (ICalculationUnit1D2D)ce;
-        if( parent.getSubCalculationUnits().contains( calculationUnit ) )
-        {
-          parents.add( parent );
-        }
-      }
-    }
-    return parents;
-  }
-
-  /**
    * To get the all calculation units of the given discretisation model
    * 
    * @param model1d2d
@@ -190,7 +158,7 @@ public class CalcUnitOps
   {
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
     final List<ICalculationUnit> calUnits = new ArrayList<>();
-    final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
+    final IFE1D2DComplexElement<IFENetItem>[] complexElements = model1d2d.getComplexElements();
     for( final IFE1D2DComplexElement ce : complexElements )
     {
       if( ce instanceof ICalculationUnit )

@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.NodeOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodeElevationCommand;
@@ -54,7 +53,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Thomas Jung
- *
  */
 public class ApplyElevationHelper
 {
@@ -91,16 +89,17 @@ public class ApplyElevationHelper
 
   public static IFE1D2DNode[] getAllNonElevationNodes( final ApplyElevationWidgetDataModel dataModel )
   {
-    final List<IFE1D2DNode> allNodes = dataModel.getDiscretisationModel().getNodes();
+    final IFE1D2DNode[] allNodes = dataModel.getDiscretisationModel().getNodes();
     final List<IFE1D2DNode> noElevationNodes = new ArrayList<>();
 
-    for( int i = 0; i < allNodes.size(); i++ )
+    for( final IFE1D2DNode node : allNodes )
     {
       try
       {
-        if( !NodeOps.hasElevation( allNodes.get( i ) ) )
+        final GM_Point point = node.getPoint();
+        if( !Double.isNaN( point.getZ() ) )
         {
-          noElevationNodes.add( allNodes.get( i ) );
+          noElevationNodes.add( node );
         }
       }
       catch( final RuntimeException e )

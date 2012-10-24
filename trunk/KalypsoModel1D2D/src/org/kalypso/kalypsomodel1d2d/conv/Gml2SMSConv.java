@@ -46,7 +46,6 @@ import java.nio.charset.Charset;
 import java.util.Comparator;
 import java.util.Formatter;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.SortedSet;
@@ -69,7 +68,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -192,7 +190,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
   {
     writeHeaderLine( formatter );
 
-    final IFeatureBindingCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
+    final IFE1D2DElement[] elements = m_discretisationModel1d2d.getElements();
     writeElementsAndNodes( formatter, elements );
   }
 
@@ -278,12 +276,11 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
   /**
    * write elements nodes and edges in a way which avoids the filtering of edges and nodes
    */
-  private void writeElementsAndNodes( final Formatter formatter, final IFeatureBindingCollection<IFE1D2DElement> elements ) throws CoreException, IOException
+  private void writeElementsAndNodes( final Formatter formatter, final IFE1D2DElement[] elementsInBBox ) throws CoreException, IOException
   {
-    final List<IFE1D2DElement> elementsInBBox = elements;
-    final Set<IFE1D2DEdge> edgeSet = new HashSet<>( elementsInBBox.size() * 2 );
+    final Set<IFE1D2DEdge> edgeSet = new HashSet<>( elementsInBBox.length * 2 );
 
-    if( elementsInBBox.size() == 0 )
+    if( elementsInBBox.length == 0 )
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.2" ), null ) ); //$NON-NLS-1$
 
     for( final IFE1D2DElement element : elementsInBBox )

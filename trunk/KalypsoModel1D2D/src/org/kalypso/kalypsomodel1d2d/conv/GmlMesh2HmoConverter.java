@@ -56,7 +56,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.ogc.gml.serialize.Gml2HmoConverter;
 import org.kalypso.ogc.gml.serialize.HMOSerializer;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -81,12 +80,11 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
     m_discretisationModel1d2d = discretisationModel1d2d;
   }
 
-  public void writeElements( final IFeatureBindingCollection<IFE1D2DElement> elements ) throws CoreException
+  public void writeElements( final IFE1D2DElement[] elementsInBBox ) throws CoreException
   {
-    final List<IFE1D2DElement> elementsInBBox = elements;
     final List<IFE1D2DNode[]> triangularElements = new ArrayList<>();
 
-    if( elementsInBBox.size() == 0 )
+    if( elementsInBBox.length == 0 )
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.GmlMesh2HmoConverter.2" ) ) ); //$NON-NLS-1$
 
     for( final IFE1D2DElement element : elementsInBBox )
@@ -148,7 +146,7 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
   public void writeHmo( final File file ) throws Exception
   {
     hmoSerializer = new HMOSerializer( file );
-    final IFeatureBindingCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
+    final IFE1D2DElement[] elements = m_discretisationModel1d2d.getElements();
     writeElements( elements );
     hmoSerializer.finish();
   }

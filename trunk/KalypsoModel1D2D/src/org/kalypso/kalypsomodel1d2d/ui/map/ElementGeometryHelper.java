@@ -44,11 +44,9 @@ import java.awt.Point;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -58,8 +56,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
@@ -101,14 +99,7 @@ public class ElementGeometryHelper
 
       if( foundNode == null )
       {
-        // create new node
-        final IFE1D2DNode newNode = discModel.getNodes().addNew( IFE1D2DNode.FEATURE_1D2DNODE, IFE1D2DNode.class );
-
-        newNode.setPoint( point );
-        newNode.setName( StringUtils.EMPTY );
-        newNode.setDescription( m_DF.format( new Date() ) ); //$NON-NLS-1$
-
-        nodes[i] = newNode;
+        nodes[i] = discModel.createNode( point );
       }
       else
         nodes[i] = foundNode;

@@ -40,16 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Undoable Add 1D fe element command from add node cmds
@@ -126,7 +123,6 @@ public class Add1DElementFromNodeCmd implements IFeatureChangeCommand
       curEdge = m_model.findEdge( node0, node1 );
       if( curEdge == null )
       {
-        final int size1 = m_model.getEdges().size();
         curEdge = m_model.createEdge( node0, node1 );
       }
       else
@@ -138,10 +134,7 @@ public class Add1DElementFromNodeCmd implements IFeatureChangeCommand
         }
       }
 
-      // TODO: move this into discretisation model
-      final IFeatureBindingCollection<IFE1D2DElement> elements = m_model.getElements();
-      m_addedElement = elements.addNew( IElement1D.QNAME, IElement1D.class );
-      m_addedElement.setEdge( curEdge );
+      m_addedElement = m_model.createElement1D( curEdge );
     }
   }
 

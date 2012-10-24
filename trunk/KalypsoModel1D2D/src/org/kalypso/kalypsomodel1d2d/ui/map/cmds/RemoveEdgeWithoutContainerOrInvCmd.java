@@ -84,13 +84,10 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
   public void process( ) throws Exception
   {
     final Set<IFE1D2DNode> changedNodes = new HashSet<>();
-    final Set<IFE1D2DNode> nodesToRemove = new HashSet<>();
-    final Set<IFE1D2DEdge> edgesToRemove = new HashSet<>();
 
     /* basically delete edges and find nodes, that are involved */
     for( final IFE1D2DEdge lEdgeToDelete : m_edgesToRemove )
     {
-      edgesToRemove.add( lEdgeToDelete );
 
       final IFE1D2DNode[] nodes = lEdgeToDelete.getNodes();
       changedNodes.add( nodes[0] );
@@ -98,31 +95,16 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
 
       for( final IFE1D2DNode node : nodes )
         node.removeLinkedEdge( lEdgeToDelete );
+
+      m_model1d2d.removeEdge( lEdgeToDelete );
     }
 
     /* Check if nodes can finally be removed */
     for( final IFE1D2DNode node : changedNodes )
     {
-      if( shouldRemoveNode( node, edgesToRemove ) )
-        nodesToRemove.add( node );
+      if( node.getLinkedEdges().length == 0 )
+        m_model1d2d.removeNode( node );
     }
-
-    m_model1d2d.getEdges().removeAll( edgesToRemove );
-    m_model1d2d.getNodes().removeAll( nodesToRemove );
-  }
-
-  private boolean shouldRemoveNode( final IFE1D2DNode node, final Set<IFE1D2DEdge> allRemovedEdges )
-  {
-    final IFE1D2DEdge[] lActNodeContainers = node.getLinkedEdges();
-
-    /* As soon as ther is one edge on the node, that will not be removed, do not remove the node as well */
-    for( final IFE1D2DEdge edge : lActNodeContainers )
-    {
-      if( !allRemovedEdges.contains( edge ) )
-        return false;
-    }
-
-    return true;
   }
 
   public void addEdgeToRemove( final IFE1D2DEdge edgeToRemove )

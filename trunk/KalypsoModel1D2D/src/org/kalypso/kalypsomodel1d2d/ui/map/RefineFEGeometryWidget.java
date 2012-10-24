@@ -378,16 +378,10 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
       // add remove element command
       final DeletePolyElementCmd deleteCmdPolyElement = new DeletePolyElementCmd( discModel );
-      final List<Feature> elementsToRemove = new ArrayList<>();
       for( final Feature feature : refineList )
       {
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
-        {
           deleteCmdPolyElement.addElementToRemove( feature );
-          elementsToRemove.add( feature );
-          // final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( feature, discModel );
-          // workspace.postCommand( deleteCmd );
-        }
       }
       try
       {
@@ -398,7 +392,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
         e.printStackTrace();
       }
 
-      discModel.getElements().removeAll( elementsToRemove );
       // workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, discModel,
       // elementsToRemove.toArray( new Feature[ elementsToRemove.size() ] ),
       // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
@@ -449,7 +442,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
       lListRes.addAll( createNodesAndEdges( discModel, lListEdges, lListPoints ) );
 
-      final IPolyElement element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
+      final IPolyElement element2d = discModel.createElement2D();
       lListRes.add( element2d );
       for( final IFE1D2DEdge lEdge : lListEdges )
       {
@@ -481,7 +474,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
       if( actNode == null )
       {
-        actNode = discModel.createNode( lPoint, -1, new boolean[1] );
+        actNode = discModel.createNode( lPoint );
         if( actNode == null )
         {
           return new ArrayList<>();

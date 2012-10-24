@@ -95,7 +95,6 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
@@ -333,7 +332,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
   {
     writeElementsNodesAndEdges( formatter );
 
-    final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = m_discretisationModel1d2d.getComplexElements();
+    final IFE1D2DComplexElement<IFENetItem>[] complexElements = m_discretisationModel1d2d.getComplexElements();
 
     // write transition elements
     if( m_calculationUnit instanceof ICalculationUnit1D2D )
@@ -364,7 +363,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
   private void writeJunctionElement( final Formatter formatter, final IJunctionElement junctionElement ) throws IOException
   {
     final int junctionElementID = getConversionID( junctionElement );
-    final List<IFELine> continuityLines = junctionElement.getContinuityLines();
+    final IFELine[] continuityLines = junctionElement.getElements();
     formatter.format( "JE%10s", junctionElementID ); //$NON-NLS-1$
     for( final IFELine line : continuityLines )
     {
@@ -383,16 +382,16 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     final int node1D_ID;
     int element1D_ID = -1;
     final int line2D_ID;
-    final List<IFELine> transitionElementContinuityLines = transitionElement.getContinuityLines();
-    if( transitionElementContinuityLines.get( 0 ) instanceof IContinuityLine1D )
+    final IFELine[] transitionElementContinuityLines = transitionElement.getElements();
+    if( transitionElementContinuityLines[0] instanceof IContinuityLine1D )
     {
-      line1D = (IContinuityLine1D)transitionElementContinuityLines.get( 0 );
-      line2D_ID = getConversionID( transitionElementContinuityLines.get( 1 ) );
+      line1D = (IContinuityLine1D)transitionElementContinuityLines[0];
+      line2D_ID = getConversionID( transitionElementContinuityLines[1] );
     }
     else
     {
-      line2D_ID = getConversionID( transitionElementContinuityLines.get( 0 ) );
-      line1D = (IContinuityLine1D)transitionElementContinuityLines.get( 1 );
+      line2D_ID = getConversionID( transitionElementContinuityLines[0] );
+      line1D = (IContinuityLine1D)transitionElementContinuityLines[1];
     }
     final IFE1D2DNode node1D = line1D.getNodes()[0];
     node1D_ID = getConversionID( node1D );
@@ -556,7 +555,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
             leftParent = getConversionIDIntern( leftElement, edge );
           else
             leftParent = 0;
-          
+
           if( rightElement != null && isCalcUnitElement( rightElement ) )
             rightParent = getConversionIDIntern( rightElement, edge );
           else
@@ -900,12 +899,12 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     // for the export case we also do not need the "box", we will just export all of the elements from the model.
     // additional check for membership of calculation unit for each element in the loop, was also removed.
 
-    final List<IFE1D2DElement> elementsInBBox = m_discretisationModel1d2d.getElements();
+    final IFE1D2DElement[] elementsInBBox = m_discretisationModel1d2d.getElements();
 
-    final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<>( elementsInBBox.size() * 2 );
+    final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<>( elementsInBBox.length * 2 );
 
     int lIntWeirDirection = 0;
-    if( elementsInBBox.size() == 0 )
+    if( elementsInBBox.length == 0 )
     {
       final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.25" ); //$NON-NLS-1$
       final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
@@ -1190,19 +1189,13 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     double velYComp = 0;
     List<Double> velTotal = new ArrayList<>();
     double virtDepth = 0;
-    final List<LINE_CASES> restartCases = new ArrayList<>();
-
-    restartCases.add( LINE_CASES.VA );
-    restartCases.add( LINE_CASES.GA );
-    restartCases.add( LINE_CASES.VO );
-    restartCases.add( LINE_CASES.GO );
 
     // --------------------------------------------------------------------------------------------------------
     // Write the velocities and the depth values in the VA-line; if RESTART should be done, this is the minimum
     // information, i.e.
     // enough information for restart with steady state, but not enough for unsteady calculations.
     // -------------------------------------------------------------------------------------------
-    for( final LINE_CASES restartCase : restartCases )
+    for( final LINE_CASES restartCase : LINE_CASES.values() )
     {
 
       switch( restartCase )

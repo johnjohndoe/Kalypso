@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +49,7 @@ import java.util.List;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -61,13 +63,15 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
   }
 
   @Override
-  public void setNodes( final List<IFE1D2DNode> nodes )
+  public void setNodes( final IFE1D2DNode[] nodes )
   {
     final List<IFE1D2DNode> recalculatedNodes = recalculateCurve( nodes );
-    nodesInternal().clear();
-    for( final IFE1D2DNode node : recalculatedNodes )
-      addNode( node );
     setGeometry( calculateGeometry( recalculatedNodes ) );
+    final FeatureList nodesInternal = nodesInternal();
+    nodesInternal.clear();
+    for( final IFE1D2DNode node : recalculatedNodes )
+      nodesInternal.addLink( node );
+    setEnvelopesUpdated();
   }
 
   private GM_Curve calculateGeometry( final List<IFE1D2DNode> nodes )
@@ -90,9 +94,9 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     }
   }
 
-  private final List<IFE1D2DNode> recalculateCurve( final List<IFE1D2DNode> nodes )
+  private final List<IFE1D2DNode> recalculateCurve( final IFE1D2DNode[] nodes )
   {
-    final Iterator<IFE1D2DNode> iterator = nodes.iterator();
+    final Iterator<IFE1D2DNode> iterator = Arrays.asList( nodes ).iterator();
     final IFE1D2DNode startNode = iterator.next();
     final List<IFE1D2DNode> curveNodes = new ArrayList<>();
     curveNodes.add( startNode );

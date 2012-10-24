@@ -360,7 +360,7 @@
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element ref="wb1d2d:elementContainer" minOccurs="0"
-						maxOccurs="unbounded" />
+						maxOccurs="16" />
 					<xs:element name="roughnessClsID" type="xs:string" />
 					<xs:element name="roughnessStyle" type="xs:string" />
 					<xs:element name="correction_ks" type="xs:double" />
@@ -488,8 +488,8 @@
 						maxOccurs="2" />
 					<xs:element ref="wb1d2d:middleNode" minOccurs="0"
 						maxOccurs="1" />
-					<xs:element ref="wb1d2d:edgeContainer" minOccurs="0"
-						maxOccurs="unbounded" />
+					<xs:element ref="wb1d2d:edgeContainer" minOccurs="1"
+						maxOccurs="2" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -625,7 +625,7 @@
 					<xs:element ref="gml:pointProperty" minOccurs="1"
 						maxOccurs="1" />
 					<xs:element ref="wb1d2d:nodeContainer" minOccurs="1"
-						maxOccurs="unbounded" />
+						maxOccurs="16" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -682,7 +682,7 @@
 		<xs:complexContent>
 			<xs:extension base="wb1d2d:LineType">
 				<xs:sequence>
-					<xs:element ref="wb1d2d:node" minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="wb1d2d:node" minOccurs="1" maxOccurs="1" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

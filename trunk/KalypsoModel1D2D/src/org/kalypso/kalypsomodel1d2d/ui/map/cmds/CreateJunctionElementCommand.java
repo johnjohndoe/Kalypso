@@ -77,7 +77,7 @@ public class CreateJunctionElementCommand implements IFeatureChangeCommand
     {
       try
       {
-        m_junctionElement = m_model.getComplexElements().addNew( IJunctionElement.QNAME, IJunctionElement.class );
+        m_junctionElement = m_model.createJunctionElement();
         for( final IContinuityLine1D line : m_lines )
           m_junctionElement.addLinkedItem( line );
         final Feature feature = m_junctionElement;

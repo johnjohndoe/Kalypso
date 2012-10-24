@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFENetItem;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
@@ -225,7 +226,7 @@ public class DeleteFeElementsHelper
   private static IStatus checkContinuityLines( final IFEDiscretisationModel1d2d discretisationModel, final EasyFeatureWrapper[] selected )
   {
     final List<IFE1D2DNode> clNodes = new ArrayList<>();
-    final IFeatureBindingCollection<IFELine> continuityLines = discretisationModel.getContinuityLines();
+    final IFELine[] continuityLines = discretisationModel.getContinuityLines();
     for( final IFELine line : continuityLines )
       clNodes.addAll( Arrays.asList( line.getNodes() ) ); // usually lines are not overlapped so there is no need to check if some of
     // the nodes are already in the list
@@ -319,13 +320,13 @@ public class DeleteFeElementsHelper
       final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class.getName() );
 
-      final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = discretisationModel.getComplexElements();
+      final IFE1D2DComplexElement<IFENetItem>[] complexElements = discretisationModel.getComplexElements();
       for( final IFE1D2DComplexElement complexElement : complexElements )
       {
         if( complexElement instanceof ITransitionElement )
         {
           final ITransitionElement transitionElement = (ITransitionElement)complexElement;
-          final List<IFELine> continuityLines = transitionElement.getContinuityLines();
+          final IFELine[] continuityLines = transitionElement.getElements();
           for( final IFELine line : continuityLines )
           {
             for( final EasyFeatureWrapper element : selected )
@@ -340,7 +341,7 @@ public class DeleteFeElementsHelper
         if( complexElement instanceof IJunctionElement )
         {
           final IJunctionElement junctionElement = (IJunctionElement)complexElement;
-          final List<IFELine> continuityLines = junctionElement.getContinuityLines();
+          final IFELine[] continuityLines = junctionElement.getElements();
           for( final IFELine line : continuityLines )
           {
             for( final EasyFeatureWrapper element : selected )

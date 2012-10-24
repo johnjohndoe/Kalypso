@@ -64,20 +64,9 @@ public abstract class FELine extends Feature_Impl implements IFELine
     return (FeatureList)getProperty( PROP_NODES );
   }
 
-  @Override
-  public void setGeometry( final GM_Curve value )
+  protected void setGeometry( final GM_Curve value )
   {
     setProperty( PROP_GEOMETRY, value );
-    setEnvelopesUpdated();
-  }
-
-  @Override
-  public void addNode( final IFE1D2DNode node )
-  {
-    Assert.throwIAEOnNullParam( node, "node" );
-    if( nodesInternal().containsOrLinksTo( node ) )
-      return;
-    nodesInternal().addLink( node );
     setEnvelopesUpdated();
   }
 
