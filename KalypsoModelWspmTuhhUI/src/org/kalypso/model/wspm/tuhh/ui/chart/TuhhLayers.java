@@ -55,7 +55,6 @@ import org.kalypso.model.wspm.tuhh.ui.chart.data.TuhhResultDataProvider;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.PointMarkerLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.RiverChannelLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.RoughnessLayer;
-import org.kalypso.model.wspm.tuhh.ui.chart.layers.StationPointLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingBridgeTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingWeirTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.DeviderTheme;
@@ -115,7 +114,7 @@ final class TuhhLayers
     return new DeviderTheme( profil, subLayers, cmScreen );
   }
 
-  public static IProfilChartLayer createRoughnessLayer( final IProfile profil, final CoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createRoughnessLayer( final IProfile profil, final ICoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
     final RoughnessLayer ks = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, styleProvider );
     final RoughnessLayer kst = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, styleProvider );
@@ -127,15 +126,15 @@ final class TuhhLayers
     return new RoughnessTheme( profil, subLayers, mapper );
   }
 
-  public static IProfilChartLayer createGelaendeLayer( final IProfile profil, final CoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createGelaendeLayer( final IProfile profil, final ICoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
-    final StationPointLayer stationPointLayer = new StationPointLayer( IWspmLayers.LAYER_GELAENDE, profil, IWspmPointProperties.POINT_PROPERTY_HOEHE, styleProvider );
+    final PointsLineLayer stationPointLayer = new PointsLineLayer( IWspmLayers.LAYER_GELAENDE, profil, IWspmPointProperties.POINT_PROPERTY_HOEHE, styleProvider );
     final StationLineLayer stationLineLayer = new StationLineLayer( profil, IWspmPointProperties.POINT_PROPERTY_HOEHE );
 
     return new CrossSectionTheme( profil, new IProfilChartLayer[] { stationLineLayer, stationPointLayer }, mapper );
   }
 
-  public static IProfilChartLayer createVegetationLayer( final IProfile profil, final CoordinateMapper cmLeft, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createVegetationLayer( final IProfile profil, final ICoordinateMapper cmLeft, final LayerStyleProviderTuhh styleProvider )
   {
     final ComponentLayer ax = new ComponentLayer( profil, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, false );
     final ComponentLayer ay = new ComponentLayer( profil, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, false );
