@@ -111,7 +111,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
    * <li/>Second element an instance of {@link IFolder}
    * <li/>third element an instance of {@link CommandableWorkspace}
    * </ul>
-   *
+   * 
    * @param workbench
    *          the current workbench
    * @param selection
@@ -122,9 +122,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   {
     m_initialSelection = selection;
     final Iterator< ? > selIterator = selection.iterator();
-    m_terrainModel = (ITerrainModel) selIterator.next();
-    m_modelFolder = (IFolder) selIterator.next();
-    m_tempFolder = (IFolder) selIterator.next();
+    m_terrainModel = (ITerrainModel)selIterator.next();
+    m_modelFolder = (IFolder)selIterator.next();
+    m_tempFolder = (IFolder)selIterator.next();
   }
 
   @Override
@@ -158,13 +158,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             SubMonitor progress = null;
             if( monitor != null )
             {
-              progress = SubMonitor.convert( monitor, Messages.getString("ImportElevationWizard.0"), 100 ); //$NON-NLS-1$
+              progress = SubMonitor.convert( monitor, Messages.getString( "ImportElevationWizard.0" ), 100 ); //$NON-NLS-1$
             }
-            ITerrainElevationModelSystem temSys = ImportElevationWizard.this.m_terrainModel.getTerrainElevationModelSystem();
-            if( temSys == null )
-            {
-              temSys =  ImportElevationWizard.this.m_terrainModel.getTerrainElevationModelSystem();
-            }
+            final ITerrainElevationModelSystem temSys = m_terrainModel.getTerrainElevationModelSystem();
 
             final GMLWorkspace workspace = temSys.getWorkspace();
 
@@ -196,7 +192,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               nativeTEMRelPath = getUTF_DecodedFile( dstFileTif ).toString();
             }
 
-            final INativeTerrainElevationModelWrapper tem = (INativeTerrainElevationModelWrapper) temSys.getTerrainElevationModels().addNew( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
+            final INativeTerrainElevationModelWrapper tem = (INativeTerrainElevationModelWrapper)temSys.getTerrainElevationModels().addNew( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
             tem.setSourceFile( nativeTEMRelPath );
 
             // TODO introduce in the first page a name imput field and gets the
@@ -262,7 +258,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   String getNewFileName( final File folder, final File srcFileTif )
   {
     final Random generator = new Random( 126545 );
-    final int key = (int) ((new Date()).getTime() + generator.nextInt());
+    final int key = (int)((new Date()).getTime() + generator.nextInt());
 
     if( new File( folder, getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif ).toString() ).exists() ) //$NON-NLS-1$ //$NON-NLS-2$
       getNewFileName( folder, srcFileTif );
@@ -301,7 +297,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     SubMonitor progress = null;
     if( monitor2 != null )
     {
-      final String taskName = String.format( Messages.getString("ImportElevationWizard.1"), src.getName(), dst.getName() ); //$NON-NLS-1$
+      final String taskName = String.format( Messages.getString( "ImportElevationWizard.1" ), src.getName(), dst.getName() ); //$NON-NLS-1$
       progress = SubMonitor.convert( monitor2, taskName, 100 );
     }
 
