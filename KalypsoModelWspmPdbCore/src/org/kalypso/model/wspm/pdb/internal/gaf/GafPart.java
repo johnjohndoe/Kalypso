@@ -124,7 +124,7 @@ public class GafPart
 
   /**
    * HACK: ugly, due to (probably) bugs in hibernatespatial, oracle does not accept the empty linestring.<br/>
-   * We must return null in that case.
+   * We must return <code>null</code> in that case.
    */
   private Geometry createEmptyGeometry( final String dbType )
   {

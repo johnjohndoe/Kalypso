@@ -296,7 +296,7 @@ public class Gaf2Db implements IPdbOperation
   }
 
   /**
-   * Calculates the widht of a point if it is not set in the gaf file.<br/>
+   * Calculates the width of a point if it is not set in the gaf file.<br/>
    * For PP points, it is just the distance to the first point.<br/>
    * For non-pp points, it is the station of the point projected to the pp-line.
    */
