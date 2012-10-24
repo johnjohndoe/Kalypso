@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
+import org.apache.commons.lang3.StringUtils;
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -59,7 +61,10 @@ public class StationPointLayer extends PointsLineLayer
   public String getTooltipInfo( final IProfileRecord point )
   {
     final String tp = super.getTooltipInfo( point );
-    final String s = getProfil().getComment();
-    return s == "" ? tp : tp + "\n" + s; //$NON-NLS-1$ //$NON-NLS-2$
+    String comment = point.getComment();
+    if( StringUtils.isBlank( comment ))
+      return tp;
+    
+    return tp + "\n" + comment; //$NON-NLS-1$
   }
 }
