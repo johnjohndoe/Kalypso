@@ -70,9 +70,9 @@ public interface IThiessenStation extends Feature
 
   void setActive( boolean active );
 
-  GM_Polygon<GM_AbstractSurfacePatch> getThiessenArea( );
+  GM_Polygon getThiessenArea( );
 
-  void setThiessenArea( GM_Polygon< ? > area );
+  void setThiessenArea( GM_Polygon area );
 
   IXLinkedFeature getStation( );
 

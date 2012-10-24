@@ -159,7 +159,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
       if( m_modelElement instanceof IPolyElement )
       {
         final IPolyElement polyElement = (IPolyElement)m_modelElement;
-        final GM_Polygon<GM_PolygonPatch> surface = polyElement.getGeometry();
+        final GM_Polygon surface = polyElement.getGeometry();
 
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
         final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );

@@ -111,7 +111,7 @@ public class ModelTinExporter implements ICoreRunnableWithProgress
         if( element instanceof IPolyElement )
         {
           final IPolyElement poly = (IPolyElement)element;
-          final GM_Polygon<GM_PolygonPatch> surface = poly.getGeometry();
+          final GM_Polygon surface = poly.getGeometry();
           if( surface != null )
           {
             final GM_Position[] exteriorRing = surface.getSurfacePatch().getExteriorRing();

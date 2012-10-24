@@ -91,7 +91,7 @@ public interface ICatchment extends Feature
   /**
    * Returns the area from the underlying linked feature via the area property of the generator.
    */
-  GM_Polygon< ? > resolveArea( );
+  GM_Polygon resolveArea( );
 
   /**
    * Returns the name from the underlying linked feature via the name property of the generator.

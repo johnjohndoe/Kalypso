@@ -216,7 +216,7 @@ public class ElementGeometryEditor
         final IPolyElement elementForNewNode = discModel.find2DElement( m_endPoint, 0.0 );
         if( elementForNewNode != null )
         {
-          final GM_Polygon<GM_PolygonPatch> surface = elementForNewNode.getGeometry();
+          final GM_Polygon surface = elementForNewNode.getGeometry();
           if( surface.contains( m_endPoint ) && !m_elementList.contains( elementForNewNode ) )
             return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.2" ) ); //$NON-NLS-1$
         }
@@ -238,7 +238,7 @@ public class ElementGeometryEditor
         if( GeometryUtilities.isSelfIntersecting( poses ) )
           return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.4" ) ); //$NON-NLS-1$
 
-        final GM_Polygon< ? extends GM_AbstractSurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, crs );
+        final GM_Polygon newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, crs );
 
         // D.2) new element is not convex
         if( newSurface.getConvexHull().difference( newSurface ) != null && poses.length < 4 )
@@ -251,7 +251,7 @@ public class ElementGeometryEditor
           if( element instanceof IPolyElement )
           {
             final IPolyElement element2D = (IPolyElement)element;
-            final GM_Polygon<GM_PolygonPatch> eleGeom = element2D.getGeometry();
+            final GM_Polygon eleGeom = element2D.getGeometry();
             if( eleGeom.intersects( newSurface ) && !m_elementList.contains( element2D ) )
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );

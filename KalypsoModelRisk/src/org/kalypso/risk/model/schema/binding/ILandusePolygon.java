@@ -25,9 +25,9 @@ public interface ILandusePolygon extends Feature
 
   public QName PROPERTY_ISURBANTYPE = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "isUrbanLanduseType" ); //$NON-NLS-1$
 
-  public void setGeometry( final GM_Polygon< ? > surface );
+  public void setGeometry( final GM_Polygon surface );
 
-  public GM_Polygon< ? > getGeometry( );
+  public GM_Polygon getGeometry( );
 
   public void setStyleType( final String styleType );
 

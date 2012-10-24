@@ -124,7 +124,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
       {
         try
         {
-          final GM_Polygon<GM_PolygonPatch> surface = ((IPolyElement)element).getGeometry();
+          final GM_Polygon surface = ((IPolyElement)element).getGeometry();
           paintSurface( surface, ELEMENT_FILL_COLOR, (Graphics2D)g, projection, ELEMENT_BORDER_WIDTH );
         }
         catch( final Exception e )
@@ -165,7 +165,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     }
   }
 
-  public static final void paintSurface( final GM_Polygon< ? > surface, final Color color, final Graphics2D g2d, final GeoTransform projection, final float lineWidth )
+  public static final void paintSurface( final GM_Polygon surface, final Color color, final Graphics2D g2d, final GeoTransform projection, final float lineWidth )
   {
     try
     {
@@ -198,7 +198,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * calculates the Area (image or screen coordinates) where to draw the surface.
    */
-  public static final Area calcTargetCoordinates( final GeoTransform projection, final GM_Polygon< ? > surface ) throws Exception
+  public static final Area calcTargetCoordinates( final GeoTransform projection, final GM_Polygon surface ) throws Exception
   {
     final float width = 1;
     try

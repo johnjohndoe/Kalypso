@@ -28,7 +28,7 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
   }
 
   @Override
-  public GM_Polygon<GM_PolygonPatch> getGeometry( )
+  public GM_Polygon getGeometry( )
   {
     return getProperty( QNAME_PROP_GEOMETRY, GM_Polygon.class );
   }

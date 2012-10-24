@@ -65,7 +65,7 @@ public interface IFloodPolygon extends Feature
 
   public boolean contains( GM_Position pos );
 
-  public GM_Polygon<GM_AbstractSurfacePatch> getArea( );
+  public GM_Polygon getArea( );
 
   public IFeatureBindingCollection<IRunoffEvent> getEvents( );
 }

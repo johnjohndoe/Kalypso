@@ -106,7 +106,7 @@ public class CatchmentInfo
 
   public String checkArea( )
   {
-    final GM_Polygon< ? > geometry = m_catchment.getGeometry();
+    final GM_Polygon geometry = m_catchment.getGeometry();
     final double catchmentAre = geometry.getArea();
 
     final double hydrotopArea = getTotalSealing().getArea();

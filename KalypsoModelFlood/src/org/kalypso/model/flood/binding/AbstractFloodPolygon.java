@@ -82,7 +82,7 @@ public abstract class AbstractFloodPolygon extends Feature_Impl implements IFloo
   }
 
   @Override
-  public GM_Polygon<GM_AbstractSurfacePatch> getArea( )
+  public GM_Polygon getArea( )
   {
     return getProperty( QNAME_PROP_AREA, GM_Polygon.class );
   }

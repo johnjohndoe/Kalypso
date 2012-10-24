@@ -103,13 +103,13 @@ public class QuadMeshValidator
         return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.5" ) ); //$NON-NLS-1$
 
       // New Element intersects other elements
-      final GM_Polygon< ? extends GM_AbstractSurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Polygon newSurface = GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final List<IFE1D2DElement> elements = discModel.queryElements( newSurface.getEnvelope(), null );
       for( final IFE1D2DElement element : elements )
       {
         if( element instanceof IPolyElement )
         {
-          final GM_Polygon<GM_PolygonPatch> eleGeom = ((IPolyElement)element).getGeometry();
+          final GM_Polygon eleGeom = ((IPolyElement)element).getGeometry();
           if( eleGeom.intersects( newSurface ) )
           {
             final GM_Object intersection = eleGeom.intersection( newSurface );

@@ -122,7 +122,7 @@ public class RoughnessPolygonCollection extends FeatureBindingCollection<IRoughn
   }
 
   @Override
-  public List<IRoughnessPolygon> selectRoughnessPolygons( final GM_Polygon< ? > selectionZone )
+  public List<IRoughnessPolygon> selectRoughnessPolygons( final GM_Polygon selectionZone )
   {
     return query( selectionZone, IRoughnessPolygon.PROP_GEOMETRY, false );
   }

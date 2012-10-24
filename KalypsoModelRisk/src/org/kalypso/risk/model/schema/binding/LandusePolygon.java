@@ -19,7 +19,7 @@ public class LandusePolygon extends Feature_Impl implements ILandusePolygon
   }
 
   @Override
-  public void setGeometry( final GM_Polygon< ? > surface )
+  public void setGeometry( final GM_Polygon surface )
   {
     setProperty( ILandusePolygon.PROPERTY_GEOMETRY, surface );
   }
@@ -125,7 +125,7 @@ public class LandusePolygon extends Feature_Impl implements ILandusePolygon
    * @see org.kalypso.risk.model.schema.binding.ILandusePolygon#getGeometry()
    */
   @Override
-  public GM_Polygon< ? > getGeometry( )
+  public GM_Polygon getGeometry( )
   {
     return getProperty( ILandusePolygon.PROPERTY_GEOMETRY, GM_Polygon.class );
   }

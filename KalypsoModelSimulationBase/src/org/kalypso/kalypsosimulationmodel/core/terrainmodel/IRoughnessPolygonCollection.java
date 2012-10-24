@@ -32,7 +32,7 @@ public interface IRoughnessPolygonCollection extends IFeatureBindingCollection<I
    *          the area where to select the roughness polygon
    * @return a set of rougness polygons overlaping the given zone.
    */
-  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Polygon< ? > selectionZone );
+  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Polygon selectionZone );
 
   /**
    * Gets all roughness polygons in this collection

@@ -81,7 +81,7 @@ class TriangulateGeometryData extends AbstractModelObject
 
   private GM_MultiCurve m_breaklines = null;
 
-  private GM_Polygon< ? extends GM_AbstractSurfacePatch> m_boundaryGeom;
+  private GM_Polygon m_boundaryGeom;
 
   private GM_TriangulatedSurface m_tin;
 
@@ -159,7 +159,7 @@ class TriangulateGeometryData extends AbstractModelObject
     return m_tin;
   }
 
-  public void setBoundary( final GM_Polygon< ? > boundaryGeom )
+  public void setBoundary( final GM_Polygon boundaryGeom )
   {
     m_boundaryGeom = boundaryGeom;
   }

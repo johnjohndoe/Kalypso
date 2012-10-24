@@ -95,7 +95,7 @@ class OverlayHydrotopeInput extends AbstractHydrotopeInput<OverlayElement>
     {
       try
       {
-        final GM_Polygon< ? > geometry = catchment.getGeometry();
+        final GM_Polygon geometry = catchment.getGeometry();
         final Polygon catchmentPolygon = (Polygon) JTSAdapter.export( geometry );
         catchmentArea = catchmentArea.union( catchmentPolygon );
       }

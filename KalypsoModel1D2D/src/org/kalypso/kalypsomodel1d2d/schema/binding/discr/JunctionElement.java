@@ -95,7 +95,7 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
     elementPositions.add( elementPositions.get( 0 ) );
 
     final String crs = linesInternal[0].getGeometry().getCoordinateSystem();
-    final GM_Polygon< ? extends GM_AbstractSurfacePatch> createGM_Surface = GeometryFactory.createGM_Surface( elementPositions.toArray( new GM_Position[] {} ), new GM_Position[][] {}, crs );
+    final GM_Polygon createGM_Surface = GeometryFactory.createGM_Surface( elementPositions.toArray( new GM_Position[] {} ), new GM_Position[][] {}, crs );
     final Geometry export = JTSAdapter.export( createGM_Surface );
     final Geometry convexHull = export.convexHull();
     return JTSAdapter.wrap( convexHull, crs );

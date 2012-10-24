@@ -134,7 +134,7 @@ public final class RainfallGeneratorUtilities
   {
     if( object instanceof GM_Polygon )
     {
-      final GM_Polygon< ? > surface = (GM_Polygon< ? >) object;
+      final GM_Polygon surface = (GM_Polygon) object;
       return GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { surface }, surface.getCoordinateSystem() );
     }
 

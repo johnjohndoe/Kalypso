@@ -112,21 +112,21 @@ public final class PolygonIntersectionHelper
       return (GM_MultiSurface) geometry;
     else if( geometry instanceof GM_Polygon )
     {
-      final GM_Polygon< ? > surface = (GM_Polygon< ? >) geometry;
+      final GM_Polygon surface = (GM_Polygon) geometry;
       return GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { surface }, geometry.getCoordinateSystem() );
     }
     else if( geometry instanceof GM_MultiPrimitive )
     {
       final GM_Object[] all = ((GM_MultiPrimitive) geometry).getAll();
-      final List<GM_Polygon< ? >> outputList = new ArrayList<>( all.length );
+      final List<GM_Polygon> outputList = new ArrayList<>( all.length );
       for( final GM_Object geom : all )
       {
         if( geom instanceof GM_Polygon )
         {
-          outputList.add( (GM_Polygon< ? >) geom );
+          outputList.add( (GM_Polygon) geom );
         }
       }
-      return GeometryFactory.createGM_MultiSurface( outputList.toArray( new GM_Polygon< ? >[outputList.size()] ), geometry.getCoordinateSystem() );
+      return GeometryFactory.createGM_MultiSurface( outputList.toArray( new GM_Polygon[outputList.size()] ), geometry.getCoordinateSystem() );
     }
     return null;
   }

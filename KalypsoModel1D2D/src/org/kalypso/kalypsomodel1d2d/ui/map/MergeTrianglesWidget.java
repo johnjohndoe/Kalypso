@@ -161,7 +161,7 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
     try
     {
       final IFE1D2DElement[] elements2remove = m_currentEdge.getLinkedElements();
-      final GM_Polygon<GM_AbstractSurfacePatch> newElement = createNewElement( (IPolyElement)elements2remove[0], (IPolyElement)elements2remove[1] );
+      final GM_Polygon newElement = createNewElement( (IPolyElement)elements2remove[0], (IPolyElement)elements2remove[1] );
       newElement.setCoordinateSystem( m_currentEdge.getGeometry().getCoordinateSystem() );
       final CommandableWorkspace workspace = m_theme.getWorkspace();
 
@@ -187,10 +187,10 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
    * Creates the new element from the two adjacent triangles.<br>
    * We just make the geometric union, that should do it.
    */
-  private GM_Polygon<GM_AbstractSurfacePatch> createNewElement( final IPolyElement element1, final IPolyElement element2 ) throws GM_Exception
+  private GM_Polygon createNewElement( final IPolyElement element1, final IPolyElement element2 ) throws GM_Exception
   {
-    final GM_Polygon<GM_PolygonPatch> geom1 = element1.getGeometry();
-    final GM_Polygon<GM_PolygonPatch> geom2 = element2.getGeometry();
+    final GM_Polygon geom1 = element1.getGeometry();
+    final GM_Polygon geom2 = element2.getGeometry();
 
     final Geometry jtsGeom1 = JTSAdapter.export( geom1 );
     final Geometry jtsGeom2 = JTSAdapter.export( geom2 );
@@ -199,7 +199,7 @@ public class MergeTrianglesWidget extends DeprecatedMouseWidget
     // TRICK: buffer with 0 in order to get a single geometry
     final Geometry buffer = union.buffer( 0 );
 
-    return (GM_Polygon<GM_AbstractSurfacePatch>)JTSAdapter.wrap( buffer );
+    return (GM_Polygon)JTSAdapter.wrap( buffer );
   }
 
   @Override

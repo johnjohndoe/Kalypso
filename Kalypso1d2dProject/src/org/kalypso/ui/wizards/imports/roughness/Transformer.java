@@ -106,8 +106,8 @@ public class Transformer implements ICoreRunnableWithProgress
       if( gm_Whatever instanceof GM_MultiSurface )
       {
         final GM_MultiSurface multiSurface = (GM_MultiSurface) ((GM_MultiSurface) gm_Whatever).clone();
-        final GM_Polygon< ? >[] surfaces = multiSurface.getAllSurfaces();
-        for( final GM_Polygon< ? > element : surfaces )
+        final GM_Polygon[] surfaces = multiSurface.getAllSurfaces();
+        for( final GM_Polygon element : surfaces )
         {
           final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
           m_NumberOfEntriesAdded++;

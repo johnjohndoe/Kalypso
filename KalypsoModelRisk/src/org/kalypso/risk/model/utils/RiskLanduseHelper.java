@@ -317,8 +317,8 @@ public class RiskLanduseHelper
       if( shpGeometryProperty instanceof GM_MultiSurface )
       {
         final GM_MultiSurface multiSurface = (GM_MultiSurface) ((GM_MultiSurface) shpGeometryProperty).clone();
-        final GM_Polygon< ? >[] surfaces = multiSurface.getAllSurfaces();
-        for( final GM_Polygon< ? > surface : surfaces )
+        final GM_Polygon[] surfaces = multiSurface.getAllSurfaces();
+        for( final GM_Polygon surface : surfaces )
         {
           final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
           polygon.setGeometry( surface );
@@ -333,7 +333,7 @@ public class RiskLanduseHelper
         // FIXME: will never happen
 
         final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
-        polygon.setGeometry( (GM_Polygon< ? >) shpGeometryProperty );
+        polygon.setGeometry( (GM_Polygon) shpGeometryProperty );
         polygon.setLanduseClass( getLanduseClassByName( polygon, shpPropertyValue, landuseClassesList ) );
         // polygon.setStyleType( shpPropertyValue );
         polygon.setEnvelopesUpdated();

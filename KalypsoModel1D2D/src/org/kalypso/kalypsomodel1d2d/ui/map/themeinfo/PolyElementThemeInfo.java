@@ -34,7 +34,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
 
     try
     {
-      final GM_Polygon<GM_PolygonPatch> surface = polyElement.getGeometry();
+      final GM_Polygon surface = polyElement.getGeometry();
       final PolyChecker polyChecker = new PolyChecker( surface );
 
       formatter.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.0" ), polyChecker.getArea() ); //$NON-NLS-1$
@@ -102,7 +102,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
 
     private final double m_area;
 
-    public PolyChecker( final GM_Polygon<GM_PolygonPatch> surface )
+    public PolyChecker( final GM_Polygon surface )
     {
       final int surfaceSize = surface.size();
       double maxLength = 0.0;

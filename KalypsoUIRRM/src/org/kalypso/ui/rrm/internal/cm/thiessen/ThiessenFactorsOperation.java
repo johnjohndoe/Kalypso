@@ -127,7 +127,7 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
       catchment.clearAllWeights();
 
       /* Get the area of the catchment. */
-      final GM_Polygon< ? > catchmentArea = catchment.getCatchmentArea();
+      final GM_Polygon catchmentArea = catchment.getCatchmentArea();
       if( catchmentArea == null )
         System.out.println( "sososo" ); //$NON-NLS-1$
 

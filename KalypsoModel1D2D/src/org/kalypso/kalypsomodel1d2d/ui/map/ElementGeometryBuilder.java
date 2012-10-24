@@ -254,7 +254,7 @@ public class ElementGeometryBuilder
         final IFE1D2DNode foundNode = discModel.findNode( newPoint, SEARCH_DISTANCE );
         if( foundNode == null )
         {
-          final GM_Polygon<GM_PolygonPatch> surface = elementForNewNode.getGeometry();
+          final GM_Polygon surface = elementForNewNode.getGeometry();
           if( surface.contains( newPoint ) )
             return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.6" ) ); //$NON-NLS-1$
         }
@@ -292,7 +292,7 @@ public class ElementGeometryBuilder
         {
           if( element instanceof IPolyElement )
           {
-            final GM_Polygon<GM_PolygonPatch> eleGeom = ((IPolyElement)element).getGeometry();
+            final GM_Polygon eleGeom = ((IPolyElement)element).getGeometry();
             if( eleGeom == null )
             {
               // check for null geometries... What to do?
@@ -328,7 +328,7 @@ public class ElementGeometryBuilder
       if( GeometryUtilities.isSelfIntersecting( ring ) && pBoolFinalPont )
         return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ); //$NON-NLS-1$
 
-      final GM_Polygon< ? extends GM_AbstractSurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Polygon newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
       // new element is not convex
       if( m_cnt_points > 0 && newSurface.getConvexHull().difference( newSurface ) != null )
@@ -340,7 +340,7 @@ public class ElementGeometryBuilder
       {
         if( element instanceof IPolyElement )
         {
-          final GM_Polygon<GM_PolygonPatch> eleGeom = ((IPolyElement)element).getGeometry();
+          final GM_Polygon eleGeom = ((IPolyElement)element).getGeometry();
           if( eleGeom.intersects( newSurface ) && pBoolFinalPont )
           {
             final GM_Object intersection = eleGeom.intersection( newSurface );

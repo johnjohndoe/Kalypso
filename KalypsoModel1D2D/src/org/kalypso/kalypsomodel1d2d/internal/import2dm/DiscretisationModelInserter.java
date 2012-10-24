@@ -221,7 +221,7 @@ public class DiscretisationModelInserter
     try
     {
       final Polygon polygon = item.getPolygon();
-      final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon<GM_AbstractSurfacePatch>) JTSAdapter.wrapWithSrid( polygon );
+      final GM_Polygon surface = (GM_Polygon) JTSAdapter.wrapWithSrid( polygon );
 
       final Feature parentFeature = m_workspace.getRootFeature();
       final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );

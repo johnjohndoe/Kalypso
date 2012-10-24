@@ -282,7 +282,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
       final String catchmentId = catchment.getId();
       final String catchmentName = catchment.getName();
       final String catchmentDescription = catchment.getDescription();
-      final GM_Polygon< ? > catchmentArea = catchment.getGeometry();
+      final GM_Polygon catchmentArea = catchment.getGeometry();
 
       final CatchmentBean catchmentBean = new CatchmentBean();
       catchmentBean.setCatchmentRef( catchmentId );

@@ -180,7 +180,7 @@ public class Catchment extends AbstractNaModelElement
     return (Node) FeatureHelper.resolveLink( this, LINK_IZKN_NODE, true );
   }
 
-  public GM_Polygon< ? > getGeometry( )
+  public GM_Polygon getGeometry( )
   {
     return getProperty( PROP_GEOM, GM_Polygon.class );
   }

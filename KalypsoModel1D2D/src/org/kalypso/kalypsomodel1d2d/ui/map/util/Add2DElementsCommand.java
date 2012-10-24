@@ -193,7 +193,7 @@ public class Add2DElementsCommand implements ICommand
       return false;
 
     // REMARK: test with surface, because ring has no interior (being a hole)
-    final GM_Polygon< ? extends GM_AbstractSurfacePatch> newSurface = GeometryFactory.createGM_Surface( positions, null, srsName );
+    final GM_Polygon newSurface = GeometryFactory.createGM_Surface( positions, null, srsName );
     final Geometry newPolygon = JTSAdapter.export( newSurface );
 
     final List<IFE1D2DElement> foundElements = discModel.queryElements( newSurface.getEnvelope(), null );
@@ -201,7 +201,7 @@ public class Add2DElementsCommand implements ICommand
     {
       if( foundElement instanceof IPolyElement )
       {
-        final GM_Polygon<GM_PolygonPatch> foundGeometry = ((IPolyElement)foundElement).getGeometry();
+        final GM_Polygon foundGeometry = ((IPolyElement)foundElement).getGeometry();
         final Geometry foundPolygon = JTSAdapter.export( foundGeometry );
         if( foundPolygon.overlaps( newPolygon ) )
         {
@@ -233,7 +233,7 @@ public class Add2DElementsCommand implements ICommand
         final IPolyElement foundElement = discModel.find2DElement( nodeLocation, SNAP_DISTANCE );
         if( foundElement != null )
         {
-          final GM_Polygon<GM_PolygonPatch> geometry = foundElement.getGeometry();
+          final GM_Polygon geometry = foundElement.getGeometry();
           if( geometry.contains( nodeLocation ) )
           {
             // do not insert nodes that are placed on existing model(overlapped elements)

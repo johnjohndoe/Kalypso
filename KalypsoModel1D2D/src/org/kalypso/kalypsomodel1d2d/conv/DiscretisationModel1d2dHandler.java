@@ -514,7 +514,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       if( lElement instanceof IPolyElement )
       {
-        final GM_Polygon<GM_PolygonPatch> eleGeom = ((IPolyElement)lElement).getGeometry();
+        final GM_Polygon eleGeom = ((IPolyElement)lElement).getGeometry();
         if( eleGeom == null )
         {
           lSetToRemove.add( (IPolyElement)lElement );

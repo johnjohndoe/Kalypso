@@ -324,7 +324,7 @@ public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
       final IRoughnessPolygonCollection roughnessPolygonCollection = model.getRoughnessPolygonCollection( m_roughnessLayer );
       final IRoughnessPolygon newZone = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
 
-      newZone.setSurface( (GM_Polygon< ? >) poly );
+      newZone.setSurface( (GM_Polygon) poly );
       newZone.setRoughnessClass( selectedClass );
 
       /* Inform workspace */
