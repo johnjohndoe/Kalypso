@@ -44,7 +44,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 
 /**
  * Contains constants for the wspm models.
- *
+ * 
  * @author thuel2
  */
 public interface IWspmTuhhConstants extends IWspmConstants
@@ -53,7 +53,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   /**
    * The scale (i.e. fraction digits) for station values.
-   *
+   * 
    * @see BigDecimal
    */
   int STATION_SCALE = 4;
@@ -67,7 +67,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
    */
 
   String MARKER_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#"; //$NON-NLS-1$
-
 
   String POINT_PROPERTY = IWspmConstants.POINT_PROPERTY;
 
@@ -102,7 +101,9 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   String PROFIL_PROPERTY_WASSERSPIEGEL = PROFIL_PROPERTY + "WASSERSPIEGEL"; //$NON-NLS-1$
 
-  String PROFIL_PROPERTY_EVENT = "eventName"; //$NON-NLS-1$
+  String PROFIL_PROPERTY_EVENT_NAME = "eventName"; //$NON-NLS-1$
+
+  String PROFIL_PROPERTY_EVENT_TYPE = "eventType"; //$NON-NLS-1$
 
   /* Layer */
   String PROFILE_LAYER = "org.kalypso.model.wspm.tuhh.ui.chart.LAYER_"; //$NON-NLS-1$

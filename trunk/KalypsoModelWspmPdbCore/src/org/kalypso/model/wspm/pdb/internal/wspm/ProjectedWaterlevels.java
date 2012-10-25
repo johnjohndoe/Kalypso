@@ -123,7 +123,7 @@ class ProjectedWaterlevels
     final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon( IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS );
 
     /* set general data */
-    // TODO: important, that name is unique withing the cross section, how can we force this here?
+    // TODO: important, that name is unique within the cross section, how can we force this here?
     waterlevel2D.setValue( IGafConstants.PART_NAME, m_eventName );
 
     /* set global discharge value */
