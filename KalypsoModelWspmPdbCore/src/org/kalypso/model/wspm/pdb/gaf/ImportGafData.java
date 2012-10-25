@@ -325,7 +325,7 @@ public class ImportGafData extends AbstractModelObject
 
     final IStatus readGafStatus = getReadGafStatus();
 
-    m_gafProfiles = new GafProfiles( m_pointChecker, getTransformer(), m_geometryFactory, riverline, readGafStatus );
+    m_gafProfiles = new GafProfiles( m_pointChecker, getTransformer(), m_geometryFactory, riverline, readGafStatus, m_gafFile.getName() );
     m_gafProfiles.addLines( m_lines );
 
     setHasWaterlevels( updateWaterlevels() );

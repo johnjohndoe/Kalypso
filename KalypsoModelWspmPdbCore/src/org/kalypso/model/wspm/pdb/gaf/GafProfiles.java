@@ -60,7 +60,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Assembles all read points into different profiles.
- *
+ * 
  * @author Gernot Belger
  */
 public class GafProfiles
@@ -83,7 +83,9 @@ public class GafProfiles
 
   private IStatus m_status;
 
-  public GafProfiles( final GafPointCheck checker, final JTSTransformer jtsTransformer, final GeometryFactory geometryFactory, final LineString riverline, final IStatus readGafStatus )
+  private final String m_gafFilename;
+
+  public GafProfiles( final GafPointCheck checker, final JTSTransformer jtsTransformer, final GeometryFactory geometryFactory, final LineString riverline, final IStatus readGafStatus, final String gafFilename )
   {
     m_readGafStatus = readGafStatus;
     // REMARK: cannot rely on the factory of riverline, as that may be null
@@ -91,6 +93,7 @@ public class GafProfiles
     m_transformer = jtsTransformer;
     m_pointChecker = checker;
     m_riverline = riverline;
+    m_gafFilename = gafFilename;
   }
 
   public void addPoint( final GafPoint point )
@@ -172,5 +175,10 @@ public class GafProfiles
     }
 
     return m_status;
+  }
+
+  public String getGafFilename( )
+  {
+    return m_gafFilename;
   }
 }
