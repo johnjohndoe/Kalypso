@@ -39,6 +39,9 @@ public class WaterlelevelObjectSearcher
 
   public WaterlelevelObjectSearcher( final IProfile profile )
   {
+    if( profile == null )
+      return;
+
     final IProfileObject[] objects = profile.getProfileObjects();
     for( final IProfileObject object : objects )
       addWaterlevel( object );

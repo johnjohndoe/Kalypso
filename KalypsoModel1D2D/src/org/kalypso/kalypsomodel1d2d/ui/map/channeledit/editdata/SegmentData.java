@@ -62,7 +62,7 @@ import com.vividsolutions.jts.geom.Point;
 /**
  * Represants a segment of the river between two profiles.<br/>
  * The segment is directed going from 'down' to 'up'.<br/>
- *
+ * 
  * @author Thomas Jung
  */
 class SegmentData implements ISegmentData
@@ -137,7 +137,10 @@ class SegmentData implements ISegmentData
 
     final Envelope fullExtend = new Envelope();
     for( final Envelope box : boxes )
-      fullExtend.expandToInclude( box );
+    {
+      if( box != null )
+        fullExtend.expandToInclude( box );
+    }
 
     return JTSAdapter.wrap( fullExtend, srsName );
   }
