@@ -61,6 +61,7 @@ import org.kalypso.model.wspm.pdb.db.constants.EventConstants.WL_TYPE;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
@@ -163,7 +164,7 @@ public class SaveEventOperation implements IPdbOperation
     try
     {
       final int targetSRID = m_geometryFactory.getSRID();
-      // REMARK: profile objects have been build forfrom db objects, so srs is the same
+      // REMARK: profile objects have been build from db objects, so srs is the same
       final int profileSRID = targetSRID;
 
       final CrossSectionPartTypes partTypes = new CrossSectionPartTypes( session );
@@ -181,6 +182,10 @@ public class SaveEventOperation implements IPdbOperation
         final CrossSectionPart part = operation.getPart();
         part.setCrossSection( sectionProvider.getSection() );
         session.save( part );
+
+        final Set<Point> points = part.getPoints();
+        for( final Point point : points )
+          session.save( point );
       }
     }
     catch( final Exception e )
