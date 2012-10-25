@@ -492,7 +492,10 @@ public class CrossSectionConverter implements IProfileTransaction
     /* remember event */
     final Event event = part.getEvent();
     if( event != null )
-      profileObject.setValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT, event.getName() );
+    {
+      profileObject.setValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT_NAME, event.getName() );
+      profileObject.setValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT_TYPE, event.getType().name() );
+    }
 
     /* Guess special cases. */
     if( profileObject instanceof BuildingKreis )
