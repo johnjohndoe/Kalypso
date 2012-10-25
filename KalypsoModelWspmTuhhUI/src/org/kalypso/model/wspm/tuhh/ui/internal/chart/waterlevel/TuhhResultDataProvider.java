@@ -1,4 +1,4 @@
-package org.kalypso.model.wspm.tuhh.ui.chart.data;
+package org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel;
 
 import java.math.BigDecimal;
 import java.net.URL;

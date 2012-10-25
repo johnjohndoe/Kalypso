@@ -51,7 +51,6 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
-import org.kalypso.model.wspm.tuhh.ui.chart.data.TuhhResultDataProvider;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.PointMarkerLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.RiverChannelLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.RoughnessLayer;
@@ -60,7 +59,8 @@ import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingWeirTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.DeviderTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.RoughnessTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.VegetationTheme;
-import org.kalypso.model.wspm.tuhh.ui.chart.themes.WspFixationLayer;
+import org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel.TuhhResultDataProvider;
+import org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel.WspFixationLayer;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -182,15 +182,15 @@ final class TuhhLayers
 
   public static IProfilChartLayer createWspLayer( final IProfile profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
   {
-    final CoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
+    final ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
     final IWspLayerData wspLayerData = new TuhhResultDataProvider( profile, result, "activeIds" ); //$NON-NLS-1$
 
-    return new WspLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL, styleProvider, wspLayerData, cm );
+    return new WspLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL, new IProfilChartLayer[] {}, styleProvider, wspLayerData, cm );
   }
 
   public static IProfilChartLayer createWspFixationLayer( final IProfile profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
   {
-    final CoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
+    final ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
     final IWspLayerData data = new TuhhResultDataProvider( profile, result, "activeFixationIds" ); //$NON-NLS-1$
 
     return new WspFixationLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL_FIXIERUNG, styleProvider, data, cm );

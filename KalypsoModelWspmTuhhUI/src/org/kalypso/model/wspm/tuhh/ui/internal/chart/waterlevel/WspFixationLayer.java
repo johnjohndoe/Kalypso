@@ -38,12 +38,13 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart.themes;
+package org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel;
 
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspPanel;
@@ -58,7 +59,7 @@ public class WspFixationLayer extends WspLayer
 {
   public WspFixationLayer( final IProfile profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper< ? , ? > mapper )
   {
-    super( profile, layerId, styleProvider, data, mapper );
+    super( profile, layerId, new IProfilChartLayer[] { new WspPointsLayer( layerId, profile, data ), new WspSegmentsLayer( layerId, profile, data ) }, styleProvider, data, mapper );
 
     setTitle( Messages.getString( "WspFixationLayer_0" ) ); //$NON-NLS-1$
   }

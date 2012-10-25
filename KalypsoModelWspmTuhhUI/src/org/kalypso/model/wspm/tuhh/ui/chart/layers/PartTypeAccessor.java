@@ -41,7 +41,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 
 /**
  * Gives access to the part type of a given object part type.
- *
+ * 
  * @author Gernot Belger
  */
 public class PartTypeAccessor
@@ -118,8 +118,8 @@ public class PartTypeAccessor
     final RGB lineColor = wspmStyle.getStrokeColor();
     final ILineStyle outline = new LineStyle( lineWidth, lineColor, 255, 0, null, LINEJOIN.ROUND, LINECAP.ROUND, 0, true );
 
-    final int width = wspmStyle.getWidth();
-    final int height = wspmStyle.getHeight();
+    final int width = wspmStyle.getMarkerWidth();
+    final int height = wspmStyle.getMarkerHeight();
     final int alpha = 255;
     final RGB inlineColor = wspmStyle.getFillColor();
     final boolean isFillVisible = true;
@@ -130,14 +130,14 @@ public class PartTypeAccessor
 
   private IStyle convertLineStyle( final org.kalypso.model.wspm.core.gml.classifications.IStyle wspmStyle )
   {
-    final int width = wspmStyle.getWidth();
-    final RGB color = wspmStyle.getColor();
+    final int width = wspmStyle.getStrokeWidth();
+    final RGB color = wspmStyle.getStrokeColor();
     final int alpha = 255;
     final float dashOffset = 0;
     final float[] dashArray = new float[] { 10, 10 };
     final LINEJOIN lineJoin = LINEJOIN.ROUND;
     final LINECAP lineCap = LINECAP.ROUND;
-    final int miterLimit = 0 ;
+    final int miterLimit = 0;
 
     return new LineStyle( width, color, alpha, dashOffset, dashArray, lineJoin, lineCap, miterLimit, true );
   }

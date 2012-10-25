@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.ui.chart.data;
+package org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel;
 
 import java.util.ArrayList;
 import java.util.Collection;
