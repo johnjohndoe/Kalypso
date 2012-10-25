@@ -60,6 +60,4 @@ public class WspFixationLayer extends WspLayer
 
     setTitle( Messages.getString( "WspFixationLayer_0" ) ); //$NON-NLS-1$
   }
-
-  // TODO: if element contains objects, do not paint base data
 }
