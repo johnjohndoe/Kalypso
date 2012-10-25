@@ -74,7 +74,7 @@ import com.vividsolutions.jts.linearref.LocationIndexedLine;
 
 /**
  * Writes a gaf profile into the database.
- *
+ * 
  * @author Gernot Belger
  */
 public class Gaf2Db implements IPdbOperation
@@ -219,16 +219,20 @@ public class Gaf2Db implements IPdbOperation
     final String name = nameGenerator.createUniqueName( partKind.toString() );
 
     csPart.setName( name );
-    csPart.setDescription( StringUtils.EMPTY );
+
+    if( part.getKind() == GafKind.W )
+    {
+      final String gafFileName = m_profiles.getGafFilename();
+      csPart.setDescription( String.format( "aus '%s'", gafFileName ) );
+    }
+    else
+      csPart.setDescription( StringUtils.EMPTY );
 
     final CrossSectionPartType partType = findPartType( partKind );
     csPart.setCrossSectionPartType( partType );
 
     final Geometry line = part.getLine( dbType );
     csPart.setLine( line );
-
-// if( line == null )
-// return null;
 
     csPart.setCrossSection( crossSection );
     session.save( csPart );
