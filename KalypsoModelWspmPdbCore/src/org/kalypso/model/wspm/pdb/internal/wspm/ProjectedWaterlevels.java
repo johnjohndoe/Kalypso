@@ -54,7 +54,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Helper class that holds all the {@link ProjectedWaterlevel}s.
- *
+ * 
  * @author Gernot Belger
  */
 class ProjectedWaterlevels
@@ -165,7 +165,7 @@ class ProjectedWaterlevels
 
   private IProfileObject[] create2Dwaterlevels( final GenericProfileHorizon originalWaterlevel )
   {
-    final Coordinate[] profileCoordinates = extractWidthHeightCoordinates(  );
+    final Coordinate[] profileCoordinates = extractWidthHeightCoordinates();
     if( profileCoordinates.length < 2 )
       return new IProfileObject[] {};
 
@@ -325,7 +325,7 @@ class ProjectedWaterlevels
     for( final Coordinate coordinate : coordinates )
     {
       final double width = coordinate.x;
-      final double height = coordinate.x;
+      final double height = coordinate.y;
 
       /* extract location at width from profile */
       final Coordinate location = m_profileLine.getCoordinateAtM( width );
