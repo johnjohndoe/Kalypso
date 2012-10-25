@@ -58,7 +58,7 @@ public class ProfileObjectsLayer extends AbstractProfilLayer
 
   public ProfileObjectsLayer( final String id, final IProfile profil, final IProfileObject object, final String title )
   {
-    super( id, profil, null, null );
+    super( id, profil );
 
     m_object = object;
 
@@ -234,5 +234,27 @@ public class ProfileObjectsLayer extends AbstractProfilLayer
     lineFigure.setStyle( lineStyle );
     lineFigure.setPoints( points );
     lineFigure.paint( gc );
+  }
+
+  @Override
+  public void executeDrop( final Point point, final EditInfo dragStartData )
+  {
+  }
+
+  @Override
+  public void executeClick( final EditInfo dragStartData )
+  {
+  }
+
+  @Override
+  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
+  {
+    return null;
+  }
+
+  @Override
+  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
+  {
+    return null;
   }
 }

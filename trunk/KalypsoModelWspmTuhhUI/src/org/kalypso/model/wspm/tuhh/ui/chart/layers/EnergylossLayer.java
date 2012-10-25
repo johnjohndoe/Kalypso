@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
@@ -63,7 +64,7 @@ public class EnergylossLayer extends AbstractProfilLayer
 {
   public EnergylossLayer( final IProfile profil )
   {
-    super( "NullComponent", profil, "NullComponent", null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "NullComponent", profil ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
@@ -98,18 +99,54 @@ public class EnergylossLayer extends AbstractProfilLayer
   @Override
   public String getTitle( )
   {
-    return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.0"); //$NON-NLS-1$
-  /**  final IEnergylossProfileObject[] elpo = getProfil().getProfileObjects( IEnergylossProfileObject.class );
-    if( elpo.length > 0)
-    {
-      final IEnergylossProfileObject energyloss = elpo[0];
-      return energyloss.getObservation().getDescription();
-    }
-    return super.getTitle();**/
+    return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel.0" ); //$NON-NLS-1$
+    /**
+     * final IEnergylossProfileObject[] elpo = getProfil().getProfileObjects( IEnergylossProfileObject.class );
+     * if( elpo.length > 0)
+     * {
+     * final IEnergylossProfileObject energyloss = elpo[0];
+     * return energyloss.getObservation().getDescription();
+     * }
+     * return super.getTitle();
+     **/
   }
 
   @Override
   public EditInfo getHover( final Point pos )
+  {
+    return null;
+  }
+
+  @Override
+  public void executeDrop( final Point point, final EditInfo dragStartData )
+  {
+  }
+
+  @Override
+  public void executeClick( final EditInfo dragStartData )
+  {
+  }
+
+  @Override
+  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
+  {
+    return null;
+  }
+
+  @Override
+  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
+  {
+    return null;
+  }
+
+  @Override
+  public IDataRange<Double> getDomainRange( )
+  {
+    return null;
+  }
+
+  @Override
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return null;
   }

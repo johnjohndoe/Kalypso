@@ -43,8 +43,6 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
@@ -57,13 +55,6 @@ import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
-import de.openali.odysseus.chart.framework.model.style.IFill;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
-import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
-import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
@@ -75,13 +66,15 @@ public class CulvertLayer extends AbstractProfilLayer
 
   private EditInfo m_editInfo;
 
+  private final IAreaStyle m_style;
+
   public CulvertLayer( final IProfile profil, final ICulvertBuilding culvert, final ILayerStyleProvider styleProvider )
   {
-    super( IWspmTuhhConstants.LAYER_TUBES, profil, IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
+    super( IWspmTuhhConstants.LAYER_TUBES, profil );
 
     m_culvert = culvert;
 
-    getLineStyle().setColor( new RGB( 255, 255, 100 ) );
+    m_style = styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_TUBES + ILayerStyleProvider.AREA, IAreaStyle.class );
   }
 
   @Override
@@ -115,17 +108,8 @@ public class CulvertLayer extends AbstractProfilLayer
 
     m_editInfo = new EditInfo( this, hoverFigure, null, null, tooltip, null );
 
-    final IAreaStyle areaStyle = createStyle();
-    tubeFigure.setStyle( areaStyle );
+    tubeFigure.setStyle( m_style );
     tubeFigure.paint( gc );
-  }
-
-  private IAreaStyle createStyle( )
-  {
-    final IFill fill = new ColorFill( new RGB( 255, 255, 100 ) );
-    final ILineStyle stroke = new LineStyle( 2, new RGB( 0, 0, 0 ), 255, 0f, null, LINEJOIN.ROUND, LINECAP.ROUND, 1, true );
-
-    return new AreaStyle( fill, 128, stroke, true );
   }
 
   @Override
@@ -135,7 +119,7 @@ public class CulvertLayer extends AbstractProfilLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( IDataRange domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange domainIntervall )
   {
     return new CulvertPainter( m_culvert ).getTargetRange();
   }
@@ -143,7 +127,28 @@ public class CulvertLayer extends AbstractProfilLayer
   @Override
   public EditInfo getHover( final Point pos )
   {
-    // FIXME: we need a 'contains' method for the hover figure or something similar
+    return null;
+  }
+
+  @Override
+  public void executeDrop( final Point point, final EditInfo dragStartData )
+  {
+  }
+
+  @Override
+  public void executeClick( final EditInfo dragStartData )
+  {
+  }
+
+  @Override
+  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
+  {
+    return null;
+  }
+
+  @Override
+  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
+  {
     return null;
   }
 }

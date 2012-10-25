@@ -48,8 +48,13 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil;
 import org.kalypso.model.wspm.ui.view.AbstractLayerStyleProvider;
 
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.IFill;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
+import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 
@@ -58,14 +63,9 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
  */
 public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 {
-  private static final String POINT = "_POINT"; //$NON-NLS-1$
-
-  private static final String LINE = "_LINE"; //$NON-NLS-1$
-
   @Override
   public void createStyles( )
   {
-    // TODO: read styles from *.kod file
     createPointMarkerStyles();
     createCrossSectionStyles();
     createRoughnessStyles();
@@ -74,6 +74,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     createVegetationStyle();
     createWasserspiegel2dStyle();
     createWasserspiegelStyle();
+    createTubeStyle();
   }
 
   private void createWasserspiegel2dStyle( )
@@ -149,5 +150,18 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 
     psKS.setInlineColor( new RGB( 0, 0, 0 ) );
     psKS.setAlpha( 50 );
+  }
+
+  private void createTubeStyle( )
+  {
+    final IAreaStyle style = getStyleFor( IWspmTuhhConstants.LAYER_TUBES + AREA, IAreaStyle.class ); //$NON-NLS-1$
+
+    final IFill fill = new ColorFill( new RGB( 255, 255, 100 ) );
+    final ILineStyle stroke = new LineStyle( 2, new RGB( 0, 0, 0 ), 255, 0f, null, LINEJOIN.ROUND, LINECAP.ROUND, 1, true );
+
+    // / FIXME: ugly, styles should be immutable -> first create styles, then register
+    style.setFill( fill );
+    style.setStroke( stroke );
+    style.setAlpha( 128 );
   }
 }
