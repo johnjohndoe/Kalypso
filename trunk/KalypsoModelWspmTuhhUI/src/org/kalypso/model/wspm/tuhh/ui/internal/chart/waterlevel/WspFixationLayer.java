@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -47,6 +50,8 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
 
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -59,5 +64,25 @@ public class WspFixationLayer extends WspLayer
     super( profile, layerId, new IProfilChartLayer[] { new WspPointsLayer( layerId, profile, data ), new WspSegmentsLayer( layerId, profile, data ) }, styleProvider, data, mapper, new WaterLevelFixationFilter() );
 
     setTitle( Messages.getString( "WspFixationLayer_0" ) ); //$NON-NLS-1$
+  }
+
+  @Override
+  public IChartLayer[] getLegendNodes( )
+  {
+    final Collection<IChartLayer> layers = new ArrayList<>( 2 );
+
+    final ILayerManager layerManager = getLayerManager();
+    final IChartLayer[] children = layerManager.getLayers();
+    for( final IChartLayer child : children )
+    {
+      if( child instanceof WspObjectsLayer )
+      {
+        final WspObjectsLayer wspLayer = (WspObjectsLayer)child;
+        if( wspLayer.hasSomethingToShow() )
+          layers.add( wspLayer );
+      }
+    }
+
+    return layers.toArray( new IChartLayer[layers.size()] );
   }
 }
