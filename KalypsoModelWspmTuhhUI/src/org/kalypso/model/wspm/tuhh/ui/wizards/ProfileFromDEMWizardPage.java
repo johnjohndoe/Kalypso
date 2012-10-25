@@ -60,6 +60,8 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.DoubleNaNValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
+import org.kalypso.model.wspm.core.gml.SimpleProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
@@ -112,8 +114,8 @@ public class ProfileFromDEMWizardPage extends WizardPage
       return;
 
     final Label lName = new Label( parent, SWT.NONE );
-    lName.setText( Messages.getString("ProfileFromDEMWizardPage.2") ); //$NON-NLS-1$
-    lName.setToolTipText( Messages.getString("ProfileFromDEMWizardPage.3") ); //$NON-NLS-1$
+    lName.setText( Messages.getString( "ProfileFromDEMWizardPage.2" ) ); //$NON-NLS-1$
+    lName.setToolTipText( Messages.getString( "ProfileFromDEMWizardPage.3" ) ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     viewer.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -176,7 +178,8 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
     final IProfilLayerProvider lp = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() );
 
-    final ProfileChartComposite profileChart = new ProfileChartComposite( parent, SWT.BORDER, lp, profile );
+    final IProfileSelection profileSelection = new SimpleProfileSelection( profile );
+    final ProfileChartComposite profileChart = new ProfileChartComposite( parent, SWT.BORDER, lp, profileSelection );
     profileChart.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
   }
 }

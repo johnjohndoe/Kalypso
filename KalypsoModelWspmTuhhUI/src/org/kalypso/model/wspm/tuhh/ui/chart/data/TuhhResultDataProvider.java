@@ -152,6 +152,9 @@ public final class TuhhResultDataProvider implements IWspLayerData
    */
   private String createSectionName( final IWspmResultNode results, final String settingId )
   {
+    if( results == null )
+      return settingId;
+
     final Object object = results.getObject();
     if( object instanceof Feature )
     {
