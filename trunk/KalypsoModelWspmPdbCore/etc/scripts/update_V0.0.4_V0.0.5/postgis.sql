@@ -252,7 +252,7 @@ INSERT INTO style_parameter (id, key, value, style_id) VALUES (8, 'markerWidth',
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (9, 'markerHeight', '8', 3);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (10, 'fillColor', '#FFFFFF', 3);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (11, 'strokeWidth', '2', 3);
-INSERT INTO style_parameter (id, key, value, style_id) VALUES (12, 'strokeColor', '#0000FF', 3);
+INSERT INTO style_parameter (id, key, value, style_id) VALUES (12, 'strokeColor', '#0077B2', 3);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (13, 'type', 'point', 4);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (14, 'markerWidth', '8', 4);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (15, 'markerHeight', '8', 4);
@@ -273,7 +273,7 @@ INSERT INTO style_parameter (id, key, value, style_id) VALUES (29, 'strokeWidth'
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (30, 'strokeColor', '#008000', 7);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (31, 'type', 'line', 8);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (32, 'strokeWidth', '2', 8);
-INSERT INTO style_parameter (id, key, value, style_id) VALUES (33, 'strokeColor', '#0000FF', 8);
+INSERT INTO style_parameter (id, key, value, style_id) VALUES (33, 'strokeColor', '#0077B2', 8);
 
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: insert into CS_Part_Type'  where key ='Version';
 INSERT INTO cs_part_type (category, description, style_array_id) VALUES ('P', 'Profil', 1);
