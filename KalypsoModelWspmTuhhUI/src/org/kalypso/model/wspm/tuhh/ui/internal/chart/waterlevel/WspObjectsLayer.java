@@ -32,6 +32,7 @@ import org.kalypso.model.wspm.tuhh.ui.chart.layers.ProfileObjectPainter;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
 
+import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
@@ -46,6 +47,8 @@ public abstract class WspObjectsLayer extends AbstractProfilLayer
   private final IWspLayerData m_wspData;
 
   private final String m_type;
+
+  private HoverIndex m_hoverIndex;
 
   public WspObjectsLayer( final String id, final IProfile profile, final IWspLayerData wspData, final String type )
   {
@@ -96,17 +99,20 @@ public abstract class WspObjectsLayer extends AbstractProfilLayer
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
+    /* recreate index */
+    m_hoverIndex = new HoverIndex();
+    m_painter.setHoverIndex( m_hoverIndex );
+
+    // FIXME: mega ugly, because mapper not given in constructor!
+    m_painter.setCoordinateMapper( getCoordinateMapper() );
+
     final Object[] activeElements = m_wspData.getActiveElements();
     for( final Object activeElement : activeElements )
     {
       final TuhhResultDataElement element = (TuhhResultDataElement)activeElement;
       final IProfileObject[] objects = element.getProfileObjects( m_type );
       for( final IProfileObject object : objects )
-      {
         m_painter.paint( gc, object );
-
-        // FIXME: create edit infos!
-      }
     }
   }
 

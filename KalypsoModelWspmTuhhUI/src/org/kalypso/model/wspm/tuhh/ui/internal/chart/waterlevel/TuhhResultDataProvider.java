@@ -61,22 +61,34 @@ public final class TuhhResultDataProvider implements IWspLayerData
     /* waterlevels from waterlevel objects of profile */
     final WaterlelevelObjectSearcher searcher = new WaterlelevelObjectSearcher( m_profile );
 
-    /* attach waterlevels to data elements, can only be attached at root level */
-    for( final TuhhResultDataElement dataElement : rootData.getChildren() )
-    {
-      final WaterlevelObject waterlevel = searcher.getWaterlevel( dataElement.getId() );
-      dataElement.setWaterlevel( waterlevel );
-    }
+    /* attach waterlevels to data elements */
+    attachWaterlevel( rootData.getChildren(), searcher );
 
     /* add waterlevels without name to root */
     final WaterlevelObject[] namelessWaterlevels = searcher.getNamelessWaterlevels();
     for( final WaterlevelObject namelessWaterlevel : namelessWaterlevels )
     {
+      // FIXME: name!
+
       final TuhhResultDataElement namelessData = new TuhhResultDataElement( rootData, null );
       namelessData.setWaterlevel( namelessWaterlevel );
+
+      rootElements.add( namelessData );
     }
 
     return rootElements.toArray( new TuhhResultDataElement[rootElements.size()] );
+  }
+
+  private void attachWaterlevel( final TuhhResultDataElement[] elements, final WaterlelevelObjectSearcher searcher )
+  {
+    for( final TuhhResultDataElement element : elements )
+    {
+      final WaterlevelObject waterlevel = searcher.getWaterlevel( element.getLabel() );
+      if( waterlevel != null )
+        element.setWaterlevel( waterlevel );
+
+      attachWaterlevel( element.getChildren(), searcher );
+    }
   }
 
   @Override

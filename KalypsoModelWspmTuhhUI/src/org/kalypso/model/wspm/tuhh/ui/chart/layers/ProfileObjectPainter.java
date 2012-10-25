@@ -29,6 +29,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 
+import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
@@ -48,6 +49,8 @@ public class ProfileObjectPainter
   private final PartTypeAccessor m_partInfo;
 
   private ICoordinateMapper m_coordinateMapper;
+
+  private HoverIndex m_hoverIndex;
 
   public ProfileObjectPainter( final IProfile profile, final String type )
   {
@@ -207,4 +210,8 @@ public class ProfileObjectPainter
     lineFigure.paint( gc );
   }
 
+  public void setHoverIndex( final HoverIndex hoverIndex )
+  {
+    m_hoverIndex = hoverIndex;
+  }
 }

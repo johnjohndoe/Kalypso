@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.tuhh.ui.chart.themes.DeviderTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.RoughnessTheme;
 import org.kalypso.model.wspm.tuhh.ui.chart.themes.VegetationTheme;
 import org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel.TuhhResultDataProvider;
+import org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel.WaterLevelFilter;
 import org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel.WspFixationLayer;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
@@ -185,7 +186,7 @@ final class TuhhLayers
     final ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
     final IWspLayerData wspLayerData = new TuhhResultDataProvider( profile, result, "activeIds" ); //$NON-NLS-1$
 
-    return new WspLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL, new IProfilChartLayer[] {}, styleProvider, wspLayerData, cm );
+    return new WspLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL, new IProfilChartLayer[] {}, styleProvider, wspLayerData, cm, new WaterLevelFilter() );
   }
 
   public static IProfilChartLayer createWspFixationLayer( final IProfile profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )

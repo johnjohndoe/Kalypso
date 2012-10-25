@@ -79,14 +79,17 @@ public class WaterlelevelObjectSearcher
   private WaterlevelObject createOrGetWaterlevel( final String eventName )
   {
     if( !m_waterlevels.containsKey( eventName ) )
-      m_waterlevels.put( eventName, new WaterlevelObject() );
+      m_waterlevels.put( eventName, new WaterlevelObject( eventName ) );
 
     return m_waterlevels.get( eventName );
   }
 
   private void addNamelessWaterlevel( final IProfileObject object )
   {
-    final WaterlevelObject namelessWaterlevel = new WaterlevelObject();
+    final String description = object.getDescription();
+
+    final WaterlevelObject namelessWaterlevel = new WaterlevelObject( description );
+
     namelessWaterlevel.addObject( object );
 
     m_namelessWaterlevels.add( namelessWaterlevel );
