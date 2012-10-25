@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
@@ -84,12 +85,12 @@ public class DeviderTheme extends AbstractProfilTheme
   @Override
   public IChartLayer[] getLegendNodes( )
   {
-    final ArrayList<IChartLayer> cl = new ArrayList<>();
+    final List<IChartLayer> cl = new ArrayList<>();
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
       if( layer instanceof IProfilChartLayer )
       {
-        if( getProfil().hasPointProperty( ((IProfilChartLayer) layer).getTargetComponent() ) )
+        if( getProfil().hasPointProperty( ((IProfilChartLayer)layer).getTargetComponent() ) )
         {
           cl.add( layer );
         }

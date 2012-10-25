@@ -65,7 +65,7 @@ import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilePointsLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilLayerUtils;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -86,7 +86,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 /**
  * @author kimwerner
  */
-public class PointMarkerLayer extends AbstractProfilLayer
+public class PointMarkerLayer extends AbstractProfilePointsLayer
 {
   private final Map<Rectangle, IProfilePointMarker> m_hoverRects = new ConcurrentHashMap<>();
 
@@ -213,15 +213,16 @@ public class PointMarkerLayer extends AbstractProfilLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( IDataRange domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange domainIntervall )
   {
     return null;
   }
 
   @Override
-  public String getTooltipInfo( final IProfileRecord point )
+  protected String getTooltipInfo( final IProfileRecord point )
   {
-    final Point2D p = getPoint2D( point );
+    final Double width = point.getBreite();
+
     try
     {
       final IComponent domainComponent = getDomainComponent();
@@ -232,7 +233,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
       final TooltipFormatter formatter = new TooltipFormatter( header, new String[] { "%s", "%.4f", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       final String domainUnit = ComponentUtilities.getComponentUnitLabel( domainComponent ); //$NON-NLS-1$
-      formatter.addLine( domainComponent.getName(), p.getX(), domainUnit );
+      formatter.addLine( domainComponent.getName(), width, domainUnit );
 
       return formatter.format();
     }

@@ -58,7 +58,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilePointsLayer;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.data.DataRange;
@@ -75,7 +75,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 /**
  * @author kimwerner
  */
-public class RoughnessLayer extends AbstractProfilLayer
+public class RoughnessLayer extends AbstractProfilePointsLayer
 {
   private IPointStyle m_styleClazzes;
 
@@ -187,7 +187,7 @@ public class RoughnessLayer extends AbstractProfilLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( IDataRange domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange domainIntervall )
   {
     final IProfile profil = getProfil();
     if( Objects.isNull( profil ) )

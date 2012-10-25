@@ -69,5 +69,4 @@ public class RiverChannelLayer extends PointMarkerLayer
 
     super.moveDevider( devider, newPoint );
   }
-
 }

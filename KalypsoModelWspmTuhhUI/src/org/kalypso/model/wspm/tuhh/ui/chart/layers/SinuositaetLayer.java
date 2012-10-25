@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.tuhh.ui.panel.SinuositaetPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
@@ -61,18 +62,9 @@ import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
  */
 public class SinuositaetLayer extends AbstractProfilLayer
 {
-  @Override
-  public void removeYourself( )
-  {
-    final ISinuositaetProfileObject[] sin = getProfil().getProfileObjects( ISinuositaetProfileObject.class );
-    final ProfileOperation operation = new ProfileOperation( Messages.getString( "SinuositaetLayer_0" ), getProfil(), true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectRemove( getProfil(), sin ) );
-    new ProfileOperationJob( operation ).schedule();
-  }
-
   public SinuositaetLayer( final IProfile profil )
   {
-    super( "NullComponent", profil, "NullComponent", null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "NullComponent", profil ); //$NON-NLS-1$
   }
 
   @Override
@@ -109,6 +101,49 @@ public class SinuositaetLayer extends AbstractProfilLayer
 
   @Override
   public EditInfo getHover( final Point pos )
+  {
+    return null;
+  }
+
+  @Override
+  public void removeYourself( )
+  {
+    final ISinuositaetProfileObject[] sin = getProfil().getProfileObjects( ISinuositaetProfileObject.class );
+    final ProfileOperation operation = new ProfileOperation( Messages.getString( "SinuositaetLayer_0" ), getProfil(), true ); //$NON-NLS-1$
+    operation.addChange( new ProfileObjectRemove( getProfil(), sin ) );
+    new ProfileOperationJob( operation ).schedule();
+  }
+
+  @Override
+  public void executeDrop( final Point point, final EditInfo dragStartData )
+  {
+  }
+
+  @Override
+  public void executeClick( final EditInfo dragStartData )
+  {
+  }
+
+  @Override
+  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
+  {
+    return null;
+  }
+
+  @Override
+  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
+  {
+    return null;
+  }
+
+  @Override
+  public IDataRange<Double> getDomainRange( )
+  {
+    return null;
+  }
+
+  @Override
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return null;
   }

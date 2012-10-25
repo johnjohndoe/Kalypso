@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
@@ -74,11 +73,9 @@ public class BuildingTubesTheme extends AbstractProfilTheme
 
   public BuildingTubesTheme( final IProfile profil, final ICulvertBuilding culvert, final ICoordinateMapper cm, final LayerStyleProviderTuhh styleProvider )
   {
-    super( profil, IWspmTuhhConstants.LAYER_TUBES, TITLE, createSubLayers( profil, culvert, styleProvider ), cm, styleProvider );
+    super( profil, IWspmTuhhConstants.LAYER_TUBES, TITLE, createSubLayers( profil, culvert, styleProvider ), cm );
 
     m_culvert = culvert;
-
-    getLineStyle().setColor( new RGB( 255, 255, 100 ) );
   }
 
   private static IProfilChartLayer[] createSubLayers( final IProfile profile, final ICulvertBuilding culvert, final LayerStyleProviderTuhh styleProvider )

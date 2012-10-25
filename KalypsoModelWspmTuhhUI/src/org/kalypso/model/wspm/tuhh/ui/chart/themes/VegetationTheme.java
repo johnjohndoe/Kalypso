@@ -83,10 +83,13 @@ public class VegetationTheme extends AbstractProfilTheme
 
   private ILegendEntry[] m_legendEntries;
 
+  private final ILineStyle m_style;
+
   public VegetationTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
     super( profil, IWspmTuhhConstants.LAYER_BEWUCHS, TITLE, chartLayers, cm );
-    setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) ); //$NON-NLS-1$
+
+    m_style = styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ); //$NON-NLS-1$
   }
 
   @Override
@@ -144,6 +147,7 @@ public class VegetationTheme extends AbstractProfilTheme
   }
 
   @Override
+  // FIXME: does not work; create edit infos during paint!
   public EditInfo getHover( final Point pos )
   {
     final IProfile profil = getProfil();
@@ -157,15 +161,19 @@ public class VegetationTheme extends AbstractProfilTheme
 
       final Rectangle hover = getHoverRectInternal( p1, p2 );
       if( hover == null )
-      {
         continue;
-      }
+
       final int size = Math.min( hover.height / 2, Math.min( hover.width / 2, 10 ) );
       if( pos.x >= hover.x - size && pos.y >= hover.y - size && pos.x < hover.x + size && pos.y < hover.y + size )
         return new EditInfo( this, null, null, ArrayUtils.indexOf( points, p1 ), getTooltipInfo( p1 ), pos );
     }
 
     return null;
+  }
+
+  private String getTooltipInfo( final IProfileRecord point )
+  {
+    return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", WspmClassifications.getAx( point ), WspmClassifications.getAy( point ), WspmClassifications.getDp( point ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -186,12 +194,6 @@ public class VegetationTheme extends AbstractProfilTheme
   }
 
   @Override
-  public String getTooltipInfo( final IProfileRecord point )
-  {
-    return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", WspmClassifications.getAx( point ), WspmClassifications.getAy( point ), WspmClassifications.getDp( point ) ); //$NON-NLS-1$
-  }
-
-  @Override
   public void removeYourself( )
   {
     final IProfile profil = getProfil();
@@ -203,21 +205,21 @@ public class VegetationTheme extends AbstractProfilTheme
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( IDataRange domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange domainIntervall )
   {
     // don't calculate axis size and ticks
     return null;
   }
 
   @Override
-  public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final IProfile profil = getProfil();
     if( profil == null )
       return;
 
     final PolylineFigure pf = new PolylineFigure();
-    pf.setStyle( getLineStyle() );
+    pf.setStyle( m_style );
 
     final IProfileRecord[] points = profil.getPoints();
     for( final IProfileRecord point : points )
@@ -232,7 +234,7 @@ public class VegetationTheme extends AbstractProfilTheme
 
   protected void drawIcon( final GC gc, final Rectangle clipping )
   {
-    getLineStyle().apply( gc );
+    m_style.apply( gc );
     if( clipping.width > 12 )
     {
       final int size = Math.min( clipping.width, 20 );
@@ -269,5 +271,4 @@ public class VegetationTheme extends AbstractProfilTheme
   {
     return new VegetationPanel( getProfil() );
   }
-
 }
