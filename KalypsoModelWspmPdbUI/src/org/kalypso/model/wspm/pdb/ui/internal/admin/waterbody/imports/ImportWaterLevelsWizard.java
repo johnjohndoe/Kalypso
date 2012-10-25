@@ -236,7 +236,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
     final Event event = m_data.getEvent();
 
-    if( SaveEventOperation.askForEmptyState( event, getShell(), getWindowTitle() ) )
+    if( !SaveEventOperation.askForEmptyState( event, getShell(), getWindowTitle() ) )
       return false;
 
     final IStatus status = runOperation( connection, event );
