@@ -222,4 +222,12 @@ class TuhhResultDataElement
 
     return m_waterlevel.getObjects( type );
   }
+
+  public String getWaterlevelType( )
+  {
+    if( m_waterlevel == null )
+      return null;
+
+    return m_waterlevel.getType();
+  }
 }

@@ -66,20 +66,21 @@ public class WaterlelevelObjectSearcher
       return;
 
     /* add object to the level with same event name */
-    final String eventName = object.getValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT, null );
+    final String eventName = object.getValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT_NAME, null );
+    final String eventType = object.getValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT_TYPE, null );
     if( StringUtils.isBlank( eventName ) )
       addNamelessWaterlevel( object );
     else
     {
-      final WaterlevelObject waterlevel = createOrGetWaterlevel( eventName );
+      final WaterlevelObject waterlevel = createOrGetWaterlevel( eventName, eventType );
       waterlevel.addObject( object );
     }
   }
 
-  private WaterlevelObject createOrGetWaterlevel( final String eventName )
+  private WaterlevelObject createOrGetWaterlevel( final String eventName, final String eventType )
   {
     if( !m_waterlevels.containsKey( eventName ) )
-      m_waterlevels.put( eventName, new WaterlevelObject( eventName ) );
+      m_waterlevels.put( eventName, new WaterlevelObject( eventName, eventType ) );
 
     return m_waterlevels.get( eventName );
   }
@@ -88,7 +89,7 @@ public class WaterlelevelObjectSearcher
   {
     final String description = object.getDescription();
 
-    final WaterlevelObject namelessWaterlevel = new WaterlevelObject( description );
+    final WaterlevelObject namelessWaterlevel = new WaterlevelObject( description, "Measurement" ); //$NON-NLS-1$
 
     namelessWaterlevel.addObject( object );
 
