@@ -115,6 +115,10 @@ class TuhhResultDataElement
     if( m_resultNode == null )
       return Double.NaN;
 
+    /* do not show simplified waterlevel if we have points/segments */
+    if( m_waterlevel != null && !m_waterlevel.isEmpty() )
+      return Double.NaN;
+
     return searchValue( m_resultNode, station );
   }
 
