@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
@@ -323,7 +324,11 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   @Override
   public LayerDescriptor[] getAddableLayers( final ProfilChartModel chartModel )
   {
-    final IProfile profile = chartModel.getProfil();
+    final IProfileSelection profilSelection = chartModel.getProfileSelection();
+    if( profilSelection == null )
+      return new LayerDescriptor[] {};
+
+    final IProfile profile = profilSelection.getProfile();
     if( Objects.isNull( profile ) )
       return new LayerDescriptor[] {};
 

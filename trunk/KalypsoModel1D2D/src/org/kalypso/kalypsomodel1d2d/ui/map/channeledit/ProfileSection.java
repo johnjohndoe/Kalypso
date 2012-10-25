@@ -78,6 +78,7 @@ import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
+import org.kalypso.model.wspm.core.gml.SimpleProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.dialog.compare.ProfileChartComposite;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
@@ -249,7 +250,7 @@ class ProfileSection extends Composite
     final IProfile segmentedProfile = profileData == null ? null : profileData.getWorkingProfile();
     final boolean hasSegmentedProfile = segmentedProfile != null;
 
-    m_profilComposite.setProfil( originalProfile, null );
+    m_profilComposite.setProfileSelection( new SimpleProfileSelection( originalProfile ) );
 
     /* set segmented profile to overlay */
     final IChartModel chartModel = m_profilComposite.getChartModel();

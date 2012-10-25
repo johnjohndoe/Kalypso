@@ -51,6 +51,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.CacheLoader.InvalidCacheLoadException;
 import com.google.common.cache.LoadingCache;
 
 /**
@@ -83,6 +84,11 @@ public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvide
     try
     {
       return m_cache.get( parent );
+    }
+    catch( final InvalidCacheLoadException e )
+    {
+      // REMARK: Happens if the loader returns null.
+      return null;
     }
     catch( final ExecutionException e )
     {
