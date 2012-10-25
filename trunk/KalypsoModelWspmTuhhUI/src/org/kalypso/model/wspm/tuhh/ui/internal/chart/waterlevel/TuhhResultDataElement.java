@@ -38,12 +38,13 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart.data;
+package org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel;
 
 import java.math.BigDecimal;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFixationNode;
@@ -141,11 +142,11 @@ class TuhhResultDataElement implements IWspLayerDataElement
   {
     if( resultNode instanceof IWspmResult )
     {
-      final IWspmResult result = (IWspmResult) resultNode;
+      final IWspmResult result = (IWspmResult)resultNode;
       final WspmResultLengthSection lengthSection = result.getLengthSection();
       final Object value = lengthSection.getValue( station, IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL );
       if( value instanceof Number )
-        return ((Number) value).doubleValue();
+        return ((Number)value).doubleValue();
     }
     else
     {
@@ -200,5 +201,13 @@ class TuhhResultDataElement implements IWspLayerDataElement
   public void setWaterlevel( final WaterlevelObject waterlevel )
   {
     m_waterlevel = waterlevel;
+  }
+
+  public IProfileObject[] getProfileObjects( final String type )
+  {
+    if( m_waterlevel == null )
+      return new IProfileObject[] {};
+
+    return m_waterlevel.getObjects( type );
   }
 }

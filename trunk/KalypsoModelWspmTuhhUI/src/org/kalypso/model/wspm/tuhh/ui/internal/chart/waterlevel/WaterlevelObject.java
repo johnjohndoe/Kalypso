@@ -16,10 +16,12 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.ui.chart.data;
+package org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -29,9 +31,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
  */
 public class WaterlevelObject
 {
-  private final Collection<IProfileObject> m_points = new ArrayList<>();
-
-  private final Collection<IProfileObject> m_segments = new ArrayList<>();
+  private final Map<String, Collection<IProfileObject>> m_objects = new HashMap<>();
 
   public void addObject( final IProfileObject object )
   {
@@ -39,15 +39,27 @@ public class WaterlevelObject
     switch( type )
     {
       case IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS:
-        m_points.add( object );
-        return;
-
       case IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_SEGMENT:
-        m_segments.add( object );
+        final Collection<IProfileObject> objects = getObjectList( type );
+        objects.add( object );
         return;
 
       default:
         throw new IllegalArgumentException();
     }
+  }
+
+  private Collection<IProfileObject> getObjectList( final String type )
+  {
+    if( !m_objects.containsKey( type ) )
+      m_objects.put( type, new ArrayList<IProfileObject>() );
+
+    return m_objects.get( type );
+  }
+
+  public IProfileObject[] getObjects( final String type )
+  {
+    final Collection<IProfileObject> objects = getObjectList( type );
+    return objects.toArray( new IProfileObject[objects.size()] );
   }
 }

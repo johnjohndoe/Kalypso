@@ -97,10 +97,10 @@ public class WspmBuildingDecorator implements ILightweightLabelDecorator
     else if( building instanceof GenericProfileHorizon )
     {
       // FIXME: remove this label
-//      final String id = building.getType();
-//      decoration.addSuffix( String.format( " ('%s')", id ) );
+      final String id = building.getType();
+      decoration.addSuffix( String.format( " ('%s')", id ) );
     }
-    else 
+    else
       decoration.addSuffix( String.format( " (%s)", typeLabel ) );
 
     /* icon */
