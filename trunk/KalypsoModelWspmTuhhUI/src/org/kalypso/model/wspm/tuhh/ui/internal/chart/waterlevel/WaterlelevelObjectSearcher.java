@@ -62,7 +62,7 @@ public class WaterlelevelObjectSearcher
     final String type = object.getType();
 
     /* is really a waterlevel ? */
-    if( !IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS.equals( type ) && !IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS.equals( type ) )
+    if( !IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS.equals( type ) && !IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_SEGMENT.equals( type ) )
       return;
 
     /* add object to the level with same event name */
