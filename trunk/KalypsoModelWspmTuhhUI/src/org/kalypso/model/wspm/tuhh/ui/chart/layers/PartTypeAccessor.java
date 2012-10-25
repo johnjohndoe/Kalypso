@@ -134,7 +134,7 @@ public class PartTypeAccessor
     final RGB color = wspmStyle.getStrokeColor();
     final int alpha = 255;
     final float dashOffset = 0;
-    final float[] dashArray = new float[] { 10, 10 };
+    final float[] dashArray = null; // new float[] { 10, 10 };
     final LINEJOIN lineJoin = LINEJOIN.ROUND;
     final LINECAP lineCap = LINECAP.ROUND;
     final int miterLimit = 0;
