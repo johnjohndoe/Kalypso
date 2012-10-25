@@ -36,9 +36,12 @@ public class WaterlevelObject
 
   private final String m_label;
 
-  public WaterlevelObject( final String label )
+  private final String m_eventType;
+
+  public WaterlevelObject( final String label, final String eventType )
   {
     m_label = label;
+    m_eventType = eventType;
   }
 
   public void addObject( final IProfileObject object )
@@ -88,5 +91,10 @@ public class WaterlevelObject
       return "<unknown waterlevel>";
 
     return m_label;
+  }
+
+  public String getType( )
+  {
+    return m_eventType;
   }
 }

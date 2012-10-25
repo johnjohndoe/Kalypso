@@ -44,6 +44,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
 /**
  * @author Gernot Belger
@@ -72,12 +74,34 @@ class TuhhResultDataElementLabelProvider extends LabelProvider
   {
     final TuhhResultDataElement dataElement = (TuhhResultDataElement)element;
 
+    final Image typeImage = getTypeImage( dataElement );
+    if( typeImage != null )
+      return typeImage;
+
     final IWspmResultNode node = dataElement.getResultNode();
     if( node == null )
-    {
-      // FIXME: 2d waterlevle, return waterlevel image
-    }
+      return null;
 
     return m_delegate.getImage( node );
+  }
+
+  private Image getTypeImage( final TuhhResultDataElement dataElement )
+  {
+    final String waterlevelType = dataElement.getWaterlevelType();
+    if( waterlevelType == null )
+      return null;
+
+    switch( waterlevelType )
+    {
+    // HACKY: these are event types from pdb....
+      case "Measurement": //$NON-NLS-1$
+        return KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImage( KalypsoModelWspmTuhhUIImages.WATERLEVEL_FIXATION );
+
+      case "Simulation": //$NON-NLS-2$
+        return KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImage( KalypsoModelWspmTuhhUIImages.WATERLEVEL_SIMULATION );
+
+      default:
+        return null;
+    }
   }
 }
