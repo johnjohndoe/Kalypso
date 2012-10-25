@@ -25,6 +25,7 @@ import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
+import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -38,10 +39,11 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class ProfileObjectsLayer extends AbstractProfilLayer
 {
-
   private final IProfileObject m_object;
 
   private final ProfileObjectPainter m_painter;
+
+  private HoverIndex m_hoverIndex;
 
   public ProfileObjectsLayer( final String id, final IProfile profile, final IProfileObject object, final String title )
   {
@@ -102,6 +104,10 @@ public class ProfileObjectsLayer extends AbstractProfilLayer
   {
     // FIXME: mega ugly, because mapper not given in cnostructor!
     m_painter.setCoordinateMapper( getCoordinateMapper() );
+
+    /* recreate index */
+    m_hoverIndex = new HoverIndex();
+    m_painter.setHoverIndex( m_hoverIndex );
 
     m_painter.paint( gc, m_object );
   }

@@ -49,12 +49,11 @@ import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFixationNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerDataElement;
 
 /**
  * @author Gernot Belger
  */
-class TuhhResultDataElement implements IWspLayerDataElement
+class TuhhResultDataElement
 {
   private final IWspmResultNode m_resultNode;
 
@@ -75,7 +74,6 @@ class TuhhResultDataElement implements IWspLayerDataElement
     return m_parentElement;
   }
 
-  @Override
   public String getLabel( )
   {
     if( m_resultNode instanceof WspmResultFixationNode )
@@ -89,8 +87,12 @@ class TuhhResultDataElement implements IWspLayerDataElement
     }
 
     if( m_resultNode == null )
-      // FIXME: 2d waterlevel?
+    {
+      if( m_waterlevel != null )
+        return m_waterlevel.getLabel();
+
       return toString();
+    }
 
     final IWspmResultNode[] childResults = m_resultNode.getChildResults();
     if( childResults.length > 0 )
@@ -99,7 +101,6 @@ class TuhhResultDataElement implements IWspLayerDataElement
     return m_resultNode.getLabel();
   }
 
-  @Override
   public String getId( )
   {
     // FIXME: 2d waterlevel?
@@ -164,12 +165,19 @@ class TuhhResultDataElement implements IWspLayerDataElement
     return m_resultNode;
   }
 
-  @Override
   public boolean isWaterLevelFixation( )
   {
     if( m_resultNode instanceof WspmResultFixationNode )
       return true;
-    else if( getId().toLowerCase().contains( "fixation" ) ) //$NON-NLS-1$
+
+    if( m_waterlevel != null )
+    {
+      if( !m_waterlevel.isEmpty() )
+        return true;
+    }
+
+    // TODO: why? strange!
+    if( getId().toLowerCase().contains( "fixation" ) ) //$NON-NLS-1$
       return true;
 
     return false;

@@ -40,26 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.internal.chart.waterlevel;
 
-import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
-
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import org.eclipse.jface.viewers.Viewer;
 
 /**
  * @author Dirk Kuch
  */
-public class WspFixationLayer extends WspLayer
+public class WaterLevelFilter extends AbstractWaterLevelViewerFilter
 {
-  public WspFixationLayer( final IProfile profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper< ? , ? > mapper )
+  @Override
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    super( profile, layerId, new IProfilChartLayer[] { new WspPointsLayer( layerId, profile, data ), new WspSegmentsLayer( layerId, profile, data ) }, styleProvider, data, mapper, new WaterLevelFixationFilter() );
-
-    setTitle( Messages.getString( "WspFixationLayer_0" ) ); //$NON-NLS-1$
+    return !isWaterLevelFixiation( element );
   }
-
-  // TODO: if element contains objects, do not paint base data
 }

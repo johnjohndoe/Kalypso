@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
@@ -32,6 +33,13 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 public class WaterlevelObject
 {
   private final Map<String, Collection<IProfileObject>> m_objects = new HashMap<>();
+
+  private final String m_label;
+
+  public WaterlevelObject( final String label )
+  {
+    m_label = label;
+  }
 
   public void addObject( final IProfileObject object )
   {
@@ -61,5 +69,24 @@ public class WaterlevelObject
   {
     final Collection<IProfileObject> objects = getObjectList( type );
     return objects.toArray( new IProfileObject[objects.size()] );
+  }
+
+  public boolean isEmpty( )
+  {
+    for( final String key : m_objects.keySet() )
+    {
+      if( !m_objects.get( key ).isEmpty() )
+        return false;
+    }
+
+    return true;
+  }
+
+  public String getLabel( )
+  {
+    if( StringUtils.isBlank( m_label ) )
+      return "<unknown waterlevel>";
+
+    return m_label;
   }
 }
