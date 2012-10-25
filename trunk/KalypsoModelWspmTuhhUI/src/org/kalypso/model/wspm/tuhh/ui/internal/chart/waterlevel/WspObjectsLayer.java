@@ -27,6 +27,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.PartTypeAccessor;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.ProfileObjectPainter;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
@@ -35,6 +36,8 @@ import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
 import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
@@ -117,6 +120,26 @@ public abstract class WspObjectsLayer extends AbstractProfilLayer
   }
 
   @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    final ILegendEntry entry = new LegendEntry( this, getTitle() )
+    {
+      @Override
+      public void paintSymbol( final GC gc, final Point size )
+      {
+        paintLegendSymbol( gc, size );
+      }
+    };
+
+    return new ILegendEntry[] { entry };
+  }
+
+  protected void paintLegendSymbol( final GC gc, final Point size )
+  {
+    m_painter.paintLegend( gc, size );
+  }
+
+  @Override
   public EditInfo getHover( final Point pos )
   {
     return null;
@@ -142,5 +165,18 @@ public abstract class WspObjectsLayer extends AbstractProfilLayer
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
     return null;
+  }
+
+  public boolean hasSomethingToShow( )
+  {
+    final IProfileObject[] allObjects = findAllObjects();
+    for( final IProfileObject object : allObjects )
+    {
+      final IProfileObjectRecords records = object.getRecords();
+      if( records.size() > 0 )
+        return true;
+    }
+
+    return false;
   }
 }
