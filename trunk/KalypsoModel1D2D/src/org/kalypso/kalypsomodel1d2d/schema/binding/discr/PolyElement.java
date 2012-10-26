@@ -10,7 +10,6 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 
 /**
  * @author Gernot Belger, Patrice Congo
@@ -34,13 +33,25 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
   }
 
   @Override
-  public void addEdge( final IFE1D2DEdge edge )
+  public void setEdges( final IFE1D2DEdge[] edges )
   {
-    Assert.throwIAEOnNull( edge, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element2D.2" ) );
-    if( edgesInternal().containsOrLinksTo( edge ) )
-      return;
-    edgesInternal().addLink( edge );
-    edge.addLinkedElement( this );
+    Assert.throwIAEOnNull( edges, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element2D.2" ) );
+//    if( edges.length < 3 || edges.length > 4 )
+//      throw new IllegalStateException( String.format( "Cannot create an element with %d edges.", edges.length ) );
+
+    final IFE1D2DEdge[] currentEdges = getEdges();
+    for( final IFE1D2DEdge edge : currentEdges )
+    {
+      edge.removeLinkedElement( this );
+    }
+
+    final FeatureList edgesInternal = edgesInternal();
+    edgesInternal.clear();
+    for( final IFE1D2DEdge edge : edges )
+    {
+      edgesInternal.addLink( edge );
+      edge.addLinkedElement( this );
+    }
     setEnvelopesUpdated();
   }
 
@@ -54,8 +65,10 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
   public IFE1D2DNode[] getNodes( )
   {
     final IFE1D2DEdge[] edges = getEdges();
-    final List<IFE1D2DNode> nodes = new ArrayList<>( edges.length + 1 );
+    if( edges.length == 0 )
+      return new IFE1D2DNode[0];
 
+    final List<IFE1D2DNode> nodes = new ArrayList<>( edges.length + 1 );
     final IFE1D2DEdge firstEdge = edges[0];
     final IFE1D2DNode[] firstTwoNodes = firstEdge.getNodes();
     final IFE1D2DNode firstNode = firstTwoNodes[0];

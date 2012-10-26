@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -97,13 +98,15 @@ public interface IFEDiscretisationModel1d2d extends IModel
 
   IElement1D createElement1D( IFE1D2DEdge edge );
 
-  IPolyElement createElement2D( );
+  IPolyElement createElement2D( IFE1D2DEdge[] edges );
 
   IElement1D find1DElement( GM_Point position, double grabDistance );
 
   IPolyElement find2DElement( GM_Point position, double grabDistance );
 
   void removeElement( IFE1D2DElement element );
+
+  boolean elementsIntersect( GM_Point point );
 
   List<IFE1D2DElement> queryElements( GM_Envelope env, List<IFE1D2DElement> result );
 
@@ -136,5 +139,9 @@ public interface IFEDiscretisationModel1d2d extends IModel
   void removeComplexElement( IFE1D2DComplexElement< ? extends IFENetItem> complexElement );
 
   IFE1D2DComplexElement<IFENetItem>[] getComplexElements( );
+
+  void removeAllNodes( Collection<IFE1D2DNode> nodes );
+
+  void removeAllElements( Collection<IFE1D2DElement> elements );
 
 }

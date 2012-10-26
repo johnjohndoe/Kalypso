@@ -44,7 +44,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 
 /**
  * Interface corresponding to the wb1d2d:PolyElementType in the sim_1d2d_discretisation.xsd
@@ -61,7 +60,7 @@ public interface IPolyElement extends IFE1D2DElement
 
   IFE1D2DEdge[] getEdges( );
 
-  void addEdge( IFE1D2DEdge edge );
+  void setEdges( IFE1D2DEdge[] edges );
 
   boolean containsEdge( IFE1D2DEdge edge );
 

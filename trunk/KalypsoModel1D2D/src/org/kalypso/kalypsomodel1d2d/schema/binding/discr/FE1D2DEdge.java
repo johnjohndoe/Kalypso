@@ -49,7 +49,6 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge
     nodesInternal().addLink( node1 );
     node0.addLinkedEdge( this );
     node1.addLinkedEdge( this );
-    setEnvelopesUpdated();
   }
 
   @Override

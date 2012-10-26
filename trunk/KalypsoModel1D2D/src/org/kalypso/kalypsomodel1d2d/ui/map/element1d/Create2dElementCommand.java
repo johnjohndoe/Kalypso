@@ -114,13 +114,7 @@ public class Create2dElementCommand implements ICommand
     final IFE1D2DEdge[] edges = ElementGeometryHelper.buildNewEdges( m_discModel, nodes, m_points.length );
 
     /* Build new element */
-    final IPolyElement newElement = m_discModel.createElement2D();
-    for( final IFE1D2DEdge edge : edges )
-    {
-      newElement.addEdge( edge );
-    }
-
-    m_newElement = newElement;
+    m_newElement = m_discModel.createElement2D( edges );
 
     /* fire workspace events */
     final GMLWorkspace discWorkspace = m_discModel.getWorkspace();

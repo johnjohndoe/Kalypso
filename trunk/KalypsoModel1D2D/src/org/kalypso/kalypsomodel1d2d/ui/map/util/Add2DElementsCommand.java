@@ -59,11 +59,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -83,8 +81,6 @@ import com.vividsolutions.jts.geom.Geometry;
 public class Add2DElementsCommand implements ICommand
 {
   private static final double SNAP_DISTANCE = 0.02;
-
-  private static boolean[] NOT_CREATED = new boolean[1];
 
   private final IStatusCollector m_log = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
 
@@ -138,9 +134,9 @@ public class Add2DElementsCommand implements ICommand
     for( final GM_Ring ring : m_elements )
       createElementFromRing( discModel, ring );
 
-//    fireEvents( discModel, m_newNodeIDs );
-//    fireEvents( discModel, m_newEdgeIDs );
-//    fireEvents( discModel, m_newElementIDs );
+    fireEvents( discModel, m_newNodeIDs );
+    fireEvents( discModel, m_newEdgeIDs );
+    fireEvents( discModel, m_newElementIDs );
   }
 
   private void fireEvents( final IFEDiscretisationModel1d2d discModel, final Collection<String> newFeatureIDs )
@@ -300,17 +296,9 @@ public class Add2DElementsCommand implements ICommand
 
   private IPolyElement createElement( final IFEDiscretisationModel1d2d discModel, final IFE1D2DEdge[] edges )
   {
-    final IPolyElement element = discModel.createElement2D();
-
+    final IPolyElement element = discModel.createElement2D( edges );
     final String elementId = element.getId();
-
     m_newElementIDs.add( elementId );
-
-    for( final IFE1D2DEdge lEdge : edges )
-    {
-      // add edge to element and element to edge
-      element.addEdge( lEdge );
-    }
 
     return element;
   }
