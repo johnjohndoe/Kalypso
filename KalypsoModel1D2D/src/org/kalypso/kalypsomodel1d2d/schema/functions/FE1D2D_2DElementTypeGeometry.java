@@ -35,6 +35,9 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
     final IFE1D2DNode[] nodes = element.getNodes();
     final int nodeCount = nodes.length;
 
+    if( nodeCount < 4 )
+      return null;
+    
     /* Positions from nodes */
     final GM_Position[] pos = new GM_Position[nodeCount];
 
@@ -52,7 +55,7 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
         patch = GeometryFactory.createGM_Triangle( pos[0], pos[1], pos[2], crs );
       else if( nodeCount == 5 )
         patch = GeometryFactory.createGM_Rectangle( pos[0], pos[1], pos[2], pos[3], crs );
-      else
+      else //if( nodeCount > 5 )
         patch = GeometryFactory.createGM_PolygonPatch( pos, null, crs );
       return GeometryFactory.createGM_Surface( patch );
     }

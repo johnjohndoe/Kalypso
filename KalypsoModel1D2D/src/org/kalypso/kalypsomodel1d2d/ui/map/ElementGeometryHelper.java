@@ -41,8 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import java.awt.Point;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +48,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -68,13 +65,6 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class ElementGeometryHelper
 {
-  /**
-   * distance for searching of already existing {@link IFE1D2DNode}s TODO: should be specified in kalypso preferences
-   * page
-   */
-  private static final double SEARCH_DISTANCE = 0.1;
-
-  private static final DateFormat m_DF = new SimpleDateFormat( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.0" ) ); //$NON-NLS-1$
 
   /**
    * Creates new {@link IFE1D2DNode}s specified by their geometry {@link GM_Point} <br/>
@@ -92,19 +82,8 @@ public class ElementGeometryHelper
     for( int i = 0; i < points.length; i++ )
     {
       final GM_Point point = points[i];
-
-      // check, if there is already a node at that position
-      // FIXME: use search distance depending on current scale in pixels
-      final IFE1D2DNode foundNode = discModel.findNode( point, SEARCH_DISTANCE );
-
-      if( foundNode == null )
-      {
-        nodes[i] = discModel.createNode( point );
-      }
-      else
-        nodes[i] = foundNode;
+      nodes[i] = discModel.createNode( point );
     }
-
     return nodes;
   }
 
@@ -129,19 +108,11 @@ public class ElementGeometryHelper
   {
     /* Build new edges */
     final IFE1D2DEdge[] edges = new IFE1D2DEdge[numOfEdges];
-    for( int i = 0; i < edges.length; i++ )
+    for( int i = 0; i < numOfEdges; i++ )
     {
       final IFE1D2DNode node0 = nodes[i];
       final IFE1D2DNode node1 = nodes[(i + 1) % nodes.length];
-
-      /* Search for existing edge */
-      final IFE1D2DEdge edge = discModel.findEdge( node0, node1 );
-      if( edge == null )
-      {
-        edges[i] = discModel.createEdge( node0, node1 );
-      }
-      else
-        edges[i] = edge;
+      edges[i] = discModel.createEdge( node0, node1 );
     }
 
     return edges;

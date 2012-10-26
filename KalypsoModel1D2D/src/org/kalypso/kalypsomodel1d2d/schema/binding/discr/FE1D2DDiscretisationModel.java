@@ -40,14 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -64,9 +68,12 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
 {
   private static final double CLUSTER_TOLERANCE = 0.001;
 
+  private final IFeatureType m_polyType;
+
   public FE1D2DDiscretisationModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+    m_polyType = GMLSchemaUtilities.getFeatureTypeQuiet( IPolyElement.QNAME );
   }
 
   @Override
@@ -81,7 +88,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
 
     try
     {
-      edge = (IFE1D2DEdge)FeatureHelper.createFeatureForListProp( getEdgesInternal(), IFE1D2DEdge.QNAME, -1 );
+      edge = (IFE1D2DEdge)FeatureHelper.createFeatureForListProp( getEdgesInternal(), null, -1 );
       edge.setNodes( node0, node1 );
       return edge;
     }
@@ -94,6 +101,9 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   @Override
   public IElement1D createElement1D( final IFE1D2DEdge edge )
   {
+    if( edge.getLinkedElements().length != 0 )
+      throw new IllegalStateException( "The edge is already contained in one or more elements." );
+
     try
     {
       final IElement1D element = (IElement1D)FeatureHelper.createFeatureForListProp( getElementsInternal(), IElement1D.QNAME, -1 );
@@ -107,17 +117,23 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   }
 
   @Override
-  public IPolyElement createElement2D( )
+  public IPolyElement createElement2D( final IFE1D2DEdge[] edges )
   {
+    final GMLWorkspace workspace = getWorkspace();
     try
     {
-      final IPolyElement element = (IPolyElement)FeatureHelper.createFeatureForListProp( getElementsInternal(), IPolyElement.QNAME, -1 );
+      final IRelationType listRelation = getElementsInternal().getPropertyType();
+      final IPolyElement element = (IPolyElement)workspace.createFeature( this, listRelation, m_polyType );
+      workspace.addFeatureAsComposition( this, listRelation, -1, element );
+      element.setEdges( edges );
+      setEnvelopesUpdated();
       return element;
     }
-    catch( final GMLSchemaException e )
+    catch( final Exception e )
     {
-      throw new IllegalStateException( e );
+      e.printStackTrace();
     }
+    return null;
   }
 
   @Override
@@ -129,9 +145,12 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     if( node != null )
       return node;
 
+    if( elementsIntersect( nodeLocation ) )
+      throw new IllegalStateException( "The given location is inside an existing element" );
+
     try
     {
-      node = (IFE1D2DNode)FeatureHelper.createFeatureForListProp( getNodesInternal(), IFE1D2DNode.FEATURE_1D2DNODE, -1 );
+      node = (IFE1D2DNode)FeatureHelper.createFeatureForListProp( getNodesInternal(), null, -1 );
       node.setPoint( nodeLocation );
       return node;
     }
@@ -346,6 +365,11 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   {
     Assert.throwIAEOnNullParam( element, "element" );//$NON-NLS-1$
     final FeatureList elements = getElementsInternal();
+    final IFE1D2DComplexElement<IFENetItem>[] linkedElements = element.getLinkedElements();
+    for( final IFE1D2DComplexElement<IFENetItem> complexElement : linkedElements )
+    {
+      complexElement.removeLinkedItem( element );
+    }
     if( elements.contains( element ) )
       elements.remove( element );
   }
@@ -360,15 +384,60 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   }
 
   @Override
+  @SuppressWarnings( "unchecked" )
+  public void removeAllNodes( final Collection<IFE1D2DNode> nodesToRemove )
+  {
+    Assert.throwIAEOnNullParam( nodesToRemove, "nodesToRemove" );//$NON-NLS-1$
+    final FeatureList nodes = getNodesInternal();
+    nodes.removeAll( nodesToRemove );
+  }
+
+  @Override
+  @SuppressWarnings( "unchecked" )
+  public void removeAllElements( final Collection<IFE1D2DElement> elementsToRemove )
+  {
+    Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" );//$NON-NLS-1$
+    final FeatureList elements = getElementsInternal();
+    elements.removeAll( elementsToRemove );
+  }
+
+  @Override
   public List<IFE1D2DElement> queryElements( final GM_Envelope env, final List<IFE1D2DElement> result )
   {
     return getElementsInternal().queryResolved( env, result );
   }
 
   @Override
+  public boolean elementsIntersect( final GM_Point point )
+  {
+    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, CLUSTER_TOLERANCE );
+    final List<IFE1D2DElement> elements = queryElements( reqEnvelope, null );
+    for( Iterator<IFE1D2DElement> iterator = elements.iterator(); iterator.hasNext(); )
+    {
+      final IFE1D2DElement element = iterator.next();
+      if( element instanceof IPolyElement )
+      {
+        if( !((IPolyElement)element).getGeometry().contains( point ) )
+          iterator.remove();
+      }
+      else if( element instanceof IElement1D )
+      {
+        if( !((IElement1D)element).getEdge().getGeometry().contains( point ) )
+          iterator.remove();
+      }
+    }
+    return !elements.isEmpty();
+  }
+
+  @Override
   public IContinuityLine1D createContinuityLine1D( final IFE1D2DNode node )
   {
     Assert.throwIAEOnNullParam( node, "node" ); //$NON-NLS-1$
+
+    final IFE1D2DEdge[] linkedEdges = node.getLinkedEdges();
+    if( linkedEdges.length != 1 || linkedEdges[0].getLinkedElements().length != 1 || !(linkedEdges[0].getLinkedElements()[0] instanceof IElement1D) )
+      throw new IllegalStateException( "Can only create a 1D continuity line at the end of a 1D element" );
+
     try
     {
       final IContinuityLine1D line = (IContinuityLine1D)FeatureHelper.createFeatureForListProp( getLinesInternal(), ICalculationUnit1D.QNAME, -1 );

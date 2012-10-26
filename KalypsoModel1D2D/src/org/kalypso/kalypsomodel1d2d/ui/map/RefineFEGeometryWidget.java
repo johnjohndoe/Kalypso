@@ -49,9 +49,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -61,13 +58,13 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -88,7 +85,6 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -119,8 +115,6 @@ import org.kalypsodeegree_impl.tools.refinement.Refinement;
  */
 public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 {
-  private static final double SNAP_DISTANCE = 0.02;
-
   private boolean m_modePolygon = false;
 
   private Point m_currentMapPoint;
@@ -144,8 +138,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
   private List<Feature> m_featuresToRefine;
 
   private boolean m_warning;
-
-  private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<>();
 
   private GM_Object m_geom;
 
@@ -356,7 +348,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
       super.keyPressed( e );
   }
 
-  @SuppressWarnings( { "unchecked" } )
   private void convertRefinementToModel( )
   {
     if( m_objects == null )
@@ -378,46 +369,37 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
       final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d)workspace.getRootFeature();
 
       // add remove element command
-      final DeletePolyElementCmd deleteCmdPolyElement = new DeletePolyElementCmd( discModel );
+      final DeletePolyElementCmd deleteCommand = new DeletePolyElementCmd( discModel );
       for( final Feature feature : refineList )
       {
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
-          deleteCmdPolyElement.addElementToRemove( feature );
+          deleteCommand.addElementToRemove( feature );
       }
       try
       {
-        deleteCmdPolyElement.process();
+        workspace.postCommand( deleteCommand );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
       }
 
-      // workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, discModel,
-      // elementsToRemove.toArray( new Feature[ elementsToRemove.size() ] ),
-      // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
-      m_nodesNameConversionMap.clear();
-
-      final List<Feature> lListAdded = new ArrayList<>();
       /* create new elements */
       for( final GM_Object object : m_objects )
       {
         if( object instanceof GM_Polygon )
         {
           final GM_Polygon surface = (GM_Polygon)object;
-          lListAdded.addAll( createPolyElement( surface, discModel ) );
-          // ElementGeometryHelper.createFE1D2DfromSurface( workspace, discModel, surface );
+          final GM_Position[] poses = surface.getSurfacePatch().getExteriorRing();
+          final GM_Point[] points = new GM_Point[poses.length];
+          for( int i = 0; i < poses.length - 1; i++ )
+            points[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], surface.getCoordinateSystem() );
+
+          final Create2dElementCommand createCommand = new Create2dElementCommand( discModel, points );
+          workspace.postCommand( createCommand );
         }
       }
 
-      if( lListAdded.size() > 0 )
-      {
-        final FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel, lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
-        workspace.fireModellEvent( changeEvent );
-        Logger.getLogger( RefineFEGeometryWidget.class.getName() ).log( Level.INFO, "Model event fired: " + changeEvent ); //$NON-NLS-1$
-
-        // FIXME: not enough! there must be a command in order to make the workspace dirty!
-      }
       reinit();
     }
     catch( final Exception e )
@@ -427,86 +409,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     }
   }
 
-  // FIXME: who the HELL does such a thing?! This is just copy paste from other widget implementations! Is this really
-  // SO hard to understand why this is really bad?!
-  // FIXME: use the Add2DElementsCommand instead
-  private List<Feature> createPolyElement( final GM_Polygon surface, final IFEDiscretisationModel1d2d discModel )
-  {
-    final List<Feature> lListRes = new ArrayList<>();
-    final List<IFE1D2DEdge> lListEdges = new ArrayList<>();
-    for( final GM_AbstractSurfacePatch surfacePatch : surface )
-    {
-      final GM_Position[] poses = surfacePatch.getExteriorRing();
-      final List<GM_Point> lListPoints = new ArrayList<>();
-      for( int i = 0; i < poses.length - 1; i++ )
-        lListPoints.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], surface.getCoordinateSystem() ) );
-
-      lListRes.addAll( createNodesAndEdges( discModel, lListEdges, lListPoints ) );
-
-      final IPolyElement element2d = discModel.createElement2D();
-      lListRes.add( element2d );
-      for( final IFE1D2DEdge lEdge : lListEdges )
-      {
-        // add edge to element
-        element2d.addEdge( lEdge );
-      }
-    }
-
-    return lListRes;
-  }
-
-  private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge> lListEdges, final List<GM_Point> lListPoses )
-  {
-    final List<Feature> lListRes = new ArrayList<>();
-    IFE1D2DNode lastNode = null;
-    int iCountNodes = 0;
-    if( lListPoses.size() > 0 && !lListPoses.get( lListPoses.size() - 1 ).equals( lListPoses.get( 0 ) ) )
-    {
-      lListPoses.add( lListPoses.get( 0 ) );
-    }
-    for( final GM_Point lPoint : lListPoses )
-    {
-      IFE1D2DNode actNode = m_nodesNameConversionMap.get( lPoint.getPosition() );
-
-      if( actNode == null )
-      {
-        actNode = discModel.findNode( lPoint, SNAP_DISTANCE );
-      }
-
-      if( actNode == null )
-      {
-        actNode = discModel.createNode( lPoint );
-        if( actNode == null )
-        {
-          return new ArrayList<>();
-        }
-        m_nodesNameConversionMap.put( lPoint.getPosition(), actNode );
-        lListRes.add( actNode );
-      }
-
-      if( iCountNodes > 0 )
-      {
-        final IFE1D2DEdge existingEdge = discModel.findEdge( lastNode, actNode );
-        final IFE1D2DEdge edge;
-        if( existingEdge != null )
-        {
-          edge = existingEdge;
-        }
-        else
-        {
-          edge = discModel.createEdge( lastNode, actNode );
-          lListRes.add( edge );
-        }
-        lListEdges.add( edge );
-        // final String gmlID = edge.getId();
-      }
-      iCountNodes++;
-      lastNode = actNode;
-    }
-    return lListRes;
-  }
-
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
   private List<Feature> reselectFeatures( final List<GM_Point> centroidList )
   {
     final List<Feature> refineList = new ArrayList<>();
@@ -530,7 +432,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     return refineList;
   }
 
-  @SuppressWarnings( { "unchecked" } )
   private List<GM_Point> getCentroids( final GM_Object[] objects )
   {
     final List<GM_Point> centroidList = new ArrayList<>();
