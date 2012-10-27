@@ -102,7 +102,7 @@ public abstract class AbstractShapeInputDescriptor<T extends GM_Object> implemen
     return Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.AbstractShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   @Override
   public final T getGeometry( final int index ) throws CoreException
   {
@@ -113,7 +113,7 @@ public abstract class AbstractShapeInputDescriptor<T extends GM_Object> implemen
       final GM_Object geometry = SHP2GM_Object.transform( m_crs, shape );
 
       /* allow for null geometries */
-      return (T) geometry;
+      return (T)geometry;
     }
     catch( final IOException e )
     {
@@ -124,7 +124,14 @@ public abstract class AbstractShapeInputDescriptor<T extends GM_Object> implemen
   @Override
   public final int size( ) throws CoreException
   {
-    return getShapeFile().getNumRecords();
+    try
+    {
+      return getShapeFile().getNumRecords();
+    }
+    catch( final IOException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 
   private ShapeFile getShapeFile( ) throws CoreException
