@@ -93,7 +93,7 @@ public class StatisticElementBuilder
   public void createElements( final ILandusePolygonCollection landusePolygons, final ShapeFile shape, final String shapeNameField, final String shapeSRS, final IProgressMonitor monitor ) throws GM_Exception, IOException, DBaseException, FactoryException, TransformException
   {
     final SubMonitor progress = SubMonitor.convert( monitor );
-    progress.beginTask( Messages.getString("StatisticElementBuilder_0"), 30 ); //$NON-NLS-1$
+    progress.beginTask( Messages.getString( "StatisticElementBuilder_0" ), 30 ); //$NON-NLS-1$
 
     /* init geo transformer */
     final int statisticsSRID = JTSAdapter.toSrid( m_statisticsSRSName );
@@ -101,20 +101,20 @@ public class StatisticElementBuilder
     final JTSTransformer geoTransformer = shapeSRID == JTSAdapter.DEFAULT_SRID ? null : new JTSTransformer( shapeSRID, statisticsSRID );
 
     /* Load shape if given */
-    progress.subTask( Messages.getString("StatisticElementBuilder_1") ); //$NON-NLS-1$
+    progress.subTask( Messages.getString( "StatisticElementBuilder_1" ) ); //$NON-NLS-1$
     final StatisticGroup[] groups = readShape( shape, shapeNameField, shapeSRS, geoTransformer );
     ProgressUtilities.worked( progress, 50 );
 
     /* Intersect groups with landuses and build all areas */
     final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection = landusePolygons.getLandusePolygonCollection();
-    progress.subTask( Messages.getString("StatisticElementBuilder_2") ); //$NON-NLS-1$
+    progress.subTask( Messages.getString( "StatisticElementBuilder_2" ) ); //$NON-NLS-1$
     final int progressCount = landusePolygonCollection.size() * groups.length;
     progress.setWorkRemaining( progressCount );
 
     for( final ILandusePolygon landusePolygon : landusePolygonCollection )
     {
       final GM_Polygon landuseSurface = landusePolygon.getGeometry();
-      final Polygon landuseArea = (Polygon) JTSAdapter.export( landuseSurface );
+      final Polygon landuseArea = (Polygon)JTSAdapter.export( landuseSurface );
 
       final ILanduseClass landuseClass = landusePolygon.getLanduseClass( m_controlModel );
 
@@ -177,13 +177,13 @@ public class StatisticElementBuilder
       {
         final ISHPGeometry shapeArea = shape.getShape( i );
 
-        final String name = (String) shape.getRowValue( i, shapeNameField );
+        final String name = (String)shape.getRowValue( i, shapeNameField );
         final Geometry transformedShapeArea = shp2jts.transform( shapeSRID, shapeArea );
         final List< ? > polygons = PolygonExtracter.getPolygons( transformedShapeArea );
 
         for( final Object polygon : polygons )
         {
-          final Polygon transformedPolygon = geoTransformer.transformPolygon( (Polygon)polygon );
+          final Polygon transformedPolygon = geoTransformer.transform( (Polygon)polygon );
 
           final StatisticGroup group = new StatisticGroup( name, transformedPolygon );
           groups.add( group );
