@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -156,6 +157,11 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
   public ShapeFile openShape( ) throws IOException, DBaseException
   {
     return new ShapeFile( m_shapeFile, Charset.defaultCharset(), FileMode.READ );
+  }
+
+  public String getShapeName( )
+  {
+    return new File( m_shapeFile ).getName();
   }
 
   public ImportAttributeInfo< ? >[] getAttributeInfos( )

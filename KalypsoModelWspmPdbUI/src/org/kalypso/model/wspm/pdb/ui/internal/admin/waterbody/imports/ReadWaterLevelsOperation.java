@@ -55,11 +55,13 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.tools.SHP2JTS;
@@ -69,7 +71,6 @@ import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
@@ -77,7 +78,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * Reads water levels from a shape file.
- *
+ * 
  * @author Gernot Belger
  */
 public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
@@ -89,6 +90,12 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
   private final ImportWaterLevelsData m_data;
 
   private final Map<WaterlevelFixation, IStatus> m_waterLevelStatus;
+
+  private SHP2JTS m_shp2jts;
+
+  private GeometryFactory m_factory;
+
+  private JTSTransformer m_transformer;
 
   public ReadWaterLevelsOperation( final ImportWaterLevelsData data, final Map<WaterlevelFixation, IStatus> waterLevelStatus )
   {
@@ -103,14 +110,18 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
     final Collection<WaterlevelFixation> wbs = new ArrayList<>();
 
-    ShapeFile shapeFile = null;
-    try
+    try( ShapeFile shapeFile = m_data.openShape() )
     {
-      shapeFile = m_data.openShape();
-
       final IDBFField[] fields = shapeFile.getFields();
 
-      for( int row = 0; row < shapeFile.getNumRecords(); row++ )
+      final int numRecords = shapeFile.getNumRecords();
+
+      final String taskName = String.format( "Reading shape file '%s'", m_data.getShapeName() );
+      monitor.beginTask( taskName, numRecords );
+
+      final int progressStep = Math.max( 1, numRecords / 1000 );
+
+      for( int row = 0; row < numRecords; row++ )
       {
         final Object[] data = shapeFile.getRow( row );
         final ISHPGeometry shape = shapeFile.getShape( row );
@@ -119,27 +130,28 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
         final IStatus valid = checkWaterlevel( wb );
         wbs.add( wb );
         m_waterLevelStatus.put( wb, valid );
+
+        if( row % progressStep == 0 )
+        {
+          ProgressUtilities.worked( monitor, progressStep );
+          monitor.subTask( String.format( "row %d", row ) );
+        }
       }
     }
     catch( final CoreException e )
     {
       throw e;
     }
-    catch( final Exception e )
+    catch( final IOException | DBaseException | MismatchedDimensionException | FactoryException | TransformException e )
     {
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE, e );
       throw new CoreException( status );
     }
-
-    try
-    {
-      shapeFile.close();
-    }
-    catch( final IOException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE, e );
-      throw new CoreException( status );
-    }
+//    catch( final Exception e )
+//    {
+//      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE, e );
+//      throw new CoreException( status );
+//    }
 
     m_waterLevels = wbs.toArray( new WaterlevelFixation[wbs.size()] );
     return Status.OK_STATUS;
@@ -201,23 +213,53 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
    */
   private Point getLocation( final ISHPGeometry shape ) throws FactoryException, MismatchedDimensionException, TransformException
   {
-    final String shapeSRS = m_data.getSrs();
-    final int shapeSRID = JTSAdapter.toSrid( shapeSRS );
-    final int dbSRID = m_data.getDbSRID();
-
-    final GeometryFactory factory = new GeometryFactory( new PrecisionModel(), shapeSRID );
-    final SHP2JTS shp2jts = new SHP2JTS( factory );
-    final JTSTransformer transformer = new JTSTransformer( shapeSRID, dbSRID );
+    final SHP2JTS shp2jts = getShape2JTS();
 
     final Geometry geometry = shp2jts.transform( shape );
     if( !(geometry instanceof Point) )
       return null;
 
-    final Coordinate transformed = transformer.transform( ((Point)geometry).getCoordinate() );
-    final Point transformedPoint = factory.createPoint( transformed );
-    transformedPoint.setSRID( dbSRID );
+    final JTSTransformer transformer = getTransformer();
+    return transformer.transform( (Point)geometry );
+  }
 
-    return transformedPoint;
+  private JTSTransformer getTransformer( ) throws FactoryException
+  {
+    if( m_transformer == null )
+    {
+      /* init srs stuff */
+      final String shapeSRS = m_data.getSrs();
+      final int shapeSRID = JTSAdapter.toSrid( shapeSRS );
+      final int dbSRID = m_data.getDbSRID();
+
+      m_transformer = new JTSTransformer( shapeSRID, dbSRID );
+    }
+
+    return m_transformer;
+  }
+
+  private SHP2JTS getShape2JTS( )
+  {
+    if( m_shp2jts == null )
+    {
+      final GeometryFactory factory = getFactory();
+      m_shp2jts = new SHP2JTS( factory );
+    }
+
+    return m_shp2jts;
+  }
+
+  private GeometryFactory getFactory( )
+  {
+    if( m_factory == null )
+    {
+      final String shapeSRS = m_data.getSrs();
+      final int shapeSRID = JTSAdapter.toSrid( shapeSRS );
+
+      m_factory = new GeometryFactory( new PrecisionModel(), shapeSRID );
+    }
+
+    return m_factory;
   }
 
   private Object findValue( final ImportAttributeInfo< ? > info, final IDBFField[] fields, final Object[] data ) throws CoreException

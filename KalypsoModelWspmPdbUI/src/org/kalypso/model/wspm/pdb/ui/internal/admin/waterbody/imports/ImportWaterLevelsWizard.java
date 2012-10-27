@@ -109,6 +109,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   {
     setWindowTitle( Messages.getString( "ImportWaterLevelsWizard.0" ) ); //$NON-NLS-1$
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
+
     setNeedsProgressMonitor( true );
   }
 
