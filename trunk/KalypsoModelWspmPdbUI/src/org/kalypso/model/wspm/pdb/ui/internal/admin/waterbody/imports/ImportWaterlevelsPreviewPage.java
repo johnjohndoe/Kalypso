@@ -73,7 +73,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdateable
 {
   private final Map<WaterlevelFixation, IStatus> m_waterlevelStatus = new HashMap<>();
@@ -137,7 +137,7 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final boolean checked = event.getChecked();
-        final WaterlevelFixation fixation = (WaterlevelFixation) event.getElement();
+        final WaterlevelFixation fixation = (WaterlevelFixation)event.getElement();
         if( checked )
           waterlevelEvent.getWaterlevelFixations().add( fixation );
         else
@@ -191,7 +191,7 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
 
   protected WaterlevelFixation[] getWaterLevels( )
   {
-    return (WaterlevelFixation[]) m_viewer.getInput();
+    return (WaterlevelFixation[])m_viewer.getInput();
   }
 
   protected CheckboxTableViewer getViewer( )
@@ -225,7 +225,7 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
   {
     final ReadWaterLevelsOperation operation = new ReadWaterLevelsOperation( m_data, m_waterlevelStatus );
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
       StatusDialog.open( getShell(), status, Messages.getString( "ImportWaterlevelsPreviewPage.8" ) ); //$NON-NLS-1$
 
