@@ -20,20 +20,32 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Doubles;
-import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
+import org.kalypso.model.wspm.ui.view.chart.ProfileStyleUtils;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateList;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.util.PolygonExtracter;
 
 import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.IFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -52,9 +64,32 @@ public class ProfileObjectPainter
 
   private HoverIndex m_hoverIndex;
 
-  public ProfileObjectPainter( final IProfile profile, final String type )
+  private final IFigure< ? extends IStyle>[] m_figures;
+
+  private final IProfileObjectInfoBuilder m_infoBuilder;
+
+  public ProfileObjectPainter( final PartTypeAccessor partInfo, final IProfileObjectInfoBuilder infoBuilder )
   {
-    m_partInfo = new PartTypeAccessor( profile, type );
+    m_partInfo = partInfo;
+    m_infoBuilder = infoBuilder;
+
+    m_figures = createFigures();
+  }
+
+  private IFigure<IStyle>[] createFigures( )
+  {
+    final Collection<IFigure< ? extends IStyle>> figures = new ArrayList<>();
+
+    final IStyle[] styles = m_partInfo.getStyles();
+    for( final IStyle style : styles )
+    {
+      if( style instanceof IPointStyle )
+        figures.add( new PointFigure( (IPointStyle)style ) );
+      else if( style instanceof ILineStyle )
+        figures.add( new PolylineFigure( (ILineStyle)style ) );
+    }
+
+    return figures.toArray( new IFigure[figures.size()] );
   }
 
   public void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
@@ -62,14 +97,9 @@ public class ProfileObjectPainter
     m_coordinateMapper = coordinateMapper;
   }
 
-  public PartTypeAccessor getInfo( )
-  {
-    return m_partInfo;
-  }
-
   public void paintLegend( final GC gc, final Point size )
   {
-    final Point[] legendPointPoints = new Point[] { new Point( size.x / 2, size.y / 2 ) };
+    final Point legendPointPoint = new Point( size.x / 2, size.y / 2 );
     final Point[] legendLinePoints = new Point[6];
     legendLinePoints[0] = new Point( 0, size.x / 2 );
     legendLinePoints[1] = new Point( size.x / 5, size.y / 2 );
@@ -78,13 +108,12 @@ public class ProfileObjectPainter
     legendLinePoints[4] = new Point( size.x / 5 * 4, size.y / 2 );
     legendLinePoints[5] = new Point( size.x, size.y / 2 );
 
-    final IStyle[] styles = m_partInfo.getStyles();
-    for( final IStyle style : styles )
+    for( final IFigure< ? extends IStyle> figure : m_figures )
     {
-      if( style instanceof IPointStyle )
-        paintPoints( gc, legendPointPoints, (IPointStyle)style );
-      else if( style instanceof ILineStyle )
-        paintLine( gc, legendLinePoints, (ILineStyle)style );
+      if( figure instanceof PointFigure )
+        paintPoint( gc, legendPointPoint, (PointFigure)figure );
+      else if( figure instanceof PolylineFigure )
+        paintLine( gc, legendLinePoints, (PolylineFigure)figure );
     }
   }
 
@@ -132,10 +161,10 @@ public class ProfileObjectPainter
       return range;
 
     final Double min = range.getMin();
-    final Double max = range.getMin();
+    final Double max = range.getMax();
 
     final double newMin = min == null ? value : Math.min( min, value );
-    final double newMax = max == null ? value : Math.min( max, value );
+    final double newMax = max == null ? value : Math.max( max, value );
 
     return new DataRange<>( newMin, newMax );
   }
@@ -146,25 +175,91 @@ public class ProfileObjectPainter
       return;
 
     /* collect points */
-    final Point[] points = buildPaintPoints( object );
+    final ProfileObjectPaintData[] paintPoints = buildPaintPoints( object );
 
     /* paint points */
-    final IStyle[] styles = m_partInfo.getStyles();
-    for( final IStyle style : styles )
-      paint( gc, points, style );
+    for( final IFigure< ? extends IStyle> figure : m_figures )
+    {
+      if( figure instanceof PointFigure )
+        paintPoints( gc, paintPoints, (PointFigure)figure, object );
+      else if( figure instanceof PolylineFigure )
+        paintLine( gc, paintPoints, (PolylineFigure)figure, object );
+    }
   }
 
-  private void paint( final GC gc, final Point[] points, final IStyle style )
+  private void paintPoints( final GC gc, final ProfileObjectPaintData[] paintPoints, final PointFigure figure, final IProfileObject object )
   {
-    if( style instanceof IPointStyle )
-      paintPoints( gc, points, (IPointStyle)style );
-    else if( style instanceof ILineStyle )
-      paintLine( gc, points, (ILineStyle)style );
+    /* create hover figure */
+    final IPointStyle style = figure.getStyle();
+    final IPointStyle hoverStyle = ProfileStyleUtils.deriveHoverStyle( style );
+
+    /* paint each point and create info */
+    for( final ProfileObjectPaintData paintPoint : paintPoints )
+    {
+      final Point point = paintPoint.getPoint();
+      final Rectangle hoverRect = paintPoint( gc, point, figure );
+
+      final PointFigure hoverFigure = new PointFigure( hoverStyle );
+      hoverFigure.setCenterPoint( point );
+
+      final EditInfo info = m_infoBuilder.createPointInfo( object, paintPoint.getRecord(), hoverFigure, point );
+
+      m_hoverIndex.addElement( hoverRect, info );
+    }
   }
 
-  private Point[] buildPaintPoints( final IProfileObject object )
+  private void paintLine( final GC gc, final ProfileObjectPaintData[] paintPoints, final PolylineFigure figure, final IProfileObject object )
   {
-    final Collection<Point> points = new ArrayList<>();
+    /* extract points */
+    final Point[] points = new Point[paintPoints.length];
+    for( int i = 0; i < points.length; i++ )
+      points[i] = paintPoints[i].getPoint();
+
+    /* paint line */
+    paintLine( gc, points, figure );
+
+    /* hover figure */
+    final ILineStyle style = figure.getStyle();
+    final ILineStyle hoverStyle = ProfileStyleUtils.deriveHoverStyle( style );
+
+    /* hover bounds */
+    final Polygon hoverBounds = buildHoverBounds( points, style.getWidth() + 1 );
+
+    /* edit info */
+    if( hoverBounds != null )
+    {
+      final PolylineFigure hoverFigure = new PolylineFigure( hoverStyle );
+      hoverFigure.setPoints( points );
+
+      final EditInfo info = m_infoBuilder.createLineInfo( object, hoverFigure );
+      m_hoverIndex.addElement( hoverBounds, info );
+    }
+  }
+
+  private Polygon buildHoverBounds( final Point[] points, final int bufferSize )
+  {
+    final CoordinateList crds = new CoordinateList();
+
+    for( final Point point : points )
+      crds.add( new Coordinate( point.x, point.y ), false );
+
+    final Coordinate[] crdArray = crds.toCoordinateArray();
+    if( crdArray.length < 2 )
+      return null;
+
+    final LineString line = JTSAdapter.jtsFactory.createLineString( crdArray );
+    final Geometry buffer = line.buffer( bufferSize );
+
+    final List<Polygon> polygons = PolygonExtracter.getPolygons( buffer );
+    if( polygons.size() == 0 )
+      return null;
+
+    return polygons.get( 0 );
+  }
+
+  private ProfileObjectPaintData[] buildPaintPoints( final IProfileObject object )
+  {
+    final Collection<ProfileObjectPaintData> paintData = new ArrayList<>();
 
     final IProfileObjectRecords records = object.getRecords();
     for( int i = 0; i < records.size(); i++ )
@@ -174,13 +269,12 @@ public class ProfileObjectPainter
       final Point screen = toScreen( record );
       if( screen != null )
       {
-        points.add( screen );
-
-        // FIXME: add hover info
+        final ProfileObjectPaintData point = new ProfileObjectPaintData( record, screen );
+        paintData.add( point );
       }
     }
 
-    return points.toArray( new Point[points.size()] );
+    return paintData.toArray( new ProfileObjectPaintData[paintData.size()] );
   }
 
   private Point toScreen( final IProfileObjectRecord record )
@@ -194,20 +288,17 @@ public class ProfileObjectPainter
     return m_coordinateMapper.numericToScreen( x, y );
   }
 
-  private void paintPoints( final GC gc, final Point[] points, final IPointStyle style )
+  private Rectangle paintPoint( final GC gc, final Point point, final PointFigure figure )
   {
-    final PointFigure figure = new PointFigure();
-    figure.setStyle( style );
-    figure.setPoints( points );
+    final Rectangle hoverRect = figure.setCenterPoint( point );
     figure.paint( gc );
+    return hoverRect;
   }
 
-  private void paintLine( final GC gc, final Point[] points, final ILineStyle lineStyle )
+  private void paintLine( final GC gc, final Point[] points, final PolylineFigure figure )
   {
-    final PolylineFigure lineFigure = new PolylineFigure();
-    lineFigure.setStyle( lineStyle );
-    lineFigure.setPoints( points );
-    lineFigure.paint( gc );
+    figure.setPoints( points );
+    figure.paint( gc );
   }
 
   public void setHoverIndex( final HoverIndex hoverIndex )
