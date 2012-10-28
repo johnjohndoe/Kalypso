@@ -19,6 +19,8 @@
 package org.kalypso.model.wspm.pdb.internal.waterlevel2d;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,6 +52,13 @@ class ProjectedWaterlevel
   private final MLineString m_profileLine;
 
   private final WaterlevelFixation m_waterlevel;
+
+  private Double m_width;
+
+  private final int m_pointWidthScale = PdbMappingUtils.findScale( Point.class, Point.PROPERTY_WIDTH );
+
+  /* Performance: cache for transformers */
+  private final Map<Integer, JTSTransformer> m_transformer = new ConcurrentHashMap<>();
 
   public ProjectedWaterlevel( final MLineString profileLine, final WaterlevelFixation waterlevel )
   {
@@ -108,12 +117,21 @@ class ProjectedWaterlevel
     final Coordinate coordinate = location.getCoordinate();
 
     final int wSRID = location.getSRID();
-    final int targetSRID = m_profileLine.getSRID();
 
-    final JTSTransformer transformer = new JTSTransformer( wSRID, targetSRID );
+    final JTSTransformer transformer = getTransformer( wSRID );
     final Coordinate transformed = transformer.transform( coordinate );
 
     return m_profileLine.getFactory().createPoint( transformed );
+  }
+
+  private JTSTransformer getTransformer( final int wSRID ) throws FactoryException
+  {
+    final int targetSRID = m_profileLine.getSRID();
+
+    if( !m_transformer.containsKey( wSRID ) )
+      m_transformer.put( wSRID, new JTSTransformer( wSRID, targetSRID ) );
+
+    return m_transformer.get( wSRID );
   }
 
   private BigDecimal calculateWidth( final Coordinate waterlevelLocation )
@@ -128,8 +146,7 @@ class ProjectedWaterlevel
 
     final BigDecimal mWidth = new BigDecimal( projectedLocationWithM.m );
 
-    final int scale = PdbMappingUtils.findScale( Point.class, Point.PROPERTY_WIDTH );
-    return mWidth.setScale( scale, BigDecimal.ROUND_HALF_UP );
+    return mWidth.setScale( m_pointWidthScale, BigDecimal.ROUND_HALF_UP );
   }
 
   public BigDecimal getDischarge( )
@@ -143,6 +160,14 @@ class ProjectedWaterlevel
   }
 
   public double getWidth( ) throws MismatchedDimensionException, FactoryException, TransformException
+  {
+    if( m_width == null )
+      m_width = calculateWidth();
+
+    return m_width.doubleValue();
+  }
+
+  private Double calculateWidth( ) throws MismatchedDimensionException, FactoryException, TransformException
   {
     /* Fetch data from waterlevel */
     final com.vividsolutions.jts.geom.Point waterlevelPoint = getWaterlevelLocationInProfileSrs();
