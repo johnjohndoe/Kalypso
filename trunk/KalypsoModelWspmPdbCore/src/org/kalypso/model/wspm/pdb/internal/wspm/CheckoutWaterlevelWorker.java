@@ -135,7 +135,7 @@ public class CheckoutWaterlevelWorker
   private Feature removeEvent( final Object wspmObject, final WspmWaterBody wspmWater )
   {
     if( wspmObject instanceof WspmFixation )
-      return removeFixation( (WspmFixation) wspmObject, wspmWater );
+      return removeFixation( (WspmFixation)wspmObject, wspmWater );
 
     if( wspmObject instanceof TuhhCalculation )
       // FIXME
@@ -205,8 +205,6 @@ public class CheckoutWaterlevelWorker
       final String description = fixation.getDescription();
       final Point location = fixation.getLocation();
 
-      final Coordinate transformed = transformer.transform( location.getCoordinate() );
-
       if( waterlevel != null )
       {
         final IRecord record = result.createRecord();
@@ -215,8 +213,13 @@ public class CheckoutWaterlevelWorker
         record.setValue( waterlevelComp, waterlevel );
         record.setValue( commentComp, description );
         record.setValue( runoffComp, discharge );
-        record.setValue( eastingComp, new BigDecimal( transformed.x ) );
-        record.setValue( northingComp, new BigDecimal( transformed.y ) );
+
+        if( location != null )
+        {
+          final Coordinate transformed = transformer.transform( location.getCoordinate() );
+          record.setValue( eastingComp, new BigDecimal( transformed.x ) );
+          record.setValue( northingComp, new BigDecimal( transformed.y ) );
+        }
 
         result.add( record );
       }
