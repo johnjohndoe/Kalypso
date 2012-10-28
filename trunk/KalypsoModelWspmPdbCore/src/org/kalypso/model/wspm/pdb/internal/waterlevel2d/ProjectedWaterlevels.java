@@ -16,19 +16,15 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.pdb.internal.wspm;
+package org.kalypso.model.wspm.pdb.internal.waterlevel2d;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.apache.commons.lang3.Range;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IStatus;
 import org.hibernatespatial.mgeom.MGeometryException;
 import org.hibernatespatial.mgeom.MLineString;
@@ -57,7 +53,7 @@ import com.vividsolutions.jts.geom.LineString;
  * 
  * @author Gernot Belger
  */
-class ProjectedWaterlevels
+public class ProjectedWaterlevels
 {
   private final IStatusCollector m_log = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
@@ -69,33 +65,31 @@ class ProjectedWaterlevels
 
   private final MLineString m_profileLine;
 
-  public ProjectedWaterlevels( final String eventName, final BigDecimal station, final MLineString profileLine, final Collection<WaterlevelFixation> waterlevels )
+  public ProjectedWaterlevels( final String eventName, final BigDecimal station, final MLineString profileLine, final WaterlevelFixation[] waterlevels )
   {
     m_eventName = eventName;
     m_station = station;
     m_profileLine = profileLine;
 
-    final Collection<ProjectedWaterlevel> projectedWaterlevels = new ArrayList<>( waterlevels.size() );
-
-    for( final WaterlevelFixation waterlevel : waterlevels )
-      projectedWaterlevels.add( new ProjectedWaterlevel( profileLine, waterlevel ) );
-
-    m_waterlevels = projectedWaterlevels.toArray( new ProjectedWaterlevel[projectedWaterlevels.size()] );
+    m_waterlevels = new ProjectedWaterlevel[waterlevels.length];
+    for( int i = 0; i < m_waterlevels.length; i++ )
+      m_waterlevels[i] = new ProjectedWaterlevel( profileLine, waterlevels[i] );
   }
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatusOrOK( m_station.toPlainString() );
+    return m_log.asMultiStatus( "Compute 2D-Waterlevels" );
   }
 
   public IProfileObject[] createParts( ) throws MismatchedDimensionException, FactoryException, TransformException
   {
     /* create 'original' waterlevel: just the fixation points projected to the profile line */
-    final Pair<GenericProfileHorizon, IStatus> originalResult = createOriginalWaterlevel();
-    if( !originalResult.getRight().isOK() )
-      m_log.add( originalResult.getRight() );
+    final ProjectOriginalWaterlevelWorker originalWorker = new ProjectOriginalWaterlevelWorker( m_eventName, m_waterlevels );
+    final IStatus originalStatus = originalWorker.execute();
+    if( !originalStatus.isOK() )
+      m_log.add( originalStatus );
 
-    final GenericProfileHorizon originalWaterlevel = originalResult.getLeft();
+    final IProfileObject originalWaterlevel = originalWorker.getResult();
 
     /* ignore empty waterlevels */
     if( originalWaterlevel.getRecords().size() == 0 )
@@ -104,66 +98,28 @@ class ProjectedWaterlevels
       return new IProfileObject[] {};
     }
 
+    // FIXME
+    final double maxDistance = 0.001; // 1 cm
+    /* simplify original waterlevel, to avoid too many points */
+    final SimplifyProjectedWaterlevelWorker simplifyWorker = new SimplifyProjectedWaterlevelWorker( originalWaterlevel, maxDistance );
+    final IStatus simplifyStatus = simplifyWorker.execute();
+    if( !simplifyStatus.isOK() )
+      m_log.add( simplifyStatus );
+
+    final IProfileObject simplifiedWaterlevel = simplifyWorker.getResult();
+
     /* create 2d waterlevels */
-    final IProfileObject[] waterlevels2d = create2Dwaterlevels( originalWaterlevel );
+    final IProfileObject[] waterlevels2d = create2Dwaterlevels( simplifiedWaterlevel );
 
     /* build return set */
     final Collection<IProfileObject> allParts = new ArrayList<>();
-    allParts.add( originalWaterlevel );
+    allParts.add( simplifiedWaterlevel );
     allParts.addAll( Arrays.asList( waterlevels2d ) );
 
     return allParts.toArray( new IProfileObject[allParts.size()] );
   }
 
-  // FIXME: douglas peucker the incoming waterlevel
-  private Pair<GenericProfileHorizon, IStatus> createOriginalWaterlevel( ) throws MismatchedDimensionException, FactoryException, TransformException
-  {
-    final IStatusCollector log = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
-
-    final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon( IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS );
-
-    /* set general data */
-    // TODO: important, that name is unique within the cross section, how can we force this here?
-    waterlevel2D.setValue( IGafConstants.PART_NAME, m_eventName );
-
-    /* set global discharge value */
-    final BigDecimal discharge = getDischarge( null );
-    if( discharge != null )
-      waterlevel2D.setValue( IGafConstants.METADATA_WATERLEVEL_DISCHARGE, discharge.toString() );
-
-    /* convert to points */
-    final IProfileObjectRecords records = waterlevel2D.getRecords();
-
-    for( final ProjectedWaterlevel waterlevel : m_waterlevels )
-    {
-      try
-      {
-        final IStatus status = waterlevel.createOriginalRecord( records );
-        if( !status.isOK() )
-          log.add( status );
-      }
-      catch( final MismatchedDimensionException e )
-      {
-        e.printStackTrace();
-        log.add( IStatus.ERROR, e.toString() );
-      }
-      catch( final FactoryException e )
-      {
-        e.printStackTrace();
-        log.add( IStatus.ERROR, e.toString() );
-      }
-      catch( final TransformException e )
-      {
-        e.printStackTrace();
-        log.add( IStatus.ERROR, e.toString() );
-      }
-    }
-
-    final IStatus status = log.asMultiStatusOrOK( m_station.toString() );
-    return Pair.of( waterlevel2D, status );
-  }
-
-  private IProfileObject[] create2Dwaterlevels( final GenericProfileHorizon originalWaterlevel )
+  private IProfileObject[] create2Dwaterlevels( final IProfileObject simplifiedWaterlevel )
   {
     final Coordinate[] profileCoordinates = extractWidthHeightCoordinates();
     if( profileCoordinates.length < 2 )
@@ -172,7 +128,7 @@ class ProjectedWaterlevels
     final Range<Double> profileWidthRange = calculateExtendedWidthRange( profileCoordinates );
 
     /* create waterlevel line */
-    final LineString waterlevelLine = extractLine( originalWaterlevel, profileWidthRange );
+    final LineString waterlevelLine = extractLine( simplifiedWaterlevel, profileWidthRange );
     if( waterlevelLine == null )
       return new IProfileObject[] {};
 
@@ -228,12 +184,12 @@ class ProjectedWaterlevels
     return Range.between( min - distance, max + distance );
   }
 
-  private LineString extractLine( final GenericProfileHorizon originalWaterlevel, final Range<Double> profileWidthRange )
+  private LineString extractLine( final IProfileObject simplifiedWaterlevel, final Range<Double> profileWidthRange )
   {
     final CoordinateList waterlevelLocations = new CoordinateList();
 
     /* extract waterlevel locations */
-    final IProfileObjectRecords records = originalWaterlevel.getRecords();
+    final IProfileObjectRecords records = simplifiedWaterlevel.getRecords();
     for( int i = 0; i < records.size(); i++ )
     {
       final IProfileObjectRecord record = records.getRecord( i );
@@ -310,11 +266,12 @@ class ProjectedWaterlevels
     final GenericProfileHorizon waterlevel2D = new GenericProfileHorizon( IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_SEGMENT );
 
     /* get description only from involved points */
-    final String description = getDescription( widthRange );
+    final AggregatedWaterlevel aggregator = new AggregatedWaterlevel( m_waterlevels, widthRange );
+    final String description = aggregator.getDescription();
     waterlevel2D.setDescription( description );
 
     /* get discharge only from involved points */
-    final BigDecimal discharge = getDischarge( widthRange );
+    final BigDecimal discharge = aggregator.getDischarge();
     if( discharge != null )
       waterlevel2D.setValue( IGafConstants.METADATA_WATERLEVEL_DISCHARGE, discharge.toString() );
 
@@ -336,64 +293,18 @@ class ProjectedWaterlevels
       record.setBreite( width );
       record.setHoehe( height );
       record.setComment( null );
-      record.setRechtswert( location.x );
-      record.setHochwert( location.y );
+
+      // FIXME: extrapolate location if outside profile
+      if( location != null )
+      {
+        record.setRechtswert( location.x );
+        record.setHochwert( location.y );
+      }
 
       // FIXME: WS is of kind W, not W2
       record.setCode( GafPointCode.WS.getKey() );
     }
 
     return waterlevel2D;
-  }
-
-  private BigDecimal getDischarge( final Range<Double> widthRange ) throws MismatchedDimensionException, FactoryException, TransformException
-  {
-    final ProjectedWaterlevel[] waterlevels = getWaterlevels( widthRange );
-
-    for( final ProjectedWaterlevel waterlevel : waterlevels )
-    {
-      final BigDecimal discharge = waterlevel.getDischarge();
-      // FIXME: calculate mean? at least log if we have different waterlevels?
-      if( discharge != null )
-        return discharge;
-    }
-
-    return null;
-  }
-
-  /* build description from all waterlevels */
-  private String getDescription( final Range<Double> widthRange ) throws MismatchedDimensionException, FactoryException, TransformException
-  {
-    final ProjectedWaterlevel[] waterlevels = getWaterlevels( widthRange );
-
-    final Set<String> descriptions = new LinkedHashSet<>();
-
-    for( final ProjectedWaterlevel waterlevel : waterlevels )
-    {
-      /* collect description, ignore blanks/empty */
-      final String description = waterlevel.getDescription();
-      descriptions.add( StringUtils.trimToNull( description ) );
-    }
-
-    /* Build combined description without null elements */
-    descriptions.remove( null );
-    return StringUtils.join( descriptions, ", " ); //$NON-NLS-1$
-  }
-
-  private ProjectedWaterlevel[] getWaterlevels( final Range<Double> widthRange ) throws MismatchedDimensionException, FactoryException, TransformException
-  {
-    if( widthRange == null )
-      return m_waterlevels;
-
-    final Collection<ProjectedWaterlevel> restrictedWaterlevels = new ArrayList<>();
-
-    for( final ProjectedWaterlevel waterlevel : m_waterlevels )
-    {
-      final double width = waterlevel.getWidth();
-      if( !Double.isNaN( width ) && widthRange.contains( width ) )
-        restrictedWaterlevels.add( waterlevel );
-    }
-
-    return restrictedWaterlevels.toArray( new ProjectedWaterlevel[restrictedWaterlevels.size()] );
   }
 }

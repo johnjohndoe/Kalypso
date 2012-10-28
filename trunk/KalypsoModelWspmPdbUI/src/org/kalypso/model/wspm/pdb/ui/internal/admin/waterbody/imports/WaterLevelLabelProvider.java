@@ -47,7 +47,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.IBeanValueProperty;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
+import org.kalypso.model.wspm.pdb.wspm.WaterlevelsForStation;
 
 /**
  * @author Gernot Belger
@@ -61,7 +61,7 @@ public class WaterLevelLabelProvider extends ColumnLabelProvider
   public WaterLevelLabelProvider( final String property, final String format )
   {
     m_format = format;
-    m_property = BeanProperties.value( WaterlevelFixation.class, property );
+    m_property = BeanProperties.value( WaterlevelsForStation.class, property );
   }
 
   @Override
@@ -74,7 +74,7 @@ public class WaterLevelLabelProvider extends ColumnLabelProvider
     if( value instanceof Date )
     {
       final DateFormat df = DateFormat.getDateInstance();
-      return df.format( (Date) value );
+      return df.format( (Date)value );
     }
 
     return String.format( m_format, value );

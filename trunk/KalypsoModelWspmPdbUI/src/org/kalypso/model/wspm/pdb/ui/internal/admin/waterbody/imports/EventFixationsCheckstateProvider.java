@@ -40,25 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
+import java.util.Set;
+
 import org.eclipse.jface.viewers.ICheckStateProvider;
-import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.wspm.WaterlevelsForStation;
 
 /**
  * @author Gernot Belger
  */
 public class EventFixationsCheckstateProvider implements ICheckStateProvider
 {
-  private final Event m_waterlevelEvent;
+  private final Set<WaterlevelsForStation> m_waterlevels;
 
-  public EventFixationsCheckstateProvider( final Event waterlevelEvent )
+  public EventFixationsCheckstateProvider( final Set<WaterlevelsForStation> waterlevels )
   {
-    m_waterlevelEvent = waterlevelEvent;
+    m_waterlevels = waterlevels;
   }
 
   @Override
   public boolean isChecked( final Object element )
   {
-    return m_waterlevelEvent.getWaterlevelFixations().contains( element );
+    return m_waterlevels.contains( element );
   }
 
   @Override

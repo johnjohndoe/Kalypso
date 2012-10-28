@@ -42,13 +42,13 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
@@ -66,7 +66,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
+import org.kalypso.model.wspm.pdb.connect.PdbExecutorOperation;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -81,6 +81,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.SaveEventOperation;
+import org.kalypso.model.wspm.pdb.wspm.WaterlevelsForStation;
 import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
 
 /**
@@ -151,7 +152,6 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     m_waterValue = BeansObservables.observeValue( event, Event.PROPERTY_WATER_BODY );
 
     addPage( new ImportWaterlevelsSelectAttributesPage( "selectAttributes", m_data ) ); //$NON-NLS-1$
-    addPage( new ImportWaterlevelsPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
 
     /* Choose water body */
     final IPdbConnection connection = m_data.getConnection();
@@ -161,6 +161,8 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
     /* Edit event properties */
     addPage( new EditEventPage( "eventPage", m_data, true ) ); //$NON-NLS-1$
+
+    addPage( new ImportWaterlevelsPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -256,27 +258,9 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   {
     final SaveEventOperation operation = createCheckinOperation( connection, event );
 
-    final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
+    final PdbExecutorOperation runnable = new PdbExecutorOperation( connection, operation, "Failed to upload waterlevels" );
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
-
-    final IStatus log = operation.getLog();
-
-    return createStatus( status, log );
-  }
-
-  private IStatus createStatus( final IStatus status1, final IStatus status2 )
-  {
-    if( !status1.isOK() && !status2.isOK() )
-      return new MultiStatus( WspmPdbUiPlugin.PLUGIN_ID, 0, new IStatus[] { status1, status2 }, "Several problems while importing waterlevel", null );
-
-    if( !status1.isOK() )
-      return status1;
-
-    if( !status2.isOK() )
-      return status1;
-
-    return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "Waterlevel was successfully uploaded" );
+    return RunnableContextHelper.execute( getContainer(), true, false, runnable );
   }
 
   private SaveEventOperation createCheckinOperation( final IPdbConnection connection, final Event event )
@@ -286,7 +270,10 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     final PdbInfo info = connection.getInfo();
     final int dbSRID = info.getSRID();
 
-    return new SaveEventOperation( event, username, dbSRID );
+    final Set<WaterlevelsForStation> waterlevels = m_data.getWaterlevels();
+    final WaterlevelsForStation[] waterlevels2d = waterlevels.toArray( new WaterlevelsForStation[waterlevels.size()] );
+
+    return new SaveEventOperation( event, username, dbSRID, waterlevels2d );
   }
 
   private WaterBody findPreferredWater( final IStructuredSelection selection )

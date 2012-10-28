@@ -41,55 +41,49 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
-import org.hibernatespatial.mgeom.MGeometryFactory;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.connect.AbstractPdbOperationWithMonitor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.constants.EventConstants.WL_TYPE;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.wspm.Waterlevel2dWorker;
-
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Gernot Belger
  */
-public class SaveEventOperation implements IPdbOperation
+public class SaveEventOperation extends AbstractPdbOperationWithMonitor
 {
   private final Event m_event;
 
   private final String m_username;
 
-  private final MGeometryFactory m_geometryFactory;
+  private final WaterlevelsForStation[] m_waterlevels2d;
 
-  private IStatus m_log;
+  private final int m_dbSRID;
 
-  public SaveEventOperation( final Event event, final String username, final int dbSRID )
+  public SaveEventOperation( final Event event, final String username, final int dbSRID, final WaterlevelsForStation[] waterlevels2d )
   {
     m_event = event;
     m_username = username;
-    m_geometryFactory = new MGeometryFactory( new PrecisionModel(), dbSRID );
+    m_dbSRID = dbSRID;
+    m_waterlevels2d = waterlevels2d;
   }
 
   @Override
@@ -98,14 +92,11 @@ public class SaveEventOperation implements IPdbOperation
     return "Save Event";
   }
 
-  public IStatus getLog( )
-  {
-    return m_log;
-  }
-
   @Override
-  public void execute( final Session session ) throws PdbConnectException
+  public IStatus execute( final Session session, final IProgressMonitor monitor ) throws PdbConnectException
   {
+    monitor.beginTask( getLabel(), 100 );
+
     /* Fetch coefficients, we need to known the unknown classes */
     final ICoefficients coefficients = new Coefficients( session, IGafConstants.POINT_KIND_GAF );
 
@@ -119,15 +110,13 @@ public class SaveEventOperation implements IPdbOperation
     session.save( m_event );
 
     /* build 2d waterlevels */
-    final String eventName = m_event.getName();
     final Set<WaterlevelFixation> waterlevels = m_event.getWaterlevelFixations();
-    final Map<BigDecimal, Collection<ISectionProvider>> sectionsByStation = hashSectionsByStation();
-    final Waterlevel2dWorker waterlevel2dWorker = new Waterlevel2dWorker( eventName, waterlevels, sectionsByStation );
-    m_log = waterlevel2dWorker.execute();
-    final Map<IProfileObject, ISectionProvider> waterlevels2d = waterlevel2dWorker.getWaterlevels2D();
 
     /* update wl_type */
-    if( waterlevels2d.size() == 0 )
+    final SubProgressMonitor subMonitor = new SubProgressMonitor( monitor, 20 );
+    subMonitor.beginTask( "Uploading data into database", 100 );
+
+    if( m_waterlevels2d.length == 0 )
       m_event.setWlType( WL_TYPE.WL_1D );
     else
       m_event.setWlType( WL_TYPE.WL_2D );
@@ -139,7 +128,11 @@ public class SaveEventOperation implements IPdbOperation
     saveFixations( session, waterlevels, now );
 
     /* save 2d waterlevels */
-    saveWaterlevels2D( session, waterlevels2d, coefficients );
+    saveWaterlevels2D( session, coefficients );
+
+    subMonitor.done();
+
+    return Status.OK_STATUS;
   }
 
   private void saveFixations( final Session session, final Set<WaterlevelFixation> waterlevels, final Date now )
@@ -159,64 +152,40 @@ public class SaveEventOperation implements IPdbOperation
     }
   }
 
-  private void saveWaterlevels2D( final Session session, final Map<IProfileObject, ISectionProvider> waterlevels2d, final ICoefficients coefficients ) throws PdbConnectException
+  private void saveWaterlevels2D( final Session session, final ICoefficients coefficients ) throws PdbConnectException
   {
     try
     {
-      final int targetSRID = m_geometryFactory.getSRID();
-      // REMARK: profile objects have been build from db objects, so srs is the same
-      final int profileSRID = targetSRID;
-
       final CrossSectionPartTypes partTypes = new CrossSectionPartTypes( session );
 
-      for( final Entry<IProfileObject, ISectionProvider> entry : waterlevels2d.entrySet() )
+      for( final WaterlevelsForStation waterlevel2d : m_waterlevels2d )
       {
-        final IProfileObject object = entry.getKey();
-        final ISectionProvider sectionProvider = entry.getValue();
+        final IProfileObject[] waterlevels = waterlevel2d.getWaterlevelObjects();
+        final ISectionProvider sectionProvider = waterlevel2d.getSection();
 
+        final CrossSection section = sectionProvider.getSection();
+        final int profileSRID = section.getLine().getSRID();
         final BigDecimal station = sectionProvider.getStation();
 
-        final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( object, profileSRID, targetSRID, station.doubleValue(), partTypes, m_event, coefficients );
-        operation.execute();
+        for( final IProfileObject waterlevel : waterlevels )
+        {
+          final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( waterlevel, profileSRID, m_dbSRID, station.doubleValue(), partTypes, m_event, coefficients );
+          operation.execute();
 
-        final CrossSectionPart part = operation.getPart();
-        part.setCrossSection( sectionProvider.getSection() );
-        session.save( part );
+          final CrossSectionPart part = operation.getPart();
+          part.setCrossSection( section );
+          session.save( part );
 
-        final Set<Point> points = part.getPoints();
-        for( final Point point : points )
-          session.save( point );
+          final Set<Point> points = part.getPoints();
+          for( final Point point : points )
+            session.save( point );
+        }
       }
     }
     catch( final Exception e )
     {
       throw new PdbConnectException( "Failed to transform to db coordinate system", e ); //$NON-NLS-1$
     }
-  }
-
-  private Map<BigDecimal, Collection<ISectionProvider>> hashSectionsByStation( )
-  {
-    final Map<BigDecimal, Collection<ISectionProvider>> hash = new TreeMap<>();
-
-    final State state = m_event.getState();
-    if( state == null )
-      return hash;
-
-    final Set<CrossSection> sections = state.getCrossSections();
-
-    for( final CrossSection section : sections )
-    {
-      final ISectionProvider provider = new CrossSectionProvider( section, m_geometryFactory );
-
-      final BigDecimal station = provider.getStation();
-
-      if( !hash.containsKey( station ) )
-        hash.put( station, new ArrayList<ISectionProvider>() );
-
-      hash.get( station ).add( provider );
-    }
-
-    return hash;
   }
 
   public static boolean askForEmptyState( final Event event, final Shell shell, final String dialogTitle )

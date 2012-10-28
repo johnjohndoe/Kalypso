@@ -35,10 +35,10 @@ import org.kalypso.model.wspm.pdb.gaf.GafKind;
 
 /**
  * Implementation of {@link ISectionProvider} based on {@link CrossSection}.
- *
+ * 
  * @author Gernot Belger
  */
-class CrossSectionProvider implements ISectionProvider
+public class CrossSectionProvider implements ISectionProvider
 {
   private final CrossSection m_section;
 
