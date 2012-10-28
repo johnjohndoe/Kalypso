@@ -19,8 +19,8 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,7 +47,8 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
 
   private final IStatusCollector m_levelsLog = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
-  private final Map<WaterlevelFixation, IStatus> m_waterlevels = new HashMap<>();
+  // REMARK: using fatser concurrent map here because we get MANY entries sometimes
+  private final Map<WaterlevelFixation, IStatus> m_waterlevels = new ConcurrentHashMap<>();
 
   private IStatus m_waterlevel2dStatus;
 
@@ -101,7 +102,8 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
     status.add( levelsStatus );
 
     /* section present? */
-    status.add( m_waterlevel2dStatus );
+    if( m_waterlevel2dStatus != null )
+      status.add( m_waterlevel2dStatus );
 
     return status.asMultiStatus( m_station.toString() );
   }
