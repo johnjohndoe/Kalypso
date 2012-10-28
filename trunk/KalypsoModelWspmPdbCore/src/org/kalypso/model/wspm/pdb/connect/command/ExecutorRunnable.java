@@ -55,7 +55,9 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
+ * @deprecated Use {@link org.kalypso.model.wspm.pdb.connect.PdbExecutorOperation} instead.
  */
+@Deprecated
 public class ExecutorRunnable implements ICoreRunnableWithProgress
 {
   private IStatus m_okStatus = Status.OK_STATUS;
@@ -85,12 +87,10 @@ public class ExecutorRunnable implements ICoreRunnableWithProgress
 
     try
     {
-      monitor.beginTask( m_operation.getLabel(), IProgressMonitor.UNKNOWN );
-
       session = m_connection.openSession();
 
       final Executor m_executor = new Executor( session, m_operation );
-      m_executor.execute();
+      m_executor.execute( monitor );
 
       session.flush();
       session.close();
