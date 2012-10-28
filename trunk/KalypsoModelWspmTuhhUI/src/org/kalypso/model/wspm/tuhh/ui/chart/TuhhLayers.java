@@ -130,7 +130,7 @@ final class TuhhLayers
   public static IProfilChartLayer createGelaendeLayer( final IProfile profil, final ICoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
     final PointsLineLayer stationPointLayer = new PointsLineLayer( IWspmLayers.LAYER_GELAENDE, profil, IWspmPointProperties.POINT_PROPERTY_HOEHE, styleProvider );
-    final StationLineLayer stationLineLayer = new StationLineLayer( profil, IWspmPointProperties.POINT_PROPERTY_HOEHE );
+    final StationLineLayer stationLineLayer = new StationLineLayer( IWspmLayers.LAYER_STATION_LINES, profil, IWspmPointProperties.POINT_PROPERTY_HOEHE, styleProvider );
 
     return new CrossSectionTheme( profil, new IProfilChartLayer[] { stationLineLayer, stationPointLayer }, mapper );
   }

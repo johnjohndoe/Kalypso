@@ -123,6 +123,12 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
   {
     final ILineStyle ls = getStyleFor( IWspmConstants.LAYER_GELAENDE + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( new RGB( 255, 150, 0 ) );
+
+    /* station lines */
+    final ILineStyle stationLineStyle = getStyleFor( IWspmConstants.LAYER_STATION_LINES + LINE, LineStyle.class ); //$NON-NLS-1$
+    stationLineStyle.setColor( new RGB( 0, 0, 0 ) );
+    stationLineStyle.setWidth( 1 );
+    stationLineStyle.setDash( 0, new float[] { 1, 1, 1 } );
   }
 
   private void createVegetationStyle( )
