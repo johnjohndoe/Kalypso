@@ -24,6 +24,7 @@ import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
+import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
@@ -43,8 +44,29 @@ public class ProfileObjectHelper
   {
   }
 
-  public static void cloneProfileObject( final IProfileObject source, final IProfileObject target )
+  /**
+   * Clones a profile object including all its metadata and all its records.
+   * 
+   * @param source
+   *          The object that is going to be cloned.
+   * @param targetProfile
+   *          {@link IProfile} used to create target object.
+   */
+  public static IProfileObject cloneProfileObject( final IProfileObject source, final IProfile targetProfile )
   {
+    return cloneProfileObject( source, targetProfile, source.getRecords().getAll() );
+  }
+
+  /**
+   * Same as {@link #cloneProfileObject(IProfileObject, IProfile)}, but only clones the given source records.
+   * 
+   * @param sourceRecords
+   *          The records that will be cloned into the new object. Must all be elements of the source.
+   */
+  public static IProfileObject cloneProfileObject( final IProfileObject source, final IProfile targetProfile, final IProfileObjectRecord[] sourceRecords )
+  {
+    final IProfileObject target = ProfileObjectFactory.createProfileObject( targetProfile, source.getType() );
+
     /* Clone the description. */
     final String description = source.getDescription();
     target.setDescription( description );
@@ -60,11 +82,10 @@ public class ProfileObjectHelper
     }
 
     /* Clone the records. */
-    final IProfileObjectRecords sourceRecords = source.getRecords();
     final IProfileObjectRecords targetRecords = target.getRecords();
-    for( int i = 0; i < sourceRecords.size(); i++ )
+    for( final IProfileObjectRecord sourceRecord : sourceRecords )
     {
-      final IProfileObjectRecord sourceRecord = sourceRecords.getRecord( i );
+      // TODO: assert that sourceRecord is a member of source
 
       final IProfileObjectRecord targetRecord = targetRecords.addNewRecord();
       targetRecord.setId( sourceRecord.getId() );
@@ -75,6 +96,8 @@ public class ProfileObjectHelper
       targetRecord.setHochwert( sourceRecord.getHochwert() );
       targetRecord.setCode( sourceRecord.getCode() );
     }
+
+    return target;
   }
 
   public static void updateObjectFromComponents( final IProfile source, final IProfileObject target, final String component )

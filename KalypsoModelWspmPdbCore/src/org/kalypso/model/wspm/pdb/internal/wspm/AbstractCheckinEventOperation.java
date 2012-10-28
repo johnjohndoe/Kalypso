@@ -41,22 +41,33 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.hibernate.Session;
+import org.hibernatespatial.mgeom.MGeometryFactory;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmLengthSectionProperties;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
+import org.kalypso.model.wspm.pdb.db.utils.EventUtils;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
+import org.kalypso.model.wspm.pdb.internal.waterlevel2d.Waterlevel2dWorker;
+import org.kalypso.model.wspm.pdb.wspm.CrossSectionProvider;
+import org.kalypso.model.wspm.pdb.wspm.ISectionProvider;
 import org.kalypso.model.wspm.pdb.wspm.SaveEventOperation;
+import org.kalypso.model.wspm.pdb.wspm.WaterlevelsForStation;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -68,7 +79,6 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
@@ -79,7 +89,7 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
 {
   static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "AbstractCheckinEventOperation.0" ); //$NON-NLS-1$
 
-  private final GeometryFactory m_factory;
+  private final MGeometryFactory m_factory;
 
   private final Map<String, WaterBody> m_waterBodies;
 
@@ -101,7 +111,7 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
     m_waterBodies = waterHash;
 
     final int dbSRID = connection.getInfo().getSRID();
-    m_factory = new GeometryFactory( new PrecisionModel(), dbSRID );
+    m_factory = new MGeometryFactory( new PrecisionModel(), dbSRID );
 
     m_monitor = monitor;
   }
@@ -140,14 +150,45 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
       throw new PdbConnectException( "Failed ot convert waterlevels", e );
     }
 
+    /* load cross sections */
+    final ISectionProvider[] sections = loadSections( session );
+
+    /* build 2d waterlevels */
+    final WaterlevelsForStation[] waterlevels2d = build2Dwaterlevels( sections, new NullProgressMonitor() );
+
     /* save event */
     final String username = m_connection.getSettings().getUsername();
     final int dbSRSID = m_connection.getInfo().getSRID();
-    final SaveEventOperation operation = new SaveEventOperation( m_event, username, dbSRSID );
-    operation.execute( session );
-    m_log = operation.getLog();
+    final SaveEventOperation operation = new SaveEventOperation( m_event, username, dbSRSID, waterlevels2d );
+    m_log = operation.execute( session, new NullProgressMonitor() );
 
     m_monitor.subTask( Messages.getString( "AbstractCheckinEventOperation.4" ) ); //$NON-NLS-1$
+  }
+
+  private ISectionProvider[] loadSections( final Session session )
+  {
+    final Set<CrossSection> crossSections = EventUtils.loadSectionsForStateName( session, m_event );
+
+    final Collection<ISectionProvider> sections = new ArrayList<>( crossSections.size() );
+
+    for( final CrossSection crossSection : crossSections )
+    {
+      final CrossSectionProvider provider = new CrossSectionProvider( crossSection, m_factory );
+      sections.add( provider );
+    }
+
+    return sections.toArray( new ISectionProvider[sections.size()] );
+  }
+
+  private WaterlevelsForStation[] build2Dwaterlevels( final ISectionProvider[] sections, final IProgressMonitor monitor )
+  {
+    final String eventName = m_event.getName();
+    final Collection<WaterlevelFixation> fixations = m_event.getWaterlevelFixations();
+
+    final Waterlevel2dWorker worker = new Waterlevel2dWorker( eventName, fixations, sections );
+    worker.execute( monitor );
+
+    return worker.getWaterlevels2D();
   }
 
   private void convertWaterlevels( ) throws FactoryException, MismatchedDimensionException, TransformException

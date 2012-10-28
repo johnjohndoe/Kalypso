@@ -40,32 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
-import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusComposite;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
+import org.kalypso.model.wspm.pdb.wspm.WaterlevelsForStation;
 
 /**
  * @author Gernot Belger
  */
 public class WaterLevelImportStatusLabelProvider extends ColumnLabelProvider
 {
-  private final Map<WaterlevelFixation, IStatus> m_waterlevelStatus;
-
-  public WaterLevelImportStatusLabelProvider( final Map<WaterlevelFixation, IStatus> waterlevelStatus )
-  {
-    m_waterlevelStatus = waterlevelStatus;
-  }
-
   @Override
   public String getText( final Object element )
   {
     final IStatus status = getStatus( element );
-    return status.getMessage();
+
+    return StatusUtilities.getLocalizedSeverity( status );
   }
 
   @Override
@@ -77,11 +70,10 @@ public class WaterLevelImportStatusLabelProvider extends ColumnLabelProvider
 
   private IStatus getStatus( final Object element )
   {
-    if( element instanceof WaterlevelFixation )
+    if( element instanceof WaterlevelsForStation )
     {
-      final WaterlevelFixation water = (WaterlevelFixation) element;
-      if( m_waterlevelStatus.containsKey( water ) )
-        return m_waterlevelStatus.get( water );
+      final WaterlevelsForStation waterlevel = (WaterlevelsForStation)element;
+      return waterlevel.validate();
     }
 
     return Status.OK_STATUS;

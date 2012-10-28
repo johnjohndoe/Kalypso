@@ -40,8 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db.utils;
 
+import java.util.Set;
+
 import org.apache.commons.lang3.ObjectUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
  * @author Gernot Belger
@@ -53,6 +60,16 @@ public final class EventUtils
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * Load the event with the given name from the session
+   */
+  public static Event findEventByName( final Session session, final String name )
+  {
+    final Criteria criteria = session.createCriteria( Event.class );
+    criteria.add( Restrictions.eq( Event.PROPERTY_NAME, name ) );
+    return (Event)criteria.uniqueResult();
+  }
+
   public static Event findEventByName( final Event[] events, final String name )
   {
     for( final Event event : events )
@@ -61,6 +78,29 @@ public final class EventUtils
         return event;
     }
     return null;
+  }
+
+  /**
+   * Find the state of the given event from the db (by name), and returns its sections
+   */
+  public static Set<CrossSection> loadSectionsForStateName( final Session session, final Event event )
+  {
+    if( event == null )
+      return null;
+
+    final State state = event.getState();
+    if( state == null )
+      return null;
+
+    final String stateName = state.getName();
+
+    /* load real event from db */
+    final State dbState = StateUtils.findStateByName( session, stateName );
+    if( dbState == null )
+      return null;
+
+    /* hash its sections */
+    return dbState.getCrossSections();
   }
 
 // public static State[] getStates( final IPdbConnection connection ) throws PdbConnectException

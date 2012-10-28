@@ -41,16 +41,21 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
@@ -59,16 +64,19 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.wspm.pdb.db.mapping.Event;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
+import org.kalypso.model.wspm.pdb.wspm.WaterlevelsForStation;
 
 /**
  * @author Gernot Belger
@@ -76,11 +84,17 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 @SuppressWarnings( "restriction" )
 public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdateable
 {
-  private final Map<WaterlevelFixation, IStatus> m_waterlevelStatus = new HashMap<>();
-
   private final ImportWaterLevelsData m_data;
 
   private CheckboxTableViewer m_viewer;
+
+  private WaterlevelsForStation[] m_input;
+
+  private ImageHyperlink m_showPreviewLink;
+
+  private Composite m_buttonsPanel;
+
+  private Label m_showPreviewLabel;
 
   protected ImportWaterlevelsPreviewPage( final String pageName, final ImportWaterLevelsData data )
   {
@@ -99,13 +113,61 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     setControl( panel );
     GridLayoutFactory.swtDefaults().applyTo( panel );
 
+    createShowPreviewControl( panel );
     createWaterTable( panel );
     createSelectButtons( panel );
+
+    /* initially hide link */
+    showPreviewControl( false );
+  }
+
+  private void createShowPreviewControl( final Composite parent )
+  {
+    final Action action = new Action()
+    {
+      @Override
+      public void runWithEvent( final org.eclipse.swt.widgets.Event event )
+      {
+        doShowPreview();
+      }
+    };
+
+    m_showPreviewLabel = new Label( parent, SWT.WRAP );
+    m_showPreviewLabel.setText( "Die Shapedatei enthält sehr viele Wasserspiegel, die Vorschau wurde deshalb unterdrückt.\nDrücken Sie 'Weiter' um alle Wasserspiegel zu importieren." );
+    m_showPreviewLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 1, 2 ) );
+
+    m_showPreviewLink = ActionHyperlink.createHyperlink( null, parent, SWT.PUSH, action );
+    m_showPreviewLink.setUnderlined( true );
+    m_showPreviewLink.setText( "Show Preview" );
+    m_showPreviewLink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+  }
+
+  private void showPreviewControl( final boolean visible )
+  {
+    /* show preview */
+    final GridData labelData = (GridData)m_showPreviewLabel.getLayoutData();
+    labelData.exclude = !visible;
+    m_showPreviewLabel.setVisible( visible );
+
+    final GridData previewData = (GridData)m_showPreviewLink.getLayoutData();
+    previewData.exclude = !visible;
+    m_showPreviewLink.setVisible( visible );
+
+    /* hide table and buttons at same moment */
+    final GridData buttonsData = (GridData)m_buttonsPanel.getLayoutData();
+    buttonsData.exclude = visible;
+    m_buttonsPanel.setVisible( !visible );
+
+    final GridData tableData = (GridData)m_viewer.getControl().getLayoutData();
+    tableData.exclude = visible;
+    m_viewer.getControl().setVisible( !visible );
+
+    ((Composite)getControl()).layout();
   }
 
   private void createWaterTable( final Composite panel )
   {
-    final Event waterlevelEvent = m_data.getEvent();
+    final Set<WaterlevelsForStation> checkedWaterlevels = m_data.getWaterlevels();
 
     m_viewer = CheckboxTableViewer.newCheckList( panel, SWT.BORDER | SWT.FULL_SELECTION );
     m_viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -116,20 +178,21 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     table.addControlListener( new ColumnsResizeControlListener() );
 
     m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_viewer.setCheckStateProvider( new EventFixationsCheckstateProvider( waterlevelEvent ) );
+    m_viewer.setCheckStateProvider( new EventFixationsCheckstateProvider( checkedWaterlevels ) );
 
     final TableViewerColumn validColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     validColumn.getColumn().setText( Messages.getString( "ImportWaterlevelsPreviewPage.2" ) ); //$NON-NLS-1$
     validColumn.getColumn().setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( validColumn.getColumn() );
     ColumnViewerSorter.registerSorter( validColumn, new ViewerComparator() );
-    validColumn.setLabelProvider( new WaterLevelImportStatusLabelProvider( m_waterlevelStatus ) );
+    validColumn.setLabelProvider( new WaterLevelImportStatusLabelProvider() );
 
-    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.STATION, WaterlevelFixation.PROPERTY_STATION, "%s" ); //$NON-NLS-1$
-    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.WATERLEVEL, WaterlevelFixation.PROPERTY_WATERLEVEL, "%s" ); //$NON-NLS-1$
-    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.DISCHARGE, WaterlevelFixation.PROPERTY_DISCHARGE, "%s" ); //$NON-NLS-1$
-    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.MEASUREMENT, WaterlevelFixation.PROPERTY_MEASURMENT_DATE, "%s" ); //$NON-NLS-1$
-    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.DESCRIPTION, WaterlevelFixation.PROPERTY_DESCRIPTION, "%s" ); //$NON-NLS-1$
+    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.STATION, WaterlevelsForStation.PROPERTY_STATION, "%s", SWT.RIGHT ); //$NON-NLS-1$
+    createWaterlevelColumn( m_viewer, "Anzahl WSP-Punkte", WaterlevelsForStation.PROPERTY_WATERLEVEL_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$
+    // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.WATERLEVEL, WaterlevelsForStation.PROPERTY_WATERLEVEL, "%s" ); //$NON-NLS-1$
+    // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.DISCHARGE, WaterlevelsForStation.PROPERTY_DISCHARGE, "%s" ); //$NON-NLS-1$
+    // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.MEASUREMENT, WaterlevelsForStation.PROPERTY_MEASURMENT_DATE, "%s" ); //$NON-NLS-1$
+    // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.DESCRIPTION, WaterlevelsForStation.PROPERTY_DESCRIPTION, "%s" ); //$NON-NLS-1$
 
     m_viewer.addCheckStateListener( new ICheckStateListener()
     {
@@ -137,61 +200,81 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final boolean checked = event.getChecked();
-        final WaterlevelFixation fixation = (WaterlevelFixation)event.getElement();
+        final WaterlevelsForStation waterlevel = (WaterlevelsForStation)event.getElement();
         if( checked )
-          waterlevelEvent.getWaterlevelFixations().add( fixation );
+          checkedWaterlevels.add( waterlevel );
         else
-          waterlevelEvent.getWaterlevelFixations().remove( fixation );
+          checkedWaterlevels.remove( waterlevel );
       }
     } );
+
+    m_viewer.addOpenListener( new IOpenListener()
+    {
+      @Override
+      public void open( final OpenEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+        final WaterlevelsForStation waterlevel = (WaterlevelsForStation)selection.getFirstElement();
+        if( waterlevel == null )
+          return;
+
+        final IStatus validate = waterlevel.validate();
+        StatusDialog.open( getShell(), validate, getWizard().getWindowTitle() );
+      }
+    } );
+
+    // TODO: show list of read waterlevels on double click
   }
 
-  private void createWaterlevelColumn( final CheckboxTableViewer viewer, final String label, final String property, final String format )
+  private void createWaterlevelColumn( final CheckboxTableViewer viewer, final String label, final String property, final String format, final int alignment )
   {
-    final TableViewerColumn validColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    validColumn.getColumn().setText( label );
-    validColumn.getColumn().setResizable( false );
-    ColumnsResizeControlListener.setMinimumPackWidth( validColumn.getColumn() );
-    ColumnViewerSorter.registerSorter( validColumn, new ViewerComparator() );
-    validColumn.setLabelProvider( new WaterLevelLabelProvider( property, format ) );
+    final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, alignment );
+
+    final TableColumn column = viewerColumn.getColumn();
+    column.setText( label );
+    column.setResizable( false );
+
+    ColumnsResizeControlListener.setMinimumPackWidth( column );
+    ColumnViewerSorter.registerSorter( viewerColumn, new ViewerComparator() );
+    viewerColumn.setLabelProvider( new WaterLevelLabelProvider( property, format ) );
   }
 
   private void createSelectButtons( final Composite parent )
   {
-    final Event event = m_data.getEvent();
+    final Set<WaterlevelsForStation> checkedWaterlevels = m_data.getWaterlevels();
 
-    final Composite panel = new Composite( parent, SWT.NONE );
-    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
-    panel.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
+    m_buttonsPanel = new Composite( parent, SWT.NONE );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( m_buttonsPanel );
+    m_buttonsPanel.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
 
-    final Button selectAllButton = new Button( panel, SWT.PUSH );
+    final Button selectAllButton = new Button( m_buttonsPanel, SWT.PUSH );
     selectAllButton.setText( WorkbenchMessages.SelectionDialog_selectLabel );
     selectAllButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
-        event.getWaterlevelFixations().addAll( Arrays.asList( getWaterLevels() ) );
+        checkedWaterlevels.addAll( Arrays.asList( getWaterLevels() ) );
         getViewer().update( getWaterLevels(), null );
       }
     } );
 
-    final Button deselectAllButton = new Button( panel, SWT.PUSH );
+    final Button deselectAllButton = new Button( m_buttonsPanel, SWT.PUSH );
     deselectAllButton.setText( WorkbenchMessages.SelectionDialog_deselectLabel );
     deselectAllButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
-        event.getWaterlevelFixations().clear();
+        checkedWaterlevels.clear();
         getViewer().update( getWaterLevels(), null );
       }
     } );
   }
 
-  protected WaterlevelFixation[] getWaterLevels( )
+  protected WaterlevelsForStation[] getWaterLevels( )
   {
-    return (WaterlevelFixation[])m_viewer.getInput();
+    return m_input;
   }
 
   protected CheckboxTableViewer getViewer( )
@@ -202,33 +285,68 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
   @Override
   public void update( )
   {
-    final Set<WaterlevelFixation> checkedWaterlevels = m_data.getEvent().getWaterlevelFixations();
+    /* reset table */
+    final Set<WaterlevelsForStation> checkedWaterlevels = m_data.getWaterlevels();
     checkedWaterlevels.clear();
+    m_viewer.setInput( new WaterlevelsForStation[] {} );
 
-    final WaterlevelFixation[] waterLevels = readWaterLevels();
-    if( waterLevels != null )
+    final WaterlevelsForStation[] readWaterLevels = readWaterLevels();
+    if( readWaterLevels == null )
     {
-      for( final WaterlevelFixation waterlevel : waterLevels )
-      {
-        final IStatus status = m_waterlevelStatus.get( waterlevel );
-        if( status == null || !status.matches( IStatus.ERROR ) )
-          checkedWaterlevels.add( waterlevel );
-      }
+      /* cancelled or error */
+      return;
     }
 
-    m_viewer.setInput( waterLevels );
+    m_input = readWaterLevels;
 
-    ColumnsResizeControlListener.refreshColumnsWidth( m_viewer.getTable() );
+    /* update waterlevels in event */
+    final Collection<WaterlevelsForStation> goodWaterlevels = new HashSet<>();
+    for( final WaterlevelsForStation waterlevel : m_input )
+    {
+      if( waterlevel.isValid() )
+        checkedWaterlevels.add( waterlevel );
+    }
+    checkedWaterlevels.addAll( goodWaterlevels );
+
+    /* */
+    if( m_input.length < 10000 )
+      setPreviewInput();
+    else
+      showPreviewControl( true );
   }
 
-  private WaterlevelFixation[] readWaterLevels( )
+  private WaterlevelsForStation[] readWaterLevels( )
   {
-    final ReadWaterLevelsOperation operation = new ReadWaterLevelsOperation( m_data, m_waterlevelStatus );
+    final ReadWaterLevelsOperation operation = new ReadWaterLevelsOperation( m_data );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
       StatusDialog.open( getShell(), status, Messages.getString( "ImportWaterlevelsPreviewPage.8" ) ); //$NON-NLS-1$
 
-    return operation.getWaterBodies();
+    return operation.getWaterlevels();
+  }
+
+  protected void doShowPreview( )
+  {
+    if( m_input == null )
+      return;
+
+    final String message = String.format( "Showing preview for %,d waterlevels will be very slow. Continue?", m_input.length );
+    if( !MessageDialog.openConfirm( getShell(), getWizard().getWindowTitle(), message ) )
+      return;
+
+    setPreviewInput();
+  }
+
+  private void setPreviewInput( )
+  {
+    if( m_input == null )
+      return;
+
+    showPreviewControl( false );
+
+    m_viewer.setInput( m_input );
+
+    ColumnsResizeControlListener.refreshColumnsWidth( m_viewer.getTable() );
   }
 }

@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
-import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
@@ -325,7 +324,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
   /**
    * This function creates a cross section part using the records of the profile.
-   *
+   * 
    * @param profile
    *          The profile.
    * @param profileSRS
@@ -377,11 +376,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     if( profileObject == null )
       return null;
 
-    final IProfileObject newProfileObject = ProfileObjectFactory.createProfileObject( null, profileObject.getType() );
-
-    ProfileObjectHelper.cloneProfileObject( profileObject, newProfileObject );
-
-    return newProfileObject;
+    return ProfileObjectHelper.cloneProfileObject( profileObject, null );
   }
 
   private void repairBridges( final List<IProfileObject> clonedProfileObjects )
@@ -445,14 +440,14 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
       if( m_updateCulvertObjects )
       {
-      if( clonedProfileObject instanceof BuildingEi )
-        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingEi)clonedProfileObject, ((BuildingEi)clonedProfileObject).getHoehe(), GafPointCode.EIFS.getKey(), GafPointCode.EIUK.getKey() );
+        if( clonedProfileObject instanceof BuildingEi )
+          ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingEi)clonedProfileObject, ((BuildingEi)clonedProfileObject).getHoehe(), GafPointCode.EIFS.getKey(), GafPointCode.EIUK.getKey() );
 
-      if( clonedProfileObject instanceof BuildingKreis )
-        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingKreis)clonedProfileObject, null, GafPointCode.KRFS.getKey(), GafPointCode.KRUK.getKey() );
+        if( clonedProfileObject instanceof BuildingKreis )
+          ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingKreis)clonedProfileObject, null, GafPointCode.KRFS.getKey(), GafPointCode.KRUK.getKey() );
 
-      if( clonedProfileObject instanceof BuildingMaul )
-        ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingMaul)clonedProfileObject, ((BuildingMaul)clonedProfileObject).getHoehe(), GafPointCode.MAFS.getKey(), GafPointCode.MAUK.getKey() );
+        if( clonedProfileObject instanceof BuildingMaul )
+          ProfileObjectHelper.updateObjectFromMetadata( profile, (BuildingMaul)clonedProfileObject, ((BuildingMaul)clonedProfileObject).getHoehe(), GafPointCode.MAFS.getKey(), GafPointCode.MAUK.getKey() );
       }
     }
   }

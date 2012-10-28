@@ -42,10 +42,15 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,10 +62,15 @@ import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.utils.EventUtils;
 import org.kalypso.model.wspm.pdb.db.utils.StateUtils;
 import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
+import org.kalypso.model.wspm.pdb.wspm.WaterlevelsForStation;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
@@ -83,6 +93,11 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
   private ImportAttributeInfo< ? >[] m_infos;
 
   private Collection<State> m_states = Collections.emptyList();
+
+  private final Set<WaterlevelsForStation> m_waterlevels = new HashSet<>();
+
+  /* sections that belong to the current event */
+  private final Map<BigDecimal, CrossSection> m_sections = new HashMap<>();
 
   public ImportWaterLevelsData( final IPdbConnection connection )
   {
@@ -212,5 +227,35 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
   public int getDbSRID( )
   {
     return m_connection.getInfo().getSRID();
+  }
+
+  public Set<WaterlevelsForStation> getWaterlevels( )
+  {
+    return m_waterlevels;
+  }
+
+  public void reloadCrossSections( final Session session )
+  {
+    m_sections.clear();
+
+    final Set<CrossSection> sections = EventUtils.loadSectionsForStateName( session, m_event );
+
+    for( final CrossSection section : sections )
+    {
+      /* force hibernate to load points */
+      final Set<CrossSectionPart> parts = section.getCrossSectionParts();
+      for( final CrossSectionPart part : parts )
+      {
+        final Set<Point> points = part.getPoints();
+        points.size();
+      }
+
+      m_sections.put( section.getStation(), section );
+    }
+  }
+
+  public CrossSection getCrossSection( final BigDecimal station )
+  {
+    return m_sections.get( station );
   }
 }

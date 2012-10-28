@@ -42,24 +42,32 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
+import org.hibernate.Session;
+import org.hibernatespatial.mgeom.MGeometryFactory;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.connect.PdbExecutorOperation;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
-import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
+import org.kalypso.model.wspm.pdb.wspm.CrossSectionProvider;
+import org.kalypso.model.wspm.pdb.wspm.WaterlevelsForStation;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.IDBFField;
@@ -85,11 +93,9 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 {
   private static final String STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE = Messages.getString( "ReadWaterLevelsOperation.0" ); //$NON-NLS-1$
 
-  private WaterlevelFixation[] m_waterLevels;
+  private final SortedMap<BigDecimal, WaterlevelsForStation> m_waterlevels = new TreeMap<>();
 
   private final ImportWaterLevelsData m_data;
-
-  private final Map<WaterlevelFixation, IStatus> m_waterLevelStatus;
 
   private SHP2JTS m_shp2jts;
 
@@ -97,19 +103,54 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
   private JTSTransformer m_transformer;
 
-  public ReadWaterLevelsOperation( final ImportWaterLevelsData data, final Map<WaterlevelFixation, IStatus> waterLevelStatus )
+  private final MGeometryFactory m_sectionFactory;
+
+  public ReadWaterLevelsOperation( final ImportWaterLevelsData data )
   {
     m_data = data;
-    m_waterLevelStatus = waterLevelStatus;
+    m_sectionFactory = new MGeometryFactory( new PrecisionModel(), data.getDbSRID() );
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    m_waterLevelStatus.clear();
+    final SubMonitor progress = SubMonitor.convert( monitor );
+    progress.beginTask( "Loading waterlevels", 100 );
 
-    final Collection<WaterlevelFixation> wbs = new ArrayList<>();
+    reloadSections( m_data, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
 
+    readShapeFile( progress.newChild( 75, SubMonitor.SUPPRESS_NONE ) );
+
+    build2dWaterlevels( progress.newChild( 20, SubMonitor.SUPPRESS_NONE ) );
+
+    return Status.OK_STATUS;
+  }
+
+  private void reloadSections( final ImportWaterLevelsData data, final IProgressMonitor monitor )
+  {
+    final IPdbConnection connection = data.getConnection();
+
+    final IPdbOperation operation = new IPdbOperation()
+    {
+      @Override
+      public String getLabel( )
+      {
+        return null;
+      }
+
+      @Override
+      public void execute( final Session session )
+      {
+        data.reloadCrossSections( session );
+      }
+    };
+
+    final PdbExecutorOperation runnable = new PdbExecutorOperation( connection, operation, "Failed to load cross section from database" );
+    runnable.execute( monitor );
+  }
+
+  private void readShapeFile( final IProgressMonitor monitor ) throws CoreException
+  {
     try( ShapeFile shapeFile = m_data.openShape() )
     {
       final IDBFField[] fields = shapeFile.getFields();
@@ -127,14 +168,14 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
         final ISHPGeometry shape = shapeFile.getShape( row );
         final WaterlevelFixation wb = toWaterlevelFixation( shape, data, fields );
 
-        final IStatus valid = checkWaterlevel( wb );
-        wbs.add( wb );
-        m_waterLevelStatus.put( wb, valid );
+        // TODO: log warning?
+        if( wb.getWaterlevel() != null )
+          addWaterlevel( wb );
 
         if( row % progressStep == 0 )
         {
           ProgressUtilities.worked( monitor, progressStep );
-          monitor.subTask( String.format( "row %d", row ) );
+          monitor.subTask( String.format( "row %,d", row ) );
         }
       }
     }
@@ -147,14 +188,30 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE, e );
       throw new CoreException( status );
     }
-//    catch( final Exception e )
-//    {
-//      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE, e );
-//      throw new CoreException( status );
-//    }
+  }
 
-    m_waterLevels = wbs.toArray( new WaterlevelFixation[wbs.size()] );
-    return Status.OK_STATUS;
+  private void addWaterlevel( final WaterlevelFixation wb )
+  {
+    final IStatus valid = checkWaterlevel( wb );
+
+    final BigDecimal station = wb.getStation();
+    final WaterlevelsForStation container = getWaterlevelContainer( station );
+
+    container.addWaterlevel( wb, valid );
+  }
+
+  private WaterlevelsForStation getWaterlevelContainer( final BigDecimal station )
+  {
+    final BigDecimal fixedStation;
+    if( station == null )
+      fixedStation = new BigDecimal( Double.MAX_VALUE );
+    else
+      fixedStation = station;
+
+    if( !m_waterlevels.containsKey( fixedStation ) )
+      m_waterlevels.put( station, new WaterlevelsForStation( fixedStation ) );
+
+    return m_waterlevels.get( fixedStation );
   }
 
   private IStatus checkWaterlevel( final WaterlevelFixation wb )
@@ -175,9 +232,9 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     return stati.asMultiStatusOrOK( Messages.getString( "ReadWaterLevelsOperation.3" ) ); //$NON-NLS-1$
   }
 
-  public WaterlevelFixation[] getWaterBodies( )
+  public WaterlevelsForStation[] getWaterlevels( )
   {
-    return m_waterLevels;
+    return m_waterlevels.values().toArray( new WaterlevelsForStation[m_waterlevels.values().size()] );
   }
 
   private WaterlevelFixation toWaterlevelFixation( final ISHPGeometry shape, final Object[] data, final IDBFField[] fields ) throws CoreException, MismatchedDimensionException, FactoryException, TransformException
@@ -274,10 +331,16 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     switch( info.getProperty() )
     {
       case WaterlevelFixation.PROPERTY_STATION:
-        return parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_STATION );
+        // FIXME: variable unit?
+        return parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_STATION ).movePointRight( 3 );
 
       case WaterlevelFixation.PROPERTY_WATERLEVEL:
-        return parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_WATERLEVEL );
+        final BigDecimal waterlevel = parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_WATERLEVEL );
+        // FIXME: UGLY!
+        if( waterlevel != null && waterlevel.doubleValue() < 0.01 )
+          return null;
+
+        return waterlevel;
 
       case WaterlevelFixation.PROPERTY_DISCHARGE:
         return parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_DISCHARGE );
@@ -308,7 +371,8 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
   private BigDecimal parseDecimal( final Object value, final String label, final String precisionProperty ) throws CoreException
   {
-    final int scale = PdbMappingUtils.findScale( WaterlevelFixation.class, precisionProperty );
+//    final int scale = PdbMappingUtils.findScale( WaterlevelFixation.class, precisionProperty );
+    final int scale = 4;
 
     if( value == null )
       return null;
@@ -338,5 +402,28 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     }
 
     throw new IllegalArgumentException();
+  }
+
+  // TODO: only needed, if we attach waterlevels to event
+  private void build2dWaterlevels( final IProgressMonitor monitor )
+  {
+    final Event event = m_data.getEvent();
+    final String eventName = event.getName();
+
+    monitor.beginTask( "Building 2D Waterlevels", m_waterlevels.size() );
+
+    for( final WaterlevelsForStation waterlevel : m_waterlevels.values() )
+    {
+      monitor.subTask( waterlevel.getStation().toString() );
+
+      /* find cross section for station */
+      final BigDecimal station = waterlevel.getStation();
+      final CrossSection section = m_data.getCrossSection( station );
+
+      final CrossSectionProvider sectionProvider = new CrossSectionProvider( section, m_sectionFactory );
+      waterlevel.create2DWaterlevels( eventName, sectionProvider );
+
+      ProgressUtilities.worked( monitor, 1 );
+    }
   }
 }

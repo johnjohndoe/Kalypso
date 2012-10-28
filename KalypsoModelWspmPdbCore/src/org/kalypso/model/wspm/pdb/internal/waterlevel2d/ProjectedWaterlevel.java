@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.pdb.internal.wspm;
+package org.kalypso.model.wspm.pdb.internal.waterlevel2d;
 
 import java.math.BigDecimal;
 
@@ -42,7 +42,7 @@ import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
  * Helper class that projects a waterlevel fixation to a prfoile and provides acces to its attributes.
- *
+ * 
  * @author Gernot Belger
  */
 class ProjectedWaterlevel
@@ -93,7 +93,7 @@ class ProjectedWaterlevel
     }
 
     final BigDecimal width = calculateWidth( waterlevelLocation );
-    // FIXME: why doubles in record??
+    // FIXME: why Doubles in record??
     record.setBreite( width.doubleValue() );
 
     return Status.OK_STATUS;
