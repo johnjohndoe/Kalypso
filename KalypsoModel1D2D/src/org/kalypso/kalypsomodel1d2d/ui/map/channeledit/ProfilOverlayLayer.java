@@ -60,7 +60,7 @@ import org.kalypso.transformation.transformer.GeoTransformerException;
 
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
-import de.openali.odysseus.chart.framework.model.figure.impl.MarkerFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -118,7 +118,7 @@ class ProfilOverlayLayer extends PointsLineLayer
     if( !isVisible() )
       return nilInfo;
 
-    final ProfilePointHover helper = new ProfilePointHover( this );
+    final ProfilePointHover helper = new ProfilePointHover( this, getPointStyleHover() );
     final EditInfo pointHover = helper.getHover( pos );
     if( pointHover != null )
       return pointHover;
@@ -320,7 +320,7 @@ class ProfilOverlayLayer extends PointsLineLayer
     pl.setPoints( points );
     pl.paint( gc );
 
-    final MarkerFigure figure = new MarkerFigure( getPointStyle() );
+    final PointFigure figure = new PointFigure( getPointStyle() );
     for( final Point point : points )
     {
       figure.setCenterPoint( point.x, point.y );
