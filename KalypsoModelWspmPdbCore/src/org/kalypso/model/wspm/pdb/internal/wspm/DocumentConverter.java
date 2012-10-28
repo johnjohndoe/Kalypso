@@ -27,6 +27,7 @@ import java.util.TreeSet;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
@@ -140,6 +141,9 @@ public class DocumentConverter
   {
     try
     {
+      if( StringUtils.isBlank( mimeType ) )
+        return null;
+
       return new MimeType( mimeType );
     }
     catch( final MimeTypeParseException e )
