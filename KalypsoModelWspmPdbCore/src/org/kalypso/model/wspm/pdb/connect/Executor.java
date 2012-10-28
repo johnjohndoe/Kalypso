@@ -42,6 +42,9 @@ package org.kalypso.model.wspm.pdb.connect;
 
 import java.sql.SQLException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 import org.hibernate.Session;
@@ -72,14 +75,26 @@ public class Executor
 
   public void execute( ) throws PdbConnectException
   {
+    execute( null );
+  }
+
+  public IStatus execute( final IProgressMonitor monitor ) throws PdbConnectException
+  {
     Assert.isTrue( m_session.isOpen() );
 
     Transaction transaction = null;
     try
     {
       transaction = m_session.beginTransaction();
-      m_operation.execute( m_session );
+
+      executeOperation( m_session, m_operation, monitor );
+
       transaction.commit();
+
+      if( m_operation instanceof IPdbOperationWithMonitor )
+        return ((IPdbOperationWithMonitor)m_operation).getStatus();
+
+      return Status.OK_STATUS;
     }
     catch( final Throwable e )
     {
@@ -91,10 +106,23 @@ public class Executor
     }
   }
 
+  private void executeOperation( final Session session, final IPdbOperation operation, final IProgressMonitor monitor ) throws PdbConnectException
+  {
+    if( operation instanceof IPdbOperationWithMonitor )
+      ((IPdbOperationWithMonitor)operation).setMonitor( monitor );
+    else if( monitor != null )
+      monitor.beginTask( operation.getLabel(), IProgressMonitor.UNKNOWN );
+
+    operation.execute( session );
+
+    if( monitor != null )
+      monitor.done();
+  }
+
   private PdbConnectException logError( final Throwable e )
   {
     if( e instanceof HibernateException )
-      return logHibernateException( (HibernateException) e );
+      return logHibernateException( (HibernateException)e );
     else
     {
       e.printStackTrace();
@@ -107,7 +135,7 @@ public class Executor
   {
     if( e instanceof JDBCException )
     {
-      final JDBCException je = (JDBCException) e;
+      final JDBCException je = (JDBCException)e;
       final SQLException sqlException = je.getSQLException();
       logSQLException( sqlException );
     }
