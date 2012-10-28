@@ -53,11 +53,12 @@ public class ProfileObjectsLayer extends AbstractProfilLayer
 
     final String type = object.getType();
 
-    m_painter = new ProfileObjectPainter( profile, type );
+    final PartTypeAccessor partInfo = new PartTypeAccessor( profile, type );
+    final ProfileObjectsInfoBuilder infoBuilder = new ProfileObjectsInfoBuilder( this, partInfo );
 
-    final PartTypeAccessor info = m_painter.getInfo();
+    m_painter = new ProfileObjectPainter( partInfo, infoBuilder );
 
-    final String label = info.getTypeLabel();
+    final String label = partInfo.getTypeLabel();
 
     final String typeTitle = String.format( "%s %s", label, m_object.getDescription() );
 
@@ -115,7 +116,10 @@ public class ProfileObjectsLayer extends AbstractProfilLayer
   @Override
   public EditInfo getHover( final Point pos )
   {
-    return null;
+    if( m_hoverIndex == null )
+      return null;
+
+    return m_hoverIndex.findElement( pos );
   }
 
   @Override

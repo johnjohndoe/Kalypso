@@ -60,10 +60,13 @@ public abstract class WspObjectsLayer extends AbstractProfilLayer
     m_wspData = wspData;
     m_type = type;
 
-    m_painter = new ProfileObjectPainter( profile, type );
+    final PartTypeAccessor partInfo = new PartTypeAccessor( profile, type );
 
-    final PartTypeAccessor info = m_painter.getInfo();
-    final String title = info.getTypeLabel();
+    final WspObjectsInfoBuilder infoBuilder = new WspObjectsInfoBuilder( this, partInfo );
+
+    m_painter = new ProfileObjectPainter( partInfo, infoBuilder );
+
+    final String title = partInfo.getTypeLabel();
     setTitle( title );
   }
 
@@ -142,7 +145,10 @@ public abstract class WspObjectsLayer extends AbstractProfilLayer
   @Override
   public EditInfo getHover( final Point pos )
   {
-    return null;
+    if( m_hoverIndex == null )
+      return null;
+
+    return m_hoverIndex.findElement( pos );
   }
 
   @Override
