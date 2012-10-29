@@ -91,15 +91,15 @@ final class TuhhLayers
 
   public static IProfilChartLayer createBridgeLayer( final IProfile profil, final ICoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
-    final PointsLineLayer unterkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, styleProvider ); //$NON-NLS-1$
-    final PointsLineLayer oberkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, styleProvider ); //$NON-NLS-1$
+    final PointsLineLayer unterkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_BRUECKE_UK, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, styleProvider ); //$NON-NLS-1$
+    final PointsLineLayer oberkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_BRUECKE_OK, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, styleProvider ); //$NON-NLS-1$
 
     return new BuildingBridgeTheme( profil, new IProfilChartLayer[] { unterkante, oberkante }, mapper );
   }
 
   public static IProfilChartLayer createWehrLayer( final IProfile profil, final ICoordinateMapper axisMapper, final ICoordinateMapper screenMapper, final LayerStyleProviderTuhh styleProvider )
   {
-    final PointsLineLayer oberkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_WEHR + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, styleProvider ); //$NON-NLS-1$
+    final PointsLineLayer oberkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_WEHR_OK, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, styleProvider ); //$NON-NLS-1$
     final PointMarkerLayer pointMarkerLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_WEHR, styleProvider, 30, false );
 
     return new BuildingWeirTheme( profil, new IProfilChartLayer[] { oberkante, pointMarkerLayer }, axisMapper, screenMapper );

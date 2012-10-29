@@ -62,6 +62,8 @@ import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
@@ -208,5 +210,30 @@ public class RoughnessLayer extends AbstractProfilePointsLayer
     final ProfileOperation operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.RoughnessLayer.0" ), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profil, getTargetComponent() ) );
     new ProfileOperationJob( operation ).schedule();
+  }
+
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    final LegendEntry le = new LegendEntry( this, toString() )
+    {
+      @Override
+      public void paintSymbol( final GC gc, final Point size )
+      {
+        final Rectangle clipping = gc.getClipping();
+        final FullRectangleFigure figure = new FullRectangleFigure( getAreaStyle() );
+
+        final int left = clipping.x + clipping.width * 1 / 3;
+        final int right = clipping.x + clipping.width * 2 / 3;
+        final int bottom = clipping.y + clipping.height * 1 / 5;
+        final int top = clipping.y + clipping.height;
+
+        final Rectangle rect = new Rectangle( left, top, right - left, bottom - top );
+        figure.setRectangle( rect );
+        figure.paint( gc );
+      }
+    };
+
+    return new ILegendEntry[] { le };
   }
 }
