@@ -182,6 +182,11 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
 
   private WaterlevelsForStation[] build2Dwaterlevels( final ISectionProvider[] sections, final IProgressMonitor monitor )
   {
+    // REMARK: uploading 2d waterlevels via this mechanism does not make much sense, so it is deactivated for now.
+    final boolean create2dWaterlevels = false;
+    if( !create2dWaterlevels )
+      return new WaterlevelsForStation[] {};
+
     final String eventName = m_event.getName();
     final Collection<WaterlevelFixation> fixations = m_event.getWaterlevelFixations();
 
