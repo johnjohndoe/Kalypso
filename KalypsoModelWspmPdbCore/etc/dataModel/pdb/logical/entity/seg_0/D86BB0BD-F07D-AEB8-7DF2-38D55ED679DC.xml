@@ -91,7 +91,6 @@
          <ownerDesignName>pdb</ownerDesignName>
          <useDomainConstraints>false</useDomainConstraints>
          <use>0</use>
-         <distinctType>AC01C032-CB71-C292-B1D8-1DF582057952</distinctType>
          <logicalDatatype>LOGDT024</logicalDatatype>
          <domain>4D22FFA7-DE31-FEDA-ACF8-34D4EFF052ED</domain>
       </Attribute>

@@ -1,11 +1,12 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <DistinctType class="oracle.dbtools.crest.model.design.datatypes.DistinctType" name="User" id="35D7D61C-E71A-566D-F228-AA52140297FC" directorySegmentName="seg_0">
-<createdBy>thuel2</createdBy>
-<createdTime>2011-05-20 12:38:54 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<predefined>false</predefined>
-<logicalDataType>LOGDT024</logicalDataType>
-<precision>0</precision>
-<scale>0</scale>
-<size>50</size>
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-20 12:38:54 UTC</createdTime>
+   <changedTime>2012-10-29 15:05:14 UTC</changedTime>
+   <ownerDesignName>pdb</ownerDesignName>
+   <predefined>false</predefined>
+   <logicalDataType>LOGDT024</logicalDataType>
+   <precision>0</precision>
+   <scale>0</scale>
+   <size>50</size>
 </DistinctType>

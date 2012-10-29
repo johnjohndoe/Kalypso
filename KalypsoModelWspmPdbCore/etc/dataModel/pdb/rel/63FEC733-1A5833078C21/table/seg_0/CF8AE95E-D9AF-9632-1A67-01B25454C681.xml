@@ -3,7 +3,7 @@
    <createdBy>thuel</createdBy>
    <createdTime>2012-08-23 07:02:14 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2012-08-23 07:02:14 UTC</changedTime>
+   <changedTime>2012-10-29 15:48:54 UTC</changedTime>
    <generatorID>9E6FBC38-EF9C-69E8-7421-463154D76AFA</generatorID>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Vegetation PK</pkName>
@@ -157,7 +157,7 @@
          <createdBy>thuel</createdBy>
          <createdTime>2012-08-23 07:02:14 UTC</createdTime>
          <changedBy>thuel</changedBy>
-         <changedTime>2012-08-23 07:02:14 UTC</changedTime>
+         <changedTime>2012-10-29 15:48:54 UTC</changedTime>
          <commentInRDBMS>color (hex)</commentInRDBMS>
          <generatorID>D4EE8AC2-B997-8AAF-4029-13E2A5283FFA</generatorID>
          <ownerDesignName>pdb</ownerDesignName>

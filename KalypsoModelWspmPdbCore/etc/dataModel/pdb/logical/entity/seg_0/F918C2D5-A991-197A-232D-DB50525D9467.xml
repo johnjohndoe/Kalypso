@@ -1,231 +1,209 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="F918C2D5-A991-197A-232D-DB50525D9467" directorySegmentName="seg_0" name="Roughness">
-<createdBy>thuel2</createdBy>
-<createdTime>2011-05-18 07:19:03 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<pkName>Gaf_Roughness PK</pkName>
-<adequatelyNormalized>NO</adequatelyNormalized>
-<expectedVolumes>0</expectedVolumes>
-<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
-<growthPercent>0</growthPercent>
-<growthType>Year</growthType>
-<maxVolumes>9999999</maxVolumes>
-<minVolumes>0</minVolumes>
-<normalForm>Third</normalForm>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Titel</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Attribut</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datentyp</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK-Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK-Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK-Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Nicht null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Schlüssel</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Attribute</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
-<attributes>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Name" id="B55455A0-3297-3DDE-9B5D-2B9C69E0E8B6">
-<createdBy>thuel2</createdBy>
-<createdTime>2011-05-18 07:19:14 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>50</dataTypeSize>
-</Attribute>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="K_Value" id="D9783E67-9102-6F4C-EAF7-033CC92CD9F4">
-<createdBy>thuel2</createdBy>
-<createdTime>2011-05-18 07:19:41 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>2</use>
-<distinctType>1DD8D1FE-B3A1-45B7-DB08-CE16350D2874</distinctType>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<dataTypePrecision>8</dataTypePrecision>
-<dataTypeScale>1</dataTypeScale>
-<comment>[m]</comment>
-<commentInRDBMS>[m]</commentInRDBMS>
-</Attribute>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Kst_Value" id="DBF880A2-0AC1-F7C6-F914-FABAA75C40C7">
-<createdBy>thuel2</createdBy>
-<createdTime>2011-05-18 09:25:45 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>2</use>
-<distinctType>D1C0019C-9F55-E84B-1E76-A36FC6052F6D</distinctType>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<dataTypePrecision>8</dataTypePrecision>
-<dataTypeScale>1</dataTypeScale>
-<comment>[m^.33/s]</comment>
-<commentInRDBMS>[m^.33/s]</commentInRDBMS>
-</Attribute>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Label" id="26FE62E6-46A9-0890-0F87-6E1251902335">
-<createdBy>thuel2</createdBy>
-<createdTime>2011-05-18 07:43:23 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>2</use>
-<distinctType>BF2E0260-2A64-9538-0B5F-9BDD527B4E28</distinctType>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-</Attribute>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Source" id="2E09954E-C4BD-AE96-2179-3A0F9B7545A8">
-<createdBy>thuel</createdBy>
-<createdTime>2011-06-07 11:05:43 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>255</dataTypeSize>
-<comment>Angabe einer Literaturstelle</comment>
-<commentInRDBMS>Angabe einer Literaturstelle</commentInRDBMS>
-</Attribute>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Validity" id="981158BC-4412-DF5D-E045-18E417470F5D">
-<createdBy>thuel</createdBy>
-<createdTime>2011-06-07 11:06:14 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>2</use>
-<distinctType>EE87A435-0062-5BF5-5AC5-C396D2130704</distinctType>
-</Attribute>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Description" id="34008CB4-C6A7-A640-0D19-6AE73DD7FB36">
-<createdBy>thuel2</createdBy>
-<createdTime>2011-05-18 07:44:12 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>2</use>
-<distinctType>B3BBFFC0-261E-2785-8C3A-A260662720FD</distinctType>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>255</dataTypeSize>
-</Attribute>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Color" id="E7058B8A-4C86-0B8A-81BB-3CDA4F6EAAB2">
-<createdBy>thuel</createdBy>
-<createdTime>2011-08-31 12:11:12 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>2</use>
-<distinctType>836798AC-5A06-51A2-94D7-E5EDF6CFF68B</distinctType>
-<commentInRDBMS>color (hex)</commentInRDBMS>
-</Attribute>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Point_Kind" id="7231709D-BDB4-2093-C436-83D7D7B0F325">
-<createdBy>thuel2</createdBy>
-<createdTime>2011-05-18 07:28:47 UTC</createdTime>
-<generatorID>9B51D5FB-A9D2-CEC3-BA7F-CF2689C0A4EE</generatorID>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<referedAttribute>094DE204-AD0E-0F86-90D8-487B4A6E9B48</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>50</dataTypeSize>
-</Attribute>
-</attributes>
-<identifiers>
-<identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="DC42384F-73B8-60E2-9263-4C00EACC048B" name="Roughness PK">
-<createdBy>thuel2</createdBy>
-<createdTime>2011-05-18 07:19:36 UTC</createdTime>
-<ownerDesignName>pdb</ownerDesignName>
-<engineerTo>
-<item key="63FEC733-A52A-728C-063E-1A5833078C21" value="true"/>
-</engineerTo>
-<pk>true</pk>
-<usedAttributes>
-<attributeRef>7231709D-BDB4-2093-C436-83D7D7B0F325</attributeRef>
-<attributeRef>B55455A0-3297-3DDE-9B5D-2B9C69E0E8B6</attributeRef>
-</usedAttributes>
-</identifier>
-</identifiers>
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-18 07:19:03 UTC</createdTime>
+   <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+   <ownerDesignName>pdb</ownerDesignName>
+   <pkName>Gaf_Roughness PK</pkName>
+   <adequatelyNormalized>NO</adequatelyNormalized>
+   <expectedVolumes>0</expectedVolumes>
+   <fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+   <growthPercent>0</growthPercent>
+   <growthType>Year</growthType>
+   <maxVolumes>9999999</maxVolumes>
+   <minVolumes>0</minVolumes>
+   <normalForm>Third</normalForm>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Titel</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Attribut</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datentyp</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK-Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK-Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK-Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Nicht null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Schlüssel</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Attribute</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <attributes>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Name" id="B55455A0-3297-3DDE-9B5D-2B9C69E0E8B6">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:19:14 UTC</createdTime>
+         <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+         <ownerDesignName>pdb</ownerDesignName>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="K_Value" id="D9783E67-9102-6F4C-EAF7-033CC92CD9F4">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:19:41 UTC</createdTime>
+         <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+         <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>1DD8D1FE-B3A1-45B7-DB08-CE16350D2874</distinctType>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>8</dataTypePrecision>
+         <dataTypeScale>1</dataTypeScale>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Kst_Value" id="DBF880A2-0AC1-F7C6-F914-FABAA75C40C7">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 09:25:45 UTC</createdTime>
+         <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+         <comment>[m^.33/s]</comment>
+         <commentInRDBMS>[m^.33/s]</commentInRDBMS>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>D1C0019C-9F55-E84B-1E76-A36FC6052F6D</distinctType>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>8</dataTypePrecision>
+         <dataTypeScale>1</dataTypeScale>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Label" id="26FE62E6-46A9-0890-0F87-6E1251902335">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:43:23 UTC</createdTime>
+         <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>BF2E0260-2A64-9538-0B5F-9BDD527B4E28</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>100</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Source" id="2E09954E-C4BD-AE96-2179-3A0F9B7545A8">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-06-07 11:05:43 UTC</createdTime>
+         <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+         <comment>Angabe einer Literaturstelle</comment>
+         <commentInRDBMS>Angabe einer Literaturstelle</commentInRDBMS>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>255</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Validity" id="981158BC-4412-DF5D-E045-18E417470F5D">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-06-07 11:06:14 UTC</createdTime>
+         <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>EE87A435-0062-5BF5-5AC5-C396D2130704</distinctType>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Description" id="34008CB4-C6A7-A640-0D19-6AE73DD7FB36">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:44:12 UTC</createdTime>
+         <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>B3BBFFC0-261E-2785-8C3A-A260662720FD</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>255</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Color" id="E7058B8A-4C86-0B8A-81BB-3CDA4F6EAAB2">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-08-31 12:11:12 UTC</createdTime>
+         <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+         <commentInRDBMS>color (hex)</commentInRDBMS>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>2</use>
+         <distinctType>836798AC-5A06-51A2-94D7-E5EDF6CFF68B</distinctType>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Point_Kind" id="7231709D-BDB4-2093-C436-83D7D7B0F325">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:28:47 UTC</createdTime>
+         <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+         <generatorID>9B51D5FB-A9D2-CEC3-BA7F-CF2689C0A4EE</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <referedAttribute>094DE204-AD0E-0F86-90D8-487B4A6E9B48</referedAttribute>
+         <useDomainConstraints>false</useDomainConstraints>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+      </Attribute>
+   </attributes>
+   <identifiers>
+      <identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="DC42384F-73B8-60E2-9263-4C00EACC048B" name="Roughness PK">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:19:36 UTC</createdTime>
+         <changedTime>2012-10-29 15:05:15 UTC</changedTime>
+         <ownerDesignName>pdb</ownerDesignName>
+         <pk>true</pk>
+         <usedAttributes>
+            <attributeRef>7231709D-BDB4-2093-C436-83D7D7B0F325</attributeRef>
+            <attributeRef>B55455A0-3297-3DDE-9B5D-2B9C69E0E8B6</attributeRef>
+         </usedAttributes>
+      </identifier>
+   </identifiers>
 </Entity>
