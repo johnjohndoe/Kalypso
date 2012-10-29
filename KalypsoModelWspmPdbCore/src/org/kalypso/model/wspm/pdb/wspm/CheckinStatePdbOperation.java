@@ -72,6 +72,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
+import org.kalypso.model.wspm.pdb.gaf.GafPartsMapping;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
@@ -149,7 +150,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
     final WaterBody waterBody = m_data.getWaterBody();
 
-    final EventUploadProvider eventProvider = new EventUploadProvider( session );
+    final EventUploadProvider eventProvider = session == null ? null : new EventUploadProvider( session );
 
     for( final IProfileFeature feature : profiles )
     {
@@ -518,6 +519,16 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
    */
   private Pair<Event, Boolean> findEvent( final State state, final IProfileObject profileObject, final EventUploadProvider eventProvider )
   {
+    // REMARK: no event provider present if we export gaf, in this case, export everything that is really GAF
+    if( eventProvider == null )
+    {
+      final String type = profileObject.getType();
+      final String kindName = new GafPartsMapping().partType2kindName( type );
+
+      final boolean shouldUpload = GafKind.quietValueOf( kindName ) != null;
+      return Pair.of( null, shouldUpload );
+    }
+
     final String eventName = profileObject.getValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT_NAME, null );
 
     /* if noevent name is set, we do upload the part; no event to be attached */
