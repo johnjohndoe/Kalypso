@@ -89,7 +89,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     ls.setColor( new RGB( 0x00, 0x00, 0xff ) );
 
     final ILineStyle fixation = getStyleFor( IWspmConstants.LAYER_WASSERSPIEGEL_FIXIERUNG + LINE, LineStyle.class ); //$NON-NLS-1$
-    fixation.setColor( new RGB( 0x00, 0xFF, 0xFF ) );
+    fixation.setColor( new RGB( 0x00, 0xCC, 0xFF ) );
   }
 
   private void createPointMarkerStyles( )

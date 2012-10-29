@@ -229,10 +229,14 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     final List<IProfilChartLayer> layersToAdd = new ArrayList<>();
 
     /* water level layer */
-    layersToAdd.add( TuhhLayers.createWspLayer( profile, (IWspmResultNode)result, m_domainAxis, m_targetAxisLeft, m_styleProvider ) );
+    final IProfilChartLayer wspLayer = TuhhLayers.createWspLayer( profile, (IWspmResultNode)result, cmLeft, m_styleProvider );
+    if( wspLayer != null )
+      layersToAdd.add( wspLayer );
 
     /* water level fixation layer */
-    layersToAdd.add( TuhhLayers.createWspFixationLayer( profile, (IWspmResultNode)result, m_domainAxis, m_targetAxisLeft, m_styleProvider ) );
+    final IProfilChartLayer wspFixationLayer = TuhhLayers.createWspFixationLayer( profile, (IWspmResultNode)result, cmLeft, m_styleProvider );
+    if( wspFixationLayer != null )
+      layersToAdd.add( wspFixationLayer );
 
     /* roughnesses */
     if( TuhhProfiles.hasRoughness( profile ) )
