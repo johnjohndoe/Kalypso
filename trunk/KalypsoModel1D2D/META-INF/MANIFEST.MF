@@ -29,7 +29,8 @@ Require-Bundle: org.junit4;resolution:=optional,
  de.openali.odysseus.chart.ui,
  de.openali.odysseus.chart.ext.base,
  org.kalypso.service.wps,
- org.kalypso.model.wspm.ewawi
+ org.kalypso.model.wspm.ewawi,
+ org.j3d
 Bundle-ClassPath: .,
   lib/jmatio.jar
 Bundle-ActivationPolicy: lazy
