@@ -230,7 +230,7 @@ public class PointMarkerLayer extends AbstractProfilePointsLayer
 
       final String header = targetComponent.getName();
 
-      final TooltipFormatter formatter = new TooltipFormatter( header, new String[] { "%s", "%.4f", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final TooltipFormatter formatter = new TooltipFormatter( header, new String[] { "%s", "%,.2f", "%s" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       final String domainUnit = ComponentUtilities.getComponentUnitLabel( domainComponent ); //$NON-NLS-1$
       formatter.addLine( domainComponent.getName(), width, domainUnit );
