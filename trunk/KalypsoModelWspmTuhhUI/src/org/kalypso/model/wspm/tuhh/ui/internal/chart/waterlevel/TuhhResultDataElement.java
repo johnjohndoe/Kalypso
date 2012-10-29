@@ -230,4 +230,22 @@ class TuhhResultDataElement
 
     return m_waterlevel.getType();
   }
+
+  public boolean hasWspData( final WaterLevelFilter wspFilter )
+  {
+    if( !wspFilter.select( null, getParent(), this ) )
+      return false;
+
+    if( getResultNode() instanceof IWspmResult )
+      return true;
+
+    final TuhhResultDataElement[] children = getChildren();
+    for( final TuhhResultDataElement child : children )
+    {
+      if( child.hasWspData( wspFilter ) )
+        return true;
+    }
+
+    return false;
+  }
 }

@@ -40,8 +40,7 @@ public final class TuhhResultDataProvider implements IWspLayerData
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
     m_sectionName = createSectionName( results, settingId );
 
-    // FIXME: also fetch waterlevel objects from profile
-    m_rootElements = createRootElements( profile, results );
+    m_rootElements = createRootElements( results );
 
     final IDialogSettings section = DialogSettingsUtils.getSection( m_settings, m_sectionName );
 
@@ -50,7 +49,7 @@ public final class TuhhResultDataProvider implements IWspLayerData
       initResults( rootElement, section );
   }
 
-  private TuhhResultDataElement[] createRootElements( final IProfile profile, final IWspmResultNode results )
+  private TuhhResultDataElement[] createRootElements( final IWspmResultNode results )
   {
     final TuhhResultDataElement rootData = new TuhhResultDataElement( null, results );
 
@@ -186,5 +185,17 @@ public final class TuhhResultDataProvider implements IWspLayerData
   TuhhResultDataElement[] getRootElements( )
   {
     return m_rootElements;
+  }
+
+  public boolean hasWspData( final WaterLevelFilter wspFilter )
+  {
+    final TuhhResultDataElement[] rootElements = getRootElements();
+    for( final TuhhResultDataElement dataElement : rootElements )
+    {
+      if( dataElement.hasWspData( wspFilter ) )
+        return true;
+    }
+
+    return false;
   }
 }

@@ -97,7 +97,7 @@ final class TuhhLayers
     return new BuildingBridgeTheme( profil, new IProfilChartLayer[] { unterkante, oberkante }, mapper );
   }
 
-  public static IProfilChartLayer createWehrLayer( final IProfile profil, final CoordinateMapper axisMapper, final CoordinateMapper screenMapper, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createWehrLayer( final IProfile profil, final ICoordinateMapper axisMapper, final ICoordinateMapper screenMapper, final LayerStyleProviderTuhh styleProvider )
   {
     final PointsLineLayer oberkante = new PointsLineLayer( IWspmTuhhConstants.LAYER_WEHR + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, styleProvider ); //$NON-NLS-1$
     final PointMarkerLayer pointMarkerLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_WEHR, styleProvider, 30, false );
@@ -105,7 +105,7 @@ final class TuhhLayers
     return new BuildingWeirTheme( profil, new IProfilChartLayer[] { oberkante, pointMarkerLayer }, axisMapper, screenMapper );
   }
 
-  public static IProfilChartLayer createDeviderLayer( final IProfile profil, final CoordinateMapper cmScreen, final LayerStyleProviderTuhh styleProvider )
+  public static IProfilChartLayer createDeviderLayer( final IProfile profil, final ICoordinateMapper cmScreen, final LayerStyleProviderTuhh styleProvider )
   {
     final PointMarkerLayer dbLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, styleProvider, 5, true );
     final RiverChannelLayer tfLayer = new RiverChannelLayer( profil, styleProvider, 15, false );
@@ -181,17 +181,20 @@ final class TuhhLayers
     return layers.toArray( new IProfilChartLayer[] {} );
   }
 
-  public static IProfilChartLayer createWspLayer( final IProfile profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
+  public static IProfilChartLayer createWspLayer( final IProfile profile, final IWspmResultNode result, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
-    final ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
-    final IWspLayerData wspLayerData = new TuhhResultDataProvider( profile, result, "activeIds" ); //$NON-NLS-1$
+    final TuhhResultDataProvider wspLayerData = new TuhhResultDataProvider( profile, result, "activeIds" ); //$NON-NLS-1$
 
-    return new WspLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL, new IProfilChartLayer[] {}, styleProvider, wspLayerData, cm, new WaterLevelFilter() );
+    final WaterLevelFilter wspFilter = new WaterLevelFilter();
+    final boolean hasWspData = wspLayerData.hasWspData( wspFilter );
+    if( !hasWspData )
+      return null;
+
+    return new WspLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL, new IProfilChartLayer[] {}, styleProvider, wspLayerData, cm, wspFilter );
   }
 
-  public static IProfilChartLayer createWspFixationLayer( final IProfile profile, final IWspmResultNode result, final IAxis domainAxis, final IAxis targetAxis, final ILayerStyleProvider styleProvider )
+  public static IProfilChartLayer createWspFixationLayer( final IProfile profile, final IWspmResultNode result, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
-    final ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
     final IWspLayerData data = new TuhhResultDataProvider( profile, result, "activeFixationIds" ); //$NON-NLS-1$
 
     return new WspFixationLayer( profile, IWspmLayers.LAYER_WASSERSPIEGEL_FIXIERUNG, styleProvider, data, cm );
