@@ -3,7 +3,7 @@
    <createdBy>thuel</createdBy>
    <createdTime>2012-08-23 07:02:14 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2012-08-23 07:02:14 UTC</changedTime>
+   <changedTime>2012-10-29 15:06:18 UTC</changedTime>
    <generatorID>90F0EE48-08A3-D666-C1C5-A0D069D98D8E</generatorID>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Event PK</pkName>
@@ -262,6 +262,7 @@
          <indexColumnUsage>
             <colUsage columnID="93447CE9-DA0A-04EF-74C1-38BFA90ED962"/>
             <colUsage columnID="99E14804-B3E7-3D9C-4116-7CFFD905839F"/>
+            <colUsage columnID="2208BC7E-4FAF-858D-8D16-C60405D38B87"/>
          </indexColumnUsage>
       </ind_PK_UK>
       <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="F7BDBDF5-6C26-6963-2DFA-226B03701B85" name="State__Event">

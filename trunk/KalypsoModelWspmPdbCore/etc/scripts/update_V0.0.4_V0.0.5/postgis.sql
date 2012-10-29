@@ -126,7 +126,8 @@ ALTER TABLE Event
 
 ALTER TABLE Event
     ADD CONSTRAINT "Event Name UK" UNIQUE ( Name ,
-     Water_Body ) ;
+     Water_Body,
+     State_ID ) ;
 
 
 
@@ -424,6 +425,25 @@ DROP TABLE BCP_EVENT;
 -- set root path for DHM files
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: set root path for DHM files (''DEMServer'')'  where key ='Version';
 INSERT INTO INFO("key", "value") VALUES ('DEMServer', '${DEMServer}');
+
+
+-- grant rights to new tables
+UPDATE INFO set value='updating 0.0.4 to 0.0.5: grant rights'  where key ='Version';
+GRANT SELECT ON TABLE pdb.CS_Part_Parameter TO GROUP pdb_user;
+GRANT SELECT ON TABLE pdb.CS_Part_Type TO GROUP pdb_user;
+GRANT SELECT ON TABLE pdb.DHM_Index TO GROUP pdb_user;
+GRANT SELECT ON TABLE pdb.Event TO GROUP pdb_user;
+GRANT SELECT ON TABLE pdb.Style TO GROUP pdb_user;
+GRANT SELECT ON TABLE pdb.Style_Array TO GROUP pdb_user;
+GRANT SELECT ON TABLE pdb.Style_Parameter TO GROUP pdb_user;
+
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.CS_Part_Parameter TO GROUP pdb_admin;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.CS_Part_Type TO GROUP pdb_admin;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.DHM_Index TO GROUP pdb_admin;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.Event TO GROUP pdb_admin;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.Style TO GROUP pdb_admin;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.Style_Array TO GROUP pdb_admin;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.Style_Parameter TO GROUP pdb_admin;
 
 -- Version endgültig setzen
 UPDATE INFO set value='0.0.5'  where key ='Version';

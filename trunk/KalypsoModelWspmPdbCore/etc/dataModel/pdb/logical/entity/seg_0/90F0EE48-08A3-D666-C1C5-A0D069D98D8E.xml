@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-18 11:53:28 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2012-07-31 06:58:45 UTC</changedTime>
+   <changedTime>2012-10-29 15:48:45 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Events PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -250,11 +250,13 @@
       <identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="528B90D9-7300-3B6F-17D5-AA0AE91ECBA2" name="Event Name UK">
          <createdBy>thuel2</createdBy>
          <createdTime>2011-05-26 09:10:33 UTC</createdTime>
-         <changedTime>2012-07-26 15:55:00 UTC</changedTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2012-10-29 15:48:42 UTC</changedTime>
          <ownerDesignName>pdb</ownerDesignName>
          <usedAttributes>
             <attributeRef>6E6D3D6F-CF9C-80E3-3CBD-5EBF8C7EBAB7</attributeRef>
             <attributeRef>111F0F77-33A5-3AA4-7547-7BE2AEB80E15</attributeRef>
+            <attributeRef>F85E690A-5343-B34C-CB91-F7AB10E7DD42</attributeRef>
          </usedAttributes>
       </identifier>
    </identifiers>
