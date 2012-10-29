@@ -45,17 +45,14 @@ import java.math.BigDecimal;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilePointsLayer;
@@ -66,10 +63,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
@@ -77,11 +70,11 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class RoughnessLayer extends AbstractProfilePointsLayer
 {
-  private IPointStyle m_styleClazzes;
+//  private IPointStyle m_styleClazzes;
 
-  public RoughnessLayer( final IProfile profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
+  public RoughnessLayer( final String id, final IProfile profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
-    super( IWspmTuhhConstants.LAYER_RAUHEIT, profil, targetRangeProperty, styleProvider );
+    super( id, profil, targetRangeProperty, styleProvider );
   }
 
   @Override
@@ -101,13 +94,7 @@ public class RoughnessLayer extends AbstractProfilePointsLayer
       return;
 
     final int baseLine = chartImageInfo.getLayerRect().y + chartImageInfo.getLayerRect().height;
-    final FullRectangleFigure fr = new FullRectangleFigure();
-
-    final IPointStyle ps = getPointStyle();
-    // FIXME: why the heck is this translation needed??
-    // Kim: rückwärtskompatibel zu alten *.KOD
-    final AreaStyle as = new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), ps.isVisible() );
-    fr.setStyle( as );
+    final FullRectangleFigure fr = new FullRectangleFigure( getAreaStyle() );
 
     final IAxis dom = getDomainAxis();
     final IAxis tar = getTargetAxis();
@@ -150,24 +137,25 @@ public class RoughnessLayer extends AbstractProfilePointsLayer
     return true;
   }
 
-  @Override
-  protected IPointStyle getPointStyle( )
-  {
-    if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( getTargetProperty() ) )
-    {
-      if( Objects.isNotNull( m_styleClazzes ) )
-        return m_styleClazzes;
-
-      m_styleClazzes = StyleUtils.getDefaultPointStyle();
-      m_styleClazzes.getStroke().setColor( new RGB( 0, 0, 0 ) );
-      m_styleClazzes.setInlineColor( new RGB( 137, 62, 16 ) );
-      m_styleClazzes.setAlpha( 40 );
-
-      return m_styleClazzes;
-    }
-
-    return super.getPointStyle();
-  }
+  // FIXME: not used!
+//  @Override
+//  protected IPointStyle getPointStyle( )
+//  {
+//    if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( getTargetProperty() ) )
+//    {
+//      if( Objects.isNotNull( m_styleClazzes ) )
+//        return m_styleClazzes;
+//
+//      m_styleClazzes = StyleUtils.getDefaultPointStyle();
+//      m_styleClazzes.getStroke().setColor( new RGB( 0, 0, 0 ) );
+//      m_styleClazzes.setInlineColor( new RGB( 137, 62, 16 ) );
+//      m_styleClazzes.setAlpha( 40 );
+//
+//      return m_styleClazzes;
+//    }
+//
+//    return super.getPointStyle();
+//  }
 
   private BigDecimal getValue( final IProfileRecord point )
   {
