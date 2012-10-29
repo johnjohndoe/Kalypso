@@ -116,9 +116,15 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   String LAYER_RAUHEIT_KST = LAYER_RAUHEIT + "RAUHEIT_KST"; //$NON-NLS-1$
 
-  String LAYER_BRUECKE = PROFILE_LAYER + "BRUECKE"; //$NON-NLS-1$
+  String THEME_BRUECKE = PROFILE_LAYER + "BRUECKE"; //$NON-NLS-1$
 
-  String LAYER_WEHR = PROFILE_LAYER + "WEHR"; //$NON-NLS-1$
+  String LAYER_BRUECKE_UK = THEME_BRUECKE + "_UK"; //$NON-NLS-1$
+
+  String LAYER_BRUECKE_OK = THEME_BRUECKE + "_OK"; //$NON-NLS-1$
+
+  String THEME_WEHR = PROFILE_LAYER + "WEHR"; //$NON-NLS-1$
+
+  String LAYER_WEHR_OK = THEME_WEHR + "_OK"; //$NON-NLS-1$
 
   String LAYER_KREIS = PROFILE_LAYER + "KREIS"; //$NON-NLS-1$
 
@@ -130,7 +136,9 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   String LAYER_EI = PROFILE_LAYER + "EI"; //$NON-NLS-1$
 
-  String LAYER_TUBES = PROFILE_LAYER + "TUBES"; //$NON-NLS-1$
+  String THEME_TUBES = PROFILE_LAYER + "TUBES"; //$NON-NLS-1$
+
+  String LAYER_TUBES = PROFILE_LAYER + "TUBES_FIGURE"; //$NON-NLS-1$
 
   String LAYER_SINUOSITAET = PROFILE_LAYER + "SINUOSITAET"; //$NON-NLS-1$
 

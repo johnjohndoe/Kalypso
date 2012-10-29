@@ -68,7 +68,7 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
 
   public BuildingBridgeTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( profil, IWspmTuhhConstants.LAYER_BRUECKE, TITLE, chartLayers, cm );
+    super( profil, IWspmTuhhConstants.THEME_BRUECKE, TITLE, chartLayers, cm );
   }
 
   @Override

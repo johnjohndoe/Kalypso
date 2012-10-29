@@ -180,15 +180,15 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
         TuhhLayersAdder.addRoughnessLayers( provider, profil, m_targetAxisRight, AXIS_LABEL );
         break;
 
-      case IWspmTuhhConstants.LAYER_BRUECKE:
+      case IWspmTuhhConstants.THEME_BRUECKE:
         TuhhLayersAdder.addBridgeLayer( shell, profil );
         break;
 
-      case IWspmTuhhConstants.LAYER_WEHR:
+      case IWspmTuhhConstants.THEME_WEHR:
         TuhhLayersAdder.addWeirLayer( shell, profil );
         break;
 
-      case IWspmTuhhConstants.LAYER_TUBES:
+      case IWspmTuhhConstants.THEME_TUBES:
         TuhhLayersAdder.addTubesLayer( shell, profil );
         break;
 
@@ -344,9 +344,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     // only ONE Object allowed
     if( ArrayUtils.isEmpty( objects ) )
     {
-      addable.add( new LayerDescriptor( BuildingBridgeTheme.TITLE, LAYER_BRUECKE ) );
-      addable.add( new LayerDescriptor( BuildingWeirTheme.TITLE, IWspmTuhhConstants.LAYER_WEHR ) );
-      addable.add( new LayerDescriptor( BuildingTubesTheme.TITLE, IWspmTuhhConstants.LAYER_TUBES ) );
+      addable.add( new LayerDescriptor( BuildingBridgeTheme.TITLE, THEME_BRUECKE ) );
+      addable.add( new LayerDescriptor( BuildingWeirTheme.TITLE, IWspmTuhhConstants.THEME_WEHR ) );
+      addable.add( new LayerDescriptor( BuildingTubesTheme.TITLE, IWspmTuhhConstants.THEME_TUBES ) );
     }
 
     // FIXME: nonse: layers to add decided by already existing layers? should only depend on profile data!

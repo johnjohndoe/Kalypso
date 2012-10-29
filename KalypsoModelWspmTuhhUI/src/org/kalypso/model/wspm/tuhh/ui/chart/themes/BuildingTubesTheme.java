@@ -73,7 +73,7 @@ public class BuildingTubesTheme extends AbstractProfilTheme
 
   public BuildingTubesTheme( final IProfile profil, final ICulvertBuilding culvert, final ICoordinateMapper cm, final LayerStyleProviderTuhh styleProvider )
   {
-    super( profil, IWspmTuhhConstants.LAYER_TUBES, TITLE, createSubLayers( profil, culvert, styleProvider ), cm );
+    super( profil, IWspmTuhhConstants.THEME_TUBES, TITLE, createSubLayers( profil, culvert, styleProvider ), cm );
 
     m_culvert = culvert;
   }
@@ -86,7 +86,7 @@ public class BuildingTubesTheme extends AbstractProfilTheme
     if( records.size() == 0 )
       return new IProfilChartLayer[] { culvertLayer };
 
-    final String id = IWspmTuhhConstants.LAYER_TUBES + "_records"; //$NON-NLS-1$
+    final String id = IWspmTuhhConstants.THEME_TUBES + "_records"; //$NON-NLS-1$
     final IProfilChartLayer profilePartLayer = new ProfileObjectsLayer( id, profile, culvert, "Messpunkte" );
 
     return new IProfilChartLayer[] { culvertLayer, profilePartLayer };

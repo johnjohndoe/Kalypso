@@ -114,7 +114,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 
     final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_WEHR + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( col );
-    addStyle( IWspmTuhhConstants.LAYER_WEHR + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + LINE, ls.clone() ); //$NON-NLS-1$
+    addStyle( IWspmTuhhConstants.LAYER_WEHR_OK + LINE, ls.clone() ); //$NON-NLS-1$
   }
 
   private void createCrossSectionStyles( )
@@ -136,12 +136,12 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 
   private void createBridgeStyles( )
   {
-    final ILineStyle lsO = getStyleFor( IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + LINE, LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle lsO = getStyleFor( IWspmTuhhConstants.LAYER_BRUECKE_OK + LINE, LineStyle.class ); //$NON-NLS-1$
     lsO.setColor( new RGB( 0, 128, 0 ) );
 
     final ILineStyle lsU = lsO.clone();
     lsU.setColor( new RGB( 0, 128, 179 ) );
-    addStyle( IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + LINE, lsU ); //$NON-NLS-1$
+    addStyle( IWspmTuhhConstants.LAYER_BRUECKE_UK + LINE, lsU ); //$NON-NLS-1$
   }
 
   private void createRoughnessStyles( )

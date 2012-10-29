@@ -74,7 +74,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
 
   public BuildingWeirTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ICoordinateMapper cmDevider )
   {
-    super( profil, IWspmTuhhConstants.LAYER_WEHR, TITLE, chartLayers, cm );
+    super( profil, IWspmTuhhConstants.THEME_WEHR, TITLE, chartLayers, cm );
     // spezialfall für PointMarker und LineLayer
     for( final IChartLayer layer : chartLayers )
     {
@@ -93,6 +93,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
       fireLayerContentChanged( ContentChangeType.value );
     }
   }
+
   @Override
   public void removeYourself( )
   {
@@ -116,7 +117,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
     {
       if( layer instanceof IProfilChartLayer )
       {
-        if( getProfil().hasPointProperty( ((IProfilChartLayer) layer).getTargetComponent() ) )
+        if( getProfil().hasPointProperty( ((IProfilChartLayer)layer).getTargetComponent() ) )
         {
           cl.add( layer );
         }
