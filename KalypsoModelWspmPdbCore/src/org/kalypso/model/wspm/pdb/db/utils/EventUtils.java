@@ -126,4 +126,15 @@ public final class EventUtils
 
     return result;
   }
+
+  public static Event[] loadEvents( final Session session, final WaterBody waterBody )
+  {
+    /* find all for given waterbody */
+    final Criteria criteria = session.createCriteria( Event.class );
+
+    criteria.add( Restrictions.eq( Event.PROPERTY_WATER_BODY, waterBody ) );
+
+    final List<Event> list = criteria.list();
+    return list.toArray( new Event[list.size()] );
+  }
 }
