@@ -45,13 +45,11 @@ import javax.xml.namespace.QName;
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * @author Thomas Jung
- * 
  */
 public interface IFloodPolygon extends Feature
 {

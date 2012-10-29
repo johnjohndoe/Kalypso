@@ -6,7 +6,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
@@ -37,7 +36,7 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
 
     if( nodeCount < 4 )
       return null;
-    
+
     /* Positions from nodes */
     final GM_Position[] pos = new GM_Position[nodeCount];
 
@@ -55,7 +54,8 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
         patch = GeometryFactory.createGM_Triangle( pos[0], pos[1], pos[2], crs );
       else if( nodeCount == 5 )
         patch = GeometryFactory.createGM_Rectangle( pos[0], pos[1], pos[2], pos[3], crs );
-      else //if( nodeCount > 5 )
+      else
+        // if( nodeCount > 5 )
         patch = GeometryFactory.createGM_PolygonPatch( pos, null, crs );
       return GeometryFactory.createGM_Surface( patch );
     }

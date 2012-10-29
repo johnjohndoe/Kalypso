@@ -122,7 +122,7 @@ public class InverseDistanceUtilities
     double sumDistances = 0.0;
 
     /* Calculate the distances. */
-    final List<Double> distances = new ArrayList<Double>();
+    final List<Double> distances = new ArrayList<>();
     for( int i = 0; i < elements.size(); i++ )
     {
       if( maximumNumber > 0 && i >= maximumNumber )
@@ -179,7 +179,7 @@ public class InverseDistanceUtilities
   private static List<InverseDistanceElement> getInverseDistanceElemets( final Geometry areaGeometry, final Point[] points )
   {
     /* Memory for the results. */
-    final List<InverseDistanceElement> results = new ArrayList<InverseDistanceElement>();
+    final List<InverseDistanceElement> results = new ArrayList<>();
 
     for( int i = 0; i < points.length; i++ )
     {

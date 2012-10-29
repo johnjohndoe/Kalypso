@@ -71,7 +71,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Calculates the thiessen areas (polygons) from a set of stations.
- *
+ * 
  * @author Gernot Belger
  */
 public class ThiessenAreaOperation
@@ -96,8 +96,8 @@ public class ThiessenAreaOperation
       @Override
       public GM_Envelope getEnvelope( final Object o )
       {
-        final Feature ombrometer = (Feature) o;
-        final GM_Point stationLocation = (GM_Point) ombrometer.getProperty( propertyLocation );
+        final Feature ombrometer = (Feature)o;
+        final GM_Point stationLocation = (GM_Point)ombrometer.getProperty( propertyLocation );
         return stationLocation.getEnvelope();
       }
     };
@@ -110,7 +110,7 @@ public class ThiessenAreaOperation
    * <br>
    * The thiessen method does work only, if at least 2 point are available. In order to handle one more case (1
    * available point), the whole buffer region is used in case of only one available point.<br>
-   *
+   * 
    * @param ombrometerList
    *          List of features of ombrometers.
    * @param boundaryCalculator
@@ -123,27 +123,27 @@ public class ThiessenAreaOperation
     if( stations.isEmpty() )
       return Collections.emptyMap();
 
-    final Feature parentFeature = ((Feature) stations.get( 0 )).getOwner();
-    final IRelationType parentRelation = ((Feature) stations.get( 0 )).getParentRelation();
+    final Feature parentFeature = ((Feature)stations.get( 0 )).getOwner();
+    final IRelationType parentRelation = ((Feature)stations.get( 0 )).getParentRelation();
 
     // Gather data:
     // - used point into point-list
     // - all coordinates into list for convex hull
     // - ombrometer into geo index for quicker search later
     // - feature changes for ombrometers to null, in order to delete old geometries
-    final List<com.vividsolutions.jts.geom.Point> points = new ArrayList<com.vividsolutions.jts.geom.Point>();
+    final List<com.vividsolutions.jts.geom.Point> points = new ArrayList<>();
     final FeatureList geoIndex = FeatureFactory.createFeatureList( parentFeature, parentRelation, m_envelopeProvider );
     final Map<Feature, GM_Polygon> changeMap = new HashMap<>();
-    final List<Coordinate> crds = new ArrayList<Coordinate>();
+    final List<Coordinate> crds = new ArrayList<>();
     String crs = null;
     for( final Object listEntry : stations )
     {
-      final Feature ombro = (Feature) listEntry;
-      final GM_Point stationLocation = (GM_Point) ombro.getProperty( m_propertyLocation );
+      final Feature ombro = (Feature)listEntry;
+      final GM_Point stationLocation = (GM_Point)ombro.getProperty( m_propertyLocation );
       if( stationLocation != null )
       {
-        final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( stationLocation );
-        final Boolean isActive = (Boolean) ombro.getProperty( m_propertyActive );
+        final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point)JTSAdapter.export( stationLocation );
+        final Boolean isActive = (Boolean)ombro.getProperty( m_propertyActive );
         if( isActive != null && isActive )
         {
           crs = stationLocation.getCoordinateSystem();
@@ -172,8 +172,8 @@ public class ThiessenAreaOperation
     }
     else if( geoIndex.size() == 1 )
     {
-      final Feature ombro = (Feature) geoIndex.get( 0 );
-      final GM_Polygon gmBoundary = (GM_Polygon) JTSAdapter.wrap( thiessenBoundary, crs );
+      final Feature ombro = (Feature)geoIndex.get( 0 );
+      final GM_Polygon gmBoundary = (GM_Polygon)JTSAdapter.wrap( thiessenBoundary, crs );
       gmBoundary.setCoordinateSystem( crs );
       changeMap.put( ombro, gmBoundary );
     }
@@ -187,7 +187,7 @@ public class ThiessenAreaOperation
 
       for( final Polygon polygon : thiessenPolys )
       {
-        final GM_Polygon affectedArea = (GM_Polygon) JTSAdapter.wrap( polygon, crs );
+        final GM_Polygon affectedArea = (GM_Polygon)JTSAdapter.wrap( polygon, crs );
         final Feature ombro = findOmbrometerFor( affectedArea, geoIndex, m_propertyLocation );
         if( ombro == null )
           throw new GM_Exception( "Fehler bei der Ermittlung der Thiessen Polygone" );
@@ -205,12 +205,11 @@ public class ThiessenAreaOperation
 
   private static Feature findOmbrometerFor( final GM_Polygon surface, final FeatureList geoIndex, final QName propertyLocation )
   {
-    @SuppressWarnings("unchecked")
-    final List< ? > query = geoIndex.query( surface.getEnvelope(), null );
+    @SuppressWarnings( "unchecked" ) final List< ? > query = geoIndex.query( surface.getEnvelope(), null );
     for( final Object object : query )
     {
-      final Feature ombro = (Feature) object;
-      final GM_Point location = (GM_Point) ombro.getProperty( propertyLocation );
+      final Feature ombro = (Feature)object;
+      final GM_Point location = (GM_Point)ombro.getProperty( propertyLocation );
       if( surface.contains( location ) )
         return ombro;
     }

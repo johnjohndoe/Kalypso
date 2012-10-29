@@ -68,12 +68,10 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -142,12 +140,12 @@ public class ElementGeometryEditor
       final List<GM_Point> pointsToDraw = new ArrayList<>();
 
       final IFE1D2DNode[] nodes = element.getNodes();
-      for( int i = 0; i < nodes.length; i++ )
+      for( final IFE1D2DNode node : nodes )
       {
-        if( nodes[i].equals( m_startNode ) )
+        if( node.equals( m_startNode ) )
           pointsToDraw.add( MapUtilities.transform( m_mapPanel, currentPoint ) );
         else
-          pointsToDraw.add( nodes[i].getPoint() );
+          pointsToDraw.add( node.getPoint() );
       }
       paintPreviewElement( g, projection, pointsToDraw.toArray( new GM_Point[pointsToDraw.size()] ) );
     }
@@ -313,9 +311,8 @@ public class ElementGeometryEditor
   {
     final List<GM_Position> posList = new ArrayList<>();
     final IFE1D2DNode[] nodes = element.getNodes();
-    for( int i = 0; i < nodes.length; i++ )
+    for( final IFE1D2DNode node : nodes )
     {
-      final IFE1D2DNode node = nodes[i];
       if( node.equals( m_startNode ) )
       {
         final GM_Position position = m_endPoint.getPosition();

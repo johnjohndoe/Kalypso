@@ -62,12 +62,10 @@ import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 
 /**
  * @author Thomas Jung
  */
-@SuppressWarnings( "rawtypes" )
 public class ValidateDiscretisationOperation implements ICoreRunnableWithProgress
 {
   private final CompositeCommand m_commands = new CompositeCommand( "Fix validation problems" );
@@ -240,9 +238,9 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
 
   private void checkEdgeEntries( final IFE1D2DElement[] elements, final Map<IFE1D2DEdge, List<IFE1D2DElement>> edgeMap, final IStatusCollector log )
   {
-    for( int i = 0; i < elements.length; i++ )
+    for( final IFE1D2DElement element2 : elements )
     {
-      final IFE1D2DElement element = elements[i];
+      final IFE1D2DElement element = element2;
 
       final IFE1D2DNode[] elementNodes = element.getNodes();
       if( elementNodes == null )
@@ -251,9 +249,9 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
         continue;
       }
 
-      for( int j = 0; j < elementNodes.length; j++ )
+      for( final IFE1D2DNode elementNode : elementNodes )
       {
-        final IFE1D2DEdge[] nodeContainers = elementNodes[j].getLinkedEdges();
+        final IFE1D2DEdge[] nodeContainers = elementNode.getLinkedEdges();
         for( final IFE1D2DEdge edge : nodeContainers )
         {
           // be sure, that we use only edges of the current element!
@@ -289,11 +287,11 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
       return false;
 
     // check, if all nodes of the edge are in the nodes list of the element => edge is part of the element
-    for( int i = 0; i < edgeNodes.length; i++ )
+    for( final IFE1D2DNode edgeNode : edgeNodes )
     {
       boolean contained = false;
-      for( IFE1D2DNode node : elementNodes )
-        if( node.equals( edgeNodes[i] ) )
+      for( final IFE1D2DNode node : elementNodes )
+        if( node.equals( edgeNode ) )
           contained = true;
       if( !contained )
         return false;
@@ -305,15 +303,12 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
   {
     int numOfContainers = 0;
     final IFE1D2DElement[] edgeContainers = edge.getLinkedElements();
-    for( int i = 0; i < edgeContainers.length; i++ )
+    for( final IFE1D2DElement object : edgeContainers )
     {
-      final Object object = edgeContainers[i];
       if( object == null )
         continue;
-      if( object instanceof IFE1D2DElement )
-      {
-        numOfContainers++;
-      }
+
+      numOfContainers++;
     }
     return numOfContainers;
   }

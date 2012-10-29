@@ -11,7 +11,6 @@ import org.kalypso.ogc.gml.FeatureThemeInfo;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;

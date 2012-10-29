@@ -17,7 +17,6 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;

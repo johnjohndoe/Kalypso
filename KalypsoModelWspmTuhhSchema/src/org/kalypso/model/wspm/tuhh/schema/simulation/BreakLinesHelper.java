@@ -69,9 +69,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -98,7 +97,7 @@ public class BreakLinesHelper implements IWspmConstants
 
     final Map<Double, Double> wspMap = new TreeMap<>();
     for( final IRecord record : result )
-      wspMap.put( ((BigDecimal) record.getValue( statIndex )).doubleValue(), ((BigDecimal) record.getValue( wspIndex )).doubleValue() );
+      wspMap.put( ((BigDecimal)record.getValue( statIndex )).doubleValue(), ((BigDecimal)record.getValue( wspIndex )).doubleValue() );
 
     return wspMap;
   }
@@ -132,7 +131,7 @@ public class BreakLinesHelper implements IWspmConstants
         if( useWsp )
         {
           if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
-            // simulation does not concern the whole reach.
+          // simulation does not concern the whole reach.
           {
             points = WspmProfileHelper.calculateWspPoints( profil, wsp.doubleValue() );
           }

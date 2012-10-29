@@ -46,7 +46,6 @@ import org.kalypso.model.rcm.binding.IThiessenStation;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -71,7 +70,6 @@ public class ThiessenStation extends Feature_Impl implements IThiessenStation
     setProperty( PROPERTY_ACTIVE, active );
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public GM_Polygon getThiessenArea( )
   {
@@ -87,7 +85,7 @@ public class ThiessenStation extends Feature_Impl implements IThiessenStation
   @Override
   public IXLinkedFeature getStation( )
   {
-    return (IXLinkedFeature) getMember( LINK_STATION );
+    return (IXLinkedFeature)getMember( LINK_STATION );
   }
 
   @Override

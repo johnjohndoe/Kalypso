@@ -471,7 +471,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     }
   }
 
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
   protected void finishGeometry( ) throws GM_Exception
   {
     if( m_geom == null )

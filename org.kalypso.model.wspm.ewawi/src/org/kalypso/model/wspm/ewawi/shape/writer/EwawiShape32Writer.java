@@ -18,13 +18,11 @@
  */
 package org.kalypso.model.wspm.ewawi.shape.writer;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
-import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
@@ -32,7 +30,6 @@ import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
-import org.kalypso.shape.shp.SHPException;
 
 /**
  * Writes EWAWI+ shape file 32.
@@ -74,13 +71,13 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
   }
 
   @Override
-  protected void writeData( final ShapeFile shapeFile, final EwawiPlus data[] ) throws DBaseException, IOException, SHPException, EwawiException
+  protected void writeData( final ShapeFile shapeFile, final EwawiPlus data[] )
   {
     for( final EwawiPlus ewawiData : data )
       writeData( shapeFile, ewawiData );
   }
 
-  private void writeData( final ShapeFile shapeFile, final EwawiPlus data ) throws DBaseException, IOException, SHPException, EwawiException
+  private void writeData( final ShapeFile shapeFile, final EwawiPlus data )
   {
   }
 }

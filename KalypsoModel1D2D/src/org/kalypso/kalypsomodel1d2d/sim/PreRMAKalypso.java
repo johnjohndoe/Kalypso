@@ -31,7 +31,6 @@ import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
 import org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter;
 import org.kalypso.kalypsomodel1d2d.conv.wind.RMA10WindDataWriter;
-import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -57,7 +56,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Convert from GML to RMAKalypso format
- *
+ * 
  * @author kurzbach
  */
 public class PreRMAKalypso implements ISimulation
@@ -136,9 +135,9 @@ public class PreRMAKalypso implements ISimulation
     {
       manager = VFSUtilities.getNewManager();
 
-      final URL controlUrl = (URL) inputProvider.getInputForID( INPUT_CONTROL );
+      final URL controlUrl = (URL)inputProvider.getInputForID( INPUT_CONTROL );
       final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlUrl, null );
-      final IControlModelGroup controlModelGroup = (IControlModelGroup) controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
+      final IControlModelGroup controlModelGroup = (IControlModelGroup)controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
       final IControlModel1D2DCollection controlModel1d2dCollection = controlModelGroup.getModel1D2DCollection();
 
       IFEDiscretisationModel1d2d discretisationModel = null;
@@ -152,9 +151,9 @@ public class PreRMAKalypso implements ISimulation
       }
       if( discretisationModel == null )
       {
-        final URL meshUrl = (URL) inputProvider.getInputForID( INPUT_MESH );
+        final URL meshUrl = (URL)inputProvider.getInputForID( INPUT_MESH );
         final GMLWorkspace discWorkspace = GmlSerializer.createGMLWorkspace( meshUrl, null );
-        discretisationModel = (IFEDiscretisationModel1d2d) discWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+        discretisationModel = (IFEDiscretisationModel1d2d)discWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
       }
 
       // specified calculation unit overrides control model calc unit
@@ -162,7 +161,7 @@ public class PreRMAKalypso implements ISimulation
       ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
       if( inputProvider.hasID( INPUT_CALCULATION_UNIT_ID ) )
       {
-        final String calcUnitID = (String) inputProvider.getInputForID( INPUT_CALCULATION_UNIT_ID );
+        final String calcUnitID = (String)inputProvider.getInputForID( INPUT_CALCULATION_UNIT_ID );
         for( final IControlModel1D2D existingControlModel : controlModel1d2dCollection.getControlModels() )
         {
           try
@@ -193,9 +192,9 @@ public class PreRMAKalypso implements ISimulation
       }
       if( flowRelationshipModel == null )
       {
-        final URL flowRelURL = (URL) inputProvider.getInputForID( INPUT_FLOW_RELATIONSHIPS );
+        final URL flowRelURL = (URL)inputProvider.getInputForID( INPUT_FLOW_RELATIONSHIPS );
         final GMLWorkspace flowRelWorkspace = GmlSerializer.createGMLWorkspace( flowRelURL, null );
-        flowRelationshipModel = (IFlowRelationshipModel) flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
+        flowRelationshipModel = (IFlowRelationshipModel)flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
       }
 
       IRoughnessClsCollection roughnessModel = null;
@@ -210,9 +209,9 @@ public class PreRMAKalypso implements ISimulation
       }
       if( roughnessModel == null )
       {
-        final URL roughnessURL = (URL) inputProvider.getInputForID( INPUT_ROUGHNESS );
+        final URL roughnessURL = (URL)inputProvider.getInputForID( INPUT_ROUGHNESS );
         final GMLWorkspace roughnessWorkspace = GmlSerializer.createGMLWorkspace( roughnessURL, null );
-        roughnessModel = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
+        roughnessModel = (IRoughnessClsCollection)roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
       }
 
       IWindModel windModel = null;
@@ -226,9 +225,9 @@ public class PreRMAKalypso implements ISimulation
       }
       if( windModel == null )
       {
-        final URL windURL = (URL) inputProvider.getInputForID( INPUT_WIND_RELATIONSHIPS );
+        final URL windURL = (URL)inputProvider.getInputForID( INPUT_WIND_RELATIONSHIPS );
         final GMLWorkspace windWorkspace = GmlSerializer.createGMLWorkspace( windURL, null );
-        windModel = (IWindModel) windWorkspace.getRootFeature().getAdapter( IWindModel.class );
+        windModel = (IWindModel)windWorkspace.getRootFeature().getAdapter( IWindModel.class );
       }
 
       final FileObject workingDir = manager.toFileObject( tmpdir );
@@ -239,7 +238,7 @@ public class PreRMAKalypso implements ISimulation
         URL restartPrefixURL = scenarioFolder.getLocationURI().toURL();
         if( !StringUtils.isEmpty( m_input ) && !SERVER_INPUT_LOCAL.equals( m_input ) )
         {
-          final URL restartFileUrl = (URL) inputProvider.getInputForID( INPUT_RESTART_FILE );
+          final URL restartFileUrl = (URL)inputProvider.getInputForID( INPUT_RESTART_FILE );
           ZipUtilities.unzip( restartFileUrl, tmpdir );
           restartPrefixURL = workingDir.getURL();
         }
@@ -249,7 +248,7 @@ public class PreRMAKalypso implements ISimulation
 
         for( final Object element : restartInfos )
         {
-          final IRestartInfo iRestartInfo = (IRestartInfo) element;
+          final IRestartInfo iRestartInfo = (IRestartInfo)element;
           URL fullPrefixURL = restartPrefixURL;
           if( !restartPrefixURL.toString().endsWith( "/" ) ) //$NON-NLS-1$
             fullPrefixURL = new URL( restartPrefixURL.toString() + "/" ); //$NON-NLS-1$

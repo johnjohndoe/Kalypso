@@ -120,10 +120,9 @@ public class RainfallGenerationOp
 
   private List<IObservation>[] initResults( )
   {
-    @SuppressWarnings("unchecked")
-    final List<IObservation>[] results = new List[m_catchments.length];
+    @SuppressWarnings( "unchecked" ) final List<IObservation>[] results = new List[m_catchments.length];
     for( int i = 0; i < results.length; i++ )
-      results[i] = new ArrayList<IObservation>();
+      results[i] = new ArrayList<>();
     return results;
   }
 

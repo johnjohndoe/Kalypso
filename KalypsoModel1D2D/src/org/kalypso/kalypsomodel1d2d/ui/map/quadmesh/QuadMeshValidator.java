@@ -50,11 +50,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;

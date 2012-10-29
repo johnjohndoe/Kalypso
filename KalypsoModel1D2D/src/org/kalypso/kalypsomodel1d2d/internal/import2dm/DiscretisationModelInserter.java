@@ -55,7 +55,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 import org.kalypsodeegree_impl.model.sort.SplitSortSpatialIndex;
@@ -67,10 +66,8 @@ import com.vividsolutions.jts.index.ItemVisitor;
 
 /**
  * TODO: check: merge with insertion code of BandGen etc.<br/>
- *
  * Wrapper around a {@link org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d} that allows to
  * insert new element into the model.
- *
  * TODO: <br/>
  * <ul>
  * <li>monitor progress</li>
@@ -80,7 +77,7 @@ import com.vividsolutions.jts.index.ItemVisitor;
  * <li>- or, remove intersected from existing</li>
  * <li>- or, refine on intersection</li>
  * </ul>
- *
+ * 
  * @author Gernot Belger
  */
 public class DiscretisationModelInserter
@@ -191,7 +188,7 @@ public class DiscretisationModelInserter
       @Override
       public void visitItem( final Object item )
       {
-        final IPolygonWithName surface = (IPolygonWithName) item;
+        final IPolygonWithName surface = (IPolygonWithName)item;
         final IStatus status = insertElementIntoModel( surface );
         if( !status.isOK() )
           stati.add( status );
@@ -221,10 +218,10 @@ public class DiscretisationModelInserter
     try
     {
       final Polygon polygon = item.getPolygon();
-      final GM_Polygon surface = (GM_Polygon) JTSAdapter.wrapWithSrid( polygon );
+      final GM_Polygon surface = (GM_Polygon)JTSAdapter.wrapWithSrid( polygon );
 
       final Feature parentFeature = m_workspace.getRootFeature();
-      final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
+      final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d)parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
       ElementGeometryHelper.createFE1D2DfromSurface( m_workspace, discModel, surface );
       return Status.OK_STATUS;
     }

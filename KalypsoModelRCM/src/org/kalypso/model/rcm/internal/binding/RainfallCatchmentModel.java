@@ -101,7 +101,7 @@ public class RainfallCatchmentModel extends Feature_Impl implements IRainfallCat
   public IFeatureBindingCollection<IMetadata> getMetadata( )
   {
     if( m_metadataMembers == null )
-      m_metadataMembers = new FeatureBindingCollection<IMetadata>( this, IMetadata.class, MEMBER_METADATA, true );
+      m_metadataMembers = new FeatureBindingCollection<>( this, IMetadata.class, MEMBER_METADATA, true );
 
     return m_metadataMembers;
   }
@@ -110,7 +110,7 @@ public class RainfallCatchmentModel extends Feature_Impl implements IRainfallCat
   public IFeatureBindingCollection<IRainfallGenerator> getGenerators( )
   {
     if( m_generatorMembers == null )
-      m_generatorMembers = new FeatureBindingCollection<IRainfallGenerator>( this, IRainfallGenerator.class, MEMBER_GENERATOR, true );
+      m_generatorMembers = new FeatureBindingCollection<>( this, IRainfallGenerator.class, MEMBER_GENERATOR, true );
 
     return m_generatorMembers;
   }
