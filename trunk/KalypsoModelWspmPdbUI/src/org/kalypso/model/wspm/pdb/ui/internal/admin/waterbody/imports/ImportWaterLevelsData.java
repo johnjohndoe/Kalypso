@@ -58,10 +58,8 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
@@ -69,6 +67,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.utils.EventUtils;
 import org.kalypso.model.wspm.pdb.db.utils.StateUtils;
+import org.kalypso.model.wspm.pdb.wspm.ExistingEventsFetcher;
 import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 import org.kalypso.model.wspm.pdb.wspm.WaterlevelsForStation;
 import org.kalypso.shape.FileMode;
@@ -84,8 +83,6 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
 
   private final IPdbConnection m_connection;
 
-  private Event[] m_existingEvents;
-
   private String m_shapeFile;
 
   private String m_shapeSRS;
@@ -99,29 +96,19 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
   /* sections that belong to the current event */
   private final Map<BigDecimal, CrossSection> m_sections = new HashMap<>();
 
+  private final ExistingEventsFetcher m_eventsFetcher;
+
   public ImportWaterLevelsData( final IPdbConnection connection )
   {
     m_connection = connection;
 
     m_event.setMeasurementDate( new Date() );
+
+    m_eventsFetcher = new ExistingEventsFetcher( connection, m_event );
   }
 
-  public void init( final IDialogSettings dialogSettings ) throws PdbConnectException
+  public void init( final IDialogSettings dialogSettings )
   {
-    Session session = null;
-    try
-    {
-      session = m_connection.openSession();
-
-      m_existingEvents = GetPdbList.getArray( session, Event.class );
-
-      session.close();
-    }
-    finally
-    {
-      PdbUtils.closeSessionQuietly( session );
-    }
-
     if( dialogSettings == null )
       return;
   }
@@ -158,9 +145,9 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
   }
 
   @Override
-  public Event[] getExistingEvents( )
+  public Event[] getExistingEvents( ) throws PdbConnectException
   {
-    return m_existingEvents;
+    return m_eventsFetcher.getEvents();
   }
 
   @Override

@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.wspm;
 import java.util.Collection;
 
 import org.kalypso.commons.java.util.IModelObject;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 
@@ -58,7 +59,7 @@ public interface IEditEventPageData extends IModelObject
 
   Event getEvent( );
 
-  Event[] getExistingEvents( );
+  Event[] getExistingEvents( ) throws PdbConnectException;
 
   Collection<State> getStates( );
 

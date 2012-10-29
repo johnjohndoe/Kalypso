@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.FlushOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
@@ -85,7 +86,10 @@ public class EditElementHandler extends AbstractHandler
     final IConnectionViewer viewer = PdbHandlerUtils.getConnectionViewerChecked( event );
 
     final String username = viewer.getUsername();
-    final IEditWorker worker = findWorker( selectedItem, username );
+
+    final IPdbConnection connection = viewer.getConnection();
+
+    final IEditWorker worker = findWorker( connection, selectedItem, username );
 
     Session session = null;
     try
@@ -154,16 +158,16 @@ public class EditElementHandler extends AbstractHandler
     return wizards[0];
   }
 
-  private IEditWorker findWorker( final Object selectedItem, final String username )
+  private IEditWorker findWorker( final IPdbConnection connection, final Object selectedItem, final String username )
   {
     if( selectedItem instanceof WaterBody )
-      return new EditWaterBodyWorker( (WaterBody) selectedItem );
+      return new EditWaterBodyWorker( (WaterBody)selectedItem );
 
     if( selectedItem instanceof State )
-      return new EditStateWorker( (State) selectedItem, username );
+      return new EditStateWorker( (State)selectedItem, username );
 
     if( selectedItem instanceof Event )
-      return new EditEventWorker( (Event) selectedItem, username );
+      return new EditEventWorker( connection, (Event)selectedItem, username );
 
     throw new IllegalArgumentException();
   }

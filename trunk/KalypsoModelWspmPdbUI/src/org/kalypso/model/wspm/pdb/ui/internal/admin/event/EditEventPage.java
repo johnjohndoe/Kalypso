@@ -68,8 +68,8 @@ public class EditEventPage extends WizardPage
     m_data = data;
     m_ignoreOwnName = ignoreOwnName;
 
-    setTitle( Messages.getString("EditEventPage_0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("EditEventPage_1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "EditEventPage_0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "EditEventPage_1" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -82,7 +82,6 @@ public class EditEventPage extends WizardPage
     m_binding = new DatabindingWizardPage( this, null );
 
     final Event event = m_data.getEvent();
-    final Event[] existingEvents = m_data.getExistingEvents();
 
     String ignoreName;
     if( m_ignoreOwnName )
@@ -91,7 +90,6 @@ public class EditEventPage extends WizardPage
       ignoreName = null;
 
     final int style = WaterlevelComposite.SHOW_MEASUREMENT_DATE;
-    final WaterlevelComposite eventEditor = new WaterlevelComposite( panel, style, m_data, m_binding, ignoreName );
-    eventEditor.setExistingEvents( existingEvents );
+    new WaterlevelComposite( panel, style, m_data, m_binding, ignoreName );
   }
 }

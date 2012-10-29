@@ -21,28 +21,29 @@ package org.kalypso.model.wspm.pdb.wspm;
 import java.util.Collection;
 
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
  * Simple implementation of {@link IEditEventPageData} with fixed return values.
- *
+ * 
  * @author Gernot Belger
  */
 public class DefaultEditEventPageData extends AbstractModelObject implements IEditEventPageData
 {
   private final Event m_event;
 
-  private final Event[] m_existingEvents;
-
   private final Collection<State> m_states;
 
   private final boolean m_showStatesChooser;
 
-  public DefaultEditEventPageData( final Event event, final Event[] existingEvents, final Collection<State> states, final boolean showStatesChooser )
+  private final ExistingEventsFetcher m_eventsFetcher;
+
+  public DefaultEditEventPageData( final ExistingEventsFetcher eventsFetcher, final Event event, final Collection<State> states, final boolean showStatesChooser )
   {
+    m_eventsFetcher = eventsFetcher;
     m_event = event;
-    m_existingEvents = existingEvents;
     m_states = states;
     m_showStatesChooser = showStatesChooser;
   }
@@ -54,9 +55,15 @@ public class DefaultEditEventPageData extends AbstractModelObject implements IEd
   }
 
   @Override
-  public Event[] getExistingEvents( )
+  public Event[] getExistingEvents( ) throws PdbConnectException
   {
-    return m_existingEvents;
+    if( m_eventsFetcher == null )
+    {
+      // no check needed, new state is created (during gaf import), event name may be arbitrary
+      return null;
+    }
+
+    return m_eventsFetcher.getEvents();
   }
 
   @Override

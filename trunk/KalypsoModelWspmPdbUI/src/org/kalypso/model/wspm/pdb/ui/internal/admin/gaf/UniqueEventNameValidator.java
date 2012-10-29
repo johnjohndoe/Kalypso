@@ -81,6 +81,10 @@ public class UniqueEventNameValidator extends TypedValidator<String>
   public void setExistingEvents( final Event[] existingEvents )
   {
     m_names.clear();
+
+    if( existingEvents == null )
+      return;
+
     for( final Event event : existingEvents )
       m_names.add( event.getName() );
   }

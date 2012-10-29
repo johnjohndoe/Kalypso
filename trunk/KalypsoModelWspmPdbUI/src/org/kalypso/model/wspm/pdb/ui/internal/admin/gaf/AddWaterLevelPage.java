@@ -118,7 +118,7 @@ public class AddWaterLevelPage extends WizardPage
 
     final Event event = m_data.getWaterlevelEvent();
 
-    final IEditEventPageData data = new DefaultEditEventPageData( event, null, null, false );
+    final IEditEventPageData data = new DefaultEditEventPageData( null, event, null, false );
 
     m_waterlevelComposite = new WaterlevelComposite( group, SWT.NONE, data, m_binding, null );
 
@@ -137,9 +137,5 @@ public class AddWaterLevelPage extends WizardPage
       setMessage( null );
     else
       setMessage( Messages.getString( "AddWaterLevelPage.4" ), INFORMATION ); //$NON-NLS-1$
-
-    final Event[] existingEvents = m_data.getExistingEvents();
-    if( m_waterlevelComposite != null )
-      m_waterlevelComposite.setExistingEvents( existingEvents );
   }
 }
