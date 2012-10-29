@@ -404,7 +404,6 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     throw new IllegalArgumentException();
   }
 
-  // TODO: only needed, if we attach waterlevels to event
   private void build2dWaterlevels( final IProgressMonitor monitor )
   {
     final Event event = m_data.getEvent();
