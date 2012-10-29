@@ -26,6 +26,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
@@ -95,6 +97,10 @@ class AggregatedWaterlevel
 
     /* Build combined description without null elements */
     descriptions.remove( null );
-    return StringUtils.join( descriptions, ", " ); //$NON-NLS-1$
+
+    final String joined = StringUtils.join( descriptions, ", " ); //$NON-NLS-1$
+
+    final int maxLength = PdbMappingUtils.findLength( CrossSectionPart.class, CrossSectionPart.PROPERTY_DESCRIPTION );
+    return StringUtils.abbreviate( joined, maxLength );
   }
 }

@@ -30,6 +30,8 @@ import com.vividsolutions.jts.geom.LineString;
 @Table( name = "cross_section_part", schema = "pdb", uniqueConstraints = @UniqueConstraint( columnNames = { "name", "cross_section" } ) )
 public class CrossSectionPart extends AbstractModelObject implements Serializable
 {
+  public static final String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
+
   private BigDecimal m_id;
 
   private CrossSection m_crossSection;
@@ -156,7 +158,7 @@ public class CrossSectionPart extends AbstractModelObject implements Serializabl
     m_crossSectionPartType = crossSectionPartType;
   }
 
-  @Column( name = "description" )
+  @Column( name = "description", length = 255 )
   public String getDescription( )
   {
     return m_description;
