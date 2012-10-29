@@ -23,7 +23,7 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 /**
  * Teilprofiltyp, bekannt in GAF.<br/>
  * Entspricht CrossSectionPartType in der PDB, aber: die PDB muss nicht unbedingt zu GAF passen (d.h. kann andere Typen definieren).
- *
+ * 
  * @author Gernot Belger
  */
 public enum GafKind
@@ -54,5 +54,23 @@ public enum GafKind
   public String toString( )
   {
     return m_label;
+  }
+
+  /**
+   * Quietly parse kind, return <code>null</code> if given element is not of this enum.
+   */
+  public static GafKind quietValueOf( final String type )
+  {
+    if( type == null )
+      return null;
+
+    try
+    {
+      return valueOf( type );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      return null;
+    }
   }
 }
