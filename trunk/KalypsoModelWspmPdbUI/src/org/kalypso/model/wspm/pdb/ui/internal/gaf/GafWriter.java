@@ -74,7 +74,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * This writer serializes profile data into the gaf format.
- *
+ * 
  * @author Holger Albert
  */
 public class GafWriter
@@ -99,7 +99,7 @@ public class GafWriter
 
   /**
    * This function writes the cross sections to the file.
-   *
+   * 
    * @param crossSections
    *          The cross sections.
    * @param file
@@ -114,7 +114,7 @@ public class GafWriter
 
     try
     {
-       writer = new PrintWriter( file );
+      writer = new PrintWriter( file );
 
       /* Monitor. */
       monitor.beginTask( "Exporting profiles to GAF file", 100 * crossSections.size() );
@@ -228,12 +228,12 @@ public class GafWriter
     String y = "-1";
     final BigDecimal width = point.getWidth();
     if( width != null )
-      y = String.format( "%.4f\t", width.doubleValue() );
+      y = String.format( "%.4f", width.doubleValue() );
 
     String z = "-1";
     final BigDecimal height = point.getHeight();
     if( height != null )
-      z = String.format( "%.4f\t", height.doubleValue() );
+      z = String.format( "%.4f", height.doubleValue() );
 
     final int rk = Integer.parseInt( point.getRoughness().getId().getName() );
     final int bk = Integer.parseInt( point.getVegetation().getId().getName() );
