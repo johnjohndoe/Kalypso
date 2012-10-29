@@ -28,7 +28,7 @@ import org.eclipse.core.databinding.beans.IBeanValueProperty;
 
 /**
  * General utilities for the pdb mapping classes.
- *
+ * 
  * @author Gernot Belger
  */
 public final class PdbMappingUtils
@@ -38,18 +38,36 @@ public final class PdbMappingUtils
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * Find the 'precision' annotation value for a given property from our mapping classes.
-   */
-  public static int findScale( final Class< ? > type, final String propertyName )
+  private static Method getReadMethod( final Class< ? > type, final String propertyName )
   {
     final IBeanValueProperty property = BeanProperties.value( type, propertyName );
 
     final PropertyDescriptor descriptor = property.getPropertyDescriptor();
 
     final Method getMethod = descriptor.getReadMethod();
+    return getMethod;
+  }
+
+  private static Column getColumAnnotation( final Class< ? > type, final String propertyName )
+  {
+    final Method getMethod = getReadMethod( type, propertyName );
 
     final Column column = getMethod.getAnnotation( Column.class );
+    return column;
+  }
+
+  /**
+   * Find the 'precision' annotation value for a given property from our mapping classes.
+   */
+  public static int findScale( final Class< ? > type, final String propertyName )
+  {
+    final Column column = getColumAnnotation( type, propertyName );
     return column.scale();
+  }
+
+  public static int findLength( final Class< ? > type, final String propertyName )
+  {
+    final Column column = getColumAnnotation( type, propertyName );
+    return column.length();
   }
 }
