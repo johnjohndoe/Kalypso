@@ -19,6 +19,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
@@ -63,14 +64,14 @@ public class ProfileObjectsInfoBuilder implements IProfileObjectInfoBuilder
   {
     final String pointHeader = getPointHeader( object, record );
 
-    final TooltipFormatter formatter = new TooltipFormatter( pointHeader );
+    final TooltipFormatter formatter = new TooltipFormatter( pointHeader, new String[] { "%s", "%s", "%s" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
 
-    formatter.addLine( "Breite", record.getBreite(), "m" );
-    formatter.addLine( "Höhe", record.getHoehe(), "mNN" );
+    formatter.addLine( "Breite", String.format( "%,.2f", record.getBreite() ), "m" );
+    formatter.addLine( "Höhe", String.format( "%,.2f", record.getHoehe() ), "mNN" );
 
     final String code = record.getCode();
     if( !StringUtils.isBlank( code ) )
-      formatter.addLine( "Kennzeichen", code, "-" );
+      formatter.addLine( "Kennzeichen", code, StringUtils.EMPTY );
 
     final String comment = record.getComment();
     if( !StringUtils.isBlank( comment ) )

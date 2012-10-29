@@ -197,10 +197,10 @@ public class ProfileObjectPainter
     for( final ProfileObjectPaintData paintPoint : paintPoints )
     {
       final Point point = paintPoint.getPoint();
-      final Rectangle hoverRect = paintPoint( gc, point, figure );
+      paintPoint( gc, point, figure );
 
       final PointFigure hoverFigure = new PointFigure( hoverStyle );
-      hoverFigure.setCenterPoint( point );
+      final Rectangle hoverRect = hoverFigure.setCenterPoint( point );
 
       final EditInfo info = m_infoBuilder.createPointInfo( object, paintPoint.getRecord(), hoverFigure, point );
 
