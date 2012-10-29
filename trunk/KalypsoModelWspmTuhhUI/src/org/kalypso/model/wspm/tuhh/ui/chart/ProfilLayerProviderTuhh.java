@@ -172,7 +172,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
         TuhhLayersAdder.addGeoLayer( provider, profil );
         break;
 
-      case IWspmLayers.LAYER_GELAENDE:
+      case IWspmLayers.THEME_GELAENDE:
         TuhhLayersAdder.addGroundLayer( provider, profil );
         break;
 
@@ -365,9 +365,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     {
       addable.add( new LayerDescriptor( VegetationTheme.TITLE, IWspmTuhhConstants.LAYER_BEWUCHS ) );
     }
-    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE ) ) && !ArrayUtils.contains( existing, IWspmLayers.LAYER_GELAENDE ) )
+    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE ) ) && !ArrayUtils.contains( existing, IWspmLayers.THEME_GELAENDE ) )
     {
-      addable.add( new LayerDescriptor( CrossSectionTheme.TITLE, IWspmLayers.LAYER_GELAENDE ) );
+      addable.add( new LayerDescriptor( CrossSectionTheme.TITLE, IWspmLayers.THEME_GELAENDE ) );
     }
     if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT ) ) && !ArrayUtils.contains( existing, IWspmLayers.LAYER_GEOKOORDINATEN ) )
     {

@@ -117,8 +117,8 @@ final class TuhhLayers
 
   public static IProfilChartLayer createRoughnessLayer( final IProfile profil, final ICoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
-    final RoughnessLayer ks = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, styleProvider );
-    final RoughnessLayer kst = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, styleProvider );
+    final RoughnessLayer ks = new RoughnessLayer( IWspmTuhhConstants.LAYER_RAUHEIT_KS, profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, styleProvider ); //$NON-NLS-1$
+    final RoughnessLayer kst = new RoughnessLayer( IWspmTuhhConstants.LAYER_RAUHEIT_KST, profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, styleProvider ); //$NON-NLS-1$
     // final RoughnessLayer clazz = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS,
     // styleProvider ); //TODO see todo in RoughnessLayser.getValue()
 
@@ -129,7 +129,7 @@ final class TuhhLayers
 
   public static IProfilChartLayer createGelaendeLayer( final IProfile profil, final ICoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
-    final PointsLineLayer stationPointLayer = new PointsLineLayer( IWspmLayers.LAYER_GELAENDE, profil, IWspmPointProperties.POINT_PROPERTY_HOEHE, styleProvider );
+    final PointsLineLayer stationPointLayer = new PointsLineLayer( IWspmLayers.LAYER_GELAENDE, profil, IWspmPointProperties.POINT_PROPERTY_HOEHE, styleProvider ); //$NON-NLS-1$
     final StationLineLayer stationLineLayer = new StationLineLayer( IWspmLayers.LAYER_STATION_LINES, profil, IWspmPointProperties.POINT_PROPERTY_HOEHE, styleProvider );
 
     return new CrossSectionTheme( profil, new IProfilChartLayer[] { stationLineLayer, stationPointLayer }, mapper );
