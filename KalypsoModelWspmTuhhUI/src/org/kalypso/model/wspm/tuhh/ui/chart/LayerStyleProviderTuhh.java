@@ -51,12 +51,10 @@ import org.kalypso.model.wspm.ui.view.AbstractLayerStyleProvider;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IFill;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 
 /**
  * @author kimwerner
@@ -148,14 +146,23 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 
   private void createRoughnessStyles( )
   {
-    final IPointStyle psKS = getStyleFor( IWspmTuhhConstants.LAYER_RAUHEIT + POINT, PointStyle.class ); //$NON-NLS-1$
+    /* ks */
+    final IAreaStyle ksStyle = getStyleFor( IWspmTuhhConstants.LAYER_RAUHEIT_KS + AREA, IAreaStyle.class );
+    ksStyle.setAlpha( 50 );
 
-    final ILineStyle stroke = psKS.getStroke();
-    stroke.setColor( new RGB( 0, 0, 0 ) );
-    stroke.setAlpha( 75 );
+    ksStyle.getStroke().setColor( new RGB( 0, 0, 0 ) );
+    ksStyle.getStroke().setAlpha( 75 );
 
-    psKS.setInlineColor( new RGB( 0, 0, 0 ) );
-    psKS.setAlpha( 50 );
+    ksStyle.setFill( new ColorFill( new RGB( 137, 62, 16 ) ) );
+
+    /* kst */
+    final IAreaStyle kstStyle = getStyleFor( IWspmTuhhConstants.LAYER_RAUHEIT_KST + AREA, IAreaStyle.class );
+    kstStyle.setAlpha( 50 );
+
+    kstStyle.getStroke().setColor( new RGB( 0, 0, 0 ) );
+    kstStyle.getStroke().setAlpha( 75 );
+
+    kstStyle.setFill( new ColorFill( new RGB( 137, 62, 16 ) ) );
   }
 
   private void createTubeStyle( )
