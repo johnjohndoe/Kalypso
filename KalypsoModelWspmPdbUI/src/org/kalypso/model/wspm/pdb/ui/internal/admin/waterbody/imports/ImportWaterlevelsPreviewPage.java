@@ -189,6 +189,8 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
 
     createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.STATION, WaterlevelsForStation.PROPERTY_STATION, "%s", SWT.RIGHT ); //$NON-NLS-1$
     createWaterlevelColumn( m_viewer, "Anzahl WSP-Punkte", WaterlevelsForStation.PROPERTY_WATERLEVEL_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$
+    createWaterlevelColumn( m_viewer, "WSP-Punkte (ausgedünnt)", WaterlevelsForStation.PROPERTY_WATERLEVEL_SIMPLIFIED_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$
+    createWaterlevelColumn( m_viewer, "WSP-Segmente", WaterlevelsForStation.PROPERTY_WATERLEVEL_SEGMENT_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$
     // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.WATERLEVEL, WaterlevelsForStation.PROPERTY_WATERLEVEL, "%s" ); //$NON-NLS-1$
     // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.DISCHARGE, WaterlevelsForStation.PROPERTY_DISCHARGE, "%s" ); //$NON-NLS-1$
     // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.MEASUREMENT, WaterlevelsForStation.PROPERTY_MEASURMENT_DATE, "%s" ); //$NON-NLS-1$

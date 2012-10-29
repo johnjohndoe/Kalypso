@@ -31,6 +31,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.waterlevel2d.ProjectedWaterlevels;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
  * Collection of {@link org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation} for one profile station.
@@ -43,11 +44,15 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
 
   public static final String PROPERTY_WATERLEVEL_COUNT = "waterlevelCount"; //$NON-NLS-1$
 
+  public static final String PROPERTY_WATERLEVEL_SIMPLIFIED_COUNT = "waterlevelCountSimplified"; //$NON-NLS-1$
+
+  public static final String PROPERTY_WATERLEVEL_SEGMENT_COUNT = "waterlevelSegmentCount"; //$NON-NLS-1$
+
   private final BigDecimal m_station;
 
   private final IStatusCollector m_levelsLog = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
-  // REMARK: using fatser concurrent map here because we get MANY entries sometimes
+  // REMARK: using faster concurrent map here because we get MANY entries sometimes
   private final Map<WaterlevelFixation, IStatus> m_waterlevels = new ConcurrentHashMap<>();
 
   private IStatus m_waterlevel2dStatus;
@@ -69,6 +74,30 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
   public int getWaterlevelCount( )
   {
     return m_waterlevels.size();
+  }
+
+  public int getWaterlevelCountSimplified( )
+  {
+    final IProfileObject pointsObject = getPointsObject();
+    if( pointsObject == null )
+      return 0;
+
+    return pointsObject.getRecords().size();
+  }
+
+  public int getWaterlevelSegmentCount( )
+  {
+    int count = 0;
+
+    final IProfileObject[] objects = getWaterlevelObjects();
+    for( final IProfileObject object : objects )
+    {
+      final String type = object.getType();
+      if( IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_SEGMENT.equals( type ) )
+        count++;
+    }
+
+    return count;
   }
 
   public void addWaterlevel( final WaterlevelFixation waterlevel, final IStatus status )
@@ -136,11 +165,8 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
 
         final ProjectedWaterlevels projected = new ProjectedWaterlevels( eventName, m_station, profileLine, waterlevels );
 
-        // TODO: douglas peucker
-
         m_waterlevels2DObjecs = projected.createParts();
 
-        // TODO fetch simplified fixations and add to event
         log.add( projected.getStatus() );
       }
       else
@@ -162,5 +188,23 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
   public ISectionProvider getSection( )
   {
     return m_section;
+  }
+
+  private IProfileObject getPointsObject( )
+  {
+    final IProfileObject[] objects = getWaterlevelObjects();
+    for( final IProfileObject object : objects )
+    {
+      /* we know that we have exactly one points object */
+      if( IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS.equals( object.getType() ) )
+        return object;
+    }
+
+    return null;
+  }
+
+  public WaterlevelFixation[] getFixations( )
+  {
+    return m_waterlevels.keySet().toArray( new WaterlevelFixation[m_waterlevels.size()] );
   }
 }
