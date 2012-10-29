@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -70,23 +67,24 @@ public class ByWaterBodyContentProvider implements IConnectionContentProvider
     {
       final WaterBody rootNode = m_input.getRoot();
       final Object[] children = m_input.getChildren( rootNode );
+      return children;
 
-      /* happens for state viewer: descend one level */
-      final List<Object> rootElements = new ArrayList<>();
-      for( final Object child : children )
-      {
-        final Object[] grandChildren = getChildren( child );
-        rootElements.addAll( Arrays.asList( grandChildren ) );
-      }
+//      /* happens for state viewer: descend one level */
+//      final List<Object> rootElements = new ArrayList<>();
+//      for( final Object child : children )
+//      {
+//        final Object[] grandChildren = getChildren( child );
+//        rootElements.addAll( Arrays.asList( grandChildren ) );
+//      }
 
-      return rootElements.toArray();
+//      return rootElements.toArray();
     }
 
     if( inputElement instanceof Object[] )
-      return (Object[]) inputElement;
+      return (Object[])inputElement;
 
     if( inputElement instanceof Collection )
-      return ((Collection< ? >) inputElement).toArray();
+      return ((Collection< ? >)inputElement).toArray();
 
     if( inputElement != null )
       return new Object[] { inputElement };
@@ -114,7 +112,7 @@ public class ByWaterBodyContentProvider implements IConnectionContentProvider
   {
     if( parentElement instanceof WaterBody )
     {
-      final WaterBody waterBody = (WaterBody) parentElement;
+      final WaterBody waterBody = (WaterBody)parentElement;
       return m_input.getChildren( waterBody );
     }
 
@@ -142,9 +140,9 @@ public class ByWaterBodyContentProvider implements IConnectionContentProvider
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     if( newInput instanceof ConnectionInput )
-      m_input = ((ConnectionInput) newInput).getStructure();
+      m_input = ((ConnectionInput)newInput).getStructure();
     else if( newInput instanceof WaterBodyStructure )
-      m_input = (WaterBodyStructure) newInput;
+      m_input = (WaterBodyStructure)newInput;
     else
       m_input = null;
   }

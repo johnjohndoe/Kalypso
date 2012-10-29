@@ -160,7 +160,7 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
     watersViewer.getControl().setMenu( watersMenu );
 //    statesViewer.getControl().setMenu( statesMenu );
 
-    final IEvaluationService service = (IEvaluationService) site.getService( IEvaluationService.class );
+    final IEvaluationService service = (IEvaluationService)site.getService( IEvaluationService.class );
     service.requestEvaluation( IEvaluationService.PROP_NOTIFYING /* ISources.ACTIVE_CURRENT_SELECTION_NAME */);
 
     watersViewer.getControl().addDisposeListener( new DisposeListener()

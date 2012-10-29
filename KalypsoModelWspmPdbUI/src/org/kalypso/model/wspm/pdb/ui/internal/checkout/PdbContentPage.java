@@ -106,7 +106,7 @@ public class PdbContentPage extends WizardPage implements IConnectionViewer
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleSelectionChanged( (IStructuredSelection) event.getSelection() );
+        handleSelectionChanged( (IStructuredSelection)event.getSelection() );
       }
     } );
 
