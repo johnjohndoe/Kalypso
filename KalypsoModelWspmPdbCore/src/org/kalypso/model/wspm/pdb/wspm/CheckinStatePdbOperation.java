@@ -47,6 +47,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.hibernate.Session;
@@ -147,11 +149,13 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
     final WaterBody waterBody = m_data.getWaterBody();
 
+    final EventUploadProvider eventProvider = new EventUploadProvider( session );
+
     for( final IProfileFeature feature : profiles )
     {
       final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
       m_monitor.subTask( String.format( Messages.getString( "CheckinStatePdbOperation.4" ), label ) ); //$NON-NLS-1$
-      uploadProfile( session, waterBody, state, feature );
+      uploadProfile( session, waterBody, state, feature, eventProvider );
       m_monitor.worked( 1 );
     }
 
@@ -204,7 +208,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     return m_log.asMultiStatusOrOK( Messages.getString( "CheckinStatePdbOperation.7" ) ); //$NON-NLS-1$
   }
 
-  private void uploadProfile( final Session session, final WaterBody waterBody, final State state, final IProfileFeature feature ) throws PdbConnectException
+  private void uploadProfile( final Session session, final WaterBody waterBody, final State state, final IProfileFeature feature, final EventUploadProvider eventProvider ) throws PdbConnectException
   {
     final IProfile profil = feature.getProfile();
 
@@ -234,7 +238,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     section.setDescription( profil.getComment() );
 
     final String srsName = feature.getSrsName();
-    createParts( session, section, profil, srsName );
+    createParts( session, state, section, profil, srsName, eventProvider );
 
     saveSection( session, state, section );
 
@@ -277,7 +281,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     return station.movePointRight( 3 );
   }
 
-  private void createParts( final Session session, final CrossSection section, final IProfile profile, final String profilSRS ) throws PdbConnectException
+  private void createParts( final Session session, final State state, final CrossSection section, final IProfile profile, final String profilSRS, final EventUploadProvider eventProvider ) throws PdbConnectException
   {
     final Set<CrossSectionPart> parts = new HashSet<>();
 
@@ -290,7 +294,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     }
 
     /* Extract extra parts. */
-    final CrossSectionPart[] additionalParts = createAdditionalParts( session, profile );
+    final CrossSectionPart[] additionalParts = createAdditionalParts( session, state, profile, eventProvider );
     for( final CrossSectionPart additionalPart : additionalParts )
       parts.add( additionalPart );
 
@@ -345,7 +349,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     return part;
   }
 
-  private CrossSectionPart[] createAdditionalParts( final Session session, final IProfile profile ) throws PdbConnectException
+  private CrossSectionPart[] createAdditionalParts( final Session session, final State state, final IProfile profile, final EventUploadProvider eventProvider ) throws PdbConnectException
   {
     /* Memory for the cloned profile objects. */
     final List<IProfileObject> clonedProfileObjects = new ArrayList<>();
@@ -368,7 +372,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     removeEmptyOks( clonedProfileObjects );
 
     /* Checkin the profile objects. */
-    return checkin( session, clonedProfileObjects, profile );
+    return checkin( session, state, clonedProfileObjects, profile, eventProvider );
   }
 
   private IProfileObject cloneProfileObject( final IProfileObject profileObject )
@@ -470,16 +474,13 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
     }
   }
 
-  private CrossSectionPart[] checkin( final Session session, final List<IProfileObject> clonedProfileObjects, final IProfile profile ) throws PdbConnectException
+  private CrossSectionPart[] checkin( final Session session, final State state, final List<IProfileObject> clonedProfileObjects, final IProfile profile, final EventUploadProvider eventProvider ) throws PdbConnectException
   {
     final List<CrossSectionPart> parts = new ArrayList<>();
 
     final CrossSectionPartTypes partTypes = session == null ? null : new CrossSectionPartTypes( session );
 
     final double station = profile.getStation();
-
-    // REMARK: do not set event, even for 'W' part types -> the original 'W' points of GAF should remain, even if corresponding event is deleted
-    final Event event = null;
 
     final int dbSRID = m_data.getGeometryFactory().getSRID();
 
@@ -489,13 +490,46 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
 
     for( final IProfileObject clonedProfileObject : clonedProfileObjects )
     {
-      final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( clonedProfileObject, profileSRID, dbSRID, station, partTypes, event, coefficients );
-      operation.execute();
+      final Pair<Event, Boolean> findEventResult = findEvent( state, clonedProfileObject, eventProvider );
 
-      final CrossSectionPart part = operation.getPart();
-      parts.add( part );
+      final boolean shouldUpload = findEventResult.getValue();
+      if( shouldUpload )
+      {
+        final Event event = findEventResult.getKey();
+        final CheckinHorizonPartOperation operation = new CheckinHorizonPartOperation( clonedProfileObject, profileSRID, dbSRID, station, partTypes, event, coefficients );
+        operation.execute();
+
+        final CrossSectionPart part = operation.getPart();
+        parts.add( part );
+      }
+      else
+      {
+        // TODO: part ws not uploaded -> log it!
+        final String eventName = clonedProfileObject.getValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT_NAME, null );
+        System.out.format( "Part ignored for section %s and part %s: missing event%n", profile.getStation(), clonedProfileObject.getType(), eventName );
+      }
     }
 
     return parts.toArray( new CrossSectionPart[] {} );
+  }
+
+  /**
+   * Determine the event for the given profile object
+   */
+  private Pair<Event, Boolean> findEvent( final State state, final IProfileObject profileObject, final EventUploadProvider eventProvider )
+  {
+    final String eventName = profileObject.getValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT_NAME, null );
+
+    /* if noevent name is set, we do upload the part; no event to be attached */
+    if( StringUtils.isBlank( eventName ) )
+      return Pair.of( null, true );
+
+    final WaterBody waterBody = m_data.getWaterBody();
+
+    /* try to find the event with this name in the database */
+    final Event event = eventProvider.getEvent( waterBody, state, eventName );
+
+    /* if event is not found, do not upload waterlevel */
+    return Pair.of( event, event != null );
   }
 }
