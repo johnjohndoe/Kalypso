@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -49,6 +51,7 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -70,8 +73,11 @@ import org.kalypso.commons.databinding.property.value.DateTimeSelectionProperty;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 
@@ -130,6 +136,20 @@ public class WaterlevelComposite extends Composite
 
     if( data.showStatesChooser() )
       createStateControls( this );
+
+    /* update name controls if state or water body changes */
+    m_event.addPropertyChangeListener( new PropertyChangeListener()
+    {
+      @Override
+      public void propertyChange( final PropertyChangeEvent evt )
+      {
+        final String property = evt.getPropertyName();
+        if( Event.PROPERTY_WATER_BODY.equals( property ) || Event.PROPERTY_STATE.equals( property ) )
+          updateExistingEvents();
+      }
+    } );
+
+    updateExistingEvents();
   }
 
   private void createNameControls( final Composite parent )
@@ -276,10 +296,22 @@ public class WaterlevelComposite extends Composite
       m_measurementField.setEnabled( enabled );
   }
 
-  public void setExistingEvents( final Event[] existingEvents )
+  void updateExistingEvents( )
   {
-    m_uniqueEventNameValidator.setExistingEvents( existingEvents );
+    try
+    {
+      final Event[] existingEvents = m_data.getExistingEvents();
 
-    m_nameBinding.validateTargetToModel();
+      m_uniqueEventNameValidator.setExistingEvents( existingEvents );
+
+      m_nameBinding.validateTargetToModel();
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to retreive existing events from database", e );
+      StatusDialog.open( getShell(), status, "Edit Waterlevel Event" );
+    }
   }
 }

@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Set;
 
@@ -106,9 +107,6 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
     m_event.setEditingDate( now );
     m_event.setEditingUser( m_username );
 
-    /* save event */
-    session.save( m_event );
-
     /* build 2d waterlevels */
     final Set<WaterlevelFixation> waterlevels = m_event.getWaterlevelFixations();
 
@@ -116,10 +114,7 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
     final SubProgressMonitor subMonitor = new SubProgressMonitor( monitor, 20 );
     subMonitor.beginTask( "Uploading data into database", 100 );
 
-    if( m_waterlevels2d.length == 0 )
-      m_event.setWlType( WL_TYPE.WL_1D );
-    else
-      m_event.setWlType( WL_TYPE.WL_2D );
+    addFixations();
 
     /* save changed event */
     session.save( m_event );
@@ -133,6 +128,42 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
     subMonitor.done();
 
     return Status.OK_STATUS;
+  }
+
+  private void addFixations( )
+  {
+    /* count all waterlevels */
+    int numberOfWaterlevels = 0;
+
+    for( final WaterlevelsForStation waterlevels : m_waterlevels2d )
+    {
+      final int waterlevelCount = waterlevels.getWaterlevelCount();
+      numberOfWaterlevels += waterlevelCount;
+    }
+
+    /* calculate ratio */
+    final int ratio = numberOfWaterlevels / m_waterlevels2d.length;
+
+    // REMARK: heuristic: if we have too many waterlevels, its a 2d waterlevel and we do not add fixations
+    if( ratio > 3 )
+    {
+      m_event.setWlType( WL_TYPE.WL_2D );
+      return;
+    }
+
+    m_event.setWlType( WL_TYPE.WL_1D );
+
+    /* we already have some fixations, do not change */
+    final Set<WaterlevelFixation> waterlevelFixations = m_event.getWaterlevelFixations();
+    if( waterlevelFixations.size() > 0 )
+      return;
+
+    /* create fixations */
+    for( final WaterlevelsForStation waterlevels : m_waterlevels2d )
+    {
+      final WaterlevelFixation[] fixations = waterlevels.getFixations();
+      waterlevelFixations.addAll( Arrays.asList( fixations ) );
+    }
   }
 
   private void saveFixations( final Session session, final Set<WaterlevelFixation> waterlevels, final Date now )

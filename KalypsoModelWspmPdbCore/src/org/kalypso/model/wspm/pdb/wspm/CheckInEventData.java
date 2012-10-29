@@ -72,8 +72,6 @@ public abstract class CheckInEventData<W extends Feature> extends AbstractModelO
 
   private final CommandableWorkspace m_wspmWorkspace;
 
-  private Event[] m_existingEvents;
-
   private String m_dbSrs;
 
   private final W m_wspmObject;
@@ -85,6 +83,8 @@ public abstract class CheckInEventData<W extends Feature> extends AbstractModelO
   private Map<String, WaterBody> m_waterHash;
 
   private Session m_session;
+
+  private ExistingEventsFetcher m_eventsFetcher;
 
   public CheckInEventData( final CommandableWorkspace wspmWorkspace, final W wspmObject )
   {
@@ -111,11 +111,10 @@ public abstract class CheckInEventData<W extends Feature> extends AbstractModelO
     m_session = connection.openSession();
 
     final PdbInfo info = new PdbInfo( m_session );
-    final List<Event> events = GetPdbList.getList( m_session, Event.class );
+
+    m_eventsFetcher = new ExistingEventsFetcher( connection, m_event );
+
     final List<WaterBody> waterbodies = GetPdbList.getList( m_session, WaterBody.class );
-
-    m_existingEvents = events.toArray( new Event[events.size()] );
-
     final WaterBody[] existingWaterBodies = waterbodies.toArray( new WaterBody[waterbodies.size()] );
     m_dbSrs = JTSAdapter.toSrs( info.getSRID() );
 
@@ -140,9 +139,9 @@ public abstract class CheckInEventData<W extends Feature> extends AbstractModelO
   }
 
   @Override
-  public Event[] getExistingEvents( )
+  public Event[] getExistingEvents( ) throws PdbConnectException
   {
-    return m_existingEvents;
+    return m_eventsFetcher.getEvents();
   }
 
   public Object getProject( )

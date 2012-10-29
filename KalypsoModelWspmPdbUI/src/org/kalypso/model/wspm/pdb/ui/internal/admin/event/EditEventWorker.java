@@ -48,8 +48,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -61,6 +60,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IEditWorker;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.DefaultEditEventPageData;
+import org.kalypso.model.wspm.pdb.wspm.ExistingEventsFetcher;
 import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 
 /**
@@ -78,8 +78,11 @@ public class EditEventWorker implements IEditWorker
 
   private final String m_username;
 
-  public EditEventWorker( final Event selectedItem, final String username )
+  private final IPdbConnection m_connection;
+
+  public EditEventWorker( final IPdbConnection connection, final Event selectedItem, final String username )
   {
+    m_connection = connection;
     m_selectedItem = selectedItem;
     m_username = username;
     m_nameToSelect = m_selectedItem.getName();
@@ -92,17 +95,19 @@ public class EditEventWorker implements IEditWorker
   }
 
   @Override
-  public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
+  public Wizard createWizard( final IProgressMonitor monitor, final Session session )
   {
     monitor.subTask( Messages.getString( "EditEventWorker_1" ) ); //$NON-NLS-1$
-    final Event[] existingEvents = GetPdbList.getArray( session, Event.class );
-    m_eventToEdit = EventUtils.findEventByName( existingEvents, m_selectedItem.getName() );
+
+    m_eventToEdit = EventUtils.findEventByName( session, m_selectedItem.getName() );
 
     final Collection<State> states = WaterBodyUtils.getPossibleStates( m_eventToEdit.getWaterBody() );
 
     m_clone = cloneForEdit( m_selectedItem, states );
 
-    final IEditEventPageData data = new DefaultEditEventPageData( m_clone, existingEvents, states, states != null );
+    final ExistingEventsFetcher eventsFetcher = new ExistingEventsFetcher( m_connection, m_clone );
+
+    final IEditEventPageData data = new DefaultEditEventPageData( eventsFetcher, m_clone, states, states != null );
 
     return new EditEventWizard( data );
   }

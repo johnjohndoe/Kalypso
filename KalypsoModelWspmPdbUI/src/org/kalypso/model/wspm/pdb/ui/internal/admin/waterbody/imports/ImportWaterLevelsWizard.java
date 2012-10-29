@@ -128,7 +128,6 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     catch( final ExecutionException e )
     {
       e.printStackTrace();
-      // TODO: better error handling
     }
   }
 
