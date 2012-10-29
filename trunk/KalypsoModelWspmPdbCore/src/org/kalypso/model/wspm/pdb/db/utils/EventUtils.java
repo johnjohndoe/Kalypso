@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db.utils;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -49,6 +52,7 @@ import org.hibernate.criterion.Restrictions;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
@@ -103,20 +107,23 @@ public final class EventUtils
     return dbState.getCrossSections();
   }
 
-// public static State[] getStates( final IPdbConnection connection ) throws PdbConnectException
-// {
-// Session session = null;
-// try
-// {
-// session = connection.openSession();
-// final List<State> list = GetPdbList.getList( session, State.class );
-// final State[] states = list.toArray( new State[list.size()] );
-// session.close();
-// return states;
-// }
-// finally
-// {
-// PdbUtils.closeSessionQuietly( session );
-// }
-// }
+  public static Map<String, Event> loadEventMap( final Session session, final WaterBody waterBody, final State state, final String eventName )
+  {
+    /* find all for given waterbody and state */
+    final Criteria criteria = session.createCriteria( Event.class );
+
+    criteria.add( Restrictions.eq( Event.PROPERTY_NAME, eventName ) );
+    criteria.add( Restrictions.eq( Event.PROPERTY_STATE, state ) );
+    criteria.add( Restrictions.eq( Event.PROPERTY_WATER_BODY, waterBody ) );
+
+    final List<Event> list = criteria.list();
+
+    /* hash by name */
+    final Map<String, Event> result = new HashMap<>( list.size() );
+
+    for( final Event event : list )
+      result.put( event.getName(), event );
+
+    return result;
+  }
 }
