@@ -52,7 +52,6 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * GML-binding for the rcm-ombrometer

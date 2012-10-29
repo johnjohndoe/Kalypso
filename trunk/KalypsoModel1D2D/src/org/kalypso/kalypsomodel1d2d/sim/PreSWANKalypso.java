@@ -36,7 +36,6 @@ import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.SWANAdditionalDataConverter;
 import org.kalypso.kalypsomodel1d2d.conv.results.SimpleNodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.conv.wind.SWANWindDataWriter;
-import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -63,7 +62,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Convert from GML to SWAN-Kalypso format
- *
+ * 
  * @author ig
  */
 public class PreSWANKalypso implements ISimulation
@@ -136,12 +135,12 @@ public class PreSWANKalypso implements ISimulation
       // next block checks if the models are already in the memory(this is the case by local calculations) and does not
       // reload such models.
       manager = VFSUtilities.getNewManager();
-      final String lStrURL = (String) inputProvider.getInputForID( OUTPUT_PATH_RMA );
+      final String lStrURL = (String)inputProvider.getInputForID( OUTPUT_PATH_RMA );
       final FileObject lFileObjPreResultsDir = manager.resolveFile( lStrURL );
 
-      final URL controlUrl = (URL) inputProvider.getInputForID( "control" ); //$NON-NLS-1$
+      final URL controlUrl = (URL)inputProvider.getInputForID( "control" ); //$NON-NLS-1$
       final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlUrl, null );
-      final IControlModelGroup controlModelGroup = (IControlModelGroup) controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
+      final IControlModelGroup controlModelGroup = (IControlModelGroup)controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
       m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
 
       final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
@@ -156,9 +155,9 @@ public class PreSWANKalypso implements ISimulation
       }
       if( m_discretisationModel == null )
       {
-        final URL meshUrl = (URL) inputProvider.getInputForID( PreRMAKalypso.INPUT_MESH );
+        final URL meshUrl = (URL)inputProvider.getInputForID( PreRMAKalypso.INPUT_MESH );
         final GMLWorkspace discWorkspace = GmlSerializer.createGMLWorkspace( meshUrl, null );
-        m_discretisationModel = (IFEDiscretisationModel1d2d) discWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+        m_discretisationModel = (IFEDiscretisationModel1d2d)discWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
       }
 
       m_flowRelationshipModel = null;
@@ -171,9 +170,9 @@ public class PreSWANKalypso implements ISimulation
       }
       if( m_flowRelationshipModel == null )
       {
-        final URL flowRelURL = (URL) inputProvider.getInputForID( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS );
+        final URL flowRelURL = (URL)inputProvider.getInputForID( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS );
         final GMLWorkspace flowRelWorkspace = GmlSerializer.createGMLWorkspace( flowRelURL, null );
-        m_flowRelationshipModel = (IFlowRelationshipModel) flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
+        m_flowRelationshipModel = (IFlowRelationshipModel)flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
       }
 
       m_scenarioMetaData = null;
@@ -186,9 +185,9 @@ public class PreSWANKalypso implements ISimulation
       }
       if( m_scenarioMetaData == null )
       {
-        final URL resultMetaURL = (URL) inputProvider.getInputForID( PreSWANKalypso.INPUT_PATH_RESULT_META );
+        final URL resultMetaURL = (URL)inputProvider.getInputForID( PreSWANKalypso.INPUT_PATH_RESULT_META );
         final GMLWorkspace resultMetaWorkspace = GmlSerializer.createGMLWorkspace( resultMetaURL, null );
-        m_scenarioMetaData = (IScenarioResultMeta) resultMetaWorkspace.getRootFeature().getAdapter( IScenarioResultMeta.class );
+        m_scenarioMetaData = (IScenarioResultMeta)resultMetaWorkspace.getRootFeature().getAdapter( IScenarioResultMeta.class );
       }
 
       try
@@ -200,13 +199,13 @@ public class PreSWANKalypso implements ISimulation
       }
       if( m_windRelationshipModel == null )
       {
-        final URL windURL = (URL) inputProvider.getInputForID( PreRMAKalypso.INPUT_WIND_RELATIONSHIPS );
+        final URL windURL = (URL)inputProvider.getInputForID( PreRMAKalypso.INPUT_WIND_RELATIONSHIPS );
         final GMLWorkspace windWorkspace = GmlSerializer.createGMLWorkspace( windURL, null );
-        m_windRelationshipModel = (IWindModel) windWorkspace.getRootFeature().getAdapter( IWindModel.class );
+        m_windRelationshipModel = (IWindModel)windWorkspace.getRootFeature().getAdapter( IWindModel.class );
       }
 
       if( inputProvider.hasID( ADDITIONAL_DATA_FILE ) )
-        m_additionalDataURL = (URL) inputProvider.getInputForID( ADDITIONAL_DATA_FILE );
+        m_additionalDataURL = (URL)inputProvider.getInputForID( ADDITIONAL_DATA_FILE );
 
       final FileObject lFileObjWorkingDir = manager.toFileObject( tmpdir );
 

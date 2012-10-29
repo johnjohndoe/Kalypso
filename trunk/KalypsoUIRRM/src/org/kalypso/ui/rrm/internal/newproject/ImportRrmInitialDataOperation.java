@@ -216,13 +216,13 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
 
   private void mapHyd( final List< ? > sourceFeatureList, final Map<IValuePropertyType, IValuePropertyType> mapping )
   {
-    final HydrotopeCollection naHydrotop = (HydrotopeCollection) m_hydWS.getRootFeature();
+    final HydrotopeCollection naHydrotop = (HydrotopeCollection)m_hydWS.getRootFeature();
 
     final IFeatureBindingCollection<IHydrotope> hydList = naHydrotop.getHydrotopes();
 
     for( final Object sourceElement : sourceFeatureList )
     {
-      final Feature sourceFeature = (Feature) sourceElement;
+      final Feature sourceFeature = (Feature)sourceElement;
       final IHydrotope targetFeature = hydList.addNew( IHydrotope.FEATURE_HYDROTOPE, sourceFeature.getId() );
 
       copyValues( sourceFeature, targetFeature, mapping, GEO_MAPPING_SURFACE_2_MULTISURFACE );
@@ -231,7 +231,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
 
   private void mapCatchment( final List< ? > sourceFeatureList, final Map<IValuePropertyType, IValuePropertyType> mapping )
   {
-    final NaModell naModel = (NaModell) m_modelWS.getRootFeature();
+    final NaModell naModel = (NaModell)m_modelWS.getRootFeature();
     final IFeatureType catchmentFT = GMLSchemaUtilities.getFeatureTypeQuiet( Catchment.FEATURE_CATCHMENT ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
@@ -241,19 +241,19 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
 
     for( final Object sourceElement : sourceFeatureList )
     {
-      final Feature sourceFeature = (Feature) sourceElement;
+      final Feature sourceFeature = (Feature)sourceElement;
 
       final String fid = getId( idColKey, sourceFeature, "TG" ); //$NON-NLS-1$
 
       final Catchment targetFeature = catchments.addNew( Catchment.FEATURE_CATCHMENT, fid );
-      final IRelationType bodenkorrekturMemberRT = (IRelationType) catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
+      final IRelationType bodenkorrekturMemberRT = (IRelationType)catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
 
       copyValues( sourceFeature, targetFeature, mapping, GEO_MAPPING_MULTISURFACE_2_SURFACE );
 
       /* Set area: TODO: probably not needed any more, check! */
       final GM_Polygon geometry = targetFeature.getGeometry();
       if( geometry != null )
-        targetFeature.setProperty( NaModelConstants.NA_MODEL_FLAECH_PROP, new Long( (long) geometry.getArea() ) );
+        targetFeature.setProperty( NaModelConstants.NA_MODEL_FLAECH_PROP, new Long( (long)geometry.getArea() ) );
 
       // Bodenkorrekturparameter erstellen
       final List< ? > list = FeatureFactory.createFeatureList( targetFeature, bodenkorrekturMemberRT );
@@ -261,7 +261,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
 
       for( int j = 0; j < m_soilLayerNo; j++ )
       {
-        final IRelationType bodFtProp = (IRelationType) catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
+        final IRelationType bodFtProp = (IRelationType)catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
         final IFeatureType bodenKorrekturFT = bodFtProp.getTargetFeatureType();
         final Feature soilCorection = m_modelWS.createFeature( targetFeature, bodenkorrekturMemberRT, bodenKorrekturFT );
         soilCorection.setDescription( Messages.getString( "KalypsoNAProjectWizard_10", j + 1 ) ); //$NON-NLS-1$
@@ -280,7 +280,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
 
   private void mapNode( final List< ? > sourceFeatureList, final Map<IValuePropertyType, IValuePropertyType> mapping )
   {
-    final NaModell naModel = (NaModell) m_modelWS.getRootFeature();
+    final NaModell naModel = (NaModell)m_modelWS.getRootFeature();
 
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
 
@@ -289,7 +289,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
 
     for( final Object sourceElement : sourceFeatureList )
     {
-      final Feature sourceFeature = (Feature) sourceElement;
+      final Feature sourceFeature = (Feature)sourceElement;
       final String fid = getId( idColKey, sourceFeature, "K" ); //$NON-NLS-1$
       final Feature targetFeature = nodes.addNew( INode.FEATURE_NODE, fid );
 
@@ -299,7 +299,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
 
   private void mapRiver( final List< ? > sourceFeatureList, final Map<IValuePropertyType, IValuePropertyType> mapping )
   {
-    final NaModell naModell = (NaModell) m_modelWS.getRootFeature();
+    final NaModell naModell = (NaModell)m_modelWS.getRootFeature();
 
     // find column for id
     final IValuePropertyType idColKey = findColumnForId( mapping );
@@ -313,12 +313,12 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
 
     for( final Object sourceElement : sourceFeatureList )
     {
-      final Feature sourceFeature = (Feature) sourceElement;
+      final Feature sourceFeature = (Feature)sourceElement;
       final Object o = sourceFeature.getProperty( typeKey );
       int channelType = 0;
       try
       {
-        channelType = ((Integer) SpecialPropertyMapper.map( o.getClass(), Integer.class, o )).intValue();
+        channelType = ((Integer)SpecialPropertyMapper.map( o.getClass(), Integer.class, o )).intValue();
       }
       catch( final Exception e )
       {
@@ -387,7 +387,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
   private Object mapValue( final IFeatureType targetFT, final Object sourceValue, final IPropertyType targetPT, final int geoMappingOption )
   {
     if( sourceValue instanceof GM_Object )
-      return mapGeometry( (GM_Object) sourceValue, geoMappingOption );
+      return mapGeometry( (GM_Object)sourceValue, geoMappingOption );
 
     final IGMLSchema schema = targetFT.getGMLSchema();
     final String gmlVersion = schema.getGMLVersion();
@@ -399,7 +399,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
     }
 
     if( targetPT instanceof IValuePropertyType )
-      return mapValuePropertyType( sourceValue, (IValuePropertyType) targetPT );
+      return mapValuePropertyType( sourceValue, (IValuePropertyType)targetPT );
 
     return null;
   }
@@ -408,19 +408,19 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
   {
     if( (mappingOption & GEO_MAPPING_SURFACE_2_MULTISURFACE) != 0 && sourceValue instanceof GM_Polygon )
     {
-      final GM_Polygon[] surfaces = new GM_Polygon[] { (GM_Polygon) (GM_Polygon) sourceValue };
-      return GeometryFactory.createGM_MultiSurface( surfaces, ((GM_Polygon) (GM_Polygon) sourceValue).getCoordinateSystem() );
+      final GM_Polygon[] surfaces = new GM_Polygon[] { (GM_Polygon)sourceValue };
+      return GeometryFactory.createGM_MultiSurface( surfaces, ((GM_Polygon)sourceValue).getCoordinateSystem() );
     }
 
     if( (mappingOption & GEO_MAPPING_MULTISURFACE_2_SURFACE) != 0 && sourceValue instanceof GM_MultiSurface )
     {
-      final GM_Polygon[] surfaces = new GM_Polygon[] { ((GM_MultiSurface) sourceValue).getSurfaceAt( 0 ) };
+      final GM_Polygon[] surfaces = new GM_Polygon[] { ((GM_MultiSurface)sourceValue).getSurfaceAt( 0 ) };
       return surfaces[0];
     }
 
     if( (mappingOption & GEO_MAPPING_MULTICURVE_2_CURVE) != 0 && sourceValue instanceof GM_MultiCurve )
     {
-      final GM_Curve[] curves = new GM_Curve[] { ((GM_MultiCurve) sourceValue).getCurveAt( 0 ) };
+      final GM_Curve[] curves = new GM_Curve[] { ((GM_MultiCurve)sourceValue).getCurveAt( 0 ) };
       return curves[0];
     }
 
@@ -480,7 +480,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
    * generates an ID based on the FeatureType. If the idColKey variable is set, then use this field to generate the ID
    * and check if the ID doesn´t exist in the idMap. if the idColKey is not set, use the ID of the sourceFeature (shape
    * file).
-   *
+   * 
    * @param idColKey
    * @param sourceFeature
    * @param IDText

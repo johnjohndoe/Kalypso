@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ops;
 
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 
@@ -56,18 +54,18 @@ public class EdgeOps
    * To get a border node of the 1d edge. If the edge has 2 border nodes it end node is return.
    * 
    * @param elementEdge
-   *            the edge which border node is to be retrieved
+   *          the edge which border node is to be retrieved
    * @return the border node of the given 1d node
    */
-  public static final IFE1D2DNode find1DEdgeEndNode( IFE1D2DEdge elementEdge )
+  public static final IFE1D2DNode find1DEdgeEndNode( final IFE1D2DEdge elementEdge )
   {
     final IFE1D2DNode[] nodes = elementEdge.getNodes();
-    IFE1D2DNode node1 = nodes[1];
+    final IFE1D2DNode node1 = nodes[1];
     if( node1.getLinkedEdges().length == 1 )
     {
       return node1;
     }
-    IFE1D2DNode node0 = nodes[0];
+    final IFE1D2DNode node0 = nodes[0];
     if( node0.getLinkedEdges().length == 1 )
     {
       return node0;

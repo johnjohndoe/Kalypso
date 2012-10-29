@@ -47,11 +47,10 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * GML-binding for the th:ThiessenStation
- *
+ * 
  * @author Gernot Belger
  */
 public interface IThiessenStation extends Feature

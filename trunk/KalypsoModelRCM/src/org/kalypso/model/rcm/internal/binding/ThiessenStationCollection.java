@@ -59,7 +59,7 @@ public class ThiessenStationCollection extends Feature_Impl implements IThiessen
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_stations = new FeatureBindingCollection<IThiessenStation>( this, IThiessenStation.class, MEMBER_STATION );
+    m_stations = new FeatureBindingCollection<>( this, IThiessenStation.class, MEMBER_STATION );
   }
 
   @Override

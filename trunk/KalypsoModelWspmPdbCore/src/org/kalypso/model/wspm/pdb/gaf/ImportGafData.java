@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.pdb.gaf;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -140,7 +139,7 @@ public class ImportGafData extends AbstractModelObject
     m_state.setEditingUser( connection.getSettings().getUsername() );
   }
 
-  public void initFromDb( ) throws PdbConnectException, IOException
+  public void initFromDb( ) throws PdbConnectException
   {
     Session session = null;
     try

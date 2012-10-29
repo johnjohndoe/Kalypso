@@ -53,10 +53,9 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_MultiCurve_Impl;
@@ -228,7 +227,7 @@ class TriangulateGeometryData extends AbstractModelObject
     catch( final Exception e1 )
     {
       e1.printStackTrace();
-      SWT_AWT_Utilities.showSwtMessageBoxError( m_widget.getName(), Messages.getString("TriangulateGeometryData_0") + e1.toString() ); //$NON-NLS-1$
+      SWT_AWT_Utilities.showSwtMessageBoxError( m_widget.getName(), Messages.getString( "TriangulateGeometryData_0" ) + e1.toString() ); //$NON-NLS-1$
     }
     finally
     {

@@ -134,8 +134,8 @@ public class MarshallPolyhedralSurfaceTest extends TestCase
 
     final List<GM_PolygonPatch> list = new ArrayList<>( 2 );
 
-    list.add( (GM_PolygonPatch) GeometryFactory.createGM_PolygonPatch( ring1, null, crs ) );
-    list.add( (GM_PolygonPatch) GeometryFactory.createGM_PolygonPatch( ring2, null, crs ) );
+    list.add( GeometryFactory.createGM_PolygonPatch( ring1, null, crs ) );
+    list.add( GeometryFactory.createGM_PolygonPatch( ring2, null, crs ) );
 
     return list.toArray( new GM_PolygonPatch[list.size()] );
   }
