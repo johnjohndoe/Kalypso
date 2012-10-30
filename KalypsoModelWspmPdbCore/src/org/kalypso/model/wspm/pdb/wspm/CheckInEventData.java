@@ -129,6 +129,8 @@ public abstract class CheckInEventData<W extends Feature> extends AbstractModelO
       // REMARK: must be called with open session
       final Collection<State> possibleStates = WaterBodyUtils.getPossibleStates( waterBody );
       setStates( possibleStates );
+
+      m_event.setWaterBody( waterBody );
     }
   }
 
