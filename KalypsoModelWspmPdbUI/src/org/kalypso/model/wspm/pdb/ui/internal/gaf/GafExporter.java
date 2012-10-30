@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperationData;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStatePdbOperation;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -99,14 +100,14 @@ public class GafExporter
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Exporting profiles into the GAF Exchange Format", 2000 );
-      monitor.subTask( "Converting profiles..." );
+      monitor.beginTask( Messages.getString("GafExporter_0"), 2000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("GafExporter_1") ); //$NON-NLS-1$
 
       /* Get the cross sections. */
       final Set<CrossSection> crossSections = getCrossSections( profiles, new SubProgressMonitor( monitor, 500 ) );
 
       /* Monitor. */
-      monitor.subTask( "Writing profiles..." );
+      monitor.subTask( Messages.getString("GafExporter_2") ); //$NON-NLS-1$
 
       /* Create the gaf writer. */
       final GafCodes codes = new GafCodes();
@@ -124,12 +125,12 @@ public class GafExporter
       if( roughnessClasses.length > 0 )
       {
         /* Monitor. */
-        monitor.subTask( "Writing roughness classes..." );
+        monitor.subTask( Messages.getString("GafExporter_3") ); //$NON-NLS-1$
 
         /* Create the kst file. */
         final File parentFile = file.getParentFile();
         final String baseName = FilenameUtils.getBaseName( file.getName() );
-        final File kstFile = new File( parentFile, String.format( "%s.kst", baseName ) );
+        final File kstFile = new File( parentFile, String.format( "%s.kst", baseName ) ); //$NON-NLS-1$
 
         /* Create the kst writer. */
         final KstWriter kstWriter = new KstWriter();
@@ -149,12 +150,12 @@ public class GafExporter
       if( vegetationClasses.length > 0 )
       {
         /* Monitor. */
-        monitor.subTask( "Writing vegetation classes..." );
+        monitor.subTask( Messages.getString("GafExporter_5") ); //$NON-NLS-1$
 
         /* Create the bwp file. */
         final File parentFile = file.getParentFile();
         final String baseName = FilenameUtils.getBaseName( file.getName() );
-        final File bwpFile = new File( parentFile, String.format( "%s.bwp", baseName ) );
+        final File bwpFile = new File( parentFile, String.format( "%s.bwp", baseName ) ); //$NON-NLS-1$
 
         /* Create the bwp writer. */
         final BwpWriter bwpWriter = new BwpWriter();
@@ -169,7 +170,7 @@ public class GafExporter
         monitor.worked( 500 );
       }
 
-      return collector.asMultiStatusOrOK( "The export has failed.", "The export was successfull." );
+      return collector.asMultiStatusOrOK( Messages.getString("GafExporter_7"), Messages.getString("GafExporter_8") ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Exception ex )
     {

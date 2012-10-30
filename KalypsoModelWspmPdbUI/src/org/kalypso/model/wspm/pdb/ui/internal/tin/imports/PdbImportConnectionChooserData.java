@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 import org.kalypso.model.wspm.pdb.ui.internal.PdbUiUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.ConnectionChooserData;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -178,7 +179,7 @@ public class PdbImportConnectionChooserData extends ConnectionChooserData
     }
     catch( final PdbConnectException ex )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Fehler beim Zugriff auf die Datenbank.", ex );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("PdbImportConnectionChooserData_0"), ex ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -204,7 +205,7 @@ public class PdbImportConnectionChooserData extends ConnectionChooserData
     /* We are within the PDB perspective. */
     final IPdbConnection connection = PdbUiUtils.getConnection( window );
     if( connection == null )
-      throw new CoreException( new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, "Es besteht keine Verbindung zur Datenbank." ) );
+      throw new CoreException( new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("PdbImportConnectionChooserData_1") ) ); //$NON-NLS-1$
 
     return connection;
   }

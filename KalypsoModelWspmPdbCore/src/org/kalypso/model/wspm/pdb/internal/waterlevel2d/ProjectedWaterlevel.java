@@ -34,6 +34,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
@@ -97,7 +98,7 @@ class ProjectedWaterlevel
     if( distance > maxDistance )
     {
       final BigDecimal station = m_waterlevel.getStation();
-      final String message = String.format( "Waterlevel with station %s: big distance to corresponding profile line: %d [m]", station, distance );
+      final String message = String.format( Messages.getString("ProjectedWaterlevel_0"), station, distance ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
     }
 

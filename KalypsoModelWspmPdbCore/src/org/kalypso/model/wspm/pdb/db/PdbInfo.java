@@ -210,7 +210,7 @@ public class PdbInfo
     final String property = m_properties.getProperty( PROPERTY_DEM_SERVER );
     if( StringUtils.isBlank( property ) )
     {
-      final String message = "Base path to the dem server is empty";
+      final String message = Messages.getString("PdbInfo.3"); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
       throw new CoreException( status );
     }

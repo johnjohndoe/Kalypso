@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.table.handler.VegetationClassComparator;
 
 /**
@@ -81,14 +82,14 @@ public class BwpWriter
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Exporting vegetation classes to BWP file", 100 * vegetationClasses.length );
-      monitor.subTask( "Writing vegetation classes..." );
+      monitor.beginTask( Messages.getString("BwpWriter_0"), 100 * vegetationClasses.length ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("BwpWriter_1") ); //$NON-NLS-1$
 
       /* Create the writer. */
       writer = new PrintWriter( file );
 
       /* Write the header line. */
-      writer.println( "KENN\tdp\tax\tay\t\"Bewuchsdefinition\"" );
+      writer.println( "KENN\tdp\tax\tay\t\"Bewuchsdefinition\"" ); //$NON-NLS-1$
 
       /* Loop the vegetation classes. */
       Arrays.sort( vegetationClasses, new VegetationClassComparator() );
@@ -101,11 +102,11 @@ public class BwpWriter
         monitor.worked( 100 );
       }
 
-      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "The BWP export was successfull." );
+      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("BwpWriter_3") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( "The BWP export has failed: %s", ex.getLocalizedMessage() ), ex );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString("BwpWriter_4"), ex.getLocalizedMessage() ), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -121,31 +122,31 @@ public class BwpWriter
   {
     /* Create the line. */
     final StringBuilder builder = new StringBuilder();
-    builder.append( "%s\t" );
-    builder.append( "%s\t" );
-    builder.append( "%s\t" );
-    builder.append( "%s\t" );
-    builder.append( "\"%s\"" );
+    builder.append( "%s\t" ); //$NON-NLS-1$
+    builder.append( "%s\t" ); //$NON-NLS-1$
+    builder.append( "%s\t" ); //$NON-NLS-1$
+    builder.append( "%s\t" ); //$NON-NLS-1$
+    builder.append( "\"%s\"" ); //$NON-NLS-1$
 
     /* Get the data to write. */
     final String name = vegetationClass.getName();
 
-    String dp = "-1";
+    String dp = "-1"; //$NON-NLS-1$
     final BigDecimal dp1 = vegetationClass.getDp();
     if( dp1 != null )
-      dp = String.format( Locale.PRC, "%.3f", dp1.doubleValue() );
+      dp = String.format( Locale.PRC, "%.3f", dp1.doubleValue() ); //$NON-NLS-1$
 
-    String ax = "-1";
+    String ax = "-1"; //$NON-NLS-1$
     final BigDecimal ax1 = vegetationClass.getAx();
     if( ax1 != null )
-      ax = String.format( Locale.PRC, "%.3f", ax1.doubleValue() );
+      ax = String.format( Locale.PRC, "%.3f", ax1.doubleValue() ); //$NON-NLS-1$
 
-    String ay = "-1";
+    String ay = "-1"; //$NON-NLS-1$
     final BigDecimal ay1 = vegetationClass.getAy();
     if( ay1 != null )
-      ay = String.format( Locale.PRC, "%.3f", ay1.doubleValue() );
+      ay = String.format( Locale.PRC, "%.3f", ay1.doubleValue() ); //$NON-NLS-1$
 
-    String comment = "";
+    String comment = ""; //$NON-NLS-1$
     final String comment1 = vegetationClass.getComment();
     if( comment1 != null )
       comment = comment1;

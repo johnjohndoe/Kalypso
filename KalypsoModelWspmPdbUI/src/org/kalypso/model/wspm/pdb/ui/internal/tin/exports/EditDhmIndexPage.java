@@ -51,6 +51,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.tin.DhmIndexComposite;
 
 /**
@@ -102,8 +103,8 @@ public class EditDhmIndexPage extends WizardPage
     m_settingsData = settingsData;
     m_dhmIndexComposite = null;
 
-    setTitle( "Eintrag editieren" );
-    setDescription( "Eigenschaften des Eintrages editieren." );
+    setTitle( Messages.getString("EditDhmIndexPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("EditDhmIndexPage_1") ); //$NON-NLS-1$
   }
 
   @Override

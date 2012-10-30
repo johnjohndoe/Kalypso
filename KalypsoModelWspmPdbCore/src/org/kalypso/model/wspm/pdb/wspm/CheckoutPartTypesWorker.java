@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.StyleArray;
 import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.GafPartsMapping;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -100,7 +101,7 @@ public class CheckoutPartTypesWorker
 
     updatePartType( newType, pdbPartType );
 
-    newType.setComment( String.format( "Create from PDB type '%s'", category ) );
+    newType.setComment( String.format( Messages.getString("CheckoutPartTypesWorker_0"), category ) ); //$NON-NLS-1$
 
     m_mapping.addAddedFeatures( newType );
   }
@@ -121,7 +122,7 @@ public class CheckoutPartTypesWorker
 
     if( changed )
     {
-      final String comment = String.format( "Updated from PDB type '%s'", pdbPartType.getCategory() );
+      final String comment = String.format( Messages.getString("CheckoutPartTypesWorker_1"), pdbPartType.getCategory() ); //$NON-NLS-1$
       wspmPartType.setComment( comment );
     }
 

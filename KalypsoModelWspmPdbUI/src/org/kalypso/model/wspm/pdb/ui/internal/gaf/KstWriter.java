@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.table.handler.RoughnessClassComparator;
 
 /**
@@ -81,14 +82,14 @@ public class KstWriter
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Exporting roughness classes to KST file", 100 * roughnessClasses.length );
-      monitor.subTask( "Writing roughness classes..." );
+      monitor.beginTask( Messages.getString("KstWriter_0"), 100 * roughnessClasses.length ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("KstWriter_1") ); //$NON-NLS-1$
 
       /* Create the writer. */
       writer = new PrintWriter( file );
 
       /* Write the header line. */
-      writer.println( "KENN\tm\tm^.33/s\t\"Oberflächenstruktur\"" );
+      writer.println( "KENN\tm\tm^.33/s\t\"Oberflächenstruktur\"" ); //$NON-NLS-1$
 
       /* Loop the roughness classes. */
       Arrays.sort( roughnessClasses, new RoughnessClassComparator() );
@@ -101,11 +102,11 @@ public class KstWriter
         monitor.worked( 100 );
       }
 
-      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "The KST export was successfull." );
+      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("KstWriter_3") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( "The KST export has failed: %s", ex.getLocalizedMessage() ), ex );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString("KstWriter_4"), ex.getLocalizedMessage() ), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -121,25 +122,25 @@ public class KstWriter
   {
     /* Create the line. */
     final StringBuilder builder = new StringBuilder();
-    builder.append( "%s\t" );
-    builder.append( "%s\t" );
-    builder.append( "%s\t" );
-    builder.append( "\"%s\"" );
+    builder.append( "%s\t" ); //$NON-NLS-1$
+    builder.append( "%s\t" ); //$NON-NLS-1$
+    builder.append( "%s\t" ); //$NON-NLS-1$
+    builder.append( "\"%s\"" ); //$NON-NLS-1$
 
     /* Get the data to write. */
     final String name = roughnessClass.getName();
 
-    String ksValue = "-1";
+    String ksValue = "-1"; //$NON-NLS-1$
     final BigDecimal ksValue1 = roughnessClass.getKsValue();
     if( ksValue1 != null )
-      ksValue = String.format( Locale.PRC, "%.3f", ksValue1.doubleValue() );
+      ksValue = String.format( Locale.PRC, "%.3f", ksValue1.doubleValue() ); //$NON-NLS-1$
 
-    String kstValue = "-1";
+    String kstValue = "-1"; //$NON-NLS-1$
     final BigDecimal kstValue1 = roughnessClass.getKstValue();
     if( kstValue1 != null )
-      kstValue = String.format( Locale.PRC, "%.1f", kstValue1.doubleValue() );
+      kstValue = String.format( Locale.PRC, "%.1f", kstValue1.doubleValue() ); //$NON-NLS-1$
 
-    String comment = "";
+    String comment = ""; //$NON-NLS-1$
     final String comment1 = roughnessClass.getComment();
     if( comment1 != null )
       comment = comment1;

@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.ConnectionChooserData;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -178,7 +179,7 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
       dhmIndex.setMimeType( findMimeType() );
       dhmIndex.setEditingDate( new Date() );
       dhmIndex.setEditingUser( SystemUtils.USER_NAME );
-      dhmIndex.setSrid( String.format( "%d", JTSAdapter.toSrid( sourceSRS ) ) );
+      dhmIndex.setSrid( String.format( "%d", JTSAdapter.toSrid( sourceSRS ) ) ); //$NON-NLS-1$
       dhmIndex.setLocation( findLocation( srid ) );
 
       setDbCoordinateSystem( JTSAdapter.toSrs( srid ) );
@@ -193,7 +194,7 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
     }
     catch( final PdbConnectException ex )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Fehler beim Zugriff auf die Datenbank.", ex );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("PdbExportConnectionChooserData_1"), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -226,25 +227,25 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
     final File sourceFile = getSourceFile();
     final String extension = FilenameUtils.getExtension( sourceFile.getName() );
 
-    if( "hmo".equals( extension ) )
-      return "tin/hmo";
+    if( "hmo".equals( extension ) ) //$NON-NLS-1$
+      return "tin/hmo"; //$NON-NLS-1$
 
-    if( "gml".equals( extension ) )
-      return "tin/gml";
+    if( "gml".equals( extension ) ) //$NON-NLS-1$
+      return "tin/gml"; //$NON-NLS-1$
 
-    if( "shp".equals( extension ) )
-      return "tin/shp";
+    if( "shp".equals( extension ) ) //$NON-NLS-1$
+      return "tin/shp"; //$NON-NLS-1$
 
-    if( "2dm".equals( extension ) )
-      return "tin/2dm";
+    if( "2dm".equals( extension ) ) //$NON-NLS-1$
+      return "tin/2dm"; //$NON-NLS-1$
 
-    if( "bin".equals( extension ) )
-      return "image/bin";
+    if( "bin".equals( extension ) ) //$NON-NLS-1$
+      return "image/bin"; //$NON-NLS-1$
 
-    if( "tif".equals( extension ) || "tiff".equals( extension ) )
-      return "image/tiff";
+    if( "tif".equals( extension ) || "tiff".equals( extension ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      return "image/tiff"; //$NON-NLS-1$
 
-    return "unknown";
+    return Messages.getString("PdbExportConnectionChooserData_15"); //$NON-NLS-1$
   }
 
   private Polygon findLocation( final int srid ) throws CoreException

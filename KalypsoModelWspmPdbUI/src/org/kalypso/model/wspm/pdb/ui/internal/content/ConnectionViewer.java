@@ -154,7 +154,7 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
     final Menu watersMenu = menuManager.createContextMenu( watersViewer.getControl() );
 //    final Menu statesMenu = menuManager.createContextMenu( statesViewer.getControl() );
 
-    site.registerContextMenu( site.getId() + ":waters", menuManager, watersViewer ); //$NON-NLS-N$
+    site.registerContextMenu( site.getId() + ":waters", menuManager, watersViewer ); //$NON-NLS-1$
     //site.registerContextMenu( site.getId() + ":states", menuManager, statesViewer ); //$NON-NLS-N$
 
     watersViewer.getControl().setMenu( watersMenu );

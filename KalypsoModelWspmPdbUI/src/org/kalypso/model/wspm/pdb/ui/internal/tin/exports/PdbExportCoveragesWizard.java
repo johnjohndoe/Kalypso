@@ -55,6 +55,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.checkout.ConnectionChooserPage;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * This wizard shows a page to edit properties for an entry (path) of the external storage location.
@@ -87,7 +88,7 @@ public class PdbExportCoveragesWizard extends Wizard
   {
     m_settingsData = settingsData;
 
-    setWindowTitle( "Höhendaten hochladen" );
+    setWindowTitle( Messages.getString("PdbExportCoveragesWizard_0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 

@@ -65,6 +65,7 @@ import org.kalypso.model.wspm.pdb.db.utils.CrossSectionPartTypes;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -90,7 +91,7 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
   @Override
   public String getLabel( )
   {
-    return "Save Event";
+    return Messages.getString("SaveEventOperation_0"); //$NON-NLS-1$
   }
 
   @Override
@@ -112,7 +113,7 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
 
     /* update wl_type */
     final SubProgressMonitor subMonitor = new SubProgressMonitor( monitor, 20 );
-    subMonitor.beginTask( "Uploading data into database", 100 );
+    subMonitor.beginTask( Messages.getString("SaveEventOperation_1"), 100 ); //$NON-NLS-1$
 
     addFixations();
 
@@ -224,7 +225,7 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
     if( event.getState() != null )
       return true;
 
-    final String message = "Das Ereignis ist keinem Zustand zugeordnet, 2D-Wasserspiegel werden nicht erzeugt. Trotzdem fortfahren?";
+    final String message = Messages.getString("SaveEventOperation_2"); //$NON-NLS-1$
     return MessageDialog.openConfirm( shell, dialogTitle, message );
   }
 }

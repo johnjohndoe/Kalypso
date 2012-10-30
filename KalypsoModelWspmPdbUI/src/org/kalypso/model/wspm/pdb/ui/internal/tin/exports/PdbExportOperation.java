@@ -50,6 +50,7 @@ import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -66,7 +67,7 @@ public class PdbExportOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return "Save and update external location";
+    return Messages.getString("PdbExportOperation_0"); //$NON-NLS-1$
   }
 
   @Override
@@ -85,11 +86,11 @@ public class PdbExportOperation implements IPdbOperation
     }
     catch( final HibernateException ex )
     {
-      throw new PdbConnectException( "Updating the database failed...", ex );
+      throw new PdbConnectException( Messages.getString("PdbExportOperation_1"), ex ); //$NON-NLS-1$
     }
     catch( final IOException ex )
     {
-      throw new PdbConnectException( "Could not copy the file...", ex );
+      throw new PdbConnectException( Messages.getString("PdbExportOperation_2"), ex ); //$NON-NLS-1$
     }
   }
 }

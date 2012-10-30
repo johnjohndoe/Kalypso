@@ -25,6 +25,7 @@ import org.kalypso.commons.math.simplify.ISegmentDistance;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.ProfileObjectHelper;
 
 /**
@@ -63,7 +64,7 @@ class SimplifyProjectedWaterlevelWorker
     /* build new object */
     m_result = ProfileObjectHelper.cloneProfileObject( m_waterlevel, null, simplifiedRecords );
 
-    final String message = String.format( "Removed %,d waterlevels points during simplification", records.length - simplifiedRecords.length );
+    final String message = String.format( Messages.getString("SimplifyProjectedWaterlevelWorker_0"), records.length - simplifiedRecords.length ); //$NON-NLS-1$
     return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, message );
   }
 }

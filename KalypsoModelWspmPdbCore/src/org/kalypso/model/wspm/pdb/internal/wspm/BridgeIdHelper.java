@@ -70,9 +70,9 @@ public class BridgeIdHelper
       return brueckeId;
 
     int cnt = 1;
-    String freeId = String.format( Locale.PRC, "bridge_%d", cnt++ );
+    String freeId = String.format( Locale.PRC, "bridge_%d", cnt++ ); //$NON-NLS-1$
     while( usedIds.contains( freeId ) )
-      freeId = String.format( Locale.PRC, "bridge_%d", cnt++ );
+      freeId = String.format( Locale.PRC, "bridge_%d", cnt++ ); //$NON-NLS-1$
 
     return freeId;
   }

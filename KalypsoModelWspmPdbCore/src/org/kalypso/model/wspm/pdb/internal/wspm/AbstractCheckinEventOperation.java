@@ -147,7 +147,7 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
     catch( final FactoryException | MismatchedDimensionException | TransformException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( "Failed ot convert waterlevels", e );
+      throw new PdbConnectException( "Failed ot convert waterlevels", e ); //$NON-NLS-1$
     }
 
     /* load cross sections */

@@ -120,7 +120,7 @@ public class CheckinStateOperationData
 
     final CrossSectionPartType type = m_partTypes.findPartType( partType );
     if( type == null )
-      throw new IllegalArgumentException( String.format( "Unknown part type: %s", partType ) );
+      throw new IllegalArgumentException( String.format( "Unknown part type: %s", partType ) ); //$NON-NLS-1$
 
     return type;
   }

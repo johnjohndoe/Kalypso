@@ -36,6 +36,7 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * Page for options for gaf export.
@@ -44,7 +45,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
  */
 class GafExportOptionsPage extends WizardPage
 {
-  private static final String FILTER_LABEL = "GAF File";
+  private static final String FILTER_LABEL = Messages.getString("GafExportOptionsPage_0"); //$NON-NLS-1$
 
   private static final String EXTENSION = "gaf"; //$NON-NLS-1$
 
@@ -58,8 +59,8 @@ class GafExportOptionsPage extends WizardPage
 
     m_data = data;
 
-    setTitle( "Export Optionen" );
-    setDescription( "Bitte wählen Sie auf dieser Seite die Optionen für den GAF Export." );
+    setTitle( Messages.getString("GafExportOptionsPage_1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("GafExportOptionsPage_2") ); //$NON-NLS-1$
   }
 
   @Override
@@ -90,7 +91,7 @@ class GafExportOptionsPage extends WizardPage
   private void createExportFileControls( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Target File" );
+    label.setText( Messages.getString("GafExportOptionsPage_3") ); //$NON-NLS-1$
 
     final FileChooserDelegateSave delegateSave = new FileChooserDelegateSave();
     delegateSave.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
@@ -109,7 +110,7 @@ class GafExportOptionsPage extends WizardPage
   private void createHykModeControls( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Hyk Kennungen" );
+    label.setText( Messages.getString("GafExportOptionsPage_4") ); //$NON-NLS-1$
 
     final ComboViewer chooser = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     chooser.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

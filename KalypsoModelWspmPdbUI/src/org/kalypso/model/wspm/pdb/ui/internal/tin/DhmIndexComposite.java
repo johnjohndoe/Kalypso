@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * This composite allows the editing of {@link org.kalypso.model.wspm.pdb.db.mapping.DhmIndex}.
@@ -133,15 +134,15 @@ public class DhmIndexComposite extends Composite
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the controls. */
-    createTextControl( main, m_dataBinding, "Dateiname", DhmIndex.PROPERTY_FILENAME, false );
-    createTextControl( main, m_dataBinding, "MimeType", DhmIndex.PROPERTY_MIMETYPE, false );
-    createTextControl( main, m_dataBinding, "Beschreibung", DhmIndex.PROPERTY_DESCRIPTION, m_editable );
-    createTextControl( main, m_dataBinding, "Bearbeiter", DhmIndex.PROPERTY_EDITINGUSER, m_editable );
-    createDateControl( main, m_dataBinding, "Messdatum", DhmIndex.PROPERTY_MEASUREMENTDATE, m_editable );
-    createTextControl( main, m_dataBinding, "Messgenauigkeit", DhmIndex.PROPERTY_MEASUREMENTACCURACY, m_editable );
-    createTextControl( main, m_dataBinding, "Quelle", DhmIndex.PROPERTY_SOURCE, m_editable );
-    createTextControl( main, m_dataBinding, "Editor", DhmIndex.PROPERTY_EDITOR, m_editable );
-    createTextControl( main, m_dataBinding, "Copyright", DhmIndex.PROPERTY_COPYRIGHT, m_editable );
+    createTextControl( main, m_dataBinding, Messages.getString("DhmIndexComposite_0"), DhmIndex.PROPERTY_FILENAME, false ); //$NON-NLS-1$
+    createTextControl( main, m_dataBinding, Messages.getString("DhmIndexComposite_1"), DhmIndex.PROPERTY_MIMETYPE, false ); //$NON-NLS-1$
+    createTextControl( main, m_dataBinding, Messages.getString("DhmIndexComposite_2"), DhmIndex.PROPERTY_DESCRIPTION, m_editable ); //$NON-NLS-1$
+    createTextControl( main, m_dataBinding, Messages.getString("DhmIndexComposite_3"), DhmIndex.PROPERTY_EDITINGUSER, m_editable ); //$NON-NLS-1$
+    createDateControl( main, m_dataBinding, Messages.getString("DhmIndexComposite_4"), DhmIndex.PROPERTY_MEASUREMENTDATE, m_editable ); //$NON-NLS-1$
+    createTextControl( main, m_dataBinding, Messages.getString("DhmIndexComposite_5"), DhmIndex.PROPERTY_MEASUREMENTACCURACY, m_editable ); //$NON-NLS-1$
+    createTextControl( main, m_dataBinding, Messages.getString("DhmIndexComposite_6"), DhmIndex.PROPERTY_SOURCE, m_editable ); //$NON-NLS-1$
+    createTextControl( main, m_dataBinding, Messages.getString("DhmIndexComposite_7"), DhmIndex.PROPERTY_EDITOR, m_editable ); //$NON-NLS-1$
+    createTextControl( main, m_dataBinding, Messages.getString("DhmIndexComposite_8"), DhmIndex.PROPERTY_COPYRIGHT, m_editable ); //$NON-NLS-1$
     // createTextControl( main, m_dataBinding, "ID", DhmIndex.PROPERTY_ID, m_editable );
     // createTextControl( main, m_dataBinding, "Name", DhmIndex.PROPERTY_NAME, m_editable );
     // createDateControl( main, m_dataBinding, "Erstellungsdatum", DhmIndex.PROPERTY_CREATIONDATE, m_editable );

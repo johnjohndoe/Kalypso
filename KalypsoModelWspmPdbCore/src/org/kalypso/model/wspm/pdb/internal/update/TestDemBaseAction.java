@@ -48,6 +48,7 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Event;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -60,8 +61,8 @@ public class TestDemBaseAction extends Action
   {
     m_fileValue = fileValue;
 
-    setText( "Verzeichnis Öffnen" );
-    setToolTipText( "Das angegebene Verzeichnis im Explorer öffnen" );
+    setText( Messages.getString("TestDemBaseAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("TestDemBaseAction_1") ); //$NON-NLS-1$
 
     m_fileValue.addValueChangeListener( new IValueChangeListener()
     {

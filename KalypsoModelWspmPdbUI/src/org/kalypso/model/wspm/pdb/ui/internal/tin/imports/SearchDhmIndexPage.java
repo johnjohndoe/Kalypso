@@ -68,6 +68,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.tin.DhmIndexComposite;
 
 /**
@@ -125,8 +126,8 @@ public class SearchDhmIndexPage extends WizardPage
     m_searchViewer = null;
     m_dhmIndexComposite = null;
 
-    setTitle( "Datei auswählen" );
-    setDescription( "Auswahl der Datei der zu importierenden Höhendaten." );
+    setTitle( Messages.getString("SearchDhmIndexPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("SearchDhmIndexPage_1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -146,7 +147,7 @@ public class SearchDhmIndexPage extends WizardPage
     final Group filterGroup = new Group( main, SWT.NONE );
     filterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     filterGroup.setLayout( new GridLayout( 1, false ) );
-    filterGroup.setText( "Auswahl einschränken" );
+    filterGroup.setText( Messages.getString("SearchDhmIndexPage_2") ); //$NON-NLS-1$
 
     /* Create the filter textbox. */
     final Text filterText = new Text( filterGroup, SWT.BORDER | SWT.SEARCH );
@@ -155,7 +156,7 @@ public class SearchDhmIndexPage extends WizardPage
     /* Create the filter button. */
     final Button filterButton = new Button( filterGroup, SWT.CHECK );
     filterButton.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    filterButton.setText( "Nach Kartenausschnitt filtern" );
+    filterButton.setText( Messages.getString("SearchDhmIndexPage_3") ); //$NON-NLS-1$
 
     /* Create a tree viewer. */
     m_searchViewer = new TreeViewer( main, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL );
@@ -269,7 +270,7 @@ public class SearchDhmIndexPage extends WizardPage
     filenameColumn.setLabelProvider( new DhmIndexFilenameLabelProvider() );
 
     final ViewerColumnItem filenameItem = new ViewerColumnItem( filenameColumn );
-    filenameItem.setText( "Dateiname" );
+    filenameItem.setText( Messages.getString("SearchDhmIndexPage_4") ); //$NON-NLS-1$
     filenameItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( filenameItem.getColumn() );
@@ -280,7 +281,7 @@ public class SearchDhmIndexPage extends WizardPage
     descriptionColumn.setLabelProvider( new DhmIndexDescriptionLabelProvider() );
 
     final ViewerColumnItem descriptionItem = new ViewerColumnItem( descriptionColumn );
-    descriptionItem.setText( "Beschreibung" );
+    descriptionItem.setText( Messages.getString("SearchDhmIndexPage_5") ); //$NON-NLS-1$
     descriptionItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( descriptionItem.getColumn() );
@@ -291,7 +292,7 @@ public class SearchDhmIndexPage extends WizardPage
     measurementDateColumn.setLabelProvider( new DhmIndexMeasurementDateLabelProvider() );
 
     final ViewerColumnItem measurementDateItem = new ViewerColumnItem( measurementDateColumn );
-    measurementDateItem.setText( "Messdatum" );
+    measurementDateItem.setText( Messages.getString("SearchDhmIndexPage_6") ); //$NON-NLS-1$
     measurementDateItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( measurementDateItem.getColumn() );
@@ -302,7 +303,7 @@ public class SearchDhmIndexPage extends WizardPage
     measurementAccuracyColumn.setLabelProvider( new DhmIndexMeasurementAccuracyLabelProvider() );
 
     final ViewerColumnItem measurementAccuracyItem = new ViewerColumnItem( measurementAccuracyColumn );
-    measurementAccuracyItem.setText( "Messgenauigkeit" );
+    measurementAccuracyItem.setText( Messages.getString("SearchDhmIndexPage_7") ); //$NON-NLS-1$
     measurementAccuracyItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( measurementAccuracyItem.getColumn() );

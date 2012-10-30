@@ -47,6 +47,7 @@ import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -68,7 +69,7 @@ public class ImportFromExternalLocationCmAction extends CoverageManagementAction
    */
   public ImportFromExternalLocationCmAction( )
   {
-    super( "Höhendaten aus externen Speicherort hinzufügen" );
+    super( Messages.getString("ImportFromExternalLocationCmAction_0") ); //$NON-NLS-1$
 
     m_widget = null;
   }

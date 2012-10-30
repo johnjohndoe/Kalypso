@@ -18,13 +18,15 @@
  */
 package org.kalypso.model.wspm.pdb.ui.internal.gaf;
 
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
+
 /**
  * @author Gernot Belger
  */
 public enum HykExportMode
 {
-  MARKER( "Profilmarker (Trennflächen, durchst. Bereiche) verwenden" ),
-  CODE( "Kennzeichen verwenden" );
+  MARKER( Messages.getString("HykExportMode_0") ), //$NON-NLS-1$
+  CODE( Messages.getString("HykExportMode_1") ); //$NON-NLS-1$
 
   private final String m_label;
 

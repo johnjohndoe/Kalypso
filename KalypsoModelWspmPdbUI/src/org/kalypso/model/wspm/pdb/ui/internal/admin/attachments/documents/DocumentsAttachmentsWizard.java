@@ -26,6 +26,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -50,7 +51,7 @@ public class DocumentsAttachmentsWizard extends Wizard implements IWorkbenchWiza
   {
     setNeedsProgressMonitor( true );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
-    setWindowTitle( "Import Attachments" );
+    setWindowTitle( Messages.getString("DocumentsAttachmentsWizard_0") ); //$NON-NLS-1$
   }
 
   @Override
@@ -141,7 +142,7 @@ public class DocumentsAttachmentsWizard extends Wizard implements IWorkbenchWiza
     if( zipFile == null || !zipFile.exists() )
       return true;
 
-    final String message = String.format( "Overwrite existing file %s?", zipFile.getName() );
+    final String message = String.format( Messages.getString("DocumentsAttachmentsWizard_1"), zipFile.getName() ); //$NON-NLS-1$
     return MessageDialog.openConfirm( getShell(), getWindowTitle(), message );
   }
 

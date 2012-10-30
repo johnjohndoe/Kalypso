@@ -507,7 +507,7 @@ public class CheckinStatePdbOperation implements ICheckinStatePdbOperation
       {
         // TODO: part ws not uploaded -> log it!
         final String eventName = clonedProfileObject.getValue( IWspmTuhhConstants.PROFIL_PROPERTY_EVENT_NAME, null );
-        System.out.format( "Part ignored for section %s and part %s: missing event%n", profile.getStation(), clonedProfileObject.getType(), eventName );
+        System.out.format( Messages.getString("CheckinStatePdbOperation.8"), profile.getStation(), clonedProfileObject.getType(), eventName ); //$NON-NLS-1$
       }
     }
 
