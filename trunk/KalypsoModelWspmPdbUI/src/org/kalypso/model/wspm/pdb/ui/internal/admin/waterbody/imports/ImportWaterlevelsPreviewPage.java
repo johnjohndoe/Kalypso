@@ -237,7 +237,6 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     column.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( column );
-    ColumnViewerSorter.registerSorter( viewerColumn, new ViewerComparator() );
     viewerColumn.setLabelProvider( new WaterLevelLabelProvider( property, format ) );
   }
 
