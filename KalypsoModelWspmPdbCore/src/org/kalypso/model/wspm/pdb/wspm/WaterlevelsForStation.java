@@ -90,6 +90,9 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
     int count = 0;
 
     final IProfileObject[] objects = getWaterlevelObjects();
+    if( objects == null )
+      return 0;
+
     for( final IProfileObject object : objects )
     {
       final String type = object.getType();
@@ -193,6 +196,9 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
   private IProfileObject getPointsObject( )
   {
     final IProfileObject[] objects = getWaterlevelObjects();
+    if( objects == null )
+      return null;
+
     for( final IProfileObject object : objects )
     {
       /* we know that we have exactly one points object */
